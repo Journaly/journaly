@@ -1,0 +1,17 @@
+{
+  // Note: You can delete this file if you're not using vscode
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug nexus App",
+      "protocol": "inspector",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/nexus",
+      "runtimeArgs": ["dev"],
+      "args": ["src/graphql.ts"],
+      "sourceMaps": true,
+      "console": "integratedTerminal"
+    }
+  ]
+}

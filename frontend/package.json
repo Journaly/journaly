@@ -1,7 +1,11 @@
 {
-  "name": "robinmacpherson",
+  "name": "journaly-frontend",
   "version": "1.0.0",
-  "description": "",
+  "description": "The frontend of Journaly.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Journaly/journaly.git"
+  },
   "main": "index.js",
   "scripts": {
     "dev": "next",

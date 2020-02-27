@@ -1,0 +1,31 @@
+{
+  "name": "backend2",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "nexus-future": "^0.8.0",
+    "nexus-plugin-prisma": "^0.4.0"
+  },
+  "scripts": {
+    "format": "npx prettier --write './**/*.{ts,md}' '!./prisma/**/*.md'",
+    "dev": "nexus dev",
+    "build": "nexus build",
+    "prisma2": "prisma2",
+    "start": "node node_modules/.build"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "devDependencies": {
+    "husky": "^4.2.3",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
+    "prisma2": "^2.0.0-preview022"
+  }
+}

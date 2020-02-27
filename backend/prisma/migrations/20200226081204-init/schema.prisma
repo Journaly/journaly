@@ -1,0 +1,41 @@
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+generator prisma_client {
+  provider = "prisma-client-js"
+}
+
+enum Status {
+  ADMIN MODERATOR FREE_USER PRO_USER
+}
+
+enum Permission {
+  ADMIN USER POST_CREATE POST_UPDATE POST_DELETE PERMISSION_UPDATE
+}
+
+model User {
+  id               String       @id @default(cuid())
+  name             String
+  email            String       @unique
+  password         String
+  resetToken       String?
+  resetTokenExpiry Float?
+  permissions      Permission[]
+  status           Status[]
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+model Post {
+  id         String   @id @default(cuid())
+  title      String
+  body       String
+  published  Boolean
+  image      String?
+  largeImage String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  author     User
+}

@@ -1,7 +1,7 @@
 // import Header from '../Header'
 // import Footer from '../Footer'
 
-const StandardLayout = props => (
+const DashboardLayout = props => (
   <div>
     {/* <Header /> */}
     {props.children}
@@ -14,4 +14,4 @@ const StandardLayout = props => (
   </div>
 );
 
-export default StandardLayout;
+export default DashboardLayout;

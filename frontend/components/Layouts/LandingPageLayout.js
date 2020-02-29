@@ -10,7 +10,6 @@ const LandingPageLayout = props => (
     <style jsx>{`
       max-width: 1200px;
       margin: 0px auto;
-      padding: 0 2rem;
     `}</style>
   </div>
 );

@@ -1,7 +1,8 @@
 import { NextPage } from "next";
+import LandingPageLayout from "../components/Layouts/LandingPageLayout";
 
 const HomePage: NextPage = () => (
-  <>
+  <LandingPageLayout>
     <h1>Journaly is coming...</h1>
     <style jsx>{`
       h1 {
@@ -9,7 +10,7 @@ const HomePage: NextPage = () => (
         text-align: center;
       }
     `}</style>
-  </>
+  </LandingPageLayout>
 );
 
 export default HomePage;

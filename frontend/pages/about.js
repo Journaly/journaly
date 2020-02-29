@@ -1,9 +1,7 @@
-import Link from "next/link";
-
-import StandardLayout from "../components/layouts/StandardLayout";
+import LandingPageLayout from "../components/Layouts/LandingPageLayout";
 
 const About = () => (
-  <StandardLayout>
+  <LandingPageLayout>
     <div className="container">
       <h1>About!</h1>
     </div>
@@ -14,7 +12,7 @@ const About = () => (
         flex-direction: row;
       }
     `}</style>
-  </StandardLayout>
+  </LandingPageLayout>
 );
 
 export default About;

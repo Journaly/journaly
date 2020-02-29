@@ -7,18 +7,6 @@
       "values": ["ADMIN", "MODERATOR", "FREE_USER", "PRO_USER"]
     },
     {
-      "tag": "CreateEnum",
-      "enum": "Permission",
-      "values": [
-        "ADMIN",
-        "USER",
-        "POST_CREATE",
-        "POST_UPDATE",
-        "POST_DELETE",
-        "PERMISSION_UPDATE"
-      ]
-    },
-    {
       "tag": "CreateSource",
       "source": "db"
     },
@@ -38,7 +26,7 @@
         "source": "db"
       },
       "argument": "url",
-      "value": "env(\"DATABASE_URL\")"
+      "value": "\"postgresql://robin:password@localhost:5432/journaly_db\""
     },
     {
       "tag": "CreateModel",
@@ -47,7 +35,7 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "id",
+      "field": "Id",
       "type": "String",
       "arity": "Required"
     },
@@ -57,7 +45,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "id"
+          "field": "Id"
         },
         "directive": "id"
       }
@@ -68,7 +56,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "id"
+          "field": "Id"
         },
         "directive": "default"
       }
@@ -80,7 +68,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "id"
+          "field": "Id"
         },
         "directive": "default"
       },
@@ -90,14 +78,14 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "name",
+      "field": "Name",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "email",
+      "field": "Email",
       "type": "String",
       "arity": "Required"
     },
@@ -107,7 +95,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "email"
+          "field": "Email"
         },
         "directive": "unique"
       }
@@ -115,30 +103,23 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "password",
+      "field": "Password",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "resetToken",
+      "field": "ResetToken",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "resetTokenExpiry",
+      "field": "ResetTokenExpiry",
       "type": "Float",
       "arity": "Optional"
-    },
-    {
-      "tag": "CreateField",
-      "model": "User",
-      "field": "permissions",
-      "type": "Permission",
-      "arity": "List"
     },
     {
       "tag": "CreateField",
@@ -150,7 +131,14 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "createdAt",
+      "field": "posts",
+      "type": "Post",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "CreatedAt",
       "type": "DateTime",
       "arity": "Required"
     },
@@ -160,7 +148,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "createdAt"
+          "field": "CreatedAt"
         },
         "directive": "default"
       }
@@ -172,7 +160,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "createdAt"
+          "field": "CreatedAt"
         },
         "directive": "default"
       },
@@ -182,7 +170,7 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "updatedAt",
+      "field": "UpdatedAt",
       "type": "DateTime",
       "arity": "Required"
     },
@@ -192,7 +180,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "updatedAt"
+          "field": "UpdatedAt"
         },
         "directive": "updatedAt"
       }
@@ -204,7 +192,7 @@
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "id",
+      "field": "Id",
       "type": "String",
       "arity": "Required"
     },
@@ -214,7 +202,7 @@
         "path": {
           "tag": "Field",
           "model": "Post",
-          "field": "id"
+          "field": "Id"
         },
         "directive": "id"
       }
@@ -225,7 +213,7 @@
         "path": {
           "tag": "Field",
           "model": "Post",
-          "field": "id"
+          "field": "Id"
         },
         "directive": "default"
       }
@@ -237,7 +225,7 @@
         "path": {
           "tag": "Field",
           "model": "Post",
-          "field": "id"
+          "field": "Id"
         },
         "directive": "default"
       },
@@ -247,42 +235,42 @@
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "title",
+      "field": "Title",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "body",
+      "field": "Body",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "published",
+      "field": "Published",
       "type": "Boolean",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "image",
+      "field": "Image",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "largeImage",
+      "field": "LargeImage",
       "type": "String",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "createdAt",
+      "field": "CreatedAt",
       "type": "DateTime",
       "arity": "Required"
     },
@@ -292,7 +280,7 @@
         "path": {
           "tag": "Field",
           "model": "Post",
-          "field": "createdAt"
+          "field": "CreatedAt"
         },
         "directive": "default"
       }
@@ -304,7 +292,7 @@
         "path": {
           "tag": "Field",
           "model": "Post",
-          "field": "createdAt"
+          "field": "CreatedAt"
         },
         "directive": "default"
       },
@@ -314,7 +302,7 @@
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "updatedAt",
+      "field": "UpdatedAt",
       "type": "DateTime",
       "arity": "Required"
     },
@@ -324,7 +312,7 @@
         "path": {
           "tag": "Field",
           "model": "Post",
-          "field": "updatedAt"
+          "field": "UpdatedAt"
         },
         "directive": "updatedAt"
       }

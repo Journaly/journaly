@@ -12,7 +12,7 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "gql-gen --config codegen.yml"
   },
   "keywords": [],
   "author": "Journaly",
@@ -21,7 +21,9 @@
     "next": "^9.2.1",
     "nprogress": "^0.2.0",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "slate": "^0.57.1",
+    "slate-react": "^0.57.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.12.2",

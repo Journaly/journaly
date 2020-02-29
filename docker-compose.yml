@@ -1,18 +1,7 @@
 version: "3.7"
 
 services:
+  frontend:
+    image: journaly/frontend:0.0.1
   db:
     image: "postgres:11"
-    container_name: "journaly_db"
-    ports:
-      - "5432:5432"
-    volumes:
-      - db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=robin
-      - POSTGRES_DB=journaly_db
-      - POSTGRES_PASSWORD=password
-    restart: always
-
-volumes:
-  db:

@@ -1,6 +1,6 @@
 # Journaly
 
-###### @ journaly.com
+###### @ [journaly.com](http://journaly.com)
 
 _A foreign-language journaling application where you can exchange feedback with native speakers._
 

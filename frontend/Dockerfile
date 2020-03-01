@@ -74,7 +74,7 @@ LABEL org.opencontainers.image.source=https://https://github.com/Journaly/journa
 LABEL org.opencontainers.image.licenses=MIT
 LABEL com.journaly.nodeversion=${NODE_VERSION}
 
-# Copy over source code with appropriate permissions for node user
+# Copy over source code with appropriate permissions for node user.
 COPY --chown=node:node . .
 
 RUN npm run build

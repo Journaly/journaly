@@ -5,7 +5,8 @@ backend:
   - backend/**/*
 
 devops:
-  - **/Dockerfile
+  - frontend/Dockerfile
+  - backend/Dockerfile
   - docker-compose.yml
   - docker-compose.override.yml
   - docker-compose.prod.yml

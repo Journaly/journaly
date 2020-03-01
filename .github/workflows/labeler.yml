@@ -12,3 +12,7 @@ devops:
   
 test:
   - ./**/*.test.tsx
+
+docs:
+  - ./README.md
+  - ./**/README.md

@@ -1,18 +1,18 @@
 frontend:
-  - ./frontend/**/*
+  - frontend/**/*
 
 backend:
-  - ./backend/**/*
+  - backend/**/*
 
 devops:
-  - ./**/Dockerfile
-  - ./docker-compose.yml
-  - ./docker-compose.override.yml
-  - ./docker-compose.prod.yml
+  - **/Dockerfile
+  - docker-compose.yml
+  - docker-compose.override.yml
+  - docker-compose.prod.yml
 
 test:
-  - ./**/*.test.tsx
+  - **/*.test.tsx
 
 docs:
-  - ./README.md
-  - ./**/README.md
+  - README.md
+  - **/README.md

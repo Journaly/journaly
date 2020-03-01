@@ -12,8 +12,10 @@ devops:
   - docker-compose.prod.yml
 
 test:
-  - **/*.test.tsx
+  - frontend/*.test.tsx
+  - backendend/*.test.tsx
 
 docs:
   - README.md
-  - **/README.md
+  - frontend/README.md
+  - backend/README.md

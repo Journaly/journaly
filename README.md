@@ -39,7 +39,7 @@ Welcome to the Journaly repository!
 
 ---
 
-## Getting Started
+## Getting Started (in progress)
 
 1. Clone the repository!  
    `$ git clone git@github.com:Journaly/journaly.git`

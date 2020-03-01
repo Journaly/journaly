@@ -1,0 +1,14 @@
+frontend:
+  - ./frontend/**/*
+ 
+backend:
+  - ./backend/**/*
+  
+devops:
+  - ./**/Dockerfile
+  - ./docker-compose.yml
+  - ./docker-compose.override.yml
+  - ./docker-compose.prod.yml
+  
+test:
+  - ./**/*.test.tsx

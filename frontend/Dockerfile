@@ -5,7 +5,7 @@ FROM node:10.15-alpine as base-node
 EXPOSE 3000
 
 # Install dependencies that certain node_modules need
-# not included in the Alpine distribution.
+# not included in the Alpine distribution
 RUN apk add --no-cache curl make gcc g++ python
 
 # Create working directory for the Docker builds
@@ -13,11 +13,11 @@ WORKDIR /usr/src/app
 # Set permissions to limited permission/node user
 RUN chown node:node .
 
-# Switch to node user.
+# Switch to node user
 USER node
 
 # Copy package.json and package-lock.json
-# with appropriate permissions for node user.
+# with appropriate permissions for node user
 COPY package*.json ./
 
 ENV NODE_ENV=production
@@ -30,10 +30,10 @@ RUN npm config list \
 
 # Stage 2 - set up development node environment
 # We don't COPY in this stage because we are bind-mounting in development,
-# this saves time when building locally.
+# this saves time when building locally
 FROM base-node as dev-node
 
-# Set PATH to be the container's /node_modules/.bin directory.
+# Set PATH to be the container's /node_modules/.bin directory
 ENV PATH /usr/src/app/node_modules/.bin/:$PATH
 
 # Install only devDependencies
@@ -42,9 +42,9 @@ RUN npm install --only=development
 
 # Stage 3 - testing
 # This stage is for the purpose of being run in C.I.
-# If tests fail this build will fail and stop the deployment.
+# If tests fail this build will fail and stop the deployment
 FROM dev-node as test
-# Copy over source code with appropriate permissions for node user.
+# Copy over source code with appropriate permissions for node user
 COPY --chown=node:node . .
 
 # run linters & a package audit as part of build
@@ -55,12 +55,12 @@ COPY --chown=node:node . .
 CMD ["npm", "test"]
 
 # Stage 4 - default, production
-# This will run by default if you don't include a target.
+# This will run by default if you don't include a target
 # It has production-only dependencies.
 FROM base-node as release
 
 # Set this with shell variables at build-time.
-# If they aren't set, then not-set will be default.
+# If they aren't set, then not-set will be default
 ARG CREATED_DATE=not-set
 ARG SOURCE_COMMIT=not-set
 
@@ -74,7 +74,7 @@ LABEL org.opencontainers.image.source=https://https://github.com/Journaly/journa
 LABEL org.opencontainers.image.licenses=MIT
 LABEL com.journaly.nodeversion=${NODE_VERSION}
 
-# Copy over source code with appropriate permissions for node user.
+# Copy over source code with appropriate permissions for node user
 COPY --chown=node:node . .
 
 RUN npm run build

@@ -55,3 +55,5 @@ Not only do you now have the entire journaly app and all its 3 services running,
 BOOM! You now have some users, along with a selection of posts :)
 
 5. To bring the app down, run `$ docker-compose stop`
+
+Next, check out [frontend](./frontend) or [backend](./backend) for detailed information on how to work across the app.

@@ -1,16 +1,18 @@
 import { NextPage } from "next";
-import LandingPageLayout from "../components/Layouts/LandingPageLayout";
+// import BlogPostLayout from "../components/Layouts/BlogPostLayout";
 
 const HomePage: NextPage = () => (
-  <LandingPageLayout>
-    <h1>Journaly is coming...</h1>
+  // <LandingPageLayout>
+  <>
+    <h1>The Post</h1>
     <style jsx>{`
       h1 {
         margin: 50px auto;
         text-align: center;
       }
     `}</style>
-  </LandingPageLayout>
+  </>
+  // </LandingPageLayout>
 );
 
 export default HomePage;

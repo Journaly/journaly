@@ -16,5 +16,6 @@
   "bugs": {
     "url": "https://github.com/Journaly/journaly/issues"
   },
-  "homepage": "https://github.com/Journaly/journaly#readme"
+  "homepage": "https://github.com/Journaly/journaly#readme",
+  "devDependencies": {}
 }

@@ -113,32 +113,69 @@ const JournalyEditor = () => {
   }, []);
 
   return (
-    <Slate editor={editor} value={value} onChange={value => setValue(value)}>
-      <Editable
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        onKeyDown={event => {
-          if (!event.ctrlKey) {
-            return;
-          }
+    <div className="editor-wrapper">
+      <div className="editor-container">
+        <Slate
+          editor={editor}
+          value={value}
+          onChange={value => setValue(value)}
+        >
+          <div>
+            <button
+              onMouseDown={event => {
+                event.preventDefault();
+                helpers.toggleBoldMark(editor);
+              }}
+            >
+              Bold
+            </button>
+            <button
+              onMouseDown={event => {
+                event.preventDefault();
+                helpers.toggleCodeBlock(editor);
+              }}
+            >
+              Code Block
+            </button>
+          </div>
+          <Editable
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            onKeyDown={event => {
+              if (!event.ctrlKey) {
+                return;
+              }
 
-          switch (event.key) {
-            case "`": {
-              event.preventDefault();
-              helpers.toggleCodeBlock(editor);
-              break;
-            }
+              switch (event.key) {
+                case "`": {
+                  event.preventDefault();
+                  helpers.toggleCodeBlock(editor);
+                  break;
+                }
 
-            // When "B" is pressed, bold the text in the selection.
-            case "b": {
-              event.preventDefault();
-              helpers.toggleBoldMark(editor);
-              break;
-            }
-          }
-        }}
-      />
-    </Slate>
+                // When "B" is pressed, bold the text in the selection.
+                case "b": {
+                  event.preventDefault();
+                  helpers.toggleBoldMark(editor);
+                  break;
+                }
+              }
+            }}
+          />
+        </Slate>
+      </div>
+      <style jsx>{`
+        .editor-wrapper {
+          padding: 50px;
+        }
+        .editor-container {
+          padding: 0 25px;
+          border: 1px solid black;
+          border-radius: 5px;
+          min-height: 200px;
+        }
+      `}</style>
+    </div>
   );
 };
 

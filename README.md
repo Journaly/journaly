@@ -12,22 +12,22 @@ Welcome to the Journaly repository!
 
 ```
 |- FRONTEND
-|--- React.js
-|--- Next.js
-|--- Apollo
-|--- TypeScript
+   |- React.js
+   |- Next.js
+   |- Apollo
+   |- TypeScript
 |- BACKEND
-|--- Prisma
-|--- Nexus-Future
-|--- Express.js
-|--- TypeScript
+   |- Prisma
+   |-- Nexus-Future
+   |- Express.js
+   |- TypeScript
 |- DATABASE
-|--- PostgreSQL
+   |- PostgreSQL
 |- DOCKER
-|--- services
-|----- frontend
-|----- backend
-|----- db
+   |- services
+      |- frontend
+      |- backend
+      |- db
 ```
 
 ---

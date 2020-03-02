@@ -18,7 +18,7 @@ Welcome to the Journaly repository!
    |- TypeScript
 |- BACKEND
    |- Prisma
-   |-- Nexus-Future
+   |- Nexus-Future
    |- Express.js
    |- TypeScript
 |- DATABASE

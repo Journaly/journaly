@@ -3,6 +3,8 @@ import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { createEditor, Editor, Transforms, Text } from "slate";
 // Slate components and React plugin.
 import { Slate, Editable, withReact } from "slate-react";
+import { withHistory } from "slate-history";
+import isHotkey from "is-hotkey";
 
 /**
  * The Journaly Rich Text Editor

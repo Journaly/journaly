@@ -5,7 +5,8 @@ import { Slate, Editable, withReact, useSlate } from "slate-react";
 import { withHistory } from "slate-history";
 import isHotkey from "is-hotkey";
 
-import { Button } from "./Button";
+import Toolbar from "./Toolbar";
+import Button from "./Button";
 
 /**
  * The Journaly Rich Text Editor
@@ -50,22 +51,21 @@ const JournalyEditor = () => {
           value={value}
           onChange={value => setValue(value)}
         >
-          // TODO (robin-macpherson): refactor to component?
-          <div className="toolbar">
-            <MarkButton format="bold" icon="bold" />
-            <MarkButton format="italic" icon="italic" />
-            <MarkButton format="underline" icon="underlined" />
-            <MarkButton format="code" icon="code" />
+          <Toolbar>
+            <MarkButton format="bold" icon="B" />
+            <MarkButton format="italic" icon="I" />
+            <MarkButton format="underline" icon="U" />
+            <MarkButton format="code" icon="<>" />
             <BlockButton format="heading-one" icon="H1" />
             <BlockButton format="heading-two" icon="H2" />
             <BlockButton format="block-quote" icon="Quote" />
-            <BlockButton format="numbered-list" icon="format_list_numbered" />
-            <BlockButton format="bulleted-list" icon="format_list_bulleted" />
-          </div>
+            <BlockButton format="numbered-list" icon="OL" />
+            <BlockButton format="bulleted-list" icon="UL" />
+          </Toolbar>
           <Editable
             renderElement={renderElement}
             renderLeaf={renderLeaf}
-            placeholder="Enter some rich text…"
+            placeholder="It all started this morning when..."
             spellCheck
             autoFocus
             onKeyDown={event => {
@@ -209,37 +209,7 @@ const BlockButton = ({ format, icon }) => {
 const initialValue = [
   {
     type: "paragraph",
-    children: [
-      { text: "This is editable " },
-      { text: "rich", bold: true },
-      { text: " text, " },
-      { text: "much", italic: true },
-      { text: " better than a " },
-      { text: "<textarea>", code: true },
-      { text: "!" }
-    ]
-  },
-  {
-    type: "paragraph",
-    children: [
-      {
-        text:
-          "Since it's rich text, you can do things like turn a selection of text "
-      },
-      { text: "bold", bold: true },
-      {
-        text:
-          ", or add a semantically rendered block quote in the middle of the page, like this:"
-      }
-    ]
-  },
-  {
-    type: "block-quote",
-    children: [{ text: "A wise quote." }]
-  },
-  {
-    type: "paragraph",
-    children: [{ text: "Try it out for yourself!" }]
+    children: [{ text: "" }]
   }
 ];
 

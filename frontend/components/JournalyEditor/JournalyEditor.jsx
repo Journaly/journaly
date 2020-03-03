@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
-// The Slate editor factory.
-import { createEditor, Editor, Transforms, Text } from "slate";
+import React, { useMemo, useState, useCallback } from "react";
+import { createEditor, Editor, Transforms } from "slate";
 // Slate components and React plugin.
-import { Slate, Editable, withReact } from "slate-react";
+import { Slate, Editable, withReact, useSlate } from "slate-react";
 import { withHistory } from "slate-history";
 import isHotkey from "is-hotkey";
+
+import { Button } from "./Button";
 
 /**
  * The Journaly Rich Text Editor
@@ -26,93 +27,20 @@ import isHotkey from "is-hotkey";
  *      how to properly break up and render it.
  */
 
-// Custom set of helpers
-const helpers = {
-  isBoldMarkActive(editor) {
-    const [match] = Editor.nodes(editor, {
-      match: n => n.bold === true,
-      universal: true
-    });
-
-    return !!match;
-  },
-
-  isCodeBlockActive(editor) {
-    const [match] = Editor.nodes(editor, {
-      match: n => n.type === "code"
-    });
-
-    return !!match;
-  },
-
-  toggleBoldMark(editor) {
-    const isActive = helpers.isBoldMarkActive(editor);
-    Transforms.setNodes(
-      editor,
-      { bold: isActive ? null : true },
-      { match: n => Text.isText(n), split: true }
-    );
-  },
-
-  toggleCodeBlock(editor) {
-    const isActive = helpers.isCodeBlockActive(editor);
-    Transforms.setNodes(
-      editor,
-      { type: isActive ? null : "code" },
-      { match: n => Editor.isBlock(editor, n) }
-    );
-  }
+const HOTKEYS = {
+  "mod+b": "bold",
+  "mod+i": "italic",
+  "mod+u": "underline",
+  "mod+`": "code"
 };
 
-// A React component renderer for our code blocks
-const CodeElement = props => {
-  return (
-    <pre {...props.attributes}>
-      <code>{props.children}</code>
-    </pre>
-  );
-};
-
-const DefaultElement = props => {
-  return <p {...props.attributes}>{props.children}</p>;
-};
-
-// React component to render leaves with bold text.
-const Leaf = props => {
-  return (
-    <span
-      {...props.attributes}
-      style={{ fontWeight: props.leaf.bold ? "bold" : "normal" }}
-    >
-      {props.children}
-    </span>
-  );
-};
+const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
 const JournalyEditor = () => {
-  const editor = useMemo(() => withReact(createEditor()), []);
-  const [value, setValue] = useState([
-    {
-      type: "paragraph",
-      children: [{ text: "It all started this morning..." }]
-    }
-  ]);
-
-  // Rendering function based on the element passed to `props`.
-  // Uses `useCallback` here to memoize the function for subsequent renders.
-  const renderElement = useCallback(props => {
-    switch (props.element.type) {
-      case "code":
-        return <CodeElement {...props} />;
-      default:
-        return <DefaultElement {...props} />;
-    }
-  }, []);
-
-  // Define a leaf rendering function that is memoized with `useCallback`.
-  const renderLeaf = useCallback(props => {
-    return <Leaf {...props} />;
-  }, []);
+  const [value, setValue] = useState(initialValue);
+  const renderElement = useCallback(props => <Element {...props} />, []);
+  const renderLeaf = useCallback(props => <Leaf {...props} />, []);
+  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   return (
     <div className="editor-wrapper">
@@ -122,44 +50,30 @@ const JournalyEditor = () => {
           value={value}
           onChange={value => setValue(value)}
         >
-          <div>
-            <button
-              onMouseDown={event => {
-                event.preventDefault();
-                helpers.toggleBoldMark(editor);
-              }}
-            >
-              Bold
-            </button>
-            <button
-              onMouseDown={event => {
-                event.preventDefault();
-                helpers.toggleCodeBlock(editor);
-              }}
-            >
-              Code Block
-            </button>
+          // TODO (robin-macpherson): refactor to component?
+          <div className="toolbar">
+            <MarkButton format="bold" icon="bold" />
+            <MarkButton format="italic" icon="italic" />
+            <MarkButton format="underline" icon="underlined" />
+            <MarkButton format="code" icon="code" />
+            <BlockButton format="heading-one" icon="H1" />
+            <BlockButton format="heading-two" icon="H2" />
+            <BlockButton format="block-quote" icon="Quote" />
+            <BlockButton format="numbered-list" icon="format_list_numbered" />
+            <BlockButton format="bulleted-list" icon="format_list_bulleted" />
           </div>
           <Editable
             renderElement={renderElement}
             renderLeaf={renderLeaf}
+            placeholder="Enter some rich text…"
+            spellCheck
+            autoFocus
             onKeyDown={event => {
-              if (!event.ctrlKey) {
-                return;
-              }
-
-              switch (event.key) {
-                case "`": {
+              for (const hotkey in HOTKEYS) {
+                if (isHotkey(hotkey, event)) {
                   event.preventDefault();
-                  helpers.toggleCodeBlock(editor);
-                  break;
-                }
-
-                // When "B" is pressed, bold the text in the selection.
-                case "b": {
-                  event.preventDefault();
-                  helpers.toggleBoldMark(editor);
-                  break;
+                  const mark = HOTKEYS[hotkey];
+                  toggleMark(editor, mark);
                 }
               }
             }}
@@ -180,5 +94,153 @@ const JournalyEditor = () => {
     </div>
   );
 };
+
+const toggleBlock = (editor, format) => {
+  const isActive = isBlockActive(editor, format);
+  const isList = LIST_TYPES.includes(format);
+
+  Transforms.unwrapNodes(editor, {
+    match: n => LIST_TYPES.includes(n.type),
+    split: true
+  });
+
+  Transforms.setNodes(editor, {
+    type: isActive ? "paragraph" : isList ? "list-item" : format
+  });
+
+  if (!isActive && isList) {
+    const block = { type: format, children: [] };
+    Transforms.wrapNodes(editor, block);
+  }
+};
+
+const toggleMark = (editor, format) => {
+  const isActive = isMarkActive(editor, format);
+
+  if (isActive) {
+    Editor.removeMark(editor, format);
+  } else {
+    Editor.addMark(editor, format, true);
+  }
+};
+
+const isBlockActive = (editor, format) => {
+  const [match] = Editor.nodes(editor, {
+    match: n => n.type === format
+  });
+
+  return !!match;
+};
+
+const isMarkActive = (editor, format) => {
+  const marks = Editor.marks(editor);
+  return marks ? marks[format] === true : false;
+};
+
+const Element = ({ attributes, children, element }) => {
+  switch (element.type) {
+    case "block-quote":
+      return <blockquote {...attributes}>{children}</blockquote>;
+    case "bulleted-list":
+      return <ul {...attributes}>{children}</ul>;
+    case "heading-one":
+      return <h1 {...attributes}>{children}</h1>;
+    case "heading-two":
+      return <h2 {...attributes}>{children}</h2>;
+    case "list-item":
+      return <li {...attributes}>{children}</li>;
+    case "numbered-list":
+      return <ol {...attributes}>{children}</ol>;
+    default:
+      return <p {...attributes}>{children}</p>;
+  }
+};
+
+const Leaf = ({ attributes, children, leaf }) => {
+  if (leaf.bold) {
+    children = <strong>{children}</strong>;
+  }
+
+  if (leaf.code) {
+    children = <code>{children}</code>;
+  }
+
+  if (leaf.italic) {
+    children = <em>{children}</em>;
+  }
+
+  if (leaf.underline) {
+    children = <u>{children}</u>;
+  }
+
+  return <span {...attributes}>{children}</span>;
+};
+
+const MarkButton = ({ format, icon }) => {
+  const editor = useSlate();
+  return (
+    <Button
+      active={isMarkActive(editor, format)}
+      onMouseDown={event => {
+        event.preventDefault();
+        toggleMark(editor, format);
+      }}
+    >
+      <p>{icon}</p>
+    </Button>
+  );
+};
+
+const BlockButton = ({ format, icon }) => {
+  const editor = useSlate();
+  return (
+    <Button
+      active={isBlockActive(editor, format)}
+      onMouseDown={event => {
+        event.preventDefault();
+        toggleBlock(editor, format);
+      }}
+    >
+      <p>{icon}</p>
+    </Button>
+  );
+};
+
+const initialValue = [
+  {
+    type: "paragraph",
+    children: [
+      { text: "This is editable " },
+      { text: "rich", bold: true },
+      { text: " text, " },
+      { text: "much", italic: true },
+      { text: " better than a " },
+      { text: "<textarea>", code: true },
+      { text: "!" }
+    ]
+  },
+  {
+    type: "paragraph",
+    children: [
+      {
+        text:
+          "Since it's rich text, you can do things like turn a selection of text "
+      },
+      { text: "bold", bold: true },
+      {
+        text:
+          ", or add a semantically rendered block quote in the middle of the page, like this:"
+      }
+    ]
+  },
+  {
+    type: "block-quote",
+    children: [{ text: "A wise quote." }]
+  },
+  {
+    type: "paragraph",
+    children: [{ text: "Try it out for yourself!" }]
+  }
+];
 
 export default JournalyEditor;

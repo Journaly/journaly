@@ -15,11 +15,9 @@ const ReasonCard = ({ image, reasonNumber }) => (
     <img src={image} />
     <p>{reasonTexts[reasonNumber]}</p>
     <style jsx>{`
-      .reason-card {
-        display: flex;
-      }
-
       img {
+        width: 320px;
+        height: 300px;
         border-radius: 5px;
         box-shadow: 0px 8px 10px #00000029;
         object-fit: cover;
@@ -65,11 +63,12 @@ const HomeSection = ({ sectionHeading, children, grey = false, style = {} }) => 
         {children}
       </div>
       <style jsx>{`
-        ${{...style}};
-        width: 100%;
-        ${grey && `background-color: ${lightGrey};`}
+        .home-section {
+          width: 100%;
+          ${grey && `background-color: ${lightGrey};`}
+        }
       
-        div {
+        .home-section > div {
           margin: 0 auto;
           max-width: ${width.desktopHD}px;
           padding: 30px 20px;
@@ -78,19 +77,6 @@ const HomeSection = ({ sectionHeading, children, grey = false, style = {} }) => 
         h1 {
           margin-bottom: 50px;
           text-align: center;
-        }
-      
-        .reasons-container {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px, auto));
-          grid-gap: 30px;
-          justify-content: space-evenly;
-          counter-reset: reason;
-        }
-        @media (min-width: 1040px) {
-          .reasons-container {
-            padding: 0 30px;
-          }
         }
       
         .j-video {
@@ -109,8 +95,9 @@ const HomeSection = ({ sectionHeading, children, grey = false, style = {} }) => 
 }
 
 const HomePage: NextPage = () => {
-  const data = ['', '', '']
-  // fixed(width: 320, height: 300)
+  const imagePath = 'images/home'
+  const imageUrls = ['hand-writing.jpg', 'hands-typing.jpg', 'typewriter.jpg']
+
   return (
     <LandingPageLayout>
       <div className="home-styles">
@@ -122,21 +109,23 @@ const HomePage: NextPage = () => {
 
           <SignupForm />
         </div>
+
         <HomeSection
           sectionHeading="Three Reasons To Use Journaly"
           style={{ height: '400px' }}
           grey
         >
           <div className="reasons-container">
-            {data.map((image, index) => (
+            {imageUrls.map((url, i) => (
               <ReasonCard
-                key={index}
-                image={image}
-                reasonNumber={index}
+                key={i}
+                image={`${imagePath}/${url}`}
+                reasonNumber={i}
               />
             ))}
           </div>
         </HomeSection>
+
         <HomeSection
           sectionHeading="A Delightful Writing Experience"
         >
@@ -151,6 +140,7 @@ const HomePage: NextPage = () => {
           >
           </iframe>
         </HomeSection>
+
         <HomeSection
           sectionHeading="What Journalers are saying"
           grey
@@ -159,12 +149,16 @@ const HomePage: NextPage = () => {
         </HomeSection>
       </div>
       <style jsx>{`
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        .home-styles {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
         @media screen and (min-width: 750px) {
-          display: block;
+          .home-styles {
+            display: block;
+          }
         }
       
         .home-section-top {
@@ -198,6 +192,19 @@ const HomePage: NextPage = () => {
         @media (min-width: 1040px) {
           .home-section-top h1 {
             margin-right: 136px;
+          }
+        }
+
+        .reasons-container {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(320px, auto));
+          grid-gap: 30px;
+          justify-content: space-evenly;
+          counter-reset: reason;
+        }
+        @media (min-width: 1040px) {
+          .reasons-container {
+            padding: 0 30px;
           }
         }
       `}</style>

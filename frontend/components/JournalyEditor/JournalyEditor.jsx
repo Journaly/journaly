@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useCallback } from "react";
 import { createEditor, Editor, Transforms } from "slate";
-// Slate components and React plugin.
 import { Slate, Editable, withReact, useSlate } from "slate-react";
 import { withHistory } from "slate-history";
 import isHotkey from "is-hotkey";
@@ -13,19 +12,6 @@ import Button from "./Button";
  *   Uses the Slate library to build a delightgul
  *   rich text editing experience that allows users
  *   to craft & format beautiful posts themselves.
- *
- * 1. `editor` @object
- * 2. State for the editor
- * 3. <Slate> context provider.
- *    - This keeps track of the editor, its plugins,
- *      value, selection, and any changes that occur.
- *    - It MUST be rendered above any <Editable> components.
- *    - It can provide the editor state to other components
- *      using the `useSlate` hook.
- * 4. Leaf
- *    - For every format you add (bold, italic, ...)
- *      we need to define a <Leaf> component to tell Slate
- *      how to properly break up and render it.
  */
 
 const HOTKEYS = {
@@ -81,7 +67,7 @@ const JournalyEditor = () => {
       </div>
       <style jsx>{`
         .editor-wrapper {
-          padding: 50px;
+          padding: 20px 50px;
         }
         .editor-container {
           padding: 0 25px;

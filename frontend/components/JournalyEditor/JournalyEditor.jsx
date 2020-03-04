@@ -52,15 +52,14 @@ const JournalyEditor = () => {
           onChange={value => setValue(value)}
         >
           <Toolbar>
-            <MarkButton format="bold" icon="B" />
-            <MarkButton format="italic" icon="I" />
-            <MarkButton format="underline" icon="U" />
-            <MarkButton format="code" icon="<>" />
-            <BlockButton format="heading-one" icon="H1" />
-            <BlockButton format="heading-two" icon="H2" />
-            <BlockButton format="block-quote" icon="Quote" />
-            <BlockButton format="numbered-list" icon="OL" />
-            <BlockButton format="bulleted-list" icon="UL" />
+            <MarkButton format="bold" icon="format_bold" />
+            <MarkButton format="italic" icon="format_italic" />
+            <MarkButton format="underline" icon="format_underlined" />
+            <MarkButton format="code" icon="format_code" />
+            <BlockButton format="heading-two" icon="format_title" />
+            <BlockButton format="block-quote" icon="format_quote" />
+            <BlockButton format="numbered-list" icon="format_list_numbered" />
+            <BlockButton format="bulleted-list" icon="format_list_bulleted" />
           </Toolbar>
           <Editable
             renderElement={renderElement}
@@ -143,8 +142,6 @@ const Element = ({ attributes, children, element }) => {
       return <blockquote {...attributes}>{children}</blockquote>;
     case "bulleted-list":
       return <ul {...attributes}>{children}</ul>;
-    case "heading-one":
-      return <h1 {...attributes}>{children}</h1>;
     case "heading-two":
       return <h2 {...attributes}>{children}</h2>;
     case "list-item":
@@ -185,9 +182,9 @@ const MarkButton = ({ format, icon }) => {
         event.preventDefault();
         toggleMark(editor, format);
       }}
-    >
-      <p>{icon}</p>
-    </Button>
+      iconSrc={`/images/icons/journaly-editor/${icon}.svg`}
+      iconAlt={icon.replace(/_/g, " ")}
+    />
   );
 };
 
@@ -200,9 +197,9 @@ const BlockButton = ({ format, icon }) => {
         event.preventDefault();
         toggleBlock(editor, format);
       }}
-    >
-      <p>{icon}</p>
-    </Button>
+      iconSrc={`/images/icons/journaly-editor/${icon}.svg`}
+      iconAlt={icon.replace(/_/g, " ")}
+    />
   );
 };
 

@@ -3,7 +3,9 @@ const Toolbar = props => (
     {props.children}
     <style jsx>{`
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
+      padding: 5px 0;
+      border-bottom: 2px solid #eee;
     `}</style>
   </div>
 );

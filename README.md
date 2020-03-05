@@ -10,31 +10,24 @@ Welcome to the Journaly repository!
 
 ## Architecture
 
-#### Frontend
-
-- React
-- Next.js
-- Apollo
-- TypeScript
-
-#### Backend
-
-- Prisma
-- Nexus Future
-- Express
-- TypeScript
-
-#### Database
-
-- PostgreSQL
-
-#### DevOps
-
 ```
-|- Docker
-|-- frontend
-|-- backend
-|-- db
+|- FRONTEND
+   |- React.js
+   |- Next.js
+   |- Apollo
+   |- TypeScript
+|- BACKEND
+   |- Prisma
+   |- Nexus-Future
+   |- Express.js
+   |- TypeScript
+|- DATABASE
+   |- PostgreSQL
+|- DOCKER
+   |- services
+      |- frontend
+      |- backend
+      |- db
 ```
 
 ---

@@ -1,4 +1,11 @@
 import { schema } from 'nexus-future'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+
+// Time constants
+const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
+const ONE_HOUR_FROM_NOW = Date.now() + 3600000
+const WITHIN_ONE_HOUR = Date.now() - 3600000
 
 schema.objectType({
   name: 'User',
@@ -61,14 +68,22 @@ schema.mutationType({
         Email: schema.stringArg({ required: true }),
         Password: schema.stringArg({ required: true }),
       },
-      resolve: (parent, args, ctx) =>
-        ctx.db.user.create({
+      resolve: async (parent, args, ctx) => {
+        const Password = await bcrypt.hash(args.Password, 10)
+        const user = ctx.db.user.create({
           data: {
             Name: args.Name,
-            Email: args.Email,
-            Password: args.Password,
+            Email: args.Email.toLowerCase(),
+            Password,
           },
-        }),
+        })
+        const token = jwt.sign({ userId: user.Id }, process.env.APP_SECRET)
+        ctx.response.cookie('token', token, {
+          httpOnly: true,
+          maxAge: ONE_YEAR,
+        })
+        return user
+      },
     })
     t.field('createPost', {
       type: 'Post',

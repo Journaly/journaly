@@ -3,6 +3,8 @@ import cookieParser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
 import { server } from 'nexus-future'
 
+require('dotenv').config({ path: '.env ' })
+
 server.custom(({ express }) => {
   express.use(cookieParser())
   express.use((request, response, next) => {

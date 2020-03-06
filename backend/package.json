@@ -26,7 +26,12 @@
     }
   },
   "dependencies": {
+    "@types/cookie-parser": "^1.4.2",
+    "@types/jsonwebtoken": "^8.3.8",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
+    "jsonwebtoken": "^8.5.1",
     "nexus-future": "^0.9.0",
     "nexus-plugin-prisma": "^0.4.0"
   },

@@ -49,6 +49,24 @@ Not only do you now have the entire journaly app and all its 3 services running,
 
 BOOM! You now have some users, along with a wee selection of posts :)
 
+To marvel at the results, go to `http://localhost:4000` and try the following query:
+
+```
+query feed {
+  feed(Published: true) {
+    Id
+    Title
+    Body
+    Published
+    author {
+      Id
+      Name
+      Email
+    }
+  }
+}
+```
+
 5. To bring the app down, run `$ docker-compose stop`
 
 Next, check out [frontend](./frontend) or [backend](./backend) for detailed information on how to work across the app.

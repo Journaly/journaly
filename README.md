@@ -36,16 +36,18 @@ Welcome to the Journaly repository!
 
 1. Clone the repository!  
    `$ git clone git@github.com:Journaly/journaly.git`
-2. In your backend directory, locate your `.env.example` file and rename it to `.env` along with replacing the values in that file - **it's important to complete this step first**
-3. In the root of the project (`journaly/`), run `$ docker-compose up` - this should spin up the entire app for you, just like that!
+2. In your backend directory, locate your `.env.example` file and rename it to `.env`
+3. Run `npm ci` in both the `frontend` and `backend` directories
+4. In the root of the project (`journaly/`), run `$ docker-compose up -d` - this will spin up the DB and frontend for you -- just like that!
+5. Finally, you just need to run `npm run dev` from the backend directory
 
 Not only do you now have the entire journaly app and all its 3 services running, but you have a local PostgreSQL database instance running on your machine with persistant storage! :)
 
 4. Let's seed that baby DB!  
    `$ cd backend/`
-   `$ ts-node prisma/seed.ts`
+   `$ npm run seed`
 
-BOOM! You now have some users, along with a selection of posts :)
+BOOM! You now have some users, along with a wee selection of posts :)
 
 5. To bring the app down, run `$ docker-compose stop`
 

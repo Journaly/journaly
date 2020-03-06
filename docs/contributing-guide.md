@@ -25,3 +25,7 @@ When an issue created, it will automatically get added to the "To Do" column of 
 
 - PRs are automatically tagged based on which code you edit.
 - When you create a PR, please make sure to link it to an issue and it will automatically be moved to the "In Progress" column in the _Journaly Kanban_.
+
+## Milestones
+
+We use *Milestones* to keep track of our progress at a high level. These are simply collections of issues that work towards a common milestone or goal, such as our Beta release, first official product release, and subsequent releases and updates after that.

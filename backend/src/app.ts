@@ -6,6 +6,14 @@ import { server } from 'nexus-future'
 require('dotenv').config({ path: '.env ' })
 
 server.custom(({ express }) => {
+  express.use(
+    cors({
+      origin: process.env.FRONTEND_URL,
+      credentials: true,
+    }),
+  )
+
+  // console.log(express.request)
   express.use(cookieParser())
   express.use((request, response, next) => {
     const { token } = request.cookies
@@ -16,5 +24,4 @@ server.custom(({ express }) => {
     }
     next()
   })
-  // express.use(cors())
 })

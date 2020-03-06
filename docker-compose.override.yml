@@ -11,9 +11,9 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=robin
-      - POSTGRES_DB=journaly_db
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=journaly_db=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=password=${POSTGRES_PASSWORD}
     restart: always
   # backend:
   #   build:

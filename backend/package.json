@@ -13,7 +13,8 @@
     "dev": "nexus dev",
     "build": "nexus build",
     "prisma2": "prisma2",
-    "start": "node node_modules/.build"
+    "start": "node node_modules/.build",
+    "seed": "ts-node seed.ts"
   },
   "prettier": {
     "semi": false,

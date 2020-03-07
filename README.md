@@ -70,3 +70,8 @@ query feed {
 5. To bring the app down, run `$ docker-compose stop`
 
 Next, check out [frontend](./frontend) or [backend](./backend) for detailed information on how to work across the app.
+
+## Contributing To Journaly
+
+If you'd like to become a contributor -- awesome!
+Please read our [contributing guide](./docs/contributing-guide.md) to get started :)

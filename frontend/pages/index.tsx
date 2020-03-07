@@ -1,7 +1,7 @@
-import { NextPage } from "next"
-import LandingPageLayout from "../components/Layouts/LandingPageLayout"
-import SignupForm from '../components/SignupForm'
+import { NextPage } from 'next'
 import Testimonials from '../components/Testimonials'
+import SignupForm from '../components/SignupForm'
+import Nav from '../components/Site/Nav'
 import { width, lightGrey } from '../utils'
 
 const reasonTexts = [
@@ -22,7 +22,7 @@ const ReasonCard = ({ image, reasonNumber }) => (
         box-shadow: 0px 8px 10px #00000029;
         object-fit: cover;
       }
-    
+
       p {
         position: relative;
         width: 320px;
@@ -36,7 +36,7 @@ const ReasonCard = ({ image, reasonNumber }) => (
           text-align: left;
         }
       }
-    
+
       p::before {
         counter-increment: reason;
         content: '' counter(reason) '.';
@@ -47,7 +47,7 @@ const ReasonCard = ({ image, reasonNumber }) => (
         font-size: 40px;
       }
       @media (min-width: 960px) {
-        p {
+        p::before {
           top: 0;
         }
       }
@@ -67,18 +67,18 @@ const HomeSection = ({ sectionHeading, children, grey = false, style = {} }) => 
           width: 100%;
           ${grey && `background-color: ${lightGrey};`}
         }
-      
+
         .home-section > div {
           margin: 0 auto;
           max-width: ${width.desktopHD}px;
           padding: 30px 20px;
         }
-      
+
         h1 {
           margin-bottom: 50px;
           text-align: center;
         }
-      
+
         .j-video {
           display: block;
           margin: 0 auto;
@@ -99,55 +99,54 @@ const HomePage: NextPage = () => {
   const imageUrls = ['hand-writing.jpg', 'hands-typing.jpg', 'typewriter.jpg']
 
   return (
-    <LandingPageLayout>
-      <div className="home-styles">
-        <div className="home-section-top">
-          <h1>
-            Improve your language skills and connect with others through
-            journaling.
-          </h1>
+    <div className="home-styles">
+      <Nav />
+      <div className="home-section-top">
+        <h1>
+          Improve your language skills and connect with others through
+          journaling.
+        </h1>
 
-          <SignupForm />
-        </div>
-
-        <HomeSection
-          sectionHeading="Three Reasons To Use Journaly"
-          style={{ height: '400px' }}
-          grey
-        >
-          <div className="reasons-container">
-            {imageUrls.map((url, i) => (
-              <ReasonCard
-                key={i}
-                image={`${imagePath}/${url}`}
-                reasonNumber={i}
-              />
-            ))}
-          </div>
-        </HomeSection>
-
-        <HomeSection
-          sectionHeading="A Delightful Writing Experience"
-        >
-          <iframe
-            className="j-video"
-            width="560"
-            height="315"
-            src="https://www.youtube-nocookie.com/embed/QaOybEkd6XI"
-            frameBorder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          >
-          </iframe>
-        </HomeSection>
-
-        <HomeSection
-          sectionHeading="What Journalers are saying"
-          grey
-        >
-          <Testimonials />
-        </HomeSection>
+        <SignupForm />
       </div>
+
+      <HomeSection
+        sectionHeading="Three Reasons To Use Journaly"
+        style={{ height: '400px' }}
+        grey
+      >
+        <div className="reasons-container">
+          {imageUrls.map((url, i) => (
+            <ReasonCard
+              key={i}
+              image={`${imagePath}/${url}`}
+              reasonNumber={i}
+            />
+          ))}
+        </div>
+      </HomeSection>
+
+      <HomeSection
+        sectionHeading="A Delightful Writing Experience"
+      >
+        <iframe
+          className="j-video"
+          width="560"
+          height="315"
+          src="https://www.youtube-nocookie.com/embed/QaOybEkd6XI"
+          frameBorder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        >
+        </iframe>
+      </HomeSection>
+
+      <HomeSection
+        sectionHeading="What Journalers are saying"
+        grey
+      >
+        <Testimonials />
+      </HomeSection>
       <style jsx>{`
         .home-styles {
           display: flex;
@@ -160,7 +159,7 @@ const HomePage: NextPage = () => {
             display: block;
           }
         }
-      
+
         .home-section-top {
           display: flex;
           flex-direction: column;
@@ -169,7 +168,7 @@ const HomePage: NextPage = () => {
           margin: 0 auto;
           max-width: ${width.desktopHD}px;
         }
-        
+
         @media (min-width: 960px) {
           .home-section-top {
             flex-direction: row;
@@ -177,7 +176,7 @@ const HomePage: NextPage = () => {
             padding: 90px 20px;
           }
         }
-      
+
         .home-section-top h1 {
           margin-bottom: 30px;
           text-align: center;
@@ -208,7 +207,7 @@ const HomePage: NextPage = () => {
           }
         }
       `}</style>
-    </LandingPageLayout>
+    </div>
   )
 }
 

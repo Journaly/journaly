@@ -1,5 +1,7 @@
 export default () => {
   return (
-    <div>SignupForm</div>
+    <div>
+      <input type="text" placeholder="Sign up!" />
+    </div>
   )
 }

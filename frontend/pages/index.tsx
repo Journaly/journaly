@@ -181,6 +181,7 @@ const HomePage: NextPage = () => {
           margin-bottom: 30px;
           text-align: center;
         }
+
         @media (min-width: 960px) {
           .home-section-top h1 {
             margin-bottom: 0;
@@ -204,6 +205,18 @@ const HomePage: NextPage = () => {
         @media (min-width: 1040px) {
           .reasons-container {
             padding: 0 30px;
+          }
+        }
+
+        .j-video {
+          display: block;
+          margin: 0 auto;
+        }
+
+        @media screen and (max-width: 750px) {
+          .j-video {
+            width: 320px;
+            height: 180px;
           }
         }
       `}</style>

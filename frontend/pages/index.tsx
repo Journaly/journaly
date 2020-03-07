@@ -55,7 +55,7 @@ const ReasonCard = ({ image, reasonNumber }) => (
   </div>
 )
 
-const HomeSection = ({ sectionHeading, children, grey = false, style = {} }) => {
+const HomeSection = ({ sectionHeading, children, grey = false }) => {
   return (
     <section className="home-section">
       <div>
@@ -101,6 +101,7 @@ const HomePage: NextPage = () => {
   return (
     <div className="home-styles">
       <Nav />
+
       <div className="home-section-top">
         <h1>
           Improve your language skills and connect with others through
@@ -112,7 +113,6 @@ const HomePage: NextPage = () => {
 
       <HomeSection
         sectionHeading="Three Reasons To Use Journaly"
-        style={{ height: '400px' }}
         grey
       >
         <div className="reasons-container">
@@ -147,6 +147,7 @@ const HomePage: NextPage = () => {
       >
         <Testimonials />
       </HomeSection>
+
       <style jsx>{`
         .home-styles {
           display: flex;

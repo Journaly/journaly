@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
-import Testimonials from '../components/Testimonials'
-import SignupForm from '../components/SignupForm'
+import Testimonials from '../components/Site/Testimonials'
+import SignupForm from '../components/Site/SignupForm'
 import Nav from '../components/Site/Nav'
 import { width, lightGrey } from '../utils'
 

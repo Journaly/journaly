@@ -1,5 +1,5 @@
 import React from 'react'
-import { lightBlue } from '../../utils'
+import { lightBlue } from '../../../utils'
 
 const createListOfLanguages = (languages) => {
   if (languages.length === 1) return languages[0]
@@ -29,17 +29,17 @@ const Testimonial = ({ quote, speaks, writes, name, picture }) => {
           border-radius: 5px;
           box-shadow: 0px 8px 10px #00000029;
         }
-        
+
         @media screen and (min-width: 550px) {
           .testimonial {
             width: 370px;
           }
         }
-        
+
         .user-quote {
           position: relative;
         }
-        
+
         .user-quote::before {
           content: '“';
           position: absolute;
@@ -50,24 +50,24 @@ const Testimonial = ({ quote, speaks, writes, name, picture }) => {
           color: ${lightBlue};
           opacity: 0.19;
         }
-      
+
         .user-info-wrapper {
           display: flex;
           align-items: center;
           margin-top: 15px;
         }
-      
+
         img {
           width: 90px;
           height: 90px;
           margin-right: 15px;
           border-radius: 50%;
         }
-      
+
         .user-info {
           font-style: italic;
         }
-      
+
         .user-name {
           font-weight: bold;
           font-style: normal;

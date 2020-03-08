@@ -1,9 +1,14 @@
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
-import { server } from 'nexus-future'
+import { server, schema } from 'nexus-future'
+import { request } from 'express'
 
 require('dotenv').config({ path: '.env ' })
+
+schema.addToContext(request => ({
+  request,
+}))
 
 server.custom(({ express }) => {
   express.use(
@@ -13,7 +18,6 @@ server.custom(({ express }) => {
     }),
   )
 
-  // console.log(express.request)
   express.use(cookieParser())
   express.use((request, response, next) => {
     const { token } = request.cookies

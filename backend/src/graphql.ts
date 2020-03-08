@@ -70,7 +70,7 @@ schema.mutationType({
       },
       resolve: async (parent, args, ctx) => {
         const Password = await bcrypt.hash(args.Password, 10)
-        const user = ctx.db.user.create({
+        const user = await ctx.db.user.create({
           data: {
             Name: args.Name,
             Email: args.Email.toLowerCase(),

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import { server, schema } from 'nexus-future'
 import { request } from 'express'
 
-require('dotenv').config({ path: '.env ' })
+require('dotenv').config({ path: '../.env ' })
 
 schema.addToContext(request => ({
   request,

@@ -20,10 +20,6 @@ model User {
   UpdatedAt        DateTime @updatedAt
 }
 
-enum UserRole {
-  ADMIN MODERATOR FREE_USER PRO_USER
-}
-
 model Post {
   Id         String     @id @default(cuid())
   Title      String
@@ -39,15 +35,27 @@ model Post {
   comments   Comment[]
   ReadTime   Int
   tags       Tag[]
+  language   Language
+  location   Location
 }
 
-enum PostStatus {
-  DRAFT PUBLISHED
+model Location {
+  Id        String  @id @default(cuid())
+  Country   String?
+  City      String?
+  Longitude Float?
+  Latitude  Float?
+}
+
+model Topic {
+  Id    String @id @default(cuid())
+  Name  String
+  posts Post[]
 }
 
 model Tag {
   Id    String @id @default(cuid())
-  label String
+  Name  String
   posts Post[]
 }
 
@@ -66,7 +74,23 @@ model Comment {
 }
 
 model Profile {
-  Id   String @id @default(cuid())
-  user User
-  bio  String
+  Id     String @id @default(cuid())
+  handle String @unique
+  user   User
+  bio    String
+}
+
+model Language {
+  Id      String  @id @default(cuid())
+  posts   Post[]
+  Name    String
+  Dialect String?
+}
+
+enum UserRole {
+  ADMIN MODERATOR FREE_USER PRO_USER
+}
+
+enum PostStatus {
+  DRAFT PUBLISHED
 }

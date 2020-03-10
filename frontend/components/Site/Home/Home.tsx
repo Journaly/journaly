@@ -1,10 +1,9 @@
-import { NextPage } from 'next'
 import TopSection from './TopSection'
 import ReasonsSection from './ReasonsSection'
 import VideoSection from './VideoSection'
 import TestimonialsSection from './TestimonialsSection'
 
-const HomePage: NextPage = () => {
+const Home = () => {
   return (
     <div>
       <TopSection />
@@ -15,4 +14,4 @@ const HomePage: NextPage = () => {
   )
 }
 
-export default HomePage
+export default Home

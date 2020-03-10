@@ -19,10 +19,10 @@
   "license": "ISC",
   "dependencies": {
     "is-hotkey": "^0.1.6",
-    "next": "^9.2.1",
+    "next": "^9.3.0",
     "nprogress": "^0.2.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
     "slate": "^0.57.1",
     "slate-history": "^0.57.1",
     "slate-react": "^0.57.1"

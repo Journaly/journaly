@@ -18,6 +18,7 @@ model User {
   posts            Post[]
   CreatedAt        DateTime @default(now())
   UpdatedAt        DateTime @updatedAt
+  profile          Profile
 }
 
 model Post {
@@ -61,23 +62,34 @@ model Tag {
 
 model Like {
   Id     String @id @default(cuid())
+  Body   String
   author User
-  body   String
 }
 
 model Comment {
   Id       String @id @default(cuid())
+  Body     String
+  Position String
   author   User
-  body     String
   post     Post
-  position String
 }
 
 model Profile {
-  Id     String @id @default(cuid())
-  handle String @unique
-  user   User
-  bio    String
+  Id              String     @id @default(cuid())
+  Handle          String     @unique
+  Bio             String
+  user            User
+  SocialMedia     String[]
+  location        Location
+  interests       Interest[]
+  languagesNative Language[] @relation("relationA")
+  // languagesLearning Language[]
+}
+
+model Interest {
+  Id    String @id @default(cuid())
+  Name  String
+  posts Post[]
 }
 
 model Language {

@@ -1,4 +1,5 @@
 import React from 'react'
+import HomeSection from './HomeSection'
 import Testimonial from './Testimonial'
 
 const data = [
@@ -25,30 +26,33 @@ const data = [
   },
 ]
 
-const Testimonials = () => {
+const TestimonialsSection = () => {
   const testimonials = data.map((testimonial, i) => {
     return (
       <Testimonial {...testimonial} key={i} />
     )
   })
   return (
-    <div className="testimonials">
-      {testimonials}
-      <style jsx>{`
-        .testimonials {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px ,auto));
-          grid-gap: 30px;
-          justify-content: space-evenly;
-        }
-        @media screen and (min-width: 550px) {
+    <HomeSection sectionHeading="What Journalers are saying" grey>
+      <div className="testimonials">
+        {testimonials}
+
+        <style jsx>{`
           .testimonials {
-            grid-template-columns: repeat(auto-fill, minmax(370px ,auto));
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px ,auto));
+            grid-gap: 30px;
+            justify-content: space-evenly;
           }
-        }
-      `}</style>
-    </div>
+          @media screen and (min-width: 550px) {
+            .testimonials {
+              grid-template-columns: repeat(auto-fill, minmax(370px ,auto));
+            }
+          }
+        `}</style>
+      </div>
+    </HomeSection>
   )
 }
 
-export default Testimonials
+export default TestimonialsSection

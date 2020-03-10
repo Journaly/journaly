@@ -3,6 +3,10 @@ frontend:
 
 backend:
   - backend/**/*
+  
+database:
+  - backend/prisma/schema.prisma
+  - backend/prisma/migrations/**/*
 
 devops:
   - frontend/Dockerfile

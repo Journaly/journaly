@@ -7,10 +7,6 @@ generator prisma_client {
   provider = "prisma-client-js"
 }
 
-enum Status {
-  ADMIN MODERATOR FREE_USER PRO_USER
-}
-
 model User {
   Id               String   @id @default(cuid())
   Name             String
@@ -18,20 +14,59 @@ model User {
   Password         String
   ResetToken       String?
   ResetTokenExpiry Float?
-  status           Status[]
+  userRole         UserRole @default(FREE_USER)
   posts            Post[]
   CreatedAt        DateTime @default(now())
   UpdatedAt        DateTime @updatedAt
 }
 
+enum UserRole {
+  ADMIN MODERATOR FREE_USER PRO_USER
+}
+
 model Post {
-  Id         String   @id @default(cuid())
+  Id         String     @id @default(cuid())
   Title      String
   Body       String
-  Published  Boolean
+  status     PostStatus @default(DRAFT)
   Image      String?
   LargeImage String?
-  CreatedAt  DateTime @default(now())
-  UpdatedAt  DateTime @updatedAt
+  CreatedAt  DateTime   @default(now())
+  UpdatedAt  DateTime   @updatedAt
   author     User
+  ReadCount  Int        @default(0)
+  likes      Like[]
+  comments   Comment[]
+  ReadTime   Int
+  tags       Tag[]
+}
+
+enum PostStatus {
+  DRAFT PUBLISHED
+}
+
+model Tag {
+  Id    String @id @default(cuid())
+  label String
+  posts Post[]
+}
+
+model Like {
+  Id     String @id @default(cuid())
+  author User
+  body   String
+}
+
+model Comment {
+  Id       String @id @default(cuid())
+  author   User
+  body     String
+  post     Post
+  location String
+}
+
+model Profile {
+  Id   String @id @default(cuid())
+  user User
+  bio  String
 }

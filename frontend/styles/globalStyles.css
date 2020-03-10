@@ -46,3 +46,11 @@ a {
   text-decoration: none;
   color: black;
 }
+
+.j-link {
+  color: #4391C9;
+}
+
+.j-link:hover {
+  text-decoration: underline;
+}

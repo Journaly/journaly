@@ -8,17 +8,27 @@ generator prisma_client {
 }
 
 model User {
-  Id               String   @id @default(cuid())
-  Name             String
-  Email            String   @unique
-  Password         String
-  ResetToken       String?
-  ResetTokenExpiry Float?
-  userRole         UserRole @default(FREE_USER)
-  posts            Post[]
-  CreatedAt        DateTime @default(now())
-  UpdatedAt        DateTime @updatedAt
-  profile          Profile
+  Id                String        @id @default(cuid())
+  Name              String
+  Email             String        @unique
+  Password          String
+  ResetToken        String?
+  ResetTokenExpiry  Float?
+  userRole          UserRole      @default(FREE_USER)
+  CreatedAt         DateTime      @default(now())
+  UpdatedAt         DateTime      @updatedAt
+  Handle            String        @unique
+  Bio               String
+  SocialMedia       SocialMedia[]
+  interests         Topic[]
+  location          Location?
+  languagesNative   Language[]    @relation("LanguageToNative")
+  languagesLearning Language[]    @relation("LanguageToLearner")
+}
+
+model SocialMedia {
+  Id       String              @id @default(cuid())
+  Platform SocialMediaPlatform
 }
 
 model Post {
@@ -32,20 +42,20 @@ model Post {
   UpdatedAt  DateTime   @updatedAt
   author     User
   ReadCount  Int        @default(0)
+  ReadTime   Int
   likes      Like[]
   comments   Comment[]
-  ReadTime   Int
   tags       Tag[]
+  topic      Topic[]
   language   Language
-  location   Location
+  Longitude  Float?
+  Latitude   Float?
 }
 
 model Location {
-  Id        String  @id @default(cuid())
-  Country   String?
-  City      String?
-  Longitude Float?
-  Latitude  Float?
+  Id      String @id @default(cuid())
+  Country String
+  City    String
 }
 
 model Topic {
@@ -61,29 +71,21 @@ model Tag {
 }
 
 model Like {
-  Id     String @id @default(cuid())
-  Body   String
-  author User
+  Id        String   @id @default(cuid())
+  CreatedAt DateTime @default(now())
+  UpdatedAt DateTime @updatedAt
+  author    User
+  post      Post
 }
 
 model Comment {
-  Id       String @id @default(cuid())
-  Body     String
-  Position String
-  author   User
-  post     Post
-}
-
-model Profile {
-  Id              String     @id @default(cuid())
-  Handle          String     @unique
-  Bio             String
-  user            User
-  SocialMedia     String[]
-  location        Location
-  interests       Interest[]
-  languagesNative Language[] @relation("relationA")
-  // languagesLearning Language[]
+  Id        String   @id @default(cuid())
+  CreatedAt DateTime @default(now())
+  UpdatedAt DateTime @updatedAt
+  Body      String
+  Position  String
+  author    User
+  post      Post
 }
 
 model Interest {
@@ -93,10 +95,12 @@ model Interest {
 }
 
 model Language {
-  Id      String  @id @default(cuid())
-  posts   Post[]
-  Name    String
-  Dialect String?
+  Id            String  @id @default(cuid())
+  posts         Post[]
+  Name          String
+  Dialect       String?
+  nativeUsers   User    @relation("LanguageToNative")
+  learningUsers User    @relation("LanguageToLearner")
 }
 
 enum UserRole {
@@ -105,4 +109,8 @@ enum UserRole {
 
 enum PostStatus {
   DRAFT PUBLISHED
+}
+
+enum SocialMediaPlatform {
+  FACEBOOK YOUTUBE INSTAGRAM LINKEDIN
 }

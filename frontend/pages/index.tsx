@@ -1,16 +1,11 @@
-import { NextPage } from "next";
-import LandingPageLayout from "../components/Layouts/LandingPageLayout";
+import { NextPage } from 'next'
+import LandingPageLayout from '../components/Layouts/LandingPageLayout'
+import Home from '../components/Site/Home'
 
 const HomePage: NextPage = () => (
   <LandingPageLayout>
-    <h1>Journaly is coming...</h1>
-    <style jsx>{`
-      h1 {
-        margin: 50px auto;
-        text-align: center;
-      }
-    `}</style>
+    <Home />
   </LandingPageLayout>
-);
+)
 
-export default HomePage;
+export default HomePage

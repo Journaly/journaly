@@ -9,7 +9,7 @@ const navItems = [
   { name: "Sign up", path: "/signup" }
 ];
 
-const Nav = props => (
+const Nav = () => (
   <div>
     <div className="header-container">
       <Logo />

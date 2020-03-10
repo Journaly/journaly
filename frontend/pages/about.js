@@ -1,7 +1,5 @@
-import LandingPageLayout from "../components/Layouts/LandingPageLayout";
-
 const About = () => (
-  <LandingPageLayout>
+  <div>
     <div className="container">
       <h1>About!</h1>
     </div>
@@ -12,7 +10,7 @@ const About = () => (
         flex-direction: row;
       }
     `}</style>
-  </LandingPageLayout>
+  </div>
 );
 
 export default About;

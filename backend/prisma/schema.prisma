@@ -18,8 +18,8 @@ model User {
   CreatedAt         DateTime      @default(now())
   UpdatedAt         DateTime      @updatedAt
   Handle            String        @unique
-  Bio               String
-  SocialMedia       SocialMedia[]
+  Bio               String?
+  socialMedia       SocialMedia[]
   interests         Topic[]
   location          Location?
   languagesNative   Language[]    @relation("LanguageToNative")
@@ -28,7 +28,8 @@ model User {
 
 model SocialMedia {
   Id       String              @id @default(cuid())
-  Platform SocialMediaPlatform
+  platform SocialMediaPlatform
+  url      String
 }
 
 model Post {
@@ -45,7 +46,6 @@ model Post {
   ReadTime   Int
   likes      Like[]
   comments   Comment[]
-  tags       Tag[]
   topic      Topic[]
   language   Language
   Longitude  Float?
@@ -59,12 +59,6 @@ model Location {
 }
 
 model Topic {
-  Id    String @id @default(cuid())
-  Name  String
-  posts Post[]
-}
-
-model Tag {
   Id    String @id @default(cuid())
   Name  String
   posts Post[]

@@ -7,7 +7,13 @@ import { request } from 'express'
 require('dotenv').config({ path: '../.env ' })
 
 schema.addToContext(request => ({
-  request,
+  response: request as Request & {
+    cookie: (
+      a: string,
+      token: string,
+      opts: { httpOnly: boolean; maxAge: number },
+    ) => void
+  },
 }))
 
 server.custom(({ express }) => {

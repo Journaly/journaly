@@ -1,23 +1,19 @@
-import HomeSection from './HomeSection'
+import HomeSection from "./HomeSection";
 
-const imagePath = 'images/home'
-const imageUrls = ['hand-writing.jpg', 'hands-typing.jpg', 'typewriter.jpg']
+const imagePath = "images/home";
+const imageUrls = ["hand-writing.jpg", "hands-typing.jpg", "typewriter.jpg"];
 const reasonTexts = [
-  'Writing is such a powerful tool for improving your language skills, but it takes effort and is best when you can get feedback. Journaly is a home for your writing and great feedback from fellow language learners!',
-  'There are many personal benefits to keeping a journal, and it is one of the most desired positive habits for many people. Journaly supercharges your language learning while helping you get all the benefits of keeping a journal!',
-  'Many sites help you find a language exchange partner by simply matching your language interests - but that’s not good enough for us. Journaly helps you find people who also share the same interests as you!',
-]
+  "Writing is such a powerful tool for improving your language skills, but it takes effort and is best when you can get feedback. Journaly is a home for your writing and great feedback from fellow language learners!",
+  "There are many personal benefits to keeping a journal, and it is one of the most desired positive habits for many people. Journaly supercharges your language learning while helping you get all the benefits of keeping a journal!",
+  "Many sites help you find a language exchange partner by simply matching your language interests - but that’s not good enough for us. Journaly helps you find people who also share the same interests as you!"
+];
 
 const ReasonsSection = () => {
   return (
     <HomeSection sectionHeading="Three Reasons To Use Journaly" grey>
       <div className="reasons-container">
         {imageUrls.map((url, i) => (
-          <ReasonCard
-            key={i}
-            image={`${imagePath}/${url}`}
-            reasonNumber={i}
-          />
+          <ReasonCard key={i} image={`${imagePath}/${url}`} reasonNumber={i} />
         ))}
       </div>
 
@@ -36,8 +32,8 @@ const ReasonsSection = () => {
         }
       `}</style>
     </HomeSection>
-  )
-}
+  );
+};
 
 const ReasonCard = ({ image, reasonNumber }) => (
   <div className="reason-card">
@@ -70,11 +66,11 @@ const ReasonCard = ({ image, reasonNumber }) => (
 
       p::before {
         counter-increment: reason;
-        content: '' counter(reason) '.';
+        content: "" counter(reason) ".";
         position: absolute;
         left: -35px;
         top: -10px;
-        font-family: 'Playfair Display', serif;
+        font-family: "Playfair Display", serif;
         font-size: 40px;
       }
       @media (min-width: 960px) {
@@ -84,6 +80,6 @@ const ReasonCard = ({ image, reasonNumber }) => (
       }
     `}</style>
   </div>
-)
+);
 
-export default ReasonsSection
+export default ReasonsSection;

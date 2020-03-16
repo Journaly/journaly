@@ -1,10 +1,9 @@
-import { NextPage } from 'next'
-import TopSection from './TopSection'
-import ReasonsSection from './ReasonsSection'
-import VideoSection from './VideoSection'
-import TestimonialsSection from './TestimonialsSection'
+import TopSection from "./TopSection";
+import ReasonsSection from "./ReasonsSection";
+import VideoSection from "./VideoSection";
+import TestimonialsSection from "./TestimonialsSection";
 
-const HomePage: NextPage = () => {
+const HomePage = () => {
   return (
     <div>
       <TopSection />
@@ -12,7 +11,7 @@ const HomePage: NextPage = () => {
       <VideoSection />
       <TestimonialsSection />
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

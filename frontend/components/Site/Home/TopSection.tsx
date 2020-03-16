@@ -1,11 +1,10 @@
-import SignupForm from '../SignupForm'
-import { width } from '../../../utils'
+import SignupForm from "../SignupForm";
+import { width } from "../../../utils";
 
 const TopSection = () => (
   <div className="home-section-top">
     <h1>
-      Improve your language skills and connect with others through
-      journaling.
+      Improve your language skills and connect with others through journaling.
     </h1>
 
     <SignupForm />
@@ -47,6 +46,6 @@ const TopSection = () => (
       }
     `}</style>
   </div>
-)
+);
 
-export default TopSection
+export default TopSection;

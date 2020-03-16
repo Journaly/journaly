@@ -1,9 +1,7 @@
-import HomeSection from './HomeSection'
+import HomeSection from "./HomeSection";
 
 const VideoSection = () => (
-  <HomeSection
-    sectionHeading="A Delightful Writing Experience"
-  >
+  <HomeSection sectionHeading="A Delightful Writing Experience">
     <iframe
       className="j-video"
       width="560"
@@ -12,8 +10,7 @@ const VideoSection = () => (
       frameBorder="0"
       allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
       allowFullScreen
-    >
-    </iframe>
+    ></iframe>
     <style jsx>{`
       .j-video {
         display: block;
@@ -28,6 +25,6 @@ const VideoSection = () => (
       }
     `}</style>
   </HomeSection>
-)
+);
 
-export default VideoSection
+export default VideoSection;

@@ -1,13 +1,13 @@
-import React from 'react'
-import { lightBlue } from '../../../utils'
+import React from "react";
+import { lightBlue } from "../../../utils";
 
-const createListOfLanguages = (languages) => {
-  if (languages.length === 1) return languages[0]
-  if (languages.length === 2) return `${languages[0]} and ${languages[1]}`
+const createListOfLanguages = languages => {
+  if (languages.length === 1) return languages[0];
+  if (languages.length === 2) return `${languages[0]} and ${languages[1]}`;
 
-  const allButLast = [...languages.slice(0, languages.length - 1)]
-  return `${allButLast.join(', ')}, and ${languages.slice(-1)[0]}`
-}
+  const allButLast = [...languages.slice(0, languages.length - 1)];
+  return `${allButLast.join(", ")}, and ${languages.slice(-1)[0]}`;
+};
 
 const Testimonial = ({ quote, speaks, writes, name, picture }) => {
   return (
@@ -41,11 +41,11 @@ const Testimonial = ({ quote, speaks, writes, name, picture }) => {
         }
 
         .user-quote::before {
-          content: '“';
+          content: "“";
           position: absolute;
           top: 10px;
           left: -22px;
-          font-family: 'Playfair Display', serif;
+          font-family: "Playfair Display", serif;
           font-size: 100px;
           color: ${lightBlue};
           opacity: 0.19;
@@ -74,7 +74,7 @@ const Testimonial = ({ quote, speaks, writes, name, picture }) => {
         }
       `}</style>
     </div>
-  )
-}
+  );
+};
 
-export default Testimonial
+export default Testimonial;

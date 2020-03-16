@@ -3,7 +3,7 @@ import ReasonsSection from "./ReasonsSection";
 import VideoSection from "./VideoSection";
 import TestimonialsSection from "./TestimonialsSection";
 
-const HomePage = () => {
+const Home = () => {
   return (
     <div>
       <TopSection />
@@ -14,4 +14,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Home;

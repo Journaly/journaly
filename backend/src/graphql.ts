@@ -68,7 +68,7 @@ schema.mutationType({
         Email: schema.stringArg({ required: true }),
         Password: schema.stringArg({ required: true }),
       },
-      resolve: async (parent, args, ctx) => {
+      resolve: async (parent, args, ctx: any) => {
         const Password = await bcrypt.hash(args.Password, 10)
         const user = await ctx.db.user.create({
           data: {
@@ -77,7 +77,7 @@ schema.mutationType({
             Password,
           },
         })
-        const token = jwt.sign({ userId: user.Id }, process.env.APP_SECRET)
+        const token = jwt.sign({ userId: user.Id }, process.env.APP_SECRET!)
         ctx.response.cookie('token', token, {
           httpOnly: true,
           maxAge: ONE_YEAR,

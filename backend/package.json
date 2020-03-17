@@ -14,7 +14,8 @@
     "build": "nexus build",
     "prisma2": "prisma2",
     "start": "node node_modules/.build",
-    "seed": "ts-node seed.ts"
+    "seed": "ts-node seed.ts",
+    "debug": "ndb -r ts-node/register node_modules/.bin/nexus dev"
   },
   "prettier": {
     "semi": false,

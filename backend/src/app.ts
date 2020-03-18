@@ -14,7 +14,7 @@ schema.addToContext((request: any) => ({
 server.custom(({ express }) => {
   express.use(
     cors({
-      origin: process.env.FRONTEND_URL,
+      origin: process.env.FRONTEND_URL!,
       credentials: true,
     }),
   )

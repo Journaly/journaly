@@ -46,6 +46,6 @@
     "husky": "^4.2.3",
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
-    "prisma2": "^2.0.0-preview023"
+    "prisma2": "^2.0.0-preview024"
   }
 }

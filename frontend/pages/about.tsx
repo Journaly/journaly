@@ -1,11 +1,11 @@
 import { NextPage } from "next";
 import LandingPageLayout from "../components/Layouts/LandingPageLayout";
-import Home from "../components/Site/Home";
+import About from "../components/Site/About";
 
-const HomePage: NextPage = () => (
+const AboutPage: NextPage = () => (
   <LandingPageLayout>
-    <Home />
+    <About />
   </LandingPageLayout>
 );
 
-export default HomePage;
+export default AboutPage;

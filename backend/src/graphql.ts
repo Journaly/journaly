@@ -6,7 +6,9 @@ schema.objectType({
     t.model.Id()
     t.model.Name()
     t.model.Email()
+    t.model.Handle()
     t.model.Password()
+    t.model.Bio()
     t.model.posts({
       pagination: false,
     })
@@ -20,7 +22,7 @@ schema.objectType({
     t.model.Title()
     t.model.Body()
     t.model.author()
-    t.model.Published()
+    t.model.status()
   },
 })
 
@@ -32,15 +34,8 @@ schema.queryType({
     }),
       t.list.field('feed', {
         type: 'Post',
-        args: {
-          Published: schema.booleanArg(),
-        },
         resolve: async (parent, args, ctx) => {
-          return ctx.db.post.findMany({
-            where: {
-              Published: args.Published,
-            },
-          })
+          return ctx.db.post.findMany({})
         },
       }),
       t.list.field('users', {
@@ -59,6 +54,7 @@ schema.mutationType({
       args: {
         Name: schema.stringArg({ required: true }),
         Email: schema.stringArg({ required: true }),
+        Handle: schema.stringArg({ required: true }),
         Password: schema.stringArg({ required: true }),
       },
       resolve: (parent, args, ctx) =>
@@ -66,6 +62,7 @@ schema.mutationType({
           data: {
             Name: args.Name,
             Email: args.Email,
+            Handle: args.Handle,
             Password: args.Password,
           },
         }),
@@ -75,7 +72,7 @@ schema.mutationType({
       args: {
         Title: schema.stringArg({ required: true }),
         Body: schema.stringArg({ required: true }),
-        Published: schema.booleanArg({ required: true }),
+        status: schema.arg(),
         authorEmail: schema.stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx) =>
@@ -88,7 +85,7 @@ schema.mutationType({
                 Email: 'ro@bin.com',
               },
             },
-            Published: args.Published,
+            status: args.status,
           },
         }),
     })

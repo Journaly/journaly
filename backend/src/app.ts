@@ -33,7 +33,6 @@ server.custom(({ express }) => {
     request.response = response
 
     if (token) {
-      console.log(token, process.env.APP_SECRET)
       const { userId } = jwt.verify(token, process.env.APP_SECRET!) as any
       request.userId = userId
     }

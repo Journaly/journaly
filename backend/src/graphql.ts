@@ -34,8 +34,15 @@ schema.queryType({
     }),
       t.list.field('feed', {
         type: 'Post',
+        args: {
+          status: schema.stringArg(),
+        },
         resolve: async (parent, args, ctx) => {
-          return ctx.db.post.findMany({})
+          return ctx.db.post.findMany({
+            where: {
+              status: args.status,
+            },
+          })
         },
       }),
       t.list.field('users', {
@@ -72,7 +79,7 @@ schema.mutationType({
       args: {
         Title: schema.stringArg({ required: true }),
         Body: schema.stringArg({ required: true }),
-        status: schema.arg(),
+        status: schema.stringArg({ required: true }),
         authorEmail: schema.stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx) =>
@@ -80,12 +87,12 @@ schema.mutationType({
           data: {
             Title: args.Title,
             Body: args.Title,
+            status: args.status,
             author: {
               connect: {
                 Email: 'ro@bin.com',
               },
             },
-            status: args.status,
           },
         }),
     })

@@ -9,14 +9,6 @@ require('dotenv').config({ path: '../.env ' })
 schema.addToContext((request: any) => ({
   request,
   response: request.response,
-  // type: request.res
-  // as any & {
-  //   cookie: (
-  //     a: string,
-  //     token: string,
-  //     opts: { httpOnly: boolean; maxAge: number },
-  //   ) => void
-  // },
 }))
 
 server.custom(({ express }) => {

@@ -16,9 +16,8 @@ schema.objectType({
     t.model.Handle()
     t.model.Password()
     t.model.Bio()
-    t.model.posts({
-      pagination: false,
-    })
+    t.model.userRole()
+    t.model.location()
   },
 })
 
@@ -30,6 +29,28 @@ schema.objectType({
     t.model.Body()
     t.model.author()
     t.model.status()
+    t.model.language({ type: 'Language' })
+  },
+})
+
+schema.objectType({
+  name: 'Location',
+  definition(t) {
+    t.model.Id()
+    t.model.Country()
+    t.model.City()
+  },
+})
+
+schema.objectType({
+  name: 'Language',
+  definition(t) {
+    t.model.Id()
+    t.model.Name()
+    t.model.posts()
+    t.model.Dialect()
+    t.model.nativeUsers()
+    t.model.learningUsers()
   },
 })
 
@@ -47,7 +68,7 @@ schema.queryType({
         resolve: async (parent, args, ctx) => {
           return ctx.db.post.findMany({
             where: {
-              status: args.status,
+              status: args.status as any,
             },
           })
         },
@@ -94,7 +115,7 @@ schema.mutationType({
       args: {
         Title: schema.stringArg({ required: true }),
         Body: schema.stringArg({ required: true }),
-        status: schema.stringArg({ required: true }),
+        status: schema.stringArg(),
         authorEmail: schema.stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx) =>
@@ -102,7 +123,7 @@ schema.mutationType({
           data: {
             Title: args.Title,
             Body: args.Title,
-            status: args.status,
+            status: args.status as any,
             author: {
               connect: {
                 Email: 'ro@bin.com',

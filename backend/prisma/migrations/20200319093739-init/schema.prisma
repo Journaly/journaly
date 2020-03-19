@@ -11,19 +11,19 @@ model User {
   Id                String        @id @default(cuid())
   Name              String
   Email             String        @unique
+  Handle            String        @unique
   Password          String
+  userRole          UserRole      @default(FREE_USER)
   ResetToken        String?
   ResetTokenExpiry  Float?
-  userRole          UserRole      @default(FREE_USER)
-  CreatedAt         DateTime      @default(now())
-  UpdatedAt         DateTime      @updatedAt
-  Handle            String        @unique
   Bio               String?
   socialMedia       SocialMedia[]
   interests         Topic[]
   location          Location?
   languagesNative   Language[]    @relation("LanguageToNative")
   languagesLearning Language[]    @relation("LanguageToLearner")
+  CreatedAt         DateTime      @default(now())
+  UpdatedAt         DateTime      @updatedAt
 }
 
 model SocialMedia {
@@ -43,11 +43,12 @@ model Post {
   UpdatedAt  DateTime   @updatedAt
   author     User
   ReadCount  Int        @default(0)
-  ReadTime   Int
+  ReadTime   Int        @default(1)
   likes      Like[]
   comments   Comment[]
   topic      Topic[]
-  language   Language
+  language   Language?
+  // TEMPORARY
   Longitude  Float?
   Latitude   Float?
 }
@@ -93,8 +94,8 @@ model Language {
   posts         Post[]
   Name          String
   Dialect       String?
-  nativeUsers   User    @relation("LanguageToNative")
-  learningUsers User    @relation("LanguageToLearner")
+  nativeUsers   User[]  @relation("LanguageToNative")
+  learningUsers User[]  @relation("LanguageToLearner")
 }
 
 enum UserRole {

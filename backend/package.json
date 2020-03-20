@@ -38,7 +38,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
-    "nexus-future": "^0.11.1",
+    "nexus-future": "^0.11.2",
     "nexus-plugin-prisma": "^0.4.4"
   },
   "devDependencies": {

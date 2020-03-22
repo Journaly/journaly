@@ -1,6 +1,6 @@
 import Nav from '../Site/Nav'
 
-const LandingPageLayout = props => (
+const LandingPageLayout = (props) => (
   <div>
     <Nav />
 

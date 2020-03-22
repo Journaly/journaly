@@ -1,4 +1,4 @@
-import { width, lightGrey } from "../../../utils";
+import { width, lightGrey } from '../../../utils'
 
 const HomeSection = ({ sectionHeading, grey = false, children }) => {
   return (
@@ -38,7 +38,7 @@ const HomeSection = ({ sectionHeading, grey = false, children }) => {
         }
       `}</style>
     </section>
-  );
-};
+  )
+}
 
-export default HomeSection;
+export default HomeSection

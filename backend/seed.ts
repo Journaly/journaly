@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 
 const db = new PrismaClient()
 
-main().catch(e => {
+main().catch((e) => {
   throw e
 })
 

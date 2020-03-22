@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { NextPage } from 'next'
 
 const MyFeedPage: NextPage = () => (
   <>
@@ -10,6 +10,6 @@ const MyFeedPage: NextPage = () => (
       }
     `}</style>
   </>
-);
+)
 
-export default MyFeedPage;
+export default MyFeedPage

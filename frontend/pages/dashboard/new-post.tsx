@@ -1,5 +1,5 @@
-import { NextPage } from "next";
-import JournalyEditor from "../../components/JournalyEditor";
+import { NextPage } from 'next'
+import JournalyEditor from '../../components/JournalyEditor'
 
 const NewPostPage: NextPage = () => (
   <>
@@ -12,6 +12,6 @@ const NewPostPage: NextPage = () => (
       }
     `}</style>
   </>
-);
+)
 
-export default NewPostPage;
+export default NewPostPage

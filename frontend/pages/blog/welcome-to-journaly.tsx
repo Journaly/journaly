@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { NextPage } from 'next'
 
 const HomePage: NextPage = () => (
   <div>
@@ -10,6 +10,6 @@ const HomePage: NextPage = () => (
       }
     `}</style>
   </div>
-);
+)
 
-export default HomePage;
+export default HomePage

@@ -1,4 +1,4 @@
-import HomeSection from "./HomeSection";
+import HomeSection from './HomeSection'
 
 const VideoSection = () => (
   <HomeSection sectionHeading="A Delightful Writing Experience">
@@ -25,6 +25,6 @@ const VideoSection = () => (
       }
     `}</style>
   </HomeSection>
-);
+)
 
-export default VideoSection;
+export default VideoSection

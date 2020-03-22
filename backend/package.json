@@ -9,7 +9,7 @@
   "author": "Journaly",
   "license": "ISC",
   "scripts": {
-    "format": "npx prettier --write './**/*.{ts,md}' '!./prisma/**/*.md'",
+    "format": "npx prettier --write './**/*.{ts,js,md}'",
     "dev": "nexus dev",
     "build": "nexus build",
     "prisma2": "prisma2",

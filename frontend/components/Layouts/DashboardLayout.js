@@ -1,7 +1,7 @@
 // import Header from '../Header'
 // import Footer from '../Footer'
 
-const DashboardLayout = props => (
+const DashboardLayout = (props) => (
   <div>
     {/* <Header /> */}
     {props.children}
@@ -12,6 +12,6 @@ const DashboardLayout = props => (
       padding: 0 2rem;
     `}</style>
   </div>
-);
+)
 
-export default DashboardLayout;
+export default DashboardLayout

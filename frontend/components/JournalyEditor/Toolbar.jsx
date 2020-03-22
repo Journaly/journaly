@@ -1,4 +1,4 @@
-const Toolbar = props => (
+const Toolbar = (props) => (
   <div>
     {props.children}
     <style jsx>{`
@@ -8,6 +8,6 @@ const Toolbar = props => (
       border-bottom: 2px solid #eee;
     `}</style>
   </div>
-);
+)
 
-export default Toolbar;
+export default Toolbar

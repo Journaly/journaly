@@ -1,7 +1,7 @@
-import TopSection from "./TopSection";
-import ReasonsSection from "./ReasonsSection";
-import VideoSection from "./VideoSection";
-import TestimonialsSection from "./TestimonialsSection";
+import TopSection from './TopSection'
+import ReasonsSection from './ReasonsSection'
+import VideoSection from './VideoSection'
+import TestimonialsSection from './TestimonialsSection'
 
 const Home = () => {
   return (
@@ -11,7 +11,7 @@ const Home = () => {
       <VideoSection />
       <TestimonialsSection />
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

@@ -1,10 +1,10 @@
-import { darkGrey } from "../../utils/colors";
+import { darkGrey } from '../../utils/colors'
 
 const Button = React.forwardRef(
   ({ active, reversed, iconSrc, iconAlt, ...props }, ref) => (
     <>
       <img
-        className={active ? "active" : ""}
+        className={active ? 'active' : ''}
         src={iconSrc}
         alt={iconAlt}
         ref={ref}
@@ -24,7 +24,7 @@ const Button = React.forwardRef(
         // }
       `}</style>
     </>
-  )
-);
+  ),
+)
 
-export default Button;
+export default Button

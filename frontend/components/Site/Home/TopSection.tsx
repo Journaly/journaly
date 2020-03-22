@@ -1,5 +1,5 @@
-import SignupForm from "../SignupForm";
-import { width } from "../../../utils";
+import SignupForm from '../SignupForm'
+import { width } from '../../../utils'
 
 const TopSection = () => (
   <div className="home-section-top">
@@ -46,6 +46,6 @@ const TopSection = () => (
       }
     `}</style>
   </div>
-);
+)
 
-export default TopSection;
+export default TopSection

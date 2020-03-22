@@ -28,4 +28,11 @@ When an issue created, it will automatically get added to the "To Do" column of 
 
 ## Milestones
 
-We use *Milestones* to keep track of our progress at a high level. These are simply collections of issues that work towards a common milestone or goal, such as our Beta release, first official product release, and subsequent releases and updates after that.
+We use _Milestones_ to keep track of our progress at a high level. These are simply collections of issues that work towards a common milestone or goal, such as our Beta release, first official product release, and subsequent releases and updates after that.
+
+## Coding Guidelines
+
+This repo uses `prettier` for formatting and `tslint` for linting TypeScript. Until precommit hooks are set up to auto format, we recommend using `prettier` on your code before submitting a PR.
+You can do this by running `npm run format`
+
+If you use VS Code, install [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [TSLint](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-tslint-plugin) extensions.

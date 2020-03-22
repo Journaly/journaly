@@ -15,5 +15,7 @@ Okay, you're ready to start debugging!
 
 1. Set a breakpoint by clicking in the margin on the left side of the line numbers in your editor, as shown in the screenshot:
 
+![Breakpoint Example](./screenshots/breakpoint-example.png)
+
 2. Now, with the app running, go back and click on "Start Debugging" again which will start up the debugging sidebar in VS Code.
 3. Simply perform whatever action you are debugging and when you hit that breakpoint, you'll be brought straight back to the editor where you can start inspecting values, stepping through, and anything else you need to debug the issue 😊

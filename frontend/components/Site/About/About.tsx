@@ -36,7 +36,7 @@ const About = () => {
       </p>
       <p>
         Check out{' '}
-        <Link href="/blog/welcome-to-journaly">
+        <Link href="/blog/introducing-journaly">
           <a className="j-link">our first blog post</a>
         </Link>{' '}
         for all the details!

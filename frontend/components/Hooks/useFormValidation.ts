@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
-const useFormValidation = (initialState: object) => {
+function useFormValidation(initialState: object) {
   const [values, setValues] = useState(initialState)
 
-  const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setValues({
       ...values,
       [e.target.name]: e.target.value,

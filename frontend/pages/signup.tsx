@@ -2,7 +2,7 @@ import { NextPage } from 'next'
 import SignUpForm from '../components/SignUpForm'
 import LandingPageLayout from '../components/Layouts/LandingPageLayout'
 
-const SignUpPage: NextPage = props => (
+const SignUpPage: NextPage = () => (
   <LandingPageLayout>
     <SignUpForm />
     <style jsx>{`
@@ -12,3 +12,5 @@ const SignUpPage: NextPage = props => (
     `}</style>
   </LandingPageLayout>
 )
+
+export default SignUpPage

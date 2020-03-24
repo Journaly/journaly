@@ -1,16 +1,12 @@
-import { useState } from 'react'
 import useFormValidation from '../Hooks/useFormValidation'
 
 const INITIAL_STATE = {
-  email: '' as string,
-  password: '' as string,
+  email: '',
+  password: '',
 }
 
-const SignupForm = () => {
-  const { handleChange, values: object } = useFormValidation(INITIAL_STATE)
-
-  // const [email, setEmail] = useState('')
-  // const [password, setPassword] = useState('')
+const SignupForm: React.FC = () => {
+  const { handleChange, values } = useFormValidation(INITIAL_STATE)
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -38,3 +34,5 @@ const SignupForm = () => {
     </div>
   )
 }
+
+export default SignupForm

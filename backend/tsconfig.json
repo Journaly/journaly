@@ -4,11 +4,15 @@
     "module": "commonjs",
     "lib": ["esnext"],
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
     // [1] nexus managed
     // "rootDir": "./src",
     // "outDir": "node_modules/.build",
-  }
+  },
+  "exclude": ["node_modules"]
   // [1] nexus managed
   // "include": "./src"
 }

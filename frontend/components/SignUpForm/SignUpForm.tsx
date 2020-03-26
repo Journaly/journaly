@@ -19,13 +19,13 @@ const SignupForm: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <input
           name="email"
-          // value={values.email}
+          value={values.email}
           placeholder="Your email address"
           onChange={handleChange}
         />
         <input
           name="password"
-          // value={values.password}
+          value={values.password}
           placeholder="A safe password"
           onChange={handleChange}
         />

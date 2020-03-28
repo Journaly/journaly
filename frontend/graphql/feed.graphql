@@ -1,5 +1,5 @@
-query feed($Published: Boolean!) {
-  feed(Published: $Published) {
+query feed {
+  feed(Published: true) {
     Id
     Title
     Body

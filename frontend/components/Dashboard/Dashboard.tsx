@@ -1,5 +1,4 @@
 import React from 'react'
-import { lightGrey } from '../../utils'
 import Nav from './Nav'
 
 const Dashboard = ({ children }) => {
@@ -14,7 +13,7 @@ const Dashboard = ({ children }) => {
           display: flex;
           flex-direction: column;
           width: 100%;
-          background-color: ${lightGrey};
+          background-color: white;
         }
       `}</style>
     </div>

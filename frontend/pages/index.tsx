@@ -2,15 +2,19 @@ import { NextPage } from 'next'
 import { withApollo } from '../lib/apollo'
 import LandingPageLayout from '../components/Layouts/LandingPageLayout'
 import Home from '../components/Site/Home'
+import { useFeedQuery } from '../generated/graphql'
+import Feed from '../components/Dashboard/Feed'
 
-import { gql, useQuery } from '@apollo/client'
+interface InitialProps {}
 
-// interface InitialProps {}
+interface Props extends InitialProps {}
 
-// interface Props extends InitialProps {}
-
-const HomePage: NextPage = () => {
-  const { loading, error, data } = useQuery(feedQuery)
+const HomePage: NextPage<Props, InitialProps> = () => {
+  const { loading, error, data } = useFeedQuery({
+    variables: {
+      published: true,
+    },
+  })
 
   if (loading) {
     return <p>Loading...</p>
@@ -20,13 +24,11 @@ const HomePage: NextPage = () => {
 
   const posts = data?.feed
 
-  console.log(data.feed)
-
   return (
     <LandingPageLayout>
       <Home />
       {posts.length > 0 ? (
-        posts.map(post => <p key={post.Id}>{post.Title}</p>)
+        <Feed posts={posts} />
       ) : (
         <p>Nothing to see here...</p>
       )}

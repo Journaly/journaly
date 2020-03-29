@@ -1,10 +1,7 @@
 import gql from 'graphql-tag'
-import * as React from 'react'
-import * as ApolloReactCommon from '@apollo/react-common'
-import * as ApolloReactComponents from '@apollo/react-components'
-import * as ApolloReactHoc from '@apollo/react-hoc'
+import * as ApolloReactCommon from '@apollo/client'
+import * as ApolloReactHooks from '@apollo/client'
 export type Maybe<T> = T | null
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -62,7 +59,9 @@ export type User = {
   posts: Array<Post>
 }
 
-export type FeedQueryVariables = {}
+export type FeedQueryVariables = {
+  published: Scalars['Boolean']
+}
 
 export type FeedQuery = { __typename?: 'Query' } & {
   feed?: Maybe<
@@ -77,9 +76,29 @@ export type FeedQuery = { __typename?: 'Query' } & {
   >
 }
 
+export type UsersQueryVariables = {}
+
+export type UsersQuery = { __typename?: 'Query' } & {
+  users?: Maybe<
+    Array<
+      { __typename?: 'User' } & Pick<
+        User,
+        'Id' | 'Name' | 'Email' | 'Password'
+      > & {
+          posts: Array<
+            { __typename?: 'Post' } & Pick<
+              Post,
+              'Id' | 'Title' | 'Body' | 'Published'
+            >
+          >
+        }
+    >
+  >
+}
+
 export const FeedDocument = gql`
-  query feed {
-    feed(Published: true) {
+  query feed($published: Boolean!) {
+    feed(Published: $published) {
       Id
       Title
       Body
@@ -92,42 +111,105 @@ export const FeedDocument = gql`
     }
   }
 `
-export type FeedComponentProps = Omit<
-  ApolloReactComponents.QueryComponentOptions<FeedQuery, FeedQueryVariables>,
-  'query'
->
 
-export const FeedComponent = (props: FeedComponentProps) => (
-  <ApolloReactComponents.Query<FeedQuery, FeedQueryVariables>
-    query={FeedDocument}
-    {...props}
-  />
-)
-
-export type FeedProps<TChildProps = {}> = ApolloReactHoc.DataProps<
-  FeedQuery,
-  FeedQueryVariables
-> &
-  TChildProps
-export function withFeed<TProps, TChildProps = {}>(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
+/**
+ * __useFeedQuery__
+ *
+ * To run a query within a React component, call `useFeedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFeedQuery({
+ *   variables: {
+ *      published: // value for 'published'
+ *   },
+ * });
+ */
+export function useFeedQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>
+) {
+  return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(
+    FeedDocument,
+    baseOptions
+  )
+}
+export function useFeedLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
     FeedQuery,
-    FeedQueryVariables,
-    FeedProps<TChildProps>
+    FeedQueryVariables
   >
 ) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    FeedQuery,
-    FeedQueryVariables,
-    FeedProps<TChildProps>
-  >(FeedDocument, {
-    alias: 'feed',
-    ...operationOptions,
-  })
+  return ApolloReactHooks.useLazyQuery<FeedQuery, FeedQueryVariables>(
+    FeedDocument,
+    baseOptions
+  )
 }
+export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
+export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
 export type FeedQueryResult = ApolloReactCommon.QueryResult<
   FeedQuery,
   FeedQueryVariables
+>
+export const UsersDocument = gql`
+  query users {
+    users {
+      Id
+      Name
+      Email
+      Password
+      posts {
+        Id
+        Title
+        Body
+        Published
+      }
+    }
+  }
+`
+
+/**
+ * __useUsersQuery__
+ *
+ * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUsersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    UsersQuery,
+    UsersQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<UsersQuery, UsersQueryVariables>(
+    UsersDocument,
+    baseOptions
+  )
+}
+export function useUsersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    UsersQuery,
+    UsersQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<UsersQuery, UsersQueryVariables>(
+    UsersDocument,
+    baseOptions
+  )
+}
+export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>
+export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>
+export type UsersQueryResult = ApolloReactCommon.QueryResult<
+  UsersQuery,
+  UsersQueryVariables
 >

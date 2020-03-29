@@ -20,7 +20,11 @@ const initialState: FormValues = {
 
 const SignupForm: React.FC = () => {
   const [values, setValues] = useState(initialState)
-  const [createUser, { loading, error }] = useCreateUserMutation()
+  const [createUser, { loading, error }] = useCreateUserMutation({
+    onCompleted: () => {
+      setValues(initialState)
+    },
+  })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues({
@@ -31,14 +35,15 @@ const SignupForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    createUser({
-      variables: {
-        Name: values.name,
-        Email: values.email,
-        Password: values.password,
-      },
-    })
-    setValues(initialState)
+    if (!loading) {
+      createUser({
+        variables: {
+          Name: values.name,
+          Email: values.email,
+          Password: values.password,
+        },
+      })
+    }
   }
 
   return (
@@ -71,7 +76,7 @@ const SignupForm: React.FC = () => {
         <label htmlFor="password">
           Password
           <input
-            type="text"
+            type="password"
             name="password"
             value={values.password}
             placeholder="A secure password"

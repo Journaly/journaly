@@ -1,9 +1,11 @@
 import { NextPage } from 'next'
 import { withApollo } from '../lib/apollo'
+
 import LandingPageLayout from '../components/Layouts/LandingPageLayout'
 import Home from '../components/Site/Home'
-import { useFeedQuery } from '../generated/graphql'
 import Feed from '../components/Dashboard/Feed'
+
+import { useFeedQuery } from '../generated/graphql'
 
 interface InitialProps {}
 

@@ -1,4 +1,5 @@
 import { NextPage } from 'next'
+import { withApollo } from '../lib/apollo'
 import SignUpForm from '../components/SignUpForm'
 import LandingPageLayout from '../components/Layouts/LandingPageLayout'
 
@@ -13,4 +14,4 @@ const SignUpPage: NextPage = () => (
   </LandingPageLayout>
 )
 
-export default SignUpPage
+export default withApollo(SignUpPage)

@@ -1,12 +1,13 @@
-interface Values {
+export interface IValues {
+  name?: string
   email?: string
   password?: string
 }
 
-interface Errors extends Values {}
+export interface IErrors extends IValues {}
 
-export default function validateAuth(values: Values): Errors {
-  let errors: Errors = {}
+export default function validateAuth(values: IValues): IErrors {
+  let errors: IErrors = {}
 
   // Email validation errors
   if (!values.email) {
@@ -20,6 +21,11 @@ export default function validateAuth(values: Values): Errors {
     errors.password = 'Password is required.'
   } else if (values.password.length < 6) {
     errors.password = 'Password must be at least 6 characters'
+  }
+
+  // Password validation errors
+  if (!values.name) {
+    errors.name = 'Name is required.'
   }
   return errors
 }

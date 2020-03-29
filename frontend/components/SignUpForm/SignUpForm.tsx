@@ -1,41 +1,44 @@
-import { useState } from 'react'
 import Link from 'next/link'
 
 import Error from '../Error'
+import { brandBlue } from '../../utils'
+import validateAuth, { IErrors } from '../../lib/validateAuth'
 
 import { useCreateUserMutation } from '../../generated/graphql'
-import { brandBlue } from '../../utils'
+import useFormValidation from '../Hooks/useFormValidation'
 
-interface FormValues {
+interface IFormValues {
   name: string
   email: string
   password: string
 }
 
-const initialState: FormValues = {
+const initialState: IFormValues = {
   name: '',
   email: '',
   password: '',
 }
 
 const SignupForm: React.FC = () => {
-  const [values, setValues] = useState(initialState)
+  const {
+    handleChange,
+    values,
+    handleValidate,
+    handleBlur,
+    errors,
+    setValues,
+  } = useFormValidation<IFormValues, IErrors>(initialState, validateAuth)
+
   const [createUser, { loading, error }] = useCreateUserMutation({
     onCompleted: () => {
       setValues(initialState)
     },
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    })
-  }
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!loading) {
+    handleValidate(e)
+    if (!loading && Object.keys(errors).length === 0) {
       createUser({
         variables: {
           Name: values.name,
@@ -53,6 +56,7 @@ const SignupForm: React.FC = () => {
         <Error error={error} />
         <label htmlFor="name">
           Name
+          <p>{errors?.name}</p>
           <input
             type="text"
             name="name"
@@ -60,10 +64,12 @@ const SignupForm: React.FC = () => {
             placeholder="Your name"
             autoComplete="on"
             onChange={handleChange}
+            onBlur={handleBlur}
           />
         </label>
         <label htmlFor="email">
           Email
+          <p>{errors?.email}</p>
           <input
             type="text"
             name="email"
@@ -71,10 +77,12 @@ const SignupForm: React.FC = () => {
             placeholder="Your email address"
             autoComplete="on"
             onChange={handleChange}
+            onBlur={handleBlur}
           />
         </label>
         <label htmlFor="password">
           Password
+          <p>{errors?.password}</p>
           <input
             type="password"
             name="password"
@@ -82,6 +90,7 @@ const SignupForm: React.FC = () => {
             placeholder="A secure password"
             autoComplete="off"
             onChange={handleChange}
+            onBlur={handleBlur}
           />
         </label>
         <button type="submit">Sign up!</button>

@@ -1,50 +1,54 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
-function useFormValidation(initialState: object, validate: (object) => {}) {
-  const [values, setValues] = useState(initialState)
-  const [errors, setErrors] = useState({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
+type InputChangeEvent = React.ChangeEvent<HTMLInputElement>
+type InputBlurEvent = React.FocusEvent<HTMLInputElement>
+type FormEvent = React.FormEvent<HTMLFormElement>
 
-  useEffect(() => {
-    if (isSubmitting) {
-      const noErrors = Object.keys(errors).length === 0
+type FormEventHandler = (e: FormEvent) => void
+type InputEventHandler = (e: InputChangeEvent) => void
 
-      if (noErrors) {
-        console.log('authenticated!', values)
-        setIsSubmitting(false)
-      } else {
-        setIsSubmitting(false)
-      }
-    }
-  }, [errors])
+interface FormValidationValues<T, U> {
+  handleChange: InputEventHandler
+  values: T
+  handleValidate: FormEventHandler
+  handleBlur: InputEventHandler
+  errors: Partial<U>
+  setValues: (values: T) => void
+}
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+function useFormValidation<T, U>(
+  initialState: T,
+  validate: (Values: T) => U
+): FormValidationValues<T, U> {
+  const [values, setValues] = useState<T>(initialState)
+  const [errors, setErrors] = useState<Partial<U>>({})
+
+  function handleChange(e: InputChangeEvent) {
     setValues({
       ...values,
       [e.target.name]: e.target.value,
     })
   }
 
-  function handleBlur(e: React.FormEvent<HTMLFormElement>) {
+  function handleBlur(e: InputBlurEvent) {
     const validationErrors = validate(values)
     setErrors(validationErrors)
-    console.log('Blurrrr!')
+    console.log(e)
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleValidate = (e: FormEvent) => {
     e.preventDefault()
     const validationErrors = validate(values)
     setErrors(validationErrors)
-    setIsSubmitting(true)
   }
 
   return {
     handleChange,
     values,
-    handleSubmit,
+    handleValidate,
     handleBlur,
     errors,
-    isSubmitting,
+    setValues,
   }
 }
 

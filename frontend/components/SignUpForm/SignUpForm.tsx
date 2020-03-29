@@ -134,6 +134,7 @@ const SignupForm: React.FC = () => {
         fieldset {
           border: 0;
           padding: 0;
+          margin-bottom: 10px;
         }
         fieldset[disabled] {
           opacity: 0.5;
@@ -173,6 +174,7 @@ const SignupForm: React.FC = () => {
           font-size: 16px;
           font-weight: 400;
           padding: 10px;
+          margin-top: 5px;
           box-shadow: 0px 8px 10px #00000029;
           text-transform: uppercase;
         }

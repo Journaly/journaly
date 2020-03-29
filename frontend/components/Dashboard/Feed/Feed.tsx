@@ -1,8 +1,8 @@
 import React from 'react'
-import { Post } from '../../../generated/graphql'
+// import { Post } from '../../../generated/graphql'
 
 interface Props {
-  posts: Post[]
+  posts: any[] // TODO: should be Post[]
 }
 
 const Feed: React.FC<Props> = ({ posts }) => {

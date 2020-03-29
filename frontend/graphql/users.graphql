@@ -1,0 +1,14 @@
+query users {
+  users {
+    Id
+    Name
+    Email
+    Password
+    posts {
+      Id
+      Title
+      Body
+      Published
+    }
+  }
+}

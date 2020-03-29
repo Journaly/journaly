@@ -1,10 +1,11 @@
-import { darkGrey } from "../../utils/colors";
+import React from 'react'
+import { darkGrey } from '../../utils/colors'
 
 const Button = React.forwardRef(
   ({ active, reversed, iconSrc, iconAlt, ...props }, ref) => (
     <>
       <img
-        className={active ? "active" : ""}
+        className={active ? 'active' : ''}
         src={iconSrc}
         alt={iconAlt}
         ref={ref}
@@ -19,12 +20,9 @@ const Button = React.forwardRef(
           box-shadow: 0px 8px 10px #00000029;
           fill: red;
         }
-
-        // span.active {
-        // }
       `}</style>
     </>
   )
-);
+)
 
-export default Button;
+export default Button

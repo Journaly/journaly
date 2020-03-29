@@ -59,6 +59,22 @@ export type User = {
   posts: Array<Post>
 }
 
+export type CreateUserMutationVariables = {
+  Name: Scalars['String']
+  Email: Scalars['String']
+  Password: Scalars['String']
+}
+
+export type CreateUserMutation = { __typename?: 'Mutation' } & {
+  createUser?: Maybe<
+    { __typename?: 'User' } & Pick<User, 'Id' | 'Name' | 'Email'> & {
+        posts: Array<
+          { __typename?: 'Post' } & Pick<Post, 'Id' | 'Title' | 'Body'>
+        >
+      }
+  >
+}
+
 export type FeedQueryVariables = {
   published: Scalars['Boolean']
 }
@@ -96,6 +112,65 @@ export type UsersQuery = { __typename?: 'Query' } & {
   >
 }
 
+export const CreateUserDocument = gql`
+  mutation createUser($Name: String!, $Email: String!, $Password: String!) {
+    createUser(Name: $Name, Email: $Email, Password: $Password) {
+      Id
+      Name
+      Email
+      posts {
+        Id
+        Title
+        Body
+      }
+    }
+  }
+`
+export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<
+  CreateUserMutation,
+  CreateUserMutationVariables
+>
+
+/**
+ * __useCreateUserMutation__
+ *
+ * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
+ *   variables: {
+ *      Name: // value for 'Name'
+ *      Email: // value for 'Email'
+ *      Password: // value for 'Password'
+ *   },
+ * });
+ */
+export function useCreateUserMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateUserMutation,
+    CreateUserMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    CreateUserMutation,
+    CreateUserMutationVariables
+  >(CreateUserDocument, baseOptions)
+}
+export type CreateUserMutationHookResult = ReturnType<
+  typeof useCreateUserMutation
+>
+export type CreateUserMutationResult = ApolloReactCommon.MutationResult<
+  CreateUserMutation
+>
+export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateUserMutation,
+  CreateUserMutationVariables
+>
 export const FeedDocument = gql`
   query feed($published: Boolean!) {
     feed(Published: $published) {

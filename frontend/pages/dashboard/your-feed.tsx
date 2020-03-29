@@ -1,6 +1,7 @@
 import { NextPage } from 'next'
 import { withApollo } from '../../lib/apollo'
 
+import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import Feed from '../../components/Dashboard/Feed'
 
 import { useFeedQuery } from '../../generated/graphql'
@@ -25,7 +26,7 @@ const MyFeedPage: NextPage<Props, InitialProps> = () => {
   const posts = data?.feed
 
   return (
-    <>
+    <DashboardLayout>
       <h1>Welcome to your feed!</h1>
       {posts.length > 0 ? (
         <Feed posts={posts} />
@@ -38,7 +39,7 @@ const MyFeedPage: NextPage<Props, InitialProps> = () => {
           text-align: center;
         }
       `}</style>
-    </>
+    </DashboardLayout>
   )
 }
 

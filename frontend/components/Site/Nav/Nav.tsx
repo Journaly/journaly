@@ -1,13 +1,13 @@
-import { width, darkGrey, lightGrey } from "../../../utils";
-import NavLink from "../../NavLink";
-import Logo from "../../Logo";
+import { width, darkGrey, lightGrey } from '../../../utils'
+import NavLink from '../../NavLink'
+import Logo from '../../Logo'
 
 const navItems = [
-  { name: "About", path: "/about" },
-  { name: "Blog", path: "/blog" },
-  { name: "Log in", path: "/login" },
-  { name: "Sign up", path: "/signup" }
-];
+  { name: 'About', path: '/about' },
+  { name: 'Blog', path: '/blog' },
+  { name: 'Log in', path: '/login' },
+  { name: 'Sign up', path: '/signup' },
+]
 
 const Nav = () => (
   <div>
@@ -15,7 +15,7 @@ const Nav = () => (
       <Logo />
 
       <ul className="nav-items">
-        {navItems.map(navItem => (
+        {navItems.map((navItem) => (
           <NavLink href={navItem.path} key={navItem.name}>
             <a className="nav-link">{navItem.name}</a>
           </NavLink>
@@ -58,6 +58,6 @@ const Nav = () => (
       }
     `}</style>
   </div>
-);
+)
 
-export default Nav;
+export default Nav

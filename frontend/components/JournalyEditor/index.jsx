@@ -1,1 +1,1 @@
-export { default } from "./JournalyEditor";
+export { default } from './JournalyEditor'

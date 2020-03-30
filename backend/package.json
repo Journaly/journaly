@@ -1,5 +1,5 @@
 {
-  "name": "journaly-frontend",
+  "name": "journaly-backend",
   "version": "1.0.0",
   "description": "The backend of Journaly.",
   "repository": {
@@ -9,18 +9,13 @@
   "author": "Journaly",
   "license": "ISC",
   "scripts": {
-    "format": "npx prettier --write './**/*.{ts,md}' '!./prisma/**/*.md'",
+    "format": "npx prettier --write './**/*.{ts,js,md}'",
     "dev": "nexus dev",
     "build": "nexus build",
     "prisma2": "prisma2",
     "start": "node node_modules/.build",
     "seed": "ts-node seed.ts",
     "debug": "ndb -r ts-node/register node_modules/.bin/nexus dev"
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "all"
   },
   "husky": {
     "hooks": {
@@ -44,7 +39,11 @@
   "devDependencies": {
     "@types/cors": "^2.8.6",
     "husky": "^4.2.3",
-    "prettier": "^1.19.1",
-    "pretty-quick": "^2.0.1"
+    "prettier": "^2.0.1",
+    "pretty-quick": "^2.0.1",
+    "tslint": "^6.1.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.2.0",
+    "typescript": "^3.8.3"
   }
 }

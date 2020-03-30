@@ -1,4 +1,5 @@
 import { NextPage } from 'next'
+
 import { withApollo } from '../lib/apollo'
 
 import LandingPageLayout from '../components/Layouts/LandingPageLayout'

@@ -78,6 +78,10 @@ query feed {
 
 Next, check out [frontend](./frontend) or [backend](./backend) for detailed information on how to work across the app.
 
+## More Helpful Docs
+
+1. [Debugging Journaly With VS Code](./docs/debugging.md)
+
 ## Contributing To Journaly
 
 If you'd like to become a contributor -- awesome!

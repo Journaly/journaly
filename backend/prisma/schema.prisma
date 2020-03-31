@@ -37,7 +37,7 @@ model Post {
   Title      String
   Body       String
   status     PostStatus @default(DRAFT)
-  Image      String?
+  images     Image[]
   LargeImage String?
   CreatedAt  DateTime   @default(now())
   UpdatedAt  DateTime   @updatedAt
@@ -96,6 +96,12 @@ model Language {
   Dialect       String?
   nativeUsers   User[]  @relation("LanguageToNative")
   learningUsers User[]  @relation("LanguageToLearner")
+}
+
+model Image {
+  Id        String  @id @default(cuid())
+  smallSize String
+  largeSize String
 }
 
 enum UserRole {

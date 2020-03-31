@@ -4,10 +4,9 @@ You are of course welcome to debug however you like, but here's a nice little gu
 
 ## Configuration
 
-1. For this to work properly with our setup, you'll need to go to your `tsconfig.json` file and set the `"sourceMap"` option to `true` (there's a comment next to it to help you find it).
-2. Click on the "Debug" menu and then "Start Debugging" (or just `f5` by default)
-3. The first time you run this, it will ask you for an environment. If you're working in the browser, for example, you can click "Chrome".
-4. It will now go to a `launch.json` file where you configure how to launch that. By default, we have set this up to work with running the app in the browser (port `3000`) but if you want to debug the backend in isolation, you can change the `"url"` option to have port `4000`)
+1. Click on the "Debug" menu in VS Code and then "Start Debugging" (or just `f5` by default)
+2. The first time you run this, it will ask you for an environment. If you're working in the browser, for example, you can click "Chrome".
+3. It will now go to a `launch.json` file where you configure how to launch that. By default, we have set this up to work with running the app in the browser (port `3000`) but if you want to debug the backend in isolation, you can change the `"url"` option to have port `4000`)
 
 Okay, you're ready to start debugging!
 

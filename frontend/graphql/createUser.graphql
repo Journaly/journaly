@@ -1,8 +1,7 @@
 mutation createUser($Name: String!, $Email: String!, $Password: String!) {
-  createUser(data: { Name: $Name, Email: $Email, Password: $Password }) {
-    id
+  createUser(Name: $Name, Email: $Email, Password: $Password) {
+    Id
     Name
     Email
-    Password
   }
 }

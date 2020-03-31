@@ -15,11 +15,15 @@
     "start": "next start",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,md}'",
     "type-check": "tsc",
-    "codegen": "gql-gen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.0.0-beta.41",
+    "@apollo/react-ssr": "^4.0.0-beta.1",
+    "graphql": "^14.6.0",
     "is-hotkey": "^0.1.6",
-    "next": "^9.3.0",
+    "isomorphic-unfetch": "^3.0.0",
+    "next": "^9.3.3",
     "nprogress": "^0.2.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
@@ -28,10 +32,10 @@
     "slate-react": "^0.57.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.12.2",
-    "@graphql-codegen/typescript": "^1.12.2",
-    "@graphql-codegen/typescript-operations": "^1.12.2",
-    "@graphql-codegen/typescript-react-apollo": "^1.12.2",
+    "@graphql-codegen/cli": "^1.13.1",
+    "@graphql-codegen/typescript": "1.13.1",
+    "@graphql-codegen/typescript-operations": "1.13.1",
+    "@graphql-codegen/typescript-react-apollo": "1.13.1",
     "@types/node": "^13.7.6",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",

@@ -1,3 +1,5 @@
+
+import React from 'react'
 import { darkGrey } from '../../utils/colors'
 
 const Button = React.forwardRef(
@@ -19,12 +21,9 @@ const Button = React.forwardRef(
           box-shadow: 0px 8px 10px #00000029;
           fill: red;
         }
-
-        // span.active {
-        // }
       `}</style>
     </>
-  ),
+  )
 )
 
 export default Button

@@ -3,10 +3,5 @@ mutation createUser($Name: String!, $Email: String!, $Password: String!) {
     Id
     Name
     Email
-    posts {
-      Id
-      Title
-      Body
-    }
   }
 }

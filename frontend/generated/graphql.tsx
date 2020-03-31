@@ -67,11 +67,7 @@ export type CreateUserMutationVariables = {
 
 export type CreateUserMutation = { __typename?: 'Mutation' } & {
   createUser?: Maybe<
-    { __typename?: 'User' } & Pick<User, 'Id' | 'Name' | 'Email'> & {
-        posts: Array<
-          { __typename?: 'Post' } & Pick<Post, 'Id' | 'Title' | 'Body'>
-        >
-      }
+    { __typename?: 'User' } & Pick<User, 'Id' | 'Name' | 'Email'>
   >
 }
 
@@ -118,11 +114,6 @@ export const CreateUserDocument = gql`
       Id
       Name
       Email
-      posts {
-        Id
-        Title
-        Body
-      }
     }
   }
 `
@@ -154,7 +145,7 @@ export function useCreateUserMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
     CreateUserMutation,
     CreateUserMutationVariables
-  >
+  >,
 ) {
   return ApolloReactHooks.useMutation<
     CreateUserMutation,
@@ -204,22 +195,25 @@ export const FeedDocument = gql`
  * });
  */
 export function useFeedQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    FeedQuery,
+    FeedQueryVariables
+  >,
 ) {
   return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(
     FeedDocument,
-    baseOptions
+    baseOptions,
   )
 }
 export function useFeedLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
     FeedQuery,
     FeedQueryVariables
-  >
+  >,
 ) {
   return ApolloReactHooks.useLazyQuery<FeedQuery, FeedQueryVariables>(
     FeedDocument,
-    baseOptions
+    baseOptions,
   )
 }
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
@@ -264,22 +258,22 @@ export function useUsersQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
     UsersQuery,
     UsersQueryVariables
-  >
+  >,
 ) {
   return ApolloReactHooks.useQuery<UsersQuery, UsersQueryVariables>(
     UsersDocument,
-    baseOptions
+    baseOptions,
   )
 }
 export function useUsersLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
     UsersQuery,
     UsersQueryVariables
-  >
+  >,
 ) {
   return ApolloReactHooks.useLazyQuery<UsersQuery, UsersQueryVariables>(
     UsersDocument,
-    baseOptions
+    baseOptions,
   )
 }
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>

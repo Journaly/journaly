@@ -17,6 +17,7 @@ model User {
   ResetToken        String?
   ResetTokenExpiry  Float?
   Bio               String?
+  posts             Post[]
   socialMedia       SocialMedia[]
   interests         Topic[]
   location          Location?

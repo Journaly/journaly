@@ -18,7 +18,7 @@ interface FormValidationValues<T, U> {
 
 function useFormValidation<T, U>(
   initialState: T,
-  validate: (Values: T) => U
+  validate: (Values: T) => U,
 ): FormValidationValues<T, U> {
   const [values, setValues] = useState<T>(initialState)
   const [errors, setErrors] = useState<Partial<U>>({})
@@ -33,7 +33,6 @@ function useFormValidation<T, U>(
   function handleBlur(e: InputBlurEvent) {
     const validationErrors = validate(values)
     setErrors(validationErrors)
-    console.log(e)
   }
 
   const handleValidate = (e: FormEvent) => {

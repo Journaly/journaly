@@ -5,7 +5,7 @@
     "allowJs": true,
     "checkJs": true,
     "jsx": "preserve",
-    "sourceMap": false, // You can set this to true for debugging purposes.
+    "sourceMap": true,
     "skipLibCheck": true,
     "strict": false, // GOAL: set to true :)
     "forceConsistentCasingInFileNames": true,

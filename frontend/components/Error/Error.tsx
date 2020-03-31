@@ -24,11 +24,7 @@ const Error = ({ children }) => (
 
 const DisplayError = ({ error }) => {
   if (!error || !error.message) return null
-  if (
-    error.networkError &&
-    error.networkError.result &&
-    error.networkError.result.errors.length
-  ) {
+  if (error.networkError?.result?.errors.length) {
     return error.networkError.result.errors.map((error, i) => (
       <Error key={i}>
         <p data-test="graphql-error">

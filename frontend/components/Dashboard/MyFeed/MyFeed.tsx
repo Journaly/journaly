@@ -9,7 +9,6 @@ interface Props {
 }
 
 const MyFeed: React.FC<Props> = ({ posts }) => {
-  console.log(posts)
   return (
     <div className="my-feed-wrapper">
       <h1>My Feed</h1>

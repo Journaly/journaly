@@ -1,17 +1,31 @@
 html {
+  box-sizing: border-box;
   font-size: 10px;
 }
 
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
 body {
-  font-family: "Source Sans Pro", sans-serif;
+  padding: 0;
+  margin: 0;
+  font-family: 'Source Sans Pro', sans-serif;
   font-size: 1.6rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Playfair Display", serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Playfair Display', serif;
   font-weight: 400;
 }
 
@@ -30,6 +44,11 @@ h3 {
   line-height: 32px;
 }
 
+h4 {
+  font-size: 20px;
+  line-height: 28px;
+}
+
 p {
   font-size: 16px;
   line-height: 24px;
@@ -42,15 +61,57 @@ a {
   color: black;
 }
 
-a {
-  text-decoration: none;
-  color: black;
-}
-
 .j-link {
-  color: #4391C9;
+  color: #4391c9;
 }
 
 .j-link:hover {
   text-decoration: underline;
+}
+
+em {
+  font-style: italic;
+}
+
+strong {
+  font-weight: 700;
+}
+
+input,
+label,
+select,
+button,
+textarea {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  display: inline-block;
+  vertical-align: middle;
+  white-space: normal;
+  background: none;
+  line-height: 1;
+  background-color: white;
+}
+
+input:focus {
+  outline: 0;
+}
+
+input,
+textarea {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+button,
+input[type='reset'],
+input[type='button'],
+input[type='submit'],
+input[type='checkbox'],
+input[type='radio'],
+select {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }

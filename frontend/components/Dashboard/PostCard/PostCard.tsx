@@ -9,13 +9,13 @@ interface IPostCardProps {
   author: string
 }
 
-const PostCard: React.FC = ({
+const PostCard: React.FC<IPostCardProps> = ({
   id,
   title,
   body,
   image,
   author,
-}: IPostCardProps) => {
+}) => {
   return (
     <div className="post-card-container" key={id}>
       <Link href={`/post?id=${id}`}>
@@ -55,10 +55,9 @@ const PostCard: React.FC = ({
 
         .post-card-bottom {
           padding: 30px;
-
-          h4 {
-            font-weight: 700;
-          }
+        }
+        h4.post-card-bottom {
+          font-weight: 700;
         }
         .info {
           display: flex;

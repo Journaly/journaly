@@ -9,6 +9,7 @@ interface Props {
 }
 
 const MyFeed: React.FC<Props> = ({ posts }) => {
+  console.log(posts)
   return (
     <div className="my-feed-wrapper">
       <h1>My Feed</h1>
@@ -25,14 +26,14 @@ const MyFeed: React.FC<Props> = ({ posts }) => {
       </div>
       <div className="my-feed-container">
         {posts.length > 0 ? (
-          posts.map(post => (
+          posts.map((post) => (
             <PostCard
               key={post.Id}
               id={post.Id}
-              title={title}
-              body={body}
-              image={image}
-              author={author.name}
+              title={post.title}
+              body={post.body}
+              image={post.image}
+              author={post.author.name}
             />
           ))
         ) : (

@@ -19,7 +19,7 @@ const initialState: IFormValues = {
   password: '',
 }
 
-const SignupForm: React.FC = () => {
+const SignUpForm: React.FC = () => {
   const {
     handleChange,
     values,
@@ -97,7 +97,7 @@ const SignupForm: React.FC = () => {
       </fieldset>
       <em>
         Already have an account?
-        <Link href="/login">
+        <Link href="/dashboard/login">
           <a> Log in</a>
         </Link>
       </em>
@@ -177,7 +177,7 @@ const SignupForm: React.FC = () => {
         }
 
         button {
-          background-color: ${props => props.color};
+          background-color: ${brandBlue};
           border-radius: 5px;
           color: white;
           font-size: 16px;
@@ -195,4 +195,4 @@ const SignupForm: React.FC = () => {
   )
 }
 
-export default SignupForm
+export default SignUpForm

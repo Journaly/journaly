@@ -5,8 +5,8 @@ import Logo from '../../Logo'
 const navItems = [
   { name: 'About', path: '/about' },
   { name: 'Blog', path: '/blog' },
-  { name: 'Log in', path: '/login' },
-  { name: 'Sign up', path: '/signup' },
+  { name: 'Log in', path: '/dashboard/login' },
+  { name: 'Sign up', path: '/dashboard/signup' },
 ]
 
 const Nav = () => (

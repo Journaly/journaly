@@ -23,6 +23,40 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
         </div>
         <div className="post-body">
           <p>{post.Body}</p>
+          <h2>Clickity Clack -- A Delightful Sound</h2>
+          <p>
+            Netus natoque dis imperdiet dictum elementum urna pellentesque
+            penatibus vulputate sollicitudin orci duis curae aliquam eleifend
+            arcu lectus volutpat ad Senectus consequat adipiscing habitant curae
+            diam eleifend egestas lacus nullam urna praesent pharetra mauris
+            tortor dapibus lobortis lectus fusce quis eros erat risus maecenas
+            consectetur interdum inceptos ultrices neque integer.
+          </p>
+          <p>
+            Netus natoque dis imperdiet dictum elementum urna pellentesque
+            penatibus vulputate sollicitudin orci duis curae aliquam eleifend
+            arcu lectus volutpat ad Senectus consequat adipiscing habitant curae
+            diam eleifend egestas lacus nullam urna praesent pharetra mauris
+            tortor dapibus lobortis lectus fusce quis eros erat risus maecenas
+            consectetur interdum inceptos ultrices neque integer.
+          </p>
+          <h2>Love At First Clack</h2>
+          <p>
+            Amet leo senectus varius natoque luctus vulputate praesent metus,
+            sollicitudin mus congue venenatis diam ante ultrices, mattis dolor
+            eleifend condimentum penatibus ipsum auctor. Sem dui fringilla
+            pellentesque urna pharetra congue arcu erat felis vestibulum nec, ut
+            primis in platea cubilia posuere natoque commodo varius tempor.
+            Nullam porttitor maecenas consequat elementum erat iaculis, tempor
+            metus amet malesuada est, fringilla magna sem semper euismod.
+            Pretium nam magna suspendisse vehicula mollis viverra at nascetur,
+            augue imperdiet mauris vestibulum erat elementum nec, condimentum
+            venenatis leo curae euismod nisl urna. Penatibus iaculis rutrum
+            cursus ullamcorper condimentum sagittis senectus tempor dolor
+            faucibus, volutpat fames natoque per ante fringilla sodales lacinia
+            vehicula mollis, malesuada ut mattis a semper class parturient
+            egestas ac.
+          </p>
         </div>
       </div>
       <style jsx>{`
@@ -72,8 +106,16 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
           margin: 0;
         }
 
+        h2 {
+          margin: 20px 0;
+        }
+
         .post-body {
           margin-bottom: 50px;
+        }
+
+        .post-body p {
+          margin: 20px 0;
         }
       `}</style>
     </div>

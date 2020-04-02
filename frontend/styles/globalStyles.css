@@ -1,17 +1,8 @@
 html {
-  box-sizing: border-box;
   font-size: 10px;
 }
 
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
-
 body {
-  padding: 0;
-  margin: 0;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 1.6rem;
   line-height: 1.6;
@@ -97,21 +88,9 @@ input:focus {
   outline: 0;
 }
 
-input,
-textarea {
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-}
-
 button,
-input[type='reset'],
-input[type='button'],
-input[type='submit'],
-input[type='checkbox'],
-input[type='radio'],
+input,
+textarea,
 select {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }

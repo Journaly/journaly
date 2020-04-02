@@ -2,7 +2,19 @@ import React from 'react'
 import Link from 'next/link'
 import { brandBlack, darkBlue, darkGrey } from '../../../utils'
 
+import { useCurrentUserQuery } from '../../../generated/graphql'
+
 const Nav = () => {
+  const { loading, error, data } = useCurrentUserQuery()
+
+  if (loading) {
+    return <p>Loading...</p>
+  } else if (error) {
+    return <p>An error occurred...</p>
+  }
+
+  console.log(data)
+
   return (
     <nav>
       <div className="nav-top">

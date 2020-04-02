@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-interface IPostCardProps {
+interface Props {
   id: string
   title: string
   body: string
@@ -9,13 +9,7 @@ interface IPostCardProps {
   author: string
 }
 
-const PostCard: React.FC<IPostCardProps> = ({
-  id,
-  title,
-  body,
-  image,
-  author,
-}) => {
+const PostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
   return (
     <div className="post-card-container" key={id}>
       <Link href={`/post?id=${id}`}>

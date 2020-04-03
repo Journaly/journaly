@@ -1,4 +1,4 @@
-import SignUpForm from '../SignUpForm'
+import SignUpForm from '../SignupForm'
 import { width } from '../../../utils'
 
 const TopSection = () => (

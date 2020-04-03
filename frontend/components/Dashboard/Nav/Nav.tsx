@@ -18,7 +18,7 @@ const Nav = () => {
   return (
     <nav>
       <div className="nav-top">
-        <Link href="/profile">
+        <Link href="/dashboard/profile">
           <a>
             <img className="profile-img" src="/images/robin-small.png" />
             <p className="current-user-name">Robin MacPherson</p>
@@ -27,25 +27,25 @@ const Nav = () => {
       </div>
 
       <div className="nav-bottom">
-        <Link href="/">
+        <Link href="/my-feed">
           <a className="nav-link">
             <img src="../images/icons/your-feed-icon.svg" alt="" />
             <span className="nav-link-text">My Feed</span>
           </a>
         </Link>
-        <Link href="/your-posts">
+        <Link href="/dashboard/my-posts">
           <a className="nav-link">
             <img src="../images/icons/your-feed-icon.svg" alt="" />
             <span className="nav-link-text">My Posts</span>
           </a>
         </Link>
-        <Link href="/new-post">
+        <Link href="/dashboard/new-post">
           <a className="nav-link">
             <img src="../images/icons/new-post-icon.svg" alt="" />
             <span className="nav-link-text">New Post</span>
           </a>
         </Link>
-        <Link href="/drafts">
+        <Link href="/dashboard/drafts">
           <a className="nav-link">
             <img src="../images/icons/drafts-icon.svg" alt="" />
             <span className="nav-link-text">Drafts</span>
@@ -54,7 +54,7 @@ const Nav = () => {
 
         <hr />
 
-        <Link href="/settings">
+        <Link href="/dashboard/settings">
           <a className="nav-link">
             <img src="../images/icons/settings-icon.svg" alt="" />
             <span className="nav-link-text">Settings</span>

@@ -25,21 +25,6 @@ server.custom(({ express }) => {
   express.use((request: any, response, next) => {
     const { token } = request.cookies
     request.response = response
-
-    console.log(request.response)
-    if (token) {
-      console.log('token', token)
-      const userId = jwt.verify(token, process.env.APP_SECRET!)
-      // Add `userId` onto the request
-      request.userId = userId
-    }
-    next()
-  })
-
-  express.use((request: any, response, next) => {
-    const { token } = request.cookies
-    request.response = response
-
     if (token) {
       const { userId } = jwt.verify(token, process.env.APP_SECRET!) as any
       request.userId = userId

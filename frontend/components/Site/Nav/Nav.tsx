@@ -1,4 +1,4 @@
-import { width, darkGrey, lightGrey } from '../../../utils'
+import { width, darkGrey } from '../../../utils'
 import NavLink from '../../NavLink'
 import Logo from '../../Logo'
 
@@ -23,7 +23,7 @@ const Nav = () => (
       </ul>
     </div>
     <style jsx>{`
-      background-color: ${darkGrey};
+      background-color: black;
 
       .header-container {
         display: flex;
@@ -50,7 +50,7 @@ const Nav = () => (
       }
 
       .nav-link.active {
-        background-color: ${lightGrey};
+        background-color: ${darkGrey};
       }
 
       .nav-link:last-child {

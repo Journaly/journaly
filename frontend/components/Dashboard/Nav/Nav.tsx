@@ -93,6 +93,7 @@ const Nav = () => {
           justify-content: center;
           width: 100%;
         }
+
         .nav-top .profile-img {
           margin-top: 50px;
           margin-bottom: 10px;

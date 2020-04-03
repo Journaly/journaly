@@ -1,14 +1,14 @@
 import { format } from 'date-fns'
 import { getUTCDate } from '../../utils'
 
-type Props = {
+interface Props {
   date: string
   title: string
   image: string
   children: React.ReactNode
 }
 
-const BlogPageLayout = (props: Props) => (
+const BlogPageLayout: React.FC<Props> = (props) => (
   <div>
     <div className="header-container">
       <h1>{props.title}</h1>

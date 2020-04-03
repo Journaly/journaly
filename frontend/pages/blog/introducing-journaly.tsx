@@ -1,7 +1,9 @@
+import { NextPage } from 'next'
 import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
 import BlogPageLayout from '../../components/Layouts/BlogPageLayout'
+import { brandBlue } from '../../utils'
 
-const IntroducingJournalyBlogPost = () => (
+const IntroducingJournalyBlogPost: NextPage = () => (
   <LandingPageLayout>
     <BlogPageLayout
       title="Introducing Journaly"
@@ -250,7 +252,7 @@ const IntroducingJournalyBlogPost = () => (
       <p>
         Got questions? We'd love to talk. Email us at{' '}
         <em>
-          <a href="mailto:hello@journaly.io">hello@journaly.io</a>
+          <a href="mailto:robin@journaly.com">robin@journaly.com</a>
         </em>
         . Don't be shy!
       </p>
@@ -279,7 +281,7 @@ const IntroducingJournalyBlogPost = () => (
         }
 
         a {
-          color: #4391c9;
+          color: ${brandBlue};
         }
 
         ul {

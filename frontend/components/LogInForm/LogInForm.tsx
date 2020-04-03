@@ -37,13 +37,7 @@ const LogInForm: React.FC = () => {
     e.preventDefault()
     handleValidate(e)
     if (!loading && Object.keys(errors).length === 0) {
-      createUser({
-        variables: {
-          Name: 'Temporary',
-          Email: values.email,
-          Password: values.password,
-        },
-      })
+      createUser()
     }
   }
 

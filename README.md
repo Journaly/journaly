@@ -58,7 +58,7 @@ BOOM! You now have some users, along with a wee selection of posts :)
 
 To marvel at the results, go to `http://localhost:4000` and try the following query:
 
-```
+```gql
 query feed {
   feed(Published: true) {
     Id

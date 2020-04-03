@@ -33,6 +33,8 @@ function useFormValidation<T, U>(
   function handleBlur(e: InputBlurEvent) {
     const validationErrors = validate(values)
     setErrors(validationErrors)
+    // TODO (robin-macpherson) finsih handling blur
+    console.log(e)
   }
 
   const handleValidate = (e: FormEvent) => {

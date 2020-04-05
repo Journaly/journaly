@@ -15,7 +15,7 @@ interface IFormValues {
   password: string
 }
 
-interface IAnalyticsEvent {
+export interface IAnalyticsEvent {
   action: string
   category: string
   label: string

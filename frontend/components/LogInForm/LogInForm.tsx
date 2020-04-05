@@ -8,18 +8,16 @@ import { useCreateUserMutation } from '../../generated/graphql'
 import useFormValidation from '../Hooks/useFormValidation'
 
 interface IFormValues {
-  name: string
   email: string
   password: string
 }
 
 const initialState: IFormValues = {
-  name: '',
   email: '',
   password: '',
 }
 
-const SignupForm: React.FC = () => {
+const LoginForm: React.FC = () => {
   const {
     handleChange,
     values,
@@ -39,34 +37,15 @@ const SignupForm: React.FC = () => {
     e.preventDefault()
     handleValidate(e)
     if (!loading && Object.keys(errors).length === 0) {
-      createUser({
-        variables: {
-          Name: values.name,
-          Email: values.email,
-          Password: values.password,
-        },
-      })
+      createUser()
     }
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <fieldset disabled={loading} aria-busy={loading}>
-        <h2>Sign up for an account</h2>
+        <h2>Log into your account</h2>
         <Error error={error} />
-        <label htmlFor="name">
-          Name
-          <p>{errors?.name}</p>
-          <input
-            type="text"
-            name="name"
-            value={values.name}
-            placeholder="Your name"
-            autoComplete="on"
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-        </label>
         <label htmlFor="email">
           Email
           <p>{errors?.email}</p>
@@ -96,9 +75,9 @@ const SignupForm: React.FC = () => {
         <button type="submit">Sign up!</button>
       </fieldset>
       <em>
-        Already have an account?
-        <Link href="/dashboard/login">
-          <a> Log in</a>
+        Don't have an account?
+        <Link href="/dashboard/signup">
+          <a> Sign up</a>
         </Link>
       </em>
       <style jsx>{`
@@ -195,4 +174,4 @@ const SignupForm: React.FC = () => {
   )
 }
 
-export default SignupForm
+export default LoginForm

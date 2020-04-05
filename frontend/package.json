@@ -20,6 +20,7 @@
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",
     "@apollo/react-ssr": "^4.0.0-beta.1",
+    "cypress": "^4.3.0",
     "date-fns": "^2.11.1",
     "graphql": "^14.6.0",
     "is-hotkey": "^0.1.6",

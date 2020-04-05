@@ -20,10 +20,11 @@ server.custom(({ express }) => {
   )
 
   express.use(cookieParser())
+
+  // decode JWT to be used on each request
   express.use((request: any, response, next) => {
     const { token } = request.cookies
     request.response = response
-
     if (token) {
       const { userId } = jwt.verify(token, process.env.APP_SECRET!) as any
       request.userId = userId

@@ -1,4 +1,5 @@
 import React from 'react'
+import { NextPage } from 'next'
 
 import { withApollo } from '../../lib/apollo'
 import Post from '../../components/Dashboard/Post'
@@ -15,7 +16,7 @@ const samplePost = {
   },
 }
 
-const PostPage: React.FC = () => {
+const PostPage: NextPage = () => {
   return (
     <DashboardLayout>
       <Post post={samplePost} />

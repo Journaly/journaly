@@ -1,11 +1,13 @@
 import Link from 'next/link'
 
-import Error from '../Error'
-import { brandBlue } from '../../utils'
+import * as gtag from '../../lib/gtag'
 import validateAuth, { IErrors } from '../../lib/validateAuth'
-
 import { useCreateUserMutation } from '../../generated/graphql'
 import useFormValidation from '../Hooks/useFormValidation'
+import IAnalyticsEvent from '../SignupForm'
+
+import Error from '../Error'
+import { brandBlue } from '../../utils'
 
 interface IFormValues {
   email: string
@@ -38,6 +40,11 @@ const LoginForm: React.FC = () => {
     handleValidate(e)
     if (!loading && Object.keys(errors).length === 0) {
       createUser()
+      gtag.event({
+        action: 'submit_form',
+        category: 'Log in',
+        label: values.email,
+      })
     }
   }
 

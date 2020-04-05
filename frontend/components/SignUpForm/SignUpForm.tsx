@@ -1,16 +1,24 @@
+import React, { useState } from 'react'
 import Link from 'next/link'
+
+import * as gtag from '../../lib/gtag'
+import validateAuth, { IErrors } from '../../lib/validateAuth'
+import { useCreateUserMutation } from '../../generated/graphql'
+import useFormValidation from '../Hooks/useFormValidation'
 
 import Error from '../Error'
 import { brandBlue } from '../../utils'
-import validateAuth, { IErrors } from '../../lib/validateAuth'
-
-import { useCreateUserMutation } from '../../generated/graphql'
-import useFormValidation from '../Hooks/useFormValidation'
 
 interface IFormValues {
   name: string
   email: string
   password: string
+}
+
+interface IAnalyticsEvent {
+  action: string
+  category: string
+  label: string
 }
 
 const initialState: IFormValues = {
@@ -45,6 +53,12 @@ const SignupForm: React.FC = () => {
           Email: values.email,
           Password: values.password,
         },
+      })
+
+      gtag.event({
+        action: 'submit_form',
+        category: 'Sign up',
+        label: values.email,
       })
     }
   }

@@ -19,7 +19,7 @@ const initialState: IFormValues = {
   password: '',
 }
 
-const SignUpForm: React.FC = () => {
+const SignupForm: React.FC = () => {
   const {
     handleChange,
     values,
@@ -195,4 +195,4 @@ const SignUpForm: React.FC = () => {
   )
 }
 
-export default SignUpForm
+export default SignupForm

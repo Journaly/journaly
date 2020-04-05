@@ -1,11 +1,11 @@
 import { NextPage } from 'next'
 import { withApollo } from '../../lib/apollo'
-import SignUpForm from '../../components/SignUpForm'
+import SignupForm from '../../components/SignupForm'
 import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
 
-const SignUpPage: NextPage = () => (
+const SignupPage: NextPage = () => (
   <LandingPageLayout>
-    <SignUpForm />
+    <SignupForm />
     <style jsx>{`
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -14,4 +14,4 @@ const SignUpPage: NextPage = () => (
   </LandingPageLayout>
 )
 
-export default withApollo(SignUpPage)
+export default withApollo(SignupPage)

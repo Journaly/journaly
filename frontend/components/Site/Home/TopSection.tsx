@@ -1,4 +1,4 @@
-import SignUpForm from '../SignUpForm'
+import SignupForm from '../SignupForm'
 import { width } from '../../../utils'
 
 const TopSection = () => (
@@ -7,7 +7,7 @@ const TopSection = () => (
       Improve your language skills and connect with others through journaling.
     </h1>
 
-    <SignUpForm />
+    <SignupForm />
 
     <style jsx>{`
       .home-section-top {

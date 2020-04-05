@@ -17,7 +17,7 @@ const initialState: IFormValues = {
   password: '',
 }
 
-const LogInForm: React.FC = () => {
+const LoginForm: React.FC = () => {
   const {
     handleChange,
     values,
@@ -174,4 +174,4 @@ const LogInForm: React.FC = () => {
   )
 }
 
-export default LogInForm
+export default LoginForm

@@ -1,24 +1,28 @@
 import React from 'react'
 import { NextPage } from 'next'
+import Error from 'next/error'
 import { useTranslation } from '../config/i18n'
 
 interface Props {
   statusCode: number
 }
 
-const Error: NextPage<Props> = ({ statusCode }) => {
+const ErrorPage: NextPage<Props> = ({ statusCode }) => {
   const { t } = useTranslation()
 
   return (
-    <p>
-      {statusCode
-        ? t('errorWithStatus', { statusCode })
-        : t('errorWithoutStatus')}
-    </p>
+    <>
+      <Error statusCode={statusCode} title={t('error')} />
+      <style global jsx>{`
+        h1 {
+          line-height: 1;
+        }
+      `}</style>
+    </>
   )
 }
 
-Error.getInitialProps = async ({ res, err }) => {
+ErrorPage.getInitialProps = async ({ res, err }) => {
   let statusCode = null
 
   if (res) statusCode = res.statusCode
@@ -30,4 +34,4 @@ Error.getInitialProps = async ({ res, err }) => {
   }
 }
 
-export default Error
+export default ErrorPage

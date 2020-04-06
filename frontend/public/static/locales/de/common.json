@@ -1,5 +1,4 @@
 {
   "signInPrompt": "Bitte einloggen, um fortzufahren.",
-  "errorWithStatus": "Auf dem Server ist ein Fehler ({{statusCode}}) aufgetreten",
-  "errorWithoutStatus": "Auf dem Server ist ein Fehler aufgetreten"
+  "error": "Auf dem Server ist ein Fehler aufgetreten"
 }

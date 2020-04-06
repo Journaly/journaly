@@ -9,9 +9,9 @@ const Nav = () => {
   const { loading, error, data } = useCurrentUserQuery()
 
   if (loading) {
-    return <p>{t('loadingGeneric')}</p>
+    return <p>{t('loading')}</p>
   } else if (error) {
-    return <p>{t('errorWithoutStatus')}</p>
+    return <p>{t('error')}</p>
   }
 
   const currentUser = data.currentUser

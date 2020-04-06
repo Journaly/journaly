@@ -18,9 +18,9 @@ const MyFeedPage: NextPage<Props, InitialProps> = () => {
   })
 
   if (loading) {
-    return <p>{t('loadingGeneric')}</p>
+    return <p>{t('loading')}</p>
   } else if (error) {
-    return <p>{t('errorWithoutStatus')}</p>
+    return <p>{t('error')}</p>
   }
 
   const posts = data?.feed

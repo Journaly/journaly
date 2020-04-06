@@ -37,7 +37,7 @@ import { useTranslation } from '../config/i18n'
 
 export function MyComponent() {
   const { t } = useTranslation()
-  E
+
   return <p>{t('homePage.welcomeMessageTitle')}</p>
 }
 ```

@@ -17,4 +17,8 @@ const HomePage: NextPage<Props, InitialProps> = () => {
   )
 }
 
+HomePage.getInitialProps = async () => ({
+  namespacesRequired: [],
+})
+
 export default withApollo(HomePage)

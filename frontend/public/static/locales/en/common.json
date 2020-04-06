@@ -1,0 +1,6 @@
+{
+  "signInPrompt": "Please sign in to continue.",
+  "errorWithStatus": "A {{statusCode}} error occurred on the server",
+  "errorWithoutStatus": "An error occurred on the server",
+  "loadingGeneric": "Loading..."
+}

@@ -5,11 +5,11 @@ import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import MyFeed from '../../components/Dashboard/MyFeed'
 import { useFeedQuery } from '../../generated/graphql'
 
-interface InitialProps {}
+interface Props {
+  namespacesRequired: string[]
+}
 
-interface Props extends InitialProps {}
-
-const MyFeedPage: NextPage<Props, InitialProps> = () => {
+const MyFeedPage: NextPage<Props> = () => {
   const { t } = useTranslation()
   const { loading, error, data } = useFeedQuery({
     variables: {

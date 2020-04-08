@@ -8,4 +8,8 @@ const AboutPage: NextPage = () => (
   </LandingPageLayout>
 )
 
+AboutPage.getInitialProps = async () => ({
+  namespacesRequired: [],
+})
+
 export default AboutPage

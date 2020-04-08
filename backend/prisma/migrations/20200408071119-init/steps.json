@@ -191,6 +191,13 @@
     {
       "tag": "CreateField",
       "model": "User",
+      "field": "posts",
+      "type": "Post",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
       "field": "socialMedia",
       "type": "SocialMedia",
       "arity": "List"
@@ -480,9 +487,9 @@
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "Image",
-      "type": "String",
-      "arity": "Optional"
+      "field": "images",
+      "type": "Image",
+      "arity": "List"
     },
     {
       "tag": "CreateField",
@@ -1204,6 +1211,67 @@
       },
       "argument": "",
       "value": "\"LanguageToLearner\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Image"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Image",
+      "field": "Id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Image",
+          "field": "Id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Image",
+          "field": "Id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Image",
+          "field": "Id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Image",
+      "field": "smallSize",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Image",
+      "field": "largeSize",
+      "type": "String",
+      "arity": "Required"
     }
   ]
 }

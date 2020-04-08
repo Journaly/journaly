@@ -17,6 +17,7 @@ model User {
   ResetToken        String?
   ResetTokenExpiry  Float?
   Bio               String?
+  posts             Post[]
   socialMedia       SocialMedia[]
   interests         Topic[]
   location          Location?
@@ -37,7 +38,7 @@ model Post {
   Title      String
   Body       String
   status     PostStatus @default(DRAFT)
-  Image      String?
+  images     Image[]
   LargeImage String?
   CreatedAt  DateTime   @default(now())
   UpdatedAt  DateTime   @updatedAt
@@ -96,6 +97,12 @@ model Language {
   Dialect       String?
   nativeUsers   User[]  @relation("LanguageToNative")
   learningUsers User[]  @relation("LanguageToLearner")
+}
+
+model Image {
+  Id        String  @id @default(cuid())
+  smallSize String
+  largeSize String
 }
 
 enum UserRole {

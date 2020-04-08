@@ -15,7 +15,8 @@
     "start": "next start",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,md}'",
     "type-check": "tsc",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml",
+    "svg-to-jsx": "svgr < public/images/icons/icon__leave-a-comment.svg > components/Icons/IconLeaveAComment.js --svgo-config svgo.json"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",
@@ -37,6 +38,7 @@
     "@graphql-codegen/typescript": "1.13.1",
     "@graphql-codegen/typescript-operations": "1.13.1",
     "@graphql-codegen/typescript-react-apollo": "1.13.1",
+    "@svgr/cli": "^5.3.1",
     "@types/node": "^13.7.6",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",

@@ -2,7 +2,8 @@ import React from 'react'
 import Head from 'next/head'
 
 import { Post as PostType } from '../../../generated/graphql'
-import { brandBlue, highlightColor } from '../../../utils'
+import { brandBlue, highlightColor, darkGrey } from '../../../utils'
+import IconLeaveComment from '../../Icons/IconLeaveAComment'
 
 // TODO: Remove any when Types are fixed with PR #17
 interface IPostProps {
@@ -11,15 +12,20 @@ interface IPostProps {
 
 const CommentSelectionButton = () => (
   <button onClick={handleCommentClick} className="comment-btn">
-    Comment
+    <IconLeaveComment
+      primaryColor="#2C3E50"
+      secondaryColor="#3B97D3"
+      size={25}
+    />
     <style jsx>{`
       .comment-btn {
-        width: 40px;
-        height: 15px;
+        width: 30px;
+        height: 30px;
         font-size: 14px;
         line-height: 1;
         color: white;
-        background-color: black;
+        background-color: ${darkGrey};
+        border-radius: 5px;
         cursor: pointer;
         position: absolute;
         top: 0;
@@ -28,20 +34,13 @@ const CommentSelectionButton = () => (
         display: none;
         transition: color 0.2s ease-in-out;
       }
+
       .comment-btn:hover {
         color: ${brandBlue};
       }
     `}</style>
   </button>
 )
-
-// const CommentedTextSpan = () => (
-//   <span className="commented-text">
-//     <style jsx>{`
-//       background-color: ${brandBlue};
-//     `}</style>
-//   </span>
-// )
 
 let selectableTextArea: NodeList
 let commentSelectionButton
@@ -63,7 +62,7 @@ function selectableTextAreaMouseUp(e) {
       const x = e.pageX
       const y = e.pageY
       commentSelectionButton.style.left = `${x - 40}px`
-      commentSelectionButton.style.top = `${y - 25}px`
+      commentSelectionButton.style.top = `${y - 50}px`
       commentSelectionButton.style.display = 'block'
     }
     console.log(e)

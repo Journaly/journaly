@@ -1,13 +1,13 @@
-import { width, darkGrey, lightGrey } from "../../../utils";
-import NavLink from "../../NavLink";
-import Logo from "../../Logo";
+import { width, darkGrey } from '../../../utils'
+import NavLink from '../../NavLink'
+import Logo from '../../Logo'
 
 const navItems = [
-  { name: "About", path: "/about" },
-  { name: "Blog", path: "/blog" },
-  { name: "Log in", path: "/login" },
-  { name: "Sign up", path: "/signup" }
-];
+  { name: 'About', path: '/about' },
+  { name: 'Blog', path: '/blog/introducing-journaly' },
+  { name: 'Log in', path: '/dashboard/login' },
+  { name: 'Sign up', path: '/dashboard/signup' },
+]
 
 const Nav = () => (
   <div>
@@ -15,7 +15,7 @@ const Nav = () => (
       <Logo />
 
       <ul className="nav-items">
-        {navItems.map(navItem => (
+        {navItems.map((navItem) => (
           <NavLink href={navItem.path} key={navItem.name}>
             <a className="nav-link">{navItem.name}</a>
           </NavLink>
@@ -23,7 +23,7 @@ const Nav = () => (
       </ul>
     </div>
     <style jsx>{`
-      background-color: ${darkGrey};
+      background-color: black;
 
       .header-container {
         display: flex;
@@ -50,7 +50,7 @@ const Nav = () => (
       }
 
       .nav-link.active {
-        background-color: ${lightGrey};
+        background-color: ${darkGrey};
       }
 
       .nav-link:last-child {
@@ -58,6 +58,6 @@ const Nav = () => (
       }
     `}</style>
   </div>
-);
+)
 
-export default Nav;
+export default Nav

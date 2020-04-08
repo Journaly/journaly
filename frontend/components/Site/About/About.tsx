@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link'
 
 const About = () => {
   return (
@@ -29,16 +29,16 @@ const About = () => {
         to help people not only find language matches (people learning your
         native language who speak the language you're learning), but we also
         want to help you connect with people who share your interests. Our
-        robust filters allow you to search for posts by language <em>and</em>{" "}
+        robust filters allow you to search for posts by language <em>and</em>{' '}
         topic. This will make it more enjoyable for you to read and provide
         feedback on their writing, but could also lead to wonderful language
         exchange partners and, hopefully, friends :)
       </p>
       <p>
-        Check out{" "}
-        <Link href="/blog/welcome-to-journaly">
+        Check out{' '}
+        <Link href="/blog/introducing-journaly">
           <a className="j-link">our first blog post</a>
-        </Link>{" "}
+        </Link>{' '}
         for all the details!
       </p>
 
@@ -58,7 +58,7 @@ const About = () => {
         }
       `}</style>
     </div>
-  );
-};
+  )
+}
 
-export default About;
+export default About

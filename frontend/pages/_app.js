@@ -1,8 +1,7 @@
-import '../styles/reset.css';
-import '../styles/globalStyles.css';
-import Head from 'next/head';
+import Head from 'next/head'
+import '../styles/reset.css'
+import '../styles/globalStyles.css'
 
-// This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
   return (
     <>
@@ -11,5 +10,5 @@ export default function MyApp({ Component, pageProps }) {
       </Head>
       <Component {...pageProps} />
     </>
-  );
+  )
 }

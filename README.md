@@ -34,16 +34,23 @@ Welcome to the Journaly repository!
 
 ## Getting Started (in progress)
 
-1. Clone the repository!  
-   `$ git clone git@github.com:Journaly/journaly.git`
-2. In your backend directory, locate your `.env.example` file and rename it to `.env`
-3. Run `npm ci` in both the `frontend` and `backend` directories
-4. In the root of the project (`journaly/`), run `$ docker-compose up -d` - this will spin up the DB and frontend for you -- just like that!
-5. Finally, you just need to run `npm run dev` from the backend directory
+### Initial setup
+
+1. Clone the repository!
+   ```sh
+   $ git clone git@github.com:Journaly/journaly.git
+   ```
+1. In your backend directory, locate your `.env.example` file and create a new one alongside it called `.env`
+1. Run `npm ci` in both the `frontend` and `backend` directories
+
+### Running Journaly
+
+1. In the root of the project (`journaly/`), run `$ docker-compose up -d` - this will spin up the DB and frontend for you -- just like that!
+2. Finally, you just need to run `npm run dev` from the backend directory
 
 Not only do you now have the entire journaly app and all its 3 services running, but you have a local PostgreSQL database instance running on your machine with persistant storage! :)
 
-4. Let's seed that baby DB!  
+3. Let's seed that baby DB!  
    `$ cd backend/`
    `$ npm run seed`
 
@@ -51,7 +58,7 @@ BOOM! You now have some users, along with a wee selection of posts :)
 
 To marvel at the results, go to `http://localhost:4000` and try the following query:
 
-```
+```gql
 query feed {
   feed(Published: true) {
     Id
@@ -67,9 +74,13 @@ query feed {
 }
 ```
 
-5. To bring the app down, run `$ docker-compose stop`
+4. To bring the app down, run `$ docker-compose stop`
 
 Next, check out [frontend](./frontend) or [backend](./backend) for detailed information on how to work across the app.
+
+## More Helpful Docs
+
+1. [Debugging Journaly With VS Code](./docs/debugging.md)
 
 ## Contributing To Journaly
 

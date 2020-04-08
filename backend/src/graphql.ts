@@ -78,6 +78,21 @@ schema.queryType({
         resolve: async (parent, args, ctx) => {
           return ctx.db.user.findMany()
         },
+      }),
+      t.list.field('currentUser', {
+        type: 'User',
+        resolve: async (parent, args, ctx) => {
+          const userId = ctx.request.userId
+          // check for current userId
+          if (!userId) {
+            return null
+          }
+          return ctx.db.user.findMany({
+            where: {
+              Id: userId,
+            },
+          })
+        },
       })
   },
 })

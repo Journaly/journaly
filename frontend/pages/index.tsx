@@ -1,11 +1,20 @@
-import { NextPage } from "next";
-import LandingPageLayout from "../components/Layouts/LandingPageLayout";
-import Home from "../components/Site/Home";
+import { NextPage } from 'next'
 
-const HomePage: NextPage = () => (
-  <LandingPageLayout>
-    <Home />
-  </LandingPageLayout>
-);
+import { withApollo } from '../lib/apollo'
 
-export default HomePage;
+import LandingPageLayout from '../components/Layouts/LandingPageLayout'
+import Home from '../components/Site/Home'
+
+interface InitialProps {}
+
+interface Props extends InitialProps {}
+
+const HomePage: NextPage<Props, InitialProps> = () => {
+  return (
+    <LandingPageLayout>
+      <Home />
+    </LandingPageLayout>
+  )
+}
+
+export default withApollo(HomePage)

@@ -6,20 +6,25 @@
     "type": "git",
     "url": "git://github.com/Journaly/journaly.git"
   },
+  "author": "Journaly",
+  "license": "ISC",
   "main": "index.js",
   "scripts": {
     "dev": "next",
     "build": "next build",
     "start": "next start",
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,md}'",
     "type-check": "tsc",
-    "codegen": "gql-gen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml"
   },
-  "keywords": [],
-  "author": "Journaly",
-  "license": "ISC",
   "dependencies": {
+    "@apollo/client": "^3.0.0-beta.41",
+    "@apollo/react-ssr": "^4.0.0-beta.1",
+    "date-fns": "^2.11.1",
+    "graphql": "^14.6.0",
     "is-hotkey": "^0.1.6",
-    "next": "^9.3.0",
+    "isomorphic-unfetch": "^3.0.0",
+    "next": "^9.3.3",
     "nprogress": "^0.2.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
@@ -28,14 +33,18 @@
     "slate-react": "^0.57.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.12.2",
-    "@graphql-codegen/typescript": "^1.12.2",
-    "@graphql-codegen/typescript-operations": "^1.12.2",
-    "@graphql-codegen/typescript-react-apollo": "^1.12.2",
+    "@graphql-codegen/cli": "^1.13.1",
+    "@graphql-codegen/typescript": "1.13.1",
+    "@graphql-codegen/typescript-operations": "1.13.1",
+    "@graphql-codegen/typescript-react-apollo": "1.13.1",
     "@types/node": "^13.7.6",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
     "graphql": "^14.6.0",
-    "typescript": "^3.8.2"
+    "prettier": "^2.0.1",
+    "tslint": "^6.1.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.2.0",
+    "typescript": "^3.8.3"
   }
 }

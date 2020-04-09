@@ -79,9 +79,15 @@ model Comment {
   CreatedAt DateTime @default(now())
   UpdatedAt DateTime @updatedAt
   Body      String
-  Position  String
   author    User
   post      Post
+  thread    Thread
+}
+
+model Thread {
+  Id       String   @id @default(cuid())
+  position Int // starting index of thread
+  comments Comment[]
 }
 
 model Interest {

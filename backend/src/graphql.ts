@@ -1,4 +1,4 @@
-import { schema } from 'nexus-future'
+import { schema } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 

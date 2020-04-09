@@ -10,12 +10,12 @@ const WITHIN_ONE_HOUR = Date.now() - 3600000
 schema.objectType({
   name: 'User',
   definition(t) {
-    t.model.Id()
-    t.model.Name()
-    t.model.Email()
-    t.model.Handle()
-    t.model.Password()
-    t.model.Bio()
+    t.model.id()
+    t.model.name()
+    t.model.email()
+    t.model.handle()
+    t.model.password()
+    t.model.bio()
     t.model.userRole()
     t.model.location()
   },
@@ -24,9 +24,9 @@ schema.objectType({
 schema.objectType({
   name: 'Post',
   definition(t) {
-    t.model.Id()
-    t.model.Title()
-    t.model.Body()
+    t.model.id()
+    t.model.title()
+    t.model.body()
     t.model.author()
     t.model.status()
     t.model.language({ type: 'Language' })
@@ -36,19 +36,19 @@ schema.objectType({
 schema.objectType({
   name: 'Location',
   definition(t) {
-    t.model.Id()
-    t.model.Country()
-    t.model.City()
+    t.model.id()
+    t.model.country()
+    t.model.city()
   },
 })
 
 schema.objectType({
   name: 'Language',
   definition(t) {
-    t.model.Id()
-    t.model.Name()
+    t.model.id()
+    t.model.name()
     t.model.posts()
-    t.model.Dialect()
+    t.model.dialect()
     t.model.nativeUsers()
     t.model.learningUsers()
   },
@@ -89,7 +89,7 @@ schema.queryType({
           }
           return ctx.db.user.findMany({
             where: {
-              Id: userId,
+              id: userId,
             },
           })
         },
@@ -102,22 +102,22 @@ schema.mutationType({
     t.field('createUser', {
       type: 'User',
       args: {
-        Name: schema.stringArg({ required: true }),
-        Email: schema.stringArg({ required: true }),
-        Handle: schema.stringArg({ required: true }),
-        Password: schema.stringArg({ required: true }),
+        name: schema.stringArg({ required: true }),
+        email: schema.stringArg({ required: true }),
+        handle: schema.stringArg({ required: true }),
+        password: schema.stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx: any) => {
-        const Password = await bcrypt.hash(args.Password, 10)
+        const password = await bcrypt.hash(args.password, 10)
         const user = await ctx.db.user.create({
           data: {
-            Name: args.Name,
-            Email: args.Email,
-            Handle: args.Handle,
-            Password: args.Password,
+            name: args.name,
+            email: args.email,
+            handle: args.handle,
+            password: args.password,
           },
         })
-        const token = jwt.sign({ userId: user.Id }, process.env.APP_SECRET!)
+        const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
         ctx.response.cookie('token', token, {
           httpOnly: true,
           maxAge: ONE_YEAR,
@@ -128,20 +128,20 @@ schema.mutationType({
     t.field('createPost', {
       type: 'Post',
       args: {
-        Title: schema.stringArg({ required: true }),
-        Body: schema.stringArg({ required: true }),
+        title: schema.stringArg({ required: true }),
+        body: schema.stringArg({ required: true }),
         status: schema.stringArg(),
         authorEmail: schema.stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx) =>
         ctx.db.post.create({
           data: {
-            Title: args.Title,
-            Body: args.Title,
+            title: args.title,
+            body: args.title,
             status: args.status as any,
             author: {
               connect: {
-                Email: 'ro@bin.com',
+                email: 'ro@bin.com',
               },
             },
           },

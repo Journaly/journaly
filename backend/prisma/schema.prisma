@@ -8,105 +8,105 @@ generator prisma_client {
 }
 
 model User {
-  Id                String        @id @default(cuid())
-  Name              String
-  Email             String        @unique
-  Handle            String        @unique
-  Password          String
+  id                String        @id @default(cuid())
+  name              String
+  email             String        @unique
+  handle            String        @unique
+  password          String
   userRole          UserRole      @default(FREE_USER)
-  ResetToken        String?
-  ResetTokenExpiry  Float?
-  Bio               String?
+  resetToken        String?
+  resetTokenExpiry  Float?
+  bio               String?
   posts             Post[]
   socialMedia       SocialMedia[]
   interests         Topic[]
   location          Location?
   languagesNative   Language[]    @relation("LanguageToNative")
   languagesLearning Language[]    @relation("LanguageToLearner")
-  CreatedAt         DateTime      @default(now())
-  UpdatedAt         DateTime      @updatedAt
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 }
 
 model SocialMedia {
-  Id       String              @id @default(cuid())
+  id       String              @id @default(cuid())
   platform SocialMediaPlatform
   url      String
 }
 
 model Post {
-  Id         String     @id @default(cuid())
-  Title      String
-  Body       String
+  id         String     @id @default(cuid())
+  title      String
+  body       String
   status     PostStatus @default(DRAFT)
   images     Image[]
-  LargeImage String?
-  CreatedAt  DateTime   @default(now())
-  UpdatedAt  DateTime   @updatedAt
+  largeImage String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
   author     User
-  ReadCount  Int        @default(0)
-  ReadTime   Int        @default(1)
+  readCount  Int        @default(0)
+  readTime   Int        @default(1)
   likes      Like[]
   comments   Comment[]
   topic      Topic[]
   language   Language?
   // TEMPORARY
-  Longitude  Float?
-  Latitude   Float?
+  longitude  Float?
+  latitude   Float?
 }
 
 model Location {
-  Id      String @id @default(cuid())
-  Country String
-  City    String
+  id      String @id @default(cuid())
+  country String
+  city    String
 }
 
 model Topic {
-  Id    String @id @default(cuid())
-  Name  String
+  id    String @id @default(cuid())
+  name  String
   posts Post[]
 }
 
 model Like {
-  Id        String   @id @default(cuid())
-  CreatedAt DateTime @default(now())
-  UpdatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   author    User
   post      Post
 }
 
 model Comment {
-  Id        String   @id @default(cuid())
-  CreatedAt DateTime @default(now())
-  UpdatedAt DateTime @updatedAt
-  Body      String
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  body      String
   author    User
   post      Post
   thread    Thread
 }
 
 model Thread {
-  Id       String   @id @default(cuid())
+  id       String   @id @default(cuid())
   position Int // starting index of thread
   comments Comment[]
 }
 
 model Interest {
-  Id    String @id @default(cuid())
-  Name  String
+  id    String @id @default(cuid())
+  name  String
   posts Post[]
 }
 
 model Language {
-  Id            String  @id @default(cuid())
+  id            String  @id @default(cuid())
   posts         Post[]
-  Name          String
-  Dialect       String?
+  name          String
+  dialect       String?
   nativeUsers   User[]  @relation("LanguageToNative")
   learningUsers User[]  @relation("LanguageToLearner")
 }
 
 model Image {
-  Id        String  @id @default(cuid())
+  id        String  @id @default(cuid())
   smallSize String
   largeSize String
 }

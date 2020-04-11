@@ -1,14 +1,14 @@
 query users {
   users {
-    Id
-    Name
-    Email
-    Password
+    id
+    name
+    email
+    password
     posts {
-      Id
-      Title
-      Body
-      Published
+      id
+      title
+      body
+      published
     }
   }
 }

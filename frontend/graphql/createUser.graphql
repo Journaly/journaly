@@ -1,7 +1,7 @@
-mutation createUser($Name: String!, $Email: String!, $Password: String!) {
-  createUser(Name: $Name, Email: $Email, Password: $Password) {
+mutation createUser($name: String!, $email: String!, $password: String!) {
+  createUser(name: $name, email: $email, password: $password) {
     Id
-    Name
-    Email
+    name
+    email
   }
 }

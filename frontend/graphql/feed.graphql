@@ -1,11 +1,11 @@
 query feed($published: Boolean!) {
   feed(Published: $published) {
-    Id
+    id
     Title
     Body
     Published
     author {
-      Id
+      id
       Name
       Email
     }

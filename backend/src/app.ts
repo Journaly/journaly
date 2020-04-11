@@ -2,7 +2,6 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
 import { server, schema } from 'nexus'
-// import { request } from 'express'
 
 require('dotenv').config({ path: '../.env ' })
 

@@ -10,8 +10,10 @@ interface IPostProps {
   post: PostType | any
 }
 
+const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
+
 const CommentSelectionButton = () => (
-  <button onClick={handleCommentClick} className="comment-btn">
+  <button onMouseDown={handleCommentClick} className="comment-btn">
     <IconLeaveComment
       primaryColor="#2C3E50"
       secondaryColor="#3B97D3"
@@ -38,30 +40,64 @@ const CommentSelectionButton = () => (
       .comment-btn:hover {
         color: ${brandBlue};
       }
-
-      .comment-btn > * {
-        pointer-events: none;
-      }
     `}</style>
   </button>
 )
 
-let selectableTextArea: NodeList
+let selectableTextArea: Node
 let commentSelectionButton
 
 if (typeof document !== 'undefined' && typeof window !== 'undefined') {
-  selectableTextArea = document.querySelectorAll('.selectable-text-area')
+  selectableTextArea = document.querySelector('.selectable-text-area')
   commentSelectionButton = document.querySelector('.comment-btn')
   commentSelectionButton.addEventListener('click', handleCommentClick)
 
-  selectableTextArea.forEach((el) => {
-    el.addEventListener('mouseup', selectableTextAreaMouseUp)
-  })
+  selectableTextArea.addEventListener('mouseup', selectableTextAreaMouseUp)
+}
+
+function buildPostOrderList(el) {
+  const postOrderList = []
+  const recur = (el) => {
+    el.childNodes.forEach(recur)
+    postOrderList.push(el)
+  }
+  recur(el)
+  return postOrderList
+}
+
+function processSelectedTextArea(selection, parentElement) {
+  const nodeList = buildPostOrderList(parentElement)
+  let startIdx = nodeList.indexOf(selection.baseNode)
+  let endIdx = nodeList.indexOf(selection.extentNode)
+
+  if (startIdx > endIdx) {
+    ;[startIdx, endIdx] = [endIdx, startIdx]
+  }
+
+  const selectedNodes = nodeList.slice(startIdx, endIdx + 1)
+
+  for (const node of selectedNodes) {
+    if (node.constructor === Text) {
+      continue
+    } else if (elementWhiteList.has(node.tagName)) {
+      continue
+    } else {
+      // node not in our "whitelist"
+      return false
+    }
+  }
+  return true
 }
 
 function selectableTextAreaMouseUp(e) {
   setTimeout(() => {
-    const selectedText = window.getSelection().toString().trim()
+    const selection = window.getSelection()
+    console.log(processSelectedTextArea(selection, selectableTextArea))
+    if (processSelectedTextArea(selection, selectableTextArea) === false) {
+      return
+    }
+
+    const selectedText = selection.toString().trim()
     if (selectedText.length) {
       const x = e.pageX
       const y = e.pageY
@@ -69,8 +105,6 @@ function selectableTextAreaMouseUp(e) {
       commentSelectionButton.style.top = `${y - 50}px`
       commentSelectionButton.style.display = 'block'
     }
-    console.log('not me')
-    console.log('not me')
   }, 0)
 }
 
@@ -78,27 +112,30 @@ if (typeof document !== 'undefined') {
   document.addEventListener('mousedown', documentMouseDown)
 }
 
-function documentMouseDown(e) {
-  console.log(e.target)
-  if (
-    getComputedStyle(commentSelectionButton).display === 'block' &&
-    !e.target.className.includes('comment-btn')
-  ) {
+function documentMouseDown() {
+  if (getComputedStyle(commentSelectionButton).display === 'block') {
     commentSelectionButton.style.display = 'none'
-    window.getSelection().empty()
   }
 }
 
-function handleCommentClick() {
-  console.log('not me!')
+function handleCommentClick(e) {
+  const selection = document.getSelection()
+  e.preventDefault()
+  e.stopPropagation()
   if (typeof document !== 'undefined') {
-    const selection = document.getSelection().getRangeAt(0)
-    const selectedText = selection.extractContents()
+    if (selection.isCollapsed === true) {
+      return
+    }
+    const firstRange = selection.getRangeAt(0)
+    const selectedText = firstRange.extractContents()
     const commentedTextSpan = document.createElement('span')
     commentedTextSpan.style.backgroundColor = `${highlightColor}`
     commentedTextSpan.appendChild(selectedText)
-    selection.insertNode(commentedTextSpan)
+    firstRange.insertNode(commentedTextSpan)
+    commentSelectionButton.style.display = 'none'
+    window.getSelection().empty()
   }
+  return false
 }
 
 const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
@@ -121,10 +158,11 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
           <p>
             Netus natoque dis imperdiet dictum elementum urna pellentesque
             penatibus vulputate sollicitudin orci duis curae aliquam eleifend
-            arcu lectus volutpat ad Senectus consequat adipiscing habitant curae
-            diam eleifend egestas lacus nullam urna praesent pharetra mauris
-            tortor dapibus lobortis lectus fusce quis eros erat risus maecenas
-            consectetur interdum inceptos ultrices neque integer.
+            arcu lectus <strong>volutpat ad Senectus</strong> consequat
+            adipiscing habitant curae diam eleifend egestas lacus nullam urna
+            praesent pharetra mauris tortor dapibus lobortis lectus fusce quis
+            eros erat risus maecenas consectetur interdum inceptos ultrices
+            neque integer.
           </p>
           <p>
             Netus natoque dis imperdiet dictum elementum urna pellentesque

@@ -106,3 +106,7 @@ trackCreateAccount()
 ```
 
 That's it! This ensures that the category and action names are always the same, as slight deviations in spelling generate additional data reports. Furthermore, every new category and action will require a new file and/or function, which makes sure that catagory and action names are carefully thought about and constructed.
+
+#### Debugging
+
+If you need to test that events are being sent, use the [Google Analytics Debugger chrome extension](https://chrome.google.com/webstore/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjechhna). This will show events that are logged in the Chrome DevTools.

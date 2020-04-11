@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
-
-import * as gtag from '../../lib/gtag'
+import { trackCreateAccount } from '../../events/users'
 import validateAuth, { IErrors } from '../../lib/validateAuth'
 import { useCreateUserMutation } from '../../generated/graphql'
 import useFormValidation from '../Hooks/useFormValidation'
@@ -13,12 +12,6 @@ interface IFormValues {
   name: string
   email: string
   password: string
-}
-
-export interface IAnalyticsEvent {
-  action: string
-  category: string
-  label: string
 }
 
 const initialState: IFormValues = {
@@ -39,6 +32,7 @@ const SignupForm: React.FC = () => {
 
   const [createUser, { loading, error }] = useCreateUserMutation({
     onCompleted: () => {
+      trackCreateAccount()
       setValues(initialState)
     },
   })
@@ -53,12 +47,6 @@ const SignupForm: React.FC = () => {
           Email: values.email,
           Password: values.password,
         },
-      })
-
-      gtag.event({
-        action: 'submit_form',
-        category: 'Sign up',
-        label: values.email,
       })
     }
   }

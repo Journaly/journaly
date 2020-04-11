@@ -17,4 +17,8 @@ const DraftsPage: NextPage = () => {
   )
 }
 
+DraftsPage.getInitialProps = async () => ({
+  namespacesRequired: [],
+})
+
 export default withApollo(DraftsPage)

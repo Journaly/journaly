@@ -5,16 +5,20 @@ import { withApollo } from '../lib/apollo'
 import LandingPageLayout from '../components/Layouts/LandingPageLayout'
 import Home from '../components/Site/Home'
 
-interface InitialProps {}
+interface InitialProps {
+  namespacesRequired: string[]
+}
 
-interface Props extends InitialProps {}
-
-const HomePage: NextPage<Props, InitialProps> = () => {
+const HomePage: NextPage<InitialProps> = () => {
   return (
     <LandingPageLayout>
       <Home />
     </LandingPageLayout>
   )
 }
+
+HomePage.getInitialProps = async () => ({
+  namespacesRequired: [],
+})
 
 export default withApollo(HomePage)

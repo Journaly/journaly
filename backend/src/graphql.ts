@@ -50,9 +50,26 @@ schema.objectType({
     t.model.posts()
     t.model.dialect()
     t.model.nativeUsers()
-    t.model.learningUsers()
+    //t.model.learningUsers()
+    t.field('learningUsers', {
+      list: true,
+      type: 'User',
+      resolve: async (language, _args, ctx) => {
+        const result = await ctx.db.language
+          .findOne({ where: { id: language.id } })
+          .learningUsers({ include: { user: true } })
+        return result.map((r) => r.user)
+      },
+    })
   },
 })
+
+// schema.objectType({
+//   name: 'LanguageLearned',
+//   definition(t) {
+//     t.
+//   }
+// })
 
 schema.queryType({
   definition(t) {

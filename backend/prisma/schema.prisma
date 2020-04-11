@@ -22,9 +22,17 @@ model User {
   interests         Topic[]
   location          Location?
   languagesNative   Language[]    @relation("LanguageToNative")
-  languagesLearning Language[]    @relation("LanguageToLearner")
+  languagesLearning LanguageLearned[]    //@relation("LanguageToLearner")
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
+}
+
+model LanguageLearned {
+  id Int @id
+  user User
+  language Language
+  //@@map("_LanguageToLearner")
+  //@@unique([user, language])
 }
 
 model SocialMedia {
@@ -102,7 +110,7 @@ model Language {
   name          String
   dialect       String?
   nativeUsers   User[]  @relation("LanguageToNative")
-  learningUsers User[]  @relation("LanguageToLearner")
+  learningUsers LanguageLearned[]  //@relation("LanguageToLearner")
 }
 
 model Image {

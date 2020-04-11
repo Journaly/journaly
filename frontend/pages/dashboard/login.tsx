@@ -14,4 +14,8 @@ const LoginPage: NextPage = () => (
   </LandingPageLayout>
 )
 
+LoginPage.getInitialProps = async () => ({
+  namespacesRequired: [],
+})
+
 export default withApollo(LoginPage)

@@ -17,4 +17,8 @@ const SettingsPage: NextPage = () => {
   )
 }
 
+SettingsPage.getInitialProps = async () => ({
+  namespacesRequired: [],
+})
+
 export default withApollo(SettingsPage)

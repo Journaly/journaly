@@ -76,7 +76,7 @@ query feed {
 
 4. To bring the app down, run `$ docker-compose stop`
 
-Next, check out [frontend](./frontend) or [backend](./backend) for detailed information on how to work across the app.
+Next, check out [frontend](./frontend/README.md) or [backend](./backend/README.md) for detailed information on how to work across the app.
 
 ## More Helpful Docs
 

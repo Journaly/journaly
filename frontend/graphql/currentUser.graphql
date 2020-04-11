@@ -1,13 +1,13 @@
 query currentUser {
   currentUser {
-    Id
-    Name
-    Email
+    id
+    name
+    email
     posts {
-      Id
-      Title
-      Body
-      Published
+      id
+      title
+      body
+      published
     }
   }
 }

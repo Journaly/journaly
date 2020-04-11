@@ -294,4 +294,8 @@ const IntroducingJournalyBlogPost: NextPage = () => (
   </LandingPageLayout>
 )
 
+IntroducingJournalyBlogPost.getInitialProps = async () => ({
+  namespacesRequired: [],
+})
+
 export default IntroducingJournalyBlogPost

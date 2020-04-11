@@ -1,16 +1,17 @@
 import React from 'react'
 import Link from 'next/link'
 import { brandBlack, darkBlue, darkGrey } from '../../../utils'
-
+import { useTranslation } from '../../../config/i18n'
 import { useCurrentUserQuery } from '../../../generated/graphql'
 
 const Nav = () => {
+  const { t } = useTranslation()
   const { loading, error, data } = useCurrentUserQuery()
 
   if (loading) {
-    return <p>Loading...</p>
+    return <p>{t('loading')}</p>
   } else if (error) {
-    return <p>An error occurred...</p>
+    return <p>{t('error')}</p>
   }
 
   const currentUser = data.currentUser

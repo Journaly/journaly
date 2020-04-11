@@ -14,18 +14,13 @@ const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
 
 const CommentSelectionButton = () => (
   <button onMouseDown={handleCommentClick} className="comment-btn">
-    <IconLeaveComment
-      primaryColor="#2C3E50"
-      secondaryColor="#3B97D3"
-      size={25}
-    />
+    <IconLeaveComment primaryColor="white" secondaryColor="white" size={30} />
     <style jsx>{`
       .comment-btn {
-        width: 30px;
-        height: 30px;
+        width: 35px;
+        height: 35px;
         font-size: 14px;
         line-height: 1;
-        color: white;
         background-color: ${darkGrey};
         border-radius: 5px;
         cursor: pointer;
@@ -34,11 +29,11 @@ const CommentSelectionButton = () => (
         left: 0;
         z-index: 10;
         display: none;
-        transition: color 0.2s ease-in-out;
+        transition: background-color 0.2s ease-in-out;
       }
 
       .comment-btn:hover {
-        color: ${brandBlue};
+        background-color: ${brandBlue};
       }
     `}</style>
   </button>
@@ -92,7 +87,6 @@ function processSelectedTextArea(selection, parentElement) {
 function selectableTextAreaMouseUp(e) {
   setTimeout(() => {
     const selection = window.getSelection()
-    console.log(processSelectedTextArea(selection, selectableTextArea))
     if (processSelectedTextArea(selection, selectableTextArea) === false) {
       return
     }

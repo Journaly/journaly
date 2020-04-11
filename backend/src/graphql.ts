@@ -10,10 +10,10 @@ const WITHIN_ONE_HOUR = Date.now() - 3600000
 schema.objectType({
   name: 'User',
   definition(t) {
-    t.model.Id()
-    t.model.Name()
-    t.model.Email()
-    t.model.Password()
+    t.model.id()
+    t.model.name()
+    t.model.email()
+    t.model.password()
     t.model.posts({
       pagination: false,
     })
@@ -23,11 +23,11 @@ schema.objectType({
 schema.objectType({
   name: 'Post',
   definition(t) {
-    t.model.Id()
-    t.model.Title()
-    t.model.Body()
+    t.model.id()
+    t.model.title()
+    t.model.body()
     t.model.author()
-    t.model.Published()
+    t.model.published()
   },
 })
 
@@ -40,12 +40,12 @@ schema.queryType({
       t.list.field('feed', {
         type: 'Post',
         args: {
-          Published: schema.booleanArg(),
+          published: schema.booleanArg(),
         },
         resolve: async (parent, args, ctx) => {
           return ctx.db.post.findMany({
             where: {
-              Published: args.Published,
+              published: args.published,
             },
           })
         },
@@ -66,7 +66,7 @@ schema.queryType({
           }
           return ctx.db.user.findMany({
             where: {
-              Id: userId,
+              id: userId,
             },
           })
         },
@@ -79,20 +79,20 @@ schema.mutationType({
     t.field('createUser', {
       type: 'User',
       args: {
-        Name: schema.stringArg({ required: true }),
-        Email: schema.stringArg({ required: true }),
-        Password: schema.stringArg({ required: true }),
+        name: schema.stringArg({ required: true }),
+        email: schema.stringArg({ required: true }),
+        password: schema.stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx: any) => {
-        const Password = await bcrypt.hash(args.Password, 10)
+        const password = await bcrypt.hash(args.password, 10)
         const user = await ctx.db.user.create({
           data: {
-            Name: args.Name,
-            Email: args.Email.toLowerCase(),
-            Password,
+            name: args.name,
+            email: args.email.toLowerCase(),
+            password,
           },
         })
-        const token = jwt.sign({ userId: user.Id }, process.env.APP_SECRET!)
+        const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
         ctx.response.cookie('token', token, {
           httpOnly: true,
           maxAge: ONE_YEAR,
@@ -103,22 +103,22 @@ schema.mutationType({
     t.field('createPost', {
       type: 'Post',
       args: {
-        Title: schema.stringArg({ required: true }),
-        Body: schema.stringArg({ required: true }),
-        Published: schema.booleanArg({ required: true }),
+        title: schema.stringArg({ required: true }),
+        body: schema.stringArg({ required: true }),
+        published: schema.booleanArg({ required: true }),
         authorEmail: schema.stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx) =>
         ctx.db.post.create({
           data: {
-            Title: args.Title,
-            Body: args.Title,
+            title: args.title,
+            body: args.title,
             author: {
               connect: {
-                Email: 'ro@bin.com',
+                email: 'ro@bin.com',
               },
             },
-            Published: args.Published,
+            published: args.published,
           },
         }),
     })

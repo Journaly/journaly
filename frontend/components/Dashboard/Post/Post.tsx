@@ -12,17 +12,17 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
     <div className="post-container">
       <Head>
         <title>
-          {post.author.Name} | {post.Title}
+          {post.author.name} | {post.title}
         </title>
       </Head>
       <div className="post-content">
         <div className="post-header">
           // TODO (robin-macpherson): update when Post Type updated w/ PR#17
-          <img src="/images/samples/sample-post-img.jpg" alt={post.Title} />
-          <h1>{post.Title}</h1>
+          <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
+          <h1>{post.title}</h1>
         </div>
         <div className="post-body">
-          <p>{post.Body}</p>
+          <p>{post.body}</p>
           <h2>Clickity Clack -- A Delightful Sound</h2>
           <p>
             Netus natoque dis imperdiet dictum elementum urna pellentesque

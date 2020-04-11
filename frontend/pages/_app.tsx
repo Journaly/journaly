@@ -12,6 +12,8 @@ Router.events.on('routeChangeComplete', (url) => trackPageView(url))
 
 class JournalyApp extends App {
   componentDidMount() {
+    // Track initial page view
+    // All others are handled by the `routeChangeComplete` event handler
     trackPageView(this.props.router.asPath)
   }
 

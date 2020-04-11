@@ -21,24 +21,36 @@ model User {
   socialMedia       SocialMedia[]
   interests         Topic[]
   location          Location?
-  languagesNative   Language[]    @relation("LanguageToNative")
-  languagesLearning LanguageLearned[]    //@relation("LanguageToLearner")
+  languagesNative   LanguageNative[]
+  languagesLearning LanguageLearning[]
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 }
 
-model LanguageLearned {
-  id Int @id
-  user User
-  language Language
-  //@@map("_LanguageToLearner")
-  //@@unique([user, language])
+model LanguageLearning {
+  id       Int @id
+  user     User @relation(fields: [userId], references: [id])
+  userId   String @unique
+  language Language @relation(fields: [languageId], references: [id])
+  languageId String
+  @@unique([userId, languageId])
+}
+
+model LanguageNative {
+  id       Int @id
+  user     User @relation(fields: [userId], references: [id])
+  userId   String
+  language Language @relation(fields: [languageId], references: [id])
+  languageId String
+  @@unique([userId, languageId])
 }
 
 model SocialMedia {
   id       String              @id @default(cuid())
   platform SocialMediaPlatform
   url      String
+  author   User @relation(fields: [authorId], references: [id])
+  authorId String
 }
 
 model Post {
@@ -50,7 +62,7 @@ model Post {
   largeImage String?
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  author     User     @relation(fields: [authorId], references: [id])
+  author     User       @relation(fields: [authorId], references: [id])
   authorId   String
   readCount  Int        @default(0)
   readTime   Int        @default(1)
@@ -61,6 +73,15 @@ model Post {
   // TEMPORARY
   longitude  Float?
   latitude   Float?
+}
+
+model Language {
+  id            String  @id @default(cuid())
+  posts         Post[]
+  name          String
+  dialect       String?
+  nativeUsers   LanguageNative[]
+  learningUsers LanguageLearning[]  //@relation("LanguageToLearner")
 }
 
 model Location {
@@ -103,15 +124,6 @@ model Interest {
   id    String @id @default(cuid())
   name  String
   posts Post[]
-}
-
-model Language {
-  id            String  @id @default(cuid())
-  posts         Post[]
-  name          String
-  dialect       String?
-  nativeUsers   User[]  @relation("LanguageToNative")
-  learningUsers LanguageLearned[]  //@relation("LanguageToLearner")
 }
 
 model Image {

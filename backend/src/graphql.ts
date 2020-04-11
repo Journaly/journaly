@@ -1,4 +1,4 @@
-import { schema } from 'nexus-future'
+import { schema } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
@@ -18,6 +18,9 @@ schema.objectType({
     t.model.bio()
     t.model.userRole()
     t.model.location()
+    t.model.posts({
+      pagination: false,
+    })
   },
 })
 
@@ -129,9 +132,9 @@ schema.mutationType({
         const user = await ctx.db.user.create({
           data: {
             name: args.name,
-            email: args.email,
+            email: args.email.toLowerCase(),
             handle: args.handle,
-            password: args.password,
+            password,
           },
         })
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)

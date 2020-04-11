@@ -50,7 +50,8 @@ model Post {
   largeImage String?
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  author     User
+  author     User     @relation(fields: [authorId], references: [id])
+  authorId   String
   readCount  Int        @default(0)
   readTime   Int        @default(1)
   likes      Like[]

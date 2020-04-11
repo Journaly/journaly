@@ -8,11 +8,14 @@ generator prisma_client {
 }
 
 enum Status {
-  ADMIN MODERATOR FREE_USER PRO_USER
+  ADMIN
+  MODERATOR
+  FREE_USER
+  PRO_USER
 }
 
 model User {
-  id               String   @id @default(cuid())
+  id               String   @default(cuid()) @id
   name             String
   email            String   @unique
   password         String
@@ -25,7 +28,7 @@ model User {
 }
 
 model Post {
-  id         String   @id @default(cuid())
+  id         String   @default(cuid()) @id
   title      String
   body       String
   published  Boolean
@@ -33,5 +36,6 @@ model Post {
   largeImage String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  author     User
+  author     User     @relation(fields: [authorId], references: [id])
+  authorId   String
 }

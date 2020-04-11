@@ -38,6 +38,10 @@ const CommentSelectionButton = () => (
       .comment-btn:hover {
         color: ${brandBlue};
       }
+
+      .comment-btn > * {
+        pointer-events: none;
+      }
     `}</style>
   </button>
 )
@@ -65,8 +69,8 @@ function selectableTextAreaMouseUp(e) {
       commentSelectionButton.style.top = `${y - 50}px`
       commentSelectionButton.style.display = 'block'
     }
-    console.log(e)
-    console.log(selectedText)
+    console.log('not me')
+    console.log('not me')
   }, 0)
 }
 
@@ -75,6 +79,7 @@ if (typeof document !== 'undefined') {
 }
 
 function documentMouseDown(e) {
+  console.log(e.target)
   if (
     getComputedStyle(commentSelectionButton).display === 'block' &&
     !e.target.className.includes('comment-btn')
@@ -85,7 +90,7 @@ function documentMouseDown(e) {
 }
 
 function handleCommentClick() {
-  console.log('clicked!')
+  console.log('not me!')
   if (typeof document !== 'undefined') {
     const selection = document.getSelection().getRangeAt(0)
     const selectedText = selection.extractContents()

@@ -1,11 +1,8 @@
 import Link from 'next/link'
-
-import * as gtag from '../../lib/gtag'
 import validateAuth, { IErrors } from '../../lib/validateAuth'
+import { trackLogIn } from '../../events/users'
 import { useCreateUserMutation } from '../../generated/graphql'
 import useFormValidation from '../Hooks/useFormValidation'
-import IAnalyticsEvent from '../SignupForm'
-
 import Error from '../Error'
 import { brandBlue } from '../../utils'
 
@@ -40,11 +37,7 @@ const LoginForm: React.FC = () => {
     handleValidate(e)
     if (!loading && Object.keys(errors).length === 0) {
       createUser()
-      gtag.event({
-        action: 'submit_form',
-        category: 'Log in',
-        label: values.email,
-      })
+      trackLogIn()
     }
   }
 

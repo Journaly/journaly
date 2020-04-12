@@ -1,14 +1,22 @@
 import App from 'next/app'
 import Head from 'next/head'
-import Router from 'next/router'
-import * as gtag from '../lib/gtag'
+import Router, { withRouter } from 'next/router'
+import { initializeTracking, trackPageView } from '../lib/google-analytics'
 import '../styles/reset.css'
 import '../styles/globalStyles.css'
 import { appWithTranslation } from '../config/i18n'
 
-Router.events.on('routeChangeComplete', (url) => gtag.pageview(url))
+initializeTracking()
+// Tracks all page views except the first page render
+Router.events.on('routeChangeComplete', (url) => trackPageView(url))
 
 class JournalyApp extends App {
+  componentDidMount() {
+    // Track initial page view
+    // All others are handled by the `routeChangeComplete` event handler
+    trackPageView(this.props.router.asPath)
+  }
+
   render() {
     const { Component, pageProps } = this.props
 
@@ -23,4 +31,4 @@ class JournalyApp extends App {
   }
 }
 
-export default appWithTranslation(JournalyApp)
+export default appWithTranslation(withRouter(JournalyApp))

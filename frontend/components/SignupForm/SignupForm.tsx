@@ -1,11 +1,12 @@
+import React from 'react'
 import Link from 'next/link'
+import { trackCreateAccount } from '../../events/users'
+import validateAuth, { IErrors } from '../../lib/validateAuth'
+import { useCreateUserMutation } from '../../generated/graphql'
+import useFormValidation from '../Hooks/useFormValidation'
 
 import Error from '../Error'
 import { brandBlue } from '../../utils'
-import validateAuth, { IErrors } from '../../lib/validateAuth'
-
-import { useCreateUserMutation } from '../../generated/graphql'
-import useFormValidation from '../Hooks/useFormValidation'
 
 interface IFormValues {
   name: string
@@ -31,6 +32,7 @@ const SignupForm: React.FC = () => {
 
   const [createUser, { loading, error }] = useCreateUserMutation({
     onCompleted: () => {
+      trackCreateAccount()
       setValues(initialState)
     },
   })

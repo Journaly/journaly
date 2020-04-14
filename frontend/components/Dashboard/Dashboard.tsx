@@ -1,19 +1,39 @@
 import React from 'react'
-import Nav from './Nav'
+import Nav, { navConstants } from './Nav'
+import Header from './Header'
+import { lightGrey } from '../../utils'
 
 const Dashboard = ({ children }) => {
+  const handleMenuClick = () => {
+  }
+
   return (
-    <div>
+    <div className="dashboard">
+      <Header onMenuClick={handleMenuClick} />
       <Nav />
       <div className="dashboard-container">{children}</div>
       <style jsx>{`
-        display: flex;
+        .dashboard {
+          width: 100%;
+          background-color: ${lightGrey};
+        }
 
         .dashboard-container {
-          display: flex;
-          flex-direction: column;
-          width: 100%;
+          margin: 0 auto;
+          padding: 2rem;
           background-color: white;
+        }
+
+        @media (min-width: ${navConstants.mobileBreakpoint}px) and (max-width: ${navConstants.desktopBreakpoint -
+          1}px) {
+          .dashboard-container {
+            margin-left: ${navConstants.skinnyNavWidth}px;
+          }
+        }
+        @media (min-width: ${navConstants.desktopBreakpoint}px) {
+          .dashboard-container {
+            margin-left: ${navConstants.navWidth}px;
+          }
         }
       `}</style>
     </div>

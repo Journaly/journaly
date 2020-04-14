@@ -80,6 +80,7 @@ const Nav = () => {
       </h1>
       <style jsx>{`
         nav {
+          position: absolute;
           display: flex;
           flex-direction: column;
           justify-content: space-between;

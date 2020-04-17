@@ -8,29 +8,37 @@ generator prisma_client {
 }
 
 // A Journaly User
-
 model User {
   id                String        @id @default(cuid())
   name              String
   email             String        @unique
   handle            String        @unique
-  password          String
+  auth              Auth
   userRole          UserRole      @default(FREE_USER)
-  resetToken        String?
-  resetTokenExpiry  Float?
   bio               String?
   posts             Post[]
   socialMedia       SocialMedia[]
   interests         Topic[]
-  location          Location?
+  location          Location @relation(fields: [locationId], references: [id])
+  locationId        String
   languagesNative   LanguageNative[]
   languagesLearning LanguageLearning[]
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 }
 
-// Intermediary Table for the M2M relationship
+// Authentication data for a User
+// @relation: User
+ model Auth {
+  id                String        @id @default(cuid())
+  user              User @relation(fields: [userId], references: [id])
+  userId            String @unique
+  password          String
+  resetToken        String?
+  resetTokenExpiry  Float?
+ }
 
+// Intermediary Table for the M2M relationship
 model LanguageLearning {
   id       Int @id
   user     User @relation(fields: [userId], references: [id])
@@ -41,7 +49,6 @@ model LanguageLearning {
 }
 
 // Intermediary Table for the M2M relationship
-
 model LanguageNative {
   id       Int @id
   user     User @relation(fields: [userId], references: [id])
@@ -52,7 +59,6 @@ model LanguageNative {
 }
 
 // Social Media platforms that Users can add to their profile
-
 model SocialMedia {
   id       String              @id @default(cuid())
   platform SocialMediaPlatform
@@ -62,7 +68,6 @@ model SocialMedia {
 }
 
 // A journal entry - or Post - that a User writes
-
 model Post {
   id         String     @id @default(cuid())
   title      String
@@ -79,7 +84,8 @@ model Post {
   likes      Like[]
   comments   Comment[]
   topic      Topic[]
-  language   Language?
+  language Language @relation(fields: [languageId], references: [id])
+  languageId String
   // TEMPORARY
   longitude  Float?
   latitude   Float?
@@ -89,7 +95,6 @@ model Post {
 // A language that a post can be written in.
 // @relation: LanguageNative - a language spoken natively by a User
 // @relation: LanguageLearning - a language being learned by a User
-
 model Language {
   id            String  @id @default(cuid())
   posts         Post[]
@@ -100,7 +105,6 @@ model Language {
 }
 
 // Location of a Post or a User
-
 model Location {
   id      String @id @default(cuid())
   country String
@@ -108,34 +112,40 @@ model Location {
 }
 
 // Subject of a Post
-
 model Topic {
   id    String @id @default(cuid())
   name  String
   posts Post[]
 }
 
+// A Like a user can give to a Post
 model Like {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  author    User
-  post      Post
+  author    User @relation(fields: [userId], references: [id])
+  userId String
+  post      Post @relation(fields: [postId], references: [id])
+  postId String
 }
 
+// A Comment a User can leave on a Post with feedback for the author
+// Appears inside of a Thread
+// @relation: Thread
 model Comment {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   body      String
-  author    User
-  post      Post
-  thread    Thread
+  userId String
+  post      Post @relation(fields: [postId], references: [id])
+  postId String
+  thread    Thread @relation(fields: [threadId], references: [id])
+  threadId String
 }
 
 // A Comment Thread
 // @position: the starting index of a comment thread in a Post
-
 model Thread {
   id       String   @id @default(cuid())
   position Int
@@ -144,7 +154,6 @@ model Thread {
 
 // Something that a User is interested in.
 // @relation: 
-
 model Interest {
   id    String @id @default(cuid())
   name  String
@@ -152,17 +161,24 @@ model Interest {
 }
 
 // An Image that can be uploaded to a Post.
-
 model Image {
   id        String  @id @default(cuid())
   smallSize String
   largeSize String
 }
 
+// Writing prompts that Users can receive to give them ideas
+// of what to write about and to get started
+model Prompt {
+  id        String  @id @default(cuid())
+  text String
+  topic Topic @relation(fields: [topicId], references: [id])
+  topicId String
+}
+
 // Roles to determine a Users permissions and which features they can access
 // @FREE_USER - can access core features
 // @PRO_USER - a User paying a monthly subscription and can access pro features
-
 enum UserRole {
   ADMIN MODERATOR FREE_USER PRO_USER
 }
@@ -170,7 +186,6 @@ enum UserRole {
 // Status of a Post
 // @DRAFT: User has either not finished writing or has chosen to keep this Post private
 // @PUBLISHED: User has published this Post publically for feedback
-
 enum PostStatus {
   DRAFT PUBLISHED
 }

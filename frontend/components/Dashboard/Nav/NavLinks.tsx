@@ -74,6 +74,23 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
         </Link>
       </div>
       <style jsx>{`
+        /*
+          Note:
+
+          Default styles are for the skinny nav, which appears between mobile and desktop.
+
+          For mobile and desktop, duplicated styles are required
+          in both :global(.expanded) *  { ... } and the mobile nav media query.
+
+          This is because certain pages, like settings, default to the skinny
+          nav, even on desktop.
+
+          The reverse (default styles for the expanded nav, and overrides with the
+          skinny nav media query) results in the same situation, since we'd need to
+          duplicate styles in the desktop media query to keep the skinny nav on the
+          settings page.
+        */
+
         .nav-top {
           margin-top: 50px;
           margin-bottom: 50px;

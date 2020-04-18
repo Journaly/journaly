@@ -124,6 +124,10 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
         .expanded .nav-logo span {
           display: inline;
         }
+        /*
+          See comment in NavLinks for why these styles must be duplicated
+          for both .expanded and the mobile nav media query
+        */
         @media (${navConstants.mobileNavOnly}) {
           .nav-logo a {
             font-size: 24px;

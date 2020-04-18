@@ -121,7 +121,7 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
           font-size: 16px;
           text-align: center;
           color: white;
-          animation: fadeIn 300ms linear;
+          animation: fadeIn ${navConstants.transitionDuration}ms linear;
         }
 
         @media (${navConstants.mobileNavOnly}) {
@@ -132,7 +132,7 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
             font-size: 16px;
             text-align: center;
             color: white;
-            animation: fadeIn 300ms linear;
+            animation: fadeIn ${navConstants.transitionDuration}ms linear;
           }
         }
 
@@ -185,7 +185,7 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
           flex-direction: row;
           height: auto;
           padding: 25px;
-          animation: fadeIn 300ms linear;
+          animation: fadeIn ${navConstants.transitionDuration}ms linear;
         }
 
         @media (${navConstants.mobileNavOnly}) {
@@ -193,7 +193,7 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
             flex-direction: row;
             height: auto;
             padding: 25px;
-            animation: fadeIn 300ms linear;
+            animation: fadeIn ${navConstants.transitionDuration}ms linear;
           }
         }
 

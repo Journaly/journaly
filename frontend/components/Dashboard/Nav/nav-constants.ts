@@ -13,4 +13,5 @@ export const navConstants = {
   zIndex: 100,
   skinnyNavWidth: 80,
   navWidth: 230,
+  transitionDuration: 300,
 }

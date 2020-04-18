@@ -46,7 +46,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
           width: 100%;
           background-color: rgba(0, 0, 0, 0.4);
           opacity: 0;
-          transition: opacity 300ms ease-in-out;
+          transition: opacity ${navConstants.transitionDuration}ms ease-in-out;
           z-index: ${navConstants.zIndex};
         }
 
@@ -74,7 +74,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
           background-color: ${black};
           z-index: ${navConstants.zIndex};
           transform: translateX(-100%);
-          transition: transform 300ms ease-in-out, width 300ms ease-in-out;
+          transition: transform ${navConstants.transitionDuration}ms ease-in-out,
+            width ${navConstants.transitionDuration}ms ease-in-out;
         }
 
         .expanded nav {
@@ -117,7 +118,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
 
         .expanded .nav-logo a {
           font-size: 24px;
-          animation: fadeIn 300ms linear;
+          animation: fadeIn ${navConstants.transitionDuration}ms linear;
         }
 
         .expanded .nav-logo span {
@@ -126,7 +127,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
         @media (${navConstants.mobileNavOnly}) {
           .nav-logo a {
             font-size: 24px;
-            animation: fadeIn 300ms linear;
+            animation: fadeIn ${navConstants.transitionDuration}ms linear;
           }
 
           .nav-logo span {

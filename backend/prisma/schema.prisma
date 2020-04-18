@@ -188,6 +188,8 @@ model Subscription {
   price       Int
   description String
   users       User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Roles to determine a Users permissions and which features they can access

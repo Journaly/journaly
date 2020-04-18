@@ -191,8 +191,8 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
         .nav-link {
           display: flex;
           flex-direction: column;
-          justify-content: center;
           align-items: center;
+          justify-content: center;
           height: 70px;
           font-size: 16px;
           color: white;
@@ -200,6 +200,7 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
 
         :global(.expanded) .nav-link {
           flex-direction: row;
+          justify-content: normal;
           height: auto;
           padding: 25px;
           animation: fadeIn ${navConstants.transitionDuration}ms linear;
@@ -208,6 +209,7 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
         @media (${navConstants.mobileNavOnly}) {
           .nav-link {
             flex-direction: row;
+            justify-content: normal;
             height: auto;
             padding: 25px;
             animation: fadeIn ${navConstants.transitionDuration}ms linear;

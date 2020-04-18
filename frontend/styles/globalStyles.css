@@ -10,6 +10,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Prevent transitions on page load */
+.block-transitions-on-page-load * {
+  transition: none !important;
+}
+
 h1,
 h2,
 h3,

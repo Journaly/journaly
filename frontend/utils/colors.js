@@ -1,4 +1,5 @@
 export const purple = '#524763'
+export const black = '#393939'
 export const charcoal = '#535353'
 export const darkBlue = '#32567E'
 export const lightBlue = '#4391C9'

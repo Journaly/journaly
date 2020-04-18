@@ -4,3 +4,7 @@ export const width = {
   desktop: 1040,
   desktopHD: 1364,
 }
+
+export const above = {
+  tablet: `min-width: ${width.tablet}px`,
+}

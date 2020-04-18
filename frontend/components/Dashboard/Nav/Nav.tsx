@@ -1,166 +1,140 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
-import { brandBlack, darkBlue, darkGrey } from '../../../utils'
-import { useTranslation } from '../../../config/i18n'
-import { useCurrentUserQuery } from '../../../generated/graphql'
+import { navConstants } from './nav-constants'
+import NavLinks from './NavLinks'
+import { black } from '../../../utils'
 
-const Nav = () => {
-  const { t } = useTranslation()
-  const { loading, error, data } = useCurrentUserQuery()
+interface Props {
+  expanded: boolean
+  collapse: () => void
+}
 
-  if (loading) {
-    return <p>{t('loading')}</p>
-  } else if (error) {
-    return <p>{t('error')}</p>
+const Nav: React.FC<Props> = ({ expanded, collapse }) => {
+  useEffect(() => {
+    setTimeout(() => {
+      document.body.classList.remove('block-transitions-on-page-load')
+    }, 0)
+  }, [])
+
+  const handleCollapse = (): void => {
+    // Collapse the nav after clicking a link for mobile only
+    if (window.innerWidth < navConstants.mobileBreakpoint) {
+      collapse()
+    }
   }
 
-  const currentUser = data.currentUser
-
   return (
-    <nav>
-      {currentUser && (
-        <>
-          <div className="nav-top">
-            <Link href="/dashboard/profile">
-              <a>
-                <img className="profile-img" src="/images/robin-small.png" />
-                <p className="current-user-name">Robin MacPherson</p>
-              </a>
-            </Link>
-          </div>
-          <div className="nav-bottom">
-            <Link href="/dashboard/my-feed">
-              <a className="nav-link">
-                <img src="../images/icons/your-feed-icon.svg" alt="" />
-                <span className="nav-link-text">My Feed</span>
-              </a>
-            </Link>
-            <Link href="/dashboard/my-posts">
-              <a className="nav-link">
-                <img src="../images/icons/your-feed-icon.svg" alt="" />
-                <span className="nav-link-text">My Posts</span>
-              </a>
-            </Link>
-            <Link href="/dashboard/new-post">
-              <a className="nav-link">
-                <img src="../images/icons/new-post-icon.svg" alt="" />
-                <span className="nav-link-text">New Post</span>
-              </a>
-            </Link>
-            <Link href="/dashboard/drafts">
-              <a className="nav-link">
-                <img src="../images/icons/drafts-icon.svg" alt="" />
-                <span className="nav-link-text">Drafts</span>
-              </a>
-            </Link>
+    <div className={expanded ? 'expanded' : ''}>
+      <div className="nav-background" onClick={handleCollapse} />
 
-            <hr />
+      <nav>
+        <NavLinks onClick={handleCollapse} />
 
-            <Link href="/dashboard/settings">
-              <a className="nav-link">
-                <img src="../images/icons/settings-icon.svg" alt="" />
-                <span className="nav-link-text">Settings</span>
-              </a>
-            </Link>
-            <Link href="/">
-              <a className="log-out nav-link">
-                <img src="../images/icons/logout-icon.svg" alt="Log out" />
-                <span className="nav-link-text">Log Out</span>
-              </a>
-            </Link>
-          </div>
-        </>
-      )}
-      <h1>
-        <Link href="/">
-          <a className="nav-logo">
-            J<span>ournaly</span>
-          </a>
-        </Link>
-      </h1>
+        <h1 className="nav-logo">
+          <Link href="/">
+            <a onClick={handleCollapse}>
+              J<span>ournaly</span>
+            </a>
+          </Link>
+        </h1>
+      </nav>
       <style jsx>{`
+        .nav-background {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          background-color: rgba(0, 0, 0, 0.4);
+          opacity: 0;
+          transition: opacity 300ms ease-in-out;
+          z-index: ${navConstants.zIndex};
+        }
+
+        .expanded .nav-background {
+          opacity: 1;
+          /* Make background take up full screen */
+          bottom: 0;
+          right: 0;
+        }
+
+        @media (${navConstants.aboveMobileNav}) {
+          .nav-background {
+            display: none;
+          }
+        }
+
         nav {
-          position: absolute;
+          position: fixed;
+          top: 0;
+          left: 0;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
-          background-color: black;
-          background-size: contain;
-          width: 230px;
           height: 100vh;
-          padding-bottom: 20px;
+          width: ${navConstants.navWidth}px;
+          background-color: ${black};
+          z-index: ${navConstants.zIndex};
+          transform: translateX(-100%);
+          transition: transform 300ms ease-in-out, width 300ms ease-in-out;
         }
 
-        .nav-top a {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
+        .expanded nav {
+          /* Move the nav from off the screen to on the screen */
+          transform: translateX(0%);
         }
 
-        .nav-top .profile-img {
-          margin-top: 50px;
-          margin-bottom: 10px;
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          background-color: ${darkBlue};
-          object-fit: cover;
+        @media (${navConstants.aboveMobileNav}) {
+          nav {
+            transform: translateX(0%);
+          }
         }
-
-        .nav-top p {
-          margin: 5px 0 25px;
-          width: 100%;
-          text-align: center;
-          color: white;
-          font-size: 16px;
+        @media (${navConstants.skinnyNavToDesktop}) {
+          nav {
+            width: ${navConstants.skinnyNavWidth}px;
+          }
         }
-
-        .nav-bottom {
-          display: flex;
-          flex-direction: column;
-          padding-left: 25px;
-        }
-
-        .nav-bottom hr {
-          width: 140px;
-          border: 1px solid white;
-          margin: 0;
-        }
-
-        .nav-link {
-          display: flex;
-          align-items: center;
-          color: white;
-          font-size: 16px;
-          padding: 25px 0;
-        }
-
-        .nav-link:hover {
-          background-color: ${darkGrey};
-        }
-
-        .nav-link img {
-          width: 25px;
-          margin-right: 15px;
+        @media (${navConstants.aboveDesktopNav}) {
+          /* Allow certain pages, like settings, to have the skinny nav for the desktop breakpoint */
+          :not(.expanded) nav {
+            width: ${navConstants.skinnyNavWidth}px;
+          }
         }
 
         .nav-logo {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          margin: ${currentUser ? '0 15px 0 0' : '50vh 15px 0 0'};
-          font-size: 24px;
+          margin-bottom: 15px;
+          text-align: center;
+        }
+
+        .nav-logo a {
+          font-size: 40px;
+          /* Match the line-height of the parent h1 */
+          line-height: 56px;
           color: white;
         }
 
-        .logo a {
-          color: ${brandBlack};
+        .nav-logo span {
+          display: none;
+        }
+
+        .expanded .nav-logo a {
+          font-size: 24px;
+          animation: fadeIn 300ms linear;
+        }
+
+        .expanded .nav-logo span {
+          display: inline;
+        }
+        @media (${navConstants.mobileNavOnly}) {
+          .nav-logo a {
+            font-size: 24px;
+            animation: fadeIn 300ms linear;
+          }
+
+          .nav-logo span {
+            display: inline;
+          }
         }
       `}</style>
-    </nav>
+    </div>
   )
 }
 

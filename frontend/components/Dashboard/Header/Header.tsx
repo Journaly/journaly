@@ -1,5 +1,5 @@
 import React from 'react'
-import { brandBlack } from '../../../utils'
+import { black } from '../../../utils'
 import { navConstants } from '../Nav'
 
 interface Props {
@@ -25,10 +25,10 @@ const Header: React.FC<Props> = ({ onMenuClick }) => {
           height: 72px;
           padding: 20px 0;
           color: white;
-          background-color: ${brandBlack};
+          background-color: ${black};
         }
         /* Header should disappear when the mobile nav does */
-        @media (min-width: ${navConstants.mobileBreakpoint}px) {
+        @media (${navConstants.aboveMobileNav}) {
           .header {
             display: none;
           }

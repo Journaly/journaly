@@ -1,10 +1,135 @@
 import React from 'react'
 import Head from 'next/head'
+
 import { Post as PostType } from '../../../generated/graphql'
+import { brandBlue, highlightColor, darkGrey } from '../../../utils'
+import IconLeaveComment from '../../Icons/IconLeaveAComment'
 
 // TODO: Remove any when Types are fixed with PR #17
 interface IPostProps {
   post: PostType | any
+}
+
+const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
+
+const CommentSelectionButton = () => (
+  <button onMouseDown={handleCommentClick} className="comment-btn">
+    <IconLeaveComment primaryColor="white" secondaryColor="white" size={30} />
+    <style jsx>{`
+      .comment-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+        line-height: 1;
+        background-color: ${darkGrey};
+        border-radius: 5px;
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        display: none;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      .comment-btn:hover {
+        background-color: ${brandBlue};
+      }
+    `}</style>
+  </button>
+)
+
+let selectableTextArea: Node
+let commentSelectionButton
+
+if (typeof document !== 'undefined' && typeof window !== 'undefined') {
+  selectableTextArea = document.querySelector('.selectable-text-area')
+  commentSelectionButton = document.querySelector('.comment-btn')
+  commentSelectionButton.addEventListener('click', handleCommentClick)
+
+  selectableTextArea.addEventListener('mouseup', selectableTextAreaMouseUp)
+}
+
+function buildPostOrderList(el) {
+  const postOrderList = []
+  const recur = (el) => {
+    el.childNodes.forEach(recur)
+    postOrderList.push(el)
+  }
+  recur(el)
+  return postOrderList
+}
+
+function processSelectedTextArea(selection, parentElement) {
+  const nodeList = buildPostOrderList(parentElement)
+  let startIdx = nodeList.indexOf(selection.baseNode)
+  let endIdx = nodeList.indexOf(selection.extentNode)
+
+  if (startIdx > endIdx) {
+    ;[startIdx, endIdx] = [endIdx, startIdx]
+  }
+
+  const selectedNodes = nodeList.slice(startIdx, endIdx + 1)
+
+  for (const node of selectedNodes) {
+    if (node.constructor === Text) {
+      continue
+    } else if (elementWhiteList.has(node.tagName)) {
+      continue
+    } else {
+      // node not in our "whitelist"
+      return false
+    }
+  }
+  return true
+}
+
+function selectableTextAreaMouseUp(e) {
+  setTimeout(() => {
+    const selection = window.getSelection()
+    if (processSelectedTextArea(selection, selectableTextArea) === false) {
+      return
+    }
+
+    const selectedText = selection.toString().trim()
+    if (selectedText.length) {
+      const x = e.pageX
+      const y = e.pageY
+      commentSelectionButton.style.left = `${x - 40}px`
+      commentSelectionButton.style.top = `${y - 50}px`
+      commentSelectionButton.style.display = 'block'
+    }
+  }, 0)
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('mousedown', documentMouseDown)
+}
+
+function documentMouseDown() {
+  if (getComputedStyle(commentSelectionButton).display === 'block') {
+    commentSelectionButton.style.display = 'none'
+  }
+}
+
+function handleCommentClick(e) {
+  const selection = document.getSelection()
+  e.preventDefault()
+  e.stopPropagation()
+  if (typeof document !== 'undefined') {
+    if (selection.isCollapsed === true) {
+      return
+    }
+    const firstRange = selection.getRangeAt(0)
+    const selectedText = firstRange.extractContents()
+    const commentedTextSpan = document.createElement('span')
+    commentedTextSpan.style.backgroundColor = `${highlightColor}`
+    commentedTextSpan.appendChild(selectedText)
+    firstRange.insertNode(commentedTextSpan)
+    commentSelectionButton.style.display = 'none'
+    window.getSelection().empty()
+  }
+  return false
 }
 
 const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
@@ -21,16 +146,17 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
           <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
           <h1>{post.title}</h1>
         </div>
-        <div className="post-body">
+        <div className="post-body selectable-text-area">
           <p>{post.body}</p>
           <h2>Clickity Clack -- A Delightful Sound</h2>
           <p>
             Netus natoque dis imperdiet dictum elementum urna pellentesque
             penatibus vulputate sollicitudin orci duis curae aliquam eleifend
-            arcu lectus volutpat ad Senectus consequat adipiscing habitant curae
-            diam eleifend egestas lacus nullam urna praesent pharetra mauris
-            tortor dapibus lobortis lectus fusce quis eros erat risus maecenas
-            consectetur interdum inceptos ultrices neque integer.
+            arcu lectus <strong>volutpat ad Senectus</strong> consequat
+            adipiscing habitant curae diam eleifend egestas lacus nullam urna
+            praesent pharetra mauris tortor dapibus lobortis lectus fusce quis
+            eros erat risus maecenas consectetur interdum inceptos ultrices
+            neque integer.
           </p>
           <p>
             Netus natoque dis imperdiet dictum elementum urna pellentesque
@@ -59,6 +185,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
           </p>
         </div>
       </div>
+      <CommentSelectionButton />
       <style jsx>{`
         .post-container {
           max-width: 1200px;

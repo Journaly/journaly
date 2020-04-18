@@ -5,8 +5,8 @@ At Journaly we use approch docs -- also known as *design docs* -- to propose an 
 ## The Process
 
 1. We create an issue to outline the initial problem we want to solve.
-2. We create a Notion page where we can write a first draft and easily collaborate to refine the approach.
-3. Once we have a final draft, we export this to the Journaly repository for openness and version control.
+2. We create a Pull Request where we write a first draft and can easily collaborate to refine the approach.
+3. Once we have a final draft, we can merge this in and begin work.
 
 ## Naming Convention
 

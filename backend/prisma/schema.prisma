@@ -180,10 +180,14 @@ model Prompt {
   topicId String
 }
 
+// A subscription or plan that a User has.
+// Ultimately indicates whether they are a FREE or PRO (paying) User.
 model Subscription {
-  id    String @default(cuid()) @id
-  name  String
-  price Int
+  id          String @default(cuid()) @id
+  name        String
+  price       Int
+  description String
+  users       User[]
 }
 
 // Roles to determine a Users permissions and which features they can access
@@ -204,6 +208,7 @@ enum PostStatus {
   PUBLISHED
 }
 
+// List of supported social media platforms that Users can add to their profile
 enum SocialMediaPlatform {
   FACEBOOK
   YOUTUBE

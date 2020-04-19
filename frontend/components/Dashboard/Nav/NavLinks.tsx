@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import NavLink from '../../NavLink'
 import { navConstants } from './nav-constants'
 import { darkBlue, darkGrey } from '../../../utils'
 import { useTranslation } from '../../../config/i18n'
@@ -32,39 +33,39 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
         </Link>
       </div>
       <div className="nav-bottom">
-        <Link href="/dashboard/my-feed">
+        <NavLink href="/dashboard/my-feed">
           <a className="nav-link" onClick={onClick}>
             <img src="../images/icons/your-feed-icon.svg" alt="" />
             <span className="nav-link-text">{t('nav.myFeed')}</span>
           </a>
-        </Link>
-        <Link href="/dashboard/my-posts">
+        </NavLink>
+        <NavLink href="/dashboard/my-posts">
           <a className="nav-link" onClick={onClick}>
             <img src="../images/icons/your-feed-icon.svg" alt="" />
             <span className="nav-link-text">{t('nav.myPosts')}</span>
           </a>
-        </Link>
-        <Link href="/dashboard/new-post">
+        </NavLink>
+        <NavLink href="/dashboard/new-post">
           <a className="nav-link" onClick={onClick}>
             <img src="../images/icons/new-post-icon.svg" alt="" />
             <span className="nav-link-text">{t('nav.newPost')}</span>
           </a>
-        </Link>
-        <Link href="/dashboard/drafts">
+        </NavLink>
+        <NavLink href="/dashboard/drafts">
           <a className="nav-link" onClick={onClick}>
             <img src="../images/icons/drafts-icon.svg" alt="" />
             <span className="nav-link-text">{t('nav.drafts')}</span>
           </a>
-        </Link>
+        </NavLink>
 
         <hr />
 
-        <Link href="/dashboard/settings">
+        <NavLink href="/dashboard/settings">
           <a className="nav-link" onClick={onClick}>
             <img src="../images/icons/settings-icon.svg" alt="" />
             <span className="nav-link-text">{t('nav.settings')}</span>
           </a>
-        </Link>
+        </NavLink>
 
         <Link href="/">
           <a className="log-out nav-link" onClick={handleLogOut}>
@@ -216,6 +217,7 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
           }
         }
 
+        .nav-link.active,
         .nav-link:hover {
           background-color: ${darkGrey};
         }

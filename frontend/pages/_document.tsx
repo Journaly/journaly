@@ -54,7 +54,7 @@ class MyDocument extends Document<
           <link rel="shortcut icon" href="/favicon.png" />
           <link rel="stylesheet" type="text/css" href="/nprogress.css" />
         </Head>
-        <body>
+        <body className="block-transitions-on-page-load">
           <Main />
           <NextScript />
         </body>

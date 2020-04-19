@@ -59,6 +59,7 @@ const Header: React.FC<Props> = ({ onMenuClick }) => {
         }
 
         .logo-text {
+          font-family: 'Playfair Display', serif;
           margin-right: 20px;
         }
       `}</style>

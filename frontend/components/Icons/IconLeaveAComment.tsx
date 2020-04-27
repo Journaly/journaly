@@ -10,10 +10,10 @@ function SvgComponent(props: React.SVGProps<SVGSVGElement> & Props) {
   const { size, primaryColor, secondaryColor, ...otherProps } = props
   return (
     <svg
-      height={props.size}
+      height={size}
       id="prefix__Layer_1"
       viewBox="0 0 128 128"
-      width={props.size}
+      width={size}
       xmlSpace="preserve"
       {...otherProps}
     >

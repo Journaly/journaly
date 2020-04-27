@@ -1,9 +1,16 @@
-
 import React from 'react'
 import { darkGrey } from '../../utils/colors'
 
-const Button = React.forwardRef(
-  ({ active, reversed, iconSrc, iconAlt, ...props }, ref) => (
+type Ref = HTMLImageElement
+
+type Props = {
+  active: boolean
+  iconSrc: string
+  iconAlt: string
+}
+
+const Button = React.forwardRef<Ref, Props>(
+  ({ active, iconSrc, iconAlt, ...props }, ref) => (
     <>
       <img
         className={active ? 'active' : ''}
@@ -23,7 +30,7 @@ const Button = React.forwardRef(
         }
       `}</style>
     </>
-  )
+  ),
 )
 
 export default Button

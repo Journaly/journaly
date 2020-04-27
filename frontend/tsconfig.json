@@ -18,7 +18,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "strict": false, // GOAL: set to true :)
+    "strict": true,
     "target": "ES6"
   },
   "exclude": ["node_modules"],

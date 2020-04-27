@@ -1,7 +1,7 @@
 import React from 'react'
 import { lightBlue } from '../../../utils'
 
-const createListOfLanguages = (languages) => {
+const createListOfLanguages = (languages: string[]) => {
   if (languages.length === 1) return languages[0]
   if (languages.length === 2) return `${languages[0]} and ${languages[1]}`
 
@@ -9,7 +9,21 @@ const createListOfLanguages = (languages) => {
   return `${allButLast.join(', ')}, and ${languages.slice(-1)[0]}`
 }
 
-const Testimonial = ({ quote, speaks, writes, name, picture }) => {
+type Props = {
+  quote: string
+  speaks: string[]
+  writes: string[]
+  name: string
+  picture: string
+}
+
+const Testimonial: React.FC<Props> = ({
+  quote,
+  speaks,
+  writes,
+  name,
+  picture,
+}) => {
   return (
     <div className="testimonial">
       <p className="user-quote">{quote}</p>

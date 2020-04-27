@@ -1,5 +1,6 @@
+// @ts-nocheck
 import React, { useMemo, useState, useCallback } from 'react'
-import { createEditor, Editor, Transforms } from 'slate'
+import { createEditor, Editor, Transforms, Node } from 'slate'
 import { Slate, Editable, withReact, useSlate } from 'slate-react'
 import { withHistory } from 'slate-history'
 import isHotkey from 'is-hotkey'
@@ -29,9 +30,15 @@ const HOTKEYS = {
 }
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
+const initialValue = [
+  {
+    type: 'paragraph',
+    children: [{ text: '' }],
+  },
+]
 
 const JournalyEditor = () => {
-  const [value, setValue] = useState(initialValue)
+  const [value, setValue] = useState<Node[]>(initialValue)
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
@@ -195,12 +202,5 @@ const BlockButton = ({ format, icon }) => {
     />
   )
 }
-
-const initialValue = [
-  {
-    type: 'paragraph',
-    children: [{ text: '' }],
-  },
-]
 
 export default JournalyEditor

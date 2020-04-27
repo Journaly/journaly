@@ -1,10 +1,11 @@
+// @ts-nocheck
 import React from 'react'
 
 import PostCard from '../PostCard'
 
 // import { Post } from '../../../generated/graphql' // TODO (robin-macpherson): See Post[] type todo below
 
-interface Props {
+type Props = {
   posts: any[] // TODO (robin-macpherson): should be Post[]
 }
 

@@ -1,13 +1,9 @@
 import React from 'react'
 import { NextPage } from 'next'
-import Error from 'next/error'
+import Error, { ErrorProps } from 'next/error'
 import { useTranslation } from '../config/i18n'
 
-interface Props {
-  statusCode: number
-}
-
-const ErrorPage: NextPage<Props> = ({ statusCode }) => {
+const ErrorPage: NextPage<ErrorProps> = ({ statusCode }) => {
   const { t } = useTranslation()
 
   return (
@@ -23,13 +19,14 @@ const ErrorPage: NextPage<Props> = ({ statusCode }) => {
 }
 
 ErrorPage.getInitialProps = async ({ res, err }) => {
-  let statusCode = null
+  let statusCode = 404
 
   if (res) statusCode = res.statusCode
-  else if (err) statusCode = err.statusCode
+  if (err && err.statusCode) statusCode = err.statusCode
 
   return {
     namespacesRequired: ['common'],
+    title: `Error | ${statusCode}`,
     statusCode,
   }
 }

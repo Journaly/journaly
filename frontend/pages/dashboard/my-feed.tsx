@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextPage } from 'next'
 import { withApollo } from '../../lib/apollo'
 import { useTranslation } from '../../config/i18n'

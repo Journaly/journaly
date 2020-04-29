@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react'
 import Head from 'next/head'
 
@@ -40,19 +41,21 @@ const CommentSelectionButton = () => (
 )
 
 let selectableTextArea: Node
-let commentSelectionButton
+let commentSelectionButton: HTMLElement
 
 if (typeof document !== 'undefined' && typeof window !== 'undefined') {
-  selectableTextArea = document.querySelector('.selectable-text-area')
-  commentSelectionButton = document.querySelector('.comment-btn')
+  selectableTextArea = document.querySelector(
+    '.selectable-text-area',
+  ) as HTMLElement
+  commentSelectionButton = document.querySelector('.comment-btn') as HTMLElement
   commentSelectionButton.addEventListener('click', handleCommentClick)
 
   selectableTextArea.addEventListener('mouseup', selectableTextAreaMouseUp)
 }
 
-function buildPostOrderList(el) {
-  const postOrderList = []
-  const recur = (el) => {
+function buildPostOrderList(el: HTMLElement) {
+  const postOrderList: (HTMLElement | Node)[] = []
+  const recur = (el: HTMLElement | Node) => {
     el.childNodes.forEach(recur)
     postOrderList.push(el)
   }
@@ -60,7 +63,7 @@ function buildPostOrderList(el) {
   return postOrderList
 }
 
-function processSelectedTextArea(selection, parentElement) {
+function processSelectedTextArea(selection, parentElement: HTMLElement) {
   const nodeList = buildPostOrderList(parentElement)
   let startIdx = nodeList.indexOf(selection.baseNode)
   let endIdx = nodeList.indexOf(selection.extentNode)
@@ -84,7 +87,7 @@ function processSelectedTextArea(selection, parentElement) {
   return true
 }
 
-function selectableTextAreaMouseUp(e) {
+function selectableTextAreaMouseUp(e: MouseEvent): void {
   setTimeout(() => {
     const selection = window.getSelection()
     if (processSelectedTextArea(selection, selectableTextArea) === false) {

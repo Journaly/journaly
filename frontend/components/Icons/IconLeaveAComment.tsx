@@ -1,6 +1,13 @@
-import * as React from 'react'
+import React from 'react'
 
-function SvgComponent({ size, primaryColor, secondaryColor }) {
+type Props = {
+  size: number
+  primaryColor: string
+  secondaryColor: string
+}
+
+function SvgComponent(props: React.SVGProps<SVGSVGElement> & Props) {
+  const { size, primaryColor, secondaryColor, ...otherProps } = props
   return (
     <svg
       height={size}
@@ -8,6 +15,7 @@ function SvgComponent({ size, primaryColor, secondaryColor }) {
       viewBox="0 0 128 128"
       width={size}
       xmlSpace="preserve"
+      {...otherProps}
     >
       <path
         d="M121.7 37.7c0-.1.1-.1.1-.2l.1-.1c0-.1.1-.1.1-.2s.1-.1.1-.2 0-.1.1-.2v-.2-.2-.2-.1l-.6-10.6v-.1-.2c0-.1 0-.1-.1-.2 0-.1 0-.1-.1-.2 0-.1-.1-.1-.1-.2s-.1-.1-.1-.2-.1-.1-.1-.2c0 0 0-.1-.1-.1l-11-11.2-.1-.1c-.1 0-.1-.1-.2-.1s-.1-.1-.2-.1-.1-.1-.2-.1-.1-.1-.2-.1-.1 0-.2-.1h-.2-.1l-10.5-.7h-.7c-.1 0-.1 0-.2.1-.1 0-.1.1-.2.1s-.1.1-.2.1-.1.1-.1.1c-.1 0-.1.1-.2.1L43.4 64.9c-.8.8-.8 2 0 2.8.8.8 2 .8 2.8 0l44.1-43.4 8.9.6 9.9 10.1.5 8.9-44.1 43.4c-.8.8-.8 2 0 2.8.8.8 2 .8 2.8 0l53.4-52.4zm-8.6-3.7v-.1-.2c0-.1 0-.1-.1-.2 0-.1 0-.1-.1-.2 0-.1-.1-.1-.1-.2s-.1-.1-.1-.2-.1-.1-.1-.2c0 0 0-.1-.1-.1l-11-11.2-.1-.1c-.1 0-.1-.1-.2-.1s-.1-.1-.2-.1-.1-.1-.2-.1-.1-.1-.2-.1-.1 0-.2-.1h-.2-.1l-6.1-.4 4.7-4.7 8.9.6 9.9 10.1.5 8.9-4.8 4.7-.1-6z"

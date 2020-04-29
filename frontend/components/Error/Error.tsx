@@ -1,6 +1,8 @@
+// @ts-nocheck
 import { errorPrimary } from '../../utils'
+import { ApolloError } from '@apollo/client'
 
-const Error = ({ children }) => (
+const Error: React.FC = ({ children }) => (
   <div>
     {children}
     <style jsx>
@@ -22,7 +24,11 @@ const Error = ({ children }) => (
   </div>
 )
 
-const DisplayError = ({ error }) => {
+type Props = {
+  error?: ApolloError
+}
+
+const DisplayError: React.FC<Props> = ({ error }) => {
   if (!error || !error.message) return null
   if (error.networkError?.result?.errors.length) {
     return error.networkError.result.errors.map((error, i) => (
@@ -43,13 +49,5 @@ const DisplayError = ({ error }) => {
     </Error>
   )
 }
-
-// DisplayError.defaultProps = {
-//   error: {},
-// }
-
-// DisplayError.propTypes = {
-//   error: PropTypes.object,
-// }
 
 export default DisplayError

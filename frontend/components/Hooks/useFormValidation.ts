@@ -6,12 +6,13 @@ type FormEvent = React.FormEvent<HTMLFormElement>
 
 type FormEventHandler = (e: FormEvent) => void
 type InputEventHandler = (e: InputChangeEvent) => void
+type InputFocusEventHandler = (e: InputBlurEvent) => void
 
 interface FormValidationValues<T, U> {
   handleChange: InputEventHandler
   values: T
   handleValidate: FormEventHandler
-  handleBlur: InputEventHandler
+  handleBlur: InputFocusEventHandler
   errors: Partial<U>
   setValues: (values: T) => void
 }

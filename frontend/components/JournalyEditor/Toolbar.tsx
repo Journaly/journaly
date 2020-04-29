@@ -1,6 +1,6 @@
-const Toolbar = (props) => (
+const Toolbar: React.FC = ({ children }) => (
   <div>
-    {props.children}
+    {children}
     <style jsx>{`
       display: flex;
       justify-content: center;

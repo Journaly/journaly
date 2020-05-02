@@ -16,7 +16,7 @@
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,md}'",
     "type-check": "tsc",
     "codegen": "graphql-codegen --config codegen.yml",
-    "svg-to-tsx": "svgr < public/images/icons/icon__leave-a-comment.svg > components/Icons/IconLeaveAComment.tsx --typescript --svgo-config svgo.json"
+    "import-svg": "node scripts/svgr.js"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",
@@ -40,7 +40,10 @@
     "@graphql-codegen/typescript": "1.13.1",
     "@graphql-codegen/typescript-operations": "1.13.1",
     "@graphql-codegen/typescript-react-apollo": "1.13.1",
-    "@svgr/cli": "^5.3.1",
+    "@svgr/core": "^5.4.0",
+    "@svgr/plugin-jsx": "^5.4.0",
+    "@svgr/plugin-prettier": "^5.4.0",
+    "@svgr/plugin-svgo": "^5.4.0",
     "@types/express": "^4.17.4",
     "@types/node": "^13.7.6",
     "@types/react": "^16.9.23",
@@ -54,6 +57,7 @@
     "express": "^4.17.1",
     "graphql": "^14.6.0",
     "prettier": "^2.0.1",
+    "prompts": "^2.3.2",
     "typescript": "^3.8.3"
   }
 }

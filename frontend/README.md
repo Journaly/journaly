@@ -110,3 +110,15 @@ That's it! This ensures that the category and action names are always the same, 
 #### Debugging
 
 If you need to test that events are being sent, use the [Google Analytics Debugger chrome extension](https://chrome.google.com/webstore/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjechhna). This will show events that are logged in the Chrome DevTools.
+
+## Images
+
+### SVGs
+
+SVGs are componentized with `svgr`. To import an SVG into the repo, run `npm import-svg` and follow the prompts. This script will take a `path/to/file.svg` and create a new `<SvgName>.tsx` React component.
+
+Now your new SVG component can take props for colors, sizes, etc. Check out the `components/Icons/` directory for examples.
+
+### JPGs and PNGs
+
+Download [ImageOptim](https://imageoptim.com/mac) and run your `.jpg` and `.png` files through it before commiting them to the repo. After you optimize them, place them in the `public/images/` directory or any of the relevant subdirectories.

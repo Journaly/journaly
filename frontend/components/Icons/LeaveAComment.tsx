@@ -6,8 +6,9 @@ type Props = {
   secondaryColor: string
 }
 
-function SvgComponent(props: React.SVGProps<SVGSVGElement> & Props) {
+function LeaveAComment(props: React.SVGProps<SVGSVGElement> & Props) {
   const { size, primaryColor, secondaryColor, ...otherProps } = props
+
   return (
     <svg
       height={size}
@@ -37,4 +38,4 @@ function SvgComponent(props: React.SVGProps<SVGSVGElement> & Props) {
   )
 }
 
-export default SvgComponent
+export default LeaveAComment

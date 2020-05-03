@@ -112,11 +112,20 @@ const Modal: React.FC<Props> = (props) => {
       <style jsx>{`
         @keyframes enterFromBottom {
           from {
-            transform: translateY(100%);
+            transform: translateY(10%);
           }
 
           to {
             transform: translateY(0);
+          }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+
+          to {
+            opacity: 1;
           }
         }
 
@@ -127,6 +136,7 @@ const Modal: React.FC<Props> = (props) => {
           left: 0;
           right: 0;
           background: rgba(0, 0, 0, 0.5);
+          animation: 100ms fadeIn linear;
         }
 
         .modal-wrapper {

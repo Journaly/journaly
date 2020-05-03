@@ -92,7 +92,7 @@ function onCancel() {
   const answers = await prompts(questions, { onCancel })
 
   // Cancelling during prompts with ctrl + c will return answers with no keys
-  if (Object.keys(answers).length > 0) {
+  if (Object.keys(answers).length === questions.length) {
     componentName = `${answers.componentName}Icon`
     importSvg(answers.pathToSvg)
   }

@@ -3,7 +3,10 @@ const path = require('path')
 const svgr = require('@svgr/core').default
 const prompts = require('prompts')
 const svgoConfig = {
-  plugins: [{ removeViewBox: false }, { cleanupIDs: false }],
+  plugins: [
+    { removeViewBox: false },
+    { removeAttrs: { attrs: ['data-name', 'id'] } },
+  ],
 }
 
 let componentName

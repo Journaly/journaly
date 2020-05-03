@@ -56,6 +56,7 @@ class MyDocument extends Document<
         </Head>
         <body className="block-transitions-on-page-load">
           <Main />
+          <div id="modal-root" />
           <NextScript />
         </body>
       </Html>

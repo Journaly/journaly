@@ -16,6 +16,7 @@ interface Props {
   ariaDescribedBy?: string
   triggerElementId?: string
   maxWidth?: string
+  maxHeight?: string
 }
 
 const Modal: React.FC<Props> = (props) => {
@@ -30,6 +31,7 @@ const Modal: React.FC<Props> = (props) => {
     ariaDescribedBy,
     triggerElementId = '',
     maxWidth = modalConstants.modalBreakpoint,
+    maxHeight = '100%',
   } = props
 
   useFocusTrap({
@@ -122,6 +124,7 @@ const Modal: React.FC<Props> = (props) => {
         @media (min-width: ${modalConstants.modalBreakpoint}) {
           .modal-content {
             flex-grow: 0;
+            max-height: ${maxHeight};
             border-radius: 8px;
           }
           .modal-content .modal-body {

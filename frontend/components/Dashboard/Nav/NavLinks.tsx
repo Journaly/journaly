@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import NavLink from '../../NavLink'
+import Feed from '../../Icons/Feed'
 import { navConstants } from './nav-constants'
 import { darkBlue, darkGrey } from '../../../utils'
 import { useTranslation } from '../../../config/i18n'
@@ -35,13 +36,13 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
       <div className="nav-bottom">
         <NavLink href="/dashboard/my-feed">
           <a className="nav-link" onClick={onClick}>
-            <img src="../images/icons/your-feed-icon.svg" alt="" />
+            <Feed aria-hidden="true" />
             <span className="nav-link-text">{t('nav.myFeed')}</span>
           </a>
         </NavLink>
         <NavLink href="/dashboard/my-posts">
           <a className="nav-link" onClick={onClick}>
-            <img src="../images/icons/your-feed-icon.svg" alt="" />
+            <Feed aria-hidden="true" />
             <span className="nav-link-text">{t('nav.myPosts')}</span>
           </a>
         </NavLink>
@@ -224,27 +225,20 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
 
         .nav-link img {
           width: 25px;
-          margin-right: 0;
-        }
-
-        :global(.expanded) .nav-link img {
-          margin-right: 15px;
-        }
-        @media (${navConstants.mobileNavOnly}) {
-          .nav-link img {
-            margin-right: 15px;
-          }
         }
 
         .nav-link-text {
+          margin-left: 0;
           font-size: 10px;
         }
 
         :global(.expanded) .nav-link-text {
+          margin-left: 15px;
           font-size: 16px;
         }
         @media (${navConstants.mobileNavOnly}) {
           .nav-link-text {
+            margin-left: 15px;
             font-size: 16px;
           }
         }

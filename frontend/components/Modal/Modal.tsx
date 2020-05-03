@@ -137,7 +137,7 @@ const Modal: React.FC<Props> = (props) => {
           height: 100%;
           padding: 0;
           overflow: auto;
-          animation: 375ms enterScreenFromBottom cubic-bezier(0, 0, 0.2, 1);
+          animation: 300ms enterFromBottom cubic-bezier(0, 0, 0.2, 1);
         }
         @media (min-width: ${modalConstants.modalBreakpoint}) {
           .modal-wrapper {

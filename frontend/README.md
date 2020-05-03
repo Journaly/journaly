@@ -115,7 +115,7 @@ If you need to test that events are being sent, use the [Google Analytics Debugg
 
 ### SVGs
 
-SVGs are componentized with `svgr`. To import an SVG into the repo, run `npm import-svg` and follow the prompts. This script will take a `path/to/file.svg` and create a new `<SvgName>.tsx` React component.
+SVGs are componentized with `svgr`. To import an SVG into the repo, run `npm run svgr` and follow the prompts. This script will take a `path/to/file.svg` and create a new `<SvgName>.tsx` React component.
 
 Now your new SVG component can take props for colors, sizes, etc. Check out the `components/Icons/` directory for examples.
 

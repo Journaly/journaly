@@ -91,9 +91,7 @@ const questions = [
 ]
 
 function onCancel() {
-  console.log(
-    'The `import-svg` command has been cancelled. No SVG was converted.',
-  )
+  console.log('The `svgr` command has been cancelled. No SVG was converted.')
 }
 
 ;(async () => {

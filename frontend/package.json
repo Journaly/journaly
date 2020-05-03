@@ -16,7 +16,7 @@
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,md}'",
     "type-check": "tsc",
     "codegen": "graphql-codegen --config codegen.yml",
-    "import-svg": "node scripts/svgr.js"
+    "svgr": "node scripts/svgr.js"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",

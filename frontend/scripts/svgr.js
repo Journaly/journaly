@@ -87,8 +87,18 @@ const questions = [
   },
 ]
 
+function onCancel() {
+  console.log(
+    'The `import-svg` command has been cancelled. No SVG was converted.',
+  )
+}
+
 ;(async () => {
-  const answers = await prompts(questions)
-  componentName = answers.componentName
-  importSvg(answers.pathToSvg)
+  const answers = await prompts(questions, { onCancel })
+
+  // Cancelling during prompts with ctrl + c will return answers with no keys
+  if (Object.keys(answers).length > 0) {
+    componentName = answers.componentName
+    importSvg(answers.pathToSvg)
+  }
 })()

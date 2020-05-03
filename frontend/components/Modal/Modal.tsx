@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import ModalHeader from './ModalHeader'
 import ModalBody from './ModalBody'
 import ModalFooter from './ModalFooter'
 import modalConstants from './modalConstants'
+import useFocusTrap from '../Hooks/useFocusTrap'
 import { white } from '../../utils'
 
 interface Props {
@@ -16,10 +17,6 @@ interface Props {
   triggerElementId?: string
   maxWidth?: string
 }
-
-const ESCAPE_KEY = 27
-const TAB_KEY = 9
-const MODAL_OPEN_CLASS = 'modal-open'
 
 const Modal: React.FC<Props> = (props) => {
   const [shouldFadeInTitle, setShouldFadeInTitle] = useState(false)
@@ -35,28 +32,12 @@ const Modal: React.FC<Props> = (props) => {
     maxWidth = modalConstants.modalBreakpoint,
   } = props
 
-  const handleTabKey = (event: KeyboardEvent): void => {
-    const focusableModalElements = modalRoot.querySelectorAll(
-      'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select',
-    )
-    const firstElement = focusableModalElements[0] as HTMLElement
-    const lastElement = focusableModalElements[focusableModalElements.length - 1] as HTMLElement
-
-    // Make sure the first element is focused
-    if (![...focusableModalElements].includes(document.activeElement as HTMLElement)) {
-      firstElement.focus()
-    }
-
-    if (!event.shiftKey && document.activeElement === lastElement) {
-      // Tabbing forwards on the last element focuses the first element
-      firstElement.focus()
-      event.preventDefault()
-    } else if (event.shiftKey && document.activeElement === firstElement) {
-      // Tabbing backwards with Shift + Tab on the first element focuses the last element
-      lastElement.focus()
-      event.preventDefault()
-    }
-  }
+  useFocusTrap({
+    rootElement: modalRoot,
+    onClose,
+    returnFocusElementId: triggerElementId,
+    bodyClass: 'modal-open',
+  })
 
   const handleModalBodyScroll = (event: Event): void => {
     if ((event.target as Element)?.scrollTop > 28) {
@@ -65,30 +46,6 @@ const Modal: React.FC<Props> = (props) => {
     }
     setShouldFadeInTitle(false)
   }
-
-  const keyListenersMap = new Map([
-    [ESCAPE_KEY, onClose],
-    [TAB_KEY, handleTabKey],
-  ])
-
-  useEffect(() => {
-    document.body.classList.add(MODAL_OPEN_CLASS)
-    return () => {
-      document.body.classList.remove(MODAL_OPEN_CLASS)
-      const elementToFocus = document.getElementById(triggerElementId)
-      if (elementToFocus) elementToFocus.focus()
-    }
-  }, [])
-
-  useEffect(() => {
-    function keyListener(event: KeyboardEvent): void {
-      const listener = keyListenersMap.get(event.keyCode)
-      return listener && listener(event)
-    }
-    document.addEventListener('keydown', keyListener)
-
-    return () => document.removeEventListener('keydown', keyListener)
-  })
 
   return ReactDOM.createPortal(
     <div className="modal-container" onClick={onClose}>

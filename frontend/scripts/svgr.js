@@ -75,9 +75,9 @@ const questions = [
     message: 'What do you want the SVG component to be called?',
     validate: (input) => {
       if (input.includes('.')) {
-        return "Pleaes omit the file extension when naming your component. 'Circle' will generate Circle.tsx"
+        return 'Pleaes omit the file extension when naming your component. It will be added automatically.'
       } else if (input.toLowerCase().endsWith('icon')) {
-        return "Do not include 'Icon' in the component name"
+        return "Do not include 'Icon' in the component name. It will be appended automatically."
       }
       return true
     },
@@ -93,7 +93,7 @@ function onCancel() {
 
   // Cancelling during prompts with ctrl + c will return answers with no keys
   if (Object.keys(answers).length > 0) {
-    componentName = answers.componentName
+    componentName = `${answers.componentName}Icon`
     importSvg(answers.pathToSvg)
   }
 })()

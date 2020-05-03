@@ -4,7 +4,7 @@ import Head from 'next/head'
 
 import { Post as PostType } from '../../../generated/graphql'
 import { brandBlue, highlightColor, darkGrey } from '../../../utils'
-import IconLeaveComment from '../../Icons/IconLeaveAComment'
+import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 
 // TODO: Remove any when Types are fixed with PR #17
 interface IPostProps {
@@ -15,7 +15,7 @@ const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
 
 const CommentSelectionButton = () => (
   <button onMouseDown={handleCommentClick} className="comment-btn">
-    <IconLeaveComment primaryColor="white" secondaryColor="white" size={30} />
+    <LeaveACommentIcon primaryColor="white" secondaryColor="white" size={30} />
     <style jsx>{`
       .comment-btn {
         width: 35px;

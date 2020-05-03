@@ -6,7 +6,7 @@ type Props = {
   secondaryColor: string
 }
 
-function LeaveAComment(props: React.SVGProps<SVGSVGElement> & Props) {
+function LeaveACommentIcon(props: React.SVGProps<SVGSVGElement> & Props) {
   const { size, primaryColor, secondaryColor, ...otherProps } = props
 
   return (
@@ -38,4 +38,4 @@ function LeaveAComment(props: React.SVGProps<SVGSVGElement> & Props) {
   )
 }
 
-export default LeaveAComment
+export default LeaveACommentIcon

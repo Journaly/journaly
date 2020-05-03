@@ -4,7 +4,7 @@ interface SVGRProps {
   titleId?: string;
 }
 
-function Feed({
+function FeedIcon({
   title,
   titleId,
   ...props
@@ -93,4 +93,4 @@ function Feed({
   )
 }
 
-export default Feed
+export default FeedIcon

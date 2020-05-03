@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import NavLink from '../../NavLink'
-import Feed from '../../Icons/Feed'
+import FeedIcon from '../../Icons/FeedIcon'
 import { navConstants } from './nav-constants'
 import { darkBlue, darkGrey } from '../../../utils'
 import { useTranslation } from '../../../config/i18n'
@@ -36,13 +36,13 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
       <div className="nav-bottom">
         <NavLink href="/dashboard/my-feed">
           <a className="nav-link" onClick={onClick}>
-            <Feed aria-hidden="true" />
+            <FeedIcon aria-hidden="true" />
             <span className="nav-link-text">{t('nav.myFeed')}</span>
           </a>
         </NavLink>
         <NavLink href="/dashboard/my-posts">
           <a className="nav-link" onClick={onClick}>
-            <Feed aria-hidden="true" />
+            <FeedIcon aria-hidden="true" />
             <span className="nav-link-text">{t('nav.myPosts')}</span>
           </a>
         </NavLink>

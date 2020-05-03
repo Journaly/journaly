@@ -2,11 +2,17 @@ const fs = require('fs')
 const path = require('path')
 const svgr = require('@svgr/core').default
 const prompts = require('prompts')
+// https://gist.github.com/pladaria/69321af86ce165c2c1fc1c718b098dd0
 const svgoConfig = {
-  plugins: [
-    { removeViewBox: false },
-    { removeAttrs: { attrs: ['data-name', 'id'] } },
-  ],
+  plugins: [{ removeViewBox: false }],
+}
+
+// https://react-svgr.com/docs/options/
+const svgrConfig = {
+  typescript: true,
+  titleProp: true,
+  svgoConfig,
+  plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx', '@svgr/plugin-prettier'],
 }
 
 let componentName
@@ -30,19 +36,7 @@ function importSvg(svgPath) {
 }
 
 function convertSvgToReactComponent(svg) {
-  svgr(
-    svg,
-    {
-      typescript: true,
-      svgoConfig,
-      plugins: [
-        '@svgr/plugin-svgo',
-        '@svgr/plugin-jsx',
-        '@svgr/plugin-prettier',
-      ],
-    },
-    { componentName },
-  )
+  svgr(svg, svgrConfig, { componentName })
     .then((svgReactComponent) => {
       writeComponentToFile(svgReactComponent)
     })

@@ -10,6 +10,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
+#modal-root {
+  position: relative;
+  z-index: 500;
+}
+
 /* Prevent transitions on page load */
 .block-transitions-on-page-load * {
   transition: none !important;
@@ -89,8 +98,6 @@ textarea {
   margin: 0;
   border: 0;
   padding: 0;
-  display: inline-block;
-  vertical-align: middle;
   white-space: normal;
   background: none;
   line-height: 1;
@@ -101,9 +108,17 @@ input:focus {
   outline: 0;
 }
 
-button,
-input,
-textarea,
-select {
-  box-sizing: border-box;
+::placeholder {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* Used by screen readers, but hidden visually */
+.screen-reader {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
 }

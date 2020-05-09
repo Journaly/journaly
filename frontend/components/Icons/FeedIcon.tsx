@@ -1,22 +1,12 @@
 import * as React from 'react'
 interface SVGRProps {
-  title?: string;
-  titleId?: string;
+  title?: string
+  titleId?: string
 }
 
-function FeedIcon({
-  title,
-  titleId,
-  ...props
-}: React.SVGProps<SVGSVGElement> & SVGRProps) {
+function FeedIcon({ title, titleId, ...props }: React.SVGProps<SVGSVGElement> & SVGRProps) {
   return (
-    <svg
-      width={25}
-      height={18.572}
-      viewBox="0 0 25 18.572"
-      aria-labelledby={titleId}
-      {...props}
-    >
+    <svg width={25} height={18.572} viewBox="0 0 25 18.572" aria-labelledby={titleId} {...props}>
       {title ? <title id={titleId}>{title}</title> : null}
       <defs>
         <clipPath id="prefix__a">
@@ -36,11 +26,7 @@ function FeedIcon({
           />
         </clipPath>
         <clipPath id="prefix__c">
-          <path
-            data-name="Rectangle 734"
-            fill="#4391c9"
-            d="M0 0h25v27.857H0z"
-          />
+          <path data-name="Rectangle 734" fill="#4391c9" d="M0 0h25v27.857H0z" />
         </clipPath>
         <clipPath id="prefix__d">
           <path
@@ -61,28 +47,12 @@ function FeedIcon({
         </clipPath>
       </defs>
       <g data-name="Group 340">
-        <g
-          data-name="Group 339"
-          clipPath="url(#prefix__a)"
-          transform="translate(0 32.5)"
-        >
-          <g
-            data-name="Group 338"
-            transform="translate(0 -37.143)"
-            clipPath="url(#prefix__b)"
-          >
+        <g data-name="Group 339" clipPath="url(#prefix__a)" transform="translate(0 32.5)">
+          <g data-name="Group 338" transform="translate(0 -37.143)" clipPath="url(#prefix__b)">
             <g data-name="Group 337" clipPath="url(#prefix__c)">
               <g data-name="Group 336" clipPath="url(#prefix__d)">
-                <g
-                  data-name="Group 335"
-                  transform="translate(0 4.286)"
-                  clipPath="url(#prefix__e)"
-                >
-                  <path
-                    data-name="Path 240"
-                    d="M-3.571-7.857h32.143v35H-3.571z"
-                    fill="#4391c9"
-                  />
+                <g data-name="Group 335" transform="translate(0 4.286)" clipPath="url(#prefix__e)">
+                  <path data-name="Path 240" d="M-3.571-7.857h32.143v35H-3.571z" fill="#4391c9" />
                 </g>
               </g>
             </g>

@@ -52,8 +52,7 @@ const Dashboard: React.FC<Props> = ({ children }) => {
         .dashboard-container {
           padding: 2rem;
           background-color: white;
-          transition: margin-left ${navConstants.transitionDuration}ms
-            ease-in-out;
+          transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;
         }
 
         @media (${navConstants.skinnyNavToDesktop}) {

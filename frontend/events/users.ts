@@ -15,10 +15,7 @@ interface OptionalEventArgs {
   nonInteraction?: boolean
 }
 
-function trackUserEvent(
-  action: string,
-  optionalArgs: OptionalEventArgs = {},
-): void {
+function trackUserEvent(action: string, optionalArgs: OptionalEventArgs = {}): void {
   const event: EventArgs = { ...baseEvent, action, ...optionalArgs }
   trackEvent(event)
 }

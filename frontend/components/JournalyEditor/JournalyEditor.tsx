@@ -46,11 +46,7 @@ const JournalyEditor = () => {
   return (
     <div className="editor-wrapper">
       <div className="editor-container">
-        <Slate
-          editor={editor}
-          value={value}
-          onChange={(value) => setValue(value)}
-        >
+        <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
           <Toolbar>
             <MarkButton format="bold" icon="format_bold" />
             <MarkButton format="italic" icon="format_italic" />

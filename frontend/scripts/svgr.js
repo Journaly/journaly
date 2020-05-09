@@ -51,9 +51,7 @@ function writeComponentToFile(component) {
 
   fs.writeFile(outputPath, component, (err) => {
     if (err) return console.log(err)
-    console.log(
-      `Success! ${newFileName} has been written to ${svgComponentsDirectory}/`,
-    )
+    console.log(`Success! ${newFileName} has been written to ${svgComponentsDirectory}/`)
   })
 }
 

@@ -19,9 +19,7 @@ interface CustomServerResponse extends ServerResponse {
   }
 }
 
-class MyDocument extends Document<
-  DocumentProps & { children?: ReactNode } & CustomProps
-> {
+class MyDocument extends Document<DocumentProps & { children?: ReactNode } & CustomProps> {
   static async getInitialProps(context: DocumentContext) {
     const initialProps = await Document.getInitialProps(context)
 

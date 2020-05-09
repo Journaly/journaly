@@ -21,11 +21,7 @@ const PostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
               <p className="preview-text">{body}</p>
             </div>
             <div className="info">
-              <img
-                className="avatar"
-                src="/images/author-sample-tiny.jpg"
-                alt="Author"
-              />
+              <img className="avatar" src="/images/author-sample-tiny.jpg" alt="Author" />
               <p className="author">{author}</p>
             </div>
           </div>

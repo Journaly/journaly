@@ -6,11 +6,7 @@ type Props = {
   children: React.ReactNode
 }
 
-const HomeSection: React.FC<Props> = ({
-  sectionHeading,
-  grey = false,
-  children,
-}) => {
+const HomeSection: React.FC<Props> = ({ sectionHeading, grey = false, children }) => {
   return (
     <section className="home-section">
       <div>

@@ -1,10 +1,10 @@
 import React from 'react'
 import { NextPage } from 'next'
 
-import { withApollo } from '../../lib/apollo'
-import DashboardLayout from '../../components/Layouts/DashboardLayout'
+import { withApollo } from '../../../lib/apollo'
+import DashboardLayout from '../../../components/Layouts/DashboardLayout'
 
-const SettingsPage: NextPage = () => {
+const ProfileInfo: NextPage = () => {
   return (
     <DashboardLayout>
       <h1>Settings</h1>
@@ -17,8 +17,8 @@ const SettingsPage: NextPage = () => {
   )
 }
 
-SettingsPage.getInitialProps = async () => ({
+ProfileInfo.getInitialProps = async () => ({
   namespacesRequired: [],
 })
 
-export default withApollo(SettingsPage)
+export default withApollo(ProfileInfo)

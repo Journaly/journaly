@@ -8,8 +8,15 @@
     "profile": "Profile Info",
     "account": "Account"
   },
-  "profile": {
-    "details": "Your Details",
-    "uploadImage": "Upload Image"
+  "profileForm": {
+    "legend": "Your Details",
+    "submitButton": "Upload Image"
+  },
+  "accountForm": {
+    "legend": "Change Password",
+    "submitButton": "Update",
+    "oldPasswordLabel": "Enter old password",
+    "newPasswordLabel": "Choose new password",
+    "confirmNewPasswordLabel": "Re-enter new password"
   }
 }

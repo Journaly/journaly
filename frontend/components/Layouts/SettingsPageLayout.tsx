@@ -27,6 +27,7 @@ const SettingsPageLayout: React.FC<Props> = ({ children }) => {
 
         .settings-container :global(.settings-nav) {
           flex-shrink: 0;
+          align-self: flex-start;
         }
       `}</style>
     </DashboardLayout>

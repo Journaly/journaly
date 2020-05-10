@@ -10,16 +10,16 @@ const Form: React.FC<Props> = ({ onSubmit, children }: Props) => {
   return (
     <form onSubmit={onSubmit}>
       {children}
+
       <style global jsx>{`
         form {
-          box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
-          background: white;
-          border: 5px solid white;
-          margin: 25vh auto;
+          width: 100%;
           padding: 20px;
-          max-width: 500px;
           font-size: 16px;
           line-height: 1.6;
+          background: white;
+          border: 5px solid white;
+          box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
         }
         label {
           display: block;
@@ -38,16 +38,6 @@ const Form: React.FC<Props> = ({ onSubmit, children }: Props) => {
         select:focus {
           outline: 0;
           border-color: ${brandBlue};
-        }
-        button,
-        input[type='submit'] {
-          width: auto;
-          background: ${brandBlue};
-          color: white;
-          border: 0;
-          font-size: 2rem;
-          font-weight: 600;
-          padding: 5px 12px;
         }
         fieldset {
           border: 0;
@@ -71,28 +61,13 @@ const Form: React.FC<Props> = ({ onSubmit, children }: Props) => {
             background-position: 100% 100%;
           }
         }
-        &[aria-busy='true']::before {
+        fieldset[aria-busy='true']::before {
           background-size: 50% auto;
           animation: loading 0.5s linear infinite;
         }
 
         h2 {
           margin-bottom: 10px;
-        }
-
-        button {
-          background-color: ${brandBlue};
-          border-radius: 5px;
-          color: white;
-          font-size: 16px;
-          font-weight: 400;
-          padding: 10px;
-          margin-top: 5px;
-          box-shadow: 0px 8px 10px #00000029;
-          text-transform: uppercase;
-        }
-        button[disabled] {
-          opacity: 0.5;
         }
       `}</style>
     </form>

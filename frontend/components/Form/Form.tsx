@@ -2,13 +2,13 @@ import React from 'react'
 import { brandBlue } from '../../utils'
 
 interface Props {
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
   children: React.ReactNode
 }
 
-const Form: React.FC<Props> = ({ handleSubmit, children }: Props) => {
+const Form: React.FC<Props> = ({ onSubmit, children }: Props) => {
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={onSubmit}>
       {children}
       <style global jsx>{`
         form {

@@ -20,7 +20,7 @@ const Dashboard: React.FC<Props> = ({ children }) => {
   useEffect((): void => {
     // Going from tablet to desktop expands the nav
     if (width >= navConstants.desktopBreakpoint) {
-      if (router.pathname.endsWith('/settings')) {
+      if (router.pathname.includes('/settings/')) {
         setNavExpanded(false)
         return
       }
@@ -41,7 +41,13 @@ const Dashboard: React.FC<Props> = ({ children }) => {
 
       <Nav expanded={navExpanded} collapse={() => setNavExpanded(false)} />
 
-      <div className="dashboard-container">{children}</div>
+      <div
+        className={`dashboard-container ${
+          router.pathname.includes('/settings/') ? 'settings-page' : ''
+        }`}
+      >
+        {children}
+      </div>
 
       <style jsx>{`
         .dashboard {
@@ -50,7 +56,7 @@ const Dashboard: React.FC<Props> = ({ children }) => {
         }
 
         .dashboard-container {
-          padding: 2rem;
+          padding: 50px 25px;
           background-color: white;
           transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;
         }
@@ -63,6 +69,10 @@ const Dashboard: React.FC<Props> = ({ children }) => {
         @media (${navConstants.aboveDesktopNav}) {
           .dashboard-container {
             margin-left: ${navConstants.navWidth}px;
+          }
+          /* The settings page has a collapsed nav bar, so we use the smaller left margin */
+          .dashboard-container.settings-page {
+            margin-left: ${navConstants.skinnyNavWidth}px;
           }
         }
       `}</style>

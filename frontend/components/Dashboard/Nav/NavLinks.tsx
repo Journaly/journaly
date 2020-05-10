@@ -61,7 +61,7 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
 
         <hr />
 
-        <NavLink href="/dashboard/settings">
+        <NavLink href="/dashboard/settings/profile">
           <a className="nav-link" onClick={onClick}>
             <img src="../images/icons/settings-icon.svg" alt="" />
             <span className="nav-link-text">{t('nav.settings')}</span>

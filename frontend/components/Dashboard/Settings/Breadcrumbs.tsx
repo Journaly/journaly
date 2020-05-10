@@ -15,7 +15,7 @@ const Breadcrumbs: React.FC = () => {
   return (
     <h1>
       <span>
-        Settings
+        {t('breadcrumbs.settings')}
         <span className="separator">&gt;</span>
         {pathToBreadcrumb[lastPathName!]}
       </span>

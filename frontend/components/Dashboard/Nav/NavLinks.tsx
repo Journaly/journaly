@@ -48,13 +48,13 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
         </NavLink>
         <NavLink href="/dashboard/new-post">
           <a className="nav-link" onClick={onClick}>
-            <img src="../images/icons/new-post-icon.svg" alt="" />
+            <img src="/images/icons/new-post-icon.svg" alt="" />
             <span className="nav-link-text">{t('nav.newPost')}</span>
           </a>
         </NavLink>
         <NavLink href="/dashboard/drafts">
           <a className="nav-link" onClick={onClick}>
-            <img src="../images/icons/drafts-icon.svg" alt="" />
+            <img src="/images/icons/drafts-icon.svg" alt="" />
             <span className="nav-link-text">{t('nav.drafts')}</span>
           </a>
         </NavLink>
@@ -63,14 +63,14 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
 
         <NavLink href="/dashboard/settings/profile">
           <a className="nav-link" onClick={onClick}>
-            <img src="../images/icons/settings-icon.svg" alt="" />
+            <img src="/images/icons/settings-icon.svg" alt="" />
             <span className="nav-link-text">{t('nav.settings')}</span>
           </a>
         </NavLink>
 
         <Link href="/">
           <a className="log-out nav-link" onClick={handleLogOut}>
-            <img src="../images/icons/logout-icon.svg" alt="Log out" />
+            <img src="/images/icons/logout-icon.svg" alt="Log out" />
             <span className="nav-link-text">{t('nav.logOut')}</span>
           </a>
         </Link>

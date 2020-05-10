@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import Nav, { navConstants } from './Nav'
 import Header from './Header'
 import useWindowSize from '../../hooks/useWindowSize'
+import { lightGrey } from '../../utils'
 
 interface Props {
   children: React.ReactNode
@@ -52,12 +53,14 @@ const Dashboard: React.FC<Props> = ({ children }) => {
       <style jsx>{`
         .dashboard {
           position: relative;
+          height: 100vh;
           width: 100%;
         }
 
         .dashboard-container {
+          height: 100%;
           padding: 50px 25px;
-          background-color: white;
+          background-color: ${lightGrey};
           transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;
         }
 

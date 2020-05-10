@@ -2,7 +2,7 @@ import Link from 'next/link'
 import validateAuth, { IErrors } from '../../lib/validateAuth'
 import { trackLogIn } from '../../events/users'
 import { useCreateUserMutation } from '../../generated/graphql'
-import useFormValidation from '../../hooks//useFormValidation'
+import useFormValidation from '../../hooks/useFormValidation'
 import Error from '../Error'
 import { brandBlue } from '../../utils'
 

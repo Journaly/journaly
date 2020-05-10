@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { trackCreateAccount } from '../../events/users'
 import validateAuth, { IErrors } from '../../lib/validateAuth'
 import { useCreateUserMutation } from '../../generated/graphql'
-import useFormValidation from '../../hooks//useFormValidation'
+import useFormValidation from '../../hooks/useFormValidation'
 
 import Error from '../Error'
 import { brandBlue } from '../../utils'

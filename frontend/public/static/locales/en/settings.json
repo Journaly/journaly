@@ -7,5 +7,9 @@
   "nav": {
     "profile": "Profile Info",
     "account": "Account"
+  },
+  "profile": {
+    "details": "Your Details",
+    "uploadImage": "Upload Image"
   }
 }

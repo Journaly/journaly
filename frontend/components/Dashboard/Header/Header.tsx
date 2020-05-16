@@ -1,5 +1,5 @@
 import React from 'react'
-import { black } from '../../../utils'
+import theme from '../../../theme'
 import { navConstants } from '../Nav'
 
 interface Props {
@@ -25,7 +25,7 @@ const Header: React.FC<Props> = ({ onMenuClick }) => {
           height: 72px;
           padding: 20px 0;
           color: white;
-          background-color: ${black};
+          background-color: ${theme.colors.black};
         }
         /* Header should disappear when the mobile nav does */
         @media (${navConstants.aboveMobileNav}) {

@@ -1,76 +1,64 @@
 import Link from 'next/link'
-import validateAuth, { IErrors } from '../../lib/validateAuth'
+import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackLogIn } from '../../events/users'
 import { useCreateUserMutation } from '../../generated/graphql'
-import useFormValidation from '../../hooks/useFormValidation'
 import Error from '../Error'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
 
-interface IFormValues {
-  email: string
-  password: string
-}
-
-const initialState: IFormValues = {
-  email: '',
-  password: '',
-}
-
 const LoginForm: React.FC = () => {
-  const { handleChange, values, handleValidate, handleBlur, errors, setValues } = useFormValidation<
-    IFormValues,
-    IErrors
-  >(initialState, validateAuth)
-
-  const [createUser, { loading, error }] = useCreateUserMutation({
-    onCompleted: () => {
-      setValues(initialState)
-    },
+  const { handleSubmit, register, errors } = useForm({
+    mode: 'onBlur',
   })
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    handleValidate(e)
+  console.log('errors', errors)
+  const [createUser, { loading, error }] = useCreateUserMutation()
+
+  const onSubmit = (data: any) => {
     if (!loading && Object.keys(errors).length === 0) {
-      createUser()
+      createUser(data)
       trackLogIn()
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={loading} aria-busy={loading}>
         <h2>Log into your account</h2>
         <Error error={error} />
         <label htmlFor="email">
           Email
-          <p>{errors?.email}</p>
           <input
             type="text"
-            name="email"
-            value={values.email}
-            placeholder="Your email address"
-            autoComplete="on"
-            onChange={handleChange}
-            onBlur={handleBlur}
+            placeholder="Email address"
+            name="Email"
+            ref={register({
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email address',
+              },
+            })}
           />
+          <ErrorMessage errors={errors} name="Email" as="p" />
         </label>
         <label htmlFor="password">
           Password
-          <p>{errors?.password}</p>
           <input
             type="password"
-            name="password"
-            value={values.password}
             placeholder="A secure password"
-            autoComplete="off"
-            onChange={handleChange}
-            onBlur={handleBlur}
+            name="Password"
+            ref={register({
+              required: 'Password is required',
+              minLength: { value: 6, message: 'Password must be at least 6 characters' },
+            })}
           />
+          <ErrorMessage errors={errors} name="Password" as="p" />
         </label>
 
-        <Button className="test">Log In</Button>
+        <Button type="submit" className="test">
+          Log In
+        </Button>
       </fieldset>
       <em>
         Don't have an account?

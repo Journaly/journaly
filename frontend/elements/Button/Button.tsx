@@ -13,13 +13,21 @@ type Props = {
   id?: string
   variant?: Variant
   plain?: boolean
+  type?: 'button' | 'submit' | 'reset'
 }
 
 const Button: React.FC<Props> = (props) => {
-  const { children, onClick, plain = false, variant = Variant.Primary, ...otherProps } = props
+  const {
+    children,
+    onClick,
+    plain = false,
+    variant = Variant.Primary,
+    type = 'button',
+    ...otherProps
+  } = props
 
   return (
-    <button onClick={onClick} {...otherProps}>
+    <button onClick={onClick} type={type} {...otherProps}>
       {children}
 
       <style jsx>{`

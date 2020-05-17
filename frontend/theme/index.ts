@@ -9,6 +9,20 @@ export const breakpoints = {
 
 type BreakpointSize = keyof typeof breakpoints
 type Breakpoint = { readonly [key in BreakpointSize]: string }
+type Colors =
+  | 'black'
+  | 'white'
+  | 'gray100'
+  | 'gray200'
+  | 'gray300'
+  | 'gray400'
+  | 'gray500'
+  | 'gray600'
+  | 'gray700'
+  | 'gray800'
+  | 'blue'
+  | 'blueLight'
+  | 'red'
 
 type Typography =
   | 'fontFamily'
@@ -24,7 +38,7 @@ type Typography =
 
 export type Theme = {
   colors: {
-    readonly [key: string]: string
+    readonly [key in Colors]: string
   }
   breakpoints: Breakpoint
   typography: {

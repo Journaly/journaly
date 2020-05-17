@@ -2,7 +2,7 @@ import { fromEntries } from '../utils'
 
 export const breakpoints = {
   XS: 600,
-  SM: 786,
+  SM: 768,
   MD: 1024,
   LG: 1280,
 } as const

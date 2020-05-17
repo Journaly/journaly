@@ -25,7 +25,8 @@ type Colors =
   | 'red'
 
 type Typography =
-  | 'fontFamily'
+  | 'fontFamilySansSerif'
+  | 'fontFamilySerif'
   | 'paragraphSM'
   | 'paragraphMD'
   | 'paragraphLG'
@@ -66,50 +67,55 @@ const theme: Theme = {
     Object.entries(breakpoints).map(([key, value]) => [key, `${value}px`]),
   ) as Breakpoint,
   typography: {
-    fontFamily: '"Source Sans Pro", sans-serif',
+    fontFamilySansSerif: `
+      font-family: "Source Sans Pro", sans-serif;
+    `,
+    fontFamilySerif: `
+      font-family: "Playfair Display", serif;
+    `,
     paragraphSM: `
-      font-size: 12px,
-      line-height: 20px,
+      font-size: 12px;
+      line-height: 20px;
     `,
     paragraphMD: `
-      font-size: 14px,
-      line-height: 24px,
+      font-size: 14px;
+      line-height: 24px;
     `,
     paragraphLG: `
-      font-size: 16px,
-      line-height: 24px,
+      font-size: 16px;
+      line-height: 24px;
     `,
     headingOverline: `
-      letter-spacing: 1px,
-      font-size: 12px,
-      line-height: 20px,
-      font-weight: 600,
-      text-transform: uppercase,
+      letter-spacing: 1px;
+      font-size: 12px;
+      line-height: 20px;
+      font-weight: 400;
+      text-transform: uppercase;
     `,
     headingSM: `
-      font-size: 16px,
-      line-height: 24px,
-      font-weight: 600,
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 400;
     `,
     headingMD: `
-      font-size: 20px,
-      line-height: 28px,
-      font-weight: 600,
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 400;
     `,
     headingLG: `
-      font-size: 24px,
-      line-height: 32px,
-      font-weight: 600,
+      font-size: 24px;
+      line-height: 32px;
+      font-weight: 400;
     `,
     headingXL: `
-      font-size: 30px,
-      line-height: 36px,
-      font-weight: 600,
+      font-size: 30px;
+      line-height: 36px;
+      font-weight: 400;
     `,
     displaySM: `
-      font-size: 44px,
-      line-height: 48px,
-      font-weight: 600,
+      font-size: 44px;
+      line-height: 48px;
+      font-weight: 400;
     `,
   },
 }

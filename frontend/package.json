@@ -21,6 +21,7 @@
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",
     "@apollo/react-ssr": "^4.0.0-beta.1",
+    "classnames": "^2.2.6",
     "date-fns": "^2.11.1",
     "graphql": "^14.6.0",
     "is-hotkey": "^0.1.6",
@@ -44,6 +45,7 @@
     "@svgr/plugin-jsx": "^5.4.0",
     "@svgr/plugin-prettier": "^5.4.0",
     "@svgr/plugin-svgo": "^5.4.0",
+    "@types/classnames": "^2.2.10",
     "@types/express": "^4.17.4",
     "@types/node": "^13.7.6",
     "@types/react": "^16.9.23",

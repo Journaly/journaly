@@ -5,10 +5,7 @@ type WindowSize = {
   height: number
 }
 
-const useWindowSize = (
-  initialWidth = Infinity,
-  initialHeight = Infinity,
-): WindowSize => {
+const useWindowSize = (initialWidth = Infinity, initialHeight = Infinity): WindowSize => {
   const isClient = typeof window === 'object'
 
   const getSize = (): WindowSize => {

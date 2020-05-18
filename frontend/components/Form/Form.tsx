@@ -61,12 +61,7 @@ const Form: React.FC<Props> = ({ handleSubmit, children }: Props) => {
           height: 10px;
           content: '';
           display: block;
-          background-image: linear-gradient(
-            to right,
-            #32567e 0%,
-            #4391c9 50%,
-            #32567e 100%
-          );
+          background-image: linear-gradient(to right, #32567e 0%, #4391c9 50%, #32567e 100%);
         }
         @keyframes loading {
           from {

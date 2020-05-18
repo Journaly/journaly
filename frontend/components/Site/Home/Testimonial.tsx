@@ -17,13 +17,7 @@ type Props = {
   picture: string
 }
 
-const Testimonial: React.FC<Props> = ({
-  quote,
-  speaks,
-  writes,
-  name,
-  picture,
-}) => {
+const Testimonial: React.FC<Props> = ({ quote, speaks, writes, name, picture }) => {
   return (
     <div className="testimonial">
       <p className="user-quote">{quote}</p>

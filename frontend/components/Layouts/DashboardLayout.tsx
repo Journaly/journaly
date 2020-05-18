@@ -5,8 +5,6 @@ interface Props {
   children: React.ReactNode
 }
 
-const DashboardLayout: React.FC<Props> = ({ children }) => (
-  <Dashboard>{children}</Dashboard>
-)
+const DashboardLayout: React.FC<Props> = ({ children }) => <Dashboard>{children}</Dashboard>
 
 export default DashboardLayout

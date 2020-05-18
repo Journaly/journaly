@@ -21,14 +21,10 @@ const initialState: IFormValues = {
 }
 
 const SignupForm: React.FC = () => {
-  const {
-    handleChange,
-    values,
-    handleValidate,
-    handleBlur,
-    errors,
-    setValues,
-  } = useFormValidation<IFormValues, IErrors>(initialState, validateAuth)
+  const { handleChange, values, handleValidate, handleBlur, errors, setValues } = useFormValidation<
+    IFormValues,
+    IErrors
+  >(initialState, validateAuth)
 
   const [createUser, { loading, error }] = useCreateUserMutation({
     onCompleted: () => {
@@ -154,12 +150,7 @@ const SignupForm: React.FC = () => {
           height: 10px;
           content: '';
           display: block;
-          background-image: linear-gradient(
-            to right,
-            #32567e 0%,
-            #4391c9 50%,
-            #32567e 100%
-          );
+          background-image: linear-gradient(to right, #32567e 0%, #4391c9 50%, #32567e 100%);
         }
         @keyframes loading {
           from {

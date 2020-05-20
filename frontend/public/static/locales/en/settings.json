@@ -1,0 +1,22 @@
+{
+  "breadcrumbs": {
+    "settings": "Settings",
+    "profile": "Edit your profile",
+    "account": "Account"
+  },
+  "nav": {
+    "profile": "Profile Info",
+    "account": "Account"
+  },
+  "profileForm": {
+    "legend": "Your Details",
+    "submitButton": "Upload Image"
+  },
+  "accountForm": {
+    "legend": "Change Password",
+    "submitButton": "Update",
+    "oldPasswordLabel": "Enter old password",
+    "newPasswordLabel": "Choose new password",
+    "confirmNewPasswordLabel": "Re-enter new password"
+  }
+}

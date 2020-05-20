@@ -2,8 +2,9 @@ import Link from 'next/link'
 import validateAuth, { IErrors } from '../../lib/validateAuth'
 import { trackLogIn } from '../../events/users'
 import { useCreateUserMutation } from '../../generated/graphql'
-import useFormValidation from '../Hooks/useFormValidation'
+import useFormValidation from '../../hooks/useFormValidation'
 import Error from '../Error'
+import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
 
 interface IFormValues {
@@ -68,7 +69,8 @@ const LoginForm: React.FC = () => {
             onBlur={handleBlur}
           />
         </label>
-        <button type="submit">Sign up!</button>
+
+        <Button className="test">Log In</Button>
       </fieldset>
       <em>
         Don't have an account?
@@ -146,19 +148,13 @@ const LoginForm: React.FC = () => {
           margin-bottom: 10px;
         }
 
-        button {
-          background-color: ${brandBlue};
+        :global(button) {
           border-radius: 5px;
-          color: white;
           font-size: 16px;
           font-weight: 400;
           padding: 10px;
           margin-top: 5px;
           box-shadow: 0px 8px 10px #00000029;
-          text-transform: uppercase;
-        }
-        button[disabled] {
-          opacity: 0.5;
         }
       `}</style>
     </form>

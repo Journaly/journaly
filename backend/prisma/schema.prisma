@@ -29,6 +29,7 @@ model User {
   UserInterests     UserInterests[]
   PostLike          PostLike[]
   CommentLike       CommentLike[]
+  PageView          PageView[]
 }
 
 // Authentication data for a User
@@ -227,6 +228,19 @@ model UserSubscription {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PageView {
+  id                  Int      @default(autoincrement()) @id
+  user                User?    @relation(fields: [userId], references: [id])
+  userId              Int?
+  sessionId           String
+  pageName            String
+  timestamp           DateTime @default(now())
+  utmSource           String?
+  // TODO (robin-macpherson): find user agent string parsing library and store each part separately
+  user_agent_string   String
+  user_agent_language String
 }
 
 // Roles to determine a Users permissions and which features they can access

@@ -9,7 +9,7 @@ generator prisma_client {
 
 // A Journaly User
 model User {
-  id                String             @default(cuid()) @id
+  id      Int      @id @default(autoincrement())
   name              String
   email             String             @unique
   handle            String             @unique
@@ -17,10 +17,11 @@ model User {
   userRole          UserRole           @default(FREE_USER)
   bio               String?
   posts             Post[]
+  subscription      UserSubscription?
   socialMedia       SocialMedia[]
   interests         Topic[]
   location          Location           @relation(fields: [locationId], references: [id])
-  locationId        String
+  locationId        Int
   languagesNative   LanguageNative[]
   languagesLearning LanguageLearning[]
   createdAt         DateTime           @default(now())
@@ -30,166 +31,190 @@ model User {
 // Authentication data for a User
 // @relation: User
 model Auth {
-  id               String  @default(cuid()) @id
+  id      Int      @id @default(autoincrement())
   user             User    @relation(fields: [userId], references: [id])
-  userId           String  @unique
+  userId           Int  @unique
   password         String
   resetToken       String?
-  resetTokenExpiry Float?
+  resetTokenExpiry DateTime?
 }
 
 // Intermediary Table for the M2M relationship
 model LanguageLearning {
-  id         Int      @id
+  id      Int      @id @default(autoincrement())
   user       User     @relation(fields: [userId], references: [id])
-  userId     String   @unique
+  userId     Int   @unique
   language   Language @relation(fields: [languageId], references: [id])
-  languageId String
+  languageId Int
+  createdAt         DateTime           @default(now())
 
   @@unique([userId, languageId])
 }
 
 // Intermediary Table for the M2M relationship
 model LanguageNative {
-  id         Int      @id
+  id      Int      @id @default(autoincrement())
   user       User     @relation(fields: [userId], references: [id])
-  userId     String
+  userId     Int
   language   Language @relation(fields: [languageId], references: [id])
-  languageId String
+  languageId Int
+  createdAt         DateTime           @default(now())
 
   @@unique([userId, languageId])
 }
 
 // Social Media platforms that Users can add to their profile
 model SocialMedia {
-  id       String              @default(cuid()) @id
+  id      Int      @id @default(autoincrement())
   platform SocialMediaPlatform
   url      String
   author   User                @relation(fields: [authorId], references: [id])
-  authorId String
+  authorId Int
 }
 
 // A journal entry - or Post - that a User writes
 model Post {
-  id         String     @default(cuid()) @id
+  id      Int      @id @default(autoincrement())
   title      String
   body       String
   status     PostStatus @default(DRAFT)
   images     Image[]
-  largeImage String?
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   author     User       @relation(fields: [authorId], references: [id])
-  authorId   String
-  readCount  Int        @default(0)
+  authorId   Int
   readTime   Int        @default(1)
-  likes      Like[]
-  comments   Comment[]
+  likes      PostLike[]
   topic      Topic[]    @relation(references: [id])
   language   Language   @relation(fields: [languageId], references: [id])
-  languageId String
-  // TEMPORARY
+  languageId Int
   longitude  Float?
   latitude   Float?
-  interestId String?
+  threads    Thread[]
 }
 
 // A language that a post can be written in.
 // @relation: LanguageNative - a language spoken natively by a User
 // @relation: LanguageLearning - a language being learned by a User
 model Language {
-  id            String             @default(cuid()) @id
+  id      Int      @id @default(autoincrement())
   posts         Post[]
   name          String
   dialect       String?
   nativeUsers   LanguageNative[]
   learningUsers LanguageLearning[]
+
+  @@unique([name, dialect])
 }
 
 // Location of a Post or a User
 model Location {
-  id      String @default(cuid()) @id
+  id      Int      @id @default(autoincrement())
   country String
   city    String
 }
 
 // Subject of a Post
 model Topic {
-  id     String  @default(cuid()) @id
+  id      Int      @id @default(autoincrement())
   name   String
   posts  Post[]  @relation(references: [id])
-  userId String?
+}
+
+model UserInterests {
+  id      Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  topic   Topic @relation(fields: [topicId], references: [id])
+  topicId Int
+  createdAt         DateTime           @default(now())
+
+  @@unique([userId, topicId])
+}
+
+model PostTopics {
+  id        Int      @id @default(autoincrement())
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     Int
+  topic   Topic @relation(fields: [topicId], references: [id])
+  topicId Int
+
+  @@unique([postId, topicId])
 }
 
 // A Like a user can give to a Post
-model Like {
-  id        String   @default(cuid()) @id
+model PostLike {
+  id      Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   author    User     @relation(fields: [userId], references: [id])
-  userId    String
+  userId    Int
   post      Post     @relation(fields: [postId], references: [id])
-  postId    String
+  postId    Int
+}
+
+// A Like a user can give to a Comment
+model CommentLike {
+  id      Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [userId], references: [id])
+  userId    Int
+  comment      Comment     @relation(fields: [commentId], references: [id])
+  commentId    Int
 }
 
 // A Comment a User can leave on a Post with feedback for the author
 // Appears inside of a Thread
 // @relation: Thread
 model Comment {
-  id        String   @default(cuid()) @id
+  id      Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   body      String
-  userId    String
-  post      Post     @relation(fields: [postId], references: [id])
-  postId    String
+  userId    Int
   thread    Thread   @relation(fields: [threadId], references: [id])
-  threadId  String
+  threadId  Int
+  likes CommentLike[]
 }
 
 // A Comment Thread
 // @position: the starting index of a comment thread in a Post
 model Thread {
-  id       String    @default(cuid()) @id
-  position Int
-  comments Comment[]
-}
-
-// Something that a User is interested in.
-// @relation: 
-model Interest {
-  id    String @default(cuid()) @id
-  name  String
-  posts Post[]
+  id        Int      @id @default(autoincrement())
+  position  Int
+  range     Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  comments  Comment[]
 }
 
 // An Image that can be uploaded to a Post.
 model Image {
-  id        String  @default(cuid()) @id
+  id      Int      @id @default(autoincrement())
   smallSize String
   largeSize String
   postId    String?
+  imageRole ImageRole
 }
 
 // Writing prompts that Users can receive to give them ideas
 // of what to write about and to get started
 model Prompt {
-  id      String @default(cuid()) @id
+  id      Int      @id @default(autoincrement())
   text    String
   topic   Topic  @relation(fields: [topicId], references: [id])
-  topicId String
+  topicId Int
 }
 
 // A subscription or plan that a User has.
 // Ultimately indicates whether they are a FREE or PRO (paying) User.
-model Subscription {
-  id          String @default(cuid()) @id
+model UserSubscription {
+  id      Int      @id @default(autoincrement())
   name        String
   price       Int
-  description String
-  users       User[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 // Roles to determine a Users permissions and which features they can access
@@ -208,6 +233,11 @@ enum UserRole {
 enum PostStatus {
   DRAFT
   PUBLISHED
+}
+
+enum ImageRole {
+  HEADLINE
+  INLINE
 }
 
 // List of supported social media platforms that Users can add to their profile

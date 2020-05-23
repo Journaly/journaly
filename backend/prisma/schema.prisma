@@ -9,7 +9,7 @@ generator prisma_client {
 
 // A Journaly User
 model User {
-  id      Int      @id @default(autoincrement())
+  id                Int                @default(autoincrement()) @id
   name              String
   email             String             @unique
   handle            String             @unique
@@ -26,14 +26,17 @@ model User {
   languagesLearning LanguageLearning[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
+  UserInterests     UserInterests[]
+  PostLike          PostLike[]
+  CommentLike       CommentLike[]
 }
 
 // Authentication data for a User
 // @relation: User
 model Auth {
-  id      Int      @id @default(autoincrement())
-  user             User    @relation(fields: [userId], references: [id])
-  userId           Int  @unique
+  id               Int       @default(autoincrement()) @id
+  user             User      @relation(fields: [userId], references: [id])
+  userId           Int       @unique
   password         String
   resetToken       String?
   resetTokenExpiry DateTime?
@@ -41,31 +44,31 @@ model Auth {
 
 // Intermediary Table for the M2M relationship
 model LanguageLearning {
-  id      Int      @id @default(autoincrement())
+  id         Int      @default(autoincrement()) @id
   user       User     @relation(fields: [userId], references: [id])
-  userId     Int   @unique
+  userId     Int      @unique
   language   Language @relation(fields: [languageId], references: [id])
   languageId Int
-  createdAt         DateTime           @default(now())
+  createdAt  DateTime @default(now())
 
   @@unique([userId, languageId])
 }
 
 // Intermediary Table for the M2M relationship
 model LanguageNative {
-  id      Int      @id @default(autoincrement())
+  id         Int      @default(autoincrement()) @id
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
   language   Language @relation(fields: [languageId], references: [id])
   languageId Int
-  createdAt         DateTime           @default(now())
+  createdAt  DateTime @default(now())
 
   @@unique([userId, languageId])
 }
 
 // Social Media platforms that Users can add to their profile
 model SocialMedia {
-  id      Int      @id @default(autoincrement())
+  id       Int                 @default(autoincrement()) @id
   platform SocialMediaPlatform
   url      String
   author   User                @relation(fields: [authorId], references: [id])
@@ -74,30 +77,31 @@ model SocialMedia {
 
 // A journal entry - or Post - that a User writes
 model Post {
-  id      Int      @id @default(autoincrement())
+  id         Int          @default(autoincrement()) @id
   title      String
   body       String
-  status     PostStatus @default(DRAFT)
+  status     PostStatus   @default(DRAFT)
   images     Image[]
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  author     User       @relation(fields: [authorId], references: [id])
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  author     User         @relation(fields: [authorId], references: [id])
   authorId   Int
-  readTime   Int        @default(1)
+  readTime   Int          @default(1)
   likes      PostLike[]
-  topic      Topic[]    @relation(references: [id])
-  language   Language   @relation(fields: [languageId], references: [id])
+  topic      Topic[]      @relation(references: [id])
+  language   Language     @relation(fields: [languageId], references: [id])
   languageId Int
   longitude  Float?
   latitude   Float?
   threads    Thread[]
+  PostTopics PostTopics[]
 }
 
 // A language that a post can be written in.
 // @relation: LanguageNative - a language spoken natively by a User
 // @relation: LanguageLearning - a language being learned by a User
 model Language {
-  id      Int      @id @default(autoincrement())
+  id            Int                @default(autoincrement()) @id
   posts         Post[]
   name          String
   dialect       String?
@@ -109,33 +113,39 @@ model Language {
 
 // Location of a Post or a User
 model Location {
-  id      Int      @id @default(autoincrement())
+  id      Int    @default(autoincrement()) @id
   country String
   city    String
+  User    User[]
 }
 
 // Subject of a Post
 model Topic {
-  id      Int      @id @default(autoincrement())
-  name   String
-  posts  Post[]  @relation(references: [id])
+  id            Int             @default(autoincrement()) @id
+  name          String
+  posts         Post[]          @relation(references: [id])
+  User          User?           @relation(fields: [userId], references: [id])
+  userId        Int?
+  UserInterests UserInterests[]
+  PostTopics    PostTopics[]
+  Prompt        Prompt[]
 }
 
 model UserInterests {
-  id      Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  topic   Topic @relation(fields: [topicId], references: [id])
-  topicId Int
-  createdAt         DateTime           @default(now())
+  id        Int      @default(autoincrement()) @id
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  topic     Topic    @relation(fields: [topicId], references: [id])
+  topicId   Int
+  createdAt DateTime @default(now())
 
   @@unique([userId, topicId])
 }
 
 model PostTopics {
-  id        Int      @id @default(autoincrement())
-  post       Post     @relation(fields: [postId], references: [id])
-  postId     Int
+  id      Int   @default(autoincrement()) @id
+  post    Post  @relation(fields: [postId], references: [id])
+  postId  Int
   topic   Topic @relation(fields: [topicId], references: [id])
   topicId Int
 
@@ -144,7 +154,7 @@ model PostTopics {
 
 // A Like a user can give to a Post
 model PostLike {
-  id      Int      @id @default(autoincrement())
+  id        Int      @default(autoincrement()) @id
   createdAt DateTime @default(now())
   author    User     @relation(fields: [userId], references: [id])
   userId    Int
@@ -154,52 +164,54 @@ model PostLike {
 
 // A Like a user can give to a Comment
 model CommentLike {
-  id      Int      @id @default(autoincrement())
+  id        Int      @default(autoincrement()) @id
   createdAt DateTime @default(now())
   author    User     @relation(fields: [userId], references: [id])
   userId    Int
-  comment      Comment     @relation(fields: [commentId], references: [id])
-  commentId    Int
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  commentId Int
 }
 
 // A Comment a User can leave on a Post with feedback for the author
 // Appears inside of a Thread
 // @relation: Thread
 model Comment {
-  id      Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int           @default(autoincrement()) @id
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
   body      String
   userId    Int
-  thread    Thread   @relation(fields: [threadId], references: [id])
+  thread    Thread        @relation(fields: [threadId], references: [id])
   threadId  Int
-  likes CommentLike[]
+  likes     CommentLike[]
 }
 
 // A Comment Thread
 // @position: the starting index of a comment thread in a Post
 model Thread {
-  id        Int      @id @default(autoincrement())
-  position  Int
-  range     Int
-  post      Post     @relation(fields: [postId], references: [id])
-  postId    Int
-  comments  Comment[]
+  id       Int       @default(autoincrement()) @id
+  position Int
+  range    Int
+  post     Post      @relation(fields: [postId], references: [id])
+  postId   Int
+  comments Comment[]
 }
 
 // An Image that can be uploaded to a Post.
 model Image {
-  id      Int      @id @default(autoincrement())
-  smallSize String
-  largeSize String
-  postId    String?
-  imageRole ImageRole
+  id                 Int       @default(autoincrement()) @id
+  smallSize          String
+  largeSize          String
+  postId             String?
+  imageRole          ImageRole
+  Post               Post?     @relation(fields: [postId_ImageToPost], references: [id])
+  postId_ImageToPost Int?
 }
 
 // Writing prompts that Users can receive to give them ideas
 // of what to write about and to get started
 model Prompt {
-  id      Int      @id @default(autoincrement())
+  id      Int    @default(autoincrement()) @id
   text    String
   topic   Topic  @relation(fields: [topicId], references: [id])
   topicId Int
@@ -208,13 +220,13 @@ model Prompt {
 // A subscription or plan that a User has.
 // Ultimately indicates whether they are a FREE or PRO (paying) User.
 model UserSubscription {
-  id      Int      @id @default(autoincrement())
-  name        String
-  price       Int
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @default(autoincrement()) @id
+  name      String
+  price     Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Roles to determine a Users permissions and which features they can access

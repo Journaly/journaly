@@ -1,5 +1,5 @@
 import React from 'react'
-import { brandBlue } from '../../utils'
+import theme from '../../theme'
 
 interface Props {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
@@ -37,7 +37,7 @@ const Form: React.FC<Props> = ({ onSubmit, children }: Props) => {
         textarea,
         select:focus {
           outline: 0;
-          border-color: ${brandBlue};
+          border-color: ${theme.colors.blueLight};
         }
         fieldset {
           border: 0;
@@ -67,6 +67,7 @@ const Form: React.FC<Props> = ({ onSubmit, children }: Props) => {
         }
 
         h2 {
+          ${theme.typography.headingXL}
           margin-bottom: 10px;
         }
       `}</style>

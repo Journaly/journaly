@@ -13,7 +13,11 @@ schema.objectType({
     t.model.id()
     t.model.name()
     t.model.email()
+    t.model.handle()
     t.model.password()
+    t.model.bio()
+    t.model.userRole()
+    t.model.location()
     t.model.posts({
       pagination: false,
     })
@@ -27,9 +31,48 @@ schema.objectType({
     t.model.title()
     t.model.body()
     t.model.author()
-    t.model.published()
+    t.model.status()
+    t.model.language({ type: 'Language' })
   },
 })
+
+schema.objectType({
+  name: 'Location',
+  definition(t) {
+    t.model.id()
+    t.model.country()
+    t.model.city()
+  },
+})
+
+schema.objectType({
+  name: 'Language',
+  definition(t) {
+    t.model.id()
+    t.model.name()
+    t.model.posts()
+    t.model.dialect()
+    t.model.nativeUsers()
+    //t.model.learningUsers()
+    t.field('learningUsers', {
+      list: true,
+      type: 'User',
+      resolve: async (language, _args, ctx) => {
+        const result = await ctx.db.language
+          .findOne({ where: { id: language.id } })
+          .learningUsers({ include: { user: true } })
+        return result.map((r) => r.user)
+      },
+    })
+  },
+})
+
+// schema.objectType({
+//   name: 'LanguageLearned',
+//   definition(t) {
+//     t.
+//   }
+// })
 
 schema.queryType({
   definition(t) {
@@ -40,12 +83,12 @@ schema.queryType({
       t.list.field('feed', {
         type: 'Post',
         args: {
-          published: schema.booleanArg(),
+          status: schema.stringArg(),
         },
         resolve: async (parent, args, ctx) => {
           return ctx.db.post.findMany({
             where: {
-              published: args.published,
+              status: args.status as any,
             },
           })
         },
@@ -81,6 +124,7 @@ schema.mutationType({
       args: {
         name: schema.stringArg({ required: true }),
         email: schema.stringArg({ required: true }),
+        handle: schema.stringArg({ required: true }),
         password: schema.stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx: any) => {
@@ -89,6 +133,7 @@ schema.mutationType({
           data: {
             name: args.name,
             email: args.email.toLowerCase(),
+            handle: args.handle,
             password,
           },
         })
@@ -105,7 +150,7 @@ schema.mutationType({
       args: {
         title: schema.stringArg({ required: true }),
         body: schema.stringArg({ required: true }),
-        published: schema.booleanArg({ required: true }),
+        status: schema.stringArg(),
         authorEmail: schema.stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx) =>
@@ -113,12 +158,12 @@ schema.mutationType({
           data: {
             title: args.title,
             body: args.title,
+            status: args.status as any,
             author: {
               connect: {
                 email: 'ro@bin.com',
               },
             },
-            published: args.published,
           },
         }),
     })

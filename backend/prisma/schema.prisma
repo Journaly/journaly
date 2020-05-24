@@ -7,7 +7,6 @@ generator prisma_client {
   provider = "prisma-client-js"
 }
 
-// A Journaly User
 model User {
   id                Int                @default(autoincrement()) @id
   name              String
@@ -32,8 +31,6 @@ model User {
   PageView          PageView[]
 }
 
-// Authentication data for a User
-// @relation: User
 model Auth {
   id               Int       @default(autoincrement()) @id
   user             User      @relation(fields: [userId], references: [id])
@@ -43,7 +40,6 @@ model Auth {
   resetTokenExpiry DateTime?
 }
 
-// Intermediary Table for the M2M relationship
 model LanguageLearning {
   id         Int      @default(autoincrement()) @id
   user       User     @relation(fields: [userId], references: [id])
@@ -55,7 +51,6 @@ model LanguageLearning {
   @@unique([userId, languageId])
 }
 
-// Intermediary Table for the M2M relationship
 model LanguageNative {
   id         Int      @default(autoincrement()) @id
   user       User     @relation(fields: [userId], references: [id])
@@ -67,7 +62,6 @@ model LanguageNative {
   @@unique([userId, languageId])
 }
 
-// Social Media platforms that Users can add to their profile
 model SocialMedia {
   id       Int                 @default(autoincrement()) @id
   platform SocialMediaPlatform
@@ -76,7 +70,6 @@ model SocialMedia {
   authorId Int
 }
 
-// A journal entry - or Post - that a User writes
 model Post {
   id         Int          @default(autoincrement()) @id
   title      String
@@ -98,9 +91,6 @@ model Post {
   PostTopics PostTopics[]
 }
 
-// A language that a post can be written in.
-// @relation: LanguageNative - a language spoken natively by a User
-// @relation: LanguageLearning - a language being learned by a User
 model Language {
   id            Int                @default(autoincrement()) @id
   posts         Post[]
@@ -112,7 +102,6 @@ model Language {
   @@unique([name, dialect])
 }
 
-// Location of a Post or a User
 model Location {
   id      Int    @default(autoincrement()) @id
   country String
@@ -120,7 +109,6 @@ model Location {
   User    User[]
 }
 
-// Subject of a Post
 model Topic {
   id            Int             @default(autoincrement()) @id
   name          String
@@ -153,7 +141,6 @@ model PostTopics {
   @@unique([postId, topicId])
 }
 
-// A Like a user can give to a Post
 model PostLike {
   id        Int      @default(autoincrement()) @id
   createdAt DateTime @default(now())
@@ -163,7 +150,6 @@ model PostLike {
   postId    Int
 }
 
-// A Like a user can give to a Comment
 model CommentLike {
   id        Int      @default(autoincrement()) @id
   createdAt DateTime @default(now())
@@ -173,9 +159,6 @@ model CommentLike {
   commentId Int
 }
 
-// A Comment a User can leave on a Post with feedback for the author
-// Appears inside of a Thread
-// @relation: Thread
 model Comment {
   id        Int           @default(autoincrement()) @id
   createdAt DateTime      @default(now())
@@ -187,8 +170,6 @@ model Comment {
   likes     CommentLike[]
 }
 
-// A Comment Thread
-// @position: the starting index of a comment thread in a Post
 model Thread {
   id       Int       @default(autoincrement()) @id
   position Int
@@ -198,7 +179,6 @@ model Thread {
   comments Comment[]
 }
 
-// An Image that can be uploaded to a Post.
 model Image {
   id                 Int       @default(autoincrement()) @id
   smallSize          String
@@ -209,8 +189,6 @@ model Image {
   postId_ImageToPost Int?
 }
 
-// Writing prompts that Users can receive to give them ideas
-// of what to write about and to get started
 model Prompt {
   id      Int    @default(autoincrement()) @id
   text    String
@@ -218,8 +196,6 @@ model Prompt {
   topicId Int
 }
 
-// A subscription or plan that a User has.
-// Ultimately indicates whether they are a FREE or PRO (paying) User.
 model UserSubscription {
   id        Int      @default(autoincrement()) @id
   name      String
@@ -243,9 +219,6 @@ model PageView {
   user_agent_language String
 }
 
-// Roles to determine a Users permissions and which features they can access
-// @FREE_USER - can access core features
-// @PRO_USER - a User paying a monthly subscription and can access pro features
 enum UserRole {
   ADMIN
   MODERATOR
@@ -253,9 +226,6 @@ enum UserRole {
   PRO_USER
 }
 
-// Status of a Post
-// @DRAFT: User has either not finished writing or has chosen to keep this Post private
-// @PUBLISHED: User has published this Post publically for feedback
 enum PostStatus {
   DRAFT
   PUBLISHED
@@ -266,7 +236,6 @@ enum ImageRole {
   INLINE
 }
 
-// List of supported social media platforms that Users can add to their profile
 enum SocialMediaPlatform {
   FACEBOOK
   YOUTUBE

@@ -19,9 +19,7 @@ interface CustomServerResponse extends ServerResponse {
   }
 }
 
-class MyDocument extends Document<
-  DocumentProps & { children?: ReactNode } & CustomProps
-> {
+class MyDocument extends Document<DocumentProps & { children?: ReactNode } & CustomProps> {
   static async getInitialProps(context: DocumentContext) {
     const initialProps = await Document.getInitialProps(context)
 
@@ -54,8 +52,9 @@ class MyDocument extends Document<
           <link rel="shortcut icon" href="/favicon.png" />
           <link rel="stylesheet" type="text/css" href="/nprogress.css" />
         </Head>
-        <body>
+        <body className="block-transitions-on-page-load">
           <Main />
+          <div id="modal-root" />
           <NextScript />
         </body>
       </Html>

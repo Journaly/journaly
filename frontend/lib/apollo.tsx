@@ -1,11 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import {
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-} from '@apollo/client'
+import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
 import fetch from 'isomorphic-unfetch'
 import { NextPage } from 'next'
 
@@ -29,10 +24,10 @@ interface WithApolloProps extends WithApolloInitialProps {
  * @param {Object} [config]
  * @param {Boolean} [config.ssr=true]
  */
-export function withApollo<
-  PageProps extends object,
-  PageInitialProps = PageProps
->(PageComponent: NextPage<PageProps, PageInitialProps>, { ssr = true } = {}) {
+export function withApollo<PageProps extends object, PageInitialProps = PageProps>(
+  PageComponent: NextPage<PageProps, PageInitialProps>,
+  { ssr = true } = {},
+) {
   const WithApollo: NextPage<
     PageProps & WithApolloProps,
     PageInitialProps & WithApolloInitialProps
@@ -47,8 +42,7 @@ export function withApollo<
 
   // Set the correct displayName in development
   if (process.env.NODE_ENV !== 'production') {
-    const displayName =
-      PageComponent.displayName || PageComponent.name || 'Component'
+    const displayName = PageComponent.displayName || PageComponent.name || 'Component'
 
     if (displayName === 'App') {
       console.warn('This withApollo HOC only works with PageComponents.')

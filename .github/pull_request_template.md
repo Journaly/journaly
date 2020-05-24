@@ -4,11 +4,9 @@
 
 ...
 
-## Screenshots
-
-...
-
-## Sub-Tasks
+## Subtasks
 
 - [ ] I have added this PR to the Journaly Kanban project ✅
 - [ ] ...
+
+## Screenshots

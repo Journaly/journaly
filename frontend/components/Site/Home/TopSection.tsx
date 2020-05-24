@@ -3,9 +3,7 @@ import { width } from '../../../utils'
 
 const TopSection = () => (
   <div className="home-section-top">
-    <h1>
-      Improve your language skills and connect with others through journaling.
-    </h1>
+    <h1>Improve your language skills and connect with others through journaling.</h1>
 
     <SignupForm />
 

@@ -1,5 +1,13 @@
 {
   "signInPrompt": "Please sign in to continue.",
   "error": "An error occurred on the server",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "nav": {
+    "myFeed": "My Feed",
+    "myPosts": "My Posts",
+    "newPost": "New Post",
+    "drafts": "Drafts",
+    "settings": "Settings",
+    "logOut": "Log Out"
+  }
 }

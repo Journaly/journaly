@@ -1,6 +1,12 @@
 import { width, lightGrey } from '../../../utils'
 
-const HomeSection = ({ sectionHeading, grey = false, children }) => {
+type Props = {
+  sectionHeading: string
+  grey?: boolean
+  children: React.ReactNode
+}
+
+const HomeSection: React.FC<Props> = ({ sectionHeading, grey = false, children }) => {
   return (
     <section className="home-section">
       <div>

@@ -1,78 +1,62 @@
 import Link from 'next/link'
-
-import Error from '../Error'
-import { brandBlue } from '../../utils'
-import validateAuth, { IErrors } from '../../lib/validateAuth'
-
+import { useForm, ErrorMessage } from 'react-hook-form'
+import { trackLogIn } from '../../events/users'
 import { useCreateUserMutation } from '../../generated/graphql'
-import useFormValidation from '../Hooks/useFormValidation'
-
-interface IFormValues {
-  email: string
-  password: string
-}
-
-const initialState: IFormValues = {
-  email: '',
-  password: '',
-}
+import Error from '../Error'
+import Button from '../../elements/Button'
+import { brandBlue } from '../../utils'
 
 const LoginForm: React.FC = () => {
-  const {
-    handleChange,
-    values,
-    handleValidate,
-    handleBlur,
-    errors,
-    setValues,
-  } = useFormValidation<IFormValues, IErrors>(initialState, validateAuth)
-
-  const [createUser, { loading, error }] = useCreateUserMutation({
-    onCompleted: () => {
-      setValues(initialState)
-    },
+  const { handleSubmit, register, errors } = useForm({
+    mode: 'onBlur',
   })
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    handleValidate(e)
+  console.log('errors', errors)
+  const [createUser, { loading, error }] = useCreateUserMutation()
+
+  const onSubmit = (data: any) => {
     if (!loading && Object.keys(errors).length === 0) {
-      createUser()
+      createUser(data)
+      trackLogIn()
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={loading} aria-busy={loading}>
         <h2>Log into your account</h2>
         <Error error={error} />
         <label htmlFor="email">
           Email
-          <p>{errors?.email}</p>
           <input
             type="text"
-            name="email"
-            value={values.email}
-            placeholder="Your email address"
-            autoComplete="on"
-            onChange={handleChange}
-            onBlur={handleBlur}
+            placeholder="Email address"
+            name="Email"
+            ref={register({
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email address',
+              },
+            })}
           />
+          <ErrorMessage errors={errors} name="Email" as="p" />
         </label>
         <label htmlFor="password">
           Password
-          <p>{errors?.password}</p>
           <input
             type="password"
-            name="password"
-            value={values.password}
             placeholder="A secure password"
-            autoComplete="off"
-            onChange={handleChange}
-            onBlur={handleBlur}
+            name="Password"
+            ref={register({
+              required: 'Password is required',
+              minLength: { value: 6, message: 'Password must be at least 6 characters' },
+            })}
           />
+          <ErrorMessage errors={errors} name="Password" as="p" />
         </label>
-        <button type="submit">Sign up!</button>
+
+        <Button type="submit">Log In</Button>
       </fieldset>
       <em>
         Don't have an account?
@@ -131,12 +115,7 @@ const LoginForm: React.FC = () => {
           height: 10px;
           content: '';
           display: block;
-          background-image: linear-gradient(
-            to right,
-            #32567e 0%,
-            #4391c9 50%,
-            #32567e 100%
-          );
+          background-image: linear-gradient(to right, #32567e 0%, #4391c9 50%, #32567e 100%);
         }
         @keyframes loading {
           from {
@@ -155,19 +134,13 @@ const LoginForm: React.FC = () => {
           margin-bottom: 10px;
         }
 
-        button {
-          background-color: ${brandBlue};
+        :global(button) {
           border-radius: 5px;
-          color: white;
           font-size: 16px;
           font-weight: 400;
           padding: 10px;
           margin-top: 5px;
           box-shadow: 0px 8px 10px #00000029;
-          text-transform: uppercase;
-        }
-        button[disabled] {
-          opacity: 0.5;
         }
       `}</style>
     </form>

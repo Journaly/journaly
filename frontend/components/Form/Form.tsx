@@ -1,25 +1,25 @@
 import React from 'react'
-import { brandBlue } from '../../utils'
+import theme from '../../theme'
 
 interface Props {
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
   children: React.ReactNode
 }
 
-const Form: React.FC<Props> = ({ handleSubmit, children }: Props) => {
+const Form: React.FC<Props> = ({ onSubmit, children }: Props) => {
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={onSubmit}>
       {children}
+
       <style global jsx>{`
         form {
-          box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
-          background: white;
-          border: 5px solid white;
-          margin: 25vh auto;
+          width: 100%;
           padding: 20px;
-          max-width: 500px;
           font-size: 16px;
           line-height: 1.6;
+          background: white;
+          border: 5px solid white;
+          box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
         }
         label {
           display: block;
@@ -37,17 +37,7 @@ const Form: React.FC<Props> = ({ handleSubmit, children }: Props) => {
         textarea,
         select:focus {
           outline: 0;
-          border-color: ${brandBlue};
-        }
-        button,
-        input[type='submit'] {
-          width: auto;
-          background: ${brandBlue};
-          color: white;
-          border: 0;
-          font-size: 2rem;
-          font-weight: 600;
-          padding: 5px 12px;
+          border-color: ${theme.colors.blueLight};
         }
         fieldset {
           border: 0;
@@ -61,12 +51,7 @@ const Form: React.FC<Props> = ({ handleSubmit, children }: Props) => {
           height: 10px;
           content: '';
           display: block;
-          background-image: linear-gradient(
-            to right,
-            #32567e 0%,
-            #4391c9 50%,
-            #32567e 100%
-          );
+          background-image: linear-gradient(to right, #32567e 0%, #4391c9 50%, #32567e 100%);
         }
         @keyframes loading {
           from {
@@ -76,28 +61,14 @@ const Form: React.FC<Props> = ({ handleSubmit, children }: Props) => {
             background-position: 100% 100%;
           }
         }
-        &[aria-busy='true']::before {
+        fieldset[aria-busy='true']::before {
           background-size: 50% auto;
           animation: loading 0.5s linear infinite;
         }
 
         h2 {
+          ${theme.typography.headingXL}
           margin-bottom: 10px;
-        }
-
-        button {
-          background-color: ${brandBlue};
-          border-radius: 5px;
-          color: white;
-          font-size: 16px;
-          font-weight: 400;
-          padding: 10px;
-          margin-top: 5px;
-          box-shadow: 0px 8px 10px #00000029;
-          text-transform: uppercase;
-        }
-        button[disabled] {
-          opacity: 0.5;
         }
       `}</style>
     </form>

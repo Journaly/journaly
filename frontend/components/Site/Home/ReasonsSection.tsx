@@ -1,5 +1,10 @@
 import HomeSection from './HomeSection'
 
+type ReasonCardProps = {
+  image: string
+  reasonNumber: number
+}
+
 const imagePath = 'images/home'
 const imageUrls = ['hand-writing.jpg', 'hands-typing.jpg', 'typewriter.jpg']
 const reasonTexts = [
@@ -35,7 +40,7 @@ const ReasonsSection = () => {
   )
 }
 
-const ReasonCard = ({ image, reasonNumber }) => (
+const ReasonCard: React.FC<ReasonCardProps> = ({ image, reasonNumber }) => (
   <div className="reason-card">
     <img src={image} />
 

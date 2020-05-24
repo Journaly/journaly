@@ -56,9 +56,7 @@ const LoginForm: React.FC = () => {
           <ErrorMessage errors={errors} name="Password" as="p" />
         </label>
 
-        <Button type="submit" className="test">
-          Log In
-        </Button>
+        <Button type="submit">Log In</Button>
       </fieldset>
       <em>
         Don't have an account?

@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import SettingsPageLayout from '../../../components/Layouts/SettingsPageLayout'
 import Form from '../../../components/Form'
 import { useTranslation } from '../../../config/i18n'
-import Button, { Variant } from '../../../elements/Button'
+import Button, { ButtonVariant } from '../../../elements/Button'
 
 const Account: NextPage = () => {
   const { t } = useTranslation('settings')
@@ -37,7 +37,7 @@ const Account: NextPage = () => {
               <input type="text" id="confirm-new-password" />
             </div>
 
-            <Button className="change-password-submit-button" variant={Variant.Secondary}>
+            <Button className="change-password-submit-button" variant={ButtonVariant.Secondary}>
               {t('accountForm.submitButton')}
             </Button>
           </div>

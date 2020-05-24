@@ -74,47 +74,56 @@ const theme: Theme = {
       font-family: "Playfair Display", serif;
     `,
     paragraphSM: `
+      font-family: "Source Sans Pro", sans-serif;
       font-size: 12px;
       line-height: 20px;
     `,
     paragraphMD: `
-      font-size: 14px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: 16px;
       line-height: 24px;
     `,
     paragraphLG: `
-      font-size: 16px;
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: 18px;
       line-height: 24px;
     `,
     headingOverline: `
       letter-spacing: 1px;
+      font-family: "Playfair Display", serif;
       font-size: 12px;
       line-height: 20px;
       font-weight: 400;
       text-transform: uppercase;
     `,
     headingSM: `
+      font-family: "Playfair Display", serif;
       font-size: 16px;
       line-height: 24px;
       font-weight: 400;
     `,
     headingMD: `
+      font-family: "Playfair Display", serif;
       font-size: 20px;
       line-height: 28px;
       font-weight: 400;
     `,
     headingLG: `
+      font-family: "Playfair Display", serif;
       font-size: 24px;
       line-height: 32px;
       font-weight: 400;
     `,
     headingXL: `
-      font-size: 30px;
-      line-height: 36px;
+      font-family: "Playfair Display", serif;
+      font-size: 32px;
+      line-height: 40px;
       font-weight: 400;
     `,
     displaySM: `
-      font-size: 44px;
-      line-height: 48px;
+      font-family: "Playfair Display", serif;
+      font-size: 40px;
+      line-height: 56px;
       font-weight: 400;
     `,
   },

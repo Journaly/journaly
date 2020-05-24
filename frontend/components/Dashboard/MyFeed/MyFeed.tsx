@@ -1,10 +1,11 @@
+// @ts-nocheck
 import React from 'react'
 
 import PostCard from '../PostCard'
 
 // import { Post } from '../../../generated/graphql' // TODO (robin-macpherson): See Post[] type todo below
 
-interface Props {
+type Props = {
   posts: any[] // TODO (robin-macpherson): should be Post[]
 }
 
@@ -27,8 +28,8 @@ const MyFeed: React.FC<Props> = ({ posts }) => {
         {posts.length > 0 ? (
           posts.map((post) => (
             <PostCard
-              key={post.Id}
-              id={post.Id}
+              key={post.id}
+              id={post.id}
               title={post.title}
               body={post.body}
               image={post.image}

@@ -8,7 +8,7 @@ interface Props {
 const Users: React.FC<Props> = ({ users }) => {
   return (
     <div>
-      {users.map(user => (
+      {users.map((user) => (
         <p key={user.Id}>{user.Name}</p>
       ))}
     </div>

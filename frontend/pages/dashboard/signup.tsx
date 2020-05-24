@@ -14,4 +14,8 @@ const SignupPage: NextPage = () => (
   </LandingPageLayout>
 )
 
+SignupPage.getInitialProps = async () => ({
+  namespacesRequired: [],
+})
+
 export default withApollo(SignupPage)

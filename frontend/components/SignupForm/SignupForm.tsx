@@ -1,11 +1,12 @@
+import React from 'react'
 import Link from 'next/link'
-
-import Error from '../Error'
-import { brandBlue } from '../../utils'
+import { trackCreateAccount } from '../../events/users'
 import validateAuth, { IErrors } from '../../lib/validateAuth'
-
 import { useCreateUserMutation } from '../../generated/graphql'
-import useFormValidation from '../Hooks/useFormValidation'
+import useFormValidation from '../../hooks/useFormValidation'
+import Error from '../Error'
+import Button from '../../elements/Button'
+import { brandBlue } from '../../utils'
 
 interface IFormValues {
   name: string
@@ -20,17 +21,14 @@ const initialState: IFormValues = {
 }
 
 const SignupForm: React.FC = () => {
-  const {
-    handleChange,
-    values,
-    handleValidate,
-    handleBlur,
-    errors,
-    setValues,
-  } = useFormValidation<IFormValues, IErrors>(initialState, validateAuth)
+  const { handleChange, values, handleValidate, handleBlur, errors, setValues } = useFormValidation<
+    IFormValues,
+    IErrors
+  >(initialState, validateAuth)
 
   const [createUser, { loading, error }] = useCreateUserMutation({
     onCompleted: () => {
+      trackCreateAccount()
       setValues(initialState)
     },
   })
@@ -93,7 +91,8 @@ const SignupForm: React.FC = () => {
             onBlur={handleBlur}
           />
         </label>
-        <button type="submit">Sign up!</button>
+
+        <Button>Sign up!</Button>
       </fieldset>
       <em>
         Already have an account?
@@ -152,12 +151,7 @@ const SignupForm: React.FC = () => {
           height: 10px;
           content: '';
           display: block;
-          background-image: linear-gradient(
-            to right,
-            #32567e 0%,
-            #4391c9 50%,
-            #32567e 100%
-          );
+          background-image: linear-gradient(to right, #32567e 0%, #4391c9 50%, #32567e 100%);
         }
         @keyframes loading {
           from {
@@ -176,19 +170,13 @@ const SignupForm: React.FC = () => {
           margin-bottom: 10px;
         }
 
-        button {
-          background-color: ${brandBlue};
+        :global(button) {
           border-radius: 5px;
-          color: white;
           font-size: 16px;
           font-weight: 400;
           padding: 10px;
           margin-top: 5px;
           box-shadow: 0px 8px 10px #00000029;
-          text-transform: uppercase;
-        }
-        button[disabled] {
-          opacity: 0.5;
         }
       `}</style>
     </form>

@@ -17,9 +17,7 @@ const BlogPageLayout: React.FC<Props> = (props) => (
       </div>
     </div>
     <div className="blog-container">
-      <p className="post-date">
-        {format(getUTCDate(props.date), 'MMMM do, yyyy')}
-      </p>
+      <p className="post-date">{format(getUTCDate(props.date), 'MMMM do, yyyy')}</p>
       <p className="post-separator">- -</p>
       <div className="post-container">{props.children}</div>
     </div>

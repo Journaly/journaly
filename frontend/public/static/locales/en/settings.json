@@ -8,9 +8,16 @@
     "profile": "Profile Info",
     "account": "Account"
   },
-  "profileForm": {
-    "legend": "Your Details",
-    "submitButton": "Upload Image"
+  "updateButton": "Update",
+  "profile": {
+    "details": {
+      "legend": "Your Details",
+      "submitImage": "Upload Image"
+    },
+    "languages": {
+      "legend": "Languages",
+      "submitImage": "Upload Image"
+    }
   },
   "accountForm": {
     "legend": "Change Password",

@@ -1,24 +1,20 @@
 import React from 'react'
 import { NextPage } from 'next'
 import SettingsPageLayout from '../../../components/Layouts/SettingsPageLayout'
-import Form from '../../../components/Form'
+import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
+import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
 import { useTranslation } from '../../../config/i18n'
 import Button, { ButtonVariant } from '../../../elements/Button'
 
 const Account: NextPage = () => {
   const { t } = useTranslation('settings')
-  const loading = false
 
   const handleSubmit = () => {}
 
   return (
     <SettingsPageLayout>
-      <Form onSubmit={handleSubmit}>
-        <fieldset disabled={loading} aria-busy={loading}>
-          <legend>
-            <h2>{t('accountForm.legend')}</h2>
-          </legend>
-
+      <SettingsForm onSubmit={handleSubmit}>
+        <SettingsFieldset legend={t('accountForm.legend')}>
           <div className="password-fields-wrapper">
             <div className="password-field">
               <label htmlFor="old-password">{t('accountForm.oldPasswordLabel')}</label>
@@ -41,8 +37,8 @@ const Account: NextPage = () => {
               {t('accountForm.submitButton')}
             </Button>
           </div>
-        </fieldset>
-      </Form>
+        </SettingsFieldset>
+      </SettingsForm>
 
       <style jsx>{`
         .password-fields-wrapper {

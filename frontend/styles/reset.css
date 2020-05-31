@@ -38,7 +38,7 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 }
-ol:not([data-slate-node]), ul:not([data-slate-node]) {
+ol, ul {
 	list-style: none;
 }
 blockquote, q {

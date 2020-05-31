@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import { Post as PostType } from '../../../generated/graphql'
-import { brandBlue, highlightColor, darkGrey } from '../../../utils'
+import theme from '../../../theme'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 
 // TODO: Remove any when Types are fixed with PR #17
@@ -20,7 +20,7 @@ const CommentSelectionButton = () => (
         height: 35px;
         font-size: 14px;
         line-height: 1;
-        background-color: ${darkGrey};
+        background-color: ${theme.colors.gray800};
         border-radius: 5px;
         cursor: pointer;
         position: absolute;
@@ -32,7 +32,7 @@ const CommentSelectionButton = () => (
       }
 
       .comment-btn:hover {
-        background-color: ${brandBlue};
+        background-color: ${theme.colors.blueLight};
       }
     `}</style>
   </button>
@@ -125,7 +125,7 @@ function handleCommentClick(e: React.MouseEvent) {
   const firstRange = selection.getRangeAt(0)
   const selectedText = firstRange.extractContents()
   const commentedTextSpan = document.createElement('span')
-  commentedTextSpan.style.backgroundColor = `${highlightColor}`
+  commentedTextSpan.style.backgroundColor = '#4391C940'
   commentedTextSpan.appendChild(selectedText)
   firstRange.insertNode(commentedTextSpan)
   commentSelectionButton.style.display = 'none'
@@ -203,7 +203,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
           position: relative;
           grid-column: 1 / -1;
           text-align: center;
-          color: white;
+          color: ${theme.colors.white};
           margin-bottom: 40px;
         }
 
@@ -220,7 +220,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
           font-size: 64px;
           line-height: 1.2;
           text-align: center;
-          color: white;
+          color: ${theme.colors.white};
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);

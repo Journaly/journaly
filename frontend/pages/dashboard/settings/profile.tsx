@@ -2,35 +2,64 @@ import React from 'react'
 import { NextPage } from 'next'
 import { withApollo } from '../../../lib/apollo'
 import SettingsPageLayout from '../../../components/Layouts/SettingsPageLayout'
-import Form from '../../../components/Form'
+import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
+import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
 import { useTranslation } from '../../../config/i18n'
-import Button, { Variant } from '../../../elements/Button'
+import Button, { ButtonVariant } from '../../../elements/Button'
 
 const ProfileInfo: NextPage = () => {
   const { t } = useTranslation('settings')
-  const loading = false
 
-  const handleSubmit = () => {}
+  const handleDetailsSubmit = (): void => {}
+  const handleLanguagesSubmit = (): void => {}
 
   return (
     <SettingsPageLayout>
-      <Form onSubmit={handleSubmit}>
-        <fieldset disabled={loading} aria-busy={loading}>
-          <legend>
-            <h2>{t('profileForm.legend')}</h2>
-          </legend>
+      <div className="forms-container">
+        <SettingsForm onSubmit={handleDetailsSubmit}>
+          <SettingsFieldset legend={t('profile.details.legend')}>
+            <div className="details-wrapper">
+              <img className="profile-image" src="/images/robin-small.png" />
 
-          <div className="details-wrapper">
-            <img className="profile-image" src="/images/robin-small.png" />
+              <Button
+                type="submit"
+                className="details-submit-button"
+                variant={ButtonVariant.Secondary}
+              >
+                {t('profile.details.submitImage')}
+              </Button>
+            </div>
+          </SettingsFieldset>
+        </SettingsForm>
 
-            <Button className="details-submit-button" variant={Variant.Secondary}>
-              {t('profileForm.submitButton')}
-            </Button>
-          </div>
-        </fieldset>
-      </Form>
+        <SettingsForm onSubmit={handleLanguagesSubmit}>
+          <SettingsFieldset legend={t('profile.languages.legend')}>
+            <div className="languages-wrapper">
+              <Button
+                type="submit"
+                className="details-submit-button"
+                variant={ButtonVariant.Secondary}
+              >
+                {t('updateButton')}
+              </Button>
+            </div>
+          </SettingsFieldset>
+        </SettingsForm>
+      </div>
 
       <style jsx>{`
+        .forms-container {
+          width: 100%;
+        }
+
+        .forms-container :global(form) {
+          margin-bottom: 40px;
+        }
+
+        .forms-container :global(form):last-child {
+          margin-bottom: 0;
+        }
+
         .details-wrapper {
           display: flex;
           flex-direction: column;

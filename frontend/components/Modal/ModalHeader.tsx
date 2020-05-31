@@ -13,7 +13,7 @@ interface Props {
 const ModalHeader: React.FC<Props> = ({ onClose, title, showTitle }) => {
   return (
     <div className="modal-header">
-      <Button plain onClick={onClose} className="modal-close-button">
+      <Button icon onClick={onClose} className="modal-close-button">
         <XIcon size={40} />
         <span className="screen-reader">Close dialog</span>
       </Button>

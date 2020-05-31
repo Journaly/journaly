@@ -1,7 +1,5 @@
-// @ts-nocheck
 import React from 'react'
 import Head from 'next/head'
-
 import { Post as PostType } from '../../../generated/graphql'
 import { brandBlue, highlightColor, darkGrey } from '../../../utils'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
@@ -40,15 +38,17 @@ const CommentSelectionButton = () => (
   </button>
 )
 
-let selectableTextArea: Node
+let selectableTextArea: HTMLElement
 let commentSelectionButton: HTMLElement
 
 if (typeof document !== 'undefined' && typeof window !== 'undefined') {
   selectableTextArea = document.querySelector('.selectable-text-area') as HTMLElement
   commentSelectionButton = document.querySelector('.comment-btn') as HTMLElement
-  commentSelectionButton.addEventListener('click', handleCommentClick)
 
-  selectableTextArea.addEventListener('mouseup', selectableTextAreaMouseUp)
+  selectableTextArea.addEventListener(
+    'mouseup',
+    selectableTextAreaMouseUp as EventListenerOrEventListenerObject,
+  )
 }
 
 function buildPostOrderList(el: HTMLElement) {
@@ -61,10 +61,11 @@ function buildPostOrderList(el: HTMLElement) {
   return postOrderList
 }
 
-function processSelectedTextArea(selection, parentElement: HTMLElement) {
+function processSelectedTextArea(selection: Selection, parentElement: HTMLElement) {
   const nodeList = buildPostOrderList(parentElement)
-  let startIdx = nodeList.indexOf(selection.baseNode)
-  let endIdx = nodeList.indexOf(selection.extentNode)
+
+  let startIdx = nodeList.indexOf(selection.anchorNode as Node)
+  let endIdx = nodeList.indexOf(selection.focusNode as Node)
 
   if (startIdx > endIdx) {
     ;[startIdx, endIdx] = [endIdx, startIdx]
@@ -75,7 +76,7 @@ function processSelectedTextArea(selection, parentElement: HTMLElement) {
   for (const node of selectedNodes) {
     if (node.constructor === Text) {
       continue
-    } else if (elementWhiteList.has(node.tagName)) {
+    } else if (elementWhiteList.has((node as HTMLElement).tagName)) {
       continue
     } else {
       // node not in our "whitelist"
@@ -87,7 +88,7 @@ function processSelectedTextArea(selection, parentElement: HTMLElement) {
 
 function selectableTextAreaMouseUp(e: MouseEvent): void {
   setTimeout(() => {
-    const selection = window.getSelection()
+    const selection = window.getSelection() as Selection
     if (processSelectedTextArea(selection, selectableTextArea) === false) {
       return
     }
@@ -113,24 +114,22 @@ function documentMouseDown() {
   }
 }
 
-function handleCommentClick(e) {
-  const selection = document.getSelection()
+function handleCommentClick(e: React.MouseEvent) {
   e.preventDefault()
   e.stopPropagation()
-  if (typeof document !== 'undefined') {
-    if (selection.isCollapsed === true) {
-      return
-    }
-    const firstRange = selection.getRangeAt(0)
-    const selectedText = firstRange.extractContents()
-    const commentedTextSpan = document.createElement('span')
-    commentedTextSpan.style.backgroundColor = `${highlightColor}`
-    commentedTextSpan.appendChild(selectedText)
-    firstRange.insertNode(commentedTextSpan)
-    commentSelectionButton.style.display = 'none'
-    window.getSelection().empty()
-  }
-  return false
+
+  const selection = document.getSelection() as Selection
+
+  if (selection.isCollapsed) return
+
+  const firstRange = selection.getRangeAt(0)
+  const selectedText = firstRange.extractContents()
+  const commentedTextSpan = document.createElement('span')
+  commentedTextSpan.style.backgroundColor = `${highlightColor}`
+  commentedTextSpan.appendChild(selectedText)
+  firstRange.insertNode(commentedTextSpan)
+  commentSelectionButton.style.display = 'none'
+  ;(window.getSelection() as Selection).empty()
 }
 
 const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {

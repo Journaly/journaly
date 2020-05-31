@@ -7,6 +7,7 @@ type Props = {
   active: boolean
   iconSrc: string
   iconAlt: string
+  onMouseDown: (e: React.MouseEvent) => void
 }
 
 const Button = React.forwardRef<Ref, Props>(({ active, iconSrc, iconAlt, ...props }, ref) => (
@@ -20,6 +21,7 @@ const Button = React.forwardRef<Ref, Props>(({ active, iconSrc, iconAlt, ...prop
       img:hover {
         box-shadow: 0px 8px 10px #00000029;
         fill: red;
+        cursor: pointer;
       }
     `}</style>
   </>

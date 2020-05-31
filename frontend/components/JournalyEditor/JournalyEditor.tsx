@@ -98,6 +98,9 @@ const JournalyEditor = () => {
           border-radius: 5px;
           min-height: 200px;
         }
+
+        /* TODO: Add specific Journaly Editor styles to ol, ul, and blockquote elements */
+        /* https://github.com/Journaly/journaly/issues/82 */
       `}</style>
     </div>
   )

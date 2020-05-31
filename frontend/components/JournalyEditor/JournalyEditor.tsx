@@ -16,7 +16,7 @@ import Button from './Button'
 
 /**
  * The Journaly Rich Text Editor
- *   Uses the Slate library to build a delightgul
+ *   Uses the Slate library to build a delightful
  *   rich text editing experience that allows users
  *   to craft & format beautiful posts themselves.
  *

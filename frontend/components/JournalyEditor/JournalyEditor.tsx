@@ -10,7 +10,7 @@ import {
 } from 'slate-react'
 import { withHistory } from 'slate-history'
 import isHotkey from 'is-hotkey'
-
+import theme from '../../theme'
 import Toolbar from './Toolbar'
 import Button from './Button'
 
@@ -94,7 +94,7 @@ const JournalyEditor = () => {
         }
         .editor-container {
           padding: 0 25px;
-          border: 1px solid black;
+          border: 1px solid ${theme.colors.black};
           border-radius: 5px;
           min-height: 200px;
         }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { darkGrey } from '../../utils/colors'
+import theme from '../../theme'
 
 type Ref = HTMLImageElement
 
@@ -16,7 +16,7 @@ const Button = React.forwardRef<Ref, Props>(({ active, iconSrc, iconAlt, ...prop
     <style jsx>{`
       margin-right: 10px;
       border-radius: 5px;
-      background-color: ${darkGrey};
+      background-color: ${theme.colors.gray800};
 
       img:hover {
         box-shadow: 0px 8px 10px #00000029;

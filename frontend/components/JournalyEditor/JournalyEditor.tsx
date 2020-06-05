@@ -1,16 +1,22 @@
-// @ts-nocheck
 import React, { useMemo, useState, useCallback } from 'react'
 import { createEditor, Editor, Transforms, Node } from 'slate'
-import { Slate, Editable, withReact, useSlate } from 'slate-react'
+import {
+  Slate,
+  Editable,
+  withReact,
+  useSlate,
+  RenderElementProps,
+  RenderLeafProps,
+} from 'slate-react'
 import { withHistory } from 'slate-history'
 import isHotkey from 'is-hotkey'
-
+import theme from '../../theme'
 import Toolbar from './Toolbar'
 import Button from './Button'
 
 /**
  * The Journaly Rich Text Editor
- *   Uses the Slate library to build a delightgul
+ *   Uses the Slate library to build a delightful
  *   rich text editing experience that allows users
  *   to craft & format beautiful posts themselves.
  *
@@ -22,11 +28,18 @@ import Button from './Button'
  * for saving it to the DB and retrieving it when viewing a post.
  */
 
-const HOTKEYS = {
+type HotKey = 'mod+b' | 'mod+i' | 'mod+u' | 'mod+`'
+
+const HOTKEYS: { [key in HotKey]: string } = {
   'mod+b': 'bold',
   'mod+i': 'italic',
   'mod+u': 'underline',
   'mod+`': 'code',
+}
+
+type ButtonProps = {
+  format: string
+  icon: string
 }
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
@@ -63,14 +76,14 @@ const JournalyEditor = () => {
             placeholder="It all started this morning when..."
             spellCheck
             autoFocus
-            onKeyDown={(event) => {
-              for (const hotkey in HOTKEYS) {
-                if (isHotkey(hotkey, event)) {
+            onKeyDown={(event: React.KeyboardEvent) => {
+              Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
+                // Convert React keyboard event to native keyboard event
+                if (isHotkey(hotkey, (event as unknown) as KeyboardEvent)) {
                   event.preventDefault()
-                  const mark = HOTKEYS[hotkey]
                   toggleMark(editor, mark)
                 }
-              }
+              })
             }}
           />
         </Slate>
@@ -81,16 +94,19 @@ const JournalyEditor = () => {
         }
         .editor-container {
           padding: 0 25px;
-          border: 1px solid black;
+          border: 1px solid ${theme.colors.black};
           border-radius: 5px;
           min-height: 200px;
         }
+
+        /* TODO: Add specific Journaly Editor styles to ol, ul, and blockquote elements */
+        /* https://github.com/Journaly/journaly/issues/82 */
       `}</style>
     </div>
   )
 }
 
-const toggleBlock = (editor, format) => {
+const toggleBlock = (editor: Editor, format: string) => {
   const isActive = isBlockActive(editor, format)
   const isList = LIST_TYPES.includes(format)
 
@@ -109,7 +125,7 @@ const toggleBlock = (editor, format) => {
   }
 }
 
-const toggleMark = (editor, format) => {
+const toggleMark = (editor: Editor, format: string) => {
   const isActive = isMarkActive(editor, format)
 
   if (isActive) {
@@ -119,7 +135,7 @@ const toggleMark = (editor, format) => {
   }
 }
 
-const isBlockActive = (editor, format) => {
+const isBlockActive = (editor: Editor, format: string) => {
   const [match] = Editor.nodes(editor, {
     match: (n) => n.type === format,
   })
@@ -127,12 +143,12 @@ const isBlockActive = (editor, format) => {
   return !!match
 }
 
-const isMarkActive = (editor, format) => {
+const isMarkActive = (editor: Editor, format: string) => {
   const marks = Editor.marks(editor)
   return marks ? marks[format] === true : false
 }
 
-const Element = ({ attributes, children, element }) => {
+const Element: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
   switch (element.type) {
     case 'block-quote':
       return <blockquote {...attributes}>{children}</blockquote>
@@ -149,7 +165,7 @@ const Element = ({ attributes, children, element }) => {
   }
 }
 
-const Leaf = ({ attributes, children, leaf }) => {
+const Leaf: React.FC<RenderLeafProps> = ({ attributes, children, leaf }) => {
   if (leaf.bold) {
     children = <strong>{children}</strong>
   }
@@ -169,12 +185,13 @@ const Leaf = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>
 }
 
-const MarkButton = ({ format, icon }) => {
+const MarkButton: React.FC<ButtonProps> = ({ format, icon }) => {
   const editor = useSlate()
+
   return (
     <Button
       active={isMarkActive(editor, format)}
-      onMouseDown={(event) => {
+      onMouseDown={(event: React.MouseEvent) => {
         event.preventDefault()
         toggleMark(editor, format)
       }}
@@ -184,8 +201,9 @@ const MarkButton = ({ format, icon }) => {
   )
 }
 
-const BlockButton = ({ format, icon }) => {
+const BlockButton: React.FC<ButtonProps> = ({ format, icon }) => {
   const editor = useSlate()
+
   return (
     <Button
       active={isBlockActive(editor, format)}

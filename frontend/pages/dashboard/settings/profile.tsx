@@ -17,6 +17,9 @@ const ProfileInfo: NextPage = () => {
 
   const onDetailsSubmit = (): void => {}
   const handleLanguagesSubmit = (): void => {}
+  const handleBioSubmit = (): void => {}
+  const handleInterestsSubmit = (): void => {}
+  const handleSocialSubmit = (): void => {}
 
   // TODO(nick): submit the image separately from the main form, since it has a separate submit button
   return (
@@ -82,9 +85,118 @@ const ProfileInfo: NextPage = () => {
         <SettingsForm onSubmit={handleLanguagesSubmit}>
           <SettingsFieldset legend={t('profile.languages.legend')}>
             <div className="languages-wrapper">
+              <div className="languages-form-fields">
+                <div className="languages-form-field">
+                  <label htmlFor="native-languages">
+                    {t('profile.languages.nativeLanguagesLabel')}
+                  </label>
+                  <input type="text" name="native-languages" className="j-field" ref={register()} />
+                </div>
+                <div className="languages-form-field">
+                  <label htmlFor="learning-languages">
+                    {t('profile.languages.learningLanguagesLabel')}
+                  </label>
+                  <input
+                    type="text"
+                    name="learning-languages"
+                    className="j-field"
+                    ref={register()}
+                  />
+                </div>
+              </div>
+
               <Button
                 type="submit"
                 className="languages-submit-button"
+                variant={ButtonVariant.Secondary}
+              >
+                {t('updateButton')}
+              </Button>
+            </div>
+          </SettingsFieldset>
+        </SettingsForm>
+
+        <SettingsForm onSubmit={handleBioSubmit}>
+          <SettingsFieldset legend={t('profile.bio.legend')}>
+            <div className="bio-wrapper">
+              <div className="bio-form-field">
+                <label htmlFor="bio">{t('profile.bio.bioLabel')}</label>
+                <textarea name="bio" className="j-textarea" ref={register()} />
+              </div>
+
+              <Button type="submit" className="bio-submit-button" variant={ButtonVariant.Secondary}>
+                {t('updateButton')}
+              </Button>
+            </div>
+          </SettingsFieldset>
+        </SettingsForm>
+
+        <SettingsForm onSubmit={handleInterestsSubmit}>
+          <SettingsFieldset legend={t('profile.interests.legend')}>
+            <div className="interests-wrapper">
+              <div className="interests-form-field">
+                <label htmlFor="interests">{t('profile.interests.topicsLabel')}</label>
+                <input type="text" name="interests" className="j-field" ref={register()} />
+              </div>
+
+              <Button
+                type="submit"
+                className="interests-submit-button"
+                variant={ButtonVariant.Secondary}
+              >
+                {t('updateButton')}
+              </Button>
+            </div>
+          </SettingsFieldset>
+        </SettingsForm>
+
+        <SettingsForm onSubmit={handleSocialSubmit}>
+          <SettingsFieldset legend={t('profile.social.legend')}>
+            <h3>{t('profile.social.socialLabel')}</h3>
+
+            <div className="social-wrapper">
+              <div className="social-form-fields">
+                <div className="social-form-field">
+                  <input
+                    type="text"
+                    name="facebook"
+                    placeholder={t('profile.social.facebookPlaceholder')}
+                    className="j-field"
+                    ref={register()}
+                  />
+                </div>
+                <div className="social-form-field">
+                  <input
+                    type="text"
+                    name="youtube"
+                    placeholder={t('profile.social.youtubePlaceholder')}
+                    className="j-field"
+                    ref={register()}
+                  />
+                </div>
+                <div className="social-form-field">
+                  <input
+                    type="text"
+                    name="instagram"
+                    placeholder={t('profile.social.instagramPlaceholder')}
+                    className="j-field"
+                    ref={register()}
+                  />
+                </div>
+                <div className="social-form-field">
+                  <input
+                    type="text"
+                    name="personal-website"
+                    placeholder={t('profile.social.personalWebsitePlaceholder')}
+                    className="j-field"
+                    ref={register()}
+                  />
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                className="social-submit-button"
                 variant={ButtonVariant.Secondary}
               >
                 {t('updateButton')}

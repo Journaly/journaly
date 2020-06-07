@@ -12,10 +12,32 @@
   "profile": {
     "details": {
       "legend": "Your Details",
-      "submitImage": "Upload Image"
+      "submitImage": "Upload Image",
+      "firstNameLabel": "First Name",
+      "lastNameLabel": "Last Name",
+      "handleLabel": "Handle",
+      "locationLabel": "Location (optional)"
     },
     "languages": {
-      "legend": "Languages"
+      "legend": "Languages",
+      "nativeLanguagesLabel": "What is your native language?",
+      "learningLanguagesLabel": "What language(s) are you learning?"
+    },
+    "bio": {
+      "legend": "Bio",
+      "bioLabel": "Tell us about yourself!"
+    },
+    "interests": {
+      "legend": "Interests",
+      "topicsLabel": "Tell us about the topics you're interested in! This will help us show you posts you'll like and find people with similar interests to you."
+    },
+    "social": {
+      "legend": "Social",
+      "socialLabel": "Want to connect with other Journalers via social media? Or promote your own work? Tell everyone where they can find you.",
+      "facebookPlaceholder": "facebook.com/YourPage",
+      "youtubePlaceholder": "youtube.com/c/YourChannel",
+      "instagramPlaceholder": "instagram.com/YourPage",
+      "personalWebsitePlaceholder": "Do you have a website?"
     }
   },
   "accountForm": {

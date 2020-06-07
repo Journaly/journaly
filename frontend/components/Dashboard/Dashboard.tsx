@@ -60,7 +60,6 @@ const Dashboard: React.FC<Props> = ({ children }) => {
         .dashboard-container {
           height: 100%;
           padding: 50px 25px;
-          background-color: ${lightGrey};
           transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;
         }
 

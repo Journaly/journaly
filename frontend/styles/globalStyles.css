@@ -66,6 +66,12 @@ strong {
   border-radius: 5px;
 }
 
+.j-textarea {
+  padding: 0 12px;
+  border: 1px solid #95989a;
+  border-radius: 5px;
+}
+
 em {
   font-style: italic;
 }

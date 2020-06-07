@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import { useTranslation } from '../../../config/i18n'
+import theme from '../../../theme'
 
 const Breadcrumbs: React.FC = () => {
   const { pathname } = useRouter()
@@ -13,7 +14,7 @@ const Breadcrumbs: React.FC = () => {
   }
 
   return (
-    <h1>
+    <h1 className="breadcrumbs">
       <span>
         {t('breadcrumbs.settings')}
         <span className="separator">&gt;</span>
@@ -21,8 +22,11 @@ const Breadcrumbs: React.FC = () => {
       </span>
 
       <style jsx>{`
+        .breadcrumbs {
+          ${theme.typography.headingXL};
+        }
         .separator {
-          margin: 0 23px;
+          margin: 0 16px;
         }
       `}</style>
     </h1>

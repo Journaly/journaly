@@ -18,19 +18,19 @@ const Account: NextPage = () => {
           <div className="password-fields-wrapper">
             <div className="password-field">
               <label htmlFor="old-password">{t('accountForm.oldPasswordLabel')}</label>
-              <input type="text" id="old-password" />
+              <input type="text" id="old-password" className="j-field" />
             </div>
 
             <div className="password-field">
               <label htmlFor="new-password">{t('accountForm.newPasswordLabel')}</label>
-              <input type="text" id="new-password" />
+              <input type="text" id="new-password" className="j-field" />
             </div>
 
             <div className="password-field">
               <label htmlFor="confirm-new-password">
                 {t('accountForm.confirmNewPasswordLabel')}
               </label>
-              <input type="text" id="confirm-new-password" />
+              <input type="text" id="confirm-new-password" className="j-field" />
             </div>
 
             <Button className="change-password-submit-button" variant={ButtonVariant.Secondary}>
@@ -64,9 +64,6 @@ const Account: NextPage = () => {
 
         .password-field input {
           width: 300px;
-          height: 50px;
-          border: 1px solid #95989a;
-          border-radius: 5px;
         }
 
         :global(.change-password-submit-button) {

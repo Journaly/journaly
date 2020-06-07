@@ -59,6 +59,13 @@ strong {
   text-decoration: underline;
 }
 
+.j-field {
+  height: 50px;
+  padding: 0 12px;
+  border: 1px solid #95989a;
+  border-radius: 5px;
+}
+
 em {
   font-style: italic;
 }
@@ -74,6 +81,9 @@ textarea {
   border: 0;
   padding: 0;
   white-space: normal;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
   background: none;
   background-color: white;
 }

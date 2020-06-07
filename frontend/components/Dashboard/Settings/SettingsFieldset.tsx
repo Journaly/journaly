@@ -16,8 +16,14 @@ const SettingsFieldset: React.FC<Props> = ({ children, legend }) => {
       {children}
       <style jsx>{`
         legend {
-          ${theme.typography.headingXL}
           margin-bottom: 10px;
+          ${theme.typography.headingXL}
+          text-align: center;
+        }
+        @media (min-width: ${theme.breakpoints.SM}) {
+          legend {
+            text-align: left;
+          }
         }
       `}</style>
     </fieldset>

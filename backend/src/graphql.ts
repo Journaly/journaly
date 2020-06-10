@@ -1,13 +1,11 @@
-import {
-  objectType,
-  queryType,
-  mutationType,
-  stringArg,
-  makeSchema,
-} from '@nexus/schema'
+import { use, schema } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { nexusPrismaPlugin } from 'nexus-prisma'
+import { prisma } from 'nexus-plugin-prisma'
+
+use(prisma())
+
+const { objectType, queryType, mutationType, stringArg, makeSchema } = schema
 
 // Time constants
 const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
@@ -21,7 +19,6 @@ const User = objectType({
     t.model.name()
     t.model.email()
     t.model.handle()
-    t.model.password()
     t.model.bio()
     t.model.userRole()
     t.model.location()
@@ -59,7 +56,7 @@ const Language = objectType({
     t.model.name()
     t.model.posts()
     t.model.dialect()
-    t.model.nativeUsers()
+    //t.model.nativeUsers()
     //t.model.learningUsers()
     t.field('learningUsers', {
       list: true,
@@ -175,9 +172,4 @@ const Mutation = mutationType({
         }),
     })
   },
-})
-
-const schema = makeSchema({
-  types: [User, Post, Location, Language, Query, Mutation],
-  plugins: [nexusPrismaPlugin()],
 })

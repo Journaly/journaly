@@ -1,13 +1,20 @@
-import { schema } from 'nexus'
+import {
+  objectType,
+  queryType,
+  mutationType,
+  stringArg,
+  makeSchema,
+} from '@nexus/schema'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { nexusPrismaPlugin } from 'nexus-prisma'
 
 // Time constants
 const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
 const ONE_HOUR_FROM_NOW = Date.now() + 3600000
 const WITHIN_ONE_HOUR = Date.now() - 3600000
 
-schema.objectType({
+const User = objectType({
   name: 'User',
   definition(t) {
     t.model.id()
@@ -24,7 +31,7 @@ schema.objectType({
   },
 })
 
-schema.objectType({
+const Post = objectType({
   name: 'Post',
   definition(t) {
     t.model.id()
@@ -36,7 +43,7 @@ schema.objectType({
   },
 })
 
-schema.objectType({
+const Location = objectType({
   name: 'Location',
   definition(t) {
     t.model.id()
@@ -45,7 +52,7 @@ schema.objectType({
   },
 })
 
-schema.objectType({
+const Language = objectType({
   name: 'Language',
   definition(t) {
     t.model.id()
@@ -67,14 +74,14 @@ schema.objectType({
   },
 })
 
-// schema.objectType({
+// objectType({
 //   name: 'LanguageLearned',
 //   definition(t) {
 //     t.
 //   }
 // })
 
-schema.queryType({
+const Query = queryType({
   definition(t) {
     t.list.field('posts', {
       type: 'Post',
@@ -83,7 +90,7 @@ schema.queryType({
       t.list.field('feed', {
         type: 'Post',
         args: {
-          status: schema.stringArg(),
+          status: stringArg(),
         },
         resolve: async (parent, args, ctx) => {
           return ctx.db.post.findMany({
@@ -117,15 +124,15 @@ schema.queryType({
   },
 })
 
-schema.mutationType({
+const Mutation = mutationType({
   definition(t) {
     t.field('createUser', {
       type: 'User',
       args: {
-        name: schema.stringArg({ required: true }),
-        email: schema.stringArg({ required: true }),
-        handle: schema.stringArg({ required: true }),
-        password: schema.stringArg({ required: true }),
+        name: stringArg({ required: true }),
+        email: stringArg({ required: true }),
+        handle: stringArg({ required: true }),
+        password: stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx: any) => {
         const password = await bcrypt.hash(args.password, 10)
@@ -148,10 +155,10 @@ schema.mutationType({
     t.field('createPost', {
       type: 'Post',
       args: {
-        title: schema.stringArg({ required: true }),
-        body: schema.stringArg({ required: true }),
-        status: schema.stringArg(),
-        authorEmail: schema.stringArg({ required: true }),
+        title: stringArg({ required: true }),
+        body: stringArg({ required: true }),
+        status: stringArg(),
+        authorEmail: stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx) =>
         ctx.db.post.create({
@@ -168,4 +175,9 @@ schema.mutationType({
         }),
     })
   },
+})
+
+const schema = makeSchema({
+  types: [User, Post, Location, Language, Query, Mutation],
+  plugins: [nexusPrismaPlugin()],
 })

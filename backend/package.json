@@ -12,7 +12,7 @@
     "format": "npx prettier --write './**/*.{ts,js,md}'",
     "dev": "nexus dev",
     "build": "nexus build",
-    "prisma2": "prisma2",
+    "prisma": "prisma",
     "start": "node node_modules/.build",
     "seed": "ts-node seed.ts",
     "debug": "ndb -r ts-node/register node_modules/.bin/nexus dev"
@@ -34,8 +34,8 @@
     "cypress": "^4.3.0",
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
-    "nexus": "^0.20.0-next.33",
-    "nexus-plugin-prisma": "^0.6.0"
+    "nexus": "^0.23.0",
+    "nexus-prisma": "^0.14.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",

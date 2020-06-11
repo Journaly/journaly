@@ -3,12 +3,10 @@ query users {
     id
     name
     email
-    password
     posts {
       id
       title
       body
-      published
     }
   }
 }

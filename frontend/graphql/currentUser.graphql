@@ -7,7 +7,6 @@ query currentUser {
       id
       title
       body
-      published
     }
   }
 }

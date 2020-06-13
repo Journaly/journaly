@@ -1,9 +1,8 @@
-query feed($published: Boolean!) {
-  feed(published: $published) {
+query feed {
+  feed {
     id
     title
     body
-    published
     author {
       id
       name

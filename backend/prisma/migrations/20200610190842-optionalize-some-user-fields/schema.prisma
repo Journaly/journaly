@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://jlyuser:jlypass@localhost:5433/jlydb"
+  url = "***"
 }
 
 generator prisma_client {
@@ -12,7 +12,7 @@ model User {
   name              String?
   email             String             @unique
   handle            String             @unique
-  auth              Auth?
+  auth              Auth
   userRole          UserRole           @default(FREE_USER)
   bio               String?
   posts             Post[]

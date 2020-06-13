@@ -126,7 +126,7 @@ const Mutation = mutationType({
     t.field('createUser', {
       type: 'User',
       args: {
-        name: stringArg({ required: true }),
+        handle: stringArg({ required: true }),
         email: stringArg({ required: true }),
         handle: stringArg({ required: true }),
         password: stringArg({ required: true }),
@@ -135,10 +135,12 @@ const Mutation = mutationType({
         const password = await bcrypt.hash(args.password, 10)
         const user = await ctx.db.user.create({
           data: {
-            name: args.name,
+            handle: args.handle,
             email: args.email.toLowerCase(),
             handle: args.handle,
-            password,
+            auth: {
+              create: { password },
+            },
           },
         })
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)

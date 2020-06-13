@@ -1,5 +1,5 @@
 export interface IValues {
-  name?: string
+  handle?: string
   email?: string
   password?: string
 }
@@ -24,8 +24,8 @@ export default function validateAuth(values: IValues): IErrors {
   }
 
   // Password validation errors
-  if (!values.name) {
-    errors.name = 'Name is required.'
+  if (!values.handle) {
+    errors.handle = 'Name is required.'
   }
   return errors
 }

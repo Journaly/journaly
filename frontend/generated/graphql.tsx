@@ -11,6 +11,30 @@ export type Scalars = {
   Float: number
 }
 
+export type Language = {
+  __typename?: 'Language'
+  id: Scalars['Int']
+  name: Scalars['String']
+  posts: Array<Post>
+  dialect?: Maybe<Scalars['String']>
+  learningUsers?: Maybe<Array<User>>
+}
+
+export type LanguagePostsArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<PostWhereUniqueInput>
+  before?: Maybe<PostWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type Location = {
+  __typename?: 'Location'
+  id: Scalars['Int']
+  country: Scalars['String']
+  city: Scalars['String']
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
   createUser?: Maybe<User>
@@ -18,25 +42,35 @@ export type Mutation = {
 }
 
 export type MutationCreateUserArgs = {
-  Name: Scalars['String']
-  Email: Scalars['String']
-  Password: Scalars['String']
+  handle: Scalars['String']
+  email: Scalars['String']
+  password: Scalars['String']
 }
 
 export type MutationCreatePostArgs = {
-  Title: Scalars['String']
-  Body: Scalars['String']
-  Published: Scalars['Boolean']
+  title: Scalars['String']
+  body: Scalars['String']
+  status?: Maybe<Scalars['String']>
   authorEmail: Scalars['String']
 }
 
 export type Post = {
   __typename?: 'Post'
-  Id: Scalars['String']
-  Title: Scalars['String']
-  Body: Scalars['String']
+  id: Scalars['Int']
+  title: Scalars['String']
+  body: Scalars['String']
   author: User
-  Published: Scalars['Boolean']
+  status: PostStatus
+  language: Language
+}
+
+export enum PostStatus {
+  Draft = 'DRAFT',
+  Published = 'PUBLISHED',
+}
+
+export type PostWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
 }
 
 export type Query = {
@@ -48,26 +82,36 @@ export type Query = {
 }
 
 export type QueryFeedArgs = {
-  Published?: Maybe<Scalars['Boolean']>
+  status?: Maybe<Scalars['String']>
 }
 
 export type User = {
   __typename?: 'User'
-  Id: Scalars['String']
-  Name: Scalars['String']
-  Email: Scalars['String']
-  Password: Scalars['String']
+  id: Scalars['Int']
+  name?: Maybe<Scalars['String']>
+  email: Scalars['String']
+  handle: Scalars['String']
+  bio?: Maybe<Scalars['String']>
+  userRole: UserRole
+  location?: Maybe<Location>
   posts: Array<Post>
 }
 
+export enum UserRole {
+  Admin = 'ADMIN',
+  Moderator = 'MODERATOR',
+  FreeUser = 'FREE_USER',
+  ProUser = 'PRO_USER',
+}
+
 export type CreateUserMutationVariables = {
-  Name: Scalars['String']
-  Email: Scalars['String']
-  Password: Scalars['String']
+  handle: Scalars['String']
+  email: Scalars['String']
+  password: Scalars['String']
 }
 
 export type CreateUserMutation = { __typename?: 'Mutation' } & {
-  createUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'Id' | 'Name' | 'Email'>>
+  createUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'email'>>
 }
 
 export type CurrentUserQueryVariables = {}
@@ -75,22 +119,20 @@ export type CurrentUserQueryVariables = {}
 export type CurrentUserQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<
     Array<
-      { __typename?: 'User' } & Pick<User, 'Id' | 'Name' | 'Email'> & {
-          posts: Array<{ __typename?: 'Post' } & Pick<Post, 'Id' | 'Title' | 'Body' | 'Published'>>
+      { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'email'> & {
+          posts: Array<{ __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body'>>
         }
     >
   >
 }
 
-export type FeedQueryVariables = {
-  published: Scalars['Boolean']
-}
+export type FeedQueryVariables = {}
 
 export type FeedQuery = { __typename?: 'Query' } & {
   feed?: Maybe<
     Array<
-      { __typename?: 'Post' } & Pick<Post, 'Id' | 'Title' | 'Body' | 'Published'> & {
-          author: { __typename?: 'User' } & Pick<User, 'Id' | 'Name' | 'Email'>
+      { __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body'> & {
+          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'email'>
         }
     >
   >
@@ -101,19 +143,19 @@ export type UsersQueryVariables = {}
 export type UsersQuery = { __typename?: 'Query' } & {
   users?: Maybe<
     Array<
-      { __typename?: 'User' } & Pick<User, 'Id' | 'Name' | 'Email' | 'Password'> & {
-          posts: Array<{ __typename?: 'Post' } & Pick<Post, 'Id' | 'Title' | 'Body' | 'Published'>>
+      { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'email'> & {
+          posts: Array<{ __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body'>>
         }
     >
   >
 }
 
 export const CreateUserDocument = gql`
-  mutation createUser($Name: String!, $Email: String!, $Password: String!) {
-    createUser(Name: $Name, Email: $Email, Password: $Password) {
-      Id
-      Name
-      Email
+  mutation createUser($handle: String!, $email: String!, $password: String!) {
+    createUser(handle: $handle, email: $email, password: $password) {
+      id
+      handle
+      email
     }
   }
 `
@@ -135,9 +177,9 @@ export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
  *   variables: {
- *      Name: // value for 'Name'
- *      Email: // value for 'Email'
- *      Password: // value for 'Password'
+ *      handle: // value for 'handle'
+ *      email: // value for 'email'
+ *      password: // value for 'password'
  *   },
  * });
  */
@@ -161,14 +203,13 @@ export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const CurrentUserDocument = gql`
   query currentUser {
     currentUser {
-      Id
-      Name
-      Email
+      id
+      name
+      email
       posts {
-        Id
-        Title
-        Body
-        Published
+        id
+        title
+        body
       }
     }
   }
@@ -212,16 +253,15 @@ export type CurrentUserQueryResult = ApolloReactCommon.QueryResult<
   CurrentUserQueryVariables
 >
 export const FeedDocument = gql`
-  query feed($published: Boolean!) {
-    feed(Published: $published) {
-      Id
-      Title
-      Body
-      Published
+  query feed {
+    feed {
+      id
+      title
+      body
       author {
-        Id
-        Name
-        Email
+        id
+        name
+        email
       }
     }
   }
@@ -239,7 +279,6 @@ export const FeedDocument = gql`
  * @example
  * const { data, loading, error } = useFeedQuery({
  *   variables: {
- *      published: // value for 'published'
  *   },
  * });
  */
@@ -259,15 +298,13 @@ export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQuery
 export const UsersDocument = gql`
   query users {
     users {
-      Id
-      Name
-      Email
-      Password
+      id
+      name
+      email
       posts {
-        Id
-        Title
-        Body
-        Published
+        id
+        title
+        body
       }
     }
   }

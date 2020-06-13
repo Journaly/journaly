@@ -12,6 +12,7 @@ interface IPostProps {
 }
 
 const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
+let allSelections = []
 
 const CommentSelectionButton = () => (
   <button onMouseDown={handleCommentClick} className="comment-btn">
@@ -49,6 +50,16 @@ if (typeof document !== 'undefined' && typeof window !== 'undefined') {
   commentSelectionButton.addEventListener('click', handleCommentClick)
 
   selectableTextArea.addEventListener('mouseup', selectableTextAreaMouseUp)
+}
+
+function buildPreOrderList(el: HTMLElement) {
+  const postOrderList: (HTMLElement | Node)[] = []
+  const recur = (el: HTMLElement | Node) => {
+    postOrderList.push(el)
+    el.childNodes.forEach(recur)
+  }
+  recur(el)
+  return postOrderList
 }
 
 function buildPostOrderList(el: HTMLElement) {
@@ -122,6 +133,26 @@ function handleCommentClick(e) {
       return
     }
     const firstRange = selection.getRangeAt(0)
+
+    const pol = buildPreOrderList(selectableTextArea)
+    const offsets = new Array(pol.length)
+
+    let curOffset = 0
+    for (let i = 0; i < pol.length; i++) {
+      const node = pol[i]
+      offsets[i] = curOffset
+
+      if (node.constructor === Text) {
+        curOffset += node.length
+      }
+    }
+
+    const startElementIdxInPOL = pol.indexOf(firstRange.startContainer)
+    const endElementIdxInPOL = pol.indexOf(firstRange.endContainer)
+    const startIndex = offsets[startElementIdxInPOL] + firstRange.startOffset
+    const endIndex = offsets[endElementIdxInPOL] + firstRange.endOffset
+    allSelections.push([startIndex, endIndex])
+
     const selectedText = firstRange.extractContents()
     const commentedTextSpan = document.createElement('span')
     commentedTextSpan.style.backgroundColor = `${highlightColor}`
@@ -134,8 +165,54 @@ function handleCommentClick(e) {
 }
 
 const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
+  const comments = [
+    [426, 454],
+    [15, 30],
+    [577, 607],
+    [597, 628],
+    [193, 205],
+    [109, 118],
+    [109, 118],
+  ]
+
+  const postRef = React.useRef()
+  React.useEffect(() => {
+    if (!postRef.current) {
+      return
+    }
+
+    comments.forEach(([startIdx, endIdx]) => {
+      selectableTextArea = document.querySelector('.selectable-text-area') as HTMLElement
+      const pol = buildPreOrderList(selectableTextArea)
+      const offsets = new Array(pol.length)
+
+      let curOffset = 0
+      for (let i = 0; i < pol.length; i++) {
+        const node = pol[i]
+        offsets[i] = curOffset
+
+        if (node.constructor === Text) {
+          curOffset += node.length
+        }
+      }
+
+      const startElIdx = offsets.filter((offset) => offset <= startIdx).length - 1
+      const endElIdx = offsets.filter((offset) => offset <= endIdx).length - 1
+
+      const range = document.createRange()
+      range.setStart(pol[startElIdx], startIdx - offsets[startElIdx])
+      range.setEnd(pol[endElIdx], endIdx - offsets[endElIdx])
+
+      const selectedText = range.extractContents()
+      const commentedTextSpan = document.createElement('span')
+      commentedTextSpan.style.backgroundColor = `${highlightColor}`
+      commentedTextSpan.appendChild(selectedText)
+      range.insertNode(commentedTextSpan)
+    })
+  }, [postRef.current])
+
   return (
-    <div className="post-container">
+    <div className="post-container" ref={postRef}>
       <Head>
         <title>
           {post.author.name} | {post.title}

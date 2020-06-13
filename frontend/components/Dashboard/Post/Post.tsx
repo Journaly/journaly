@@ -11,6 +11,7 @@ interface IPostProps {
   post: PostType | any
 }
 
+// Elements whose boundaries a comment can cross
 const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
 let allSelections = []
 
@@ -52,14 +53,23 @@ if (typeof document !== 'undefined' && typeof window !== 'undefined') {
   selectableTextArea.addEventListener('mouseup', selectableTextAreaMouseUp)
 }
 
-function buildPreOrderList(el: HTMLElement) {
-  const postOrderList: (HTMLElement | Node)[] = []
+// Construct highlighted text/selection & replace original selection with highlighted construction
+function highlightRange(range) {
+  const selectedText = range.extractContents()
+  const commentedTextSpan = document.createElement('span')
+  commentedTextSpan.style.backgroundColor = `${highlightColor}`
+  commentedTextSpan.appendChild(selectedText)
+  range.insertNode(commentedTextSpan)
+}
+
+function buildPreOrderList(rootEl: HTMLElement) {
+  const preOrderList: (HTMLElement | Node)[] = []
   const recur = (el: HTMLElement | Node) => {
-    postOrderList.push(el)
+    preOrderList.push(el)
     el.childNodes.forEach(recur)
   }
-  recur(el)
-  return postOrderList
+  recur(rootEl)
+  return preOrderList
 }
 
 function buildPostOrderList(el: HTMLElement) {
@@ -72,17 +82,25 @@ function buildPostOrderList(el: HTMLElement) {
   return postOrderList
 }
 
-function processSelectedTextArea(selection, parentElement: HTMLElement) {
+// Returns boolean to indicate whether selection is valid for a comment
+function isSelectionCommentable(selection, parentElement: HTMLElement) {
   const nodeList = buildPostOrderList(parentElement)
+  // Index of the element that contains the beginning of the selection
   let startIdx = nodeList.indexOf(selection.baseNode)
+  // Index of the element that contains the end of the selection
   let endIdx = nodeList.indexOf(selection.extentNode)
 
+  // Make sure it's not a backwards selection
+  // If so, reverse it.
   if (startIdx > endIdx) {
     ;[startIdx, endIdx] = [endIdx, startIdx]
   }
 
+  // The nodes that the selection crosses boundaries of
   const selectedNodes = nodeList.slice(startIdx, endIdx + 1)
 
+  // Check none of the nodes crossed by the selection
+  // are not Text nodes or outisde of the whitelist
   for (const node of selectedNodes) {
     if (node.constructor === Text) {
       continue
@@ -99,10 +117,11 @@ function processSelectedTextArea(selection, parentElement: HTMLElement) {
 function selectableTextAreaMouseUp(e: MouseEvent): void {
   setTimeout(() => {
     const selection = window.getSelection()
-    if (processSelectedTextArea(selection, selectableTextArea) === false) {
+    if (isSelectionCommentable(selection, selectableTextArea) === false) {
       return
     }
 
+    // Make sure selection isn't empty
     const selectedText = selection.toString().trim()
     if (selectedText.length) {
       const x = e.pageX
@@ -124,40 +143,47 @@ function documentMouseDown() {
   }
 }
 
+function buildPreOrderListAndOffsets(selectableTextArea) {
+  // a list of every element in the selectableTextArea
+  const preOrderList = buildPreOrderList(selectableTextArea)
+  // a list of integers which are the offsets of the preOrderList elements
+  // this method of creating the Array is more efficient than using Array.push
+  const offsets = new Array(preOrderList.length)
+
+  // Offset of the sum of the length of all the Text Nodes that appear
+  // before the current element in the document
+  let currentOffset = 0
+  for (let i = 0; i < preOrderList.length; i++) {
+    const node = preOrderList[i]
+    offsets[i] = currentOffset
+
+    if (node.constructor === Text) {
+      currentOffset += node.length
+    }
+  }
+
+  return [preOrderList, offsets]
+}
+
 function handleCommentClick(e) {
   const selection = document.getSelection()
   e.preventDefault()
   e.stopPropagation()
   if (typeof document !== 'undefined') {
-    if (selection.isCollapsed === true) {
-      return
-    }
+    // 🚨 Bad things will happen here if browsers start to support multiple ranges
     const firstRange = selection.getRangeAt(0)
 
-    const pol = buildPreOrderList(selectableTextArea)
-    const offsets = new Array(pol.length)
-
-    let curOffset = 0
-    for (let i = 0; i < pol.length; i++) {
-      const node = pol[i]
-      offsets[i] = curOffset
-
-      if (node.constructor === Text) {
-        curOffset += node.length
-      }
-    }
-
-    const startElementIdxInPOL = pol.indexOf(firstRange.startContainer)
-    const endElementIdxInPOL = pol.indexOf(firstRange.endContainer)
+    const [preOrderList, offsets] = buildPreOrderListAndOffsets(selectableTextArea)
+    // Find the index of the first Text node in the selection within the preOrderList
+    const startElementIdxInPOL = preOrderList.indexOf(firstRange.startContainer)
+    const endElementIdxInPOL = preOrderList.indexOf(firstRange.endContainer)
+    // Find the index of the start of the selection relative to the start of the selectableTextArea
     const startIndex = offsets[startElementIdxInPOL] + firstRange.startOffset
     const endIndex = offsets[endElementIdxInPOL] + firstRange.endOffset
+    // Temporary local state > will be stored in DB
     allSelections.push([startIndex, endIndex])
 
-    const selectedText = firstRange.extractContents()
-    const commentedTextSpan = document.createElement('span')
-    commentedTextSpan.style.backgroundColor = `${highlightColor}`
-    commentedTextSpan.appendChild(selectedText)
-    firstRange.insertNode(commentedTextSpan)
+    highlightRange(firstRange)
     commentSelectionButton.style.display = 'none'
     window.getSelection().empty()
   }
@@ -165,6 +191,7 @@ function handleCommentClick(e) {
 }
 
 const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
+  // Temporary local state
   const comments = [
     [426, 454],
     [15, 30],
@@ -173,46 +200,41 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
     [193, 205],
     [109, 118],
     [109, 118],
+    [173, 180],
   ]
 
+  // How we get a reference to the selectableTextArea
   const postRef = React.useRef()
+  // On very first render, children won't have rendered yet,
+  // so postRef will be empty
   React.useEffect(() => {
     if (!postRef.current) {
       return
     }
 
+    // Re-construct all comments from DB
     comments.forEach(([startIdx, endIdx]) => {
-      selectableTextArea = document.querySelector('.selectable-text-area') as HTMLElement
-      const pol = buildPreOrderList(selectableTextArea)
-      const offsets = new Array(pol.length)
+      selectableTextArea = postRef.current as HTMLElement
+      // Rebuild list on every iteration b/c the DOM & the POL change with every new comment
+      // Done for simplicity of logic, but can be refactored to update original list if performance becomes an issues
+      // Would complicate logic quite a lot.
+      const [preOrderList, offsets] = buildPreOrderListAndOffsets(selectableTextArea)
 
-      let curOffset = 0
-      for (let i = 0; i < pol.length; i++) {
-        const node = pol[i]
-        offsets[i] = curOffset
-
-        if (node.constructor === Text) {
-          curOffset += node.length
-        }
-      }
-
+      // Get the index of where the comment starts & ends within the preOrderList
       const startElIdx = offsets.filter((offset) => offset <= startIdx).length - 1
       const endElIdx = offsets.filter((offset) => offset <= endIdx).length - 1
 
+      // Construct the range the comment will occupy
       const range = document.createRange()
-      range.setStart(pol[startElIdx], startIdx - offsets[startElIdx])
-      range.setEnd(pol[endElIdx], endIdx - offsets[endElIdx])
+      range.setStart(preOrderList[startElIdx], startIdx - offsets[startElIdx])
+      range.setEnd(preOrderList[endElIdx], endIdx - offsets[endElIdx])
 
-      const selectedText = range.extractContents()
-      const commentedTextSpan = document.createElement('span')
-      commentedTextSpan.style.backgroundColor = `${highlightColor}`
-      commentedTextSpan.appendChild(selectedText)
-      range.insertNode(commentedTextSpan)
+      highlightRange(range)
     })
   }, [postRef.current])
 
   return (
-    <div className="post-container" ref={postRef}>
+    <div className="post-container">
       <Head>
         <title>
           {post.author.name} | {post.title}
@@ -220,19 +242,18 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
       </Head>
       <div className="post-content">
         <div className="post-header">
-          // TODO (robin-macpherson): update when Post Type updated w/ PR#17
           <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
           <h1>{post.title}</h1>
         </div>
-        <div className="post-body selectable-text-area">
+        <div className="post-body selectable-text-area" ref={postRef}>
           <p>{post.body}</p>
           <h2>Clickity Clack -- A Delightful Sound</h2>
           <p>
             Netus natoque dis imperdiet dictum elementum urna pellentesque penatibus vulputate
-            sollicitudin orci duis curae aliquam eleifend arcu lectus{' '}
-            <strong>volutpat ad Senectus</strong> consequat adipiscing habitant curae diam eleifend
-            egestas lacus nullam urna praesent pharetra mauris tortor dapibus lobortis lectus fusce
-            quis eros erat risus maecenas consectetur interdum inceptos ultrices neque integer.
+            sollicitudin orci duis curae aliquam eleifend arcu lectus <strong>ありがとう</strong>{' '}
+            consequat adipiscing habitant curae diam eleifend egestas lacus nullam urna praesent
+            pharetra mauris tortor dapibus lobortis lectus fusce quis eros erat risus maecenas
+            consectetur interdum inceptos ultrices neque integer.
           </p>
           <p>
             Netus natoque dis imperdiet dictum elementum urna pellentesque penatibus vulputate

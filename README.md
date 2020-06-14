@@ -66,18 +66,24 @@ $ create database journaly_db;
 $ alter user <your_username> with superuser;
 ```
 
-4. Finally, apply database migrations to your new database instance:
+4. Apply database migrations to your new database instance:
 
 ```bash
 $ npx prisma migrate up --experimental
 ```
 
+5. Finally, go to your `.env` file in the backend directory and replace the placeholders with your new postgres username & password.
+
 You've got a local Journaly PostgreSQL DB, woohoo! 🎉
+
+#### Useful Commands For Working With Your DB
+
+- Start up your psql `journaly_db` shell: `psql <your_db_url>`
 
 ### Running Journaly
 
-1. From the frontend directory, run `npm run dev` to start up the frontend dev server.
-2. Finally, run `npm run dev` from the backend directory to start up the backend dev server.
+1. To run the entire app in local development mode, simply run `npm run dev` from the root of the project! This will use `concurrently` to start up both the frontend and backend dev servers.
+2. If you would like to run frontend or backend separately, you can run `npm run dev` from each respective directory.
 
 ### Seeding your database
 

@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { NextPage } from 'next'
 import { withApollo } from '../../lib/apollo'
-import { useTranslation } from '../../config/i18n'
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import MyFeed from '../../components/Dashboard/MyFeed'
 import { useFeedQuery } from '../../generated/graphql'
+import LoadingWrapper from '../../components/LoadingWrapper'
 
 interface InitialProps {
   namespacesRequired: string[]
@@ -18,17 +18,11 @@ const MyFeedPage: NextPage<InitialProps> = () => {
     },
   })
 
-  if (loading) {
-    return <p>{t('loading')}</p>
-  } else if (error) {
-    return <p>{t('error')}</p>
-  }
-
   const posts = data?.feed
 
   return (
     <DashboardLayout>
-      <MyFeed posts={posts} />
+      <LoadingWrapper loading={loading} error={error} render={() => <MyFeed posts={posts} />} />
     </DashboardLayout>
   )
 }

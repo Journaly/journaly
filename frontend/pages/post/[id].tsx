@@ -15,14 +15,11 @@ const PostPage: NextPage = () => {
     variables: { id },
   })
 
-  console.log(data)
   const post = data?.postById
 
   return (
     <DashboardLayout>
-      <LoadingWrapper loading={loading} error={error}>
-        <Post post={post} />
-      </LoadingWrapper>
+      <LoadingWrapper loading={loading} error={error} render={() => <Post post={post} />} />
     </DashboardLayout>
   )
 }

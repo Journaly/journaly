@@ -148,7 +148,11 @@ export type PostByIdQueryVariables = {
 }
 
 export type PostByIdQuery = { __typename?: 'Query' } & {
-  postById?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'title' | 'body' | 'status'>>
+  postById?: Maybe<
+    { __typename?: 'Post' } & Pick<Post, 'title' | 'body' | 'status'> & {
+        author: { __typename?: 'User' } & Pick<User, 'id' | 'name'>
+      }
+  >
 }
 
 export type UsersQueryVariables = {}
@@ -314,6 +318,10 @@ export const PostByIdDocument = gql`
       title
       body
       status
+      author {
+        id
+        name
+      }
     }
   }
 `

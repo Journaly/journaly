@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react'
 import Head from 'next/head'
+import DOMPurify from 'dompurify'
 
 import { Post as PostType } from '../../../generated/graphql'
 import { brandBlue, highlightColor, darkGrey } from '../../../utils'
@@ -14,8 +15,12 @@ interface IPostProps {
 const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
 let allSelections = []
 
-const CommentSelectionButton = () => (
-  <button onMouseDown={handleCommentClick} className="comment-btn">
+const CommentSelectionButton = React.forwardRef(({ selectableRef }, ref) => (
+  <button
+    onMouseDown={(e) => handleCommentClick(selectableRef.current, ref.current)(e)}
+    className="comment-btn"
+    ref={ref}
+  >
     <LeaveACommentIcon primaryColor="white" secondaryColor="white" size={30} />
     <style jsx>{`
       .comment-btn {
@@ -39,18 +44,7 @@ const CommentSelectionButton = () => (
       }
     `}</style>
   </button>
-)
-
-let selectableTextArea: Node
-let commentSelectionButton: HTMLElement
-
-if (typeof document !== 'undefined' && typeof window !== 'undefined') {
-  selectableTextArea = document.querySelector('.selectable-text-area') as HTMLElement
-  commentSelectionButton = document.querySelector('.comment-btn') as HTMLElement
-  commentSelectionButton.addEventListener('click', handleCommentClick)
-
-  selectableTextArea.addEventListener('mouseup', selectableTextAreaMouseUp)
-}
+))
 
 function buildPreOrderList(el: HTMLElement) {
   const postOrderList: (HTMLElement | Node)[] = []
@@ -96,7 +90,9 @@ function processSelectedTextArea(selection, parentElement: HTMLElement) {
   return true
 }
 
-function selectableTextAreaMouseUp(e: MouseEvent): void {
+const selectableTextAreaMouseUp = (selectableTextArea, commentSelectionButton) => (
+  e: MouseEvent,
+) => {
   setTimeout(() => {
     const selection = window.getSelection()
     if (processSelectedTextArea(selection, selectableTextArea) === false) {
@@ -114,17 +110,13 @@ function selectableTextAreaMouseUp(e: MouseEvent): void {
   }, 0)
 }
 
-if (typeof document !== 'undefined') {
-  document.addEventListener('mousedown', documentMouseDown)
-}
-
-function documentMouseDown() {
+const documentMouseDown = (commentSelectionButton) => () => {
   if (getComputedStyle(commentSelectionButton).display === 'block') {
     commentSelectionButton.style.display = 'none'
   }
 }
 
-function handleCommentClick(e) {
+const handleCommentClick = (selectableTextArea, commentSelectionButton) => (e) => {
   const selection = document.getSelection()
   e.preventDefault()
   e.stopPropagation()
@@ -165,24 +157,21 @@ function handleCommentClick(e) {
 }
 
 const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
-  const comments = [
-    [426, 454],
-    [15, 30],
-    [577, 607],
-    [597, 628],
-    [193, 205],
-    [109, 118],
-    [109, 118],
-  ]
+  const comments = []
 
-  const postRef = React.useRef()
+  const selectableRef = React.useRef()
+  const commentButtonRef = React.useRef()
+
   React.useEffect(() => {
-    if (!postRef.current) {
+    if (!selectableRef.current || !commentButtonRef.current) {
       return
     }
 
+    //selectableTextArea = document.querySelector('.selectable-text-area') as HTMLElement
+    const selectableTextArea = selectableRef.current
+    const commentSelectionButton = commentButtonRef.current
+
     comments.forEach(([startIdx, endIdx]) => {
-      selectableTextArea = document.querySelector('.selectable-text-area') as HTMLElement
       const pol = buildPreOrderList(selectableTextArea)
       const offsets = new Array(pol.length)
 
@@ -209,10 +198,18 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
       commentedTextSpan.appendChild(selectedText)
       range.insertNode(commentedTextSpan)
     })
-  }, [postRef.current])
+
+    selectableTextArea.addEventListener(
+      'mouseup',
+      selectableTextAreaMouseUp(selectableTextArea, commentSelectionButton),
+    )
+    document.addEventListener('mousedown', documentMouseDown(commentSelectionButton))
+  }, [selectableRef.current, commentButtonRef.current])
+
+  const sanitizedHTML = DOMPurify.sanitize(post.body)
 
   return (
-    <div className="post-container" ref={postRef}>
+    <div className="post-container">
       <Head>
         <title>
           {post.author.name} | {post.title}
@@ -224,40 +221,11 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
           <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
           <h1>{post.title}</h1>
         </div>
-        <div className="post-body selectable-text-area">
-          <p>{post.body}</p>
-          <h2>Clickity Clack -- A Delightful Sound</h2>
-          <p>
-            Netus natoque dis imperdiet dictum elementum urna pellentesque penatibus vulputate
-            sollicitudin orci duis curae aliquam eleifend arcu lectus{' '}
-            <strong>volutpat ad Senectus</strong> consequat adipiscing habitant curae diam eleifend
-            egestas lacus nullam urna praesent pharetra mauris tortor dapibus lobortis lectus fusce
-            quis eros erat risus maecenas consectetur interdum inceptos ultrices neque integer.
-          </p>
-          <p>
-            Netus natoque dis imperdiet dictum elementum urna pellentesque penatibus vulputate
-            sollicitudin orci duis curae aliquam eleifend arcu lectus volutpat ad Senectus consequat
-            adipiscing habitant curae diam eleifend egestas lacus nullam urna praesent pharetra
-            mauris tortor dapibus lobortis lectus fusce quis eros erat risus maecenas consectetur
-            interdum inceptos ultrices neque integer.
-          </p>
-          <h2>Love At First Clack</h2>
-          <p>
-            Amet leo senectus varius natoque luctus vulputate praesent metus, sollicitudin mus
-            congue venenatis diam ante ultrices, mattis dolor eleifend condimentum penatibus ipsum
-            auctor. Sem dui fringilla pellentesque urna pharetra congue arcu erat felis vestibulum
-            nec, ut primis in platea cubilia posuere natoque commodo varius tempor. Nullam porttitor
-            maecenas consequat elementum erat iaculis, tempor metus amet malesuada est, fringilla
-            magna sem semper euismod. Pretium nam magna suspendisse vehicula mollis viverra at
-            nascetur, augue imperdiet mauris vestibulum erat elementum nec, condimentum venenatis
-            leo curae euismod nisl urna. Penatibus iaculis rutrum cursus ullamcorper condimentum
-            sagittis senectus tempor dolor faucibus, volutpat fames natoque per ante fringilla
-            sodales lacinia vehicula mollis, malesuada ut mattis a semper class parturient egestas
-            ac.
-          </p>
+        <div className="post-body selectable-text-area" ref={selectableRef}>
+          <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
         </div>
       </div>
-      <CommentSelectionButton />
+      <CommentSelectionButton selectableRef={selectableRef} ref={commentButtonRef} />
       <style jsx>{`
         .post-container {
           max-width: 1200px;

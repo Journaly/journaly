@@ -3,5 +3,9 @@ query postById($id: Int!) {
     title
     body
     status
+    author {
+      id
+      name
+    }
   }
 }

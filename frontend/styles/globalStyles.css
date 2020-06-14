@@ -48,7 +48,7 @@ em {
 }
 
 strong {
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .j-link {
@@ -67,17 +67,15 @@ strong {
 }
 
 .j-textarea {
-  padding: 0 12px;
+  width: 100%;
+  padding: 8px 12px;
   border: 1px solid #95989a;
   border-radius: 5px;
+  resize: vertical;
 }
 
-em {
-  font-style: italic;
-}
-
-strong {
-  font-weight: 700;
+label {
+  display: block;
 }
 
 input,

@@ -5,6 +5,7 @@ import { withApollo } from '../../../lib/apollo'
 import SettingsPageLayout from '../../../components/Layouts/SettingsPageLayout'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
+import XIcon from '../../../components/Icons/XIcon'
 import { useTranslation } from '../../../config/i18n'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
@@ -33,7 +34,7 @@ const ProfileInfo: NextPage = () => {
 
                 <Button
                   type="submit"
-                  className="details-submit-button"
+                  className="settings-submit-button"
                   variant={ButtonVariant.Secondary}
                 >
                   {t('profile.details.submitImage')}
@@ -42,7 +43,9 @@ const ProfileInfo: NextPage = () => {
               <div className="details-form-fields-wrapper">
                 <div className="details-form-fields">
                   <div className="details-form-field">
-                    <label htmlFor="first-name">First Name</label>
+                    <label className="settings-label" htmlFor="first-name">
+                      First Name
+                    </label>
                     <input
                       type="text"
                       name="first-name"
@@ -52,7 +55,9 @@ const ProfileInfo: NextPage = () => {
                     <ErrorMessage errors={errors} name="First Name" as="p" />
                   </div>
                   <div className="details-form-field">
-                    <label htmlFor="last-name">Last Name</label>
+                    <label className="settings-label" htmlFor="last-name">
+                      Last Name
+                    </label>
                     <input
                       type="text"
                       name="last-name"
@@ -62,17 +67,21 @@ const ProfileInfo: NextPage = () => {
                     <ErrorMessage errors={errors} name="Last Name" as="p" />
                   </div>
                   <div className="details-form-field">
-                    <label htmlFor="handle">Handle</label>
+                    <label className="settings-label" htmlFor="handle">
+                      Handle
+                    </label>
                     <input type="text" name="handle" className="j-field" ref={register()} />
                   </div>
                   <div className="details-form-field">
-                    <label htmlFor="location">Location (optional)</label>
+                    <label className="settings-label" htmlFor="location">
+                      Location (optional)
+                    </label>
                     <input type="text" name="location" className="j-field" ref={register()} />
                   </div>
                 </div>
                 <Button
                   type="submit"
-                  className="details-submit-button"
+                  className="settings-submit-button"
                   variant={ButtonVariant.Secondary}
                 >
                   {t('updateButton')}
@@ -87,13 +96,13 @@ const ProfileInfo: NextPage = () => {
             <div className="languages-wrapper">
               <div className="languages-form-fields">
                 <div className="languages-form-field">
-                  <label htmlFor="native-languages">
+                  <label className="settings-label" htmlFor="native-languages">
                     {t('profile.languages.nativeLanguagesLabel')}
                   </label>
                   <input type="text" name="native-languages" className="j-field" ref={register()} />
                 </div>
                 <div className="languages-form-field">
-                  <label htmlFor="learning-languages">
+                  <label className="settings-label" htmlFor="learning-languages">
                     {t('profile.languages.learningLanguagesLabel')}
                   </label>
                   <input
@@ -107,7 +116,7 @@ const ProfileInfo: NextPage = () => {
 
               <Button
                 type="submit"
-                className="languages-submit-button"
+                className="settings-submit-button"
                 variant={ButtonVariant.Secondary}
               >
                 {t('updateButton')}
@@ -120,11 +129,18 @@ const ProfileInfo: NextPage = () => {
           <SettingsFieldset legend={t('profile.bio.legend')}>
             <div className="bio-wrapper">
               <div className="bio-form-field">
-                <label htmlFor="bio">{t('profile.bio.bioLabel')}</label>
-                <textarea name="bio" className="j-textarea" ref={register()} />
+                <label className="settings-label" htmlFor="bio">
+                  {t('profile.bio.bioLabel')}
+                </label>
+                {/* TODO: add native maxlength attribute when we know how long this field can be */}
+                <textarea rows={4} name="bio" className="j-textarea" ref={register()} />
               </div>
 
-              <Button type="submit" className="bio-submit-button" variant={ButtonVariant.Secondary}>
+              <Button
+                type="submit"
+                className="settings-submit-button"
+                variant={ButtonVariant.Secondary}
+              >
                 {t('updateButton')}
               </Button>
             </div>
@@ -135,13 +151,15 @@ const ProfileInfo: NextPage = () => {
           <SettingsFieldset legend={t('profile.interests.legend')}>
             <div className="interests-wrapper">
               <div className="interests-form-field">
-                <label htmlFor="interests">{t('profile.interests.topicsLabel')}</label>
+                <label className="settings-label" htmlFor="interests">
+                  {t('profile.interests.topicsLabel')}
+                </label>
                 <input type="text" name="interests" className="j-field" ref={register()} />
               </div>
 
               <Button
                 type="submit"
-                className="interests-submit-button"
+                className="settings-submit-button"
                 variant={ButtonVariant.Secondary}
               >
                 {t('updateButton')}
@@ -152,11 +170,12 @@ const ProfileInfo: NextPage = () => {
 
         <SettingsForm onSubmit={handleSocialSubmit}>
           <SettingsFieldset legend={t('profile.social.legend')}>
-            <h3>{t('profile.social.socialLabel')}</h3>
+            <h3 className="social-description">{t('profile.social.socialLabel')}</h3>
 
             <div className="social-wrapper">
               <div className="social-form-fields">
                 <div className="social-form-field">
+                  <XIcon />
                   <input
                     type="text"
                     name="facebook"
@@ -166,15 +185,7 @@ const ProfileInfo: NextPage = () => {
                   />
                 </div>
                 <div className="social-form-field">
-                  <input
-                    type="text"
-                    name="youtube"
-                    placeholder={t('profile.social.youtubePlaceholder')}
-                    className="j-field"
-                    ref={register()}
-                  />
-                </div>
-                <div className="social-form-field">
+                  <XIcon />
                   <input
                     type="text"
                     name="instagram"
@@ -184,6 +195,17 @@ const ProfileInfo: NextPage = () => {
                   />
                 </div>
                 <div className="social-form-field">
+                  <XIcon />
+                  <input
+                    type="text"
+                    name="youtube"
+                    placeholder={t('profile.social.youtubePlaceholder')}
+                    className="j-field"
+                    ref={register()}
+                  />
+                </div>
+                <div className="social-form-field">
+                  <XIcon />
                   <input
                     type="text"
                     name="personal-website"
@@ -196,7 +218,7 @@ const ProfileInfo: NextPage = () => {
 
               <Button
                 type="submit"
-                className="social-submit-button"
+                className="settings-submit-button"
                 variant={ButtonVariant.Secondary}
               >
                 {t('updateButton')}
@@ -209,6 +231,7 @@ const ProfileInfo: NextPage = () => {
       <style jsx>{`
         .forms-container {
           width: 100%;
+          max-width: 1008px;
         }
 
         .forms-container :global(form) {
@@ -219,12 +242,19 @@ const ProfileInfo: NextPage = () => {
           margin-bottom: 0;
         }
 
+        .settings-label {
+          margin-bottom: 4px;
+        }
+
+        :global(.settings-submit-button) {
+          margin-top: 40px;
+        }
+
         .details-wrapper {
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
           align-items: center;
-          margin-top: 30px;
+          margin-top: 16px;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .details-wrapper {
@@ -281,17 +311,56 @@ const ProfileInfo: NextPage = () => {
           }
         }
 
-        .details-form-field {
+        .details-form-field,
+        .languages-form-field {
           display: flex;
           flex-direction: column;
         }
 
-        .details-form-field label {
-          margin-bottom: 4px;
+        .languages-form-field {
+          margin-bottom: 24px;
         }
 
-        :global(.details-submit-button) {
+        .languages-form-field:last-child {
+          margin-bottom: 0;
+        }
+
+        .interests-form-field input {
+          width: 100%;
+        }
+
+        .social-description {
+          margin-bottom: 24px;
+        }
+
+        .social-form-fields {
+          display: grid;
+          grid-gap: 24px;
           margin-top: 40px;
+        }
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .social-form-fields {
+            grid-template-columns: 320px;
+            margin-top: 0;
+          }
+        }
+        @media (min-width: ${theme.breakpoints.LG}) {
+          .social-form-fields {
+            grid-template-columns: 320px 320px;
+          }
+        }
+
+        .social-form-field {
+          display: flex;
+          align-items: center;
+        }
+
+        .social-form-field .j-field {
+          flex-grow: 1;
+        }
+
+        .social-form-field :global(svg) {
+          margin-right: 8px;
         }
       `}</style>
     </SettingsPageLayout>

@@ -9,19 +9,21 @@ type Props = {
 const SettingsFieldset: React.FC<Props> = ({ children, legend }) => {
   return (
     <fieldset className="settings-fieldset">
-      <legend>
+      <legend className="settings-fieldset-legend">
         <h2>{legend}</h2>
       </legend>
 
       {children}
       <style jsx>{`
-        legend {
-          margin-bottom: 10px;
-          ${theme.typography.headingXL}
+        .settings-fieldset-legend {
+          margin-bottom: 24px;
           text-align: center;
         }
+        .settings-fieldset-legend h2 {
+          ${theme.typography.headingLG}
+        }
         @media (min-width: ${theme.breakpoints.SM}) {
-          legend {
+          .settings-fieldset-legend {
             text-align: left;
           }
         }

@@ -34,8 +34,7 @@ const DisplayError: React.FC<Props> = ({ error }) => {
     return error.networkError.result.errors.map((error, i) => (
       <Error key={i}>
         <p data-test="graphql-error">
-          <strong>Whoops!</strong>
-          {error.message.replace('GraphQL error: ', '')}
+          <strong>Whoops!</strong> {error.message.replace('GraphQL error: ', '')}
         </p>
       </Error>
     ))
@@ -43,8 +42,7 @@ const DisplayError: React.FC<Props> = ({ error }) => {
   return (
     <Error>
       <p data-test="graphql-error">
-        <strong>Whoops!</strong>
-        {error.message.replace('GraphQL error: ', '')}
+        <strong>Whoops!</strong> {error.message.replace('GraphQL error: ', '')}
       </p>
     </Error>
   )

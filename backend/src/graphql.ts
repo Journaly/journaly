@@ -5,7 +5,14 @@ import { prisma } from 'nexus-plugin-prisma'
 
 use(prisma())
 
-const { objectType, queryType, mutationType, stringArg, makeSchema } = schema
+const {
+  objectType,
+  queryType,
+  mutationType,
+  intArg,
+  stringArg,
+  makeSchema,
+} = schema
 
 // Time constants
 const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
@@ -84,6 +91,19 @@ const Query = queryType({
       type: 'Post',
       resolve: async (parent, args, ctx) => ctx.db.post.findMany(),
     }),
+      t.field('postById', {
+        type: 'Post',
+        args: {
+          id: intArg(),
+        },
+        resolve: async (parent, args, ctx) => {
+          return await ctx.db.post.findOne({
+            where: {
+              id: args.id,
+            },
+          })
+        },
+      }),
       t.list.field('feed', {
         type: 'Post',
         args: {

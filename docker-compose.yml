@@ -1,7 +1,0 @@
-version: "3.7"
-
-services:
-  frontend:
-    image: journaly/frontend:0.0.1
-  db:
-    image: "postgres:11"

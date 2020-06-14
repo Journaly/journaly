@@ -9,13 +9,13 @@ import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
 
 interface IFormValues {
-  name: string
+  handle: string
   email: string
   password: string
 }
 
 const initialState: IFormValues = {
-  name: '',
+  handle: '',
   email: '',
   password: '',
 }
@@ -39,9 +39,9 @@ const SignupForm: React.FC = () => {
     if (!loading && Object.keys(errors).length === 0) {
       createUser({
         variables: {
-          Name: values.name,
-          Email: values.email,
-          Password: values.password,
+          handle: values.handle,
+          email: values.email,
+          password: values.password,
         },
       })
     }
@@ -51,15 +51,15 @@ const SignupForm: React.FC = () => {
     <form onSubmit={handleSubmit}>
       <fieldset disabled={loading} aria-busy={loading}>
         <h2>Sign up for an account</h2>
-        <FormError error={error} />
-        <label htmlFor="name">
-          Name
-          <p>{errors?.name}</p>
+        {error && <FormError error={error} />}
+        <label htmlFor="handle">
+          Username
+          <p>{errors?.handle}</p>
           <input
             type="text"
-            name="name"
-            value={values.name}
-            placeholder="Your name"
+            name="handle"
+            value={values.handle}
+            placeholder="Your username"
             autoComplete="on"
             onChange={handleChange}
             onBlur={handleBlur}

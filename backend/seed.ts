@@ -7,17 +7,27 @@ main().catch((e) => {
 })
 
 async function main() {
+  const Andalish = await db.language.create({
+    data: {
+      name: 'The Common Tongue of the Andals',
+    },
+  })
+
   const user1 = await db.user.create({
     data: {
-      Name: 'Jon Snow',
-      Email: 'j@n.com',
-      Password: 'password',
+      handle: 'jsno',
+      name: 'Jon Snow',
+      email: 'j@n.com',
       posts: {
-        create: {
-          Title: 'Beyond The Wall',
-          Body: 'She is my queen. The end.',
-          Published: true,
-        },
+        create: [
+          {
+            title: 'Beyond The Wall',
+            body: 'She is my queen. The end.',
+            language: {
+              connect: { id: Andalish.id },
+            },
+          },
+        ],
       },
     },
     include: {
@@ -26,15 +36,19 @@ async function main() {
   })
   const user2 = await db.user.create({
     data: {
-      Name: 'Ned Stark',
-      Email: 'st@rk.com',
-      Password: 'password',
+      handle: 'TheWardenOfTheNorth420',
+      name: 'Ned Stark',
+      email: 'st@rk.com',
       posts: {
-        create: {
-          Title: 'A Tale of Winter',
-          Body: "He's not my son",
-          Published: true,
-        },
+        create: [
+          {
+            title: 'A Tale of Winter',
+            body: "He's not my son",
+            language: {
+              connect: { id: Andalish.id },
+            },
+          },
+        ],
       },
     },
     include: {
@@ -43,7 +57,7 @@ async function main() {
   })
 
   console.log(
-    `Created users ${user1.Name} and ${user2.Name}, each with ${user1.posts.length} post!`,
+    `Created users ${user1.name} and ${user2.name}, each with ${user1.posts.length} post!`,
   )
 
   db.disconnect()

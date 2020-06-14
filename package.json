@@ -4,7 +4,7 @@
   "description": "A foreign-language journaling application.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
   },
   "repository": {
     "type": "git",
@@ -17,5 +17,8 @@
     "url": "https://github.com/Journaly/journaly/issues"
   },
   "homepage": "https://github.com/Journaly/journaly#readme",
-  "devDependencies": {}
+  "devDependencies": {},
+  "dependencies": {
+    "concurrently": "^5.2.0"
+  }
 }

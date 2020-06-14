@@ -34,9 +34,9 @@ type NetworkError = ApolloError & { result: { errors: Error[] } }
 const FormError: React.FC<Props> = ({ error }) => {
   if (!error || !error.message) return null
 
-  const result = (error.networkError as NetworkError).result
+  const result = (error.networkError as NetworkError)?.result
 
-  if (result.errors.length) {
+  if (result?.errors?.length) {
     // TODO catalog network errors, extract them to separate file, translate them
     return (
       <>

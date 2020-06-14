@@ -2,7 +2,7 @@
 import { errorPrimary } from '../../utils'
 import { ApolloError } from '@apollo/client'
 
-const Error: React.FC = ({ children }) => (
+const ErrorMessage: React.FC = ({ children }) => (
   <div>
     {children}
     <style jsx>
@@ -28,24 +28,25 @@ type Props = {
   error?: ApolloError
 }
 
-const DisplayError: React.FC<Props> = ({ error }) => {
+const FormError: React.FC<Props> = ({ error }) => {
   if (!error || !error.message) return null
+
   if (error.networkError?.result?.errors.length) {
     return error.networkError.result.errors.map((error, i) => (
-      <Error key={i}>
+      <ErrorMessage key={i}>
         <p data-test="graphql-error">
           <strong>Whoops!</strong> {error.message.replace('GraphQL error: ', '')}
         </p>
-      </Error>
+      </ErrorMessage>
     ))
   }
   return (
-    <Error>
+    <ErrorMessage>
       <p data-test="graphql-error">
         <strong>Whoops!</strong> {error.message.replace('GraphQL error: ', '')}
       </p>
-    </Error>
+    </ErrorMessage>
   )
 }
 
-export default DisplayError
+export default FormError

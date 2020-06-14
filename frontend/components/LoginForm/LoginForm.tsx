@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackLogIn } from '../../events/users'
 import { useCreateUserMutation } from '../../generated/graphql'
-import Error from '../Error'
+import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
 
@@ -25,7 +25,7 @@ const LoginForm: React.FC = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={loading} aria-busy={loading}>
         <h2>Log into your account</h2>
-        <Error error={error} />
+        <FormError error={error} />
         <label htmlFor="email">
           Email
           <input

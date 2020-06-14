@@ -23,7 +23,7 @@ const DetailsForm: React.FC = () => {
   }
 
   return (
-    <SettingsForm onSubmit={handleSubmit(handleDetailsSubmit)}>
+    <SettingsForm onSubmit={handleSubmit(handleDetailsSubmit)} errorInputName={fieldErrorName}>
       <SettingsFieldset legend={t('profile.details.legend')}>
         <div className="details-wrapper">
           <div className="profile-image-wrapper">
@@ -48,6 +48,7 @@ const DetailsForm: React.FC = () => {
                 </label>
                 <input
                   type="text"
+                  id="first-name"
                   name="first-name"
                   className="j-field"
                   ref={register({ required: 'First name is required' })}
@@ -57,7 +58,7 @@ const DetailsForm: React.FC = () => {
                 <label className="settings-label" htmlFor="last-name">
                   Last Name
                 </label>
-                <input type="text" name="last-name" className="j-field" />
+                <input type="text" id="last-name" name="last-name" className="j-field" />
               </div>
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="handle">
@@ -74,7 +75,13 @@ const DetailsForm: React.FC = () => {
                 <label className="settings-label" htmlFor="location">
                   Location (optional)
                 </label>
-                <input type="text" name="location" className="j-field" ref={register()} />
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  className="j-field"
+                  ref={register()}
+                />
               </div>
             </div>
 
@@ -153,10 +160,6 @@ const DetailsForm: React.FC = () => {
           .details-form-fields {
             grid-template-columns: 320px 320px;
           }
-        }
-
-        .details-form-fields input[name="${fieldErrorName}"] {
-          border-color: ${theme.colors.red};
         }
 
         .details-form-field {

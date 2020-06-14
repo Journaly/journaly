@@ -23,7 +23,7 @@ const BioForm: React.FC = () => {
               {t('profile.bio.bioLabel')}
             </label>
             {/* TODO: add native maxlength attribute when we know how long this field can be */}
-            <textarea rows={4} name="bio" className="j-textarea" ref={register()} />
+            <textarea rows={4} id="bio" name="bio" className="j-textarea" ref={register()} />
           </div>
 
           <Button

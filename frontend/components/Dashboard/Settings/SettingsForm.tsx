@@ -6,14 +6,16 @@ type Props = {
   className?: string
   children: React.ReactNode
   onSubmit: () => void
+  errorInputName?: string
 }
 
-const SettingsForm: React.FC<Props> = ({ className, children, onSubmit }) => {
+const SettingsForm: React.FC<Props> = ({ className, children, onSubmit, errorInputName }) => {
   const settingsFormClasses = classNames('settings-form', className)
 
   return (
     <form onSubmit={onSubmit} className={settingsFormClasses}>
       {children}
+
       <style jsx>{`
         .settings-form {
           width: 100%;
@@ -24,6 +26,10 @@ const SettingsForm: React.FC<Props> = ({ className, children, onSubmit }) => {
 
         :global(.form-error) {
           margin-bottom: 24px;
+        }
+
+        :global(input[name="${errorInputName}"]) {
+          border-color: ${theme.colors.red};
         }
       `}</style>
     </form>

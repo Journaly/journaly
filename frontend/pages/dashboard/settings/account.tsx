@@ -1,39 +1,82 @@
 import React from 'react'
+import { useForm } from 'react-hook-form'
 import { NextPage } from 'next'
+import FormError from '../../../components/FormError'
 import SettingsPageLayout from '../../../components/Layouts/SettingsPageLayout'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
 import { useTranslation } from '../../../config/i18n'
 import Button, { ButtonVariant } from '../../../elements/Button'
+import theme from '../../../theme'
 
 const Account: NextPage = () => {
   const { t } = useTranslation('settings')
+  const { handleSubmit, register, getValues, errors } = useForm({
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+  })
 
-  const handleSubmit = () => {}
+  const fieldErrorName = Object.keys(errors)[0] || ''
+  const fieldError = errors[fieldErrorName]
+
+  const onChangePasswordSubmit = () => {}
 
   return (
     <SettingsPageLayout>
-      <SettingsForm onSubmit={handleSubmit}>
+      <SettingsForm onSubmit={handleSubmit(onChangePasswordSubmit)} errorInputName={fieldErrorName}>
         <SettingsFieldset legend={t('accountForm.legend')}>
           <div className="password-fields-wrapper">
-            <div className="password-field">
-              <label htmlFor="old-password">{t('accountForm.oldPasswordLabel')}</label>
-              <input type="text" id="old-password" className="j-field" />
+            {fieldError && <FormError error={fieldError.message as string} />}
+
+            <div className="password-form-fields">
+              <div className="password-field">
+                <label htmlFor="old-password" className="settings-label">
+                  {t('accountForm.oldPasswordLabel')}
+                </label>
+                <input
+                  type="text"
+                  id="old-password"
+                  name="old-password"
+                  className="j-field"
+                  ref={register({ required: 'Enter your old password.' })}
+                />
+              </div>
+
+              <div className="password-field">
+                <label htmlFor="new-password" className="settings-label">
+                  {t('accountForm.newPasswordLabel')}
+                </label>
+                <input
+                  type="text"
+                  id="new-password"
+                  name="new-password"
+                  className="j-field"
+                  ref={register({ required: 'Enter your new password.' })}
+                />
+              </div>
+
+              <div className="password-field">
+                <label htmlFor="confirm-new-password" className="settings-label">
+                  {t('accountForm.confirmNewPasswordLabel')}
+                </label>
+                <input
+                  type="text"
+                  id="confirm-new-password"
+                  name="confirm-new-password"
+                  className="j-field"
+                  ref={register({
+                    required: 'Confirm your new password.',
+                    validate: (value) =>
+                      value === getValues('new-password') || 'Passwords do not match.',
+                  })}
+                />
+              </div>
             </div>
 
-            <div className="password-field">
-              <label htmlFor="new-password">{t('accountForm.newPasswordLabel')}</label>
-              <input type="text" id="new-password" className="j-field" />
-            </div>
-
-            <div className="password-field">
-              <label htmlFor="confirm-new-password">
-                {t('accountForm.confirmNewPasswordLabel')}
-              </label>
-              <input type="text" id="confirm-new-password" className="j-field" />
-            </div>
-
-            <Button className="change-password-submit-button" variant={ButtonVariant.Secondary}>
+            <Button
+              className="change-password-submit-button settings-submit-button"
+              variant={ButtonVariant.Secondary}
+            >
               {t('accountForm.submitButton')}
             </Button>
           </div>
@@ -47,8 +90,15 @@ const Account: NextPage = () => {
 
         .password-field {
           display: flex;
-          align-items: center;
+          flex-direction: column;
           margin-top: 15px;
+        }
+
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .password-field {
+            flex-direction: row;
+            align-items: center;
+          }
         }
 
         .password-field:first-child {
@@ -59,7 +109,11 @@ const Account: NextPage = () => {
           width: 175px;
           flex-shrink: 0;
           margin-right: 30px;
-          text-align: right;
+        }
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .password-field label {
+            text-align: right;
+          }
         }
 
         .password-field input {
@@ -67,7 +121,6 @@ const Account: NextPage = () => {
         }
 
         :global(.change-password-submit-button) {
-          margin-top: 20px;
           margin-left: 205px;
         }
       `}</style>

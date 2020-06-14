@@ -21,7 +21,13 @@ const InterestsForm: React.FC = () => {
             <label className="settings-label" htmlFor="interests">
               {t('profile.interests.topicsLabel')}
             </label>
-            <input type="text" name="interests" className="j-field" ref={register()} />
+            <input
+              type="text"
+              id="interests"
+              name="interests"
+              className="j-field"
+              ref={register()}
+            />
           </div>
 
           <Button

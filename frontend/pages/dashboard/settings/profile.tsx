@@ -32,14 +32,6 @@ const ProfileInfo: NextPage = () => {
         .forms-container :global(form):last-child {
           margin-bottom: 0;
         }
-
-        .settings-label {
-          margin-bottom: 4px;
-        }
-
-        :global(.settings-submit-button) {
-          margin-top: 40px;
-        }
       `}</style>
     </SettingsPageLayout>
   )

@@ -27,6 +27,14 @@ const SettingsFieldset: React.FC<Props> = ({ children, legend }) => {
             text-align: left;
           }
         }
+
+        :global(.settings-label) {
+          margin-bottom: 4px;
+        }
+
+        :global(.settings-submit-button) {
+          margin-top: 40px;
+        }
       `}</style>
     </fieldset>
   )

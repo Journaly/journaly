@@ -51,7 +51,7 @@ const DetailsForm: React.FC = () => {
                   id="first-name"
                   name="first-name"
                   className="j-field"
-                  ref={register({ required: 'First name is required' })}
+                  ref={register({ required: t('profile.details.firstNameError') as string })}
                 />
               </div>
               <div className="details-form-field">
@@ -68,7 +68,7 @@ const DetailsForm: React.FC = () => {
                   type="text"
                   name="handle"
                   className="j-field"
-                  ref={register({ required: 'Handle is required' })}
+                  ref={register({ required: t('profile.details.handleError') as string })}
                 />
               </div>
               <div className="details-form-field">

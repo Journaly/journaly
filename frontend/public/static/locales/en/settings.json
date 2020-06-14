@@ -14,14 +14,18 @@
       "legend": "Your Details",
       "submitImage": "Upload Image",
       "firstNameLabel": "First Name",
+      "firstNameError": "First name is required",
       "lastNameLabel": "Last Name",
       "handleLabel": "Handle",
+      "handleError": "Handle is required",
       "locationLabel": "Location (optional)"
     },
     "languages": {
       "legend": "Languages",
       "nativeLanguagesLabel": "What is your native language?",
-      "learningLanguagesLabel": "What language(s) are you learning?"
+      "nativeLanguagesError": "At least one native language is required.",
+      "learningLanguagesLabel": "What language(s) are you learning?",
+      "learningLanguagesError": "At least one language is required."
     },
     "bio": {
       "legend": "Bio",
@@ -44,7 +48,11 @@
     "legend": "Change Password",
     "submitButton": "Update",
     "oldPasswordLabel": "Enter old password",
+    "oldPasswordError": "Enter your old password",
     "newPasswordLabel": "Choose new password",
-    "confirmNewPasswordLabel": "Re-enter new password"
+    "newPasswordError": "Enter your new password",
+    "confirmNewPasswordLabel": "Re-enter new password",
+    "confirmNewPasswordError": "Confirm your new password",
+    "confirmNewPasswordMatchError": "Passwords do not match"
   }
 }

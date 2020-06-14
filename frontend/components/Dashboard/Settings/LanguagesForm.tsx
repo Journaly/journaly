@@ -33,7 +33,7 @@ const LanguagesForm: React.FC = () => {
                 id="native-languages"
                 name="native-languages"
                 className="j-field"
-                ref={register({ required: 'At least one native language is required.' })}
+                ref={register({ required: t('profile.languages.nativeLanguagesError') as string })}
               />
             </div>
             <div className="languages-form-field">
@@ -45,7 +45,9 @@ const LanguagesForm: React.FC = () => {
                 id="learning-languages"
                 name="learning-languages"
                 className="j-field"
-                ref={register({ required: 'At least one language is required.' })}
+                ref={register({
+                  required: t('profile.languages.learningLanguagesError') as string,
+                })}
               />
             </div>
           </div>

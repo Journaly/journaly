@@ -38,7 +38,7 @@ const Account: NextPage = () => {
                   id="old-password"
                   name="old-password"
                   className="j-field"
-                  ref={register({ required: 'Enter your old password.' })}
+                  ref={register({ required: t('accountForm.oldPasswordError') as string })}
                 />
               </div>
 
@@ -51,7 +51,7 @@ const Account: NextPage = () => {
                   id="new-password"
                   name="new-password"
                   className="j-field"
-                  ref={register({ required: 'Enter your new password.' })}
+                  ref={register({ required: t('accountForm.newPasswordError') as string })}
                 />
               </div>
 
@@ -65,9 +65,10 @@ const Account: NextPage = () => {
                   name="confirm-new-password"
                   className="j-field"
                   ref={register({
-                    required: 'Confirm your new password.',
+                    required: t('accountForm.confirmNewPasswordError') as string,
                     validate: (value) =>
-                      value === getValues('new-password') || 'Passwords do not match.',
+                      value === getValues('new-password') ||
+                      (t('accountForm.confirmNewPasswordMatchError') as string),
                   })}
                 />
               </div>

@@ -21,6 +21,10 @@ const SettingsForm: React.FC<Props> = ({ className, children, onSubmit }) => {
           background-color: ${theme.colors.white};
           box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
         }
+
+        :global(.form-error) {
+          margin-bottom: 24px;
+        }
       `}</style>
     </form>
   )

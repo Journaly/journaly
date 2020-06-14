@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://jlyuser:jlypass@localhost:5433/jlydb"
+  url      = env("DATABASE_URL")
 }
 
 generator prisma_client {

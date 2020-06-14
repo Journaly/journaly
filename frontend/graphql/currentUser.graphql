@@ -1,12 +1,8 @@
 query currentUser {
   currentUser {
     id
-    name
+    handle
     email
-    posts {
-      id
-      title
-      body
-    }
+    userRole
   }
 }

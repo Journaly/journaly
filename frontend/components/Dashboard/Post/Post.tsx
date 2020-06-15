@@ -16,36 +16,38 @@ interface IPostProps {
 const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
 let allSelections = []
 
-const CommentSelectionButton = React.forwardRef(({ selectableRef }, ref) => (
-  <button
-    onMouseDown={(e) => handleCommentClick(selectableRef.current, ref.current)(e)}
-    className="comment-btn"
-    ref={ref}
-  >
-    <LeaveACommentIcon primaryColor="white" secondaryColor="white" size={30} />
-    <style jsx>{`
-      .comment-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
-        line-height: 1;
-        background-color: ${darkGrey};
-        border-radius: 5px;
-        cursor: pointer;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 10;
-        display: none;
-        transition: background-color 0.2s ease-in-out;
-      }
+const CommentSelectionButton = React.forwardRef(({ position, display, onClick }, ref) => {
+  if (!display) {
+    return null
+  }
 
-      .comment-btn:hover {
-        background-color: ${brandBlue};
-      }
-    `}</style>
-  </button>
-))
+  return (
+    <button onMouseDown={onClick} className="comment-btn" ref={ref}>
+      <LeaveACommentIcon primaryColor="white" secondaryColor="white" size={30} />
+      <style jsx>{`
+        .comment-btn {
+          display: block;
+          width: 35px;
+          height: 35px;
+          font-size: 14px;
+          line-height: 1;
+          background-color: ${darkGrey};
+          border-radius: 5px;
+          cursor: pointer;
+          position: absolute;
+          top: ${position.y};
+          left: ${position.x};
+          z-index: 10;
+          transition: background-color 0.2s ease-in-out;
+        }
+
+        .comment-btn:hover {
+          background-color: ${brandBlue};
+        }
+      `}</style>
+    </button>
+  )
+})
 
 // Construct highlighted text/selection & replace original selection with highlighted construction
 function highlightRange(range) {
@@ -108,33 +110,6 @@ function isSelectionCommentable(selection, parentElement: HTMLElement) {
   return true
 }
 
-const selectableTextAreaMouseUp = (selectableTextArea, commentSelectionButton) => (
-  e: MouseEvent,
-) => {
-  setTimeout(() => {
-    const selection = window.getSelection()
-    if (isSelectionCommentable(selection, selectableTextArea) === false) {
-      return
-    }
-
-    // Make sure selection isn't empty
-    const selectedText = selection.toString().trim()
-    if (selectedText.length) {
-      const x = e.pageX
-      const y = e.pageY
-      commentSelectionButton.style.left = `${x - 40}px`
-      commentSelectionButton.style.top = `${y - 50}px`
-      commentSelectionButton.style.display = 'block'
-    }
-  }, 0)
-}
-
-const documentMouseDown = (commentSelectionButton) => () => {
-  if (getComputedStyle(commentSelectionButton).display === 'block') {
-    commentSelectionButton.style.display = 'none'
-  }
-}
-
 function buildPreOrderListAndOffsets(selectableTextArea) {
   // a list of every element in the selectableTextArea
   const preOrderList = buildPreOrderList(selectableTextArea)
@@ -157,36 +132,14 @@ function buildPreOrderListAndOffsets(selectableTextArea) {
   return [preOrderList, offsets]
 }
 
-const handleCommentClick = (selectableTextArea, commentSelectionButton) => (e) => {
-  const selection = document.getSelection()
-  e.preventDefault()
-  e.stopPropagation()
-  if (typeof document !== 'undefined') {
-    // 🚨 Bad things will happen here if browsers start to support multiple ranges
-    const firstRange = selection.getRangeAt(0)
-
-    const [preOrderList, offsets] = buildPreOrderListAndOffsets(selectableTextArea)
-    // Find the index of the first Text node in the selection within the preOrderList
-    const startElementIdxInPOL = preOrderList.indexOf(firstRange.startContainer)
-    const endElementIdxInPOL = preOrderList.indexOf(firstRange.endContainer)
-    // Find the index of the start of the selection relative to the start of the selectableTextArea
-    const startIndex = offsets[startElementIdxInPOL] + firstRange.startOffset
-    const endIndex = offsets[endElementIdxInPOL] + firstRange.endOffset
-    // Temporary local state > will be stored in DB
-    allSelections.push([startIndex, endIndex])
-
-    highlightRange(firstRange)
-    commentSelectionButton.style.display = 'none'
-    window.getSelection().empty()
-  }
-  return false
-}
-
 const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
   const comments = []
 
   const selectableRef = React.useRef()
   const commentButtonRef = React.useRef()
+  const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
+  const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: 0, y: 0 })
+
   React.useEffect(() => {
     if (!selectableRef.current || !commentButtonRef.current) {
       return
@@ -214,14 +167,64 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
       highlightRange(range)
     })
 
-    selectableTextArea.addEventListener(
-      'mouseup',
-      selectableTextAreaMouseUp(selectableTextArea, commentSelectionButton),
-    )
-    document.addEventListener('mousedown', documentMouseDown(commentSelectionButton))
+    document.addEventListener('mousedown', () => {
+      setDisplayCommentButton(false)
+    })
   }, [selectableRef.current, commentButtonRef.current])
 
   const sanitizedHTML = DOMPurify.sanitize(post.body)
+
+  const createComment = (e: MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const selection = document.getSelection()
+
+    if (typeof document !== 'undefined') {
+      // 🚨 Bad things will happen here if browsers start to support multiple ranges
+      const firstRange = selection.getRangeAt(0)
+
+      const [preOrderList, offsets] = buildPreOrderListAndOffsets(selectableRef.current)
+      // Find the index of the first Text node in the selection within the preOrderList
+      const startElementIdxInPOL = preOrderList.indexOf(firstRange.startContainer)
+      const endElementIdxInPOL = preOrderList.indexOf(firstRange.endContainer)
+      // Find the index of the start of the selection relative to the start of the selectableTextArea
+      const startIndex = offsets[startElementIdxInPOL] + firstRange.startOffset
+      const endIndex = offsets[endElementIdxInPOL] + firstRange.endOffset
+      // Temporary local state > will be stored in DB
+      allSelections.push([startIndex, endIndex])
+
+      highlightRange(firstRange)
+      window.getSelection().empty()
+      setDisplayCommentButton(false)
+    }
+    return false
+  }
+
+  const selectableTextAreaMouseUp = (e: MouseEvent) => {
+    const x = e.pageX - 40
+    const y = e.pageY - 50
+
+    setTimeout(() => {
+      // mouseup fires before the selection is created/accessible, so wait
+      // for the scheduler to idle before we look at the selection. Event
+      // properties are taken off above because the event is freed as soon
+      // as event processing ends.
+      const selection = window.getSelection()
+      if (
+        !isSelectionCommentable(selection, selectableRef.current) ||
+        !selection.toString().trim().length
+      ) {
+        return
+      }
+
+      setDisplayCommentButton(true)
+      setCommentButtonPosition({
+        x: `${x}px`,
+        y: `${y}px`,
+      })
+    }, 0)
+  }
 
   return (
     <div className="post-container">
@@ -235,11 +238,20 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
           <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
           <h1>{post.title}</h1>
         </div>
-        <div className="post-body selectable-text-area" ref={selectableRef}>
+        <div
+          className="post-body selectable-text-area"
+          ref={selectableRef}
+          onMouseUp={selectableTextAreaMouseUp}
+        >
           <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
         </div>
       </div>
-      <CommentSelectionButton selectableRef={selectableRef} ref={commentButtonRef} />
+      <CommentSelectionButton
+        onClick={createComment}
+        position={commentButtonPosition}
+        display={displayCommentButton}
+        ref={commentButtonRef}
+      />
       <style jsx>{`
         .post-container {
           max-width: 1200px;

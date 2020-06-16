@@ -76,9 +76,14 @@ export type PostWhereUniqueInput = {
 export type Query = {
   __typename?: 'Query'
   posts?: Maybe<Array<Post>>
+  postById?: Maybe<Post>
   feed?: Maybe<Array<Post>>
   users?: Maybe<Array<User>>
   currentUser?: Maybe<Array<User>>
+}
+
+export type QueryPostByIdArgs = {
+  id?: Maybe<Scalars['Int']>
 }
 
 export type QueryFeedArgs = {
@@ -135,6 +140,18 @@ export type FeedQuery = { __typename?: 'Query' } & {
           author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'email'>
         }
     >
+  >
+}
+
+export type PostByIdQueryVariables = {
+  id: Scalars['Int']
+}
+
+export type PostByIdQuery = { __typename?: 'Query' } & {
+  postById?: Maybe<
+    { __typename?: 'Post' } & Pick<Post, 'title' | 'body' | 'status'> & {
+        author: { __typename?: 'User' } & Pick<User, 'id' | 'name'>
+      }
   >
 }
 
@@ -295,6 +312,58 @@ export function useFeedLazyQuery(
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
 export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
+export const PostByIdDocument = gql`
+  query postById($id: Int!) {
+    postById(id: $id) {
+      title
+      body
+      status
+      author {
+        id
+        name
+      }
+    }
+  }
+`
+
+/**
+ * __usePostByIdQuery__
+ *
+ * To run a query within a React component, call `usePostByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePostByIdQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<PostByIdQuery, PostByIdQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<PostByIdQuery, PostByIdQueryVariables>(
+    PostByIdDocument,
+    baseOptions,
+  )
+}
+export function usePostByIdLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PostByIdQuery, PostByIdQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<PostByIdQuery, PostByIdQueryVariables>(
+    PostByIdDocument,
+    baseOptions,
+  )
+}
+export type PostByIdQueryHookResult = ReturnType<typeof usePostByIdQuery>
+export type PostByIdLazyQueryHookResult = ReturnType<typeof usePostByIdLazyQuery>
+export type PostByIdQueryResult = ApolloReactCommon.QueryResult<
+  PostByIdQuery,
+  PostByIdQueryVariables
+>
 export const UsersDocument = gql`
   query users {
     users {

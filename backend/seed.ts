@@ -6,6 +6,42 @@ main().catch((e) => {
   throw e
 })
 
+const longPost = `
+<h1>The Rains of Castamere</h1>
+
+While I may be a <em>little</em> biased, I think this is a good song.
+
+<h2>Verse One</h2>
+<p>
+  One night, I hold on you
+  Ooh, ooh, ooh, ooh, ooh, you
+  Castamere, Castamere, Castamere, Castamere
+</p>
+
+<h2>Verse Two</h2>
+<p>
+  A coat of gold, a coat of red
+  A lion still has claws
+  And mine are long and sharp, my Lord
+  As long and sharp as yours
+</p>
+
+<h2>Verse Three</h2>
+<p>
+  And so he spoke, and so he spoke
+  That Lord of Castamere
+  And now the rains weep o'er his halls
+  With no one there to hear
+</p>
+
+<h2>Verse Four</h2>
+<p>
+  Yes, now the rains weep o'er his halls
+  And not a soul to hear
+  Ooh, ooh, ooh, ooh, ooh
+</p>
+`
+
 async function main() {
   const Andalish = await db.language.create({
     data: {
@@ -13,7 +49,7 @@ async function main() {
     },
   })
 
-  const user1 = await db.user.create({
+  await db.user.create({
     data: {
       handle: 'jsno',
       name: 'Jon Snow',
@@ -34,7 +70,8 @@ async function main() {
       posts: true,
     },
   })
-  const user2 = await db.user.create({
+
+  await db.user.create({
     data: {
       handle: 'TheWardenOfTheNorth420',
       name: 'Ned Stark',
@@ -56,9 +93,29 @@ async function main() {
     },
   })
 
-  console.log(
-    `Created users ${user1.name} and ${user2.name}, each with ${user1.posts.length} post!`,
-  )
+  await db.user.create({
+    data: {
+      handle: 'TheLannyster',
+      name: 'Tywin Lannister',
+      email: 'tywin@lannysport.net',
+      posts: {
+        create: [
+          {
+            title: 'The Rains of Castamere',
+            body: longPost,
+            language: {
+              connect: { id: Andalish.id },
+            },
+          },
+        ],
+      },
+    },
+    include: {
+      posts: true,
+    },
+  })
+
+  console.log('Seeding successful')
 
   db.disconnect()
 }

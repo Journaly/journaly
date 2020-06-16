@@ -9,7 +9,7 @@ import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import { usePostByIdQuery } from '../../generated/graphql'
 
 const PostPage: NextPage = () => {
-  const { id: idStr } = useRouter().query
+  const idStr = useRouter().query.id as string
   const id = parseInt(idStr, 10)
   const { loading, error, data } = usePostByIdQuery({
     variables: { id },

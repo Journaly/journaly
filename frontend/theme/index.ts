@@ -23,6 +23,7 @@ type Colors =
   | 'blue'
   | 'blueLight'
   | 'red'
+  | 'highlightColor'
 
 type Typography =
   | 'fontFamilySansSerif'
@@ -61,6 +62,7 @@ const theme: Theme = {
     gray800: '#444444',
     blue: '#32567E',
     blueLight: '#4391C9',
+    highlightColor: '#4391C940',
     red: '#c42f14',
   },
   breakpoints: fromEntries(

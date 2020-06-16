@@ -1,10 +1,9 @@
-// @ts-nocheck
 import React from 'react'
 import Head from 'next/head'
 import DOMPurify from 'dompurify'
 
 import { Post as PostType } from '../../../generated/graphql'
-import { brandBlue, highlightColor, darkGrey } from '../../../utils'
+import theme from '../../../theme'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 
 // TODO: Remove any when Types are fixed with PR #17
@@ -16,13 +15,22 @@ interface IPostProps {
 const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
 let allSelections = []
 
-const CommentSelectionButton = React.forwardRef(({ position, display, onClick }, ref) => {
+type CommentSelectionButtonProps = {
+  position: {
+    x: string
+    y: string
+  }
+  display: boolean
+  onClick: React.MouseEventHandler
+}
+
+const CommentSelectionButton = ({ position, display, onClick }: CommentSelectionButtonProps) => {
   if (!display) {
     return null
   }
 
   return (
-    <button onMouseDown={onClick} className="comment-btn" ref={ref}>
+    <button onMouseDown={onClick} className="comment-btn">
       <LeaveACommentIcon primaryColor="white" secondaryColor="white" size={30} />
       <style jsx>{`
         .comment-btn {
@@ -31,7 +39,7 @@ const CommentSelectionButton = React.forwardRef(({ position, display, onClick },
           height: 35px;
           font-size: 14px;
           line-height: 1;
-          background-color: ${darkGrey};
+          background-color: ${theme.colors.gray800};
           border-radius: 5px;
           cursor: pointer;
           position: absolute;
@@ -42,23 +50,23 @@ const CommentSelectionButton = React.forwardRef(({ position, display, onClick },
         }
 
         .comment-btn:hover {
-          background-color: ${brandBlue};
+          background-color: ${theme.colors.blueLight};
         }
       `}</style>
     </button>
   )
-})
+}
 
 // Construct highlighted text/selection & replace original selection with highlighted construction
-function highlightRange(range) {
+function highlightRange(range: Range) {
   const selectedText = range.extractContents()
   const commentedTextSpan = document.createElement('span')
-  commentedTextSpan.style.backgroundColor = `${highlightColor}`
+  commentedTextSpan.style.backgroundColor = theme.colors.highlightColor
   commentedTextSpan.appendChild(selectedText)
   range.insertNode(commentedTextSpan)
 }
 
-function buildPreOrderList(rootEl: HTMLElement) {
+function buildPreOrderList(rootEl: HTMLElement): (HTMLElement | Node)[] {
   const preOrderList: (HTMLElement | Node)[] = []
   const recur = (el: HTMLElement | Node) => {
     preOrderList.push(el)
@@ -68,7 +76,7 @@ function buildPreOrderList(rootEl: HTMLElement) {
   return preOrderList
 }
 
-function buildPostOrderList(el: HTMLElement) {
+function buildPostOrderList(el: HTMLElement): (HTMLElement | Node)[] {
   const postOrderList: (HTMLElement | Node)[] = []
   const recur = (el: HTMLElement | Node) => {
     el.childNodes.forEach(recur)
@@ -79,12 +87,16 @@ function buildPostOrderList(el: HTMLElement) {
 }
 
 // Returns boolean to indicate whether selection is valid for a comment
-function isSelectionCommentable(selection, parentElement: HTMLElement) {
+function isSelectionCommentable(selection: Selection, parentElement: HTMLElement) {
+  if (!selection.anchorNode || !selection.focusNode) {
+    return false
+  }
+
   const nodeList = buildPostOrderList(parentElement)
   // Index of the element that contains the beginning of the selection
-  let startIdx = nodeList.indexOf(selection.baseNode)
+  let startIdx = nodeList.indexOf(selection.anchorNode)
   // Index of the element that contains the end of the selection
-  let endIdx = nodeList.indexOf(selection.extentNode)
+  let endIdx = nodeList.indexOf(selection.focusNode)
 
   // Make sure it's not a backwards selection
   // If so, reverse it.
@@ -100,7 +112,7 @@ function isSelectionCommentable(selection, parentElement: HTMLElement) {
   for (const node of selectedNodes) {
     if (node.constructor === Text) {
       continue
-    } else if (elementWhiteList.has(node.tagName)) {
+    } else if (elementWhiteList.has((node as HTMLElement).tagName)) {
       continue
     } else {
       // node not in our "whitelist"
@@ -110,7 +122,7 @@ function isSelectionCommentable(selection, parentElement: HTMLElement) {
   return true
 }
 
-function buildPreOrderListAndOffsets(selectableTextArea) {
+function buildPreOrderListAndOffsets(selectableTextArea: HTMLElement) {
   // a list of every element in the selectableTextArea
   const preOrderList = buildPreOrderList(selectableTextArea)
   // a list of integers which are the offsets of the preOrderList elements
@@ -125,7 +137,7 @@ function buildPreOrderListAndOffsets(selectableTextArea) {
     offsets[i] = currentOffset
 
     if (node.constructor === Text) {
-      currentOffset += node.length
+      currentOffset += (node as Text).length
     }
   }
 
@@ -133,20 +145,18 @@ function buildPreOrderListAndOffsets(selectableTextArea) {
 }
 
 const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
-  const comments = []
+  const comments: number[][] = []
 
-  const selectableRef = React.useRef()
-  const commentButtonRef = React.useRef()
+  const selectableRef = React.useRef<HTMLDivElement>(null)
   const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
-  const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: 0, y: 0 })
+  const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
 
   React.useEffect(() => {
-    if (!selectableRef.current || !commentButtonRef.current) {
+    if (!selectableRef.current) {
       return
     }
 
     const selectableTextArea = selectableRef.current
-    const commentSelectionButton = commentButtonRef.current
 
     // Re-construct all comments from DB
     comments.forEach(([startIdx, endIdx]) => {
@@ -170,17 +180,17 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
     document.addEventListener('mousedown', () => {
       setDisplayCommentButton(false)
     })
-  }, [selectableRef.current, commentButtonRef.current])
+  }, [selectableRef.current])
 
   const sanitizedHTML = DOMPurify.sanitize(post.body)
 
-  const createComment = (e: MouseEvent) => {
+  const createComment = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
     const selection = document.getSelection()
 
-    if (typeof document !== 'undefined') {
+    if (selectableRef.current && selection) {
       // 🚨 Bad things will happen here if browsers start to support multiple ranges
       const firstRange = selection.getRangeAt(0)
 
@@ -195,13 +205,12 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
       allSelections.push([startIndex, endIndex])
 
       highlightRange(firstRange)
-      window.getSelection().empty()
+      window.getSelection()?.empty()
       setDisplayCommentButton(false)
     }
-    return false
   }
 
-  const selectableTextAreaMouseUp = (e: MouseEvent) => {
+  const selectableTextAreaMouseUp: React.MouseEventHandler = (e) => {
     const x = e.pageX - 40
     const y = e.pageY - 50
 
@@ -212,6 +221,8 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
       // as event processing ends.
       const selection = window.getSelection()
       if (
+        !selection ||
+        !selectableRef.current ||
         !isSelectionCommentable(selection, selectableRef.current) ||
         !selection.toString().trim().length
       ) {
@@ -250,7 +261,6 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
         onClick={createComment}
         position={commentButtonPosition}
         display={displayCommentButton}
-        ref={commentButtonRef}
       />
       <style jsx>{`
         .post-container {

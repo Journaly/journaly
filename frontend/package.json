@@ -21,6 +21,7 @@
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",
     "@apollo/react-ssr": "^4.0.0-beta.1",
+    "@types/dompurify": "^2.0.2",
     "classnames": "^2.2.6",
     "cypress": "^4.3.0",
     "date-fns": "^2.11.1",

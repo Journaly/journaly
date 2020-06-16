@@ -1,8 +1,15 @@
 import React from 'react'
+import { ApolloError } from '@apollo/client'
 
 import { useTranslation } from '../../config/i18n'
 
-const LoadingWrapper = ({ loading, error, render }) => {
+type LoadingWrapperProps = {
+  loading: boolean
+  error: ApolloError | undefined
+  render: () => React.ReactElement | null
+}
+
+const LoadingWrapper = ({ loading, error, render }: LoadingWrapperProps) => {
   const { t } = useTranslation()
 
   if (error) {

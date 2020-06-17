@@ -13,7 +13,7 @@ interface IPostProps {
 
 // Elements whose boundaries a comment can cross
 const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
-let allSelections = []
+let allSelections: number[][] = []
 
 type CommentSelectionButtonProps = {
   position: {
@@ -61,6 +61,7 @@ const CommentSelectionButton = ({ position, display, onClick }: CommentSelection
 function highlightRange(range: Range) {
   const selectedText = range.extractContents()
   const commentedTextSpan = document.createElement('span')
+  console.log(theme.colors)
   commentedTextSpan.style.backgroundColor = theme.colors.highlightColor
   commentedTextSpan.appendChild(selectedText)
   range.insertNode(commentedTextSpan)
@@ -176,10 +177,6 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
 
       highlightRange(range)
     })
-
-    document.addEventListener('mousedown', () => {
-      setDisplayCommentButton(false)
-    })
   }, [selectableRef.current])
 
   const sanitizedHTML = DOMPurify.sanitize(post.body)
@@ -203,6 +200,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
       const endIndex = offsets[endElementIdxInPOL] + firstRange.endOffset
       // Temporary local state > will be stored in DB
       allSelections.push([startIndex, endIndex])
+      console.log([startIndex, endIndex])
 
       highlightRange(firstRange)
       window.getSelection()?.empty()
@@ -253,6 +251,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
           className="post-body selectable-text-area"
           ref={selectableRef}
           onMouseUp={selectableTextAreaMouseUp}
+          onMouseDown={() => setDisplayCommentButton(false)}
         >
           <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
         </div>

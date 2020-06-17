@@ -16,6 +16,7 @@ const PostPage: NextPage = () => {
   })
 
   const post = data?.postById
+  console.log(post)
 
   return (
     <DashboardLayout>

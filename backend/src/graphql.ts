@@ -43,7 +43,28 @@ const Post = objectType({
     t.model.body()
     t.model.author()
     t.model.status()
+    t.model.threads()
     t.model.language({ type: 'Language' })
+  },
+})
+
+const Thread = objectType({
+  name: 'Thread',
+  definition(t) {
+    t.model.id()
+    t.model.startIndex()
+    t.model.endIndex()
+    t.model.highlightedContent()
+    t.model.comments()
+  },
+})
+
+const Comment = objectType({
+  name: 'Comment',
+  definition(t) {
+    t.model.id()
+    t.model.author()
+    t.model.body()
   },
 })
 

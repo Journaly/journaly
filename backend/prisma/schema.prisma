@@ -164,19 +164,21 @@ model Comment {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   body      String
-  userId    Int
+  author    User          @relation(fields: [authorId], references: [id])
+  authorId  Int
   thread    Thread        @relation(fields: [threadId], references: [id])
   threadId  Int
   likes     CommentLike[]
 }
 
 model Thread {
-  id       Int       @default(autoincrement()) @id
-  position Int
-  range    Int
-  post     Post      @relation(fields: [postId], references: [id])
-  postId   Int
-  comments Comment[]
+  id                 Int       @default(autoincrement()) @id
+  startIndex         Int
+  endIndex           Int
+  highlightedContent String
+  post               Post      @relation(fields: [postId], references: [id])
+  postId             Int
+  comments           Comment[]
 }
 
 model Image {

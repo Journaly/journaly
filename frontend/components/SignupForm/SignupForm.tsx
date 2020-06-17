@@ -4,7 +4,7 @@ import { trackCreateAccount } from '../../events/users'
 import validateAuth, { IErrors } from '../../lib/validateAuth'
 import { useCreateUserMutation } from '../../generated/graphql'
 import useFormValidation from '../../hooks/useFormValidation'
-import Error from '../Error'
+import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
 
@@ -51,7 +51,7 @@ const SignupForm: React.FC = () => {
     <form onSubmit={handleSubmit}>
       <fieldset disabled={loading} aria-busy={loading}>
         <h2>Sign up for an account</h2>
-        <Error error={error} />
+        {error && <FormError error={error} />}
         <label htmlFor="handle">
           Username
           <p>{errors?.handle}</p>

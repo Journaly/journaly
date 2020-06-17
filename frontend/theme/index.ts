@@ -66,6 +66,7 @@ const theme: Theme = {
     red: '#c42f14',
   },
   breakpoints: fromEntries(
+    // Add px to breakpoint values: { XS: '600px', SM: '768px' }
     Object.entries(breakpoints).map(([key, value]) => [key, `${value}px`]),
   ) as Breakpoint,
   typography: {

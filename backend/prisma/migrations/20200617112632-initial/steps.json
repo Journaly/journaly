@@ -41,7 +41,7 @@
         "source": "db"
       },
       "argument": "url",
-      "value": "\"postgresql://jlyuser:jlypass@localhost:5433/jlydb\""
+      "value": "env(\"DATABASE_URL\")"
     },
     {
       "tag": "CreateModel",
@@ -95,7 +95,7 @@
       "model": "User",
       "field": "name",
       "type": "String",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateField",
@@ -138,7 +138,7 @@
       "model": "User",
       "field": "auth",
       "type": "Auth",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateField",
@@ -212,7 +212,7 @@
       "model": "User",
       "field": "location",
       "type": "Location",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateDirective",
@@ -258,7 +258,7 @@
       "model": "User",
       "field": "locationId",
       "type": "Int",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateField",
@@ -2539,7 +2539,53 @@
     {
       "tag": "CreateField",
       "model": "Comment",
-      "field": "userId",
+      "field": "author",
+      "type": "User",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Comment",
+          "field": "author"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Comment",
+          "field": "author"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[authorId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Comment",
+          "field": "author"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Comment",
+      "field": "authorId",
       "type": "Int",
       "arity": "Required"
     },
@@ -2653,15 +2699,22 @@
     {
       "tag": "CreateField",
       "model": "Thread",
-      "field": "position",
+      "field": "startIndex",
       "type": "Int",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Thread",
-      "field": "range",
+      "field": "endIndex",
       "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Thread",
+      "field": "highlightedContent",
+      "type": "String",
       "arity": "Required"
     },
     {

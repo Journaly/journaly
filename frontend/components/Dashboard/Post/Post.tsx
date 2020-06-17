@@ -13,7 +13,7 @@ interface IPostProps {
 
 // Elements whose boundaries a comment can cross
 const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
-let allSelections = []
+let allSelections: number[][] = []
 
 type CommentSelectionButtonProps = {
   position: {
@@ -61,7 +61,7 @@ const CommentSelectionButton = ({ position, display, onClick }: CommentSelection
 function highlightRange(range: Range) {
   const selectedText = range.extractContents()
   const commentedTextSpan = document.createElement('span')
-  commentedTextSpan.style.backgroundColor = theme.colors.highlightColor
+  commentedTextSpan.classList.add('thread-highlight')
   commentedTextSpan.appendChild(selectedText)
   range.insertNode(commentedTextSpan)
 }
@@ -145,8 +145,6 @@ function buildPreOrderListAndOffsets(selectableTextArea: HTMLElement) {
 }
 
 const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
-  const comments: number[][] = []
-
   const selectableRef = React.useRef<HTMLDivElement>(null)
   const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
   const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
@@ -158,27 +156,26 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
 
     const selectableTextArea = selectableRef.current
 
+    // Clear existing set of highlights so we don't double-apply them
+    selectableTextArea.innerHTML = DOMPurify.sanitize(post.body)
+
     // Re-construct all comments from DB
-    comments.forEach(([startIdx, endIdx]) => {
+    post.threads.forEach(({ startIndex, endIndex }) => {
       // Rebuild list on every iteration b/c the DOM & the POL change with every new comment
       // Done for simplicity of logic, but can be refactored to update original list if performance becomes an issues
       // Would complicate logic quite a lot.
       const [preOrderList, offsets] = buildPreOrderListAndOffsets(selectableTextArea)
 
       // Get the index of where the comment starts & ends within the preOrderList
-      const startElIdx = offsets.filter((offset) => offset <= startIdx).length - 1
-      const endElIdx = offsets.filter((offset) => offset <= endIdx).length - 1
+      const startElIndex = offsets.filter((offset) => offset <= startIndex).length - 1
+      const endElIndex = offsets.filter((offset) => offset <= endIndex).length - 1
 
       // Construct the range the comment will occupy
       const range = document.createRange()
-      range.setStart(preOrderList[startElIdx], startIdx - offsets[startElIdx])
-      range.setEnd(preOrderList[endElIdx], endIdx - offsets[endElIdx])
+      range.setStart(preOrderList[startElIndex], startIndex - offsets[startElIndex])
+      range.setEnd(preOrderList[endElIndex], endIndex - offsets[endElIndex])
 
       highlightRange(range)
-    })
-
-    document.addEventListener('mousedown', () => {
-      setDisplayCommentButton(false)
     })
   }, [selectableRef.current])
 
@@ -203,6 +200,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
       const endIndex = offsets[endElementIdxInPOL] + firstRange.endOffset
       // Temporary local state > will be stored in DB
       allSelections.push([startIndex, endIndex])
+      console.log([startIndex, endIndex])
 
       highlightRange(firstRange)
       window.getSelection()?.empty()
@@ -253,6 +251,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
           className="post-body selectable-text-area"
           ref={selectableRef}
           onMouseUp={selectableTextAreaMouseUp}
+          onMouseDown={() => setDisplayCommentButton(false)}
         >
           <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
         </div>
@@ -262,6 +261,17 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
         position={commentButtonPosition}
         display={displayCommentButton}
       />
+      <style>{`
+        .thread-highlight {
+          transition: background-color 0.25s;
+          background-color: ${theme.colors.highlightColor};
+          cursor: pointer;
+          border-radius: 3px;
+        }
+        .thread-highlight:hover {
+          background-color: ${theme.colors.highlightColorHover};
+        }
+      `}</style>
       <style jsx>{`
         .post-container {
           max-width: 1200px;

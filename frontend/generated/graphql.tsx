@@ -11,6 +11,17 @@ export type Scalars = {
   Float: number
 }
 
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['Int']
+  author: User
+  body: Scalars['String']
+}
+
+export type CommentWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+}
+
 export type Language = {
   __typename?: 'Language'
   id: Scalars['Int']
@@ -61,7 +72,16 @@ export type Post = {
   body: Scalars['String']
   author: User
   status: PostStatus
+  threads: Array<Thread>
   language: Language
+}
+
+export type PostThreadsArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<ThreadWhereUniqueInput>
+  before?: Maybe<ThreadWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
 }
 
 export enum PostStatus {
@@ -88,6 +108,27 @@ export type QueryPostByIdArgs = {
 
 export type QueryFeedArgs = {
   status?: Maybe<Scalars['String']>
+}
+
+export type Thread = {
+  __typename?: 'Thread'
+  id: Scalars['Int']
+  startIndex: Scalars['Int']
+  endIndex: Scalars['Int']
+  highlightedContent: Scalars['String']
+  comments: Array<Comment>
+}
+
+export type ThreadCommentsArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<CommentWhereUniqueInput>
+  before?: Maybe<CommentWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type ThreadWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
 }
 
 export type User = {
@@ -151,6 +192,18 @@ export type PostByIdQuery = { __typename?: 'Query' } & {
   postById?: Maybe<
     { __typename?: 'Post' } & Pick<Post, 'title' | 'body' | 'status'> & {
         author: { __typename?: 'User' } & Pick<User, 'id' | 'name'>
+        threads: Array<
+          { __typename?: 'Thread' } & Pick<
+            Thread,
+            'startIndex' | 'endIndex' | 'highlightedContent'
+          > & {
+              comments: Array<
+                { __typename?: 'Comment' } & Pick<Comment, 'body'> & {
+                    author: { __typename?: 'User' } & Pick<User, 'id' | 'name'>
+                  }
+              >
+            }
+        >
       }
   >
 }
@@ -321,6 +374,18 @@ export const PostByIdDocument = gql`
       author {
         id
         name
+      }
+      threads {
+        startIndex
+        endIndex
+        highlightedContent
+        comments {
+          body
+          author {
+            id
+            name
+          }
+        }
       }
     }
   }

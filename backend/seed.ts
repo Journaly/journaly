@@ -13,32 +13,32 @@ While I may be a <em>little</em> biased, I think this is a good song.
 
 <h2>Verse One</h2>
 <p>
-  One night, I hold on you
-  Ooh, ooh, ooh, ooh, ooh, you
-  Castamere, Castamere, Castamere, Castamere
+  One night, I hold on you <br>
+  Ooh, ooh, ooh, ooh, ooh, you <br>
+  Castamere, Castamere, Castamere, Castamere<br>
 </p>
 
 <h2>Verse Two</h2>
 <p>
-  A coat of gold, a coat of red
-  A lion still has claws
-  And mine are long and sharp, my Lord
-  As long and sharp as yours
+  A coat of gold, a coat of red<br>
+  A lion still has claws<br>
+  And mine are long and sharp, my Lord<br>
+  As long and sharp as yours<br>
 </p>
 
 <h2>Verse Three</h2>
 <p>
-  And so he spoke, and so he spoke
-  That Lord of Castamere
-  And now the rains weep o'er his halls
-  With no one there to hear
+  And so he spoke, and so he spoke<br>
+  That Lord of Castamere<br>
+  And now the rains weep o'er his halls<br>
+  With no one there to hear<br>
 </p>
 
 <h2>Verse Four</h2>
 <p>
-  Yes, now the rains weep o'er his halls
-  And not a soul to hear
-  Ooh, ooh, ooh, ooh, ooh
+  Yes, now the rains weep o'er his halls<br>
+  And not a soul to hear<br>
+  Ooh, ooh, ooh, ooh, ooh<br>
 </p>
 `
 
@@ -49,7 +49,27 @@ async function main() {
     },
   })
 
-  await db.user.create({
+  await db.language.create({
+    data: {
+      name: 'Dothraki',
+    },
+  })
+
+  await db.language.create({
+    data: {
+      name: 'Valyrian',
+      dialect: 'High',
+    },
+  })
+
+  await db.language.create({
+    data: {
+      name: 'Valyrian',
+      dialect: 'Baavosi',
+    },
+  })
+
+  const jon = await db.user.create({
     data: {
       handle: 'jsno',
       name: 'Jon Snow',
@@ -71,7 +91,7 @@ async function main() {
     },
   })
 
-  await db.user.create({
+  const ned = await db.user.create({
     data: {
       handle: 'TheWardenOfTheNorth420',
       name: 'Ned Stark',
@@ -105,6 +125,31 @@ async function main() {
             body: longPost,
             language: {
               connect: { id: Andalish.id },
+            },
+            threads: {
+              create: [
+                {
+                  startIndex: 57,
+                  endIndex: 84,
+                  highlightedContent: 'I think this is a good song',
+                  comments: {
+                    create: [
+                      {
+                        body: 'Get over yourself Tywin.',
+                        author: {
+                          connect: { id: ned.id },
+                        },
+                      },
+                      {
+                        body: 'You tell em dad!',
+                        author: {
+                          connect: { id: jon.id },
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
             },
           },
         ],

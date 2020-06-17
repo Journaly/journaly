@@ -7,5 +7,17 @@ query postById($id: Int!) {
       id
       name
     }
+    threads {
+      startIndex
+      endIndex
+      highlightedContent
+      comments {
+        body
+        author {
+          id
+          name
+        }
+      }
+    }
   }
 }

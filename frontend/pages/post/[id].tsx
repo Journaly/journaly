@@ -11,7 +11,7 @@ import { usePostByIdQuery } from '../../generated/graphql'
 const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
   const id = parseInt(idStr, 10)
-  const { loading, error, data } = usePostByIdQuery({
+  const { refetch, loading, error, data } = usePostByIdQuery({
     variables: { id },
   })
 
@@ -19,7 +19,11 @@ const PostPage: NextPage = () => {
 
   return (
     <DashboardLayout>
-      <LoadingWrapper loading={loading} error={error} render={() => <Post post={post} />} />
+      <LoadingWrapper
+        loading={loading}
+        error={error}
+        render={() => <Post post={post} refetch={refetch} />}
+      />
     </DashboardLayout>
   )
 }

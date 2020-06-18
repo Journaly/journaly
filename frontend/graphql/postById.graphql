@@ -8,6 +8,7 @@ query postById($id: Int!) {
       name
     }
     threads {
+      id
       startIndex
       endIndex
       highlightedContent

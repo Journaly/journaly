@@ -50,6 +50,7 @@ export type Mutation = {
   __typename?: 'Mutation'
   createUser?: Maybe<User>
   createPost?: Maybe<Post>
+  createComment?: Maybe<Comment>
 }
 
 export type MutationCreateUserArgs = {
@@ -63,6 +64,11 @@ export type MutationCreatePostArgs = {
   body: Scalars['String']
   status?: Maybe<Scalars['String']>
   authorEmail: Scalars['String']
+}
+
+export type MutationCreateCommentArgs = {
+  threadId: Scalars['Int']
+  body: Scalars['String']
 }
 
 export type Post = {
@@ -150,6 +156,19 @@ export enum UserRole {
   ProUser = 'PRO_USER',
 }
 
+export type CreateCommentMutationVariables = {
+  body: Scalars['String']
+  threadId: Scalars['Int']
+}
+
+export type CreateCommentMutation = { __typename?: 'Mutation' } & {
+  createComment?: Maybe<
+    { __typename?: 'Comment' } & Pick<Comment, 'body'> & {
+        author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+      }
+  >
+}
+
 export type CreateUserMutationVariables = {
   handle: Scalars['String']
   email: Scalars['String']
@@ -195,7 +214,7 @@ export type PostByIdQuery = { __typename?: 'Query' } & {
         threads: Array<
           { __typename?: 'Thread' } & Pick<
             Thread,
-            'startIndex' | 'endIndex' | 'highlightedContent'
+            'id' | 'startIndex' | 'endIndex' | 'highlightedContent'
           > & {
               comments: Array<
                 { __typename?: 'Comment' } & Pick<Comment, 'body'> & {
@@ -220,6 +239,58 @@ export type UsersQuery = { __typename?: 'Query' } & {
   >
 }
 
+export const CreateCommentDocument = gql`
+  mutation createComment($body: String!, $threadId: Int!) {
+    createComment(body: $body, threadId: $threadId) {
+      body
+      author {
+        id
+        name
+        handle
+      }
+    }
+  }
+`
+export type CreateCommentMutationFn = ApolloReactCommon.MutationFunction<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
+>
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      body: // value for 'body'
+ *      threadId: // value for 'threadId'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(
+    CreateCommentDocument,
+    baseOptions,
+  )
+}
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>
+export type CreateCommentMutationResult = ApolloReactCommon.MutationResult<CreateCommentMutation>
+export type CreateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
+>
 export const CreateUserDocument = gql`
   mutation createUser($handle: String!, $email: String!, $password: String!) {
     createUser(handle: $handle, email: $email, password: $password) {
@@ -376,6 +447,7 @@ export const PostByIdDocument = gql`
         name
       }
       threads {
+        id
         startIndex
         endIndex
         highlightedContent

@@ -2,7 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import DOMPurify from 'dompurify'
 
-import { Post as PostType } from '../../../generated/graphql'
+import { Post as PostType, Thread as ThreadType } from '../../../generated/graphql'
 import theme from '../../../theme'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
@@ -63,7 +63,7 @@ function highlightRange(range: Range, threadIndex: number) {
   const selectedText = range.extractContents()
   const commentedTextSpan = document.createElement('span')
   commentedTextSpan.classList.add('thread-highlight')
-  commentedTextSpan.dataset.tidx = threadIndex
+  commentedTextSpan.dataset.tidx = `${threadIndex}`
   commentedTextSpan.appendChild(selectedText)
   range.insertNode(commentedTextSpan)
 }
@@ -151,7 +151,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
   const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
   const [selectedThreadIndex, setSelectedThreadIndex] = React.useState<number>(-1)
   const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
-  const [popoverPosition, setPopoverPosition] = React.useState({ x: '0', y: '0' })
+  const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
 
   React.useEffect(() => {
     if (!selectableRef.current) {
@@ -164,7 +164,8 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
     selectableTextArea.innerHTML = DOMPurify.sanitize(post.body)
 
     // Re-construct all comments from DB
-    post.threads.forEach(({ startIndex, endIndex }, threadIndex) => {
+    post.threads.forEach((thread: ThreadType, threadIndex: number) => {
+      const { startIndex, endIndex } = thread
       // Rebuild list on every iteration b/c the DOM & the POL change with every new comment
       // Done for simplicity of logic, but can be refactored to update original list if performance becomes an issues
       // Would complicate logic quite a lot.
@@ -204,7 +205,6 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
       const endIndex = offsets[endElementIdxInPOL] + firstRange.endOffset
       // Temporary local state > will be stored in DB
       allSelections.push([startIndex, endIndex])
-      console.log([startIndex, endIndex])
 
       highlightRange(firstRange)
       window.getSelection()?.empty()
@@ -251,8 +251,10 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
 
     setSelectedThreadIndex(e.target.dataset.tidx)
     setPopoverPosition({
-      x: `${e.target.offsetLeft}px`,
-      y: `${e.target.offsetTop + 25}px`,
+      x: e.target.offsetLeft,
+      y: e.target.offsetTop,
+      w: e.target.offsetWidth,
+      h: e.target.offsetHeight,
     })
   }
 
@@ -287,7 +289,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
       {selectedThreadIndex >= 0 && (
         <InlineFeedbackPopover
           thread={post.threads[selectedThreadIndex]}
-          position={popoverPosition}
+          target={popoverPosition}
         />
       )}
       <style>{`

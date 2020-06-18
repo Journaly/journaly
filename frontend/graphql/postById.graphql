@@ -16,6 +16,7 @@ query postById($id: Int!) {
         author {
           id
           name
+          handle
         }
       }
     }

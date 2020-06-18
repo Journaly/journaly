@@ -199,7 +199,7 @@ export type PostByIdQuery = { __typename?: 'Query' } & {
           > & {
               comments: Array<
                 { __typename?: 'Comment' } & Pick<Comment, 'body'> & {
-                    author: { __typename?: 'User' } & Pick<User, 'id' | 'name'>
+                    author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
                   }
               >
             }
@@ -384,6 +384,7 @@ export const PostByIdDocument = gql`
           author {
             id
             name
+            handle
           }
         }
       }

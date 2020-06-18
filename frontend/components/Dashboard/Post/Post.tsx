@@ -206,7 +206,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
       // Temporary local state > will be stored in DB
       allSelections.push([startIndex, endIndex])
 
-      highlightRange(firstRange)
+      highlightRange(firstRange, -1)
       window.getSelection()?.empty()
       setDisplayCommentButton(false)
     }
@@ -244,17 +244,23 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
     setSelectedThreadIndex(-1)
   }
 
-  const onThreadClick = (e: MouseEvent) => {
-    if (!e.target.classList.contains('thread-highlight')) {
+  const onThreadClick = (e: React.MouseEvent<HTMLSpanElement>) => {
+    if (!e.target) {
       return
     }
 
-    setSelectedThreadIndex(e.target.dataset.tidx)
+    const target = e.target as HTMLElement
+
+    if (!target.classList.contains('thread-highlight') || !target.dataset.tidx) {
+      return
+    }
+
+    setSelectedThreadIndex(parseInt(target.dataset.tidx, 10))
     setPopoverPosition({
-      x: e.target.offsetLeft,
-      y: e.target.offsetTop,
-      w: e.target.offsetWidth,
-      h: e.target.offsetHeight,
+      x: target.offsetLeft,
+      y: target.offsetTop,
+      w: target.offsetWidth,
+      h: target.offsetHeight,
     })
   }
 

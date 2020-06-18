@@ -31,8 +31,8 @@ const Popover: React.FC<PopoverProps> = ({ target, children }) => {
 
   let x, y
 
-  const vpw = window.visualViewport.width
-  const vph = window.visualViewport.height
+  const vpw = document.documentElement.clientWidth
+  const vph = document.documentElement.clientHeight
   const st = document.documentElement.scrollTop
 
   const ownWidth = Math.min(vpw - VP_PADDING * 2, 480)

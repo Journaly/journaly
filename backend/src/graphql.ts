@@ -214,6 +214,38 @@ const Mutation = mutationType({
           },
         }),
     })
+    t.field('createThread', {
+      type: 'Thread',
+      args: {
+        postId: intArg({ required: true }),
+        startIndex: intArg({ required: true }),
+        endIndex: intArg({ required: true }),
+        highlightedContent: stringArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to create threads.')
+        }
+
+        const { postId, startIndex, endIndex, highlightedContent } = args
+        const post = await ctx.db.post.findOne({ where: { id: args.postId } })
+
+        if (!post) {
+          throw new Error(`Unable to find post with id ${postId}`)
+        }
+
+        return await ctx.db.thread.create({
+          data: {
+            startIndex,
+            endIndex,
+            highlightedContent,
+            post: { connect: { id: postId } },
+          },
+        })
+      },
+    })
     t.field('createComment', {
       type: 'Comment',
       args: {
@@ -232,7 +264,7 @@ const Mutation = mutationType({
         })
 
         if (!thread) {
-          throw new Error(`Unable to find post with id ${args.threadId}`)
+          throw new Error(`Unable to find thread with id ${args.threadId}`)
         }
 
         return await ctx.db.comment.create({

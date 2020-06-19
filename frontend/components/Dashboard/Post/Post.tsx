@@ -2,7 +2,11 @@ import React from 'react'
 import Head from 'next/head'
 import DOMPurify from 'dompurify'
 
-import { Post as PostType, Thread as ThreadType } from '../../../generated/graphql'
+import {
+  Post as PostType,
+  Thread as ThreadType,
+  useCreateThreadMutation,
+} from '../../../generated/graphql'
 import theme from '../../../theme'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
@@ -60,13 +64,15 @@ const CommentSelectionButton = ({ position, display, onClick }: CommentSelection
 }
 
 // Construct highlighted text/selection & replace original selection with highlighted construction
-function highlightRange(range: Range, threadIndex: number) {
+function highlightRange(range: Range, threadId: number): string {
   const selectedText = range.extractContents()
   const commentedTextSpan = document.createElement('span')
   commentedTextSpan.classList.add('thread-highlight')
-  commentedTextSpan.dataset.tidx = `${threadIndex}`
+  commentedTextSpan.dataset.tid = `${threadId}`
   commentedTextSpan.appendChild(selectedText)
   range.insertNode(commentedTextSpan)
+
+  return commentedTextSpan.innerHTML
 }
 
 function buildPreOrderList(rootEl: HTMLElement): (HTMLElement | Node)[] {
@@ -150,9 +156,15 @@ function buildPreOrderListAndOffsets(selectableTextArea: HTMLElement) {
 const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
   const selectableRef = React.useRef<HTMLDivElement>(null)
   const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
-  const [selectedThreadIndex, setSelectedThreadIndex] = React.useState<number>(-1)
+  const [activeThreadId, setActiveThreadId] = React.useState<number>(-1)
   const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
   const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
+  const [createThread] = useCreateThreadMutation({
+    onCompleted: ({ createThread }) => {
+      refetch()
+      setActiveThreadId(createThread.id)
+    },
+  })
 
   React.useEffect(() => {
     if (!selectableRef.current) {
@@ -166,7 +178,7 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
 
     // Re-construct all comments from DB
     post.threads.forEach((thread: ThreadType, threadIndex: number) => {
-      const { startIndex, endIndex } = thread
+      const { startIndex, endIndex, id } = thread
       // Rebuild list on every iteration b/c the DOM & the POL change with every new comment
       // Done for simplicity of logic, but can be refactored to update original list if performance becomes an issues
       // Would complicate logic quite a lot.
@@ -181,13 +193,13 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
       range.setStart(preOrderList[startElIndex], startIndex - offsets[startElIndex])
       range.setEnd(preOrderList[endElIndex], endIndex - offsets[endElIndex])
 
-      highlightRange(range, threadIndex)
+      highlightRange(range, id)
     })
-  }, [selectableRef.current])
+  }, [selectableRef.current, post.threads.length])
 
   const sanitizedHTML = DOMPurify.sanitize(post.body)
 
-  const createComment = (e: React.MouseEvent) => {
+  const createThreadHandler = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -207,9 +219,18 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
       // Temporary local state > will be stored in DB
       allSelections.push([startIndex, endIndex])
 
-      highlightRange(firstRange, -1)
+      const highlightedContent = highlightRange(firstRange, -1)
       window.getSelection()?.empty()
       setDisplayCommentButton(false)
+
+      createThread({
+        variables: {
+          postId: post.id,
+          startIndex,
+          endIndex,
+          highlightedContent,
+        },
+      })
     }
   }
 
@@ -242,7 +263,7 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
 
   const onMouseDownHandler = () => {
     setDisplayCommentButton(false)
-    setSelectedThreadIndex(-1)
+    setActiveThreadId(-1)
   }
 
   const onThreadClick = (e: React.MouseEvent<HTMLSpanElement>) => {
@@ -252,11 +273,11 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
 
     const target = e.target as HTMLElement
 
-    if (!target.classList.contains('thread-highlight') || !target.dataset.tidx) {
+    if (!target.classList.contains('thread-highlight') || !target.dataset.tid) {
       return
     }
 
-    setSelectedThreadIndex(parseInt(target.dataset.tidx, 10))
+    setActiveThreadId(parseInt(target.dataset.tid, 10))
     setPopoverPosition({
       x: target.offsetLeft,
       y: target.offsetTop,
@@ -264,6 +285,8 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
       h: target.offsetHeight,
     })
   }
+
+  const activeThread = post.threads.find((thread) => thread.id === activeThreadId)
 
   return (
     <div className="post-container">
@@ -288,14 +311,14 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
         </div>
       </div>
       <CommentSelectionButton
-        onClick={createComment}
+        onClick={createThreadHandler}
         position={commentButtonPosition}
         display={displayCommentButton}
       />
       <div id="popover-root" />
-      {selectedThreadIndex >= 0 && (
+      {activeThread && (
         <InlineFeedbackPopover
-          thread={post.threads[selectedThreadIndex]}
+          thread={activeThread}
           target={popoverPosition}
           onNewComment={refetch}
         />

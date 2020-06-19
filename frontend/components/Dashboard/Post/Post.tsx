@@ -10,6 +10,7 @@ import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 // TODO: Remove any when Types are fixed with PR #17
 interface IPostProps {
   post: PostType | any
+  refetch: any
 }
 
 // Elements whose boundaries a comment can cross
@@ -146,7 +147,7 @@ function buildPreOrderListAndOffsets(selectableTextArea: HTMLElement) {
   return [preOrderList, offsets]
 }
 
-const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
+const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
   const selectableRef = React.useRef<HTMLDivElement>(null)
   const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
   const [selectedThreadIndex, setSelectedThreadIndex] = React.useState<number>(-1)
@@ -296,6 +297,7 @@ const Post: React.FC<IPostProps> = ({ post }: IPostProps) => {
         <InlineFeedbackPopover
           thread={post.threads[selectedThreadIndex]}
           target={popoverPosition}
+          onNewComment={refetch}
         />
       )}
       <style>{`

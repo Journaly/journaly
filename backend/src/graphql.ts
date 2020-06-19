@@ -214,5 +214,39 @@ const Mutation = mutationType({
           },
         }),
     })
+    t.field('createComment', {
+      type: 'Comment',
+      args: {
+        threadId: intArg({ required: true }),
+        body: stringArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to post comments.')
+        }
+
+        const thread = await ctx.db.thread.findOne({
+          where: { id: args.threadId },
+        })
+
+        if (!thread) {
+          throw new Error(`Unable to find post with id ${args.threadId}`)
+        }
+
+        return await ctx.db.comment.create({
+          data: {
+            body: args.body,
+            author: {
+              connect: { id: userId },
+            },
+            thread: {
+              connect: { id: thread.id },
+            },
+          },
+        })
+      },
+    })
   },
 })

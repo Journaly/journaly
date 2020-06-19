@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import CSS from 'csstype'
 
 import { useCreateCommentMutation } from '../../generated/graphql'
 import { Thread as ThreadType } from '../../generated/graphql'
@@ -32,7 +33,7 @@ const VP_PADDING = 20
 const Popover: React.FC<PopoverProps> = ({ target, children }) => {
   const popoverRoot = document.getElementById('popover-root') as HTMLElement
 
-  const ownPosition = {}
+  const ownPosition: CSS.Properties = {}
 
   const vpw = document.documentElement.clientWidth
   const vph = document.documentElement.clientHeight
@@ -63,7 +64,6 @@ const Popover: React.FC<PopoverProps> = ({ target, children }) => {
     ownPosition.left = `${idealX}px`
   }
 
-  console.log(ownPosition)
   const popover = (
     <>
       <div className="popover-container" style={ownPosition}>

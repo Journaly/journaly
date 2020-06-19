@@ -68,7 +68,7 @@ const Popover: React.FC<PopoverProps> = ({ target, children }) => {
       <style jsx>{`
         .popover-container {
           position: absolute;
-          z-index: 5;
+          z-index: 100;
           left: ${x}px;
           top: ${y}px;
 

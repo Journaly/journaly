@@ -161,6 +161,10 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
   const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
   const [createThread] = useCreateThreadMutation({
     onCompleted: ({ createThread }) => {
+      if (!createThread) {
+        return
+      }
+
       refetch()
       setActiveThreadId(createThread.id)
     },
@@ -177,7 +181,7 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
     selectableTextArea.innerHTML = DOMPurify.sanitize(post.body)
 
     // Re-construct all comments from DB
-    post.threads.forEach((thread: ThreadType, threadIndex: number) => {
+    post.threads.forEach((thread: ThreadType) => {
       const { startIndex, endIndex, id } = thread
       // Rebuild list on every iteration b/c the DOM & the POL change with every new comment
       // Done for simplicity of logic, but can be refactored to update original list if performance becomes an issues
@@ -286,7 +290,7 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
     })
   }
 
-  const activeThread = post.threads.find((thread) => thread.id === activeThreadId)
+  const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
 
   return (
     <div className="post-container">

@@ -50,6 +50,7 @@ export type Mutation = {
   __typename?: 'Mutation'
   createUser?: Maybe<User>
   createPost?: Maybe<Post>
+  createThread?: Maybe<Thread>
   createComment?: Maybe<Comment>
 }
 
@@ -64,6 +65,13 @@ export type MutationCreatePostArgs = {
   body: Scalars['String']
   status?: Maybe<Scalars['String']>
   authorEmail: Scalars['String']
+}
+
+export type MutationCreateThreadArgs = {
+  postId: Scalars['Int']
+  startIndex: Scalars['Int']
+  endIndex: Scalars['Int']
+  highlightedContent: Scalars['String']
 }
 
 export type MutationCreateCommentArgs = {
@@ -169,6 +177,17 @@ export type CreateCommentMutation = { __typename?: 'Mutation' } & {
   >
 }
 
+export type CreateThreadMutationVariables = {
+  postId: Scalars['Int']
+  startIndex: Scalars['Int']
+  endIndex: Scalars['Int']
+  highlightedContent: Scalars['String']
+}
+
+export type CreateThreadMutation = { __typename?: 'Mutation' } & {
+  createThread?: Maybe<{ __typename?: 'Thread' } & ThreadFragmentFragment>
+}
+
 export type CreateUserMutationVariables = {
   handle: Scalars['String']
   email: Scalars['String']
@@ -203,28 +222,31 @@ export type FeedQuery = { __typename?: 'Query' } & {
   >
 }
 
+export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+
+export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<Comment, 'body'> & {
+    author: { __typename?: 'User' } & AuthorFragmentFragment
+  }
+
+export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
+  Thread,
+  'id' | 'startIndex' | 'endIndex' | 'highlightedContent'
+> & { comments: Array<{ __typename?: 'Comment' } & CommentFragmentFragment> }
+
+export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
+  Post,
+  'id' | 'title' | 'body' | 'status'
+> & {
+    author: { __typename?: 'User' } & AuthorFragmentFragment
+    threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
+  }
+
 export type PostByIdQueryVariables = {
   id: Scalars['Int']
 }
 
 export type PostByIdQuery = { __typename?: 'Query' } & {
-  postById?: Maybe<
-    { __typename?: 'Post' } & Pick<Post, 'title' | 'body' | 'status'> & {
-        author: { __typename?: 'User' } & Pick<User, 'id' | 'name'>
-        threads: Array<
-          { __typename?: 'Thread' } & Pick<
-            Thread,
-            'id' | 'startIndex' | 'endIndex' | 'highlightedContent'
-          > & {
-              comments: Array<
-                { __typename?: 'Comment' } & Pick<Comment, 'body'> & {
-                    author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
-                  }
-              >
-            }
-        >
-      }
-  >
+  postById?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
 }
 
 export type UsersQueryVariables = {}
@@ -239,6 +261,50 @@ export type UsersQuery = { __typename?: 'Query' } & {
   >
 }
 
+export const AuthorFragmentFragmentDoc = gql`
+  fragment AuthorFragment on User {
+    id
+    name
+    handle
+  }
+`
+export const CommentFragmentFragmentDoc = gql`
+  fragment CommentFragment on Comment {
+    body
+    author {
+      ...AuthorFragment
+    }
+  }
+  ${AuthorFragmentFragmentDoc}
+`
+export const ThreadFragmentFragmentDoc = gql`
+  fragment ThreadFragment on Thread {
+    id
+    startIndex
+    endIndex
+    highlightedContent
+    comments {
+      ...CommentFragment
+    }
+  }
+  ${CommentFragmentFragmentDoc}
+`
+export const PostFragmentFragmentDoc = gql`
+  fragment PostFragment on Post {
+    id
+    title
+    body
+    status
+    author {
+      ...AuthorFragment
+    }
+    threads {
+      ...ThreadFragment
+    }
+  }
+  ${AuthorFragmentFragmentDoc}
+  ${ThreadFragmentFragmentDoc}
+`
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
     createComment(body: $body, threadId: $threadId) {
@@ -290,6 +356,66 @@ export type CreateCommentMutationResult = ApolloReactCommon.MutationResult<Creat
 export type CreateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateCommentMutation,
   CreateCommentMutationVariables
+>
+export const CreateThreadDocument = gql`
+  mutation createThread(
+    $postId: Int!
+    $startIndex: Int!
+    $endIndex: Int!
+    $highlightedContent: String!
+  ) {
+    createThread(
+      postId: $postId
+      startIndex: $startIndex
+      endIndex: $endIndex
+      highlightedContent: $highlightedContent
+    ) {
+      ...ThreadFragment
+    }
+  }
+  ${ThreadFragmentFragmentDoc}
+`
+export type CreateThreadMutationFn = ApolloReactCommon.MutationFunction<
+  CreateThreadMutation,
+  CreateThreadMutationVariables
+>
+
+/**
+ * __useCreateThreadMutation__
+ *
+ * To run a mutation, you first call `useCreateThreadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateThreadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createThreadMutation, { data, loading, error }] = useCreateThreadMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *      startIndex: // value for 'startIndex'
+ *      endIndex: // value for 'endIndex'
+ *      highlightedContent: // value for 'highlightedContent'
+ *   },
+ * });
+ */
+export function useCreateThreadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateThreadMutation,
+    CreateThreadMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<CreateThreadMutation, CreateThreadMutationVariables>(
+    CreateThreadDocument,
+    baseOptions,
+  )
+}
+export type CreateThreadMutationHookResult = ReturnType<typeof useCreateThreadMutation>
+export type CreateThreadMutationResult = ApolloReactCommon.MutationResult<CreateThreadMutation>
+export type CreateThreadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateThreadMutation,
+  CreateThreadMutationVariables
 >
 export const CreateUserDocument = gql`
   mutation createUser($handle: String!, $email: String!, $password: String!) {
@@ -439,29 +565,10 @@ export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQuery
 export const PostByIdDocument = gql`
   query postById($id: Int!) {
     postById(id: $id) {
-      title
-      body
-      status
-      author {
-        id
-        name
-      }
-      threads {
-        id
-        startIndex
-        endIndex
-        highlightedContent
-        comments {
-          body
-          author {
-            id
-            name
-            handle
-          }
-        }
-      }
+      ...PostFragment
     }
   }
+  ${PostFragmentFragmentDoc}
 `
 
 /**

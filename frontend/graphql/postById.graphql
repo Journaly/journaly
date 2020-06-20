@@ -1,25 +1,5 @@
 query postById($id: Int!) {
   postById(id: $id) {
-    title
-    body
-    status
-    author {
-      id
-      name
-    }
-    threads {
-      id
-      startIndex
-      endIndex
-      highlightedContent
-      comments {
-        body
-        author {
-          id
-          name
-          handle
-        }
-      }
-    }
+    ...PostFragment
   }
 }

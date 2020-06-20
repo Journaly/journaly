@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import CSS from 'csstype'
+import DOMPurify from 'dompurify'
 
 import { useCreateCommentMutation } from '../../generated/graphql'
 import { Thread as ThreadType } from '../../generated/graphql'
@@ -32,11 +34,12 @@ const VP_PADDING = 20
 const Popover: React.FC<PopoverProps> = ({ target, children }) => {
   const popoverRoot = document.getElementById('popover-root') as HTMLElement
 
-  let x, y
+  const ownPosition: CSS.Properties = {}
 
   const vpw = document.documentElement.clientWidth
   const vph = document.documentElement.clientHeight
   const st = document.documentElement.scrollTop
+  const dh = document.documentElement.offsetHeight
 
   const ownWidth = Math.min(vpw - VP_PADDING * 2, 480)
   const ownHeight = Math.min(vph - VP_PADDING * 2, 300)
@@ -47,33 +50,35 @@ const Popover: React.FC<PopoverProps> = ({ target, children }) => {
   const rBottom = vph + st - (target.y + target.h)
 
   if (rTop > rBottom) {
-    y = target.y - ownHeight - 5
+    ownPosition.bottom = `${dh - target.y + 5}px`
   } else {
-    y = target.y + target.h + 5
+    ownPosition.top = `${target.y + target.h + 5}px`
   }
 
   const idealX = tCenterX - ownWidth / 2
 
   if (idealX < VP_PADDING) {
-    x = VP_PADDING
+    ownPosition.left = `${VP_PADDING}px`
   } else if (idealX + ownWidth > vpw - VP_PADDING) {
-    x = vpw - ownWidth - VP_PADDING
+    ownPosition.left = `${vpw - ownWidth - VP_PADDING}px`
   } else {
-    x = idealX
+    ownPosition.left = `${idealX}px`
   }
 
   const popover = (
     <>
-      <div className="popover-container">{children}</div>
+      <div className="popover-container" style={ownPosition}>
+        {children}
+      </div>
       <style jsx>{`
         .popover-container {
           position: absolute;
-          z-index: 5;
-          left: ${x}px;
-          top: ${y}px;
+          z-index: 100;
+          display: flex;
+          flex-direction: column;
 
           width: ${ownWidth}px;
-          height: ${ownHeight}px;
+          max-height: ${ownHeight}px;
 
           background-color: #f9f9f9;
           border: 1px solid #dadada;
@@ -90,7 +95,10 @@ const Popover: React.FC<PopoverProps> = ({ target, children }) => {
 const Thread: React.FC<ThreadProps> = ({ thread, onNewComment }) => {
   const [commentBody, setCommentBody] = React.useState<string>('')
   const [createComment, { loading }] = useCreateCommentMutation({
-    onCompleted: onNewComment,
+    onCompleted: () => {
+      onNewComment()
+      setCommentBody('')
+    },
   })
 
   const createNewComment = (e: React.FormEvent<HTMLFormElement>) => {
@@ -104,10 +112,12 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment }) => {
     })
   }
 
+  const sanitizedHTML = DOMPurify.sanitize(thread.highlightedContent)
+
   return (
     <div className="thread">
       <div className="thread-subject">
-        <span className="highlighted-content">{thread.highlightedContent}</span>
+        <span className="highlighted-content" dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
       </div>
       <div className="thread-body">
         <div className="comments">
@@ -125,26 +135,32 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment }) => {
               </div>
             )
           })}
+
+          {!thread.comments.length && <div className="empty-notice">No comments... yet!</div>}
         </div>
-        <form className="new-comment-block" onSubmit={createNewComment}>
+        <form onSubmit={createNewComment}>
           <fieldset>
-            <textarea
-              value={commentBody}
-              onChange={(e) => setCommentBody(e.target.value)}
-              disabled={loading}
-            />
-            <button type="submit" disabled={loading}>
-              Submit
-            </button>
+            <div className="new-comment-block">
+              <textarea
+                placeholder="Add a comment..."
+                value={commentBody}
+                onChange={(e) => setCommentBody(e.target.value)}
+                disabled={loading}
+              />
+              <button type="submit" disabled={loading}>
+                Submit
+              </button>
+            </div>
           </fieldset>
         </form>
       </div>
       <style jsx>{`
         .thread {
+          flex: 1;
           display: flex;
           flex-direction: column;
           overflow: hidden;
-          height: 100%;
+          max-height: 100%;
         }
 
         .thread-subject {
@@ -166,9 +182,34 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment }) => {
           padding: 5px 20px;
         }
 
+        .empty-notice {
+          text-align: center;
+          padding: 20px;
+          font-style: italic;
+        }
+
         .author-block {
           font-weight: bold;
           font-size: 0.75em;
+        }
+
+        .new-comment-block {
+          display: flex;
+          flex-direction: row;
+        }
+
+        .new-comment-block textarea {
+          flex: 1;
+          min-height: 4em;
+          background-color: #f9f9f9;
+          padding: 0.5em 1em;
+          font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .new-comment-block button {
+          background-color: #f9f9f9;
+          padding: 5px 15px;
+          cursor: pointer;
         }
       `}</style>
     </div>

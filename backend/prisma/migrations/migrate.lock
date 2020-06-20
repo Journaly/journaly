@@ -3,6 +3,4 @@
 # Prisma Migrate lockfile v1
 # Read more about conflict resolution here: TODO
 
-20200610133356-initial
-20200610190842-optionalize-some-user-fields
-20200610191234-optionalize-user-auth
+20200617112632-initial

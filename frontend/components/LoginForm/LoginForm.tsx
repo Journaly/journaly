@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackLogIn } from '../../events/users'
 import { useCreateUserMutation } from '../../generated/graphql'
-import Error from '../Error'
+import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
 
@@ -11,7 +11,6 @@ const LoginForm: React.FC = () => {
     mode: 'onBlur',
   })
 
-  console.log('errors', errors)
   const [createUser, { loading, error }] = useCreateUserMutation()
 
   const onSubmit = (data: any) => {
@@ -25,7 +24,7 @@ const LoginForm: React.FC = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={loading} aria-busy={loading}>
         <h2>Log into your account</h2>
-        <Error error={error} />
+        {error && <FormError error={error} />}
         <label htmlFor="email">
           Email
           <input
@@ -74,6 +73,9 @@ const LoginForm: React.FC = () => {
           max-width: 500px;
           font-size: 16px;
           line-height: 1.6;
+        }
+        :global(.form-error) {
+          margin: 12px 0;
         }
         label {
           display: block;

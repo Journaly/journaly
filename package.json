@@ -4,7 +4,9 @@
   "description": "A foreign-language journaling application.",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "empty-db": "psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
+    "reseed-db": "npm run empty-db && npm run migrate:up --prefix backend && npm run seed --prefix backend"
   },
   "repository": {
     "type": "git",

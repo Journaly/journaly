@@ -5,7 +5,14 @@ import { prisma } from 'nexus-plugin-prisma'
 
 use(prisma())
 
-const { objectType, queryType, mutationType, stringArg, makeSchema } = schema
+const {
+  objectType,
+  queryType,
+  mutationType,
+  intArg,
+  stringArg,
+  makeSchema,
+} = schema
 
 // Time constants
 const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
@@ -36,7 +43,28 @@ const Post = objectType({
     t.model.body()
     t.model.author()
     t.model.status()
+    t.model.threads()
     t.model.language({ type: 'Language' })
+  },
+})
+
+const Thread = objectType({
+  name: 'Thread',
+  definition(t) {
+    t.model.id()
+    t.model.startIndex()
+    t.model.endIndex()
+    t.model.highlightedContent()
+    t.model.comments()
+  },
+})
+
+const Comment = objectType({
+  name: 'Comment',
+  definition(t) {
+    t.model.id()
+    t.model.author()
+    t.model.body()
   },
 })
 
@@ -84,6 +112,19 @@ const Query = queryType({
       type: 'Post',
       resolve: async (parent, args, ctx) => ctx.db.post.findMany(),
     }),
+      t.field('postById', {
+        type: 'Post',
+        args: {
+          id: intArg(),
+        },
+        resolve: async (parent, args, ctx) => {
+          return await ctx.db.post.findOne({
+            where: {
+              id: args.id,
+            },
+          })
+        },
+      }),
       t.list.field('feed', {
         type: 'Post',
         args: {
@@ -172,6 +213,72 @@ const Mutation = mutationType({
             },
           },
         }),
+    })
+    t.field('createThread', {
+      type: 'Thread',
+      args: {
+        postId: intArg({ required: true }),
+        startIndex: intArg({ required: true }),
+        endIndex: intArg({ required: true }),
+        highlightedContent: stringArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to create threads.')
+        }
+
+        const { postId, startIndex, endIndex, highlightedContent } = args
+        const post = await ctx.db.post.findOne({ where: { id: args.postId } })
+
+        if (!post) {
+          throw new Error(`Unable to find post with id ${postId}`)
+        }
+
+        return await ctx.db.thread.create({
+          data: {
+            startIndex,
+            endIndex,
+            highlightedContent,
+            post: { connect: { id: postId } },
+          },
+        })
+      },
+    })
+    t.field('createComment', {
+      type: 'Comment',
+      args: {
+        threadId: intArg({ required: true }),
+        body: stringArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to post comments.')
+        }
+
+        const thread = await ctx.db.thread.findOne({
+          where: { id: args.threadId },
+        })
+
+        if (!thread) {
+          throw new Error(`Unable to find thread with id ${args.threadId}`)
+        }
+
+        return await ctx.db.comment.create({
+          data: {
+            body: args.body,
+            author: {
+              connect: { id: userId },
+            },
+            thread: {
+              connect: { id: thread.id },
+            },
+          },
+        })
+      },
     })
   },
 })

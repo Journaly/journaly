@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTranslation } from '../../../config/i18n'
 import NavLink from '../../NavLink'
+import theme from '../../../theme'
 
 const SettingsNav: React.FC = () => {
   const { t } = useTranslation('settings')
@@ -11,7 +12,7 @@ const SettingsNav: React.FC = () => {
 
   return (
     <nav className="settings-nav">
-      <ul>
+      <ul className="settings-nav-items">
         {Object.entries(links).map(([page, navText]) => {
           return (
             <NavLink href={`/dashboard/settings/${page}`} key={`${page}-nav-link`}>
@@ -24,27 +25,57 @@ const SettingsNav: React.FC = () => {
       </ul>
       <style jsx>{`
         .settings-nav {
-          margin-right: 25px;
+          margin-bottom: 25px;
           padding: 5px 20px 5px 0;
-          border-right: 2px dotted #49749c;
+        }
+        @media (min-width: ${theme.breakpoints.SM}) {
+          .settings-nav {
+            margin-right: 25px;
+            margin-bottom: 0;
+            border-right: 2px dotted #49749c;
+          }
+        }
+
+        .settings-nav-items {
+          display: flex;
+          align-items: center;
+        }
+        @media (min-width: ${theme.breakpoints.SM}) {
+          .settings-nav-items {
+            display: block;
+          }
         }
 
         .settings-nav-item {
           display: block;
-          margin-bottom: 10px;
-          padding-left: 20px;
-          border-left: 9px solid transparent;
+          margin-right: 12px;
+          padding: 0 8px 12px;
+          border-bottom: 4px solid transparent;
           cursor: pointer;
+        }
+        @media (min-width: ${theme.breakpoints.SM}) {
+          .settings-nav-item {
+            margin-right: 0;
+            margin-bottom: 10px;
+            padding: 0;
+            padding-left: 20px;
+            border-bottom: 0;
+            border-left: 9px solid transparent;
+          }
         }
 
         .settings-nav-item:last-child {
-          margin-bottom: 0;
+          margin-right: 0;
+        }
+        @media (min-width: ${theme.breakpoints.SM}) {
+          .settings-nav-item:last-child {
+            margin-bottom: 0;
+          }
         }
 
         .settings-nav-item.active {
           border-color: #4391c9;
           pointer-events: none;
-          cursor: default;
         }
       `}</style>
     </nav>

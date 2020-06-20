@@ -6,6 +6,42 @@ main().catch((e) => {
   throw e
 })
 
+const longPost = `
+<h1>The Rains of Castamere</h1>
+
+While I may be a <em>little</em> biased, I think this is a good song.
+
+<h2>Verse One</h2>
+<p>
+  One night, I hold on you <br>
+  Ooh, ooh, ooh, ooh, ooh, you <br>
+  Castamere, Castamere, Castamere, Castamere<br>
+</p>
+
+<h2>Verse Two</h2>
+<p>
+  A coat of gold, a coat of red<br>
+  A lion still has claws<br>
+  And mine are long and sharp, my Lord<br>
+  As long and sharp as yours<br>
+</p>
+
+<h2>Verse Three</h2>
+<p>
+  And so he spoke, and so he spoke<br>
+  That Lord of Castamere<br>
+  And now the rains weep o'er his halls<br>
+  With no one there to hear<br>
+</p>
+
+<h2>Verse Four</h2>
+<p>
+  Yes, now the rains weep o'er his halls<br>
+  And not a soul to hear<br>
+  Ooh, ooh, ooh, ooh, ooh<br>
+</p>
+`
+
 async function main() {
   const Andalish = await db.language.create({
     data: {
@@ -13,7 +49,27 @@ async function main() {
     },
   })
 
-  const user1 = await db.user.create({
+  await db.language.create({
+    data: {
+      name: 'Dothraki',
+    },
+  })
+
+  await db.language.create({
+    data: {
+      name: 'Valyrian',
+      dialect: 'High',
+    },
+  })
+
+  await db.language.create({
+    data: {
+      name: 'Valyrian',
+      dialect: 'Baavosi',
+    },
+  })
+
+  const jon = await db.user.create({
     data: {
       handle: 'jsno',
       name: 'Jon Snow',
@@ -34,7 +90,8 @@ async function main() {
       posts: true,
     },
   })
-  const user2 = await db.user.create({
+
+  const ned = await db.user.create({
     data: {
       handle: 'TheWardenOfTheNorth420',
       name: 'Ned Stark',
@@ -56,9 +113,54 @@ async function main() {
     },
   })
 
-  console.log(
-    `Created users ${user1.name} and ${user2.name}, each with ${user1.posts.length} post!`,
-  )
+  await db.user.create({
+    data: {
+      handle: 'TheLannyster',
+      name: 'Tywin Lannister',
+      email: 'tywin@lannysport.net',
+      posts: {
+        create: [
+          {
+            title: 'The Rains of Castamere',
+            body: longPost,
+            language: {
+              connect: { id: Andalish.id },
+            },
+            threads: {
+              create: [
+                {
+                  startIndex: 57,
+                  endIndex: 84,
+                  highlightedContent: 'I think this is a good song',
+                  comments: {
+                    create: [
+                      {
+                        body: 'Get over yourself Tywin.',
+                        author: {
+                          connect: { id: ned.id },
+                        },
+                      },
+                      {
+                        body: 'You tell em dad!',
+                        author: {
+                          connect: { id: jon.id },
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    include: {
+      posts: true,
+    },
+  })
+
+  console.log('Seeding successful')
 
   db.disconnect()
 }

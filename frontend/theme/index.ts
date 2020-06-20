@@ -23,6 +23,8 @@ type Colors =
   | 'blue'
   | 'blueLight'
   | 'red'
+  | 'highlightColor'
+  | 'highlightColorHover'
 
 type Typography =
   | 'fontFamilySansSerif'
@@ -61,9 +63,12 @@ const theme: Theme = {
     gray800: '#444444',
     blue: '#32567E',
     blueLight: '#4391C9',
+    highlightColor: '#4391C940',
+    highlightColorHover: '#4391C980',
     red: '#c42f14',
   },
   breakpoints: fromEntries(
+    // Add px to breakpoint values: { XS: '600px', SM: '768px' }
     Object.entries(breakpoints).map(([key, value]) => [key, `${value}px`]),
   ) as Breakpoint,
   typography: {

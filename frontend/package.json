@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "node server/index.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "NODE_ENV=production node server/index.js",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,md}'",
     "type-check": "tsc",
     "codegen": "graphql-codegen --config codegen.yml",
@@ -21,9 +21,11 @@
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",
     "@apollo/react-ssr": "^4.0.0-beta.1",
+    "@types/dompurify": "^2.0.2",
     "classnames": "^2.2.6",
     "cypress": "^4.3.0",
     "date-fns": "^2.11.1",
+    "dompurify": "^2.0.11",
     "graphql": "^14.6.0",
     "is-hotkey": "^0.1.6",
     "isomorphic-unfetch": "^3.0.0",

@@ -1,0 +1,10 @@
+mutation createComment($body: String!, $threadId: Int!) {
+  createComment(body: $body, threadId: $threadId) {
+    body
+    author {
+      id
+      name
+      handle
+    }
+  }
+}

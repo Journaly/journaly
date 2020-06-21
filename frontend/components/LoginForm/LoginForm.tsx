@@ -22,7 +22,6 @@ const LoginForm: React.FC = () => {
         },
       })
       trackLogIn()
-      console.log(data)
     }
   }
 

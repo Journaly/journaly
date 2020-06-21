@@ -20,7 +20,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
     refetch()
   }, [])
 
-  console.log(data)
   const handleCollapse = (): void => {
     // Collapse the nav after clicking a link for mobile only
     if (window.innerWidth < navConstants.mobileBreakpoint) {

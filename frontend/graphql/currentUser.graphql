@@ -4,5 +4,6 @@ query currentUser {
     handle
     email
     userRole
+    profileImage
   }
 }

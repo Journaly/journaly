@@ -9,7 +9,8 @@ import { User as UserType } from '../../../generated/graphql'
 
 interface Props {
   onClick: () => void
-  currentUser: UserType
+  // TOOD (robin-macpherson): solve issue with `UserType` requiring `posts`
+  currentUser: UserType | any
 }
 
 const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
@@ -30,7 +31,7 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
       <div className="nav-top">
         <Link href="/dashboard/profile">
           <a onClick={onClick}>
-            <img className="profile-img" src="/images/robin-small.png" />
+            <img className="profile-img" src={currentUser.profileImage} />
             <p className="current-user-name">{currentUser.handle}</p>
           </a>
         </Link>

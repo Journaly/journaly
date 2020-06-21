@@ -161,6 +161,7 @@ export type User = {
   userRole: UserRole
   location?: Maybe<Location>
   posts: Array<Post>
+  profileImage?: Maybe<Scalars['String']>
 }
 
 export enum UserRole {
@@ -207,7 +208,9 @@ export type CreateUserMutation = { __typename?: 'Mutation' } & {
 export type CurrentUserQueryVariables = {}
 
 export type CurrentUserQuery = { __typename?: 'Query' } & {
-  currentUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'email' | 'userRole'>>
+  currentUser?: Maybe<
+    { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'email' | 'userRole' | 'profileImage'>
+  >
 }
 
 export type FeedQueryVariables = {}
@@ -496,6 +499,7 @@ export const CurrentUserDocument = gql`
       handle
       email
       userRole
+      profileImage
     }
   }
 `

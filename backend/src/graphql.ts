@@ -32,6 +32,7 @@ const User = objectType({
     t.model.posts({
       pagination: false,
     })
+    t.model.profileImage()
   },
 })
 

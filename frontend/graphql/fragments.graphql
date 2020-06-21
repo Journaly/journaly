@@ -3,6 +3,8 @@ fragment UserFragment on User {
   name
   handle
   email
+  userRole
+  profileImage
 }
 
 fragment AuthorFragment on User {

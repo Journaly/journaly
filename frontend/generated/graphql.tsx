@@ -227,7 +227,7 @@ export type FeedQuery = { __typename?: 'Query' } & {
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'name' | 'handle' | 'email'
+  'id' | 'name' | 'handle' | 'email' | 'userRole' | 'profileImage'
 >
 
 export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
@@ -284,6 +284,8 @@ export const UserFragmentFragmentDoc = gql`
     name
     handle
     email
+    userRole
+    profileImage
   }
 `
 export const AuthorFragmentFragmentDoc = gql`

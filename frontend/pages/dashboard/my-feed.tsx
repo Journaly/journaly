@@ -5,14 +5,13 @@ import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import MyFeed from '../../components/Dashboard/MyFeed'
 import { useFeedQuery } from '../../generated/graphql'
 import LoadingWrapper from '../../components/LoadingWrapper'
-import { useTranslation } from '../../config/i18n'
 
 interface InitialProps {
   namespacesRequired: string[]
 }
 
 const MyFeedPage: NextPage<InitialProps> = () => {
-  const { t } = useTranslation
+  const { t } = useTranslation()
   const { loading, error, data } = useFeedQuery({
     variables: {
       published: true,

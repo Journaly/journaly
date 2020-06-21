@@ -31,7 +31,14 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
       <div className="nav-top">
         <Link href="/dashboard/profile">
           <a onClick={onClick}>
-            <img className="profile-img" src={currentUser.profileImage} />
+            <img
+              className="profile-img"
+              src={
+                currentUser.profileImage
+                  ? '/images/icons/blank_avatar.svg'
+                  : currentUser.profileImage
+              }
+            />
             <p className="current-user-name">{currentUser.handle}</p>
           </a>
         </Link>

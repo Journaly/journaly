@@ -1,3 +1,10 @@
+fragment UserFragment on User {
+  id
+  name
+  handle
+  email
+}
+
 fragment AuthorFragment on User {
   id
   name

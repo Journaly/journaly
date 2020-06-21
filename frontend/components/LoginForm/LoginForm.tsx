@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackLogIn } from '../../events/users'
-import { useLoginUserMutation } from '../../generated/graphql'
+import { useLoginUserMutation, CurrentUserDocument } from '../../generated/graphql'
 import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
@@ -22,6 +22,7 @@ const LoginForm: React.FC = () => {
           identifier: data.email,
           password: data.password,
         },
+        refetchQueries: [{ query: CurrentUserDocument }],
       })
       trackLogIn()
       router.push({

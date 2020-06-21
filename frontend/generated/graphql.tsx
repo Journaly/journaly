@@ -208,9 +208,7 @@ export type CreateUserMutation = { __typename?: 'Mutation' } & {
 export type CurrentUserQueryVariables = {}
 
 export type CurrentUserQuery = { __typename?: 'Query' } & {
-  currentUser?: Maybe<
-    { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'email' | 'userRole' | 'profileImage'>
-  >
+  currentUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
 }
 
 export type FeedQueryVariables = {}
@@ -497,13 +495,10 @@ export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const CurrentUserDocument = gql`
   query currentUser {
     currentUser {
-      id
-      handle
-      email
-      userRole
-      profileImage
+      ...UserFragment
     }
   }
+  ${UserFragmentFragmentDoc}
 `
 
 /**

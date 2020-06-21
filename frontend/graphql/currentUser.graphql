@@ -1,9 +1,5 @@
 query currentUser {
   currentUser {
-    id
-    handle
-    email
-    userRole
-    profileImage
+    ...UserFragment
   }
 }

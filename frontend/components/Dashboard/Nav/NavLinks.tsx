@@ -5,12 +5,15 @@ import FeedIcon from '../../Icons/FeedIcon'
 import { navConstants } from './nav-constants'
 import { darkBlue, darkGrey } from '../../../utils'
 import { useTranslation } from '../../../config/i18n'
+import { User as UserType } from '../../../generated/graphql'
 
 interface Props {
   onClick: () => void
+  // TOOD (robin-macpherson): solve issue with `UserType` requiring `posts`
+  currentUser: UserType | any
 }
 
-const NavLinks: React.FC<Props> = ({ onClick }) => {
+const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
   const { t } = useTranslation()
   // TODO: implement fetching user information (requires PR #17)
   const user = {}
@@ -28,8 +31,15 @@ const NavLinks: React.FC<Props> = ({ onClick }) => {
       <div className="nav-top">
         <Link href="/dashboard/profile">
           <a onClick={onClick}>
-            <img className="profile-img" src="/images/robin-small.png" />
-            <p className="current-user-name">Robin MacPherson</p>
+            <img
+              className="profile-img"
+              src={
+                currentUser.profileImage
+                  ? currentUser.profileImage
+                  : '/images/icons/blank_avatar.svg'
+              }
+            />
+            <p className="current-user-name">{currentUser.handle}</p>
           </a>
         </Link>
       </div>

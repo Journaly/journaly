@@ -1,12 +1,5 @@
 query currentUser {
   currentUser {
-    id
-    name
-    email
-    posts {
-      id
-      title
-      body
-    }
+    ...UserFragment
   }
 }

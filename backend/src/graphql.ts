@@ -32,6 +32,7 @@ const User = objectType({
     t.model.posts({
       pagination: false,
     })
+    t.model.profileImage()
   },
 })
 
@@ -144,7 +145,7 @@ const Query = queryType({
           return ctx.db.user.findMany()
         },
       }),
-      t.list.field('currentUser', {
+      t.field('currentUser', {
         type: 'User',
         resolve: async (parent, args, ctx) => {
           const userId = ctx.request.userId
@@ -152,7 +153,7 @@ const Query = queryType({
           if (!userId) {
             return null
           }
-          return ctx.db.user.findMany({
+          return ctx.db.user.findOne({
             where: {
               id: userId,
             },
@@ -169,7 +170,6 @@ const Mutation = mutationType({
       args: {
         handle: stringArg({ required: true }),
         email: stringArg({ required: true }),
-        handle: stringArg({ required: true }),
         password: stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx: any) => {
@@ -178,7 +178,6 @@ const Mutation = mutationType({
           data: {
             handle: args.handle,
             email: args.email.toLowerCase(),
-            handle: args.handle,
             auth: {
               create: { password },
             },
@@ -191,7 +190,42 @@ const Mutation = mutationType({
         })
         return user
       },
-    })
+    }),
+      t.field('loginUser', {
+        type: 'User',
+        args: {
+          identifier: stringArg({ required: true }),
+          password: stringArg({ required: true }),
+        },
+        resolve: async (parent, args, ctx: any) => {
+          const user = await ctx.db.user.findOne({
+            where: {
+              email: args.identifier,
+            },
+            include: {
+              auth: true,
+            },
+          })
+          if (!user) {
+            throw new Error('User not found')
+          }
+
+          const isValid = await bcrypt.compare(
+            args.password,
+            user.auth.password,
+          )
+
+          if (!isValid) {
+            throw new Error('Invalid password')
+          }
+          const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
+          ctx.response.cookie('token', token, {
+            httpOnly: true,
+            maxAge: ONE_YEAR,
+          })
+          return user
+        },
+      })
     t.field('createPost', {
       type: 'Post',
       args: {

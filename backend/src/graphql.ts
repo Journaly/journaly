@@ -144,7 +144,7 @@ const Query = queryType({
           return ctx.db.user.findMany()
         },
       }),
-      t.list.field('currentUser', {
+      t.field('currentUser', {
         type: 'User',
         resolve: async (parent, args, ctx) => {
           const userId = ctx.request.userId
@@ -152,7 +152,7 @@ const Query = queryType({
           if (!userId) {
             return null
           }
-          return ctx.db.user.findMany({
+          return ctx.db.user.findOne({
             where: {
               id: userId,
             },
@@ -169,7 +169,6 @@ const Mutation = mutationType({
       args: {
         handle: stringArg({ required: true }),
         email: stringArg({ required: true }),
-        handle: stringArg({ required: true }),
         password: stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx: any) => {
@@ -178,7 +177,6 @@ const Mutation = mutationType({
           data: {
             handle: args.handle,
             email: args.email.toLowerCase(),
-            handle: args.handle,
             auth: {
               create: { password },
             },

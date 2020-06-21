@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { navConstants } from './nav-constants'
 import NavLinks from './NavLinks'
 import { black } from '../../../utils'
+import { useCurrentUserQuery } from '../../../generated/graphql'
 
 interface Props {
   expanded: boolean
@@ -10,12 +11,16 @@ interface Props {
 }
 
 const Nav: React.FC<Props> = ({ expanded, collapse }) => {
+  const { data, refetch } = useCurrentUserQuery()
+
   useEffect(() => {
     setTimeout(() => {
       document.body.classList.remove('block-transitions-on-page-load')
     }, 0)
+    refetch()
   }, [])
 
+  console.log(data)
   const handleCollapse = (): void => {
     // Collapse the nav after clicking a link for mobile only
     if (window.innerWidth < navConstants.mobileBreakpoint) {
@@ -28,7 +33,9 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
       <div className="nav-background" onClick={handleCollapse} />
 
       <nav>
-        <NavLinks onClick={handleCollapse} />
+        {data && data.currentUser && (
+          <NavLinks onClick={handleCollapse} currentUser={data.currentUser} />
+        )}
 
         <h1 className="nav-logo">
           <Link href="/">

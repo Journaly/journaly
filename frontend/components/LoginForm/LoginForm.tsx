@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackLogIn } from '../../events/users'
-import { useCreateUserMutation } from '../../generated/graphql'
+import { useLoginUserMutation } from '../../generated/graphql'
 import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
@@ -11,12 +11,18 @@ const LoginForm: React.FC = () => {
     mode: 'onBlur',
   })
 
-  const [createUser, { loading, error }] = useCreateUserMutation()
+  const [loginUser, { loading, error }] = useLoginUserMutation()
 
   const onSubmit = (data: any) => {
     if (!loading && Object.keys(errors).length === 0) {
-      createUser(data)
+      loginUser({
+        variables: {
+          identifier: data.email,
+          password: data.password,
+        },
+      })
       trackLogIn()
+      console.log(data)
     }
   }
 
@@ -30,7 +36,7 @@ const LoginForm: React.FC = () => {
           <input
             type="text"
             placeholder="Email address"
-            name="Email"
+            name="email"
             ref={register({
               required: 'Email is required',
               pattern: {
@@ -39,20 +45,20 @@ const LoginForm: React.FC = () => {
               },
             })}
           />
-          <ErrorMessage errors={errors} name="Email" as="p" />
+          <ErrorMessage errors={errors} name="email" as="p" />
         </label>
         <label htmlFor="password">
           Password
           <input
             type="password"
             placeholder="A secure password"
-            name="Password"
+            name="password"
             ref={register({
               required: 'Password is required',
               minLength: { value: 6, message: 'Password must be at least 6 characters' },
             })}
           />
-          <ErrorMessage errors={errors} name="Password" as="p" />
+          <ErrorMessage errors={errors} name="password" as="p" />
         </label>
 
         <Button type="submit">Log In</Button>

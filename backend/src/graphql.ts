@@ -189,7 +189,42 @@ const Mutation = mutationType({
         })
         return user
       },
-    })
+    }),
+      t.field('loginUser', {
+        type: 'User',
+        args: {
+          identifier: stringArg({ required: true }),
+          password: stringArg({ required: true }),
+        },
+        resolve: async (parent, args, ctx: any) => {
+          const user = await ctx.db.user.findOne({
+            where: {
+              email: args.identifier,
+            },
+            include: {
+              auth: true,
+            },
+          })
+          if (!user) {
+            throw new Error('User not found')
+          }
+
+          const isValid = await bcrypt.compare(
+            args.password,
+            user.auth.password,
+          )
+
+          if (!isValid) {
+            throw new Error('Invalid password')
+          }
+          const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
+          ctx.response.cookie('token', token, {
+            httpOnly: true,
+            maxAge: ONE_YEAR,
+          })
+          return user
+        },
+      })
     t.field('createPost', {
       type: 'Post',
       args: {

@@ -35,8 +35,8 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
               className="profile-img"
               src={
                 currentUser.profileImage
-                  ? '/images/icons/blank_avatar.svg'
-                  : currentUser.profileImage
+                  ? currentUser.profileImage
+                  : '/images/icons/blank_avatar.svg'
               }
             />
             <p className="current-user-name">{currentUser.handle}</p>

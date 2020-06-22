@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import NavLink from '../../NavLink'
 import FeedIcon from '../../Icons/FeedIcon'
+import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 import { navConstants } from './nav-constants'
 import { darkBlue, darkGrey } from '../../../utils'
 import { useTranslation } from '../../../config/i18n'
@@ -30,15 +31,12 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
     <>
       <div className="nav-top">
         <Link href="/dashboard/profile">
-          <a onClick={onClick}>
-            <img
-              className="profile-img"
-              src={
-                currentUser.profileImage
-                  ? currentUser.profileImage
-                  : '/images/icons/blank_avatar.svg'
-              }
-            />
+          <a onClick={onClick} className="profile-image">
+            {currentUser.profileImage ? (
+              <img src={currentUser.profileImage} alt="" />
+            ) : (
+              <BlankAvatarIcon size={60} />
+            )}
             <p className="current-user-name">{currentUser.handle}</p>
           </a>
         </Link>
@@ -125,12 +123,16 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           width: 100%;
         }
 
-        .profile-img {
+        .profile-image img {
           width: 60px;
           height: 60px;
           border-radius: 50%;
-          background-color: ${darkBlue};
           object-fit: cover;
+        }
+
+        .profile-image :global(svg) {
+          border-radius: 50%;
+          background-color: ${darkBlue};
         }
 
         .current-user-name,

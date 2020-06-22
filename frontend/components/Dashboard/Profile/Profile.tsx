@@ -1,14 +1,20 @@
+// @ts-nocheck
 import React from 'react'
 import ProfileCard from './ProfileCard'
 import PostList from './PostList'
 import { layoutPadding } from '../../Dashboard/dashboardConstants'
 import theme from '../../../theme'
 
-const Profile: React.FC = () => {
+type Props = {
+  // TODO: use Post type from generated graphql
+  posts: any[]
+}
+
+const Profile: React.FC<Props> = ({ posts }) => {
   return (
     <div className="profile-wrapper">
       <ProfileCard />
-      <PostList />
+      <PostList posts={posts} />
 
       <style jsx>{`
         .profile-wrapper {

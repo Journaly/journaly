@@ -1,23 +1,22 @@
 import React from 'react'
 import { useTranslation } from '../../../config/i18n'
 import { layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
+import ProfilePostCard from '../PostCard/ProfilePostCard'
 import theme from '../../../theme'
 
-const PostList: React.FC = () => {
-  const { t } = useTranslation(['profile', 'posts'])
-  const posts = ['post1', 'post2', 'post3']
+type Props = {
+  // TODO: use Post type from generated graphql
+  posts: any[]
+}
+
+const PostList: React.FC<Props> = ({ posts }) => {
+  const { t } = useTranslation(['profile'])
 
   return (
     <div className="post-list">
       <h1 className="posts-title">{t('postsTitle')}</h1>
 
-      {posts.map((post, i) => {
-        return (
-          <div key={i} className="post">
-            {post}
-          </div>
-        )
-      })}
+      {posts && posts.map((post) => <ProfilePostCard key={post.id} post={post} />)}
 
       <style jsx>{`
         .post-list {
@@ -44,19 +43,10 @@ const PostList: React.FC = () => {
           }
         }
 
-        .post {
-          width: 100%;
+        .post-list :global(.post-card-container) {
           margin-bottom: 50px;
-          padding: 40px;
-          box-shadow: 0px 8px 10px #00000029;
-          transition: all 150ms ease-in;
         }
-
-        .post:hover {
-          box-shadow: 0px 8px 12px #00000029;
-          transform: translateY(-2px);
-        }
-        .post:last-child {
+        .post-list :global(.post-card-container:last-child) {
           margin-bottom: 0;
         }
       `}</style>

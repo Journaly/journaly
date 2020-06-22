@@ -1,28 +1,24 @@
 import React from 'react'
 import Link from 'next/link'
+// TODO: use Post type from generated graphql
+import { Post } from './postCardUtils'
 
-interface Props {
-  id: string
-  title: string
-  body: string
-  image?: string
-  author: string
+type Props = {
+  post: Post
 }
 
-const MyFeedPostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
+const MyFeedPostCard: React.FC<Props> = ({ post }) => {
+  const { id, title, excerpt, image, author } = post
+
   return (
     <div className="post-card-container" key={id}>
-      <Link href={`/post?id=${id}`}>
+      <Link href={`/post/${id}`}>
         <a>
-          <img
-            className="post-image"
-            src={image || '/images/samples/sample-post-img.jpg'}
-            alt="Sample post image"
-          />
+          <img className="post-image" src={image || '/images/samples/sample-post-img.jpg'} alt="" />
           <div className="post-card-bottom">
             <div className="preview">
               <h4>{title}</h4>
-              <p className="preview-text">{body}</p>
+              <p className="preview-text">{excerpt}</p>
             </div>
 
             <div className="info">

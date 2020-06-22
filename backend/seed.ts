@@ -265,7 +265,7 @@ async function main() {
     },
   })
 
-  // Add image and connect to post 1
+  // Add images and connect to posts
   await db.image.create({
     data: {
       smallSize:
@@ -276,6 +276,51 @@ async function main() {
       Post: {
         connect: {
           id: 1,
+        },
+      },
+    },
+  })
+
+  await db.image.create({
+    data: {
+      smallSize:
+        'https://res.cloudinary.com/journaly/image/upload/v1573956654/journaly/uzlkstq7jp4wi0m0mmvy.jpg',
+      largeSize:
+        'https://res.cloudinary.com/journaly/image/upload/v1573956654/journaly/uzlkstq7jp4wi0m0mmvy.jpg',
+      imageRole: 'HEADLINE',
+      Post: {
+        connect: {
+          id: 2,
+        },
+      },
+    },
+  })
+
+  await db.image.create({
+    data: {
+      smallSize:
+        'https://res.cloudinary.com/journaly/image/upload/v1574186170/journaly/f5kflfytag99wwsflhtj.jpg',
+      largeSize:
+        'https://res.cloudinary.com/journaly/image/upload/v1574186170/journaly/f5kflfytag99wwsflhtj.jpg',
+      imageRole: 'HEADLINE',
+      Post: {
+        connect: {
+          id: 3,
+        },
+      },
+    },
+  })
+
+  await db.image.create({
+    data: {
+      smallSize:
+        'https://res.cloudinary.com/journaly/image/upload/v1574186437/journaly/gmgxskfkwefzefoxegjx.jpg',
+      largeSize:
+        'https://res.cloudinary.com/journaly/image/upload/v1574186437/journaly/gmgxskfkwefzefoxegjx.jpg',
+      imageRole: 'HEADLINE',
+      Post: {
+        connect: {
+          id: 4,
         },
       },
     },

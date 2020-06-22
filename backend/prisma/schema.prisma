@@ -189,8 +189,8 @@ model Image {
   smallSize String
   largeSize String
   imageRole ImageRole
-  post      Post      @relation(fields: [postId], references: [id])
-  postId    Int
+  post      Post?     @relation(fields: [postId], references: [id])
+  postId    Int?
 }
 
 model Prompt {

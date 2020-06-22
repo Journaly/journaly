@@ -172,7 +172,7 @@
       "model": "Image",
       "field": "post",
       "type": "Post",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateDirective",
@@ -227,8 +227,7 @@
       "tag": "UpdateField",
       "model": "Image",
       "field": "postId",
-      "type": "Int",
-      "arity": "Required"
+      "type": "Int"
     }
   ]
 }

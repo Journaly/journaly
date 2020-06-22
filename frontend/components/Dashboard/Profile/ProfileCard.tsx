@@ -8,7 +8,7 @@ const ProfileCard: React.FC = () => {
   const { t } = useTranslation('profile')
 
   const user = {
-    name: 'Avocado King',
+    name: 'Avocado 🥑 King 🤴🏼',
     handle: 'avocado-me',
     image: '/images/robin-small.png',
     speaks: ['English'],
@@ -24,73 +24,144 @@ const ProfileCard: React.FC = () => {
   }
 
   const name = user.name || user.handle
+  const showSeparator = user.facebook || user.instagram || user.youtube || user.website
 
   return (
     <div className="profile-card">
-      <h1 className="profile-name">{name}</h1>
+      <div className="profile-header">
+        <h1 className="profile-name">{name}</h1>
 
-      <img className="profile-image-mobile" src={user.image} />
+        <img className="profile-image-mobile" src={user.image} />
 
-      <div className="langauges-and-interests">
-        <p>
-          <span>{t('card.speaks')}:</span> {user.speaks.join(', ')}
-        </p>
-        <p>
-          <span>{t('card.learns')}:</span> {user.learns.join(', ')}
-        </p>
-        {user.likes.length && (
+        <div className="languages-and-interests">
           <p>
-            <span>{t('card.likes')}:</span> {user.likes.join(', ')}
+            <span>{t('card.speaks')}:</span> {user.speaks.join(', ')}
           </p>
-        )}
+          <p>
+            <span>{t('card.learns')}:</span> {user.learns.join(', ')}
+          </p>
+          {user.likes.length && (
+            <p>
+              <span>{t('card.likes')}:</span> {user.likes.join(', ')}
+            </p>
+          )}
+        </div>
       </div>
 
-      <img className="profile-image-desktop" src={user.image} />
+      <div className="profile-body">
+        <img className="profile-image-desktop" src={user.image} />
 
-      {user.bio && <p className="bio">{user.bio}</p>}
+        {user.bio && <p className="bio">{user.bio}</p>}
+      </div>
 
-      {user.location && <p className="location">{user.location}</p>}
+      <div className="profile-footer">
+        {user.location && (
+          <>
+            <p className="location">{user.location}</p>
+            {showSeparator && <div className="separator">- -</div>}
+          </>
+        )}
 
-      <div className="separator">- -</div>
-
-      <div className="social-links">
-        {user.facebook && (
-          <ExternalLink href={user.facebook} className="social-link">
-            <XIcon />
-          </ExternalLink>
-        )}
-        {user.instagram && (
-          <ExternalLink href={user.instagram} className="social-link">
-            <XIcon />
-          </ExternalLink>
-        )}
-        {user.youtube && (
-          <ExternalLink href={user.youtube} className="social-link">
-            <XIcon />
-          </ExternalLink>
-        )}
-        {user.website && (
-          <ExternalLink href={user.website} className="social-link">
-            <XIcon />
-          </ExternalLink>
-        )}
+        <div className="social-links">
+          {user.facebook && (
+            <ExternalLink href={user.facebook} className="social-link">
+              <XIcon color={theme.colors.white} />
+            </ExternalLink>
+          )}
+          {user.instagram && (
+            <ExternalLink href={user.instagram} className="social-link">
+              <XIcon color={theme.colors.white} />
+            </ExternalLink>
+          )}
+          {user.youtube && (
+            <ExternalLink href={user.youtube} className="social-link">
+              <XIcon color={theme.colors.white} />
+            </ExternalLink>
+          )}
+          {user.website && (
+            <ExternalLink href={user.website} className="social-link">
+              <XIcon color={theme.colors.white} />
+            </ExternalLink>
+          )}
+        </div>
       </div>
 
       <style jsx>{`
         .profile-card {
+          position: relative;
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding-bottom: 40px;
+          padding: 30px 25px;
+          color: ${theme.colors.white};
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-card {
-            padding: 80px 50px;
+            justify-content: space-between;
+          }
+        }
+
+        .profile-card::before {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          z-index: -1;
+          opacity: 0.75;
+          background-image: url('/images/profile/person_using_typewriter.jpg');
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+
+        .profile-card::after {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          z-index: -1;
+          background: rgba(0, 0, 0, 0.75);
+        }
+
+        .profile-header {
+          width: 100%;
+          text-align: center;
+        }
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .profile-header {
+            align-self: flex-start;
+            text-align: left;
+          }
+        }
+        .profile-body {
+          margin: 50px 0;
+          text-align: center;
+        }
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .profile-body {
+            text-align: center;
+          }
+        }
+        .profile-footer {
+          text-align: center;
+        }
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .profile-footer {
+            text-align: center;
           }
         }
 
         .profile-name {
           ${theme.typography.headingLG};
+        }
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .profile-name {
+            margin-bottom: 10px;
+          }
         }
 
         .profile-image-mobile,
@@ -101,7 +172,7 @@ const ProfileCard: React.FC = () => {
           object-fit: cover;
         }
         .profile-image-mobile {
-          margin: 24px 0;
+          margin: 30px 0 20px;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-image-mobile {
@@ -109,19 +180,18 @@ const ProfileCard: React.FC = () => {
           }
         }
 
-        .langauges-and-interests {
-          align-self: flex-start;
-          margin-bottom: 24px;
+        .languages-and-interests {
+          text-align: left;
         }
 
-        .langauges-and-interests p {
+        .languages-and-interests p {
           margin-bottom: 10px;
         }
-        .langauges-and-interests p:last-child {
+        .languages-and-interests p:last-child {
           margin-bottom: 0;
         }
 
-        .langauges-and-interests span {
+        .languages-and-interests span {
           font-weight: bold;
         }
 
@@ -131,13 +201,15 @@ const ProfileCard: React.FC = () => {
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-image-desktop {
             display: block;
+            margin: 0 auto 40px;
           }
         }
 
+        .languages-and-interests,
         .bio {
           max-width: 660px;
-          margin: 25px 0;
-          text-align: center;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .location {
@@ -159,7 +231,7 @@ const ProfileCard: React.FC = () => {
           height: 60px;
           width: 60px;
           padding: 10px;
-          border: 2px solid black;
+          border: 2px solid ${theme.colors.white};
           border-radius: 50%;
           margin-right: 20px;
         }

@@ -1,12 +1,18 @@
 import * as React from 'react'
 interface SVGRProps {
-  title?: string;
-  titleId?: string;
+  title?: string
+  titleId?: string
+  size: number
 }
 
-function GlobeIcon({ title, titleId, ...props }: React.SVGProps<SVGSVGElement> & SVGRProps) {
+function GlobeIcon({
+  title,
+  titleId,
+  size = 60,
+  ...props
+}: React.SVGProps<SVGSVGElement> & SVGRProps) {
   return (
-    <svg width={60} height={60} viewBox="0 0 60 60" aria-labelledby={titleId} {...props}>
+    <svg width={size} height={size} viewBox="0 0 60 60" aria-labelledby={titleId} {...props}>
       {title ? <title id={titleId}>{title}</title> : null}
       <g data-name="Group 438">
         <g data-name="Ellipse 5" fill="none" stroke="#fff" strokeWidth={2}>

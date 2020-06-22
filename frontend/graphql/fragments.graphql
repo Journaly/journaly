@@ -41,9 +41,4 @@ fragment PostFragment on Post {
   threads {
     ...ThreadFragment
   }
-  images {
-    smallSize
-    largeSize
-    imageRole
-  }
 }

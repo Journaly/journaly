@@ -1,5 +1,12 @@
 query feed {
   feed {
-    ...PostFragment
+    id
+    title
+    body
+    author {
+      id
+      name
+      email
+    }
   }
 }

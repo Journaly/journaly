@@ -65,8 +65,9 @@ async function main() {
             body: `
               <h1>Les Pluies de Castamere</h1>
             
-              <p>I studied up on my French quite a lot during my days up on the wall. Especially when Sam would fall asleep during the night shift.</p>
-              <p>I thought Lord Tywin might appreciate this, since he loves the French <span>so much</span>.</p>
+              <p>
+                I studied up on my French quite a lot during my days up on the wall. Especially when Sam would fall asleep during the night shift. I thought Lord Tywin might appreciate this, since he loves the French <span>so much</span>.
+              </p>
             
               <p>
                 Et qui êtes-vous, demanda le seigneur majestueux,
@@ -141,7 +142,7 @@ async function main() {
     },
   })
 
-  await db.user.create({
+  const tywin = await db.user.create({
     data: {
       handle: 'TheLannyster',
       name: 'Tywin Lannister',
@@ -224,6 +225,39 @@ async function main() {
     },
     include: {
       posts: true,
+    },
+  })
+
+  await db.post.update({
+    where: {
+      id: 2,
+    },
+    data: {
+      threads: {
+        create: [
+          {
+            startIndex: 15,
+            endIndex: 38,
+            highlightedContent: 'Les Pluies de Castamere',
+            comments: {
+              create: [
+                {
+                  body: 'You bastard!',
+                  author: {
+                    connect: { id: tywin.id },
+                  },
+                },
+                {
+                  body: 'HA HA!',
+                  author: {
+                    connect: { id: ned.id },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
     },
   })
 

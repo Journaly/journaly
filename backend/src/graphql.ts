@@ -5,14 +5,7 @@ import { prisma } from 'nexus-plugin-prisma'
 
 use(prisma())
 
-const {
-  objectType,
-  queryType,
-  mutationType,
-  intArg,
-  stringArg,
-  makeSchema,
-} = schema
+const { objectType, queryType, mutationType, intArg, stringArg } = schema
 
 // Time constants
 const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
@@ -42,6 +35,7 @@ const Post = objectType({
     t.model.id()
     t.model.title()
     t.model.body()
+    t.model.excerpt()
     t.model.author()
     t.model.status()
     t.model.threads()
@@ -99,13 +93,6 @@ const Language = objectType({
     })
   },
 })
-
-// objectType({
-//   name: 'LanguageLearned',
-//   definition(t) {
-//     t.
-//   }
-// })
 
 const Query = queryType({
   definition(t) {

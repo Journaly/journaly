@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react'
 
-import PostCard from '../PostCard'
+import MyFeedPostCard from '../PostCard/MyFeedPostCard'
 
 // import { Post } from '../../../generated/graphql' // TODO (robin-macpherson): See Post[] type todo below
 
@@ -27,7 +27,7 @@ const MyFeed: React.FC<Props> = ({ posts }) => {
       <div className="my-feed-container">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <PostCard
+            <MyFeedPostCard
               key={post.id}
               id={post.id}
               title={post.title}

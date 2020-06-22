@@ -9,7 +9,7 @@ interface Props {
   author: string
 }
 
-const PostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
+const MyFeedPostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
   return (
     <div className="post-card-container" key={id}>
       <Link href={`/post?id=${id}`}>
@@ -20,13 +20,19 @@ const PostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
               <h4>{title}</h4>
               <p className="preview-text">{body}</p>
             </div>
+
             <div className="info">
-              <img className="avatar" src="/images/author-sample-tiny.jpg" alt="Author" />
+              <img
+                className="avatar"
+                src={image || '/images/author-sample-tiny.jpg'}
+                alt="Author"
+              />
               <p className="author">{author}</p>
             </div>
           </div>
         </a>
       </Link>
+
       <style jsx>{`
         .post-card-container {
           height: 500px;
@@ -69,4 +75,4 @@ const PostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
   )
 }
 
-export default PostCard
+export default MyFeedPostCard

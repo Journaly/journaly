@@ -5,14 +5,7 @@ import { prisma } from 'nexus-plugin-prisma'
 
 use(prisma())
 
-const {
-  objectType,
-  queryType,
-  mutationType,
-  intArg,
-  stringArg,
-  makeSchema,
-} = schema
+const { objectType, queryType, mutationType, intArg, stringArg } = schema
 
 // Time constants
 const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
@@ -32,6 +25,7 @@ const User = objectType({
     t.model.posts({
       pagination: false,
     })
+    t.model.profileImage()
   },
 })
 
@@ -41,6 +35,7 @@ const Post = objectType({
     t.model.id()
     t.model.title()
     t.model.body()
+    t.model.excerpt()
     t.model.author()
     t.model.status()
     t.model.threads()
@@ -99,13 +94,6 @@ const Language = objectType({
   },
 })
 
-// objectType({
-//   name: 'LanguageLearned',
-//   definition(t) {
-//     t.
-//   }
-// })
-
 const Query = queryType({
   definition(t) {
     t.list.field('posts', {
@@ -144,7 +132,7 @@ const Query = queryType({
           return ctx.db.user.findMany()
         },
       }),
-      t.list.field('currentUser', {
+      t.field('currentUser', {
         type: 'User',
         resolve: async (parent, args, ctx) => {
           const userId = ctx.request.userId
@@ -152,7 +140,7 @@ const Query = queryType({
           if (!userId) {
             return null
           }
-          return ctx.db.user.findMany({
+          return ctx.db.user.findOne({
             where: {
               id: userId,
             },
@@ -169,7 +157,6 @@ const Mutation = mutationType({
       args: {
         handle: stringArg({ required: true }),
         email: stringArg({ required: true }),
-        handle: stringArg({ required: true }),
         password: stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx: any) => {
@@ -178,7 +165,6 @@ const Mutation = mutationType({
           data: {
             handle: args.handle,
             email: args.email.toLowerCase(),
-            handle: args.handle,
             auth: {
               create: { password },
             },
@@ -191,7 +177,42 @@ const Mutation = mutationType({
         })
         return user
       },
-    })
+    }),
+      t.field('loginUser', {
+        type: 'User',
+        args: {
+          identifier: stringArg({ required: true }),
+          password: stringArg({ required: true }),
+        },
+        resolve: async (parent, args, ctx: any) => {
+          const user = await ctx.db.user.findOne({
+            where: {
+              email: args.identifier,
+            },
+            include: {
+              auth: true,
+            },
+          })
+          if (!user) {
+            throw new Error('User not found')
+          }
+
+          const isValid = await bcrypt.compare(
+            args.password,
+            user.auth.password,
+          )
+
+          if (!isValid) {
+            throw new Error('Invalid password')
+          }
+          const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
+          ctx.response.cookie('token', token, {
+            httpOnly: true,
+            maxAge: ONE_YEAR,
+          })
+          return user
+        },
+      })
     t.field('createPost', {
       type: 'Post',
       args: {
@@ -214,6 +235,38 @@ const Mutation = mutationType({
           },
         }),
     })
+    t.field('createThread', {
+      type: 'Thread',
+      args: {
+        postId: intArg({ required: true }),
+        startIndex: intArg({ required: true }),
+        endIndex: intArg({ required: true }),
+        highlightedContent: stringArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to create threads.')
+        }
+
+        const { postId, startIndex, endIndex, highlightedContent } = args
+        const post = await ctx.db.post.findOne({ where: { id: args.postId } })
+
+        if (!post) {
+          throw new Error(`Unable to find post with id ${postId}`)
+        }
+
+        return await ctx.db.thread.create({
+          data: {
+            startIndex,
+            endIndex,
+            highlightedContent,
+            post: { connect: { id: postId } },
+          },
+        })
+      },
+    })
     t.field('createComment', {
       type: 'Comment',
       args: {
@@ -232,7 +285,7 @@ const Mutation = mutationType({
         })
 
         if (!thread) {
-          throw new Error(`Unable to find post with id ${args.threadId}`)
+          throw new Error(`Unable to find thread with id ${args.threadId}`)
         }
 
         return await ctx.db.comment.create({

@@ -1,0 +1,44 @@
+fragment UserFragment on User {
+  id
+  name
+  handle
+  email
+  userRole
+  profileImage
+}
+
+fragment AuthorFragment on User {
+  id
+  name
+  handle
+}
+
+fragment CommentFragment on Comment {
+  body
+  author {
+    ...AuthorFragment
+  }
+}
+
+fragment ThreadFragment on Thread {
+  id
+  startIndex
+  endIndex
+  highlightedContent
+  comments {
+    ...CommentFragment
+  }
+}
+
+fragment PostFragment on Post {
+  id
+  title
+  body
+  status
+  author {
+    ...AuthorFragment
+  }
+  threads {
+    ...ThreadFragment
+  }
+}

@@ -1,0 +1,15 @@
+mutation createThread(
+  $postId: Int!
+  $startIndex: Int!
+  $endIndex: Int!
+  $highlightedContent: String!
+) {
+  createThread(
+    postId: $postId
+    startIndex: $startIndex
+    endIndex: $endIndex
+    highlightedContent: $highlightedContent
+  ) {
+    ...ThreadFragment
+  }
+}

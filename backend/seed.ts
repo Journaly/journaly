@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
 
 const db = new PrismaClient()
@@ -43,6 +44,8 @@ While I may be a <em>little</em> biased, I think this is a good song.
 `
 
 async function main() {
+  const hashedPassword = await bcrypt.hash('password', 10)
+
   const Andalish = await db.language.create({
     data: {
       name: 'The Common Tongue of the Andals',
@@ -74,6 +77,11 @@ async function main() {
       handle: 'jsno',
       name: 'Jon Snow',
       email: 'j@n.com',
+      auth: {
+        create: {
+          password: hashedPassword,
+        },
+      },
       posts: {
         create: [
           {
@@ -96,6 +104,11 @@ async function main() {
       handle: 'TheWardenOfTheNorth420',
       name: 'Ned Stark',
       email: 'st@rk.com',
+      auth: {
+        create: {
+          password: hashedPassword,
+        },
+      },
       posts: {
         create: [
           {
@@ -118,6 +131,11 @@ async function main() {
       handle: 'TheLannyster',
       name: 'Tywin Lannister',
       email: 'tywin@lannysport.net',
+      auth: {
+        create: {
+          password: hashedPassword,
+        },
+      },
       posts: {
         create: [
           {

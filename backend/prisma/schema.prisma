@@ -77,7 +77,6 @@ model Post {
   title      String
   body       String
   status     PostStatus   @default(DRAFT)
-  // @Lanny ⬇️
   images     Image[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt

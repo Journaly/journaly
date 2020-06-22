@@ -14,7 +14,11 @@ const MyFeedPostCard: React.FC<Props> = ({ id, title, body, image, author }) => 
     <div className="post-card-container" key={id}>
       <Link href={`/post?id=${id}`}>
         <a>
-          <img className="post-image" src={image} alt="Sample post image" />
+          <img
+            className="post-image"
+            src={image || '/images/samples/sample-post-img.jpg'}
+            alt="Sample post image"
+          />
           <div className="post-card-bottom">
             <div className="preview">
               <h4>{title}</h4>
@@ -22,11 +26,7 @@ const MyFeedPostCard: React.FC<Props> = ({ id, title, body, image, author }) => 
             </div>
 
             <div className="info">
-              <img
-                className="avatar"
-                src={image || '/images/author-sample-tiny.jpg'}
-                alt="Author"
-              />
+              <img className="avatar" src={image || '/images/robin-small.png'} alt="Author" />
               <p className="author">{author}</p>
             </div>
           </div>

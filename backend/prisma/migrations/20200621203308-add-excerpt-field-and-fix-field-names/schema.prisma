@@ -1,0 +1,248 @@
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+generator prisma_client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                Int                @default(autoincrement()) @id
+  name              String?
+  email             String             @unique
+  handle            String             @unique
+  auth              Auth?
+  userRole          UserRole           @default(FREE_USER)
+  bio               String?
+  posts             Post[]
+  subscription      UserSubscription?
+  socialMedia       SocialMedia[]
+  interests         Topic[]
+  location          Location?          @relation(fields: [locationId], references: [id])
+  locationId        Int?
+  languagesNative   LanguageNative[]
+  languagesLearning LanguageLearning[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  userInterests     UserInterests[]
+  postLike          PostLike[]
+  commentLike       CommentLike[]
+  pageView          PageView[]
+  profileImage      String?
+  comment           Comment[]
+}
+
+model Auth {
+  id               Int       @default(autoincrement()) @id
+  user             User      @relation(fields: [userId], references: [id])
+  userId           Int       @unique
+  password         String
+  resetToken       String?
+  resetTokenExpiry DateTime?
+}
+
+model LanguageLearning {
+  id         Int      @default(autoincrement()) @id
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int      @unique
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId Int
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, languageId])
+}
+
+model LanguageNative {
+  id         Int      @default(autoincrement()) @id
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId Int
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, languageId])
+}
+
+model SocialMedia {
+  id       Int                 @default(autoincrement()) @id
+  platform SocialMediaPlatform
+  url      String
+  author   User                @relation(fields: [authorId], references: [id])
+  authorId Int
+}
+
+model Post {
+  id         Int          @default(autoincrement()) @id
+  title      String
+  body       String
+  excerpt    String
+  status     PostStatus   @default(DRAFT)
+  images     Image[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  author     User         @relation(fields: [authorId], references: [id])
+  authorId   Int
+  readTime   Int          @default(1)
+  likes      PostLike[]
+  topic      Topic[]      @relation(references: [id])
+  language   Language     @relation(fields: [languageId], references: [id])
+  languageId Int
+  longitude  Float?
+  latitude   Float?
+  threads    Thread[]
+  postTopics PostTopics[]
+}
+
+model Language {
+  id            Int                @default(autoincrement()) @id
+  posts         Post[]
+  name          String
+  dialect       String?
+  nativeUsers   LanguageNative[]
+  learningUsers LanguageLearning[]
+
+  @@unique([name, dialect])
+}
+
+model Location {
+  id      Int    @default(autoincrement()) @id
+  country String
+  city    String
+  User    User[]
+}
+
+model Topic {
+  id            Int             @default(autoincrement()) @id
+  name          String
+  posts         Post[]          @relation(references: [id])
+  user          User?           @relation(fields: [userId], references: [id])
+  userId        Int?
+  userInterests UserInterests[]
+  postTopics    PostTopics[]
+  prompt        Prompt[]
+}
+
+model UserInterests {
+  id        Int      @default(autoincrement()) @id
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  topic     Topic    @relation(fields: [topicId], references: [id])
+  topicId   Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, topicId])
+}
+
+model PostTopics {
+  id      Int   @default(autoincrement()) @id
+  post    Post  @relation(fields: [postId], references: [id])
+  postId  Int
+  topic   Topic @relation(fields: [topicId], references: [id])
+  topicId Int
+
+  @@unique([postId, topicId])
+}
+
+model PostLike {
+  id        Int      @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+}
+
+model CommentLike {
+  id        Int      @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [userId], references: [id])
+  userId    Int
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  commentId Int
+}
+
+model Comment {
+  id        Int           @default(autoincrement()) @id
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  body      String
+  author    User          @relation(fields: [authorId], references: [id])
+  authorId  Int
+  thread    Thread        @relation(fields: [threadId], references: [id])
+  threadId  Int
+  likes     CommentLike[]
+}
+
+model Thread {
+  id                 Int       @default(autoincrement()) @id
+  startIndex         Int
+  endIndex           Int
+  highlightedContent String
+  post               Post      @relation(fields: [postId], references: [id])
+  postId             Int
+  comments           Comment[]
+}
+
+model Image {
+  id        Int       @default(autoincrement()) @id
+  smallSize String
+  largeSize String
+  imageRole ImageRole
+  post      Post      @relation(fields: [postId], references: [id])
+  postId    Int
+}
+
+model Prompt {
+  id      Int    @default(autoincrement()) @id
+  text    String
+  topic   Topic  @relation(fields: [topicId], references: [id])
+  topicId Int
+}
+
+model UserSubscription {
+  id        Int      @default(autoincrement()) @id
+  name      String
+  price     Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PageView {
+  id                  Int      @default(autoincrement()) @id
+  user                User?    @relation(fields: [userId], references: [id])
+  userId              Int?
+  sessionId           String
+  pageName            String
+  timestamp           DateTime @default(now())
+  utmSource           String?
+  // TODO (robin-macpherson): find user agent string parsing library and store each part separately
+  user_agent_string   String
+  user_agent_language String
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  FREE_USER
+  PRO_USER
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum ImageRole {
+  HEADLINE
+  INLINE
+}
+
+enum SocialMediaPlatform {
+  FACEBOOK
+  YOUTUBE
+  INSTAGRAM
+  LINKEDIN
+}

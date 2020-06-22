@@ -65,9 +65,9 @@ async function main() {
             },
           },
           {
-            title: "This One's for you, Tywin.",
+            title: 'Les Pluies de Castamere',
             body: `
-              <h1>Les Pluies de Castamere</h1>
+              <p>This One's for you, Tywin.</p>
             
               <p>
                 I studied up on my French quite a lot during my days up on the wall. Especially when Sam would fall asleep during the night shift. I thought Lord Tywin might appreciate this, since he loves the French <span>so much</span>.
@@ -164,9 +164,7 @@ async function main() {
           {
             title: 'The Rains of Castamere',
             body: `
-              <h1>The Rains of Castamere</h1>
-              
-              While I may be a <em>little</em> biased, I think this is a good song.
+              <p>While I may be a <em>little</em> biased, I think this is a good song.</p>
               
               <h2>Verse One</h2>
               <p>

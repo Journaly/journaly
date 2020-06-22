@@ -1,5 +1,6 @@
 import React from 'react'
 import { useTranslation } from '../../../config/i18n'
+import { layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
 import theme from '../../../theme'
 
 const PostList: React.FC = () => {
@@ -8,7 +9,7 @@ const PostList: React.FC = () => {
 
   return (
     <div className="post-list">
-      <h1>{t('postsTitle')}</h1>
+      <h1 className="posts-title">{t('postsTitle')}</h1>
 
       {posts.map((post, i) => {
         return (
@@ -24,8 +25,7 @@ const PostList: React.FC = () => {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          padding-top: 40px;
-          border-top: 1px dashed black;
+          padding: 0 ${layoutLeftRightPadding};
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .post-list {
@@ -34,8 +34,14 @@ const PostList: React.FC = () => {
           }
         }
 
-        .post-list {
+        .posts-title {
+          margin: 40px 0;
           ${theme.typography.headingLG};
+        }
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .posts-title {
+            display: none;
+          }
         }
 
         .post {

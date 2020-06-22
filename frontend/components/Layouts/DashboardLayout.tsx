@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react'
+import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import Nav, { navConstants } from '../Dashboard/Nav'
+import { layoutPadding } from '../Dashboard/dashboardConstants'
 import Header from '../Dashboard/Header'
 import useWindowSize from '../../hooks/useWindowSize'
 
 interface Props {
   children: React.ReactNode
+  withPadding?: boolean
 }
 
-const DashboardLayout: React.FC<Props> = ({ children }) => {
+const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
   const { width } = useWindowSize()
   const router = useRouter()
   const [navExpanded, setNavExpanded] = useState(false)
+
+  const dashboardContainerStyles = classNames('dashboard-container', {
+    'settings-page': router.pathname.includes('/settings/'),
+    'with-padding': withPadding,
+  })
 
   const toggleNav = (): void => {
     setNavExpanded(!navExpanded)
@@ -41,13 +49,7 @@ const DashboardLayout: React.FC<Props> = ({ children }) => {
 
       <Nav expanded={navExpanded} collapse={() => setNavExpanded(false)} />
 
-      <div
-        className={`dashboard-container ${
-          router.pathname.includes('/settings/') ? 'settings-page' : ''
-        }`}
-      >
-        {children}
-      </div>
+      <div className={dashboardContainerStyles}>{children}</div>
 
       <style jsx>{`
         .dashboard {
@@ -58,8 +60,11 @@ const DashboardLayout: React.FC<Props> = ({ children }) => {
 
         .dashboard-container {
           height: 100%;
-          padding: 50px 25px;
           transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;
+        }
+
+        .dashboard-container.with-padding {
+          padding: ${layoutPadding};
         }
 
         @media (${navConstants.skinnyNavToDesktop}) {

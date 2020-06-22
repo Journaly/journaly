@@ -1,6 +1,7 @@
 import React from 'react'
 import ProfileCard from './ProfileCard'
 import PostList from './PostList'
+import { layoutPadding } from '../../Dashboard/dashboardConstants'
 import theme from '../../../theme'
 
 const Profile: React.FC = () => {
@@ -18,6 +19,7 @@ const Profile: React.FC = () => {
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-wrapper {
             flex-direction: row;
+            padding: ${layoutPadding};
           }
 
           .profile-wrapper > :global(div) {

@@ -9,7 +9,7 @@ interface InitialProps {
 
 const ProfilePage: NextPage<InitialProps> = () => {
   return (
-    <DashboardLayout>
+    <DashboardLayout withPadding={false}>
       <Profile />
     </DashboardLayout>
   )

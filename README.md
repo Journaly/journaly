@@ -39,8 +39,8 @@ We use Python for data science, leveraging a number of powerful libraries for da
    ```sh
    $ git clone git@github.com:Journaly/journaly.git
    ```
-1. In your backend directory, locate your `prisma/.env.example` file and create a new one alongside it called `.env`
-1. Run `npm ci` in both the `frontend` and `backend` directories
+1. In your backend directory, locate your `.env.example` file and copy the contents into a new `.env` file alongside it.
+1. Run `npm ci` in both the `frontend` and `backend` directories.
 
 #### Setting Up Your Local DB Instance
 
@@ -66,7 +66,7 @@ We use Python for data science, leveraging a number of powerful libraries for da
    $ alter user <your_username> with superuser;
    ```
 
-1. If you haven't created a `backend/prisma/.env` file yet, copy and paste `.env.example` into the new `.env` file. Then, replace the placeholders with your new postgres username & password.
+1. If you haven't created a `backend/prisma/.env` file yet, copy and paste `backend/prisma/.env.example` into the new `.env` file. Then, replace the placeholders with your new postgres username & password.
 
 1. Finally, from the `backend` directory, apply database migrations to your new database instance:
 

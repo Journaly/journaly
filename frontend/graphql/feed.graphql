@@ -3,6 +3,7 @@ query feed {
     id
     title
     body
+    excerpt
     author {
       id
       name

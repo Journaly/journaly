@@ -90,6 +90,7 @@ export type Post = {
   id: Scalars['Int']
   title: Scalars['String']
   body: Scalars['String']
+  excerpt: Scalars['String']
   author: User
   status: PostStatus
   threads: Array<Thread>
@@ -216,7 +217,7 @@ export type FeedQueryVariables = {}
 export type FeedQuery = { __typename?: 'Query' } & {
   feed?: Maybe<
     Array<
-      { __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body'> & {
+      { __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body' | 'excerpt'> & {
           author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'email'>
         }
     >
@@ -544,6 +545,7 @@ export const FeedDocument = gql`
       id
       title
       body
+      excerpt
       author {
         id
         name

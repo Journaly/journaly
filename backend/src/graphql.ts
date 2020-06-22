@@ -94,13 +94,6 @@ const Language = objectType({
   },
 })
 
-// objectType({
-//   name: 'LanguageLearned',
-//   definition(t) {
-//     t.
-//   }
-// })
-
 const Query = queryType({
   definition(t) {
     t.list.field('posts', {

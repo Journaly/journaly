@@ -184,12 +184,13 @@ model Thread {
 }
 
 model Image {
-  id        Int       @default(autoincrement()) @id
-  smallSize String
-  largeSize String
-  imageRole ImageRole
-  Post      Post?     @relation(fields: [postId], references: [id])
-  postId    Int?
+  id                 Int       @default(autoincrement()) @id
+  smallSize          String
+  largeSize          String
+  postId             String?
+  imageRole          ImageRole
+  Post               Post?     @relation(fields: [postId_ImageToPost], references: [id])
+  postId_ImageToPost Int?
 }
 
 model Prompt {

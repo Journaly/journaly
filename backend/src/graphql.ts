@@ -35,6 +35,7 @@ const Post = objectType({
     t.model.id()
     t.model.title()
     t.model.body()
+    t.model.excerpt()
     t.model.author()
     t.model.status()
     t.model.threads()

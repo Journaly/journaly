@@ -54,70 +54,6 @@ async function main() {
           password: hashedPassword,
         },
       },
-      posts: {
-        create: [
-          {
-            title: 'Beyond The Wall',
-            body: 'She is my queen. The end.',
-            excerpt: 'She is my queen. The end.',
-            language: {
-              connect: { id: Andalish.id },
-            },
-          },
-          {
-            title: 'Les Pluies de Castamere',
-            body: `
-              <p>This One's for you, Tywin.</p>
-            
-              <p>
-                I studied up on my French quite a lot during my days up on the wall. Especially when Sam would fall asleep during the night shift. I thought Lord Tywin might appreciate this, since he loves the French <span>so much</span>.
-              </p>
-            
-              <p>
-                Et qui êtes-vous, demanda le seigneur majestueux,
-                Pour que je doive m'incliner si bas?
-              </p>
-              <p>
-                Rien qu'un chat à la robe différente,
-                Voilà la seule chose dont je sois sûr.
-              </p>
-              <p>
-                Sous une robe dorée ou une robe rouge,
-                Un lion a toujours des griffes,
-              </p>
-              <p>
-                Et les miennes sont longues et aiguisées, mon seigneur,
-                Aussi longues et aiguisées que les vôtres.
-              </p>
-            
-              <p>
-              Ainsi parla-t-il, ainsi parla-t-il,
-              Le seigneur de Castamere,
-              </p>
-            
-              <p>
-              Mais maintenant, le ciel pleure au-dessus de sa grande salle,
-              Et il n'y a personne pour l'entendre.
-              </p>
-            
-              <p>
-              Oui, maintenant, le ciel pleure au-dessus de sa grande salle,
-              Et il n'y a pas une âme pour l'entendre.
-              </p>
-          `,
-            excerpt:
-              'Les Pluies de Castamere. I studied up on my French quite a lot during my days up on the wall. Especially when Sam would fall asleep during the night shift. I thought...',
-            language: {
-              connect: {
-                id: French.id,
-              },
-            },
-          },
-        ],
-      },
-    },
-    include: {
-      posts: true,
     },
   })
 
@@ -235,12 +171,72 @@ async function main() {
     },
   })
 
-  // Add comment to Jon's post
-  await db.post.update({
-    where: {
-      id: 2,
-    },
+  // Create posts
+  await db.post.create({
     data: {
+      title: 'Beyond The Wall',
+      body: 'She is my queen. The end.',
+      excerpt: 'She is my queen. The end.',
+      language: {
+        connect: { id: Andalish.id },
+      },
+      author: {
+        connect: { id: jon.id },
+      },
+    },
+  })
+  await db.post.create({
+    data: {
+      title: 'Les Pluies de Castamere',
+      body: `
+          <p>This One's for you, Tywin.</p>
+        
+          <p>
+            I studied up on my French quite a lot during my days up on the wall. Especially when Sam would fall asleep during the night shift. I thought Lord Tywin might appreciate this, since he loves the French <span>so much</span>.
+          </p>
+        
+          <p>
+            Et qui êtes-vous, demanda le seigneur majestueux,
+            Pour que je doive m'incliner si bas?
+          </p>
+          <p>
+            Rien qu'un chat à la robe différente,
+            Voilà la seule chose dont je sois sûr.
+          </p>
+          <p>
+            Sous une robe dorée ou une robe rouge,
+            Un lion a toujours des griffes,
+          </p>
+          <p>
+            Et les miennes sont longues et aiguisées, mon seigneur,
+            Aussi longues et aiguisées que les vôtres.
+          </p>
+        
+          <p>
+          Ainsi parla-t-il, ainsi parla-t-il,
+          Le seigneur de Castamere,
+          </p>
+        
+          <p>
+          Mais maintenant, le ciel pleure au-dessus de sa grande salle,
+          Et il n'y a personne pour l'entendre.
+          </p>
+        
+          <p>
+          Oui, maintenant, le ciel pleure au-dessus de sa grande salle,
+          Et il n'y a pas une âme pour l'entendre.
+          </p>
+      `,
+      excerpt:
+        'Les Pluies de Castamere. I studied up on my French quite a lot during my days up on the wall. Especially when Sam would fall asleep during the night shift. I thought...',
+      language: {
+        connect: {
+          id: French.id,
+        },
+      },
+      author: {
+        connect: { id: jon.id },
+      },
       threads: {
         create: [
           {

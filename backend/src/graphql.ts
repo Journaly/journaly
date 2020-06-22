@@ -2,6 +2,7 @@ import { use, schema } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
+import { readTime } from './utils/post'
 
 use(prisma())
 
@@ -225,7 +226,8 @@ const Mutation = mutationType({
         ctx.db.post.create({
           data: {
             title: args.title,
-            body: args.title,
+            body: args.body,
+            readTime: readTime(args.body),
             status: args.status as any,
             author: {
               connect: {

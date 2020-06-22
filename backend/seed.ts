@@ -59,6 +59,7 @@ async function main() {
           {
             title: 'Beyond The Wall',
             body: 'She is my queen. The end.',
+            excerpt: 'She is my queen. The end.',
             language: {
               connect: { id: Andalish.id },
             },
@@ -104,6 +105,8 @@ async function main() {
               Et il n'y a pas une âme pour l'entendre.
               </p>
           `,
+            excerpt:
+              'Les Pluies de Castamere. I studied up on my French quite a lot during my days up on the wall. Especially when Sam would fall asleep during the night shift. I thought...',
             language: {
               connect: {
                 id: French.id,
@@ -133,6 +136,7 @@ async function main() {
           {
             title: 'A Tale of Winter',
             body: "He's not my son",
+            excerpt: "He's not my son",
             language: {
               connect: { id: Andalish.id },
             },
@@ -194,6 +198,8 @@ async function main() {
                 Ooh, ooh, ooh, ooh, ooh<br>
               </p>
             `,
+            excerpt:
+              'The Rains of Castamere. While I may be a little biased, I think this is a good song. One night...',
             language: {
               connect: { id: Andalish.id },
             },
@@ -273,7 +279,7 @@ async function main() {
       largeSize:
         'https://res.cloudinary.com/journaly/image/upload/v1574187295/journaly/p5dxflsivmpwii9146rw.jpg',
       imageRole: 'HEADLINE',
-      Post: {
+      post: {
         connect: {
           id: 1,
         },
@@ -288,7 +294,7 @@ async function main() {
       largeSize:
         'https://res.cloudinary.com/journaly/image/upload/v1573956654/journaly/uzlkstq7jp4wi0m0mmvy.jpg',
       imageRole: 'HEADLINE',
-      Post: {
+      post: {
         connect: {
           id: 2,
         },
@@ -303,7 +309,7 @@ async function main() {
       largeSize:
         'https://res.cloudinary.com/journaly/image/upload/v1574186170/journaly/f5kflfytag99wwsflhtj.jpg',
       imageRole: 'HEADLINE',
-      Post: {
+      post: {
         connect: {
           id: 3,
         },
@@ -318,7 +324,7 @@ async function main() {
       largeSize:
         'https://res.cloudinary.com/journaly/image/upload/v1574186437/journaly/gmgxskfkwefzefoxegjx.jpg',
       imageRole: 'HEADLINE',
-      Post: {
+      post: {
         connect: {
           id: 4,
         },

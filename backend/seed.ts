@@ -8,8 +8,10 @@ main().catch((e) => {
 })
 
 async function main() {
+  // Create a generic password for all seed users
   const hashedPassword = await bcrypt.hash('password', 10)
 
+  // Create languages
   const Andalish = await db.language.create({
     data: {
       name: 'The Common Tongue of the Andals',
@@ -41,6 +43,7 @@ async function main() {
     },
   })
 
+  // Create users with posts and comments
   const jon = await db.user.create({
     data: {
       handle: 'jsno',
@@ -228,6 +231,7 @@ async function main() {
     },
   })
 
+  // Add comment to Jon's post
   await db.post.update({
     where: {
       id: 2,
@@ -257,6 +261,22 @@ async function main() {
             },
           },
         ],
+      },
+    },
+  })
+
+  // Add image and connect to post 1
+  await db.image.create({
+    data: {
+      smallSize:
+        'https://res.cloudinary.com/journaly/image/upload/v1574187295/journaly/p5dxflsivmpwii9146rw.jpg',
+      largeSize:
+        'https://res.cloudinary.com/journaly/image/upload/v1574187295/journaly/p5dxflsivmpwii9146rw.jpg',
+      imageRole: 'HEADLINE',
+      Post: {
+        connect: {
+          id: 1,
+        },
       },
     },
   })

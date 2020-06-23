@@ -1,5 +1,5 @@
 import { sanitize } from '../../../utils'
-import { User, PostStatus } from '../../../generated/graphql'
+import { User, PostStatus, Thread } from '../../../generated/graphql'
 
 // TODO: this will be unnecessary once we use types from generated graphql
 export type Post = {
@@ -12,10 +12,11 @@ export type Post = {
   author: User
   status: PostStatus
   likes?: number
+  threads?: Thread[]
 }
 
 export const processPost = (post: Post) => {
-  const { id, title, readTime, images = [], author } = post
+  const { id, title, readTime, images = [], likes = 0, threads = [], author } = post
   const displayImage = images[0] || '/images/samples/sample-post-img.jpg'
   const authorDisplayName = author.name || author.handle
 
@@ -23,6 +24,8 @@ export const processPost = (post: Post) => {
     id,
     title,
     readTime,
+    likes,
+    numThreads: threads.length,
     excerpt: sanitize(post.excerpt),
     displayImage,
     profileImage: author.profileImage,

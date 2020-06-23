@@ -1,6 +1,9 @@
 import React from 'react'
 import { useTranslation } from '../../../config/i18n'
-import XIcon from '../../../components/Icons/XIcon'
+import FacebookIcon from '../../../components/Icons/FacebookIcon'
+import InstagramIcon from '../../../components/Icons/InstagramIcon'
+import YoutubeIcon from '../../../components/Icons/YoutubeIcon'
+import GlobeIcon from '../../../components/Icons/GlobeIcon'
 import ExternalLink from '../../../elements/ExternalLink'
 import theme from '../../../theme'
 
@@ -65,22 +68,22 @@ const ProfileCard: React.FC = () => {
         <div className="social-links">
           {user.facebook && (
             <ExternalLink href={user.facebook} className="social-link">
-              <XIcon color={theme.colors.white} />
+              <FacebookIcon />
             </ExternalLink>
           )}
           {user.instagram && (
             <ExternalLink href={user.instagram} className="social-link">
-              <XIcon color={theme.colors.white} />
+              <InstagramIcon />
             </ExternalLink>
           )}
           {user.youtube && (
             <ExternalLink href={user.youtube} className="social-link">
-              <XIcon color={theme.colors.white} />
+              <YoutubeIcon />
             </ExternalLink>
           )}
           {user.website && (
             <ExternalLink href={user.website} className="social-link">
-              <XIcon color={theme.colors.white} />
+              <GlobeIcon />
             </ExternalLink>
           )}
         </div>
@@ -228,11 +231,6 @@ const ProfileCard: React.FC = () => {
         }
 
         :global(.social-link) {
-          height: 60px;
-          width: 60px;
-          padding: 10px;
-          border: 2px solid ${theme.colors.white};
-          border-radius: 50%;
           margin-right: 20px;
         }
         :global(.social-link:last-child) {

@@ -1,0 +1,11 @@
+mutation deleteComment($commentId: Int!) {
+  updateComment(commentId: $commentId) {
+    id
+    comment
+    author {
+      id
+      name
+      handle
+    }
+  }
+}

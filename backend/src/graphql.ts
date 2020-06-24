@@ -301,5 +301,52 @@ schema.mutationType({
         })
       },
     })
+    t.field('updateComment', {
+      type: 'Comment',
+      args: {
+        commentId: intArg({ required: true }),
+        body: stringArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new Error('You must be logged in to do that.')
+
+        const comment = await ctx.db.comment.update({
+          data: {
+            body: args.body,
+          },
+          where: {
+            id: args.commentId,
+          },
+        })
+
+        if (!comment) throw new Error('Comment not found.')
+        if (comment.authorId !== userId)
+          throw new Error('You do not have permission to edit this comment.')
+
+        return comment
+      },
+    })
+    t.field('deleteComment', {
+      type: 'Comment',
+      args: {
+        commentId: intArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new Error('You must be logged in to do that.')
+
+        const comment = await ctx.db.comment.delete({
+          where: {
+            id: args.commentId,
+          },
+        })
+        if (!comment) throw new Error('Comment not found.')
+        if (comment.authorId !== userId)
+          throw new Error('You do not have permission to edit this comment.')
+
+        return comment
+      },
+    })
   },
 })

@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import { sanitize } from '../../../utils'
 import { User, PostStatus, Thread } from '../../../generated/graphql'
 
@@ -13,10 +14,13 @@ export type Post = {
   status: PostStatus
   likes?: number
   threads?: Thread[]
+  createdAt: string
 }
 
+export const postBorderRadius = '5px'
+
 export const processPost = (post: Post) => {
-  const { id, title, readTime, images = [], likes = 0, threads = [], author } = post
+  const { id, title, readTime, images = [], likes = 0, threads = [], author, createdAt } = post
   const displayImage = images[0] || '/images/samples/sample-post-img.jpg'
   const authorDisplayName = author.name || author.handle
 
@@ -30,5 +34,10 @@ export const processPost = (post: Post) => {
     displayImage,
     profileImage: author.profileImage,
     authorName: authorDisplayName,
+    createdAt,
   }
+}
+
+export const formatPostDate = (date: string): string => {
+  return format(Number(date), 'MMM d')
 }

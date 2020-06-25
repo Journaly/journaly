@@ -1,13 +1,10 @@
-html {
-  font-size: 10px;
-}
-
 body {
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 16px;
   line-height: 24px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #efefef;
 }
 
 body.modal-open {
@@ -34,26 +31,6 @@ h6 {
   font-weight: 400;
 }
 
-h1 {
-  font-size: 40px;
-  line-height: 56px;
-}
-
-h2 {
-  font-size: 32px;
-  line-height: 40px;
-}
-
-h3 {
-  font-size: 24px;
-  line-height: 32px;
-}
-
-h4 {
-  font-size: 20px;
-  line-height: 28px;
-}
-
 p {
   font-size: 16px;
   line-height: 24px;
@@ -71,7 +48,7 @@ em {
 }
 
 strong {
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .j-link {
@@ -82,25 +59,36 @@ strong {
   text-decoration: underline;
 }
 
-em {
-  font-style: italic;
+.j-field {
+  height: 50px;
+  padding: 0 12px;
+  border: 1px solid #95989a;
+  border-radius: 5px;
 }
 
-strong {
-  font-weight: 700;
+.j-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #95989a;
+  border-radius: 5px;
+  resize: vertical;
+}
+
+label {
+  display: block;
 }
 
 input,
-label,
 select,
-button,
 textarea {
   margin: 0;
   border: 0;
   padding: 0;
   white-space: normal;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
   background: none;
-  line-height: 1;
   background-color: white;
 }
 

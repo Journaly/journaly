@@ -7,22 +7,14 @@ import { htmlifyEditorNodes } from './utils'
 
 use(prisma())
 
-const {
-  objectType,
-  inputObjectType,
-  queryType,
-  mutationType,
-  intArg,
-  stringArg,
-  makeSchema,
-} = schema
+const { intArg, stringArg } = schema
 
 // Time constants
 const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
 const ONE_HOUR_FROM_NOW = Date.now() + 3600000
 const WITHIN_ONE_HOUR = Date.now() - 3600000
 
-const User = objectType({
+schema.objectType({
   name: 'User',
   definition(t) {
     t.model.id()
@@ -35,15 +27,17 @@ const User = objectType({
     t.model.posts({
       pagination: false,
     })
+    t.model.profileImage()
   },
 })
 
-const Post = objectType({
+schema.objectType({
   name: 'Post',
   definition(t) {
     t.model.id()
     t.model.title()
     t.model.body()
+    t.model.excerpt()
     t.model.author()
     t.model.status()
     t.model.threads()
@@ -51,7 +45,7 @@ const Post = objectType({
   },
 })
 
-const Thread = objectType({
+schema.objectType({
   name: 'Thread',
   definition(t) {
     t.model.id()
@@ -62,7 +56,7 @@ const Thread = objectType({
   },
 })
 
-const Comment = objectType({
+schema.objectType({
   name: 'Comment',
   definition(t) {
     t.model.id()
@@ -71,7 +65,7 @@ const Comment = objectType({
   },
 })
 
-const Location = objectType({
+schema.objectType({
   name: 'Location',
   definition(t) {
     t.model.id()
@@ -80,7 +74,7 @@ const Location = objectType({
   },
 })
 
-const Language = objectType({
+schema.objectType({
   name: 'Language',
   definition(t) {
     t.model.id()
@@ -102,7 +96,7 @@ const Language = objectType({
   },
 })
 
-const EditorNode = inputObjectType({
+const EditorNode = schema.inputObjectType({
   name: 'EditorNode',
   definition(t) {
     t.string('type', { nullable: true }),
@@ -115,7 +109,7 @@ const EditorNode = inputObjectType({
   },
 })
 
-const Query = queryType({
+schema.queryType({
   definition(t) {
     t.list.field('posts', {
       type: 'Post',
@@ -153,7 +147,7 @@ const Query = queryType({
           return ctx.db.user.findMany()
         },
       }),
-      t.list.field('currentUser', {
+      t.field('currentUser', {
         type: 'User',
         resolve: async (parent, args, ctx) => {
           const userId = ctx.request.userId
@@ -161,7 +155,7 @@ const Query = queryType({
           if (!userId) {
             return null
           }
-          return ctx.db.user.findMany({
+          return ctx.db.user.findOne({
             where: {
               id: userId,
             },
@@ -171,14 +165,13 @@ const Query = queryType({
   },
 })
 
-const Mutation = mutationType({
+schema.mutationType({
   definition(t) {
     t.field('createUser', {
       type: 'User',
       args: {
         handle: stringArg({ required: true }),
         email: stringArg({ required: true }),
-        handle: stringArg({ required: true }),
         password: stringArg({ required: true }),
       },
       resolve: async (parent, args, ctx: any) => {
@@ -187,7 +180,6 @@ const Mutation = mutationType({
           data: {
             handle: args.handle,
             email: args.email.toLowerCase(),
-            handle: args.handle,
             auth: {
               create: { password },
             },
@@ -200,7 +192,42 @@ const Mutation = mutationType({
         })
         return user
       },
-    })
+    }),
+      t.field('loginUser', {
+        type: 'User',
+        args: {
+          identifier: stringArg({ required: true }),
+          password: stringArg({ required: true }),
+        },
+        resolve: async (parent, args, ctx: any) => {
+          const user = await ctx.db.user.findOne({
+            where: {
+              email: args.identifier,
+            },
+            include: {
+              auth: true,
+            },
+          })
+          if (!user) {
+            throw new Error('User not found')
+          }
+
+          const isValid = await bcrypt.compare(
+            args.password,
+            user.auth.password,
+          )
+
+          if (!isValid) {
+            throw new Error('Invalid password')
+          }
+          const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
+          ctx.response.cookie('token', token, {
+            httpOnly: true,
+            maxAge: ONE_YEAR,
+          })
+          return user
+        },
+      })
     t.field('createPost', {
       type: 'Post',
       args: {

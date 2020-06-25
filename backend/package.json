@@ -17,7 +17,9 @@
     "seed": "ts-node seed.ts",
     "migrate:up": "prisma migrate up --experimental",
     "migrate:save": "prisma migrate save --experimental",
-    "debug": "ndb -r ts-node/register node_modules/.bin/nexus dev"
+    "debug": "ndb -r ts-node/register node_modules/.bin/nexus dev",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio --experimental"
   },
   "husky": {
     "hooks": {

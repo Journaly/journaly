@@ -76,6 +76,7 @@ model Post {
   id         Int          @default(autoincrement()) @id
   title      String
   body       String
+  bodySrc    String       @default("")
   excerpt    String
   status     PostStatus   @default(DRAFT)
   images     Image[]

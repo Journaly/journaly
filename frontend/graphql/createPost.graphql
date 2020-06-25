@@ -1,0 +1,5 @@
+mutation createPost($title: String!, $body: [EditorNode!]) {
+  createPost(title: $title, body: $body) {
+    id
+  }
+}

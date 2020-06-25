@@ -327,29 +327,43 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "UserInterests",
+      "field": "userInterests",
       "type": "UserInterests",
       "arity": "List"
     },
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "PostLike",
+      "field": "postLike",
       "type": "PostLike",
       "arity": "List"
     },
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "CommentLike",
+      "field": "commentLike",
       "type": "CommentLike",
       "arity": "List"
     },
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "PageView",
+      "field": "pageView",
       "type": "PageView",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "profileImage",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "comment",
+      "type": "Comment",
       "arity": "List"
     },
     {
@@ -1075,6 +1089,45 @@
     {
       "tag": "CreateField",
       "model": "Post",
+      "field": "bodySrc",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Post",
+          "field": "bodySrc"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Post",
+          "field": "bodySrc"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Post",
+      "field": "excerpt",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Post",
       "field": "status",
       "type": "PostStatus",
       "arity": "Required"
@@ -1362,7 +1415,7 @@
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "PostTopics",
+      "field": "postTopics",
       "type": "PostTopics",
       "arity": "List"
     },
@@ -1621,7 +1674,7 @@
     {
       "tag": "CreateField",
       "model": "Topic",
-      "field": "User",
+      "field": "user",
       "type": "User",
       "arity": "Optional"
     },
@@ -1631,7 +1684,7 @@
         "path": {
           "tag": "Field",
           "model": "Topic",
-          "field": "User"
+          "field": "user"
         },
         "directive": "relation"
       }
@@ -1643,7 +1696,7 @@
         "path": {
           "tag": "Field",
           "model": "Topic",
-          "field": "User"
+          "field": "user"
         },
         "directive": "relation"
       },
@@ -1657,7 +1710,7 @@
         "path": {
           "tag": "Field",
           "model": "Topic",
-          "field": "User"
+          "field": "user"
         },
         "directive": "relation"
       },
@@ -1674,21 +1727,21 @@
     {
       "tag": "CreateField",
       "model": "Topic",
-      "field": "UserInterests",
+      "field": "userInterests",
       "type": "UserInterests",
       "arity": "List"
     },
     {
       "tag": "CreateField",
       "model": "Topic",
-      "field": "PostTopics",
+      "field": "postTopics",
       "type": "PostTopics",
       "arity": "List"
     },
     {
       "tag": "CreateField",
       "model": "Topic",
-      "field": "Prompt",
+      "field": "prompt",
       "type": "Prompt",
       "arity": "List"
     },
@@ -2841,13 +2894,6 @@
     {
       "tag": "CreateField",
       "model": "Image",
-      "field": "postId",
-      "type": "String",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Image",
       "field": "imageRole",
       "type": "ImageRole",
       "arity": "Required"
@@ -2855,7 +2901,7 @@
     {
       "tag": "CreateField",
       "model": "Image",
-      "field": "Post",
+      "field": "post",
       "type": "Post",
       "arity": "Optional"
     },
@@ -2865,7 +2911,7 @@
         "path": {
           "tag": "Field",
           "model": "Image",
-          "field": "Post"
+          "field": "post"
         },
         "directive": "relation"
       }
@@ -2877,12 +2923,12 @@
         "path": {
           "tag": "Field",
           "model": "Image",
-          "field": "Post"
+          "field": "post"
         },
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[postId_ImageToPost]"
+      "value": "[postId]"
     },
     {
       "tag": "CreateArgument",
@@ -2891,7 +2937,7 @@
         "path": {
           "tag": "Field",
           "model": "Image",
-          "field": "Post"
+          "field": "post"
         },
         "directive": "relation"
       },
@@ -2901,7 +2947,7 @@
     {
       "tag": "CreateField",
       "model": "Image",
-      "field": "postId_ImageToPost",
+      "field": "postId",
       "type": "Int",
       "arity": "Optional"
     },

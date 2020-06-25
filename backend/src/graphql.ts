@@ -4,16 +4,22 @@ import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
 import { readTime } from './utils/post'
 
+import { htmlifyEditorNodes } from './utils'
+
 use(prisma())
 
-const { objectType, queryType, mutationType, intArg, stringArg } = schema
+const { intArg, stringArg } = schema
 
 // Time constants
 const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
 const ONE_HOUR_FROM_NOW = Date.now() + 3600000
 const WITHIN_ONE_HOUR = Date.now() - 3600000
 
-const User = objectType({
+const languagesM2MDef = (t) => {
+  t.model.language()
+}
+
+schema.objectType({
   name: 'User',
   definition(t) {
     t.model.id()
@@ -27,10 +33,23 @@ const User = objectType({
       pagination: false,
     })
     t.model.profileImage()
+
+    t.model.languagesNative()
+    t.model.languagesLearning()
   },
 })
 
-const Post = objectType({
+schema.objectType({
+  name: 'LanguageLearning',
+  definition: languagesM2MDef,
+})
+
+schema.objectType({
+  name: 'LanguageNative',
+  definition: languagesM2MDef,
+})
+
+schema.objectType({
   name: 'Post',
   definition(t) {
     t.model.id()
@@ -46,7 +65,7 @@ const Post = objectType({
   },
 })
 
-const Thread = objectType({
+schema.objectType({
   name: 'Thread',
   definition(t) {
     t.model.id()
@@ -57,7 +76,7 @@ const Thread = objectType({
   },
 })
 
-const Comment = objectType({
+schema.objectType({
   name: 'Comment',
   definition(t) {
     t.model.id()
@@ -66,7 +85,7 @@ const Comment = objectType({
   },
 })
 
-const Location = objectType({
+schema.objectType({
   name: 'Location',
   definition(t) {
     t.model.id()
@@ -75,7 +94,7 @@ const Location = objectType({
   },
 })
 
-const Language = objectType({
+schema.objectType({
   name: 'Language',
   definition(t) {
     t.model.id()
@@ -97,7 +116,22 @@ const Language = objectType({
   },
 })
 
-const Query = queryType({
+const EditorNode = schema.inputObjectType({
+  name: 'EditorNode',
+  definition(t) {
+    t.string('type', { nullable: true }),
+      t.string('text', { nullable: true }),
+      t.boolean('italic', { nullable: true }),
+      t.boolean('bold', { nullable: true }),
+      t.field('children', {
+        type: EditorNode,
+        list: true,
+        nullable: true,
+      })
+  },
+})
+
+schema.queryType({
   definition(t) {
     t.list.field('posts', {
       type: 'Post',
@@ -153,7 +187,7 @@ const Query = queryType({
   },
 })
 
-const Mutation = mutationType({
+schema.mutationType({
   definition(t) {
     t.field('createUser', {
       type: 'User',
@@ -220,24 +254,31 @@ const Mutation = mutationType({
       type: 'Post',
       args: {
         title: stringArg({ required: true }),
-        body: stringArg({ required: true }),
-        status: stringArg(),
-        authorEmail: stringArg({ required: true }),
+        body: EditorNode.asArg({ list: true }),
       },
-      resolve: async (parent, args, ctx) =>
-        ctx.db.post.create({
+      resolve: async (parent, args, ctx) => {
+        const { title, body } = args
+        const { userId } = ctx.request
+
+        const html = htmlifyEditorNodes(body)
+
+        // TODO: Actually populate this via arg
+        const someLang = await ctx.db.language.findOne({
+          where: { id: 1 },
+        })
+
+        return ctx.db.post.create({
           data: {
             title: args.title,
-            body: args.body,
+            body: html,
+            bodySrc: JSON.stringify(body),
             readTime: readTime(args.body),
-            status: args.status as any,
-            author: {
-              connect: {
-                email: 'ro@bin.com',
-              },
-            },
+            excerpt: '',
+            language: { connect: { id: someLang.id } },
+            author: { connect: { id: userId } },
           },
-        }),
+        })
+      },
     })
     t.field('createThread', {
       type: 'Thread',

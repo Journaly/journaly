@@ -24,8 +24,6 @@ import Button from './Button'
  * 1. Would like to use our ApolloCache once that is set up
  * to temporarily save "in-progress" drafts, which we can clear
  * once they publish or save draft.
- * 2. Need to figure out how we need to serialize the data
- * for saving it to the DB and retrieving it when viewing a post.
  */
 
 type HotKey = 'mod+b' | 'mod+i' | 'mod+u' | 'mod+`'
@@ -43,15 +41,16 @@ type ButtonProps = {
 }
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
-const initialValue = [
-  {
-    type: 'paragraph',
-    children: [{ text: '' }],
-  },
-]
 
-const JournalyEditor = () => {
-  const [value, setValue] = useState<Node[]>(initialValue)
+type JournalyEditorProps = {
+  value: Node[]
+  setValue: (value: Node[]) => void
+}
+
+const JournalyEditor: React.FC<JournalyEditorProps> = ({
+  value,
+  setValue,
+}: JournalyEditorProps) => {
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])

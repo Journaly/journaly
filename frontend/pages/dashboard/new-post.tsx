@@ -21,11 +21,8 @@ const NewPostPage: NextPage = () => {
 
   const router = useRouter()
   const [createPost] = useCreatePostMutation({
-    onCompleted: (post) => {
-      router.push({
-        pathname: '/post/[id]',
-        query: { id: post.id },
-      })
+    onCompleted: ({ createPost }) => {
+      router.push({ pathname: `/post/${createPost.id}` })
     },
   })
 

@@ -35,6 +35,7 @@
     "cors": "^2.8.5",
     "cypress": "^4.3.0",
     "dotenv": "^8.2.0",
+    "escape-html": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
     "nexus": "^0.23.0",
     "nexus-plugin-prisma": "^0.9.0"

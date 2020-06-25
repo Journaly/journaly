@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
 
+import { htmlifyEditorNodes } from './utils'
+
 use(prisma())
 
 const {
@@ -206,12 +208,16 @@ const Mutation = mutationType({
         body: EditorNode.asArg({ list: true }),
       },
       resolve: async (parent, args, ctx) => {
+        const { title, body } = args
         const { userId } = ctx.request
+
+        const html = htmlifyEditorNodes(body)
 
         return ctx.db.post.create({
           data: {
             title: args.title,
-            body: args.title,
+            body: html,
+            bodySrc: JSON.stringify(body),
             author: { connect: { id: userId } },
           },
         })

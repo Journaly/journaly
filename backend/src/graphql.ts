@@ -79,8 +79,6 @@ schema.objectType({
     t.model.name()
     t.model.posts()
     t.model.dialect()
-    //t.model.nativeUsers()
-    //t.model.learningUsers()
     t.field('learningUsers', {
       list: true,
       type: 'User',
@@ -191,6 +189,20 @@ schema.queryType({
           })
         },
       })
+    t.list.field('languages', {
+      type: 'Language',
+      resolve: async (parent, args, ctx) => {
+        return ctx.db.language.findMany({
+          where: {
+            posts: {
+              some: {
+                status: 'PUBLISHED',
+              },
+            },
+          },
+        })
+      },
+    })
   },
 })
 

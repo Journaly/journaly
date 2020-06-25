@@ -37,6 +37,7 @@ fragment PostFragment on Post {
   status
   excerpt
   readTime
+  createdAt
   author {
     ...AuthorFragment
   }

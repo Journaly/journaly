@@ -5,6 +5,7 @@ query feed {
     body
     excerpt
     readTime
+    createdAt
     author {
       id
       name

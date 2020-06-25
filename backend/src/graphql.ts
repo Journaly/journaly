@@ -42,6 +42,7 @@ const Post = objectType({
     t.model.status()
     t.model.threads()
     t.model.language({ type: 'Language' })
+    t.string('createdAt')
   },
 })
 

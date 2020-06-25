@@ -117,12 +117,56 @@ schema.queryType({
         type: 'Post',
         args: {
           status: stringArg(),
+          search: stringArg({ required: false }),
+          language: intArg({ required: false }),
+          topic: stringArg({ required: false }),
+          skip: intArg(),
+          first: intArg(),
         },
         resolve: async (parent, args, ctx) => {
+          const filterClauses = []
+
+          if (args.language) {
+            filterClauses.push({
+              language: {
+                id: {
+                  equals: args.language,
+                },
+              },
+            })
+          }
+          if (args.topic) {
+            filterClauses.push({
+              topic: {
+                some: {
+                  name: args.topic,
+                },
+              },
+            })
+          }
+          if (args.search) {
+            filterClauses.push({
+              OR: [
+                {
+                  title: {
+                    contains: args.search,
+                  },
+                },
+                {
+                  body: {
+                    contains: args.search,
+                  },
+                },
+              ],
+            })
+          }
+
           return ctx.db.post.findMany({
             where: {
-              status: args.status as any,
+              AND: filterClauses,
             },
+            skip: args.skip,
+            first: args.first,
           })
         },
       }),

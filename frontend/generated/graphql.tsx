@@ -94,6 +94,7 @@ export type Post = {
   id: Scalars['Int']
   title: Scalars['String']
   body: Scalars['String']
+  excerpt: Scalars['String']
   author: User
   status: PostStatus
   threads: Array<Thread>

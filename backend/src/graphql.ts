@@ -14,6 +14,10 @@ const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
 const ONE_HOUR_FROM_NOW = Date.now() + 3600000
 const WITHIN_ONE_HOUR = Date.now() - 3600000
 
+const languagesM2MDef = (t) => {
+  t.model.language()
+}
+
 schema.objectType({
   name: 'User',
   definition(t) {
@@ -28,7 +32,20 @@ schema.objectType({
       pagination: false,
     })
     t.model.profileImage()
+
+    t.model.languagesNative()
+    t.model.languagesLearning()
   },
+})
+
+schema.objectType({
+  name: 'LanguageLearning',
+  definition: languagesM2MDef,
+})
+
+schema.objectType({
+  name: 'LanguageNative',
+  definition: languagesM2MDef,
 })
 
 schema.objectType({
@@ -101,6 +118,8 @@ const EditorNode = schema.inputObjectType({
   definition(t) {
     t.string('type', { nullable: true }),
       t.string('text', { nullable: true }),
+      t.boolean('italic', { nullable: true }),
+      t.boolean('bold', { nullable: true }),
       t.field('children', {
         type: EditorNode,
         list: true,
@@ -240,11 +259,18 @@ schema.mutationType({
 
         const html = htmlifyEditorNodes(body)
 
+        // TODO: Actually populate this via arg
+        const someLang = await ctx.db.language.findOne({
+          where: { id: 1 },
+        })
+
         return ctx.db.post.create({
           data: {
             title: args.title,
             body: html,
             bodySrc: JSON.stringify(body),
+            excerpt: '',
+            language: { connect: { id: someLang.id } },
             author: { connect: { id: userId } },
           },
         })

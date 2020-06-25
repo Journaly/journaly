@@ -22,6 +22,12 @@ export type CommentWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>
 }
 
+export type EditorNode = {
+  type?: Maybe<Scalars['String']>
+  text?: Maybe<Scalars['String']>
+  children?: Maybe<Array<EditorNode>>
+}
+
 export type Language = {
   __typename?: 'Language'
   id: Scalars['Int']
@@ -62,9 +68,7 @@ export type MutationCreateUserArgs = {
 
 export type MutationCreatePostArgs = {
   title: Scalars['String']
-  body: Scalars['String']
-  status?: Maybe<Scalars['String']>
-  authorEmail: Scalars['String']
+  body?: Maybe<Array<EditorNode>>
 }
 
 export type MutationCreateThreadArgs = {
@@ -175,6 +179,15 @@ export type CreateCommentMutation = { __typename?: 'Mutation' } & {
         author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
       }
   >
+}
+
+export type CreatePostMutationVariables = {
+  title: Scalars['String']
+  body?: Maybe<Array<EditorNode>>
+}
+
+export type CreatePostMutation = { __typename?: 'Mutation' } & {
+  createPost?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'id'>>
 }
 
 export type CreateThreadMutationVariables = {
@@ -356,6 +369,53 @@ export type CreateCommentMutationResult = ApolloReactCommon.MutationResult<Creat
 export type CreateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateCommentMutation,
   CreateCommentMutationVariables
+>
+export const CreatePostDocument = gql`
+  mutation createPost($title: String!, $body: [EditorNode!]) {
+    createPost(title: $title, body: $body) {
+      id
+    }
+  }
+`
+export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
+  CreatePostMutation,
+  CreatePostMutationVariables
+>
+
+/**
+ * __useCreatePostMutation__
+ *
+ * To run a mutation, you first call `useCreatePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostMutation, { data, loading, error }] = useCreatePostMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      body: // value for 'body'
+ *   },
+ * });
+ */
+export function useCreatePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreatePostMutation,
+    CreatePostMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<CreatePostMutation, CreatePostMutationVariables>(
+    CreatePostDocument,
+    baseOptions,
+  )
+}
+export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>
+export type CreatePostMutationResult = ApolloReactCommon.MutationResult<CreatePostMutation>
+export type CreatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreatePostMutation,
+  CreatePostMutationVariables
 >
 export const CreateThreadDocument = gql`
   mutation createThread(

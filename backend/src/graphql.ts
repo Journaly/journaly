@@ -7,6 +7,7 @@ use(prisma())
 
 const {
   objectType,
+  inputObjectType,
   queryType,
   mutationType,
   intArg,
@@ -99,12 +100,18 @@ const Language = objectType({
   },
 })
 
-// objectType({
-//   name: 'LanguageLearned',
-//   definition(t) {
-//     t.
-//   }
-// })
+const EditorNode = inputObjectType({
+  name: 'EditorNode',
+  definition(t) {
+    t.string('type', { nullable: true }),
+      t.string('text', { nullable: true }),
+      t.field('children', {
+        type: EditorNode,
+        list: true,
+        nullable: true,
+      })
+  },
+})
 
 const Query = queryType({
   definition(t) {
@@ -196,23 +203,19 @@ const Mutation = mutationType({
       type: 'Post',
       args: {
         title: stringArg({ required: true }),
-        body: stringArg({ required: true }),
-        status: stringArg(),
-        authorEmail: stringArg({ required: true }),
+        body: EditorNode.asArg({ list: true }),
       },
-      resolve: async (parent, args, ctx) =>
-        ctx.db.post.create({
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        return ctx.db.post.create({
           data: {
             title: args.title,
             body: args.title,
-            status: args.status as any,
-            author: {
-              connect: {
-                email: 'ro@bin.com',
-              },
-            },
+            author: { connect: { id: userId } },
           },
-        }),
+        })
+      },
     })
     t.field('createThread', {
       type: 'Thread',

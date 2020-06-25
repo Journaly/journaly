@@ -91,6 +91,7 @@ export type Post = {
   title: Scalars['String']
   body: Scalars['String']
   excerpt: Scalars['String']
+  readTime: Scalars['Int']
   author: User
   status: PostStatus
   threads: Array<Thread>
@@ -217,7 +218,7 @@ export type FeedQueryVariables = {}
 export type FeedQuery = { __typename?: 'Query' } & {
   feed?: Maybe<
     Array<
-      { __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body' | 'excerpt'> & {
+      { __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body' | 'excerpt' | 'readTime'> & {
           author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'email'>
         }
     >
@@ -242,7 +243,7 @@ export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
 
 export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
-  'id' | 'title' | 'body' | 'status'
+  'id' | 'title' | 'body' | 'status' | 'excerpt' | 'readTime'
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
@@ -321,6 +322,8 @@ export const PostFragmentFragmentDoc = gql`
     title
     body
     status
+    excerpt
+    readTime
     author {
       ...AuthorFragment
     }
@@ -546,6 +549,7 @@ export const FeedDocument = gql`
       title
       body
       excerpt
+      readTime
       author {
         id
         name

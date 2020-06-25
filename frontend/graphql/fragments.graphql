@@ -35,6 +35,8 @@ fragment PostFragment on Post {
   title
   body
   status
+  excerpt
+  readTime
   author {
     ...AuthorFragment
   }

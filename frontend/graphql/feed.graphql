@@ -4,6 +4,7 @@ query feed {
     title
     body
     excerpt
+    readTime
     author {
       id
       name

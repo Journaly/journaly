@@ -11,7 +11,7 @@ const typeToElStrMap = {
   'heading-two': 'h2',
   'bulleted-list': 'ul',
   'numbered-list': 'ol',
-  paragraph: 'p',
+  'paragraph': 'p',
 }
 
 const htmlifyEditorNode = (node: NodeType): string => {

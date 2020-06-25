@@ -76,6 +76,7 @@ async function main() {
             language: {
               connect: { id: Andalish.id },
             },
+            status: 'PUBLISHED',
           },
         ],
       },
@@ -137,6 +138,7 @@ async function main() {
             language: {
               connect: { id: Andalish.id },
             },
+            status: 'PUBLISHED',
             threads: {
               create: [
                 {
@@ -180,6 +182,7 @@ async function main() {
       language: {
         connect: { id: Andalish.id },
       },
+      status: 'PUBLISHED',
       author: {
         connect: { id: jon.id },
       },
@@ -234,6 +237,7 @@ async function main() {
           id: French.id,
         },
       },
+      status: 'PUBLISHED',
       author: {
         connect: { id: jon.id },
       },

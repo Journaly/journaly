@@ -184,6 +184,46 @@ schema.queryType({
   },
 })
 
+type LanguageM2MType = 'LanguageLearning' | 'LanguageNative'
+
+const langM2MModel = (db, m2mType: LanguageM2MType) => {
+  switch (m2mType) {
+    case 'LanguageLearning':
+      return db.languageLearning
+    case 'LanguageNative':
+      return db.languageNative
+  }
+}
+
+const addLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
+  type: m2mType,
+  args: {
+    languageId: intArg({ required: true }),
+  },
+  resolve: async (parent, args, ctx) => {
+    const { userId } = ctx.request
+
+    if (!userId) {
+      throw new Error('You must be logged in add languages.')
+    }
+
+    const language = await ctx.db.language.findOne({
+      where: { id: args.languageId },
+    })
+
+    if (!language) {
+      throw new Error(`Unable to find language with id "${args.languageId}".`)
+    }
+
+    return langM2MModel(ctx.db, m2mType).create({
+      data: {
+        user: { connect: { id: userId } },
+        language: { connect: { id: args.languageId } },
+      },
+    })
+  },
+})
+
 schema.mutationType({
   definition(t) {
     t.field('createUser', {
@@ -342,5 +382,8 @@ schema.mutationType({
         })
       },
     })
+
+    t.field('addLanguageLearning', addLanguageM2MMutation('LanguageLearning'))
+    t.field('addLanguageNative', addLanguageM2MMutation('LanguageNative'))
   },
 })

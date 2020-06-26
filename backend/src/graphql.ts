@@ -98,8 +98,6 @@ schema.objectType({
     t.model.name()
     t.model.posts()
     t.model.dialect()
-    //t.model.nativeUsers()
-    //t.model.learningUsers()
     t.field('learningUsers', {
       list: true,
       type: 'User',
@@ -150,13 +148,56 @@ schema.queryType({
       t.list.field('feed', {
         type: 'Post',
         args: {
-          status: stringArg(),
+          search: stringArg({ required: false }),
+          language: intArg({ required: false }),
+          topic: stringArg({ required: false }),
+          skip: intArg(),
+          first: intArg(),
         },
         resolve: async (parent, args, ctx) => {
+          const filterClauses = []
+
+          if (args.language) {
+            filterClauses.push({
+              language: {
+                id: {
+                  equals: args.language,
+                },
+              },
+            })
+          }
+          if (args.topic) {
+            filterClauses.push({
+              topic: {
+                some: {
+                  name: args.topic,
+                },
+              },
+            })
+          }
+          if (args.search) {
+            filterClauses.push({
+              OR: [
+                {
+                  title: {
+                    contains: args.search,
+                  },
+                },
+                {
+                  body: {
+                    contains: args.search,
+                  },
+                },
+              ],
+            })
+          }
+
           return ctx.db.post.findMany({
             where: {
-              status: args.status as any,
+              AND: filterClauses,
             },
+            skip: args.skip,
+            first: args.first,
           })
         },
       }),
@@ -181,6 +222,20 @@ schema.queryType({
           })
         },
       })
+    t.list.field('languages', {
+      type: 'Language',
+      resolve: async (parent, args, ctx) => {
+        return ctx.db.language.findMany({
+          where: {
+            posts: {
+              some: {
+                status: 'PUBLISHED',
+              },
+            },
+          },
+        })
+      },
+    })
   },
 })
 

@@ -17,7 +17,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
     setTimeout(() => {
       document.body.classList.remove('block-transitions-on-page-load')
     }, 0)
-    refetch()
   }, [])
 
   const handleCollapse = (): void => {

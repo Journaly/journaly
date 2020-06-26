@@ -53,11 +53,18 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
 
   if (ssr || PageComponent.getInitialProps) {
     WithApollo.getInitialProps = async (ctx) => {
-      const { AppTree } = ctx
+      const { AppTree, req } = ctx
+
+      const headers = {}
+      if (typeof window === 'undefined') {
+        // If SSR, copy the request cookies into apollo client so it has the same
+        // auth context as the request for the page.
+        headers['cookie'] = req.headers.cookie
+      }
 
       // Initialize ApolloClient, add it to the ctx object so
       // we can use it in `PageComponent.getInitialProp`.
-      const apolloClient = (ctx.apolloClient = initApolloClient())
+      const apolloClient = (ctx.apolloClient = initApolloClient({}, headers))
 
       // Run wrapped getInitialProps methods
       let pageProps = {} as PageInitialProps
@@ -117,16 +124,16 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
  * Creates or reuses apollo client in the browser.
  * @param  {Object} initialState
  */
-function initApolloClient(initialState?: ApolloClientCache) {
+function initApolloClient(initialState?: ApolloClientCache, headers = {}) {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
   if (typeof window === 'undefined') {
-    return createApolloClient(initialState)
+    return createApolloClient(initialState, headers)
   }
 
   // Reuse client on the client-side
   if (!apolloClient) {
-    apolloClient = createApolloClient(initialState)
+    apolloClient = createApolloClient(initialState, headers)
   }
 
   return apolloClient
@@ -136,13 +143,14 @@ function initApolloClient(initialState?: ApolloClientCache) {
  * Creates and configures the ApolloClient
  * @param  {Object} [initialState={}]
  */
-function createApolloClient(initialState: ApolloClientCache = {}) {
+function createApolloClient(initialState: ApolloClientCache = {}, headers = {}) {
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({
     ssrMode: typeof window === 'undefined', // Disables forceFetch on the server (so queries are only run once)
     link: new HttpLink({
       uri: 'http://localhost:4000/graphql', // Server URL (must be absolute)
       credentials: 'include', // Additional fetch() options like `credentials` or `headers`
+      headers,
       fetch,
     }),
     cache: new InMemoryCache().restore(initialState),

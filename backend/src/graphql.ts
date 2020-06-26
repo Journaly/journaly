@@ -114,7 +114,6 @@ schema.queryType({
       t.list.field('feed', {
         type: 'Post',
         args: {
-          status: stringArg(),
           search: stringArg({ required: false }),
           language: intArg({ required: false }),
           topic: stringArg({ required: false }),

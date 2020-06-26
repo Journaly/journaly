@@ -166,12 +166,6 @@ schema.queryType({
           return ctx.db.user.findMany()
         },
       }),
-      t.list.field('languages', {
-        type: 'Language',
-        resolve: async (parent, args, ctx) => {
-          return ctx.db.language.findMany()
-        },
-      }),
       t.field('currentUser', {
         type: 'User',
         resolve: async (parent, args, ctx) => {

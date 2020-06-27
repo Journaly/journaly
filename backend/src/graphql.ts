@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
 
-import { htmlifyEditorNodes } from './utils'
+import { htmlifyEditorNodes, hasPostPermissions } from './utils'
 
 use(prisma())
 
@@ -451,13 +451,13 @@ schema.mutationType({
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
-        const user = ctx.db.user.findOne({
+        const currentUser = ctx.db.user.findOne({
           where: {
             id: userId,
           },
         })
 
-        if (!user) throw new Error('User not found.')
+        if (!currentUser) throw new Error('User not found.')
 
         const originalComment = await ctx.db.comment.findOne({
           where: {
@@ -467,14 +467,7 @@ schema.mutationType({
 
         if (!originalComment) throw new Error('Comment not found.')
 
-        const hasPermissions =
-          originalComment.authorId !== userId ||
-          user.userRole !== 'MODERATOR' ||
-          user.userRole !== 'ADMIN'
-
-        if (!hasPermissions) {
-          throw new Error('You do not have permission to edit this comment.')
-        }
+        hasPostPermissions(originalComment, currentUser)
 
         const comment = await ctx.db.comment.update({
           data: {
@@ -497,13 +490,13 @@ schema.mutationType({
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
-        const user = ctx.db.user.findOne({
+        const currentUser = ctx.db.user.findOne({
           where: {
             id: userId,
           },
         })
 
-        if (!user) throw new Error('User not found.')
+        if (!currentUser) throw new Error('User not found.')
 
         const originalComment = await ctx.db.comment.findOne({
           where: {
@@ -513,14 +506,7 @@ schema.mutationType({
 
         if (!originalComment) throw new Error('Comment not found.')
 
-        const hasPermissions =
-          originalComment.authorId !== userId ||
-          user.userRole !== 'MODERATOR' ||
-          user.userRole !== 'ADMIN'
-
-        if (!hasPermissions) {
-          throw new Error('You do not have permission to delete this comment.')
-        }
+        hasPostPermissions(originalComment, currentUser)
 
         const comment = await ctx.db.comment.delete({
           where: {

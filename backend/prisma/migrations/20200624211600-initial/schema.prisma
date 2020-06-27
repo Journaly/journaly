@@ -25,12 +25,12 @@ model User {
   languagesLearning LanguageLearning[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
-  UserInterests     UserInterests[]
-  PostLike          PostLike[]
-  CommentLike       CommentLike[]
-  PageView          PageView[]
+  userInterests     UserInterests[]
+  postLike          PostLike[]
+  commentLike       CommentLike[]
+  pageView          PageView[]
   profileImage      String?
-  Comment           Comment[]
+  comment           Comment[]
 }
 
 model Auth {
@@ -76,6 +76,8 @@ model Post {
   id         Int          @default(autoincrement()) @id
   title      String
   body       String
+  bodySrc    String       @default("")
+  excerpt    String
   status     PostStatus   @default(DRAFT)
   images     Image[]
   createdAt  DateTime     @default(now())
@@ -90,7 +92,7 @@ model Post {
   longitude  Float?
   latitude   Float?
   threads    Thread[]
-  PostTopics PostTopics[]
+  postTopics PostTopics[]
 }
 
 model Language {
@@ -115,11 +117,11 @@ model Topic {
   id            Int             @default(autoincrement()) @id
   name          String
   posts         Post[]          @relation(references: [id])
-  User          User?           @relation(fields: [userId], references: [id])
+  user          User?           @relation(fields: [userId], references: [id])
   userId        Int?
-  UserInterests UserInterests[]
-  PostTopics    PostTopics[]
-  Prompt        Prompt[]
+  userInterests UserInterests[]
+  postTopics    PostTopics[]
+  prompt        Prompt[]
 }
 
 model UserInterests {
@@ -184,13 +186,12 @@ model Thread {
 }
 
 model Image {
-  id                 Int       @default(autoincrement()) @id
-  smallSize          String
-  largeSize          String
-  postId             String?
-  imageRole          ImageRole
-  Post               Post?     @relation(fields: [postId_ImageToPost], references: [id])
-  postId_ImageToPost Int?
+  id        Int       @default(autoincrement()) @id
+  smallSize String
+  largeSize String
+  imageRole ImageRole
+  post      Post?     @relation(fields: [postId], references: [id])
+  postId    Int?
 }
 
 model Prompt {

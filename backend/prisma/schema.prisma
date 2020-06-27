@@ -45,7 +45,7 @@ model Auth {
 model LanguageLearning {
   id         Int      @default(autoincrement()) @id
   user       User     @relation(fields: [userId], references: [id])
-  userId     Int      @unique
+  userId     Int
   language   Language @relation(fields: [languageId], references: [id])
   languageId Int
   createdAt  DateTime @default(now())
@@ -76,6 +76,7 @@ model Post {
   id         Int          @default(autoincrement()) @id
   title      String
   body       String
+  bodySrc    String       @default("")
   excerpt    String
   status     PostStatus   @default(DRAFT)
   images     Image[]

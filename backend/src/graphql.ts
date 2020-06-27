@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
 
+import { htmlifyEditorNodes } from './utils'
+
 use(prisma())
 
 const { intArg, stringArg } = schema
@@ -11,6 +13,10 @@ const { intArg, stringArg } = schema
 const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
 const ONE_HOUR_FROM_NOW = Date.now() + 3600000
 const WITHIN_ONE_HOUR = Date.now() - 3600000
+
+const languagesM2MDef = (t) => {
+  t.model.language()
+}
 
 schema.objectType({
   name: 'User',
@@ -26,7 +32,20 @@ schema.objectType({
       pagination: false,
     })
     t.model.profileImage()
+
+    t.model.languagesNative()
+    t.model.languagesLearning()
   },
+})
+
+schema.objectType({
+  name: 'LanguageLearning',
+  definition: languagesM2MDef,
+})
+
+schema.objectType({
+  name: 'LanguageNative',
+  definition: languagesM2MDef,
 })
 
 schema.objectType({
@@ -79,8 +98,6 @@ schema.objectType({
     t.model.name()
     t.model.posts()
     t.model.dialect()
-    //t.model.nativeUsers()
-    //t.model.learningUsers()
     t.field('learningUsers', {
       list: true,
       type: 'User',
@@ -91,6 +108,21 @@ schema.objectType({
         return result.map((r) => r.user)
       },
     })
+  },
+})
+
+const EditorNode = schema.inputObjectType({
+  name: 'EditorNode',
+  definition(t) {
+    t.string('type', { nullable: true }),
+      t.string('text', { nullable: true }),
+      t.boolean('italic', { nullable: true }),
+      t.boolean('bold', { nullable: true }),
+      t.field('children', {
+        type: EditorNode,
+        list: true,
+        nullable: true,
+      })
   },
 })
 
@@ -116,13 +148,56 @@ schema.queryType({
       t.list.field('feed', {
         type: 'Post',
         args: {
-          status: stringArg(),
+          search: stringArg({ required: false }),
+          language: intArg({ required: false }),
+          topic: stringArg({ required: false }),
+          skip: intArg(),
+          first: intArg(),
         },
         resolve: async (parent, args, ctx) => {
+          const filterClauses = []
+
+          if (args.language) {
+            filterClauses.push({
+              language: {
+                id: {
+                  equals: args.language,
+                },
+              },
+            })
+          }
+          if (args.topic) {
+            filterClauses.push({
+              topic: {
+                some: {
+                  name: args.topic,
+                },
+              },
+            })
+          }
+          if (args.search) {
+            filterClauses.push({
+              OR: [
+                {
+                  title: {
+                    contains: args.search,
+                  },
+                },
+                {
+                  body: {
+                    contains: args.search,
+                  },
+                },
+              ],
+            })
+          }
+
           return ctx.db.post.findMany({
             where: {
-              status: args.status as any,
+              AND: filterClauses,
             },
+            skip: args.skip,
+            first: args.first,
           })
         },
       }),
@@ -147,6 +222,60 @@ schema.queryType({
           })
         },
       })
+    t.list.field('languages', {
+      type: 'Language',
+      resolve: async (parent, args, ctx) => {
+        return ctx.db.language.findMany({
+          where: {
+            posts: {
+              some: {
+                status: 'PUBLISHED',
+              },
+            },
+          },
+        })
+      },
+    })
+  },
+})
+
+type LanguageM2MType = 'LanguageLearning' | 'LanguageNative'
+
+const langM2MModel = (db, m2mType: LanguageM2MType) => {
+  switch (m2mType) {
+    case 'LanguageLearning':
+      return db.languageLearning
+    case 'LanguageNative':
+      return db.languageNative
+  }
+}
+
+const addLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
+  type: m2mType,
+  args: {
+    languageId: intArg({ required: true }),
+  },
+  resolve: async (parent, args, ctx) => {
+    const { userId } = ctx.request
+
+    if (!userId) {
+      throw new Error('You must be logged in add languages.')
+    }
+
+    const language = await ctx.db.language.findOne({
+      where: { id: args.languageId },
+    })
+
+    if (!language) {
+      throw new Error(`Unable to find language with id "${args.languageId}".`)
+    }
+
+    return langM2MModel(ctx.db, m2mType).create({
+      data: {
+        user: { connect: { id: userId } },
+        language: { connect: { id: args.languageId } },
+      },
+    })
   },
 })
 
@@ -217,23 +346,30 @@ schema.mutationType({
       type: 'Post',
       args: {
         title: stringArg({ required: true }),
-        body: stringArg({ required: true }),
-        status: stringArg(),
-        authorEmail: stringArg({ required: true }),
+        body: EditorNode.asArg({ list: true }),
       },
-      resolve: async (parent, args, ctx) =>
-        ctx.db.post.create({
+      resolve: async (parent, args, ctx) => {
+        const { title, body } = args
+        const { userId } = ctx.request
+
+        const html = htmlifyEditorNodes(body)
+
+        // TODO: Actually populate this via arg
+        const someLang = await ctx.db.language.findOne({
+          where: { id: 1 },
+        })
+
+        return ctx.db.post.create({
           data: {
             title: args.title,
-            body: args.title,
-            status: args.status as any,
-            author: {
-              connect: {
-                email: 'ro@bin.com',
-              },
-            },
+            body: html,
+            bodySrc: JSON.stringify(body),
+            excerpt: '',
+            language: { connect: { id: someLang.id } },
+            author: { connect: { id: userId } },
           },
-        }),
+        })
+      },
     })
     t.field('createThread', {
       type: 'Thread',
@@ -348,5 +484,8 @@ schema.mutationType({
         return comment
       },
     })
+
+    t.field('addLanguageLearning', addLanguageM2MMutation('LanguageLearning'))
+    t.field('addLanguageNative', addLanguageM2MMutation('LanguageNative'))
   },
 })

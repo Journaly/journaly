@@ -18,6 +18,7 @@ export type Comment = {
   author: User
   body: Scalars['String']
   createdAt: Scalars['DateTime']
+  authorId: Scalars['Int']
 }
 
 export type CommentWhereUniqueInput = {

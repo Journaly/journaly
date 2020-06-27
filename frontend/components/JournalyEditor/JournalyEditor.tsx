@@ -88,9 +88,6 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
         </Slate>
       </div>
       <style jsx>{`
-        .editor-wrapper {
-          padding: 20px 50px;
-        }
         .editor-container {
           padding: 0 25px;
           border: 1px solid ${theme.colors.black};

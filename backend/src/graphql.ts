@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
 
-import { htmlifyEditorNodes } from './utils'
+import { processEditorDocument } from './utils'
 
 use(prisma())
 
@@ -298,16 +298,12 @@ schema.mutationType({
         const { title, body, languageId } = args
         const { userId } = ctx.request
 
-        const html = htmlifyEditorNodes(body)
-
         return ctx.db.post.create({
           data: {
             title: args.title,
-            body: html,
-            bodySrc: JSON.stringify(body),
-            excerpt: '',
             language: { connect: { id: languageId } },
             author: { connect: { id: userId } },
+            ...processEditorDocument(body),
           },
         })
       },

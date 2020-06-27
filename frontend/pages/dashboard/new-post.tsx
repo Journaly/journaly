@@ -54,7 +54,7 @@ const NewPostPage: NextPage = () => {
           onChange={(e) => setTitle(e.target.value)}
           type="text"
           name="title"
-          placeholder="Title..."
+          placeholder="The Greatest Story Never Told..."
           autoComplete="off"
         />
 

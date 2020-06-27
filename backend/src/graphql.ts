@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
 
-import { htmlifyEditorNodes } from './utils'
+import { htmlifyEditorNodes, hasPostPermissions } from './utils'
 
 use(prisma())
 
@@ -32,7 +32,7 @@ schema.objectType({
       pagination: false,
     })
     t.model.profileImage()
-
+    t.model.createdAt()
     t.model.languagesNative()
     t.model.languagesLearning()
   },
@@ -59,6 +59,7 @@ schema.objectType({
     t.model.status()
     t.model.threads()
     t.model.language({ type: 'Language' })
+    t.model.createdAt()
   },
 })
 
@@ -79,6 +80,8 @@ schema.objectType({
     t.model.id()
     t.model.author()
     t.model.body()
+    t.model.createdAt()
+    t.model.authorId()
   },
 })
 
@@ -365,7 +368,8 @@ schema.mutationType({
             body: html,
             bodySrc: JSON.stringify(body),
             excerpt: '',
-            language: { connect: { id: someLang.id } },
+            // TODO remove `!` when populating via arg
+            language: { connect: { id: someLang!.id } },
             author: { connect: { id: userId } },
           },
         })
@@ -435,6 +439,82 @@ schema.mutationType({
             },
           },
         })
+      },
+    })
+    t.field('updateComment', {
+      type: 'Comment',
+      args: {
+        commentId: intArg({ required: true }),
+        body: stringArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new Error('You must be logged in to do that.')
+
+        const [currentUser, originalComment] = await Promise.all([
+          ctx.db.user.findOne({
+            where: {
+              id: userId,
+            },
+          }),
+          ctx.db.comment.findOne({
+            where: {
+              id: args.commentId,
+            },
+          }),
+        ])
+
+        if (!currentUser) throw new Error('User not found.')
+        if (!originalComment) throw new Error('Comment not found.')
+
+        hasPostPermissions(originalComment, currentUser)
+
+        const comment = await ctx.db.comment.update({
+          data: {
+            body: args.body,
+          },
+          where: {
+            id: args.commentId,
+          },
+        })
+
+        return comment
+      },
+    })
+    t.field('deleteComment', {
+      type: 'Comment',
+      args: {
+        commentId: intArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new Error('You must be logged in to do that.')
+
+        const currentUser = ctx.db.user.findOne({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (!currentUser) throw new Error('User not found.')
+
+        const originalComment = await ctx.db.comment.findOne({
+          where: {
+            id: args.commentId,
+          },
+        })
+
+        if (!originalComment) throw new Error('Comment not found.')
+
+        hasPostPermissions(originalComment, currentUser)
+
+        const comment = await ctx.db.comment.delete({
+          where: {
+            id: args.commentId,
+          },
+        })
+
+        return comment
       },
     })
 

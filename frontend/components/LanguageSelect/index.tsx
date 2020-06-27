@@ -16,7 +16,12 @@ const LanguageSelect: React.FC<LanguageSelectProps> = ({
   id,
 }: LanguageSelectProps) => {
   return (
-    <select id={id} className="j-field" value={value} onChange={(e) => onChange(e.target.value)}>
+    <select
+      id={id}
+      className="j-field"
+      value={value}
+      onChange={(e) => onChange(parseInt(e.target.value, 10))}
+    >
       <option value={-1}>Select language...</option>
       {languages.map((lang) => (
         <option value={lang.id} key={lang.id}>

@@ -37,7 +37,7 @@ const NewPostPage: NextPage = () => {
   const createNewPost = (e) => {
     e.preventDefault()
     createPost({
-      variables: { title, body },
+      variables: { title, body, languageId: langId },
     })
   }
 
@@ -55,6 +55,7 @@ const NewPostPage: NextPage = () => {
           type="text"
           name="title"
           placeholder="Title..."
+          autoComplete="off"
         />
 
         <label htmlFor="post-language">Language</label>

@@ -292,17 +292,13 @@ schema.mutationType({
       args: {
         title: stringArg({ required: true }),
         body: EditorNode.asArg({ list: true }),
+        languageId: intArg({ required: true }),
       },
       resolve: async (parent, args, ctx) => {
-        const { title, body } = args
+        const { title, body, languageId } = args
         const { userId } = ctx.request
 
         const html = htmlifyEditorNodes(body)
-
-        // TODO: Actually populate this via arg
-        const someLang = await ctx.db.language.findOne({
-          where: { id: 1 },
-        })
 
         return ctx.db.post.create({
           data: {
@@ -310,7 +306,7 @@ schema.mutationType({
             body: html,
             bodySrc: JSON.stringify(body),
             excerpt: '',
-            language: { connect: { id: someLang.id } },
+            language: { connect: { id: languageId } },
             author: { connect: { id: userId } },
           },
         })

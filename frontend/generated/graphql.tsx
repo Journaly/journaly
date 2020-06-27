@@ -9,6 +9,7 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  DateTime: any
 }
 
 export type Comment = {
@@ -16,6 +17,7 @@ export type Comment = {
   id: Scalars['Int']
   author: User
   body: Scalars['String']
+  createdAt: Scalars['DateTime']
 }
 
 export type CommentWhereUniqueInput = {
@@ -25,6 +27,8 @@ export type CommentWhereUniqueInput = {
 export type EditorNode = {
   type?: Maybe<Scalars['String']>
   text?: Maybe<Scalars['String']>
+  italic?: Maybe<Scalars['Boolean']>
+  bold?: Maybe<Scalars['Boolean']>
   children?: Maybe<Array<EditorNode>>
 }
 
@@ -45,6 +49,26 @@ export type LanguagePostsArgs = {
   last?: Maybe<Scalars['Int']>
 }
 
+export type LanguageLearning = {
+  __typename?: 'LanguageLearning'
+  language: Language
+}
+
+export type LanguageLearningWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+  userId_languageId?: Maybe<UserIdLanguageIdCompoundUniqueInput>
+}
+
+export type LanguageNative = {
+  __typename?: 'LanguageNative'
+  language: Language
+}
+
+export type LanguageNativeWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+  userId_languageId?: Maybe<UserIdLanguageIdCompoundUniqueInput>
+}
+
 export type Location = {
   __typename?: 'Location'
   id: Scalars['Int']
@@ -59,6 +83,10 @@ export type Mutation = {
   createPost?: Maybe<Post>
   createThread?: Maybe<Thread>
   createComment?: Maybe<Comment>
+  updateComment?: Maybe<Comment>
+  deleteComment?: Maybe<Comment>
+  addLanguageLearning?: Maybe<LanguageLearning>
+  addLanguageNative?: Maybe<LanguageNative>
 }
 
 export type MutationCreateUserArgs = {
@@ -89,6 +117,23 @@ export type MutationCreateCommentArgs = {
   body: Scalars['String']
 }
 
+export type MutationUpdateCommentArgs = {
+  commentId: Scalars['Int']
+  body: Scalars['String']
+}
+
+export type MutationDeleteCommentArgs = {
+  commentId: Scalars['Int']
+}
+
+export type MutationAddLanguageLearningArgs = {
+  languageId: Scalars['Int']
+}
+
+export type MutationAddLanguageNativeArgs = {
+  languageId: Scalars['Int']
+}
+
 export type Post = {
   __typename?: 'Post'
   id: Scalars['Int']
@@ -99,6 +144,7 @@ export type Post = {
   status: PostStatus
   threads: Array<Thread>
   language: Language
+  createdAt: Scalars['DateTime']
 }
 
 export type PostThreadsArgs = {
@@ -125,6 +171,7 @@ export type Query = {
   feed?: Maybe<Array<Post>>
   users?: Maybe<Array<User>>
   currentUser?: Maybe<User>
+  languages?: Maybe<Array<Language>>
 }
 
 export type QueryPostByIdArgs = {
@@ -132,7 +179,11 @@ export type QueryPostByIdArgs = {
 }
 
 export type QueryFeedArgs = {
-  status?: Maybe<Scalars['String']>
+  search?: Maybe<Scalars['String']>
+  language?: Maybe<Scalars['Int']>
+  topic?: Maybe<Scalars['String']>
+  skip?: Maybe<Scalars['Int']>
+  first?: Maybe<Scalars['Int']>
 }
 
 export type Thread = {
@@ -167,6 +218,30 @@ export type User = {
   location?: Maybe<Location>
   posts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
+  createdAt: Scalars['DateTime']
+  languagesNative: Array<LanguageNative>
+  languagesLearning: Array<LanguageLearning>
+}
+
+export type UserLanguagesNativeArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<LanguageNativeWhereUniqueInput>
+  before?: Maybe<LanguageNativeWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type UserLanguagesLearningArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<LanguageLearningWhereUniqueInput>
+  before?: Maybe<LanguageLearningWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type UserIdLanguageIdCompoundUniqueInput = {
+  userId: Scalars['Int']
+  languageId: Scalars['Int']
 }
 
 export enum UserRole {
@@ -225,6 +300,14 @@ export type CurrentUserQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
 }
 
+export type DeleteCommentMutationVariables = {
+  commentId: Scalars['Int']
+}
+
+export type DeleteCommentMutation = { __typename?: 'Mutation' } & {
+  deleteComment?: Maybe<{ __typename?: 'Comment' } & Pick<Comment, 'id'>>
+}
+
 export type FeedQueryVariables = {}
 
 export type FeedQuery = { __typename?: 'Query' } & {
@@ -244,9 +327,10 @@ export type UserFragmentFragment = { __typename?: 'User' } & Pick<
 
 export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
 
-export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<Comment, 'body'> & {
-    author: { __typename?: 'User' } & AuthorFragmentFragment
-  }
+export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
+  Comment,
+  'body' | 'createdAt'
+> & { author: { __typename?: 'User' } & AuthorFragmentFragment }
 
 export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
   Thread,
@@ -255,7 +339,7 @@ export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
 
 export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
-  'id' | 'title' | 'body' | 'status'
+  'id' | 'title' | 'body' | 'status' | 'createdAt'
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
@@ -276,6 +360,15 @@ export type PostByIdQueryVariables = {
 
 export type PostByIdQuery = { __typename?: 'Query' } & {
   postById?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
+}
+
+export type UpdateCommentMutationVariables = {
+  body: Scalars['String']
+  commentId: Scalars['Int']
+}
+
+export type UpdateCommentMutation = { __typename?: 'Mutation' } & {
+  updateComment?: Maybe<{ __typename?: 'Comment' } & CommentFragmentFragment>
 }
 
 export type UsersQueryVariables = {}
@@ -310,6 +403,7 @@ export const AuthorFragmentFragmentDoc = gql`
 export const CommentFragmentFragmentDoc = gql`
   fragment CommentFragment on Comment {
     body
+    createdAt
     author {
       ...AuthorFragment
     }
@@ -334,6 +428,7 @@ export const PostFragmentFragmentDoc = gql`
     title
     body
     status
+    createdAt
     author {
       ...AuthorFragment
     }
@@ -599,6 +694,52 @@ export type CurrentUserQueryResult = ApolloReactCommon.QueryResult<
   CurrentUserQuery,
   CurrentUserQueryVariables
 >
+export const DeleteCommentDocument = gql`
+  mutation deleteComment($commentId: Int!) {
+    deleteComment(commentId: $commentId) {
+      id
+    }
+  }
+`
+export type DeleteCommentMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteCommentMutation,
+  DeleteCommentMutationVariables
+>
+
+/**
+ * __useDeleteCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentMutation, { data, loading, error }] = useDeleteCommentMutation({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useDeleteCommentMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteCommentMutation,
+    DeleteCommentMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(
+    DeleteCommentDocument,
+    baseOptions,
+  )
+}
+export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>
+export type DeleteCommentMutationResult = ApolloReactCommon.MutationResult<DeleteCommentMutation>
+export type DeleteCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteCommentMutation,
+  DeleteCommentMutationVariables
+>
 export const FeedDocument = gql`
   query feed {
     feed {
@@ -733,6 +874,54 @@ export type PostByIdLazyQueryHookResult = ReturnType<typeof usePostByIdLazyQuery
 export type PostByIdQueryResult = ApolloReactCommon.QueryResult<
   PostByIdQuery,
   PostByIdQueryVariables
+>
+export const UpdateCommentDocument = gql`
+  mutation updateComment($body: String!, $commentId: Int!) {
+    updateComment(body: $body, commentId: $commentId) {
+      ...CommentFragment
+    }
+  }
+  ${CommentFragmentFragmentDoc}
+`
+export type UpdateCommentMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateCommentMutation,
+  UpdateCommentMutationVariables
+>
+
+/**
+ * __useUpdateCommentMutation__
+ *
+ * To run a mutation, you first call `useUpdateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCommentMutation, { data, loading, error }] = useUpdateCommentMutation({
+ *   variables: {
+ *      body: // value for 'body'
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useUpdateCommentMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateCommentMutation,
+    UpdateCommentMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<UpdateCommentMutation, UpdateCommentMutationVariables>(
+    UpdateCommentDocument,
+    baseOptions,
+  )
+}
+export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateCommentMutation>
+export type UpdateCommentMutationResult = ApolloReactCommon.MutationResult<UpdateCommentMutation>
+export type UpdateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateCommentMutation,
+  UpdateCommentMutationVariables
 >
 export const UsersDocument = gql`
   query users {

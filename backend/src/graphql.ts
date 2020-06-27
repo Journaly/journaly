@@ -32,7 +32,7 @@ schema.objectType({
       pagination: false,
     })
     t.model.profileImage()
-
+    t.model.createdAt()
     t.model.languagesNative()
     t.model.languagesLearning()
   },
@@ -59,6 +59,7 @@ schema.objectType({
     t.model.status()
     t.model.threads()
     t.model.language({ type: 'Language' })
+    t.model.createdAt()
   },
 })
 
@@ -79,6 +80,7 @@ schema.objectType({
     t.model.id()
     t.model.author()
     t.model.body()
+    t.model.createdAt()
   },
 })
 
@@ -365,7 +367,8 @@ schema.mutationType({
             body: html,
             bodySrc: JSON.stringify(body),
             excerpt: '',
-            language: { connect: { id: someLang.id } },
+            // TODO remove `!` when populating via arg
+            language: { connect: { id: someLang!.id } },
             author: { connect: { id: userId } },
           },
         })

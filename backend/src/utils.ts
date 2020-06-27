@@ -39,7 +39,7 @@ export const hasPostPermissions = (
   const hasPermission =
     original.authorId == currentUser.id ||
     currentUser.userRole !== 'MODERATOR' ||
-    'ADMIN'
+    currentUser.userRole !== 'ADMIN'
 
   if (!hasPermission) throw new Error('You do not have permission to do that')
   return true

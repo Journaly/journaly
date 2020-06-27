@@ -71,7 +71,7 @@ We use Python for data science, leveraging a number of powerful libraries for da
 1. Finally, from the `backend` directory, apply database migrations to your new database instance:
 
    ```bash
-   $ npx @prisma/cli migrate up --experimental
+   $ npm run migrate:up
    ```
 
    You've got a local Journaly PostgreSQL DB, woohoo! 🎉
@@ -84,9 +84,7 @@ We use Python for data science, leveraging a number of powerful libraries for da
 
 1. To run the entire app in local development mode, simply run `npm run dev` from the root of the project! This will use `concurrently` to start up both the frontend and backend dev servers.
 1. If you would like to run frontend or backend separately, you can run `npm run dev` from each respective directory.
-1. Let's seed that baby DB!  
-   `$ cd backend/`
-   `$ npm run seed`
+1. Let's seed that baby DB! From the root of the repo, run `npm run reseed-db`
 
 BOOM! You now have some users, along with a wee selection of posts :)
 

@@ -81,6 +81,7 @@ schema.objectType({
     t.model.author()
     t.model.body()
     t.model.createdAt()
+    t.model.authorId()
   },
 })
 
@@ -456,12 +457,12 @@ schema.mutationType({
           },
           where: {
             id: args.commentId,
+            // TODO (robin-macpherson): handle author permissions after investigating `CommentWhereUniqueInput`
+            // authorId: userId
           },
         })
 
         if (!comment) throw new Error('Comment not found.')
-        if (comment.authorId !== userId)
-          throw new Error('You do not have permission to edit this comment.')
 
         return comment
       },

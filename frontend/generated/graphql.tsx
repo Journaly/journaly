@@ -25,6 +25,8 @@ export type CommentWhereUniqueInput = {
 export type EditorNode = {
   type?: Maybe<Scalars['String']>
   text?: Maybe<Scalars['String']>
+  italic?: Maybe<Scalars['Boolean']>
+  bold?: Maybe<Scalars['Boolean']>
   children?: Maybe<Array<EditorNode>>
 }
 
@@ -45,6 +47,26 @@ export type LanguagePostsArgs = {
   last?: Maybe<Scalars['Int']>
 }
 
+export type LanguageLearning = {
+  __typename?: 'LanguageLearning'
+  language: Language
+}
+
+export type LanguageLearningWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+  userId_languageId?: Maybe<UserIdLanguageIdCompoundUniqueInput>
+}
+
+export type LanguageNative = {
+  __typename?: 'LanguageNative'
+  language: Language
+}
+
+export type LanguageNativeWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+  userId_languageId?: Maybe<UserIdLanguageIdCompoundUniqueInput>
+}
+
 export type Location = {
   __typename?: 'Location'
   id: Scalars['Int']
@@ -59,6 +81,8 @@ export type Mutation = {
   createPost?: Maybe<Post>
   createThread?: Maybe<Thread>
   createComment?: Maybe<Comment>
+  addLanguageLearning?: Maybe<LanguageLearning>
+  addLanguageNative?: Maybe<LanguageNative>
 }
 
 export type MutationCreateUserArgs = {
@@ -87,6 +111,14 @@ export type MutationCreateThreadArgs = {
 export type MutationCreateCommentArgs = {
   threadId: Scalars['Int']
   body: Scalars['String']
+}
+
+export type MutationAddLanguageLearningArgs = {
+  languageId: Scalars['Int']
+}
+
+export type MutationAddLanguageNativeArgs = {
+  languageId: Scalars['Int']
 }
 
 export type Post = {
@@ -167,6 +199,29 @@ export type User = {
   location?: Maybe<Location>
   posts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
+  languagesNative: Array<LanguageNative>
+  languagesLearning: Array<LanguageLearning>
+}
+
+export type UserLanguagesNativeArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<LanguageNativeWhereUniqueInput>
+  before?: Maybe<LanguageNativeWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type UserLanguagesLearningArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<LanguageLearningWhereUniqueInput>
+  before?: Maybe<LanguageLearningWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type UserIdLanguageIdCompoundUniqueInput = {
+  userId: Scalars['Int']
+  languageId: Scalars['Int']
 }
 
 export enum UserRole {
@@ -222,7 +277,20 @@ export type CreateUserMutation = { __typename?: 'Mutation' } & {
 export type CurrentUserQueryVariables = {}
 
 export type CurrentUserQuery = { __typename?: 'Query' } & {
-  currentUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
+  currentUser?: Maybe<
+    { __typename?: 'User' } & {
+      languagesLearning: Array<
+        { __typename?: 'LanguageLearning' } & {
+          language: { __typename?: 'Language' } & Pick<Language, 'name' | 'dialect' | 'id'>
+        }
+      >
+      languagesNative: Array<
+        { __typename?: 'LanguageNative' } & {
+          language: { __typename?: 'Language' } & Pick<Language, 'name' | 'dialect' | 'id'>
+        }
+      >
+    } & UserFragmentFragment
+  >
 }
 
 export type FeedQueryVariables = {}
@@ -557,6 +625,20 @@ export const CurrentUserDocument = gql`
   query currentUser {
     currentUser {
       ...UserFragment
+      languagesLearning {
+        language {
+          name
+          dialect
+          id
+        }
+      }
+      languagesNative {
+        language {
+          name
+          dialect
+          id
+        }
+      }
     }
   }
   ${UserFragmentFragmentDoc}

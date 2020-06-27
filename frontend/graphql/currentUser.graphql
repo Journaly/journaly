@@ -1,5 +1,19 @@
 query currentUser {
   currentUser {
     ...UserFragment
+    languagesLearning {
+      language {
+        name
+        dialect
+        id
+      }
+    }
+    languagesNative {
+      language {
+        name
+        dialect
+        id
+      }
+    }
   }
 }

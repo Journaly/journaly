@@ -6,7 +6,8 @@ import { withApollo } from '../../lib/apollo'
 
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import JournalyEditor from '../../components/JournalyEditor'
-import { useCreatePostMutation } from '../../generated/graphql'
+import LanguageSelect from '../../components/LanguageSelect'
+import { useCurrentUserQuery, useCreatePostMutation } from '../../generated/graphql'
 
 const initialValue = [
   {
@@ -16,15 +17,21 @@ const initialValue = [
 ]
 
 const NewPostPage: NextPage = () => {
-  const [title, setTitle] = React.useState<string>('')
-  const [body, setBody] = React.useState<Node[]>(initialValue)
+  const { data: { currentUser } = {} } = useCurrentUserQuery()
+  const { languagesLearning = [], languagesNative = [] } = currentUser || {}
 
   const router = useRouter()
+  const [title, setTitle] = React.useState<string>('')
+  const [langId, setLangId] = React.useState<number>(-1)
+  const [body, setBody] = React.useState<Node[]>(initialValue)
+
   const [createPost] = useCreatePostMutation({
     onCompleted: ({ createPost }) => {
       router.push({ pathname: `/post/${createPost.id}` })
     },
   })
+
+  const userLanguages = languagesLearning.concat(languagesNative).map((x) => x.language)
 
   const createNewPost = (e) => {
     e.preventDefault()
@@ -44,6 +51,7 @@ const NewPostPage: NextPage = () => {
           name="title"
           placeholder="Title..."
         />
+        <LanguageSelect languages={userLanguages} value={langId} onChange={setLangId} />
         <JournalyEditor value={body} setValue={setBody} />
         <input type="submit" value="Submit" />
         <style jsx>{`

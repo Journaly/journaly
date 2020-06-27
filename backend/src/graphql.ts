@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
 import { readTime } from './utils/post'
 
-import { htmlifyEditorNodes } from './utils'
+import { htmlifyEditorNodes, hasPostPermissions } from './utils'
 
 use(prisma())
 
@@ -33,7 +33,7 @@ schema.objectType({
       pagination: false,
     })
     t.model.profileImage()
-
+    t.model.createdAt()
     t.model.languagesNative()
     t.model.languagesLearning()
   },
@@ -61,7 +61,7 @@ schema.objectType({
     t.model.status()
     t.model.threads()
     t.model.language({ type: 'Language' })
-    t.string('createdAt')
+    t.model.createdAt()
   },
 })
 
@@ -82,6 +82,8 @@ schema.objectType({
     t.model.id()
     t.model.author()
     t.model.body()
+    t.model.createdAt()
+    t.model.authorId()
   },
 })
 
@@ -101,8 +103,6 @@ schema.objectType({
     t.model.name()
     t.model.posts()
     t.model.dialect()
-    //t.model.nativeUsers()
-    //t.model.learningUsers()
     t.field('learningUsers', {
       list: true,
       type: 'User',
@@ -153,13 +153,56 @@ schema.queryType({
       t.list.field('feed', {
         type: 'Post',
         args: {
-          status: stringArg(),
+          search: stringArg({ required: false }),
+          language: intArg({ required: false }),
+          topic: stringArg({ required: false }),
+          skip: intArg(),
+          first: intArg(),
         },
         resolve: async (parent, args, ctx) => {
+          const filterClauses = []
+
+          if (args.language) {
+            filterClauses.push({
+              language: {
+                id: {
+                  equals: args.language,
+                },
+              },
+            })
+          }
+          if (args.topic) {
+            filterClauses.push({
+              topic: {
+                some: {
+                  name: args.topic,
+                },
+              },
+            })
+          }
+          if (args.search) {
+            filterClauses.push({
+              OR: [
+                {
+                  title: {
+                    contains: args.search,
+                  },
+                },
+                {
+                  body: {
+                    contains: args.search,
+                  },
+                },
+              ],
+            })
+          }
+
           return ctx.db.post.findMany({
             where: {
-              status: args.status as any,
+              AND: filterClauses,
             },
+            skip: args.skip,
+            first: args.first,
           })
         },
       }),
@@ -184,6 +227,60 @@ schema.queryType({
           })
         },
       })
+    t.list.field('languages', {
+      type: 'Language',
+      resolve: async (parent, args, ctx) => {
+        return ctx.db.language.findMany({
+          where: {
+            posts: {
+              some: {
+                status: 'PUBLISHED',
+              },
+            },
+          },
+        })
+      },
+    })
+  },
+})
+
+type LanguageM2MType = 'LanguageLearning' | 'LanguageNative'
+
+const langM2MModel = (db, m2mType: LanguageM2MType) => {
+  switch (m2mType) {
+    case 'LanguageLearning':
+      return db.languageLearning
+    case 'LanguageNative':
+      return db.languageNative
+  }
+}
+
+const addLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
+  type: m2mType,
+  args: {
+    languageId: intArg({ required: true }),
+  },
+  resolve: async (parent, args, ctx) => {
+    const { userId } = ctx.request
+
+    if (!userId) {
+      throw new Error('You must be logged in add languages.')
+    }
+
+    const language = await ctx.db.language.findOne({
+      where: { id: args.languageId },
+    })
+
+    if (!language) {
+      throw new Error(`Unable to find language with id "${args.languageId}".`)
+    }
+
+    return langM2MModel(ctx.db, m2mType).create({
+      data: {
+        user: { connect: { id: userId } },
+        language: { connect: { id: args.languageId } },
+      },
+    })
   },
 })
 
@@ -274,7 +371,8 @@ schema.mutationType({
             bodySrc: JSON.stringify(body),
             readTime: readTime(args.body),
             excerpt: '',
-            language: { connect: { id: someLang.id } },
+            // TODO remove `!` when populating via arg
+            language: { connect: { id: someLang!.id } },
             author: { connect: { id: userId } },
           },
         })
@@ -346,5 +444,84 @@ schema.mutationType({
         })
       },
     })
+    t.field('updateComment', {
+      type: 'Comment',
+      args: {
+        commentId: intArg({ required: true }),
+        body: stringArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new Error('You must be logged in to do that.')
+
+        const [currentUser, originalComment] = await Promise.all([
+          ctx.db.user.findOne({
+            where: {
+              id: userId,
+            },
+          }),
+          ctx.db.comment.findOne({
+            where: {
+              id: args.commentId,
+            },
+          }),
+        ])
+
+        if (!currentUser) throw new Error('User not found.')
+        if (!originalComment) throw new Error('Comment not found.')
+
+        hasPostPermissions(originalComment, currentUser)
+
+        const comment = await ctx.db.comment.update({
+          data: {
+            body: args.body,
+          },
+          where: {
+            id: args.commentId,
+          },
+        })
+
+        return comment
+      },
+    })
+    t.field('deleteComment', {
+      type: 'Comment',
+      args: {
+        commentId: intArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new Error('You must be logged in to do that.')
+
+        const currentUser = ctx.db.user.findOne({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (!currentUser) throw new Error('User not found.')
+
+        const originalComment = await ctx.db.comment.findOne({
+          where: {
+            id: args.commentId,
+          },
+        })
+
+        if (!originalComment) throw new Error('Comment not found.')
+
+        hasPostPermissions(originalComment, currentUser)
+
+        const comment = await ctx.db.comment.delete({
+          where: {
+            id: args.commentId,
+          },
+        })
+
+        return comment
+      },
+    })
+
+    t.field('addLanguageLearning', addLanguageM2MMutation('LanguageLearning'))
+    t.field('addLanguageNative', addLanguageM2MMutation('LanguageNative'))
   },
 })

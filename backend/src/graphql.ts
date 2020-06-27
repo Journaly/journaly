@@ -451,20 +451,20 @@ schema.mutationType({
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
-        const currentUser = ctx.db.user.findOne({
-          where: {
-            id: userId,
-          },
-        })
+        const [currentUser, originalComment] = await Promise.all([
+          ctx.db.user.findOne({
+            where: {
+              id: userId,
+            },
+          }),
+          ctx.db.comment.findOne({
+            where: {
+              id: args.commentId,
+            },
+          }),
+        ])
 
         if (!currentUser) throw new Error('User not found.')
-
-        const originalComment = await ctx.db.comment.findOne({
-          where: {
-            id: args.commentId,
-          },
-        })
-
         if (!originalComment) throw new Error('Comment not found.')
 
         hasPostPermissions(originalComment, currentUser)

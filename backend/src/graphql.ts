@@ -497,14 +497,36 @@ schema.mutationType({
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
+        const user = ctx.db.user.findOne({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (!user) throw new Error('User not found.')
+
+        const originalComment = await ctx.db.comment.findOne({
+          where: {
+            id: args.commentId,
+          },
+        })
+
+        if (!originalComment) throw new Error('Comment not found.')
+
+        const hasPermissions =
+          originalComment.authorId !== userId ||
+          user.userRole !== 'MODERATOR' ||
+          user.userRole !== 'ADMIN'
+
+        if (!hasPermissions) {
+          throw new Error('You do not have permission to delete this comment.')
+        }
+
         const comment = await ctx.db.comment.delete({
           where: {
             id: args.commentId,
           },
         })
-        if (!comment) throw new Error('Comment not found.')
-        if (comment.authorId !== userId)
-          throw new Error('You do not have permission to edit this comment.')
 
         return comment
       },

@@ -1,19 +1,36 @@
 import React from 'react'
 import Link from 'next/link'
 import { useTranslation } from '../../../config/i18n'
-import { Post, processPost, formatPostDate, postBorderRadius } from './postCardUtils'
+import { formatShortDate } from '../../../utils/date'
+import { Post as PostType } from '../../../generated/graphql'
 import XIcon from '../../Icons/XIcon'
 import theme from '../../../theme'
 
 type Props = {
-  post: Post
+  post: PostType
+  avatar?: boolean
 }
 
-const ProfilePostCard: React.FC<Props> = ({ post }) => {
+const postBorderRadius = '5px'
+
+const Post: React.FC<Props> = ({ post, avatar = false }) => {
   const { t } = useTranslation('posts')
-  const { id, title, readTime, excerpt, displayImage, likes, numThreads, createdAt } = processPost(
-    post,
-  )
+  const {
+    id,
+    title,
+    excerpt,
+    readTime,
+    images,
+    likes,
+    threads,
+    author: { handle, name, profileImage },
+    createdAt,
+  } = post
+
+  const displayImage = images.length ? images[0].smallSize : '/images/samples/sample-post-img.jpg'
+  console.log(handle, name, profileImage, avatar)
+  // const authorDisplayName = author.handle || author.name
+  // const profileImage = author.profileImage
 
   return (
     <>
@@ -35,11 +52,11 @@ const ProfilePostCard: React.FC<Props> = ({ post }) => {
                 </div>
                 <div className="post-stat">
                   <XIcon size={16} color={theme.colors.blueLight} />
-                  <span>{numThreads}</span>
+                  <span>{threads.length}</span>
                 </div>
               </div>
               <div className="post-subtext">
-                {formatPostDate(createdAt)} - {t('readTime', { minutes: readTime })}
+                {formatShortDate(createdAt)} - {t('readTime', { minutes: readTime })}
               </div>
             </div>
             <p className="read-post">{t('readLink')}</p>
@@ -152,4 +169,4 @@ const ProfilePostCard: React.FC<Props> = ({ post }) => {
   )
 }
 
-export default ProfilePostCard
+export default Post

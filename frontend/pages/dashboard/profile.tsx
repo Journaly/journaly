@@ -3,25 +3,25 @@ import { NextPage } from 'next'
 import { withApollo } from '../../lib/apollo'
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import Profile from '../../components/Dashboard/Profile'
-import { useFeedQuery } from '../../generated/graphql'
+import { useMyPostsQuery } from '../../generated/graphql'
 
 interface InitialProps {
   namespacesRequired: string[]
 }
 
 const ProfilePage: NextPage<InitialProps> = () => {
-  // TODO: this should only query posts for the user who's profile we are on
-  const { data } = useFeedQuery({
-    variables: {
-      published: true,
-    },
-  })
-
-  const posts = data?.feed
+  const { loading, data, error } = useMyPostsQuery()
+  console.log('error', error)
 
   return (
     <DashboardLayout withPadding={false}>
-      <Profile posts={posts} />
+      {loading ? (
+        <>
+          <div>Loading...</div>
+        </>
+      ) : (
+        <Profile posts={data.myPosts} />
+      )}
     </DashboardLayout>
   )
 }

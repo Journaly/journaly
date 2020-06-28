@@ -1,0 +1,24 @@
+query myPosts {
+  myPosts {
+    id
+    title
+    body
+    excerpt
+    readTime
+    createdAt
+    images {
+      smallSize
+    }
+    likes {
+      id
+    }
+    threads {
+      id
+    }
+    author {
+      id
+      handle
+      name
+    }
+  }
+}

@@ -5,6 +5,9 @@ import { server, schema } from 'nexus'
 
 require('dotenv').config({ path: '../.env ' })
 
+// Watch https://github.com/graphql-nexus/nexus/issues/524
+// and https://github.com/graphql-nexus/nexus/issues/523 for future
+// changes to this function
 schema.addToContext((request: any) => ({
   request,
   response: request.response,

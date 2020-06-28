@@ -3,17 +3,13 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
 import { readTime } from './utils/post'
+import { ONE_YEAR } from './constants'
 
 import { htmlifyEditorNodes, hasPostPermissions } from './utils'
 
 use(prisma())
 
 const { intArg, stringArg } = schema
-
-// Time constants
-const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
-const ONE_HOUR_FROM_NOW = Date.now() + 3600000
-const WITHIN_ONE_HOUR = Date.now() - 3600000
 
 const languagesM2MDef = (t) => {
   t.model.language()

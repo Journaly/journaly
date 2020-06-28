@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { User, PostStatus, Thread } from '../../../generated/graphql'
 
 // TODO: this will be unnecessary once we use types from generated graphql
@@ -48,5 +48,5 @@ export const processPost = (post: Post) => {
 }
 
 export const formatPostDate = (date: string): string => {
-  return format(Number(date), 'MMM d')
+  return format(parseISO(date), 'MMM d')
 }

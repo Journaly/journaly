@@ -115,15 +115,15 @@ schema.objectType({
 const EditorNode = schema.inputObjectType({
   name: 'EditorNode',
   definition(t) {
-    t.string('type', { nullable: true }),
-      t.string('text', { nullable: true }),
-      t.boolean('italic', { nullable: true }),
-      t.boolean('bold', { nullable: true }),
-      t.field('children', {
-        type: EditorNode,
-        list: true,
-        nullable: true,
-      })
+    t.string('type', { nullable: true })
+    t.string('text', { nullable: true })
+    t.boolean('italic', { nullable: true })
+    t.boolean('bold', { nullable: true })
+    t.field('children', {
+      type: EditorNode,
+      list: true,
+      nullable: true,
+    })
   },
 })
 
@@ -133,96 +133,97 @@ schema.queryType({
       type: 'Post',
       resolve: async (parent, args, ctx) => ctx.db.post.findMany(),
     }),
-      t.field('postById', {
-        type: 'Post',
-        args: {
-          id: intArg(),
-        },
-        resolve: async (parent, args, ctx) => {
-          return await ctx.db.post.findOne({
-            where: {
-              id: args.id,
+    })
+    t.field('postById', {
+      type: 'Post',
+      args: {
+        id: intArg(),
+      },
+      resolve: async (parent, args, ctx) => {
+        return await ctx.db.post.findOne({
+          where: {
+            id: args.id,
+          },
+        })
+      },
+    })
+    t.list.field('feed', {
+      type: 'Post',
+      args: {
+        search: stringArg({ required: false }),
+        language: intArg({ required: false }),
+        topic: stringArg({ required: false }),
+        skip: intArg(),
+        first: intArg(),
+      },
+      resolve: async (parent, args, ctx) => {
+        const filterClauses = []
+
+        if (args.language) {
+          filterClauses.push({
+            language: {
+              id: {
+                equals: args.language,
+              },
             },
           })
-        },
-      }),
-      t.list.field('feed', {
-        type: 'Post',
-        args: {
-          search: stringArg({ required: false }),
-          language: intArg({ required: false }),
-          topic: stringArg({ required: false }),
-          skip: intArg(),
-          first: intArg(),
-        },
-        resolve: async (parent, args, ctx) => {
-          const filterClauses = []
-
-          if (args.language) {
-            filterClauses.push({
-              language: {
-                id: {
-                  equals: args.language,
+        }
+        if (args.topic) {
+          filterClauses.push({
+            topic: {
+              some: {
+                name: args.topic,
+              },
+            },
+          })
+        }
+        if (args.search) {
+          filterClauses.push({
+            OR: [
+              {
+                title: {
+                  contains: args.search,
                 },
               },
-            })
-          }
-          if (args.topic) {
-            filterClauses.push({
-              topic: {
-                some: {
-                  name: args.topic,
+              {
+                body: {
+                  contains: args.search,
                 },
               },
-            })
-          }
-          if (args.search) {
-            filterClauses.push({
-              OR: [
-                {
-                  title: {
-                    contains: args.search,
-                  },
-                },
-                {
-                  body: {
-                    contains: args.search,
-                  },
-                },
-              ],
-            })
-          }
+            ],
+          })
+        }
 
-          return ctx.db.post.findMany({
-            where: {
-              AND: filterClauses,
-            },
-            skip: args.skip,
-            first: args.first,
-          })
-        },
-      }),
-      t.list.field('users', {
-        type: 'User',
-        resolve: async (parent, args, ctx) => {
-          return ctx.db.user.findMany()
-        },
-      }),
-      t.field('currentUser', {
-        type: 'User',
-        resolve: async (parent, args, ctx) => {
-          const userId = ctx.request.userId
-          // check for current userId
-          if (!userId) {
-            return null
-          }
-          return ctx.db.user.findOne({
-            where: {
-              id: userId,
-            },
-          })
-        },
-      })
+        return ctx.db.post.findMany({
+          where: {
+            AND: filterClauses,
+          },
+          skip: args.skip,
+          first: args.first,
+        })
+      },
+    })
+    t.list.field('users', {
+      type: 'User',
+      resolve: async (parent, args, ctx) => {
+        return ctx.db.user.findMany()
+      },
+    })
+    t.field('currentUser', {
+      type: 'User',
+      resolve: async (parent, args, ctx) => {
+        const userId = ctx.request.userId
+        // check for current userId
+        if (!userId) {
+          return null
+        }
+        return ctx.db.user.findOne({
+          where: {
+            id: userId,
+          },
+        })
+      },
+    })
     t.list.field('languages', {
       type: 'Language',
       resolve: async (parent, args, ctx) => {
@@ -307,42 +308,39 @@ schema.mutationType({
         })
         return user
       },
-    }),
-      t.field('loginUser', {
-        type: 'User',
-        args: {
-          identifier: stringArg({ required: true }),
-          password: stringArg({ required: true }),
-        },
-        resolve: async (parent, args, ctx: any) => {
-          const user = await ctx.db.user.findOne({
-            where: {
-              email: args.identifier,
-            },
-            include: {
-              auth: true,
-            },
-          })
-          if (!user) {
-            throw new Error('User not found')
-          }
+    })
+    t.field('loginUser', {
+      type: 'User',
+      args: {
+        identifier: stringArg({ required: true }),
+        password: stringArg({ required: true }),
+      },
+      resolve: async (parent, args, ctx: any) => {
+        const user = await ctx.db.user.findOne({
+          where: {
+            email: args.identifier,
+          },
+          include: {
+            auth: true,
+          },
+        })
+        if (!user) {
+          throw new Error('User not found')
+        }
 
-          const isValid = await bcrypt.compare(
-            args.password,
-            user.auth.password,
-          )
+        const isValid = await bcrypt.compare(args.password, user.auth.password)
 
-          if (!isValid) {
-            throw new Error('Invalid password')
-          }
-          const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
-          ctx.response.cookie('token', token, {
-            httpOnly: true,
-            maxAge: ONE_YEAR,
-          })
-          return user
-        },
-      })
+        if (!isValid) {
+          throw new Error('Invalid password')
+        }
+        const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
+        ctx.response.cookie('token', token, {
+          httpOnly: true,
+          maxAge: ONE_YEAR,
+        })
+        return user
+      },
+    })
     t.field('createPost', {
       type: 'Post',
       args: {

@@ -55,9 +55,19 @@ schema.objectType({
     t.model.readTime()
     t.model.author()
     t.model.status()
+    t.model.images()
+    t.model.likes({ type: 'PostLike' })
     t.model.threads()
     t.model.language({ type: 'Language' })
     t.model.createdAt()
+  },
+})
+
+schema.objectType({
+  name: 'Image',
+  definition(t) {
+    t.model.id()
+    t.model.smallSize()
   },
 })
 
@@ -89,6 +99,13 @@ schema.objectType({
     t.model.id()
     t.model.country()
     t.model.city()
+  },
+})
+
+schema.objectType({
+  name: 'PostLike',
+  definition(t) {
+    t.model.id()
   },
 })
 

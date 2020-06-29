@@ -172,6 +172,7 @@ const SignupForm: React.FC = () => {
 
         :global(label > p) {
           color: ${theme.colors.red};
+          font-style: italic;
         }
 
         :global(button) {

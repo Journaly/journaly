@@ -1,4 +1,3 @@
-import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
@@ -7,15 +6,12 @@ import { useLoginUserMutation, CurrentUserDocument } from '../../generated/graph
 import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
-import theme from '../../theme'
 
 const LoginForm: React.FC = () => {
   const router = useRouter()
   const { handleSubmit, register, errors } = useForm({
     mode: 'onBlur',
   })
-
-  const fieldErrorName = Object.keys(errors)[0] || ''
 
   const [loginUser, { loading, error }] = useLoginUserMutation()
 
@@ -54,7 +50,7 @@ const LoginForm: React.FC = () => {
               },
             })}
           />
-          <ErrorMessage errors={errors} name="email" as="em" />
+          <ErrorMessage errors={errors} name="email" as="p" />
         </label>
         <label htmlFor="password">
           Password
@@ -67,7 +63,7 @@ const LoginForm: React.FC = () => {
               minLength: { value: 6, message: 'Password must be at least 6 characters' },
             })}
           />
-          <ErrorMessage errors={errors} name="password" as="em" />
+          <ErrorMessage errors={errors} name="password" as="p" />
         </label>
 
         <Button type="submit">Log In</Button>
@@ -148,9 +144,7 @@ const LoginForm: React.FC = () => {
         }
 
         h2 {
-          margin: 10px 0;
-          ${theme.typography.headingLG}
-          text-align: center;
+          margin-bottom: 10px;
         }
 
         :global(button) {
@@ -160,17 +154,6 @@ const LoginForm: React.FC = () => {
           padding: 10px;
           margin-top: 5px;
           box-shadow: 0px 8px 10px #00000029;
-        }
-
-        :global(label > em) {
-          color: ${theme.colors.red};
-        }
-        
-        :global(.form-error) {
-          margin-bottom: 24px;
-        }
-        :global(input[name="${fieldErrorName}"]) {
-          border-color: ${theme.colors.red};
         }
       `}</style>
     </form>

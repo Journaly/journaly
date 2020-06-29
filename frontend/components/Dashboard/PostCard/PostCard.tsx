@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import theme from '../../../theme'
 
 interface Props {
   id: string
@@ -14,14 +15,18 @@ const PostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
     <div className="post-card-container" key={id}>
       <Link href={`/post/${id}`}>
         <a>
-          <img className="post-image" src={image} alt="Sample post image" />
+          <img
+            className="post-image"
+            src="/images/samples/sample-post-img.jpg"
+            alt="Sample post image"
+          />
           <div className="post-card-bottom">
             <div className="preview">
               <h4>{title}</h4>
               <p className="preview-text">{body}</p>
             </div>
             <div className="info">
-              <img className="avatar" src="/images/author-sample-tiny.jpg" alt="Author" />
+              <img className="avatar" src="/images/robin-small.png" alt="Author" />
               <p className="author">{author}</p>
             </div>
           </div>
@@ -46,8 +51,8 @@ const PostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
         .post-card-bottom {
           padding: 30px;
         }
-        h4.post-card-bottom {
-          font-weight: 700;
+        h4 {
+          ${theme.typography.headingMD};
         }
         .info {
           display: flex;

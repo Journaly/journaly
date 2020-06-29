@@ -52,7 +52,7 @@ const SignupForm: React.FC = () => {
             autoComplete="on"
             ref={register({
               required: 'Display Name is required',
-              minLength: { value: 6, message: 'Your display name must be at least 6 characters' },
+              minLength: { value: 3, message: 'Your display name must be at least 3 characters' },
             })}
           />
           <ErrorMessage errors={errors} name="handle" as="em" />

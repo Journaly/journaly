@@ -11,13 +11,12 @@ interface Props {
 }
 
 const Nav: React.FC<Props> = ({ expanded, collapse }) => {
-  const { data, refetch } = useCurrentUserQuery()
+  const { data } = useCurrentUserQuery()
 
   useEffect(() => {
     setTimeout(() => {
       document.body.classList.remove('block-transitions-on-page-load')
     }, 0)
-    refetch()
   }, [])
 
   const handleCollapse = (): void => {

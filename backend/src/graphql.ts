@@ -2,10 +2,9 @@ import { use, schema } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
-import { readTime } from './utils/post'
 import { ONE_YEAR } from './constants'
 
-import { htmlifyEditorNodes, hasPostPermissions } from './utils'
+import { processEditorDocument, hasPostPermissions } from './utils'
 
 use(prisma())
 
@@ -371,28 +370,18 @@ schema.mutationType({
       args: {
         title: stringArg({ required: true }),
         body: EditorNode.asArg({ list: true }),
+        languageId: intArg({ required: true }),
       },
       resolve: async (parent, args, ctx) => {
-        const { title, body } = args
+        const { title, body, languageId } = args
         const { userId } = ctx.request
-
-        const html = htmlifyEditorNodes(body)
-
-        // TODO: Actually populate this via arg
-        const someLang = await ctx.db.language.findOne({
-          where: { id: 1 },
-        })
 
         return ctx.db.post.create({
           data: {
             title: args.title,
-            body: html,
-            bodySrc: JSON.stringify(body),
-            readTime: readTime(args.body),
-            excerpt: '',
-            // TODO remove `!` when populating via arg
-            language: { connect: { id: someLang!.id } },
+            language: { connect: { id: languageId } },
             author: { connect: { id: userId } },
+            ...processEditorDocument(body),
           },
         })
       },

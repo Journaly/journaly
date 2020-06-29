@@ -114,6 +114,7 @@ export type MutationLoginUserArgs = {
 export type MutationCreatePostArgs = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
+  languageId: Scalars['Int']
 }
 
 export type MutationCreateThreadArgs = {
@@ -310,6 +311,7 @@ export type CreateCommentMutation = { __typename?: 'Mutation' } & {
 export type CreatePostMutationVariables = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
+  languageId: Scalars['Int']
 }
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
@@ -340,7 +342,20 @@ export type CreateUserMutation = { __typename?: 'Mutation' } & {
 export type CurrentUserQueryVariables = {}
 
 export type CurrentUserQuery = { __typename?: 'Query' } & {
-  currentUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
+  currentUser?: Maybe<
+    { __typename?: 'User' } & {
+      languagesLearning: Array<
+        { __typename?: 'LanguageLearning' } & {
+          language: { __typename?: 'Language' } & Pick<Language, 'name' | 'dialect' | 'id'>
+        }
+      >
+      languagesNative: Array<
+        { __typename?: 'LanguageNative' } & {
+          language: { __typename?: 'Language' } & Pick<Language, 'name' | 'dialect' | 'id'>
+        }
+      >
+    } & UserFragmentFragment
+  >
 }
 
 export type DeleteCommentMutationVariables = {
@@ -576,8 +591,8 @@ export type CreateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions
   CreateCommentMutationVariables
 >
 export const CreatePostDocument = gql`
-  mutation createPost($title: String!, $body: [EditorNode!]) {
-    createPost(title: $title, body: $body) {
+  mutation createPost($title: String!, $body: [EditorNode!], $languageId: Int!) {
+    createPost(title: $title, body: $body, languageId: $languageId) {
       id
     }
   }
@@ -602,6 +617,7 @@ export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
  *   variables: {
  *      title: // value for 'title'
  *      body: // value for 'body'
+ *      languageId: // value for 'languageId'
  *   },
  * });
  */
@@ -736,6 +752,20 @@ export const CurrentUserDocument = gql`
   query currentUser {
     currentUser {
       ...UserFragment
+      languagesLearning {
+        language {
+          name
+          dialect
+          id
+        }
+      }
+      languagesNative {
+        language {
+          name
+          dialect
+          id
+        }
+      }
     }
   }
   ${UserFragmentFragmentDoc}

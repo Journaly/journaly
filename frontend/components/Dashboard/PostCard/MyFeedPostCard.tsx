@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Post as PostType } from '../../../generated/graphql'
+import theme from '../../../theme'
 
 type Props = {
   post: PostType
@@ -14,7 +15,7 @@ const MyFeedPostCard: React.FC<Props> = ({ post }) => {
     <div className="post-card-container" key={id}>
       <Link href={`/post/${id}`}>
         <a>
-          <img className="post-image" src={displayImage} alt="" />
+          <img className="post-image" src={displayImage} alt="Typewriter on an old wooden desk" />
           <div className="post-card-bottom">
             <div className="preview">
               <h4>{title}</h4>
@@ -25,9 +26,9 @@ const MyFeedPostCard: React.FC<Props> = ({ post }) => {
               <img
                 className="avatar"
                 src={author.profileImage || '/images/robin-small.png'}
-                alt="Author"
+                alt=""
               />
-              <p className="author">{author}</p>
+              <p className="author">{author.handle}</p>
             </div>
           </div>
         </a>
@@ -52,8 +53,8 @@ const MyFeedPostCard: React.FC<Props> = ({ post }) => {
         .post-card-bottom {
           padding: 30px;
         }
-        h4.post-card-bottom {
-          font-weight: 700;
+        h4 {
+          ${theme.typography.headingMD};
         }
         .info {
           display: flex;

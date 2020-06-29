@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import theme from '../../../theme'
 
 const About = () => {
   return (
@@ -48,6 +49,7 @@ const About = () => {
 
         h1 {
           margin-bottom: 20px;
+          ${theme.typography.headingXL}
         }
 
         p {

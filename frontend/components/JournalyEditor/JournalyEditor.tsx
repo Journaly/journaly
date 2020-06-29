@@ -96,6 +96,7 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
           border: 1px solid ${theme.colors.black};
           border-radius: 5px;
           min-height: 200px;
+          background-color: ${theme.colors.white};
         }
 
         /* TODO: Add specific Journaly Editor styles to ol, ul, and blockquote elements */

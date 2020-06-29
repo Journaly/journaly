@@ -1,3 +1,4 @@
+import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
@@ -6,6 +7,7 @@ import { useLoginUserMutation, CurrentUserDocument } from '../../generated/graph
 import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
+import theme from '../../theme'
 
 const LoginForm: React.FC = () => {
   const router = useRouter()
@@ -13,7 +15,16 @@ const LoginForm: React.FC = () => {
     mode: 'onBlur',
   })
 
-  const [loginUser, { loading, error }] = useLoginUserMutation()
+  const fieldErrorName = Object.keys(errors)[0] || ''
+
+  const [loginUser, { loading, error }] = useLoginUserMutation({
+    onCompleted: () => {
+      trackLogIn()
+      router.push({
+        pathname: '/dashboard/my-feed',
+      })
+    },
+  })
 
   const onSubmit = (data: any) => {
     if (!loading && Object.keys(errors).length === 0) {
@@ -23,10 +34,6 @@ const LoginForm: React.FC = () => {
           password: data.password,
         },
         refetchQueries: [{ query: CurrentUserDocument }],
-      })
-      trackLogIn()
-      router.push({
-        pathname: '/dashboard/my-feed',
       })
     }
   }
@@ -144,7 +151,9 @@ const LoginForm: React.FC = () => {
         }
 
         h2 {
-          margin-bottom: 10px;
+          margin: 10px 0;
+          ${theme.typography.headingLG}
+          text-align: center;
         }
 
         :global(button) {
@@ -154,6 +163,18 @@ const LoginForm: React.FC = () => {
           padding: 10px;
           margin-top: 5px;
           box-shadow: 0px 8px 10px #00000029;
+        }
+
+        :global(label > p) {
+          color: ${theme.colors.red};
+          font-style: italic;
+        }
+        
+        :global(.form-error) {
+          margin-bottom: 24px;
+        }
+        :global(input[name="${fieldErrorName}"]) {
+          border-color: ${theme.colors.red};
         }
       `}</style>
     </form>

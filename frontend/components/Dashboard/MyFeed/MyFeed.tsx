@@ -1,12 +1,10 @@
-// @ts-nocheck
 import React from 'react'
-
+import { Post } from '../../../generated/graphql'
 import MyFeedPostCard from '../PostCard/MyFeedPostCard'
-
-// import { Post } from '../../../generated/graphql' // TODO (robin-macpherson): See Post[] type todo below
+import theme from '../../../theme'
 
 type Props = {
-  posts: any[] // TODO (robin-macpherson): should be Post[]
+  posts: Post[]
 }
 
 const MyFeed: React.FC<Props> = ({ posts }) => {
@@ -26,16 +24,7 @@ const MyFeed: React.FC<Props> = ({ posts }) => {
       </div>
       <div className="my-feed-container">
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <MyFeedPostCard
-              key={post.id}
-              id={post.id}
-              title={post.title}
-              body={post.body}
-              image={post.image}
-              author={post.author.name}
-            />
-          ))
+          posts.map((post) => <MyFeedPostCard post={post} />)
         ) : (
           <p>Nothing to see yet...</p>
         )}
@@ -51,6 +40,7 @@ const MyFeed: React.FC<Props> = ({ posts }) => {
         h1 {
           margin: 50px auto;
           text-align: center;
+          ${theme.typography.headingXL};
         }
 
         .my-feed-search {

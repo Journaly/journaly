@@ -1,98 +1,93 @@
 import React from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackCreateAccount } from '../../events/users'
-import validateAuth, { IErrors } from '../../lib/validateAuth'
 import { useCreateUserMutation } from '../../generated/graphql'
-import useFormValidation from '../../hooks/useFormValidation'
 import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
-
-interface IFormValues {
-  handle: string
-  email: string
-  password: string
-}
-
-const initialState: IFormValues = {
-  handle: '',
-  email: '',
-  password: '',
-}
+import theme from '../../theme'
 
 const SignupForm: React.FC = () => {
-  const { handleChange, values, handleValidate, handleBlur, errors, setValues } = useFormValidation<
-    IFormValues,
-    IErrors
-  >(initialState, validateAuth)
+  const router = useRouter()
+  const { handleSubmit, register, errors } = useForm({
+    mode: 'onBlur',
+  })
+
+  const fieldErrorName = Object.keys(errors)[0] || ''
 
   const [createUser, { loading, error }] = useCreateUserMutation({
     onCompleted: () => {
       trackCreateAccount()
-      setValues(initialState)
+      router.push({
+        pathname: '/dashboard/my-feed',
+      })
     },
   })
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    handleValidate(e)
+  const onSubmit = (data: any) => {
     if (!loading && Object.keys(errors).length === 0) {
       createUser({
         variables: {
-          handle: values.handle,
-          email: values.email,
-          password: values.password,
+          handle: data.handle,
+          email: data.email,
+          password: data.password,
         },
       })
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={loading} aria-busy={loading}>
         <h2>Sign up for an account</h2>
         {error && <FormError error={error} />}
         <label htmlFor="handle">
-          Username
-          <p>{errors?.handle}</p>
+          Display Name
           <input
             type="text"
             name="handle"
-            value={values.handle}
-            placeholder="Your username"
+            placeholder="Your name, or perhaps a fun pseudonym!"
             autoComplete="on"
-            onChange={handleChange}
-            onBlur={handleBlur}
+            ref={register({
+              required: 'Display Name is required',
+              minLength: { value: 3, message: 'Your display name must be at least 3 characters' },
+            })}
           />
+          <ErrorMessage errors={errors} name="handle" as="p" />
         </label>
         <label htmlFor="email">
           Email
-          <p>{errors?.email}</p>
           <input
             type="text"
+            placeholder="Email address"
             name="email"
-            value={values.email}
-            placeholder="Your email address"
-            autoComplete="on"
-            onChange={handleChange}
-            onBlur={handleBlur}
+            ref={register({
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email address',
+              },
+            })}
           />
+          <ErrorMessage errors={errors} name="email" as="p" />
         </label>
         <label htmlFor="password">
           Password
-          <p>{errors?.password}</p>
           <input
             type="password"
-            name="password"
-            value={values.password}
             placeholder="A secure password"
-            autoComplete="off"
-            onChange={handleChange}
-            onBlur={handleBlur}
+            name="password"
+            ref={register({
+              required: 'Password is required',
+              minLength: { value: 6, message: 'Password must be at least 6 characters' },
+            })}
           />
+          <ErrorMessage errors={errors} name="password" as="p" />
         </label>
 
-        <Button>Sign up!</Button>
+        <Button type="submit">Sign up!</Button>
       </fieldset>
       <em>
         Already have an account?
@@ -110,6 +105,9 @@ const SignupForm: React.FC = () => {
           max-width: 500px;
           font-size: 16px;
           line-height: 1.6;
+        }
+        :global(.form-error) {
+          margin: 12px 0;
         }
         label {
           display: block;
@@ -167,7 +165,14 @@ const SignupForm: React.FC = () => {
         }
 
         h2 {
-          margin-bottom: 10px;
+          margin: 10px 0;
+          ${theme.typography.headingLG}
+          text-align: center;
+        }
+
+        :global(label > p) {
+          color: ${theme.colors.red};
+          font-style: italic;
         }
 
         :global(button) {
@@ -177,6 +182,13 @@ const SignupForm: React.FC = () => {
           padding: 10px;
           margin-top: 5px;
           box-shadow: 0px 8px 10px #00000029;
+        }
+
+        :global(.form-error) {
+          margin-bottom: 24px;
+        }
+        :global(input[name="${fieldErrorName}"]) {
+          border-color: ${theme.colors.red};
         }
       `}</style>
     </form>

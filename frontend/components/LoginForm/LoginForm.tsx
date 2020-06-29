@@ -17,7 +17,14 @@ const LoginForm: React.FC = () => {
 
   const fieldErrorName = Object.keys(errors)[0] || ''
 
-  const [loginUser, { loading, error }] = useLoginUserMutation()
+  const [loginUser, { loading, error }] = useLoginUserMutation({
+    onCompleted: () => {
+      trackLogIn()
+      router.push({
+        pathname: '/dashboard/my-feed',
+      })
+    },
+  })
 
   const onSubmit = (data: any) => {
     if (!loading && Object.keys(errors).length === 0) {
@@ -27,10 +34,6 @@ const LoginForm: React.FC = () => {
           password: data.password,
         },
         refetchQueries: [{ query: CurrentUserDocument }],
-      })
-      trackLogIn()
-      router.push({
-        pathname: '/dashboard/my-feed',
       })
     }
   }

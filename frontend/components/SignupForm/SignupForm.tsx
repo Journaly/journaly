@@ -17,7 +17,14 @@ const SignupForm: React.FC = () => {
 
   const fieldErrorName = Object.keys(errors)[0] || ''
 
-  const [createUser, { loading, error }] = useCreateUserMutation()
+  const [createUser, { loading, error }] = useCreateUserMutation({
+    onCompleted: () => {
+      trackCreateAccount()
+      router.push({
+        pathname: '/dashboard/my-feed',
+      })
+    },
+  })
 
   const onSubmit = (data: any) => {
     if (!loading && Object.keys(errors).length === 0) {
@@ -27,10 +34,6 @@ const SignupForm: React.FC = () => {
           email: data.email,
           password: data.password,
         },
-      })
-      trackCreateAccount()
-      router.push({
-        pathname: '/dashboard/my-feed',
       })
     }
   }

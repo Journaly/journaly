@@ -1,5 +1,5 @@
-query myPosts {
-  myPosts {
+query posts($authorId: Int!) {
+  posts(authorId: $authorId) {
     id
     title
     body

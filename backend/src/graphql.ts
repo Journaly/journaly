@@ -146,18 +146,15 @@ const EditorNode = schema.inputObjectType({
 
 schema.queryType({
   definition(t) {
-    t.list.field('myPosts', {
+    t.list.field('posts', {
       type: 'Post',
-      resolve: async (_root, _args, ctx) => {
-        const { userId } = ctx.request
-
-        if (!userId) {
-          throw new Error('You must be logged in to perform this action.')
-        }
-
+      args: {
+        authorId: intArg({ required: true }),
+      },
+      resolve: async (_root, args, ctx) => {
         return ctx.db.post.findMany({
           where: {
-            author: { id: userId },
+            author: { id: args.authorId },
           },
         })
       },

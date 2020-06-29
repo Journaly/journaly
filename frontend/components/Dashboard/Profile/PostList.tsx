@@ -1,12 +1,12 @@
 import React from 'react'
 import { useTranslation } from '../../../config/i18n'
 import { layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
+import { Post as PostType } from '../../../generated/graphql'
 import Post from '../Posts/Post'
 import theme from '../../../theme'
 
 type Props = {
-  // TODO: use Post type from generated graphql
-  posts: any[]
+  posts: PostType[]
 }
 
 const PostList: React.FC<Props> = ({ posts }) => {

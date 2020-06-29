@@ -205,12 +205,16 @@ export type PostWhereUniqueInput = {
 
 export type Query = {
   __typename?: 'Query'
-  myPosts?: Maybe<Array<Post>>
+  posts?: Maybe<Array<Post>>
   postById?: Maybe<Post>
   feed?: Maybe<Array<Post>>
   users?: Maybe<Array<User>>
   currentUser?: Maybe<User>
   languages?: Maybe<Array<Language>>
+}
+
+export type QueryPostsArgs = {
+  authorId: Scalars['Int']
 }
 
 export type QueryPostByIdArgs = {
@@ -402,10 +406,20 @@ export type LoginUserMutation = { __typename?: 'Mutation' } & {
   loginUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
 }
 
-export type MyPostsQueryVariables = {}
+export type PostByIdQueryVariables = {
+  id: Scalars['Int']
+}
 
-export type MyPostsQuery = { __typename?: 'Query' } & {
-  myPosts?: Maybe<
+export type PostByIdQuery = { __typename?: 'Query' } & {
+  postById?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
+}
+
+export type PostsQueryVariables = {
+  authorId: Scalars['Int']
+}
+
+export type PostsQuery = { __typename?: 'Query' } & {
+  posts?: Maybe<
     Array<
       { __typename?: 'Post' } & Pick<
         Post,
@@ -418,14 +432,6 @@ export type MyPostsQuery = { __typename?: 'Query' } & {
         }
     >
   >
-}
-
-export type PostByIdQueryVariables = {
-  id: Scalars['Int']
-}
-
-export type PostByIdQuery = { __typename?: 'Query' } & {
-  postById?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
 }
 
 export type UpdateCommentMutationVariables = {
@@ -910,67 +916,6 @@ export type LoginUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   LoginUserMutation,
   LoginUserMutationVariables
 >
-export const MyPostsDocument = gql`
-  query myPosts {
-    myPosts {
-      id
-      title
-      body
-      excerpt
-      readTime
-      createdAt
-      images {
-        smallSize
-      }
-      likes {
-        id
-      }
-      threads {
-        id
-      }
-      author {
-        id
-        handle
-        name
-      }
-    }
-  }
-`
-
-/**
- * __useMyPostsQuery__
- *
- * To run a query within a React component, call `useMyPostsQuery` and pass it any options that fit your needs.
- * When your component renders, `useMyPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMyPostsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useMyPostsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<MyPostsQuery, MyPostsQueryVariables>,
-) {
-  return ApolloReactHooks.useQuery<MyPostsQuery, MyPostsQueryVariables>(
-    MyPostsDocument,
-    baseOptions,
-  )
-}
-export function useMyPostsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MyPostsQuery, MyPostsQueryVariables>,
-) {
-  return ApolloReactHooks.useLazyQuery<MyPostsQuery, MyPostsQueryVariables>(
-    MyPostsDocument,
-    baseOptions,
-  )
-}
-export type MyPostsQueryHookResult = ReturnType<typeof useMyPostsQuery>
-export type MyPostsLazyQueryHookResult = ReturnType<typeof useMyPostsLazyQuery>
-export type MyPostsQueryResult = ApolloReactCommon.QueryResult<MyPostsQuery, MyPostsQueryVariables>
 export const PostByIdDocument = gql`
   query postById($id: Int!) {
     postById(id: $id) {
@@ -1018,6 +963,62 @@ export type PostByIdQueryResult = ApolloReactCommon.QueryResult<
   PostByIdQuery,
   PostByIdQueryVariables
 >
+export const PostsDocument = gql`
+  query posts($authorId: Int!) {
+    posts(authorId: $authorId) {
+      id
+      title
+      body
+      excerpt
+      readTime
+      createdAt
+      images {
+        smallSize
+      }
+      likes {
+        id
+      }
+      threads {
+        id
+      }
+      author {
+        id
+        handle
+        name
+      }
+    }
+  }
+`
+
+/**
+ * __usePostsQuery__
+ *
+ * To run a query within a React component, call `usePostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostsQuery({
+ *   variables: {
+ *      authorId: // value for 'authorId'
+ *   },
+ * });
+ */
+export function usePostsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<PostsQuery, PostsQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<PostsQuery, PostsQueryVariables>(PostsDocument, baseOptions)
+}
+export function usePostsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PostsQuery, PostsQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<PostsQuery, PostsQueryVariables>(PostsDocument, baseOptions)
+}
+export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>
+export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>
+export type PostsQueryResult = ApolloReactCommon.QueryResult<PostsQuery, PostsQueryVariables>
 export const UpdateCommentDocument = gql`
   mutation updateComment($body: String!, $commentId: Int!) {
     updateComment(body: $body, commentId: $commentId) {

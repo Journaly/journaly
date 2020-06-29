@@ -3,11 +3,11 @@ import React from 'react'
 import ProfileCard from './ProfileCard'
 import PostList from './PostList'
 import { layoutPadding } from '../../Dashboard/dashboardConstants'
+import { Post } from '../../generated/graphql'
 import theme from '../../../theme'
 
 type Props = {
-  // TODO: use Post type from generated graphql
-  posts: any[]
+  posts: Post[]
 }
 
 const Profile: React.FC<Props> = ({ posts }) => {

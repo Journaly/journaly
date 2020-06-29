@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { useTranslation } from '../../../config/i18n'
 import { formatShortDate } from '../../../utils/date'
 import { Post as PostType } from '../../../generated/graphql'
-import XIcon from '../../Icons/XIcon'
+import LikeIcon from '../../Icons/LikeIcon'
+import CommentIcon from '../../Icons/CommentIcon'
 import theme from '../../../theme'
 
 type Props = {
@@ -47,11 +48,11 @@ const Post: React.FC<Props> = ({ post, avatar = false }) => {
             <div className="post-data">
               <div className="post-stats">
                 <div className="post-stat">
-                  <XIcon size={16} color={theme.colors.blueLight} />
-                  <span>{likes}</span>
+                  <LikeIcon />
+                  <span>{likes.length}</span>
                 </div>
                 <div className="post-stat">
-                  <XIcon size={16} color={theme.colors.blueLight} />
+                  <CommentIcon />
                   <span>{threads.length}</span>
                 </div>
               </div>

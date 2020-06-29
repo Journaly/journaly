@@ -24,7 +24,7 @@ const MyFeed: React.FC<Props> = ({ posts }) => {
       </div>
       <div className="my-feed-container">
         {posts.length > 0 ? (
-          posts.map((post) => <MyFeedPostCard post={post} />)
+          posts.map((post) => <MyFeedPostCard key={post.id} post={post} />)
         ) : (
           <p>Nothing to see yet...</p>
         )}

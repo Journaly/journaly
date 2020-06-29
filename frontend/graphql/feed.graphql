@@ -1,26 +1,5 @@
 query feed {
   feed {
-    id
-    title
-    body
-    excerpt
-    readTime
-    createdAt
-    images {
-      smallSize
-    }
-    likes {
-      id
-    }
-    threads {
-      id
-    }
-    author {
-      id
-      handle
-      name
-      email
-      profileImage
-    }
+    ...PostCardFragment
   }
 }

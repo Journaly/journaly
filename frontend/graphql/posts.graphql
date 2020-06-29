@@ -1,24 +1,5 @@
 query posts($authorId: Int!) {
   posts(authorId: $authorId) {
-    id
-    title
-    body
-    excerpt
-    readTime
-    createdAt
-    images {
-      smallSize
-    }
-    likes {
-      id
-    }
-    threads {
-      id
-    }
-    author {
-      id
-      handle
-      name
-    }
+    ...PostCardFragment
   }
 }

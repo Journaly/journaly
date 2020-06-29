@@ -354,22 +354,7 @@ export type DeleteCommentMutation = { __typename?: 'Mutation' } & {
 export type FeedQueryVariables = {}
 
 export type FeedQuery = { __typename?: 'Query' } & {
-  feed?: Maybe<
-    Array<
-      { __typename?: 'Post' } & Pick<
-        Post,
-        'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt'
-      > & {
-          images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
-          likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
-          threads: Array<{ __typename?: 'Thread' } & Pick<Thread, 'id'>>
-          author: { __typename?: 'User' } & Pick<
-            User,
-            'id' | 'handle' | 'name' | 'email' | 'profileImage'
-          >
-        }
-    >
-  >
+  feed?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
 }
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
@@ -377,7 +362,10 @@ export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   'id' | 'name' | 'handle' | 'email' | 'userRole' | 'profileImage'
 >
 
-export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
+  User,
+  'id' | 'name' | 'handle' | 'profileImage'
+>
 
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
@@ -395,6 +383,16 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
+  }
+
+export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
+  Post,
+  'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt'
+> & {
+    images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
+    likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
+    threads: Array<{ __typename?: 'Thread' } & Pick<Thread, 'id'>>
+    author: { __typename?: 'User' } & AuthorFragmentFragment
   }
 
 export type LoginUserMutationVariables = {
@@ -419,19 +417,7 @@ export type PostsQueryVariables = {
 }
 
 export type PostsQuery = { __typename?: 'Query' } & {
-  posts?: Maybe<
-    Array<
-      { __typename?: 'Post' } & Pick<
-        Post,
-        'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt'
-      > & {
-          images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
-          likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
-          threads: Array<{ __typename?: 'Thread' } & Pick<Thread, 'id'>>
-          author: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'name'>
-        }
-    >
-  >
+  posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
 }
 
 export type UpdateCommentMutationVariables = {
@@ -470,6 +456,7 @@ export const AuthorFragmentFragmentDoc = gql`
     id
     name
     handle
+    profileImage
   }
 `
 export const CommentFragmentFragmentDoc = gql`
@@ -512,6 +499,29 @@ export const PostFragmentFragmentDoc = gql`
   }
   ${AuthorFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
+`
+export const PostCardFragmentFragmentDoc = gql`
+  fragment PostCardFragment on Post {
+    id
+    title
+    body
+    excerpt
+    readTime
+    createdAt
+    images {
+      smallSize
+    }
+    likes {
+      id
+    }
+    threads {
+      id
+    }
+    author {
+      ...AuthorFragment
+    }
+  }
+  ${AuthorFragmentFragmentDoc}
 `
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
@@ -817,30 +827,10 @@ export type DeleteCommentMutationOptions = ApolloReactCommon.BaseMutationOptions
 export const FeedDocument = gql`
   query feed {
     feed {
-      id
-      title
-      body
-      excerpt
-      readTime
-      createdAt
-      images {
-        smallSize
-      }
-      likes {
-        id
-      }
-      threads {
-        id
-      }
-      author {
-        id
-        handle
-        name
-        email
-        profileImage
-      }
+      ...PostCardFragment
     }
   }
+  ${PostCardFragmentFragmentDoc}
 `
 
 /**
@@ -966,28 +956,10 @@ export type PostByIdQueryResult = ApolloReactCommon.QueryResult<
 export const PostsDocument = gql`
   query posts($authorId: Int!) {
     posts(authorId: $authorId) {
-      id
-      title
-      body
-      excerpt
-      readTime
-      createdAt
-      images {
-        smallSize
-      }
-      likes {
-        id
-      }
-      threads {
-        id
-      }
-      author {
-        id
-        handle
-        name
-      }
+      ...PostCardFragment
     }
   }
+  ${PostCardFragmentFragmentDoc}
 `
 
 /**

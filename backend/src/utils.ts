@@ -1,5 +1,6 @@
 import escapeHTML from 'escape-html'
 import { User, Post, Comment } from '.prisma/client'
+import { readTime } from './utils/post'
 
 type NodeType = {
   type: ?string
@@ -90,10 +91,12 @@ export const generateExcerpt = (
 }
 
 export const processEditorDocument = (document: NodeType[]) => {
+  const body = htmlifyEditorNodes(document)
   return {
-    body: htmlifyEditorNodes(document),
+    body,
     bodySrc: JSON.stringify(document),
     excerpt: generateExcerpt(document),
+    readTime: readTime(body),
   }
 }
 

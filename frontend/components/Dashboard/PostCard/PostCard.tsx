@@ -12,7 +12,7 @@ interface Props {
 const PostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
   return (
     <div className="post-card-container" key={id}>
-      <Link href={`/post?id=${id}`}>
+      <Link href={`/post/${id}`}>
         <a>
           <img className="post-image" src={image} alt="Sample post image" />
           <div className="post-card-bottom">

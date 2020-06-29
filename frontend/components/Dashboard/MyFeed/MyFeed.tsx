@@ -2,6 +2,7 @@
 import React from 'react'
 
 import PostCard from '../PostCard'
+import theme from '../../../theme'
 
 // import { Post } from '../../../generated/graphql' // TODO (robin-macpherson): See Post[] type todo below
 
@@ -51,6 +52,7 @@ const MyFeed: React.FC<Props> = ({ posts }) => {
         h1 {
           margin: 50px auto;
           text-align: center;
+          ${theme.typography.headingXL};
         }
 
         .my-feed-search {

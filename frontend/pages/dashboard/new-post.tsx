@@ -7,7 +7,8 @@ import { withApollo } from '../../lib/apollo'
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import JournalyEditor from '../../components/JournalyEditor'
 import LanguageSelect from '../../components/LanguageSelect'
-import Button from '../../elements/Button'
+import theme from '../../theme'
+import Button, { ButtonVariant } from '../../elements/Button'
 import { useCurrentUserQuery, useCreatePostMutation } from '../../generated/graphql'
 
 const initialValue = [
@@ -70,14 +71,35 @@ const NewPostPage: NextPage = () => {
           <JournalyEditor value={body} setValue={setBody} />
         </div>
 
-        <Button onClick={createNewPost} disabled={!title || langId === -1}>
-          Submit
-        </Button>
-
+        <div className="button-container">
+          <Button
+            type="submit"
+            onClick={createNewPost}
+            disabled={!title || langId === -1}
+            variant={ButtonVariant.Primary}
+          >
+            Publish!
+          </Button>
+          <Button type="submit" variant={ButtonVariant.Secondary}>
+            Save Draft
+          </Button>
+        </div>
         <style jsx>{`
+          display: flex;
+          flex-direction: column;
+
           h1 {
             margin: 50px auto;
             text-align: center;
+            ${theme.typography.headingXL};
+          }
+
+          .button-container {
+            display: flex;
+            flex-direction: row;
+            margin: 0 auto;
+            width: 200px;
+            justify-content: space-between;
           }
 
           #new-post {

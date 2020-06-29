@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import { withApollo } from '../../lib/apollo'
-import NewPost from '../../components/Dashboard/Posts/NewPost'
+import Post from '../../components/Dashboard/Post'
 import LoadingWrapper from '../../components/LoadingWrapper'
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import { usePostByIdQuery } from '../../generated/graphql'
@@ -22,7 +22,7 @@ const PostPage: NextPage = () => {
       <LoadingWrapper
         loading={loading}
         error={error}
-        render={() => <NewPost post={post} refetch={refetch} />}
+        render={() => <Post post={post} refetch={refetch} />}
       />
     </DashboardLayout>
   )

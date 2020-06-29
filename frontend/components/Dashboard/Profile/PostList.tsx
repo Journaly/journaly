@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from '../../../config/i18n'
 import { layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
 import { Post as PostType } from '../../../generated/graphql'
-import Post from '../Posts/Post'
+import PostCard from '../PostCard/PostCard'
 import theme from '../../../theme'
 
 type Props = {
@@ -16,7 +16,7 @@ const PostList: React.FC<Props> = ({ posts }) => {
     <div className="post-list">
       <h1 className="posts-title">{t('postsTitle')}</h1>
 
-      {posts && posts.map((post) => <Post key={post.id} post={post} />)}
+      {posts && posts.map((post) => <PostCard key={post.id} post={post} />)}
 
       <style jsx>{`
         .post-list {

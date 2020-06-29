@@ -57,7 +57,7 @@ const LoginForm: React.FC = () => {
               },
             })}
           />
-          <ErrorMessage errors={errors} name="email" as="em" />
+          <ErrorMessage errors={errors} name="email" as="p" />
         </label>
         <label htmlFor="password">
           Password
@@ -70,7 +70,7 @@ const LoginForm: React.FC = () => {
               minLength: { value: 6, message: 'Password must be at least 6 characters' },
             })}
           />
-          <ErrorMessage errors={errors} name="password" as="em" />
+          <ErrorMessage errors={errors} name="password" as="p" />
         </label>
 
         <Button type="submit">Log In</Button>
@@ -165,7 +165,7 @@ const LoginForm: React.FC = () => {
           box-shadow: 0px 8px 10px #00000029;
         }
 
-        :global(label > em) {
+        :global(label > p) {
           color: ${theme.colors.red};
         }
         

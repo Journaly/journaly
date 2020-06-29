@@ -55,7 +55,7 @@ const SignupForm: React.FC = () => {
               minLength: { value: 3, message: 'Your display name must be at least 3 characters' },
             })}
           />
-          <ErrorMessage errors={errors} name="handle" as="em" />
+          <ErrorMessage errors={errors} name="handle" as="p" />
         </label>
         <label htmlFor="email">
           Email
@@ -71,7 +71,7 @@ const SignupForm: React.FC = () => {
               },
             })}
           />
-          <ErrorMessage errors={errors} name="email" as="em" />
+          <ErrorMessage errors={errors} name="email" as="p" />
         </label>
         <label htmlFor="password">
           Password
@@ -84,7 +84,7 @@ const SignupForm: React.FC = () => {
               minLength: { value: 6, message: 'Password must be at least 6 characters' },
             })}
           />
-          <ErrorMessage errors={errors} name="password" as="em" />
+          <ErrorMessage errors={errors} name="password" as="p" />
         </label>
 
         <Button type="submit">Sign up!</Button>
@@ -170,7 +170,7 @@ const SignupForm: React.FC = () => {
           text-align: center;
         }
 
-        :global(label > em) {
+        :global(label > p) {
           color: ${theme.colors.red};
         }
 

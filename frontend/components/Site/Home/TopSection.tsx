@@ -1,5 +1,6 @@
 import SignupForm from '../SignupForm'
 import { width } from '../../../utils'
+import theme from '../../../theme'
 
 const TopSection = () => (
   <div className="home-section-top">
@@ -15,6 +16,10 @@ const TopSection = () => (
         padding: 30px 20px;
         margin: 0 auto;
         max-width: ${width.desktopHD}px;
+      }
+
+      h1 {
+        ${theme.typography.headingXL}
       }
 
       @media (min-width: 960px) {

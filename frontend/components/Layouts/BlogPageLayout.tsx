@@ -1,5 +1,6 @@
 import { format } from 'date-fns'
 import { getUTCDate } from '../../utils'
+import theme from '../../theme'
 
 interface Props {
   date: string
@@ -60,6 +61,7 @@ const BlogPageLayout: React.FC<Props> = (props) => (
         max-width: 800px;
         margin: 0 auto;
         padding: 25px 0 50px;
+        background-color: ${theme.colors.white};
       }
 
       .post-date,

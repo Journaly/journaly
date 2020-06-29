@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { navConstants } from './nav-constants'
 import NavLinks from './NavLinks'
 import { black } from '../../../utils'
-import { useCurrentUserQuery } from '../../../generated/graphql'
+import { CurrentUserDocument } from '../../../generated/graphql'
+import { useApolloClient } from '@apollo/client'
 
 interface Props {
   expanded: boolean
@@ -11,13 +12,13 @@ interface Props {
 }
 
 const Nav: React.FC<Props> = ({ expanded, collapse }) => {
-  const { data, refetch } = useCurrentUserQuery()
+  const client = useApolloClient()
+  const user = client.readQuery({ query: CurrentUserDocument })
 
   useEffect(() => {
     setTimeout(() => {
       document.body.classList.remove('block-transitions-on-page-load')
     }, 0)
-    refetch()
   }, [])
 
   const handleCollapse = (): void => {
@@ -32,8 +33,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
       <div className="nav-background" onClick={handleCollapse} />
 
       <nav>
-        {data && data.currentUser && (
-          <NavLinks onClick={handleCollapse} currentUser={data.currentUser} />
+        {user && user.currentUser && (
+          <NavLinks onClick={handleCollapse} currentUser={user.currentUser} />
         )}
 
         <h1 className="nav-logo">

@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useApolloClient } from '@apollo/client'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackLogIn } from '../../events/users'
 import { useLoginUserMutation, CurrentUserDocument } from '../../generated/graphql'
@@ -11,6 +12,7 @@ import theme from '../../theme'
 
 const LoginForm: React.FC = () => {
   const router = useRouter()
+  const client = useApolloClient()
   const { handleSubmit, register, errors } = useForm({
     mode: 'onBlur',
   })
@@ -18,11 +20,12 @@ const LoginForm: React.FC = () => {
   const fieldErrorName = Object.keys(errors)[0] || ''
 
   const [loginUser, { loading, error }] = useLoginUserMutation({
-    onCompleted: () => {
+    onCompleted: (data) => {
       trackLogIn()
       router.push({
         pathname: '/dashboard/my-feed',
       })
+      client.writeQuery({ query: CurrentUserDocument, data: { user: data.loginUser } })
     },
   })
 
@@ -169,7 +172,7 @@ const LoginForm: React.FC = () => {
           color: ${theme.colors.red};
           font-style: italic;
         }
-        
+
         :global(.form-error) {
           margin-bottom: 24px;
         }

@@ -1,4 +1,5 @@
 import { width, lightGrey } from '../../../utils'
+import theme from '../../../theme'
 
 type Props = {
   sectionHeading: string
@@ -30,6 +31,7 @@ const HomeSection: React.FC<Props> = ({ sectionHeading, grey = false, children }
         h1 {
           margin-bottom: 50px;
           text-align: center;
+          ${theme.typography.headingLG}
         }
 
         .j-video {

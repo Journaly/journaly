@@ -1,20 +1,20 @@
 import React from 'react'
 import Link from 'next/link'
-// TODO: use Post type from generated graphql
-import { Post } from './postCardUtils'
+import { Post as PostType } from '../../../generated/graphql'
 
 type Props = {
-  post: Post
+  post: PostType
 }
 
 const MyFeedPostCard: React.FC<Props> = ({ post }) => {
-  const { id, title, excerpt, image, author } = post
+  const { id, title, excerpt, images, author } = post
+  const displayImage = images.length ? images[0].smallSize : '/images/samples/sample-post-img.jpg'
 
   return (
     <div className="post-card-container" key={id}>
       <Link href={`/post/${id}`}>
         <a>
-          <img className="post-image" src={image || '/images/samples/sample-post-img.jpg'} alt="" />
+          <img className="post-image" src={displayImage} alt="" />
           <div className="post-card-bottom">
             <div className="preview">
               <h4>{title}</h4>
@@ -22,7 +22,11 @@ const MyFeedPostCard: React.FC<Props> = ({ post }) => {
             </div>
 
             <div className="info">
-              <img className="avatar" src={image || '/images/robin-small.png'} alt="Author" />
+              <img
+                className="avatar"
+                src={author.profileImage || '/images/robin-small.png'}
+                alt="Author"
+              />
               <p className="author">{author}</p>
             </div>
           </div>

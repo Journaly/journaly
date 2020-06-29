@@ -11,7 +11,7 @@ interface Props {
 }
 
 const Nav: React.FC<Props> = ({ expanded, collapse }) => {
-  const { data, refetch } = useCurrentUserQuery()
+  const { data } = useCurrentUserQuery()
 
   useEffect(() => {
     setTimeout(() => {

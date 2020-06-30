@@ -26,7 +26,7 @@ import Button from './Button'
  * once they publish or save draft.
  */
 
-type HotKey = 'mod+b' | 'mod+i' | 'mod+u' | 'mod+`'
+type HotKey = 'mod+b' | 'mod+i' | 'mod+u'
 
 const HOTKEYS: { [key in HotKey]: string } = {
   'mod+b': 'bold',

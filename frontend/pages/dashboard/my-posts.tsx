@@ -6,7 +6,7 @@ import TabToggle from '../../elements/TabToggle'
 
 const MyPostsPage: NextPage = () => {
   const tabs = [
-    { key: 'my-posts', text: 'My Posts' },
+    { key: 'published', text: 'Published' },
     { key: 'drafts', text: 'Drafts' },
   ]
   const [activeKey, setActiveKey] = useState(tabs[0].key)
@@ -21,7 +21,7 @@ const MyPostsPage: NextPage = () => {
       <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
 
       <div className="posts-wrapper">
-        {activeKey === 'my-posts' && <div>My Posts</div>}
+        {activeKey === 'published' && <div>My Posts</div>}
         {activeKey === 'drafts' && <div>Drafts</div>}
       </div>
 

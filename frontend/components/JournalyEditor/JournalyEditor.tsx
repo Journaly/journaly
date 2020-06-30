@@ -87,7 +87,7 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
       </div>
       <style jsx>{`
         .editor-container {
-          padding: 0 25px;
+          padding: 0 25px 10px;
           border: 1px solid ${theme.colors.black};
           border-radius: 5px;
           min-height: 200px;
@@ -95,10 +95,10 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
         }
 
         :global(blockquote) {
-          border-left: 2px solid #ddd;
+          border-left: 2px solid ${theme.colors.gray800};
           margin: 10px 0;
           padding-left: 10px;
-          color: #aaa;
+          color: ${theme.colors.gray800};
           font-style: italic;
         }
 

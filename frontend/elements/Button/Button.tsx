@@ -93,6 +93,7 @@ const Button: React.FC<Props> = (props) => {
           border: 1px solid ${theme.colors.blueLight};
           box-shadow: none;
           cursor: pointer;
+          white-space: nowrap;
         }
 
         .${ButtonSize.Large} {

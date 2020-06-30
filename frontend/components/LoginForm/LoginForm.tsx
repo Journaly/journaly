@@ -56,6 +56,7 @@ const LoginForm: React.FC = () => {
                 message: 'Invalid email address',
               },
             })}
+            data-test="email"
           />
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>
@@ -69,6 +70,7 @@ const LoginForm: React.FC = () => {
               required: 'Password is required',
               minLength: { value: 6, message: 'Password must be at least 6 characters' },
             })}
+            data-test="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>

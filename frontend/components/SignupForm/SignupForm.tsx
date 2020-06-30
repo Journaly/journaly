@@ -54,6 +54,7 @@ const SignupForm: React.FC = () => {
               required: 'Display Name is required',
               minLength: { value: 3, message: 'Your display name must be at least 3 characters' },
             })}
+            data-test="display-name"
           />
           <ErrorMessage errors={errors} name="handle" as="p" />
         </label>
@@ -70,6 +71,7 @@ const SignupForm: React.FC = () => {
                 message: 'Invalid email address',
               },
             })}
+            data-test="email"
           />
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>
@@ -83,6 +85,7 @@ const SignupForm: React.FC = () => {
               required: 'Password is required',
               minLength: { value: 6, message: 'Password must be at least 6 characters' },
             })}
+            data-test="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>

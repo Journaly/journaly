@@ -13,12 +13,12 @@ describe('/login', () => {
 
   it('requires email address', () => {
     cy.get('form').contains('Log In').click()
-    cy.get('p', 'Email is required')
+    cy.contains('p', 'Email is required')
   })
 
   it('requires password', () => {
     cy.get('form').contains('Log In').click()
-    cy.get('p', 'Password is required')
+    cy.contains('p', 'Password is required')
   })
 
   it('redirects user to /dashboard/my-feed on succesful login', () => {

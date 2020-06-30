@@ -13,27 +13,27 @@ describe('/login', () => {
 
   it('requires display name', () => {
     cy.get('form').contains('Sign up!').click()
-    cy.get('p', 'Display Name is required')
+    cy.contains('p', 'Display Name is required')
   })
 
   it('requires email address', () => {
     cy.get('form').contains('Sign up!').click()
-    cy.get('p', 'Email is required')
+    cy.contains('p', 'Email is required')
   })
 
   it('requires valid email address', () => {
-    cy.get('[data-test=email]').type('jon')
-    cy.get('p', 'Invalid email address')
+    cy.get('[data-test=email]').type('jon{enter}')
+    cy.contains('p', 'Invalid email address')
   })
 
   it('requires password', () => {
     cy.get('form').contains('Sign up!').click()
-    cy.get('p', 'Password is required')
+    cy.contains('p', 'Password is required')
   })
 
   it('requires valid password', () => {
     cy.get('[data-test=password]').type('12{enter}')
-    cy.get('p', 'Password must be at least 6 characters')
+    cy.contains('p', 'Password must be at least 6 characters')
   })
 
   it('redirects user to /dashboard/my-feed on succesful signup', () => {

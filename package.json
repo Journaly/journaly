@@ -19,7 +19,9 @@
     "url": "https://github.com/Journaly/journaly/issues"
   },
   "homepage": "https://github.com/Journaly/journaly#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "cypress": "^4.9.0"
+  },
   "dependencies": {
     "concurrently": "^5.2.0"
   }

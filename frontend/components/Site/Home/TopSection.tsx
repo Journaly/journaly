@@ -25,6 +25,9 @@ const TopSection = () => (
 
       h1 {
         ${theme.typography.headingXL};
+        margin-bottom: 30px;
+        text-align: center;
+        margin-right: 0;
       }
 
       :global(.get-started-btn) {
@@ -46,12 +49,6 @@ const TopSection = () => (
         :global(.get-started-btn) {
           margin-left: 10px;
         }
-      }
-
-      .home-section-top h1 {
-        margin-bottom: 30px;
-        text-align: center;
-        margin-right: 0;
       }
     `}</style>
   </div>

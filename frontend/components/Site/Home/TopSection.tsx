@@ -28,7 +28,6 @@ const TopSection = () => (
       }
 
       :global(.get-started-btn) {
-        white-space: nowrap;
         margin-left: 0px;
       }
 

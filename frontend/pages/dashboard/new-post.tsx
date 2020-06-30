@@ -77,10 +77,11 @@ const NewPostPage: NextPage = () => {
             onClick={createNewPost}
             disabled={!title || langId === -1}
             variant={ButtonVariant.Primary}
+            data-test="post-submit"
           >
             Publish!
           </Button>
-          <Button type="submit" variant={ButtonVariant.Secondary}>
+          <Button type="submit" variant={ButtonVariant.Secondary} data-test="post-draft">
             Save Draft
           </Button>
         </div>

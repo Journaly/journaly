@@ -10,6 +10,7 @@ import LanguageSelect from '../../components/LanguageSelect'
 import theme from '../../theme'
 import Button, { ButtonVariant } from '../../elements/Button'
 import { useCurrentUserQuery, useCreatePostMutation } from '../../generated/graphql'
+import AuthGate from '../../components/AuthGate'
 
 const initialValue = [
   {
@@ -43,80 +44,82 @@ const NewPostPage: NextPage = () => {
   }
 
   return (
-    <DashboardLayout>
-      <form id="new-post" onSubmit={createNewPost}>
-        <h1>Let's write a post</h1>
+    <AuthGate>
+      <DashboardLayout>
+        <form id="new-post" onSubmit={createNewPost}>
+          <h1>Let's write a post</h1>
 
-        <label htmlFor="post-title">Title</label>
-        <input
-          className="j-field"
-          id="post-title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          type="text"
-          name="title"
-          placeholder="The Greatest Story Never Told..."
-          autoComplete="off"
-        />
+          <label htmlFor="post-title">Title</label>
+          <input
+            className="j-field"
+            id="post-title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            type="text"
+            name="title"
+            placeholder="The Greatest Story Never Told..."
+            autoComplete="off"
+          />
 
-        <label htmlFor="post-language">Language</label>
-        <LanguageSelect
-          id="language"
-          languages={userLanguages}
-          value={langId}
-          onChange={setLangId}
-        />
+          <label htmlFor="post-language">Language</label>
+          <LanguageSelect
+            id="language"
+            languages={userLanguages}
+            value={langId}
+            onChange={setLangId}
+          />
 
-        <div className="editor-padding">
-          <JournalyEditor value={body} setValue={setBody} />
-        </div>
+          <div className="editor-padding">
+            <JournalyEditor value={body} setValue={setBody} />
+          </div>
 
-        <div className="button-container">
-          <Button
-            type="submit"
-            onClick={createNewPost}
-            disabled={!title || langId === -1}
-            variant={ButtonVariant.Primary}
-            data-test="post-submit"
-          >
-            Publish!
-          </Button>
-          <Button type="submit" variant={ButtonVariant.Secondary} data-test="post-draft">
-            Save Draft
-          </Button>
-        </div>
-        <style jsx>{`
-          display: flex;
-          flex-direction: column;
-
-          h1 {
-            margin: 50px auto;
-            text-align: center;
-            ${theme.typography.headingXL};
-          }
-
-          .button-container {
-            display: flex;
-            flex-direction: row;
-            margin: 0 auto;
-            width: 200px;
-            justify-content: space-between;
-          }
-
-          #new-post {
+          <div className="button-container">
+            <Button
+              type="submit"
+              onClick={createNewPost}
+              disabled={!title || langId === -1}
+              variant={ButtonVariant.Primary}
+              data-test="post-submit"
+            >
+              Publish!
+            </Button>
+            <Button type="submit" variant={ButtonVariant.Secondary} data-test="post-draft">
+              Save Draft
+            </Button>
+          </div>
+          <style jsx>{`
             display: flex;
             flex-direction: column;
-            background-color: white;
-            padding: 25px;
-            box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
-          }
 
-          .editor-padding {
-            padding: 25px 0;
-          }
-        `}</style>
-      </form>
-    </DashboardLayout>
+            h1 {
+              margin: 50px auto;
+              text-align: center;
+              ${theme.typography.headingXL};
+            }
+
+            .button-container {
+              display: flex;
+              flex-direction: row;
+              margin: 0 auto;
+              width: 200px;
+              justify-content: space-between;
+            }
+
+            #new-post {
+              display: flex;
+              flex-direction: column;
+              background-color: white;
+              padding: 25px;
+              box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
+            }
+
+            .editor-padding {
+              padding: 25px 0;
+            }
+          `}</style>
+        </form>
+      </DashboardLayout>
+    </AuthGate>
   )
 }
 

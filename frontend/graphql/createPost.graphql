@@ -1,5 +1,10 @@
-mutation createPost($title: String!, $body: [EditorNode!], $languageId: Int!) {
-  createPost(title: $title, body: $body, languageId: $languageId) {
+mutation createPost(
+  $title: String!
+  $body: [EditorNode!]
+  $languageId: Int!
+  $status: PostStatus!
+) {
+  createPost(title: $title, body: $body, languageId: $languageId, status: $status) {
     id
   }
 }

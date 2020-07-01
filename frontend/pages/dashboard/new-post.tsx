@@ -9,7 +9,11 @@ import JournalyEditor from '../../components/JournalyEditor'
 import LanguageSelect from '../../components/LanguageSelect'
 import theme from '../../theme'
 import Button, { ButtonVariant } from '../../elements/Button'
-import { useCurrentUserQuery, useCreatePostMutation } from '../../generated/graphql'
+import {
+  useCurrentUserQuery,
+  useCreatePostMutation,
+  PostStatus as PostStatusType,
+} from '../../generated/graphql'
 
 const initialValue = [
   {
@@ -35,16 +39,15 @@ const NewPostPage: NextPage = () => {
 
   const userLanguages = languagesLearning.concat(languagesNative).map((x) => x.language)
 
-  const createNewPost = (e) => {
-    e.preventDefault()
+  const createNewPost = (status: PostStatusType) => {
     createPost({
-      variables: { title, body, languageId: langId },
+      variables: { title, body, status, languageId: langId },
     })
   }
 
   return (
     <DashboardLayout>
-      <form id="new-post" onSubmit={createNewPost}>
+      <form id="new-post">
         <h1>Let's write a post</h1>
 
         <label htmlFor="post-title">Title</label>
@@ -74,14 +77,26 @@ const NewPostPage: NextPage = () => {
         <div className="button-container">
           <Button
             type="submit"
-            onClick={createNewPost}
             disabled={!title || langId === -1}
             variant={ButtonVariant.Primary}
             data-test="post-submit"
+            onClick={(e) => {
+              e.preventDefault()
+              createNewPost(PostStatusType.Published)
+            }}
           >
             Publish!
           </Button>
-          <Button type="submit" variant={ButtonVariant.Secondary} data-test="post-draft">
+          <Button
+            type="submit"
+            disabled={!title || langId === -1}
+            variant={ButtonVariant.Secondary}
+            data-test="post-draft"
+            onClick={(e) => {
+              e.preventDefault()
+              createNewPost(PostStatusType.Draft)
+            }}
+          >
             Save Draft
           </Button>
         </div>

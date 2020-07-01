@@ -105,6 +105,7 @@ export type MutationCreatePostArgs = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
   languageId: Scalars['Int']
+  status?: Maybe<PostStatus>
 }
 
 export type MutationCreateThreadArgs = {
@@ -270,6 +271,7 @@ export type CreatePostMutationVariables = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
   languageId: Scalars['Int']
+  status: PostStatus
 }
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
@@ -508,8 +510,13 @@ export type CreateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions
   CreateCommentMutationVariables
 >
 export const CreatePostDocument = gql`
-  mutation createPost($title: String!, $body: [EditorNode!], $languageId: Int!) {
-    createPost(title: $title, body: $body, languageId: $languageId) {
+  mutation createPost(
+    $title: String!
+    $body: [EditorNode!]
+    $languageId: Int!
+    $status: PostStatus!
+  ) {
+    createPost(title: $title, body: $body, languageId: $languageId, status: $status) {
       id
     }
   }
@@ -535,6 +542,7 @@ export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      title: // value for 'title'
  *      body: // value for 'body'
  *      languageId: // value for 'languageId'
+ *      status: // value for 'status'
  *   },
  * });
  */

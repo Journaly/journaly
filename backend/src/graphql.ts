@@ -7,7 +7,7 @@ import { processEditorDocument, hasPostPermissions } from './utils'
 
 use(prisma())
 
-const { intArg, stringArg } = schema
+const { arg, intArg, stringArg } = schema
 
 // Time constants
 const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
@@ -351,6 +351,7 @@ schema.mutationType({
         title: stringArg({ required: true }),
         body: EditorNode.asArg({ list: true }),
         languageId: intArg({ required: true }),
+        status: arg({ type: 'PostStatus' }),
       },
       resolve: async (parent, args, ctx) => {
         const { title, body, languageId } = args
@@ -359,6 +360,7 @@ schema.mutationType({
         return ctx.db.post.create({
           data: {
             title: args.title,
+            status: args.status,
             language: { connect: { id: languageId } },
             author: { connect: { id: userId } },
             ...processEditorDocument(body),

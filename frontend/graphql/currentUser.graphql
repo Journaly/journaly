@@ -3,16 +3,12 @@ query currentUser {
     ...UserFragment
     languagesLearning {
       language {
-        name
-        dialect
-        id
+        ...LanguageFragment
       }
     }
     languagesNative {
       language {
-        name
-        dialect
-        id
+        ...LanguageFragment
       }
     }
   }

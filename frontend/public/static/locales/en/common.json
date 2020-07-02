@@ -8,5 +8,7 @@
     "newPost": "New Post",
     "settings": "Settings",
     "logOut": "Log Out"
-  }
+  },
+  "e404": "Resource not found",
+  "e403": "Not Authorized"
 }

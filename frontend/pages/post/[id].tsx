@@ -6,24 +6,27 @@ import { withApollo } from '../../lib/apollo'
 import Post from '../../components/Dashboard/Post'
 import LoadingWrapper from '../../components/LoadingWrapper'
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
-import { usePostByIdQuery } from '../../generated/graphql'
+import { useCurrentUserQuery, usePostByIdQuery } from '../../generated/graphql'
 
 const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
   const id = parseInt(idStr, 10)
-  const { refetch, loading, error, data } = usePostByIdQuery({
+  const { refetch, loading: postLoading, error: postError, data: postData } = usePostByIdQuery({
     variables: { id },
   })
-
-  const post = data?.postById
+  const { loading: userLoading, error: userError, data: userData } = useCurrentUserQuery()
 
   return (
     <DashboardLayout>
-      <LoadingWrapper loading={loading} error={error}>
-        <Post post={post} refetch={refetch} />
+      <LoadingWrapper loading={postLoading || userLoading} error={postError || userError}>
+        <Post post={postData?.postById} currentUser={userData?.currentUser} refetch={refetch} />
       </LoadingWrapper>
     </DashboardLayout>
   )
 }
+
+PostPage.getInitialProps = async () => ({
+  namespacesRequired: ['common', 'post'],
+})
 
 export default withApollo(PostPage)

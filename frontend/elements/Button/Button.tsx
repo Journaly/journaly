@@ -26,7 +26,7 @@ type Props = {
   link?: boolean
   loading?: boolean
   id?: string
-  onClick?: () => void
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   size?: ButtonSize
   type?: Type
   variant?: ButtonVariant

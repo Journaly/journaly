@@ -15,6 +15,7 @@ import {
   PostStatus as PostStatusType,
 } from '../../generated/graphql'
 import AuthGate from '../../components/AuthGate'
+import useAutosavedState from '../../hooks/useAutosavedState'
 
 const initialValue = [
   {
@@ -30,7 +31,10 @@ const NewPostPage: NextPage = () => {
   const router = useRouter()
   const [title, setTitle] = React.useState<string>('')
   const [langId, setLangId] = React.useState<number>(-1)
-  const [body, setBody] = React.useState<Node[]>(initialValue)
+  const [body, setBody, resetBody] = useAutosavedState<Node[]>(initialValue, {
+    key: 'new-post',
+    debounceTime: 1000,
+  })
 
   const [createPost] = useCreatePostMutation({
     onCompleted: ({ createPost }) => {
@@ -38,6 +42,7 @@ const NewPostPage: NextPage = () => {
         return
       }
 
+      resetBody()
       router.push({ pathname: `/post/${createPost.id}` })
     },
   })

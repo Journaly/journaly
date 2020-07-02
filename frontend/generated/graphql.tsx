@@ -92,6 +92,7 @@ export type Mutation = {
   createUser?: Maybe<User>
   loginUser?: Maybe<User>
   createPost?: Maybe<Post>
+  updatePost?: Maybe<Post>
   createThread?: Maybe<Thread>
   createComment?: Maybe<Comment>
   updateComment?: Maybe<Comment>
@@ -115,6 +116,14 @@ export type MutationCreatePostArgs = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
   languageId: Scalars['Int']
+  status?: Maybe<PostStatus>
+}
+
+export type MutationUpdatePostArgs = {
+  postId: Scalars['Int']
+  title?: Maybe<Scalars['String']>
+  body?: Maybe<Array<EditorNode>>
+  status?: Maybe<PostStatus>
 }
 
 export type MutationCreateThreadArgs = {
@@ -312,6 +321,7 @@ export type CreatePostMutationVariables = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
   languageId: Scalars['Int']
+  status: PostStatus
 }
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
@@ -346,12 +356,12 @@ export type CurrentUserQuery = { __typename?: 'Query' } & {
     { __typename?: 'User' } & {
       languagesLearning: Array<
         { __typename?: 'LanguageLearning' } & {
-          language: { __typename?: 'Language' } & Pick<Language, 'name' | 'dialect' | 'id'>
+          language: { __typename?: 'Language' } & LanguageFragmentFragment
         }
       >
       languagesNative: Array<
         { __typename?: 'LanguageNative' } & {
-          language: { __typename?: 'Language' } & Pick<Language, 'name' | 'dialect' | 'id'>
+          language: { __typename?: 'Language' } & LanguageFragmentFragment
         }
       >
     } & UserFragmentFragment
@@ -410,6 +420,11 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
     author: { __typename?: 'User' } & AuthorFragmentFragment
   }
 
+export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
+  Language,
+  'id' | 'name' | 'dialect'
+>
+
 export type LoginUserMutationVariables = {
   identifier: Scalars['String']
   password: Scalars['String']
@@ -442,6 +457,17 @@ export type UpdateCommentMutationVariables = {
 
 export type UpdateCommentMutation = { __typename?: 'Mutation' } & {
   updateComment?: Maybe<{ __typename?: 'Comment' } & CommentFragmentFragment>
+}
+
+export type UpdatePostMutationVariables = {
+  postId: Scalars['Int']
+  title?: Maybe<Scalars['String']>
+  body?: Maybe<Array<EditorNode>>
+  status?: Maybe<PostStatus>
+}
+
+export type UpdatePostMutation = { __typename?: 'Mutation' } & {
+  updatePost?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
 }
 
 export type UsersQueryVariables = {}
@@ -538,6 +564,13 @@ export const PostCardFragmentFragmentDoc = gql`
   }
   ${AuthorFragmentFragmentDoc}
 `
+export const LanguageFragmentFragmentDoc = gql`
+  fragment LanguageFragment on Language {
+    id
+    name
+    dialect
+  }
+`
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
     createComment(body: $body, threadId: $threadId) {
@@ -591,8 +624,13 @@ export type CreateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions
   CreateCommentMutationVariables
 >
 export const CreatePostDocument = gql`
-  mutation createPost($title: String!, $body: [EditorNode!], $languageId: Int!) {
-    createPost(title: $title, body: $body, languageId: $languageId) {
+  mutation createPost(
+    $title: String!
+    $body: [EditorNode!]
+    $languageId: Int!
+    $status: PostStatus!
+  ) {
+    createPost(title: $title, body: $body, languageId: $languageId, status: $status) {
       id
     }
   }
@@ -618,6 +656,7 @@ export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      title: // value for 'title'
  *      body: // value for 'body'
  *      languageId: // value for 'languageId'
+ *      status: // value for 'status'
  *   },
  * });
  */
@@ -754,21 +793,18 @@ export const CurrentUserDocument = gql`
       ...UserFragment
       languagesLearning {
         language {
-          name
-          dialect
-          id
+          ...LanguageFragment
         }
       }
       languagesNative {
         language {
-          name
-          dialect
-          id
+          ...LanguageFragment
         }
       }
     }
   }
   ${UserFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
 `
 
 /**
@@ -1068,6 +1104,56 @@ export type UpdateCommentMutationResult = ApolloReactCommon.MutationResult<Updat
 export type UpdateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateCommentMutation,
   UpdateCommentMutationVariables
+>
+export const UpdatePostDocument = gql`
+  mutation updatePost($postId: Int!, $title: String, $body: [EditorNode!], $status: PostStatus) {
+    updatePost(body: $body, title: $title, status: $status, postId: $postId) {
+      ...PostFragment
+    }
+  }
+  ${PostFragmentFragmentDoc}
+`
+export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
+  UpdatePostMutation,
+  UpdatePostMutationVariables
+>
+
+/**
+ * __useUpdatePostMutation__
+ *
+ * To run a mutation, you first call `useUpdatePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePostMutation, { data, loading, error }] = useUpdatePostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *      title: // value for 'title'
+ *      body: // value for 'body'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdatePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdatePostMutation,
+    UpdatePostMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(
+    UpdatePostDocument,
+    baseOptions,
+  )
+}
+export type UpdatePostMutationHookResult = ReturnType<typeof useUpdatePostMutation>
+export type UpdatePostMutationResult = ApolloReactCommon.MutationResult<UpdatePostMutation>
+export type UpdatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdatePostMutation,
+  UpdatePostMutationVariables
 >
 export const UsersDocument = gql`
   query users {

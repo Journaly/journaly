@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Language as LanguageType } from '../../generated/graphql'
+import { LanguageFragmentFragment as LanguageType } from '../../generated/graphql'
 
 type LanguageSelectProps = {
   languages: LanguageType[]

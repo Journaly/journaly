@@ -9,7 +9,11 @@ import JournalyEditor from '../../components/JournalyEditor'
 import LanguageSelect from '../../components/LanguageSelect'
 import theme from '../../theme'
 import Button, { ButtonVariant } from '../../elements/Button'
-import { useCurrentUserQuery, useCreatePostMutation } from '../../generated/graphql'
+import {
+  useCurrentUserQuery,
+  useCreatePostMutation,
+  PostStatus as PostStatusType,
+} from '../../generated/graphql'
 import AuthGate from '../../components/AuthGate'
 
 const initialValue = [
@@ -30,23 +34,28 @@ const NewPostPage: NextPage = () => {
 
   const [createPost] = useCreatePostMutation({
     onCompleted: ({ createPost }) => {
+      if (!createPost) {
+        return
+      }
+
       router.push({ pathname: `/post/${createPost.id}` })
     },
   })
 
-  const userLanguages = languagesLearning.concat(languagesNative).map((x) => x.language)
+  const userLanguages = languagesLearning
+    .map((x) => x.language)
+    .concat(languagesNative.map((x) => x.language))
 
-  const createNewPost = (e) => {
-    e.preventDefault()
+  const createNewPost = (status: PostStatusType) => {
     createPost({
-      variables: { title, body, languageId: langId },
+      variables: { title, body, status, languageId: langId },
     })
   }
 
   return (
     <AuthGate>
       <DashboardLayout>
-        <form id="new-post" onSubmit={createNewPost}>
+        <form id="new-post">
           <h1>Let's write a post</h1>
 
           <label htmlFor="post-title">Title</label>
@@ -76,14 +85,26 @@ const NewPostPage: NextPage = () => {
           <div className="button-container">
             <Button
               type="submit"
-              onClick={createNewPost}
               disabled={!title || langId === -1}
               variant={ButtonVariant.Primary}
               data-test="post-submit"
+              onClick={(e: React.MouseEvent) => {
+                e.preventDefault()
+                createNewPost(PostStatusType.Published)
+              }}
             >
               Publish!
             </Button>
-            <Button type="submit" variant={ButtonVariant.Secondary} data-test="post-draft">
+            <Button
+              type="submit"
+              disabled={!title || langId === -1}
+              variant={ButtonVariant.Secondary}
+              data-test="post-draft"
+              onClick={(e: React.MouseEvent) => {
+                e.preventDefault()
+                createNewPost(PostStatusType.Draft)
+              }}
+            >
               Save Draft
             </Button>
           </div>
@@ -112,7 +133,6 @@ const NewPostPage: NextPage = () => {
               padding: 25px;
               box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
             }
-
             .editor-padding {
               padding: 25px 0;
             }

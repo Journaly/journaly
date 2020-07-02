@@ -68,3 +68,9 @@ fragment PostCardFragment on Post {
     ...AuthorFragment
   }
 }
+
+fragment LanguageFragment on Language {
+  id
+  name
+  dialect
+}

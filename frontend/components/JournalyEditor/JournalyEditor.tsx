@@ -19,11 +19,6 @@ import Button from './Button'
  *   Uses the Slate library to build a delightful
  *   rich text editing experience that allows users
  *   to craft & format beautiful posts themselves.
- *
- * TODOS:
- * 1. Would like to use our ApolloCache once that is set up
- * to temporarily save "in-progress" drafts, which we can clear
- * once they publish or save draft.
  */
 
 type HotKey = 'mod+b' | 'mod+i' | 'mod+u'

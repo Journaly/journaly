@@ -9,4 +9,5 @@ module.exports = new NextI18Next({
   detection: {
     order: ['navigator', 'cookie'],
   },
+  localePath: process.env.NODE_ENV === 'production' ? 'static/locales' : undefined,
 })

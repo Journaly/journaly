@@ -361,17 +361,68 @@ schema.mutationType({
         status: arg({ type: 'PostStatus' }),
       },
       resolve: async (parent, args, ctx) => {
-        const { title, body, languageId } = args
+        const { title, body, languageId, status } = args
         const { userId } = ctx.request
 
         return ctx.db.post.create({
           data: {
-            title: args.title,
-            status: args.status,
             language: { connect: { id: languageId } },
             author: { connect: { id: userId } },
+            title,
+            status,
             ...processEditorDocument(body),
           },
+        })
+      },
+    })
+    t.field('updatePost', {
+      type: 'Post',
+      args: {
+        postId: intArg({ required: true }),
+        title: stringArg({ required: false }),
+        body: EditorNode.asArg({ list: true, required: false }),
+        status: arg({ type: 'PostStatus', required: false }),
+      },
+      resolve: async (parent, args, ctx) => {
+        // Check user can actually do this
+        const { userId } = ctx.request
+        if (!userId) throw new NotAuthorizedError()
+
+        const [currentUser, originalPost] = await Promise.all([
+          ctx.db.user.findOne({
+            where: {
+              id: userId,
+            },
+          }),
+          ctx.db.post.findOne({
+            where: {
+              id: args.postId,
+            },
+          }),
+        ])
+
+        if (!currentUser) throw new NotFoundError('User')
+        if (!originalPost) throw new NotFoundError('Post')
+
+        hasPostPermissions(originalPost, currentUser)
+
+        // Actually make the change in the DB
+        let data = {}
+        if (args.title) {
+          data.title = args.title
+        }
+
+        if (args.status) {
+          data.status = args.status
+        }
+
+        if (args.body) {
+          data = { ...data, ...processEditorDocument(args.body) }
+        }
+
+        return ctx.db.post.update({
+          where: { id: args.postId },
+          data,
         })
       },
     })

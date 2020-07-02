@@ -6,7 +6,9 @@ import {
   Post as PostType,
   User as UserType,
   Thread as ThreadType,
+  PostStatus as PostStatusType,
   useCreateThreadMutation,
+  useUpdatePostMutation,
 } from '../../../generated/graphql'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
@@ -175,6 +177,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       setActiveThreadId(createThread.id)
     },
   })
+  const [updatePost] = useUpdatePostMutation({ onCompleted: refetch })
 
   React.useEffect(() => {
     if (!selectableRef.current) {
@@ -296,6 +299,10 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     })
   }
 
+  const setPostStatus = (status: PostStatusType) => () => {
+    updatePost({ variables: { postId: post.id, status } })
+  }
+
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
 
   return (
@@ -328,9 +335,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
               <Button
                 type="button"
                 variant={ButtonVariant.Secondary}
-                onClick={(e) => {
-                  console.log('publishing!')
-                }}
+                onClick={setPostStatus('PUBLISHED')}
               >
                 {t('publishDraft')}
               </Button>

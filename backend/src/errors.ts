@@ -2,8 +2,6 @@ export class ResolverError extends Error {
   constructor(message, extensions) {
     super(message)
     this.extensions = extensions
-    this.statusCode = 404
-    this.status = 404
   }
 }
 

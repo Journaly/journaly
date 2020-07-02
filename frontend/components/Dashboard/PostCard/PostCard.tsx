@@ -10,7 +10,7 @@ interface Props {
   author: string
 }
 
-const PostCard: React.FC<Props> = ({ id, title, body, image, author }) => {
+const PostCard: React.FC<Props> = ({ id, title, body, author }) => {
   return (
     <div className="post-card-container" key={id}>
       <Link href={`/post/${id}`}>

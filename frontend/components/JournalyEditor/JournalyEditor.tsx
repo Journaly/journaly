@@ -11,6 +11,7 @@ import {
 import { withHistory } from 'slate-history'
 import isHotkey from 'is-hotkey'
 import theme from '../../theme'
+import PostBodyStyles from '../PostBodyStyles'
 import Toolbar from './Toolbar'
 import Button from './Button'
 
@@ -80,6 +81,7 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
           />
         </Slate>
       </div>
+      <PostBodyStyles parentClassName="editor-container" />
       <style jsx>{`
         .editor-container {
           padding: 0 25px 10px;
@@ -87,24 +89,6 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
           border-radius: 5px;
           min-height: 200px;
           background-color: ${theme.colors.white};
-        }
-
-        :global(blockquote) {
-          border-left: 2px solid ${theme.colors.gray800};
-          margin: 10px 0;
-          padding-left: 10px;
-          color: ${theme.colors.gray800};
-          font-style: italic;
-        }
-
-        :global(ul) {
-          list-style-type: disc;
-          list-style-position: inside;
-        }
-
-        :global(ol) {
-          list-style-type: decimal;
-          list-style-position: inside;
         }
       `}</style>
     </div>

@@ -5,21 +5,17 @@ import FeedIcon from '../../Icons/FeedIcon'
 import { navConstants } from './nav-constants'
 import { darkBlue, darkGrey } from '../../../utils'
 import { useTranslation } from '../../../config/i18n'
-import { User as UserType } from '../../../generated/graphql'
+import { User } from '../../../generated/graphql'
 
 interface Props {
   onClick: () => void
-  // TOOD (robin-macpherson): solve issue with `UserType` requiring `posts`
-  currentUser: UserType | any
+  user: User
 }
 
-const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
+const NavLinks: React.FC<Props> = ({ onClick, user }) => {
   const { t } = useTranslation()
-  // TODO: implement fetching user information (requires PR #17)
-  const user = {}
-  if (!user) return null
   const logout = (): void => {
-    // TODO: implement logout functionality (requires PR #17)
+    // TODO: implement logout functionality
   }
   const handleLogOut = (): void => {
     onClick()
@@ -33,13 +29,9 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           <a onClick={onClick}>
             <img
               className="profile-img"
-              src={
-                currentUser.profileImage
-                  ? currentUser.profileImage
-                  : '/images/icons/blank_avatar.svg'
-              }
+              src={user.profileImage ? user.profileImage : '/images/icons/blank_avatar.svg'}
             />
-            <p className="current-user-name">{currentUser.handle}</p>
+            <p className="current-user-name">{user.handle}</p>
           </a>
         </Link>
       </div>

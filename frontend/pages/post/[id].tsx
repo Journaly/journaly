@@ -19,11 +19,9 @@ const PostPage: NextPage = () => {
 
   return (
     <DashboardLayout>
-      <LoadingWrapper
-        loading={loading}
-        error={error}
-        render={() => <Post post={post} refetch={refetch} />}
-      />
+      <LoadingWrapper loading={loading} error={error}>
+        <Post post={post} refetch={refetch} />
+      </LoadingWrapper>
     </DashboardLayout>
   )
 }

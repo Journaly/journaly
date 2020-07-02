@@ -3,14 +3,16 @@ import DashboardLayout from './DashboardLayout'
 import Breadcrumbs from '../Dashboard/Settings/Breadcrumbs'
 import SettingsNav from '../Dashboard/Settings/SettingsNav'
 import theme from '../../theme'
+import { User } from '../../generated/graphql'
 
 interface Props {
+  user: User
   children: React.ReactNode
 }
 
-const SettingsPageLayout: React.FC<Props> = ({ children }) => {
+const SettingsPageLayout: React.FC<Props> = ({ user, children }) => {
   return (
-    <DashboardLayout>
+    <DashboardLayout user={user}>
       <Breadcrumbs />
 
       <div className="settings-container">

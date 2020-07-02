@@ -3,16 +3,15 @@ import Link from 'next/link'
 import { navConstants } from './nav-constants'
 import NavLinks from './NavLinks'
 import { black } from '../../../utils'
-import { useCurrentUserQuery } from '../../../generated/graphql'
+import { User } from '../../../generated/graphql'
 
 interface Props {
+  user?: User
   expanded: boolean
   collapse: () => void
 }
 
-const Nav: React.FC<Props> = ({ expanded, collapse }) => {
-  const { data } = useCurrentUserQuery()
-
+const Nav: React.FC<Props> = ({ user, expanded, collapse }) => {
   useEffect(() => {
     setTimeout(() => {
       document.body.classList.remove('block-transitions-on-page-load')
@@ -31,9 +30,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
       <div className="nav-background" onClick={handleCollapse} />
 
       <nav>
-        {data && data.currentUser && (
-          <NavLinks onClick={handleCollapse} currentUser={data.currentUser} />
-        )}
+        {user && <NavLinks onClick={handleCollapse} user={user} />}
 
         <h1 className="nav-logo">
           <Link href="/">

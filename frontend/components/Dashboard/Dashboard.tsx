@@ -3,12 +3,14 @@ import { useRouter } from 'next/router'
 import Nav, { navConstants } from './Nav'
 import Header from './Header'
 import useWindowSize from '../../hooks/useWindowSize'
+import { User } from '../../generated/graphql'
 
 interface Props {
+  user?: User
   children: React.ReactNode
 }
 
-const Dashboard: React.FC<Props> = ({ children }) => {
+const Dashboard: React.FC<Props> = ({ user, children }) => {
   const { width } = useWindowSize()
   const router = useRouter()
   const [navExpanded, setNavExpanded] = useState(false)
@@ -39,7 +41,7 @@ const Dashboard: React.FC<Props> = ({ children }) => {
     <div className="dashboard">
       <Header onMenuClick={toggleNav} />
 
-      <Nav expanded={navExpanded} collapse={() => setNavExpanded(false)} />
+      <Nav user={user} expanded={navExpanded} collapse={() => setNavExpanded(false)} />
 
       <div
         className={`dashboard-container ${

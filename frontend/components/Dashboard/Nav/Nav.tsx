@@ -3,10 +3,10 @@ import Link from 'next/link'
 import { navConstants } from './nav-constants'
 import NavLinks from './NavLinks'
 import { black } from '../../../utils'
-import { User } from '../../../generated/graphql'
+import { User as UserType } from '../../../generated/graphql'
 
 interface Props {
-  user?: User
+  user?: UserType
   expanded: boolean
   collapse: () => void
 }

@@ -1,8 +1,8 @@
 import React from 'react'
-import { User } from '../../../generated/graphql'
+import { User as UserType } from '../../../generated/graphql'
 
 interface Props {
-  users: User[]
+  users: UserType[]
 }
 
 const Users: React.FC<Props> = ({ users }) => {

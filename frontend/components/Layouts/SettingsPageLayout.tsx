@@ -3,10 +3,10 @@ import DashboardLayout from './DashboardLayout'
 import Breadcrumbs from '../Dashboard/Settings/Breadcrumbs'
 import SettingsNav from '../Dashboard/Settings/SettingsNav'
 import theme from '../../theme'
-import { User } from '../../generated/graphql'
+import { User as UserType } from '../../generated/graphql'
 
 interface Props {
-  user: User
+  user: UserType
   children: React.ReactNode
 }
 

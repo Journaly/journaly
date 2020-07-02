@@ -3,10 +3,10 @@ import { useRouter } from 'next/router'
 import Nav, { navConstants } from './Nav'
 import Header from './Header'
 import useWindowSize from '../../hooks/useWindowSize'
-import { User } from '../../generated/graphql'
+import { User as UserType } from '../../generated/graphql'
 
 interface Props {
-  user?: User
+  user?: UserType
   children: React.ReactNode
 }
 

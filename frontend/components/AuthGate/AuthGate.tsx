@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import LoadingWrapper from '../LoadingWrapper'
-import { useCurrentUserQuery, User } from '../../generated/graphql'
+import { useCurrentUserQuery, UserType } from '../../generated/graphql'
 
 /**
  * Checks that the user is logged in.
@@ -24,7 +24,7 @@ import { useCurrentUserQuery, User } from '../../generated/graphql'
  * </AuthGate>
  */
 
-type RenderCallback = (user: User) => React.ReactElement
+type RenderCallback = (user: UserType) => React.ReactElement
 
 type Props = {
   children: RenderCallback | React.ReactElement

@@ -5,11 +5,11 @@ import FeedIcon from '../../Icons/FeedIcon'
 import { navConstants } from './nav-constants'
 import { darkBlue, darkGrey } from '../../../utils'
 import { useTranslation } from '../../../config/i18n'
-import { User } from '../../../generated/graphql'
+import { User as UserType } from '../../../generated/graphql'
 
 interface Props {
   onClick: () => void
-  user: User
+  user: UserType
 }
 
 const NavLinks: React.FC<Props> = ({ onClick, user }) => {

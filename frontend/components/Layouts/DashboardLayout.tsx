@@ -1,9 +1,9 @@
 import React from 'react'
 import Dashboard from '../Dashboard'
-import { User } from '../../generated/graphql'
+import { User as UserType } from '../../generated/graphql'
 
 interface Props {
-  user?: User
+  user?: UserType
   children: React.ReactNode
 }
 

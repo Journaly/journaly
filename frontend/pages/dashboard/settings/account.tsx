@@ -25,8 +25,8 @@ const Account: NextPage = () => {
 
   return (
     <AuthGate>
-      {(user) => (
-        <SettingsPageLayout user={user}>
+      {(currentUser) => (
+        <SettingsPageLayout currentUser={currentUser}>
           <SettingsForm
             onSubmit={handleSubmit(onChangePasswordSubmit)}
             errorInputName={fieldErrorName}

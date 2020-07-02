@@ -6,11 +6,11 @@ import useWindowSize from '../../hooks/useWindowSize'
 import { User as UserType } from '../../generated/graphql'
 
 interface Props {
-  user?: UserType
+  currentUser?: UserType
   children: React.ReactNode
 }
 
-const Dashboard: React.FC<Props> = ({ user, children }) => {
+const Dashboard: React.FC<Props> = ({ currentUser, children }) => {
   const { width } = useWindowSize()
   const router = useRouter()
   const [navExpanded, setNavExpanded] = useState(false)
@@ -41,7 +41,11 @@ const Dashboard: React.FC<Props> = ({ user, children }) => {
     <div className="dashboard">
       <Header onMenuClick={toggleNav} />
 
-      <Nav user={user} expanded={navExpanded} collapse={() => setNavExpanded(false)} />
+      <Nav
+        currentUser={currentUser}
+        expanded={navExpanded}
+        collapse={() => setNavExpanded(false)}
+      />
 
       <div
         className={`dashboard-container ${

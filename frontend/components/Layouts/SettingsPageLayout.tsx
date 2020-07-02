@@ -6,13 +6,13 @@ import theme from '../../theme'
 import { User as UserType } from '../../generated/graphql'
 
 interface Props {
-  user: UserType
+  currentUser: UserType
   children: React.ReactNode
 }
 
-const SettingsPageLayout: React.FC<Props> = ({ user, children }) => {
+const SettingsPageLayout: React.FC<Props> = ({ currentUser, children }) => {
   return (
-    <DashboardLayout user={user}>
+    <DashboardLayout currentUser={currentUser}>
       <Breadcrumbs />
 
       <div className="settings-container">

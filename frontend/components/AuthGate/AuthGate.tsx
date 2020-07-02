@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import LoadingWrapper from '../LoadingWrapper'
-import { useCurrentUserQuery, UserType } from '../../generated/graphql'
+import { useCurrentUserQuery, User as UserType } from '../../generated/graphql'
 
 /**
  * Checks that the user is logged in.
@@ -15,16 +15,16 @@ import { useCurrentUserQuery, UserType } from '../../generated/graphql'
  *   <Child />
  * </AuthGate>
  *
- * Otherwise, wrap the <Child /> component in a function, which accepts user as a parameter
+ * Otherwise, wrap the <Child /> component in a function, which accepts currentUser as a parameter
  *
  * <AuthGate>
- *   {(user) => (
- *     <Child user={user} />
+ *   {(currentUser) => (
+ *     <Child currentUser={currentUser} />
  *   )}
  * </AuthGate>
  */
 
-type RenderCallback = (user: UserType) => React.ReactElement
+type RenderCallback = (currentUser: UserType) => React.ReactElement
 
 type Props = {
   children: RenderCallback | React.ReactElement
@@ -34,9 +34,9 @@ const AuthGate: React.FC<Props> = ({ children }) => {
   const router = useRouter()
   const { data, loading, error } = useCurrentUserQuery()
 
-  const user = data?.currentUser as User
+  const currentUser = data?.currentUser as UserType
 
-  if (!(user || loading || error)) {
+  if (!(currentUser || loading || error)) {
     router.push({
       pathname: '/dashboard/login',
     })
@@ -45,7 +45,7 @@ const AuthGate: React.FC<Props> = ({ children }) => {
 
   return (
     <LoadingWrapper loading={loading} error={error}>
-      {typeof children === 'function' ? children(user) : children}
+      {typeof children === 'function' ? children(currentUser) : children}
     </LoadingWrapper>
   )
 }

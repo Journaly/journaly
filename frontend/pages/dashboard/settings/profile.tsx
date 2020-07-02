@@ -12,8 +12,8 @@ import AuthGate from '../../../components/AuthGate'
 const ProfileInfo: NextPage = () => {
   return (
     <AuthGate>
-      {(user) => (
-        <SettingsPageLayout user={user}>
+      {(currentUser) => (
+        <SettingsPageLayout currentUser={currentUser}>
           <div className="forms-container">
             <DetailsForm />
             <LanguagesForm />

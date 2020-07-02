@@ -21,10 +21,10 @@ const MyFeedPage: NextPage<InitialProps> = () => {
 
   return (
     <AuthGate>
-      {(user) => (
-        <DashboardLayout user={user}>
+      {(currentUser) => (
+        <DashboardLayout currentUser={currentUser}>
           <LoadingWrapper loading={loading} error={error}>
-            <MyFeed posts={posts as Post[]} user={user} />
+            <MyFeed posts={posts as Post[]} currentUser={currentUser} />
           </LoadingWrapper>
         </DashboardLayout>
       )}

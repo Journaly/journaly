@@ -9,10 +9,10 @@ import { User as UserType } from '../../../generated/graphql'
 
 interface Props {
   onClick: () => void
-  user: UserType
+  currentUser: UserType
 }
 
-const NavLinks: React.FC<Props> = ({ onClick, user }) => {
+const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
   const { t } = useTranslation()
   const logout = (): void => {
     // TODO: implement logout functionality
@@ -29,9 +29,13 @@ const NavLinks: React.FC<Props> = ({ onClick, user }) => {
           <a onClick={onClick}>
             <img
               className="profile-img"
-              src={user.profileImage ? user.profileImage : '/images/icons/blank_avatar.svg'}
+              src={
+                currentUser.profileImage
+                  ? currentUser.profileImage
+                  : '/images/icons/blank_avatar.svg'
+              }
             />
-            <p className="current-user-name">{user.handle}</p>
+            <p className="current-user-name">{currentUser.handle}</p>
           </a>
         </Link>
       </div>

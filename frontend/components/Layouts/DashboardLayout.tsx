@@ -3,12 +3,12 @@ import Dashboard from '../Dashboard'
 import { User as UserType } from '../../generated/graphql'
 
 interface Props {
-  user?: UserType
+  currentUser?: UserType
   children: React.ReactNode
 }
 
-const DashboardLayout: React.FC<Props> = ({ user, children }) => (
-  <Dashboard user={user}>{children}</Dashboard>
+const DashboardLayout: React.FC<Props> = ({ currentUser, children }) => (
+  <Dashboard currentUser={currentUser}>{children}</Dashboard>
 )
 
 export default DashboardLayout

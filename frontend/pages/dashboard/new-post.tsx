@@ -54,8 +54,8 @@ const NewPostPage: NextPage = () => {
 
   return (
     <AuthGate>
-      {(user) => (
-        <DashboardLayout user={user}>
+      {(currentUser) => (
+        <DashboardLayout currentUser={currentUser}>
           <form id="new-post">
             <h1>Let's write a post</h1>
 

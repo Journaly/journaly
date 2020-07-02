@@ -19,8 +19,8 @@ const MyPostsPage: NextPage = () => {
 
   return (
     <AuthGate>
-      {(user) => (
-        <DashboardLayout user={user}>
+      {(currentUser) => (
+        <DashboardLayout currentUser={currentUser}>
           <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
 
           <div className="posts-wrapper">

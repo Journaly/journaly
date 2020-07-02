@@ -6,12 +6,12 @@ import { black } from '../../../utils'
 import { User as UserType } from '../../../generated/graphql'
 
 interface Props {
-  user?: UserType
+  currentUser?: UserType
   expanded: boolean
   collapse: () => void
 }
 
-const Nav: React.FC<Props> = ({ user, expanded, collapse }) => {
+const Nav: React.FC<Props> = ({ currentUser, expanded, collapse }) => {
   useEffect(() => {
     setTimeout(() => {
       document.body.classList.remove('block-transitions-on-page-load')
@@ -30,7 +30,7 @@ const Nav: React.FC<Props> = ({ user, expanded, collapse }) => {
       <div className="nav-background" onClick={handleCollapse} />
 
       <nav>
-        {user && <NavLinks onClick={handleCollapse} user={user} />}
+        {currentUser && <NavLinks onClick={handleCollapse} currentUser={currentUser} />}
 
         <h1 className="nav-logo">
           <Link href="/">

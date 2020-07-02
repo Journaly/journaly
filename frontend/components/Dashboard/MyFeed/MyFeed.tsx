@@ -8,11 +8,11 @@ import { User as UserType } from '../../../generated/graphql'
 
 type Props = {
   posts: any[] // TODO (robin-macpherson): should be Post[]
-  user: UserType
+  currentUser: UserType
 }
 
-const MyFeed: React.FC<Props> = ({ posts, user }) => {
-  console.log(user)
+const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
+  console.log(currentUser)
   return (
     <div className="my-feed-wrapper">
       <h1>My Feed</h1>

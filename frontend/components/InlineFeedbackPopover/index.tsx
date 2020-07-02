@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import CSS from 'csstype'
-import DOMPurify from 'dompurify'
+import { sanitize } from '../../utils'
 
 import { useCreateCommentMutation } from '../../generated/graphql'
 import { Thread as ThreadType } from '../../generated/graphql'
@@ -112,7 +112,7 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment }) => {
     })
   }
 
-  const sanitizedHTML = DOMPurify.sanitize(thread.highlightedContent)
+  const sanitizedHTML = sanitize(thread.highlightedContent)
 
   return (
     <div className="thread">

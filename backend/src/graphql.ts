@@ -122,6 +122,7 @@ const EditorNode = schema.inputObjectType({
       t.string('text', { nullable: true }),
       t.boolean('italic', { nullable: true }),
       t.boolean('bold', { nullable: true }),
+      t.boolean('underline', { nullable: true }),
       t.field('children', {
         type: EditorNode,
         list: true,

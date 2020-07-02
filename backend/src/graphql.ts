@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
 
 import { processEditorDocument, hasPostPermissions } from './utils'
+import { NotFoundError, NotAuthorizedError } from './errors'
 
 use(prisma())
 
@@ -141,11 +142,17 @@ schema.queryType({
           id: intArg(),
         },
         resolve: async (parent, args, ctx) => {
-          return await ctx.db.post.findOne({
-            where: {
-              id: args.id,
-            },
-          })
+          const post = await ctx.db.post.findOne({ where: { id: args.id } })
+
+          if (!post) {
+            throw new NotFoundError('Post')
+          }
+
+          if (post.status === 'DRAFT' && post.authorId !== ctx.request.userId) {
+            throw new NotAuthorizedError()
+          }
+
+          return post
         },
       }),
       t.list.field('feed', {

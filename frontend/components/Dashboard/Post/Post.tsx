@@ -4,9 +4,9 @@ import DOMPurify from 'dompurify'
 
 import {
   Post as PostType,
-  User as UserType,
+  UserFragmentFragment as UserType,
   Thread as ThreadType,
-  PostStatus as PostStatusType,
+  PostStatus,
   useCreateThreadMutation,
   useUpdatePostMutation,
 } from '../../../generated/graphql'
@@ -19,7 +19,7 @@ import { useTranslation } from '../../../config/i18n'
 // TODO: Remove any when Types are fixed with PR #17
 interface IPostProps {
   post: PostType | any
-  currentUser: UserType
+  currentUser: UserType | null | undefined
   refetch: any
 }
 
@@ -299,7 +299,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     })
   }
 
-  const setPostStatus = (status: PostStatusType) => () => {
+  const setPostStatus = (status: PostStatus) => () => {
     updatePost({ variables: { postId: post.id, status } })
   }
 
@@ -335,7 +335,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
               <Button
                 type="button"
                 variant={ButtonVariant.Secondary}
-                onClick={setPostStatus('PUBLISHED')}
+                onClick={setPostStatus(PostStatus.Published)}
               >
                 {t('publishDraft')}
               </Button>

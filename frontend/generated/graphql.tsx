@@ -314,12 +314,12 @@ export type CurrentUserQuery = { __typename?: 'Query' } & {
     { __typename?: 'User' } & {
       languagesLearning: Array<
         { __typename?: 'LanguageLearning' } & {
-          language: { __typename?: 'Language' } & Pick<Language, 'name' | 'dialect' | 'id'>
+          language: { __typename?: 'Language' } & LanguageFragmentFragment
         }
       >
       languagesNative: Array<
         { __typename?: 'LanguageNative' } & {
-          language: { __typename?: 'Language' } & Pick<Language, 'name' | 'dialect' | 'id'>
+          language: { __typename?: 'Language' } & LanguageFragmentFragment
         }
       >
     } & UserFragmentFragment
@@ -370,6 +370,11 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
     author: { __typename?: 'User' } & AuthorFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
   }
+
+export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
+  Language,
+  'id' | 'name' | 'dialect'
+>
 
 export type LoginUserMutationVariables = {
   identifier: Scalars['String']
@@ -475,6 +480,13 @@ export const PostFragmentFragmentDoc = gql`
   }
   ${AuthorFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
+`
+export const LanguageFragmentFragmentDoc = gql`
+  fragment LanguageFragment on Language {
+    id
+    name
+    dialect
+  }
 `
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
@@ -698,21 +710,18 @@ export const CurrentUserDocument = gql`
       ...UserFragment
       languagesLearning {
         language {
-          name
-          dialect
-          id
+          ...LanguageFragment
         }
       }
       languagesNative {
         language {
-          name
-          dialect
-          id
+          ...LanguageFragment
         }
       }
     }
   }
   ${UserFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
 `
 
 /**

@@ -33,11 +33,17 @@ const NewPostPage: NextPage = () => {
 
   const [createPost] = useCreatePostMutation({
     onCompleted: ({ createPost }) => {
+      if (!createPost) {
+        return
+      }
+
       router.push({ pathname: `/post/${createPost.id}` })
     },
   })
 
-  const userLanguages = languagesLearning.concat(languagesNative).map((x) => x.language)
+  const userLanguages = languagesLearning
+    .map((x) => x.language)
+    .concat(languagesNative.map((x) => x.language))
 
   const createNewPost = (status: PostStatusType) => {
     createPost({
@@ -80,7 +86,7 @@ const NewPostPage: NextPage = () => {
             disabled={!title || langId === -1}
             variant={ButtonVariant.Primary}
             data-test="post-submit"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.preventDefault()
               createNewPost(PostStatusType.Published)
             }}
@@ -92,7 +98,7 @@ const NewPostPage: NextPage = () => {
             disabled={!title || langId === -1}
             variant={ButtonVariant.Secondary}
             data-test="post-draft"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.preventDefault()
               createNewPost(PostStatusType.Draft)
             }}

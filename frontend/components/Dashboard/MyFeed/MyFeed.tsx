@@ -1,16 +1,18 @@
-// @ts-nocheck
 import React from 'react'
 
 import PostCard from '../PostCard'
 import theme from '../../../theme'
+import { User as UserType } from '../../../generated/graphql'
 
 // import { Post } from '../../../generated/graphql' // TODO (robin-macpherson): See Post[] type todo below
 
 type Props = {
   posts: any[] // TODO (robin-macpherson): should be Post[]
+  currentUser: UserType
 }
 
-const MyFeed: React.FC<Props> = ({ posts }) => {
+const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
+  console.log(currentUser)
   return (
     <div className="my-feed-wrapper">
       <h1>My Feed</h1>

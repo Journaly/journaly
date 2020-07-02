@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackCreateAccount } from '../../events/users'
-import { useCreateUserMutation } from '../../generated/graphql'
+import { useCreateUserMutation, useCurrentUserQuery } from '../../generated/graphql'
 import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
@@ -17,9 +17,12 @@ const SignupForm: React.FC = () => {
 
   const fieldErrorName = Object.keys(errors)[0] || ''
 
+  const { refetch } = useCurrentUserQuery()
+
   const [createUser, { loading, error }] = useCreateUserMutation({
-    onCompleted: () => {
+    onCompleted: async () => {
       trackCreateAccount()
+      await refetch()
       router.push({
         pathname: '/dashboard/my-feed',
       })
@@ -54,6 +57,7 @@ const SignupForm: React.FC = () => {
               required: 'Display Name is required',
               minLength: { value: 3, message: 'Your display name must be at least 3 characters' },
             })}
+            data-test="display-name"
           />
           <ErrorMessage errors={errors} name="handle" as="p" />
         </label>
@@ -70,6 +74,7 @@ const SignupForm: React.FC = () => {
                 message: 'Invalid email address',
               },
             })}
+            data-test="email"
           />
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>
@@ -83,6 +88,7 @@ const SignupForm: React.FC = () => {
               required: 'Password is required',
               minLength: { value: 6, message: 'Password must be at least 6 characters' },
             })}
+            data-test="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>

@@ -21,11 +21,9 @@
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",
     "@apollo/react-ssr": "^4.0.0-beta.1",
-    "@types/dompurify": "^2.0.2",
     "classnames": "^2.2.6",
     "cypress": "^4.3.0",
     "date-fns": "^2.11.1",
-    "dompurify": "^2.0.11",
     "graphql": "^14.6.0",
     "is-hotkey": "^0.1.6",
     "isomorphic-unfetch": "^3.0.0",
@@ -38,7 +36,8 @@
     "react-hook-form": "^5.7.2",
     "slate": "^0.57.1",
     "slate-history": "^0.57.1",
-    "slate-react": "^0.57.1"
+    "slate-react": "^0.57.1",
+    "xss": "^1.0.7"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.13.1",

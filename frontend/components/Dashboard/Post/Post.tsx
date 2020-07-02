@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import DOMPurify from 'dompurify'
+import { sanitize } from '../../../utils'
 
 import {
   Post as PostType,
@@ -187,7 +187,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     const selectableTextArea = selectableRef.current
 
     // Clear existing set of highlights so we don't double-apply them
-    selectableTextArea.innerHTML = DOMPurify.sanitize(post.body)
+    selectableTextArea.innerHTML = sanitize(post.body)
 
     // Re-construct all comments from DB
     post.threads.forEach((thread: ThreadType) => {
@@ -210,7 +210,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     })
   }, [selectableRef.current, post.threads.length])
 
-  const sanitizedHTML = DOMPurify.sanitize(post.body)
+  const sanitizedHTML = sanitize(post.body)
 
   const createThreadHandler = (e: React.MouseEvent) => {
     e.preventDefault()

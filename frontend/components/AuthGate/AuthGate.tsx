@@ -6,6 +6,22 @@ import { useCurrentUserQuery, User } from '../../generated/graphql'
 /**
  * Checks that the user is logged in.
  * If not, redirects them to the login page.
+ *
+ * Example usages:
+ *
+ * If you need to gate a page, but you don't need any user properties, simply add a child like normal:
+ *
+ * <AuthGate>
+ *   <Child />
+ * </AuthGate>
+ *
+ * Otherwise, wrap the <Child /> component in a function, which accepts { user } as a parameter
+ *
+ * <AuthGate>
+ *   {({ user }: { user: User }) => (
+ *     <Child user={user} />
+ *   )}
+ * </AuthGate>
  */
 
 type AuthGateProps = {

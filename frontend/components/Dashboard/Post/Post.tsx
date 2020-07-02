@@ -8,6 +8,7 @@ import {
   Thread as ThreadType,
   useCreateThreadMutation,
 } from '../../../generated/graphql'
+import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
@@ -157,7 +158,7 @@ function buildPreOrderListAndOffsets(selectableTextArea: HTMLElement) {
 }
 
 const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation('post')
 
   const selectableRef = React.useRef<HTMLDivElement>(null)
   const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
@@ -310,6 +311,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           <h1>{post.title}</h1>
           {post.status === 'DRAFT' && <div className="draft-badge">{t('draft')}</div>}
         </div>
+
         <div
           className="post-body selectable-text-area"
           ref={selectableRef}
@@ -319,6 +321,22 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
         >
           <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
         </div>
+
+        {post.author.id === currentUser.id && (
+          <div className="post-controls">
+            {post.status === 'DRAFT' && (
+              <Button
+                type="button"
+                variant={ButtonVariant.Secondary}
+                onClick={(e) => {
+                  console.log('publishing!')
+                }}
+              >
+                {t('publishDraft')}
+              </Button>
+            )}
+          </div>
+        )}
       </div>
       <CommentSelectionButton
         onClick={createThreadHandler}

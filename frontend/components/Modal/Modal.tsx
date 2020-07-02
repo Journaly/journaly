@@ -58,7 +58,7 @@ const Modal: React.FC<Props> = (props) => {
           aria-modal="true"
           aria-labelledby={ariaLabelledBy}
           aria-describedby={ariaDescribedBy}
-          data-testid="modal"
+          data-test="modal"
           onClick={(event) => event.stopPropagation()}
         >
           <ModalHeader title={title} onClose={onClose} showTitle={shouldFadeInTitle} />

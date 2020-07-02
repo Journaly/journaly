@@ -3,9 +3,10 @@ import { NextPage } from 'next'
 import { withApollo } from '../../lib/apollo'
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import MyFeed from '../../components/Dashboard/MyFeed'
-import { useFeedQuery } from '../../generated/graphql'
+import { useFeedQuery, useCurrentUserQuery } from '../../generated/graphql'
 import LoadingWrapper from '../../components/LoadingWrapper'
 import { useTranslation } from '../../config/i18n'
+import AuthGate from '../../components/AuthGate'
 
 interface InitialProps {
   namespacesRequired: string[]
@@ -13,18 +14,30 @@ interface InitialProps {
 
 const MyFeedPage: NextPage<InitialProps> = () => {
   const { t } = useTranslation()
-  const { loading, error, data } = useFeedQuery({
+  const {
+    data: currentUserData,
+    loading: currentUserLoading,
+    error: currentUserError,
+  } = useCurrentUserQuery()
+
+  const { loading: feedLoading, error: feedError, data: feedData } = useFeedQuery({
     variables: {
       published: true,
     },
   })
 
-  const posts = data?.feed
+  const posts = feedData?.feed
 
   return (
-    <DashboardLayout>
-      <LoadingWrapper loading={loading} error={error} render={() => <MyFeed posts={posts} />} />
-    </DashboardLayout>
+    <AuthGate>
+      <DashboardLayout>
+        <LoadingWrapper
+          loading={currentUserLoading || feedLoading}
+          error={currentUserError || feedError}
+          render={() => <MyFeed posts={posts} currentUser={currentUserData.currentUser} />}
+        />
+      </DashboardLayout>
+    </AuthGate>
   )
 }
 

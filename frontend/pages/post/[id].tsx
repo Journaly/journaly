@@ -29,4 +29,8 @@ const PostPage: NextPage = () => {
   )
 }
 
+PostPage.getInitialProps = async () => ({
+  namespacesRequired: ['common', 'post'],
+})
+
 export default withApollo(PostPage)

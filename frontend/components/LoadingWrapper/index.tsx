@@ -56,8 +56,4 @@ const LoadingWrapper = ({ loading, error, render }: LoadingWrapperProps) => {
   }
 }
 
-LoadingWrapper.getInitialProps = async () => ({
-  namespacesRequired: ['common'],
-})
-
 export default LoadingWrapper

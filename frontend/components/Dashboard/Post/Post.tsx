@@ -11,6 +11,7 @@ import {
 import theme from '../../../theme'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
+import { useTranslation } from '../../../config/i18n'
 
 // TODO: Remove any when Types are fixed with PR #17
 interface IPostProps {
@@ -156,6 +157,8 @@ function buildPreOrderListAndOffsets(selectableTextArea: HTMLElement) {
 }
 
 const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) => {
+  const { t } = useTranslation()
+
   const selectableRef = React.useRef<HTMLDivElement>(null)
   const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
   const [activeThreadId, setActiveThreadId] = React.useState<number>(-1)
@@ -305,7 +308,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
         <div className="post-header">
           <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
           <h1>{post.title}</h1>
-          {post.status === 'DRAFT' && <div className="draft-badge">DRAFT</div>}
+          {post.status === 'DRAFT' && <div className="draft-badge">{t('draft')}</div>}
         </div>
         <div
           className="post-body selectable-text-area"
@@ -372,13 +375,16 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           position: absolute;
           top: 10px;
           right: 10px;
+
           line-height: 1;
+          padding: 2px 5px;
+          color: white;
+
+          text-transform: uppercase;
           border: 2px solid white;
           border-radius: 4px;
-          padding: 2px 5px;
           font-weight: bold;
-          color: white;
-          line-height: 1;
+          font-size: 12px;
         }
 
         img {

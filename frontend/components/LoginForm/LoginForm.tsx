@@ -3,7 +3,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackLogIn } from '../../events/users'
-import { useLoginUserMutation, CurrentUserDocument } from '../../generated/graphql'
+import {
+  useLoginUserMutation,
+  CurrentUserDocument,
+  useCurrentUserQuery,
+} from '../../generated/graphql'
 import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
@@ -17,9 +21,12 @@ const LoginForm: React.FC = () => {
 
   const fieldErrorName = Object.keys(errors)[0] || ''
 
+  const { refetch } = useCurrentUserQuery()
+
   const [loginUser, { loading, error }] = useLoginUserMutation({
-    onCompleted: () => {
+    onCompleted: async () => {
       trackLogIn()
+      await refetch()
       router.push({
         pathname: '/dashboard/my-feed',
       })
@@ -56,6 +63,7 @@ const LoginForm: React.FC = () => {
                 message: 'Invalid email address',
               },
             })}
+            data-test="email"
           />
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>
@@ -69,6 +77,7 @@ const LoginForm: React.FC = () => {
               required: 'Password is required',
               minLength: { value: 6, message: 'Password must be at least 6 characters' },
             })}
+            data-test="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>

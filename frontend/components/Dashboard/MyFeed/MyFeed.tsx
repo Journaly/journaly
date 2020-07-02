@@ -2,12 +2,15 @@ import React from 'react'
 import { Post } from '../../../generated/graphql'
 import MyFeedPostCard from '../PostCard/MyFeedPostCard'
 import theme from '../../../theme'
+import { User as UserType } from '../../../generated/graphql'
 
 type Props = {
   posts: Post[]
+  currentUser: UserType
 }
 
-const MyFeed: React.FC<Props> = ({ posts }) => {
+const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
+  console.log(currentUser)
   return (
     <div className="my-feed-wrapper">
       <h1>My Feed</h1>

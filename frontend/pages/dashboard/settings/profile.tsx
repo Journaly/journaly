@@ -7,33 +7,36 @@ import LanguagesForm from '../../../components/Dashboard/Settings/LanguagesForm'
 import BioForm from '../../../components/Dashboard/Settings/BioForm'
 import InterestsForm from '../../../components/Dashboard/Settings/InterestsForm'
 import SocialForm from '../../../components/Dashboard/Settings/SocialForm'
+import AuthGate from '../../../components/AuthGate'
 
 const ProfileInfo: NextPage = () => {
   return (
-    <SettingsPageLayout>
-      <div className="forms-container">
-        <DetailsForm />
-        <LanguagesForm />
-        <BioForm />
-        <InterestsForm />
-        <SocialForm />
-      </div>
+    <AuthGate>
+      <SettingsPageLayout>
+        <div className="forms-container">
+          <DetailsForm />
+          <LanguagesForm />
+          <BioForm />
+          <InterestsForm />
+          <SocialForm />
+        </div>
 
-      <style jsx>{`
-        .forms-container {
-          width: 100%;
-          max-width: 1008px;
-        }
+        <style jsx>{`
+          .forms-container {
+            width: 100%;
+            max-width: 1008px;
+          }
 
-        .forms-container :global(form) {
-          margin-bottom: 40px;
-        }
+          .forms-container :global(form) {
+            margin-bottom: 40px;
+          }
 
-        .forms-container :global(form):last-child {
-          margin-bottom: 0;
-        }
-      `}</style>
-    </SettingsPageLayout>
+          .forms-container :global(form):last-child {
+            margin-bottom: 0;
+          }
+        `}</style>
+      </SettingsPageLayout>
+    </AuthGate>
   )
 }
 

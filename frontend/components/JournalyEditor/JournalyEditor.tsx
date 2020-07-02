@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { createEditor, Editor, Transforms, Node } from 'slate'
 import {
   Slate,
@@ -26,13 +26,12 @@ import Button from './Button'
  * once they publish or save draft.
  */
 
-type HotKey = 'mod+b' | 'mod+i' | 'mod+u' | 'mod+`'
+type HotKey = 'mod+b' | 'mod+i' | 'mod+u'
 
 const HOTKEYS: { [key in HotKey]: string } = {
   'mod+b': 'bold',
   'mod+i': 'italic',
   'mod+u': 'underline',
-  'mod+`': 'code',
 }
 
 type ButtonProps = {
@@ -63,7 +62,6 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
             <MarkButton format="bold" icon="format_bold" />
             <MarkButton format="italic" icon="format_italic" />
             <MarkButton format="underline" icon="format_underlined" />
-            <MarkButton format="code" icon="format_code" />
             <BlockButton format="heading-two" icon="format_title" />
             <BlockButton format="block-quote" icon="format_quote" />
             <BlockButton format="numbered-list" icon="format_list_numbered" />
@@ -89,15 +87,30 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
       </div>
       <style jsx>{`
         .editor-container {
-          padding: 0 25px;
+          padding: 0 25px 10px;
           border: 1px solid ${theme.colors.black};
           border-radius: 5px;
           min-height: 200px;
           background-color: ${theme.colors.white};
         }
 
-        /* TODO: Add specific Journaly Editor styles to ol, ul, and blockquote elements */
-        /* https://github.com/Journaly/journaly/issues/82 */
+        :global(blockquote) {
+          border-left: 2px solid ${theme.colors.gray800};
+          margin: 10px 0;
+          padding-left: 10px;
+          color: ${theme.colors.gray800};
+          font-style: italic;
+        }
+
+        :global(ul) {
+          list-style-type: disc;
+          list-style-position: inside;
+        }
+
+        :global(ol) {
+          list-style-type: decimal;
+          list-style-position: inside;
+        }
       `}</style>
     </div>
   )
@@ -165,10 +178,6 @@ const Element: React.FC<RenderElementProps> = ({ attributes, children, element }
 const Leaf: React.FC<RenderLeafProps> = ({ attributes, children, leaf }) => {
   if (leaf.bold) {
     children = <strong>{children}</strong>
-  }
-
-  if (leaf.code) {
-    children = <code>{children}</code>
   }
 
   if (leaf.italic) {

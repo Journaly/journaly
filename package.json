@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
     "empty-db": "psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
-    "reseed-db": "npm run empty-db && npm run migrate:up --prefix backend && npm run seed --prefix backend"
+    "reseed-db": "npm run empty-db && npm run migrate:up --prefix backend && npm run seed --prefix backend",
+    "cypress:open": "npx cypress open"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,9 @@
     "url": "https://github.com/Journaly/journaly/issues"
   },
   "homepage": "https://github.com/Journaly/journaly#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "cypress": "^4.9.0"
+  },
   "dependencies": {
     "concurrently": "^5.2.0"
   }

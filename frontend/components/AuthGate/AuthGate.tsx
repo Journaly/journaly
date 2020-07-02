@@ -15,20 +15,16 @@ import { useCurrentUserQuery, User } from '../../generated/graphql'
  *   <Child />
  * </AuthGate>
  *
- * Otherwise, wrap the <Child /> component in a function, which accepts { user } as a parameter
+ * Otherwise, wrap the <Child /> component in a function, which accepts user as a parameter
  *
  * <AuthGate>
- *   {({ user }: { user: User }) => (
+ *   {(user) => (
  *     <Child user={user} />
  *   )}
  * </AuthGate>
  */
 
-type AuthGateProps = {
-  user: User
-}
-
-type RenderCallback = (args: AuthGateProps) => React.ReactElement
+type RenderCallback = (user: User) => React.ReactElement
 
 type Props = {
   children: RenderCallback | React.ReactElement
@@ -49,7 +45,7 @@ const AuthGate: React.FC<Props> = ({ children }) => {
 
   return (
     <LoadingWrapper loading={loading} error={error}>
-      {typeof children === 'function' ? children({ user }) : children}
+      {typeof children === 'function' ? children(user) : children}
     </LoadingWrapper>
   )
 }

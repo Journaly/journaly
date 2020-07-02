@@ -8,12 +8,11 @@ import BioForm from '../../../components/Dashboard/Settings/BioForm'
 import InterestsForm from '../../../components/Dashboard/Settings/InterestsForm'
 import SocialForm from '../../../components/Dashboard/Settings/SocialForm'
 import AuthGate from '../../../components/AuthGate'
-import { User } from '../../../generated/graphql'
 
 const ProfileInfo: NextPage = () => {
   return (
     <AuthGate>
-      {({ user }: { user: User }) => (
+      {(user) => (
         <SettingsPageLayout user={user}>
           <div className="forms-container">
             <DetailsForm />

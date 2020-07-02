@@ -2,7 +2,7 @@ import { NextPage } from 'next'
 import { withApollo } from '../../lib/apollo'
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
 import MyFeed from '../../components/Dashboard/MyFeed'
-import { useFeedQuery, User, Post } from '../../generated/graphql'
+import { useFeedQuery, Post } from '../../generated/graphql'
 import LoadingWrapper from '../../components/LoadingWrapper'
 import AuthGate from '../../components/AuthGate'
 
@@ -21,7 +21,7 @@ const MyFeedPage: NextPage<InitialProps> = () => {
 
   return (
     <AuthGate>
-      {({ user }: { user: User }) => (
+      {(user) => (
         <DashboardLayout user={user}>
           <LoadingWrapper loading={loading} error={error}>
             <MyFeed posts={posts as Post[]} user={user} />

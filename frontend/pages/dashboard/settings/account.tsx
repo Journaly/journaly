@@ -10,7 +10,6 @@ import { useTranslation } from '../../../config/i18n'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
 import AuthGate from '../../../components/AuthGate'
-import { User } from '../../../generated/graphql'
 
 const Account: NextPage = () => {
   const { t } = useTranslation('settings')
@@ -26,7 +25,7 @@ const Account: NextPage = () => {
 
   return (
     <AuthGate>
-      {({ user }: { user: User }) => (
+      {(user) => (
         <SettingsPageLayout user={user}>
           <SettingsForm
             onSubmit={handleSubmit(onChangePasswordSubmit)}

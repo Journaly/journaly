@@ -8,14 +8,16 @@ import AuthGate from '../../components/AuthGate'
 const MyPostsPage: NextPage = () => {
   return (
     <AuthGate>
-      <DashboardLayout>
-        <h1>My Posts</h1>
-        <style jsx>{`
-          h1 {
-            margin: 50px auto;
-          }
-        `}</style>
-      </DashboardLayout>
+      {(user) => (
+        <DashboardLayout user={user}>
+          <h1>My Posts</h1>
+          <style jsx>{`
+            h1 {
+              margin: 50px auto;
+            }
+          `}</style>
+        </DashboardLayout>
+      )}
     </AuthGate>
   )
 }

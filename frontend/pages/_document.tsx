@@ -24,10 +24,10 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
     const initialProps = await Document.getInitialProps(context)
 
     // Locals comes from the i18n middleware in server/index.js
-    const { language } = (context.res as CustomServerResponse).locals
+    // const { language } = (context.res as CustomServerResponse).locals
 
     const additionalProps = {
-      language,
+      language: 'en',
     }
 
     return { ...initialProps, ...additionalProps }

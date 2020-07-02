@@ -54,12 +54,6 @@ const NavLinks: React.FC<Props> = ({ onClick, user }) => {
             <span className="nav-link-text">{t('nav.newPost')}</span>
           </a>
         </NavLink>
-        <NavLink href="/dashboard/drafts">
-          <a className="nav-link" onClick={onClick}>
-            <img src="/images/icons/drafts-icon.svg" alt="" />
-            <span className="nav-link-text">{t('nav.drafts')}</span>
-          </a>
-        </NavLink>
 
         <hr />
 

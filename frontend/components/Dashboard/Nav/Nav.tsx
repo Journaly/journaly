@@ -118,6 +118,15 @@ const Nav: React.FC<Props> = ({ user, expanded, collapse }) => {
           display: none;
         }
 
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
         .expanded .nav-logo a {
           font-size: 24px;
           animation: fadeIn ${navConstants.transitionDuration}ms linear;

@@ -3,30 +3,25 @@ import { ApolloError } from '@apollo/client'
 
 import { useTranslation } from '../../config/i18n'
 
-type LoadingWrapperProps = {
+type Props = {
   loading: boolean
-  error: ApolloError | undefined
-  render: () => React.ReactElement | null
+  error?: ApolloError
 }
 
 /**
  * Prevents rendering until loading and error are falsey.
  */
 
-const LoadingWrapper = ({ loading, error, render }: LoadingWrapperProps) => {
-  const { t } = useTranslation()
+const LoadingWrapper: React.FC<Props> = ({ loading, error, children }) => {
+  const { t } = useTranslation('common')
 
   if (error) {
     return <p>{t('error')}</p>
   } else if (loading) {
     return <p>{t('loading')}</p>
   } else {
-    return render()
+    return <>{children}</>
   }
 }
-
-LoadingWrapper.getInitialProps = async () => ({
-  namespacesRequired: ['common'],
-})
 
 export default LoadingWrapper

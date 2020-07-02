@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackCreateAccount } from '../../events/users'
-import { useCreateUserMutation } from '../../generated/graphql'
+import { useCreateUserMutation, useCurrentUserQuery } from '../../generated/graphql'
 import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
@@ -17,9 +17,12 @@ const SignupForm: React.FC = () => {
 
   const fieldErrorName = Object.keys(errors)[0] || ''
 
+  const { refetch } = useCurrentUserQuery()
+
   const [createUser, { loading, error }] = useCreateUserMutation({
-    onCompleted: () => {
+    onCompleted: async () => {
       trackCreateAccount()
+      await refetch()
       router.push({
         pathname: '/dashboard/my-feed',
       })

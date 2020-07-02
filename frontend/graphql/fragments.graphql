@@ -44,3 +44,9 @@ fragment PostFragment on Post {
     ...ThreadFragment
   }
 }
+
+fragment LanguageFragment on Language {
+  id
+  name
+  dialect
+}

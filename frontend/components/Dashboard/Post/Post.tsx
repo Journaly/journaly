@@ -4,16 +4,22 @@ import DOMPurify from 'dompurify'
 
 import {
   Post as PostType,
+  UserFragmentFragment as UserType,
   Thread as ThreadType,
+  PostStatus,
   useCreateThreadMutation,
+  useUpdatePostMutation,
 } from '../../../generated/graphql'
+import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
+import { useTranslation } from '../../../config/i18n'
 
 // TODO: Remove any when Types are fixed with PR #17
 interface IPostProps {
   post: PostType | any
+  currentUser: UserType | null | undefined
   refetch: any
 }
 
@@ -153,7 +159,9 @@ function buildPreOrderListAndOffsets(selectableTextArea: HTMLElement) {
   return [preOrderList, offsets]
 }
 
-const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
+const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) => {
+  const { t } = useTranslation('post')
+
   const selectableRef = React.useRef<HTMLDivElement>(null)
   const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
   const [activeThreadId, setActiveThreadId] = React.useState<number>(-1)
@@ -169,6 +177,7 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
       setActiveThreadId(createThread.id)
     },
   })
+  const [updatePost] = useUpdatePostMutation({ onCompleted: refetch })
 
   React.useEffect(() => {
     if (!selectableRef.current) {
@@ -290,6 +299,10 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
     })
   }
 
+  const setPostStatus = (status: PostStatus) => () => {
+    updatePost({ variables: { postId: post.id, status } })
+  }
+
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
 
   return (
@@ -303,7 +316,9 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
         <div className="post-header">
           <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
           <h1>{post.title}</h1>
+          {post.status === 'DRAFT' && <div className="draft-badge">{t('draft')}</div>}
         </div>
+
         <div
           className="post-body selectable-text-area"
           ref={selectableRef}
@@ -313,6 +328,20 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
         >
           <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
         </div>
+
+        {post.author.id === currentUser.id && (
+          <div className="post-controls">
+            {post.status === 'DRAFT' && (
+              <Button
+                type="button"
+                variant={ButtonVariant.Secondary}
+                onClick={setPostStatus(PostStatus.Published)}
+              >
+                {t('publishDraft')}
+              </Button>
+            )}
+          </div>
+        )}
       </div>
       <CommentSelectionButton
         onClick={createThreadHandler}
@@ -363,6 +392,22 @@ const Post: React.FC<IPostProps> = ({ post, refetch }: IPostProps) => {
           text-align: center;
           color: white;
           margin-bottom: 40px;
+        }
+
+        .draft-badge {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+
+          line-height: 1;
+          padding: 2px 5px;
+          color: white;
+
+          text-transform: uppercase;
+          border: 2px solid white;
+          border-radius: 4px;
+          font-weight: bold;
+          font-size: 12px;
         }
 
         img {

@@ -1,0 +1,5 @@
+mutation updatePost($postId: Int!, $title: String, $body: [EditorNode!], $status: PostStatus) {
+  updatePost(body: $body, title: $title, status: $status, postId: $postId) {
+    ...PostFragment
+  }
+}

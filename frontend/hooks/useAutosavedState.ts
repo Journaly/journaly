@@ -1,15 +1,10 @@
 import React from 'react'
 
-type optionsType = {
-  key: Maybe<string>
-  debounceTime: Maybe<number>
-}
-
 export default function useAutosavedState<T>(
   initialValue: T,
   opts = { key: 'default', debounceTime: 1000 },
-) {
-  const storage = (typeof window !== 'undefined' && window.localStorage) || {}
+): [T, (value: T) => void, () => void] {
+  const storage: any = (typeof window !== 'undefined' && window.localStorage) || {}
   const storageKey = `autsave[${opts.key || 'default'}]`
 
   const [value, setValue] = React.useState<T>(initialValue)

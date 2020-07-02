@@ -31,7 +31,10 @@ const NewPostPage: NextPage = () => {
   const router = useRouter()
   const [title, setTitle] = React.useState<string>('')
   const [langId, setLangId] = React.useState<number>(-1)
-  const [body, setBody, resetBody] = useAutosavedState<Node[]>(initialValue, { key: 'new-post' })
+  const [body, setBody, resetBody] = useAutosavedState<Node[]>(initialValue, {
+    key: 'new-post',
+    debounceTime: 1000,
+  })
 
   const [createPost] = useCreatePostMutation({
     onCompleted: ({ createPost }) => {

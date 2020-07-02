@@ -329,7 +329,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
         </div>
 
-        {post.author.id === currentUser.id && (
+        {currentUser && post.author.id === currentUser.id && (
           <div className="post-controls">
             {post.status === 'DRAFT' && (
               <Button

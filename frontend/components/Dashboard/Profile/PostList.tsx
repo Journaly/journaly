@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from '../../../config/i18n'
 import { layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
 import { Post as PostType } from '../../../generated/graphql'
-import PostCard from '../PostCard/PostCard'
+import PostCard from '../PostCard'
 import theme from '../../../theme'
 
 type Props = {

@@ -6,7 +6,7 @@ import {
   usePostsQuery,
 } from '../../../generated/graphql'
 import LoadingSpinner from '../../Icons/LoadingSpinner'
-import PostCard from '../PostCard/PostCard'
+import PostCard from '../PostCard'
 import theme from '../../../theme'
 
 type Props = {

@@ -7,17 +7,17 @@ import Document, {
   NextScript,
   DocumentProps,
 } from 'next/document'
-import { ServerResponse } from 'http'
+// import { ServerResponse } from 'http'
 
 interface CustomProps {
   language: string
 }
 
-interface CustomServerResponse extends ServerResponse {
-  locals: {
-    language: string
-  }
-}
+// interface CustomServerResponse extends ServerResponse {
+//   locals: {
+//     language: string
+//   }
+// }
 
 class MyDocument extends Document<DocumentProps & { children?: ReactNode } & CustomProps> {
   static async getInitialProps(context: DocumentContext) {

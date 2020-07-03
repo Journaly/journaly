@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "commonjs",
-    "lib": ["esnext"],
+    "lib": ["dom", "esnext"],
     "strict": true,
     "esModuleInterop": true,
     "removeComments": true,

@@ -1,19 +1,14 @@
 import escapeHTML from 'escape-html'
 import { User, Post, Comment } from '.prisma/client'
 
-type TextNode = {
-  text: string
-  italic: ?boolean
-  bold: ?boolean
-  underline: ?boolean
+type NodeType = {
+  text?: string | null
+  italic?: boolean | null
+  bold?: boolean | null
+  underline?: boolean | null
+  type?: string | null
+  children?: NodeType[] | undefined | null
 }
-
-type BlockNode = {
-  type: string
-  children: NodeType[]
-}
-
-type NodeType = BlockNode | TextNode
 
 const typeToElStrMap = {
   'heading-one': 'h1',

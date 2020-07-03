@@ -1,4 +1,7 @@
 {
   "draft": "draft",
-  "publishDraft": "Publish Draft"
+  "publishDraft": "Publish Draft",
+  "readTime": "{{minutes}} min. read",
+  "readAction": "Read post",
+  "finishAction": "Finish post"
 }

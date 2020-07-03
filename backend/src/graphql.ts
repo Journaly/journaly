@@ -150,12 +150,16 @@ schema.queryType({
     t.list.field('posts', {
       type: 'Post',
       args: {
+        status: arg({ type: 'PostStatus', required: false }),
         authorId: intArg({ required: true }),
       },
       resolve: async (_root, args, ctx) => {
         return ctx.db.post.findMany({
           where: {
-            author: { id: args.authorId },
+            AND: {
+              author: { id: args.authorId },
+              status: args.status || 'PUBLISHED',
+            },
           },
         })
       },

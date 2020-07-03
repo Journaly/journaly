@@ -1,5 +1,5 @@
-query posts($authorId: Int!) {
-  posts(authorId: $authorId) {
+query posts($authorId: Int!, $status: PostStatus) {
+  posts(authorId: $authorId, status: $status) {
     ...PostCardFragment
   }
 }

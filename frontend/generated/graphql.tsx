@@ -30,6 +30,7 @@ export type EditorNode = {
   text?: Maybe<Scalars['String']>
   italic?: Maybe<Scalars['Boolean']>
   bold?: Maybe<Scalars['Boolean']>
+  underline?: Maybe<Scalars['Boolean']>
   children?: Maybe<Array<EditorNode>>
 }
 
@@ -224,6 +225,7 @@ export type Query = {
 }
 
 export type QueryPostsArgs = {
+  status?: Maybe<PostStatus>
   authorId: Scalars['Int']
 }
 
@@ -444,6 +446,7 @@ export type PostByIdQuery = { __typename?: 'Query' } & {
 
 export type PostsQueryVariables = {
   authorId: Scalars['Int']
+  status?: Maybe<PostStatus>
 }
 
 export type PostsQuery = { __typename?: 'Query' } & {
@@ -1020,8 +1023,8 @@ export type PostByIdQueryResult = ApolloReactCommon.QueryResult<
   PostByIdQueryVariables
 >
 export const PostsDocument = gql`
-  query posts($authorId: Int!) {
-    posts(authorId: $authorId) {
+  query posts($authorId: Int!, $status: PostStatus) {
+    posts(authorId: $authorId, status: $status) {
       ...PostCardFragment
     }
   }
@@ -1041,6 +1044,7 @@ export const PostsDocument = gql`
  * const { data, loading, error } = usePostsQuery({
  *   variables: {
  *      authorId: // value for 'authorId'
+ *      status: // value for 'status'
  *   },
  * });
  */

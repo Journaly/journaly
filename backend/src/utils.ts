@@ -2,11 +2,19 @@ import escapeHTML from 'escape-html'
 import { User, Post, Comment } from '.prisma/client'
 import { readTime } from './utils/post'
 
-type NodeType = {
-  type: ?string
-  text: ?string
-  children: ?NodeType[]
+type TextNode = {
+  text: string
+  italic: ?boolean
+  bold: ?boolean
+  underline: ?boolean
 }
+
+type BlockNode = {
+  type: string
+  children: NodeType[]
+}
+
+type NodeType = BlockNode | TextNode
 
 const typeToElStrMap = {
   'heading-one': 'h1',
@@ -15,6 +23,15 @@ const typeToElStrMap = {
   'bulleted-list': 'ul',
   'numbered-list': 'ol',
   paragraph: 'p',
+}
+
+// Iterate this array rather than the following object for a consistent order.
+const textNodeFormats = ['italic', 'bold', 'underline']
+
+const textNodeFormatEls = {
+  italic: 'em',
+  bold: 'strong',
+  underline: 'u',
 }
 
 const nonBodyTypes = new Set(['heading-one', 'heading-two', 'block-quote'])
@@ -29,7 +46,15 @@ const breakCharacters = new Set([
 
 const htmlifyEditorNode = (node: NodeType): string => {
   if (!node.type && typeof node.text === 'string') {
-    return escapeHTML(node.text)
+    // Wrap text node in each applicable element
+    return textNodeFormats.reduce((textNodeMarkup, format) => {
+      if (node[format]) {
+        const El = textNodeFormatEls[format]
+        return `<${El}>${textNodeMarkup}</${El}>`
+      } else {
+        return textNodeMarkup
+      }
+    }, escapeHTML(node.text))
   }
 
   const tagName = typeToElStrMap[node.type] || 'span'

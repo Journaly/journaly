@@ -12,6 +12,7 @@ import {
 } from '../../../generated/graphql'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
+import PostBodyStyles from '../../PostBodyStyles'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 import { useTranslation } from '../../../config/i18n'
@@ -329,7 +330,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
         </div>
 
-        {post.author.id === currentUser.id && (
+        {currentUser && post.author.id === currentUser.id && (
           <div className="post-controls">
             {post.status === 'DRAFT' && (
               <Button
@@ -356,6 +357,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           onNewComment={refetch}
         />
       )}
+      <PostBodyStyles parentClassName="post-body" />
       <style>{`
         .thread-highlight {
           transition: background-color 0.25s;

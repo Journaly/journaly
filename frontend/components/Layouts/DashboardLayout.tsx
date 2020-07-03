@@ -5,13 +5,15 @@ import Nav, { navConstants } from '../Dashboard/Nav'
 import { layoutPadding } from '../Dashboard/dashboardConstants'
 import Header from '../Dashboard/Header'
 import useWindowSize from '../../hooks/useWindowSize'
+import { User as UserType } from '../../generated/graphql'
 
 interface Props {
+  currentUser?: UserType
   children: React.ReactNode
   withPadding?: boolean
 }
 
-const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
+const DashboardLayout: React.FC<Props> = ({ currentUser, children, withPadding = true }) => {
   const { width } = useWindowSize()
   const router = useRouter()
   const [navExpanded, setNavExpanded] = useState(false)
@@ -47,7 +49,11 @@ const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
     <div className="dashboard">
       <Header onMenuClick={toggleNav} />
 
-      <Nav expanded={navExpanded} collapse={() => setNavExpanded(false)} />
+      <Nav
+        currentUser={currentUser}
+        expanded={navExpanded}
+        collapse={() => setNavExpanded(false)}
+      />
 
       <div className={dashboardContainerStyles}>{children}</div>
 

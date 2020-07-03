@@ -14,7 +14,7 @@ type Props = {
 
 const postBorderRadius = '5px'
 
-const Post: React.FC<Props> = ({ post, avatar = false }) => {
+const PostCard: React.FC<Props> = ({ post, avatar = false }) => {
   const { t } = useTranslation('posts')
   const {
     id,
@@ -170,4 +170,4 @@ const Post: React.FC<Props> = ({ post, avatar = false }) => {
   )
 }
 
-export default Post
+export default PostCard

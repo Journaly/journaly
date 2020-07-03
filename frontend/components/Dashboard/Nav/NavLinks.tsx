@@ -10,17 +10,13 @@ import { User as UserType } from '../../../generated/graphql'
 
 interface Props {
   onClick: () => void
-  // TOOD (robin-macpherson): solve issue with `UserType` requiring `posts`
-  currentUser: UserType | any
+  currentUser: UserType
 }
 
 const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
   const { t } = useTranslation()
-  // TODO: implement fetching user information (requires PR #17)
-  const user = {}
-  if (!user) return null
   const logout = (): void => {
-    // TODO: implement logout functionality (requires PR #17)
+    // TODO: implement logout functionality
   }
   const handleLogOut = (): void => {
     onClick()

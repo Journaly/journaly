@@ -55,8 +55,8 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
     WithApollo.getInitialProps = async (ctx) => {
       const { AppTree, req } = ctx
 
-      const headers = {}
-      if (typeof window === 'undefined') {
+      const headers: any = {}
+      if (typeof window === 'undefined' && req) {
         // If SSR, copy the request cookies into apollo client so it has the same
         // auth context as the request for the page.
         headers['cookie'] = req.headers.cookie

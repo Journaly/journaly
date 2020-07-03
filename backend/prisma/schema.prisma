@@ -25,7 +25,7 @@ model User {
   languagesLearning LanguageLearning[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
-  userInterests     UserInterests[]
+  userInterests     UserInterest[]
   postLike          PostLike[]
   commentLike       CommentLike[]
   pageView          PageView[]
@@ -73,26 +73,26 @@ model SocialMedia {
 }
 
 model Post {
-  id         Int          @default(autoincrement()) @id
+  id         Int         @default(autoincrement()) @id
   title      String
   body       String
-  bodySrc    String       @default("")
+  bodySrc    String      @default("")
   excerpt    String
-  status     PostStatus   @default(DRAFT)
+  status     PostStatus  @default(DRAFT)
   images     Image[]
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  author     User         @relation(fields: [authorId], references: [id])
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  author     User        @relation(fields: [authorId], references: [id])
   authorId   Int
-  readTime   Int          @default(1)
+  readTime   Int         @default(1)
   likes      PostLike[]
-  topic      Topic[]      @relation(references: [id])
-  language   Language     @relation(fields: [languageId], references: [id])
+  topic      Topic[]     @relation(references: [id])
+  language   Language    @relation(fields: [languageId], references: [id])
   languageId Int
   longitude  Float?
   latitude   Float?
   threads    Thread[]
-  postTopics PostTopics[]
+  postTopics PostTopic[]
 }
 
 model Language {
@@ -114,17 +114,17 @@ model Location {
 }
 
 model Topic {
-  id            Int             @default(autoincrement()) @id
+  id            Int            @default(autoincrement()) @id
   name          String
-  posts         Post[]          @relation(references: [id])
-  user          User?           @relation(fields: [userId], references: [id])
+  posts         Post[]         @relation(references: [id])
+  user          User?          @relation(fields: [userId], references: [id])
   userId        Int?
-  userInterests UserInterests[]
-  postTopics    PostTopics[]
+  userInterests UserInterest[]
+  postTopics    PostTopic[]
   prompt        Prompt[]
 }
 
-model UserInterests {
+model UserInterest {
   id        Int      @default(autoincrement()) @id
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
@@ -135,7 +135,7 @@ model UserInterests {
   @@unique([userId, topicId])
 }
 
-model PostTopics {
+model PostTopic {
   id      Int   @default(autoincrement()) @id
   post    Post  @relation(fields: [postId], references: [id])
   postId  Int

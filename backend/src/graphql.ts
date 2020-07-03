@@ -3,19 +3,16 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
 
+import { PostUpdateInput } from '.prisma/client/index'
+
 import { processEditorDocument, hasPostPermissions } from './utils'
-import { NotFoundError, NotAuthorizedError } from './errors'
+import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 
 use(prisma())
 
 const { arg, intArg, stringArg } = schema
 
-// Time constants
-const ONE_YEAR = 1000 * 60 * 60 * 24 * 365
-const ONE_HOUR_FROM_NOW = Date.now() + 3600000
-const WITHIN_ONE_HOUR = Date.now() - 3600000
-
-const languagesM2MDef = (t) => {
+const languagesM2MDef = (t: any) => {
   t.model.language()
 }
 
@@ -135,14 +132,14 @@ schema.queryType({
   definition(t) {
     t.list.field('posts', {
       type: 'Post',
-      resolve: async (parent, args, ctx) => ctx.db.post.findMany(),
+      resolve: async (_parent, _args, ctx) => ctx.db.post.findMany(),
     }),
       t.field('postById', {
         type: 'Post',
         args: {
           id: intArg(),
         },
-        resolve: async (parent, args, ctx) => {
+        resolve: async (_parent, args, ctx) => {
           const post = await ctx.db.post.findOne({ where: { id: args.id } })
 
           if (!post) {
@@ -165,7 +162,7 @@ schema.queryType({
           skip: intArg(),
           first: intArg(),
         },
-        resolve: async (parent, args, ctx) => {
+        resolve: async (_parent, args, ctx) => {
           const filterClauses = []
 
           if (args.language) {
@@ -214,13 +211,13 @@ schema.queryType({
       }),
       t.list.field('users', {
         type: 'User',
-        resolve: async (parent, args, ctx) => {
+        resolve: async (_parent, _args, ctx) => {
           return ctx.db.user.findMany()
         },
       }),
       t.field('currentUser', {
         type: 'User',
-        resolve: async (parent, args, ctx) => {
+        resolve: async (_parent, _args, ctx) => {
           const userId = ctx.request.userId
           // check for current userId
           if (!userId) {
@@ -235,7 +232,7 @@ schema.queryType({
       })
     t.list.field('languages', {
       type: 'Language',
-      resolve: async (parent, args, ctx) => {
+      resolve: async (_parent, _args, ctx) => {
         return ctx.db.language.findMany({
           where: {
             posts: {
@@ -252,7 +249,7 @@ schema.queryType({
 
 type LanguageM2MType = 'LanguageLearning' | 'LanguageNative'
 
-const langM2MModel = (db, m2mType: LanguageM2MType) => {
+const langM2MModel = (db: any, m2mType: LanguageM2MType) => {
   switch (m2mType) {
     case 'LanguageLearning':
       return db.languageLearning
@@ -266,7 +263,7 @@ const addLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
   args: {
     languageId: intArg({ required: true }),
   },
-  resolve: async (parent, args, ctx) => {
+  resolve: async (_parent: any, args: any, ctx: any) => {
     const { userId } = ctx.request
 
     if (!userId) {
@@ -299,7 +296,7 @@ schema.mutationType({
         email: stringArg({ required: true }),
         password: stringArg({ required: true }),
       },
-      resolve: async (parent, args, ctx: any) => {
+      resolve: async (_parent, args, ctx: any) => {
         const password = await bcrypt.hash(args.password, 10)
         const user = await ctx.db.user.create({
           data: {
@@ -313,7 +310,7 @@ schema.mutationType({
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
         ctx.response.cookie('token', token, {
           httpOnly: true,
-          maxAge: ONE_YEAR,
+          maxAge: 1000 * 60 * 60 * 24 * 365,
         })
         return user
       },
@@ -324,7 +321,7 @@ schema.mutationType({
           identifier: stringArg({ required: true }),
           password: stringArg({ required: true }),
         },
-        resolve: async (parent, args, ctx: any) => {
+        resolve: async (_parent, args, ctx: any) => {
           const user = await ctx.db.user.findOne({
             where: {
               email: args.identifier,
@@ -348,7 +345,7 @@ schema.mutationType({
           const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
           ctx.response.cookie('token', token, {
             httpOnly: true,
-            maxAge: ONE_YEAR,
+            maxAge: 1000 * 60 * 60 * 24 * 365,
           })
           return user
         },
@@ -361,9 +358,13 @@ schema.mutationType({
         languageId: intArg({ required: true }),
         status: arg({ type: 'PostStatus' }),
       },
-      resolve: async (parent, args, ctx) => {
+      resolve: async (_parent, args, ctx) => {
         const { title, body, languageId, status } = args
         const { userId } = ctx.request
+
+        if (!body) {
+          throw new ResolverError('We need a body!', {})
+        }
 
         return ctx.db.post.create({
           data: {
@@ -384,7 +385,7 @@ schema.mutationType({
         body: EditorNode.asArg({ list: true, required: false }),
         status: arg({ type: 'PostStatus', required: false }),
       },
-      resolve: async (parent, args, ctx) => {
+      resolve: async (_parent, args, ctx) => {
         // Check user can actually do this
         const { userId } = ctx.request
         if (!userId) throw new NotAuthorizedError()
@@ -408,7 +409,7 @@ schema.mutationType({
         hasPostPermissions(originalPost, currentUser)
 
         // Actually make the change in the DB
-        let data = {}
+        let data: PostUpdateInput = {}
         if (args.title) {
           data.title = args.title
         }
@@ -435,7 +436,7 @@ schema.mutationType({
         endIndex: intArg({ required: true }),
         highlightedContent: stringArg({ required: true }),
       },
-      resolve: async (parent, args, ctx) => {
+      resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
         if (!userId) {
@@ -465,7 +466,7 @@ schema.mutationType({
         threadId: intArg({ required: true }),
         body: stringArg({ required: true }),
       },
-      resolve: async (parent, args, ctx) => {
+      resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
         if (!userId) {
@@ -499,7 +500,7 @@ schema.mutationType({
         commentId: intArg({ required: true }),
         body: stringArg({ required: true }),
       },
-      resolve: async (parent, args, ctx) => {
+      resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
@@ -538,11 +539,11 @@ schema.mutationType({
       args: {
         commentId: intArg({ required: true }),
       },
-      resolve: async (parent, args, ctx) => {
+      resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
-        const currentUser = ctx.db.user.findOne({
+        const currentUser = await ctx.db.user.findOne({
           where: {
             id: userId,
           },

@@ -1,5 +1,6 @@
 export class ResolverError extends Error {
-  constructor(message, extensions) {
+  extensions: any
+  constructor(message: string, extensions: any) {
     super(message)
     this.extensions = extensions
   }

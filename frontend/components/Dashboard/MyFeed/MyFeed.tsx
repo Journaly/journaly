@@ -1,6 +1,6 @@
 import React from 'react'
 import { Post } from '../../../generated/graphql'
-import MyFeedPostCard from '../PostCard/MyFeedPostCard'
+import PostCard from '../PostCard'
 import theme from '../../../theme'
 import { User as UserType } from '../../../generated/graphql'
 
@@ -27,7 +27,7 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
       </div>
       <div className="my-feed-container">
         {posts.length > 0 ? (
-          posts.map((post) => <MyFeedPostCard key={post.id} post={post} />)
+          posts.map((post) => <PostCard key={post.id} post={post} stacked avatar />)
         ) : (
           <p>Nothing to see yet...</p>
         )}

@@ -150,7 +150,7 @@ schema.queryType({
     t.list.field('posts', {
       type: 'Post',
       args: {
-        status: arg({ type: 'PostStatus', required: false }),
+        status: arg({ type: 'PostStatus', required: true }),
         authorId: intArg({ required: true }),
       },
       resolve: async (_root, args, ctx) => {
@@ -158,7 +158,7 @@ schema.queryType({
           where: {
             AND: {
               author: { id: args.authorId },
-              status: args.status || 'PUBLISHED',
+              status: args.status,
             },
           },
         })

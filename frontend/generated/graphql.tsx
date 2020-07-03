@@ -225,7 +225,7 @@ export type Query = {
 }
 
 export type QueryPostsArgs = {
-  status?: Maybe<PostStatus>
+  status: PostStatus
   authorId: Scalars['Int']
 }
 
@@ -446,7 +446,7 @@ export type PostByIdQuery = { __typename?: 'Query' } & {
 
 export type PostsQueryVariables = {
   authorId: Scalars['Int']
-  status?: Maybe<PostStatus>
+  status: PostStatus
 }
 
 export type PostsQuery = { __typename?: 'Query' } & {
@@ -1023,7 +1023,7 @@ export type PostByIdQueryResult = ApolloReactCommon.QueryResult<
   PostByIdQueryVariables
 >
 export const PostsDocument = gql`
-  query posts($authorId: Int!, $status: PostStatus) {
+  query posts($authorId: Int!, $status: PostStatus!) {
     posts(authorId: $authorId, status: $status) {
       ...PostCardFragment
     }

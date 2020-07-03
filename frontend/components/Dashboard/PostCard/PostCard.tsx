@@ -1,21 +1,29 @@
 import React from 'react'
 import Link from 'next/link'
+import classNames from 'classnames'
 import { useTranslation } from '../../../config/i18n'
 import { formatShortDate } from '../../../utils/date'
 import { Post as PostType, PostStatus as PostStatusType } from '../../../generated/graphql'
 import LikeIcon from '../../Icons/LikeIcon'
 import CommentIcon from '../../Icons/CommentIcon'
 import theme from '../../../theme'
+import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type Props = {
   post: PostType
   status?: PostStatusType
   avatar?: boolean
+  stacked?: boolean
 }
 
 const postBorderRadius = '5px'
 
-const PostCard: React.FC<Props> = ({ post, status = PostStatusType.Published, avatar = false }) => {
+const PostCard: React.FC<Props> = ({
+  post,
+  status = PostStatusType.Published,
+  avatar = false,
+  stacked = false,
+}) => {
   const { t } = useTranslation('post')
   const {
     id,
@@ -31,15 +39,14 @@ const PostCard: React.FC<Props> = ({ post, status = PostStatusType.Published, av
   const isDraft = status === PostStatusType.Draft
   const isPublished = status === PostStatusType.Published
   const displayImage = images.length ? images[0].smallSize : '/images/samples/sample-post-img.jpg'
-  console.log(handle, name, profileImage, avatar)
-  // const authorDisplayName = author.handle || author.name
-  // const profileImage = author.profileImage
+  const imageAlt = images.length === 0 ? 'Typewriter on an old wooden desk' : ''
+  const postCardStyles = classNames('post-card-container', { stacked })
 
   return (
     <>
       <Link href={`/post/${id}`}>
-        <a className="post-card-container">
-          <img className="post-image" src={displayImage} alt="" />
+        <a className={postCardStyles}>
+          <img className="post-image" src={displayImage} alt={imageAlt} />
 
           <div className="post-card-details">
             <div className="post-text">
@@ -47,24 +54,42 @@ const PostCard: React.FC<Props> = ({ post, status = PostStatusType.Published, av
               <p className="post-excerpt">{excerpt}</p>
             </div>
 
-            <div className="post-data">
-              {isPublished && (
-                <div className="post-stats">
-                  <div className="post-stat">
-                    <LikeIcon />
-                    <span>{likes.length}</span>
-                  </div>
-                  <div className="post-stat">
-                    <CommentIcon />
-                    <span>{threads.length}</span>
-                  </div>
+            <div className="post-avatar-and-data">
+              {avatar && (
+                <div className="post-avatar">
+                  {profileImage ? (
+                    <img className="profile-image" src={profileImage} alt="" />
+                  ) : (
+                    <BlankAvatarIcon size={27} />
+                  )}
+
+                  <p className="author">{handle || name}</p>
                 </div>
               )}
-              <div className="post-subtext">
-                {formatShortDate(createdAt)} - {t('readTime', { minutes: readTime })}
+
+              <div className="post-data">
+                {isPublished && (
+                  <div className="post-stats">
+                    <div className="post-stat">
+                      <LikeIcon />
+                      <span>{likes.length}</span>
+                    </div>
+                    <div className="post-stat">
+                      <CommentIcon />
+                      <span>{threads.length}</span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="post-subtext">
+                  {formatShortDate(createdAt)} - {t('readTime', { minutes: readTime })}
+                </div>
               </div>
             </div>
-            <p className="post-action">{isDraft ? t('finishAction') : t('readAction')}</p>
+
+            {!avatar && (
+              <p className="post-action">{isDraft ? t('finishAction') : t('readAction')}</p>
+            )}
           </div>
         </a>
       </Link>
@@ -80,7 +105,7 @@ const PostCard: React.FC<Props> = ({ post, status = PostStatusType.Published, av
           transition: all 150ms ease-in;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
-          .post-card-container {
+          .post-card-container:not(.stacked) {
             flex-direction: row;
             justify-content: center;
             align-items: stretch;
@@ -101,7 +126,7 @@ const PostCard: React.FC<Props> = ({ post, status = PostStatusType.Published, av
           border-top-left-radius: ${postBorderRadius};
         }
         @media (min-width: ${theme.breakpoints.MD}) {
-          .post-image {
+          :not(.stacked) .post-image {
             width: 125px;
             align-self: center;
             margin-right: 30px;
@@ -119,7 +144,7 @@ const PostCard: React.FC<Props> = ({ post, status = PostStatusType.Published, av
           padding: 12px;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
-          .post-card-details {
+          :not(.stacked) .post-card-details {
             padding: 0;
             height: auto;
           }
@@ -130,8 +155,43 @@ const PostCard: React.FC<Props> = ({ post, status = PostStatusType.Published, av
           ${theme.typography.headingLG};
         }
 
-        .post-data {
-          margin-top: 14px;
+        .post-avatar-and-data {
+          display: flex;
+          align-items: center;
+          margin-top: 12px;
+        }
+
+        .stacked .post-avatar-and-data {
+          margin-top: 24px;
+        }
+
+        .post-avatar-and-data > div {
+          flex-basis: 50%;
+        }
+
+        .post-avatar {
+          display: flex;
+          align-items: center;
+          margin-bottom: 4px;
+        }
+
+        .post-avatar > :global(*) {
+          border-radius: 50%;
+          margin-right: 12px;
+        }
+
+        .post-avatar :global(svg) {
+          background-color: ${theme.colors.blueLight};
+        }
+
+        .profile-image {
+          width: 27px;
+          height: 27px;
+          object-fit: cover;
+        }
+
+        .author {
+          font-size: 14px;
         }
 
         .post-stats {
@@ -164,7 +224,7 @@ const PostCard: React.FC<Props> = ({ post, status = PostStatusType.Published, av
           display: none;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
-          .post-action {
+          :not(.stacked) .post-action {
             position: absolute;
             bottom: 0;
             right: 0;

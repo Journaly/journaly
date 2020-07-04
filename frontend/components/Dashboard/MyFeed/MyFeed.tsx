@@ -2,12 +2,10 @@ import React from 'react'
 
 import PostCard from '../PostCard'
 import theme from '../../../theme'
-import { User as UserType } from '../../../generated/graphql'
-
-// import { Post } from '../../../generated/graphql' // TODO (robin-macpherson): See Post[] type todo below
+import { User as UserType, Post as PostType } from '../../../generated/graphql'
 
 type Props = {
-  posts: any[] // TODO (robin-macpherson): should be Post[]
+  posts: PostType[]
   currentUser: UserType
 }
 
@@ -29,16 +27,7 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
       </div>
       <div className="my-feed-container">
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <PostCard
-              key={post.id}
-              id={post.id}
-              title={post.title}
-              body={post.body}
-              image={post.image}
-              author={post.author.name}
-            />
-          ))
+          posts.map((post) => <PostCard key={post.id} post={post} />)
         ) : (
           <p>Nothing to see yet...</p>
         )}

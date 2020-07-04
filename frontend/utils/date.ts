@@ -1,3 +1,5 @@
+import { format, parseISO } from 'date-fns'
+
 type DateString = string | number
 
 export const getUTCDate = (dateString: DateString = Date.now()): Date => {
@@ -11,4 +13,8 @@ export const getUTCDate = (dateString: DateString = Date.now()): Date => {
     date.getUTCMinutes(),
     date.getUTCSeconds(),
   )
+}
+
+export const formatShortDate = (date: string): string => {
+  return format(parseISO(date), 'MMM d')
 }

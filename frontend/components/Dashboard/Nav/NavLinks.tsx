@@ -4,9 +4,9 @@ import NavLink from '../../NavLink'
 import FeedIcon from '../../Icons/FeedIcon'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 import { navConstants } from './nav-constants'
-import { darkBlue, darkGrey } from '../../../utils'
 import { useTranslation } from '../../../config/i18n'
 import { User as UserType } from '../../../generated/graphql'
+import theme from '../../../theme'
 
 interface Props {
   onClick: () => void
@@ -92,18 +92,17 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           settings page.
         */
 
-        .nav-top {
-          margin-top: 50px;
-          margin-bottom: 50px;
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
 
-        :global(.expanded) .nav-top {
-          margin-bottom: 25px;
-        }
-        @media (${navConstants.mobileNavOnly}) {
-          .nav-top {
-            margin-bottom: 25px;
-          }
+        .nav-top {
+          margin-top: 50px;
         }
 
         .nav-top a {
@@ -123,7 +122,7 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
 
         .profile-image :global(svg) {
           border-radius: 50%;
-          background-color: ${darkBlue};
+          background-color: ${theme.colors.blue};
         }
 
         .current-user-name,
@@ -142,7 +141,7 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           margin-top: 15px;
           font-size: 16px;
           text-align: center;
-          color: white;
+          color: ${theme.colors.white};
           animation: fadeIn ${navConstants.transitionDuration}ms linear;
         }
 
@@ -153,7 +152,7 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
             margin-top: 15px;
             font-size: 16px;
             text-align: center;
-            color: white;
+            color: ${theme.colors.white};
             animation: fadeIn ${navConstants.transitionDuration}ms linear;
           }
         }
@@ -161,8 +160,8 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
         .nav-bottom {
           display: flex;
           flex-direction: column;
-          /* Expands the links to push the Journaly "J" logo down to the bottom */
-          flex-grow: 2;
+          /* centers itself in the grid container */
+          align-self: center;
         }
 
         .nav-bottom hr {
@@ -174,22 +173,13 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
 
         :global(.expanded) .nav-bottom hr {
           width: 180px;
-          margin: 0 auto;
+          margin: 20px auto;
         }
 
         @media (${navConstants.mobileNavOnly}) {
           .nav-bottom hr {
             width: 180px;
-            margin: 0 auto;
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
+            margin: 20px auto;
           }
         }
 
@@ -200,7 +190,7 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           justify-content: center;
           height: 70px;
           font-size: 16px;
-          color: white;
+          color: ${theme.colors.white};
         }
 
         :global(.expanded) .nav-link {
@@ -223,7 +213,7 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
 
         .nav-link.active,
         .nav-link:hover {
-          background-color: ${darkGrey};
+          background-color: #5a5a5a;
         }
 
         .nav-link img {

@@ -16,7 +16,24 @@ interface Props {
 const DashboardLayout: React.FC<Props> = ({ currentUser, children, withPadding = true }) => {
   const { width } = useWindowSize()
   const router = useRouter()
-  const [navExpanded, setNavExpanded] = useState(false)
+  const shouldNavBeExpanded = () => {
+    // Going from tablet to desktop expands the nav
+    if (width >= navConstants.desktopBreakpoint) {
+      if (router.pathname.includes('/settings/')) {
+        return false
+      }
+
+      return true
+    }
+
+    // Going from mobile to tablet collapses the nav
+    if (width >= navConstants.mobileBreakpoint) {
+      return false
+    }
+
+    return false
+  }
+  const [navExpanded, setNavExpanded] = useState(shouldNavBeExpanded())
 
   const dashboardContainerStyles = classNames('dashboard-container', {
     'settings-page': router.pathname.includes('/settings/'),
@@ -28,21 +45,7 @@ const DashboardLayout: React.FC<Props> = ({ currentUser, children, withPadding =
   }
 
   useEffect((): void => {
-    // Going from tablet to desktop expands the nav
-    if (width >= navConstants.desktopBreakpoint) {
-      if (router.pathname.includes('/settings/')) {
-        setNavExpanded(false)
-        return
-      }
-
-      setNavExpanded(true)
-      return
-    }
-
-    // Going from mobile to tablet collapses the nav
-    if (width >= navConstants.mobileBreakpoint) {
-      setNavExpanded(false)
-    }
+    setNavExpanded(shouldNavBeExpanded())
   }, [width, router.pathname])
 
   return (

@@ -2,19 +2,20 @@ import React from 'react'
 import Link from 'next/link'
 import { useTranslation } from '../../../config/i18n'
 import { formatShortDate } from '../../../utils/date'
-import { Post as PostType } from '../../../generated/graphql'
+import { Post as PostType, PostStatus as PostStatusType } from '../../../generated/graphql'
 import LikeIcon from '../../Icons/LikeIcon'
 import CommentIcon from '../../Icons/CommentIcon'
 import theme from '../../../theme'
 
 type Props = {
   post: PostType
+  status?: PostStatusType
   avatar?: boolean
 }
 
 const postBorderRadius = '5px'
 
-const PostCard: React.FC<Props> = ({ post, avatar = false }) => {
+const PostCard: React.FC<Props> = ({ post, status = PostStatusType.Published, avatar = false }) => {
   const { t } = useTranslation('post')
   const {
     id,
@@ -27,7 +28,8 @@ const PostCard: React.FC<Props> = ({ post, avatar = false }) => {
     author: { handle, name, profileImage },
     createdAt,
   } = post
-
+  const isDraft = status === PostStatusType.Draft
+  const isPublished = status === PostStatusType.Published
   const displayImage = images.length ? images[0].smallSize : '/images/samples/sample-post-img.jpg'
   console.log(handle, name, profileImage, avatar)
   // const authorDisplayName = author.handle || author.name
@@ -46,21 +48,23 @@ const PostCard: React.FC<Props> = ({ post, avatar = false }) => {
             </div>
 
             <div className="post-data">
-              <div className="post-stats">
-                <div className="post-stat">
-                  <LikeIcon />
-                  <span>{likes.length}</span>
+              {isPublished && (
+                <div className="post-stats">
+                  <div className="post-stat">
+                    <LikeIcon />
+                    <span>{likes.length}</span>
+                  </div>
+                  <div className="post-stat">
+                    <CommentIcon />
+                    <span>{threads.length}</span>
+                  </div>
                 </div>
-                <div className="post-stat">
-                  <CommentIcon />
-                  <span>{threads.length}</span>
-                </div>
-              </div>
+              )}
               <div className="post-subtext">
                 {formatShortDate(createdAt)} - {t('readTime', { minutes: readTime })}
               </div>
             </div>
-            <p className="read-post">{t('readAction')}</p>
+            <p className="post-action">{isDraft ? t('finishAction') : t('readAction')}</p>
           </div>
         </a>
       </Link>
@@ -79,7 +83,7 @@ const PostCard: React.FC<Props> = ({ post, avatar = false }) => {
           .post-card-container {
             flex-direction: row;
             justify-content: center;
-            align-items: center;
+            align-items: stretch;
             padding: 15px;
           }
         }
@@ -99,6 +103,7 @@ const PostCard: React.FC<Props> = ({ post, avatar = false }) => {
         @media (min-width: ${theme.breakpoints.MD}) {
           .post-image {
             width: 125px;
+            align-self: center;
             margin-right: 30px;
             border-radius: 0;
           }
@@ -116,6 +121,7 @@ const PostCard: React.FC<Props> = ({ post, avatar = false }) => {
         @media (min-width: ${theme.breakpoints.MD}) {
           .post-card-details {
             padding: 0;
+            height: auto;
           }
         }
 
@@ -124,10 +130,13 @@ const PostCard: React.FC<Props> = ({ post, avatar = false }) => {
           ${theme.typography.headingLG};
         }
 
+        .post-data {
+          margin-top: 14px;
+        }
+
         .post-stats {
           display: flex;
           align-items: center;
-          margin-top: 14px;
           font-size: 14px;
           line-height: 1;
           color: ${theme.colors.blueLight};
@@ -151,11 +160,11 @@ const PostCard: React.FC<Props> = ({ post, avatar = false }) => {
           color: #95989a;
         }
 
-        .read-post {
+        .post-action {
           display: none;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
-          .read-post {
+          .post-action {
             position: absolute;
             bottom: 0;
             right: 0;

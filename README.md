@@ -39,42 +39,42 @@ We use Python for data science, leveraging a number of powerful libraries for da
    ```sh
    $ git clone git@github.com:Journaly/journaly.git
    ```
-1. In your backend directory, locate your `.env.example` file and create a new one alongside it called `.env`
-1. Run `npm ci` in both the `frontend` and `backend` directories
+1. In your backend directory, locate your `.env.example` file and copy the contents into a new `.env` file alongside it.
+1. Run `npm ci` in both the `frontend` and `backend` directories.
 
 #### Setting Up Your Local DB Instance
 
 1. Install Postgres with Homebrew
    _Note that this set your Postgres DB to run when your computer starts up and will stay running in the background_.
 
-```bash
-$ brew install postgres
-$ brew services start postgresql
-```
+   ```bash
+   $ brew install postgres
+   $ brew services start postgresql
+   ```
 
-2. Start up your Postgres shell and create your user
+1. Start up your Postgres shell and create your user
 
-```bash
-$ psql postgres
-$ create user <your_username> with createdb password '<your_password>';
-```
+   ```bash
+   $ psql postgres
+   $ create user <your_username> with createdb password '<your_password>';
+   ```
 
-3. Create your local instance of Journaly DB and give your user permissions
+1. Create your local instance of Journaly DB and give your user permissions
 
-```bash
-$ create database journaly_db;
-$ alter user <your_username> with superuser;
-```
+   ```bash
+   $ create database journaly_db;
+   $ alter user <your_username> with superuser;
+   ```
 
-4. Apply database migrations to your new database instance:
+1. If you haven't created a `backend/prisma/.env` file yet, copy and paste `backend/prisma/.env.example` into the new `.env` file. Then, replace the placeholders with your new postgres username & password.
 
-```bash
-$ npx prisma migrate up --experimental
-```
+1. Finally, from the `backend` directory, apply database migrations to your new database instance:
 
-5. Finally, go to your `.env` file in the backend directory and replace the placeholders with your new postgres username & password.
+   ```bash
+   $ npm run migrate:up
+   ```
 
-You've got a local Journaly PostgreSQL DB, woohoo! 🎉
+   You've got a local Journaly PostgreSQL DB, woohoo! 🎉
 
 #### Useful Commands For Working With Your DB
 
@@ -83,13 +83,8 @@ You've got a local Journaly PostgreSQL DB, woohoo! 🎉
 ### Running Journaly
 
 1. To run the entire app in local development mode, simply run `npm run dev` from the root of the project! This will use `concurrently` to start up both the frontend and backend dev servers.
-2. If you would like to run frontend or backend separately, you can run `npm run dev` from each respective directory.
-
-### Seeding your database
-
-3. Let's seed that baby DB!  
-   `$ cd backend/`
-   `$ npm run seed`
+1. If you would like to run frontend or backend separately, you can run `npm run dev` from each respective directory.
+1. Let's seed that baby DB! From the root of the repo, run `npm run reseed-db`
 
 BOOM! You now have some users, along with a wee selection of posts :)
 

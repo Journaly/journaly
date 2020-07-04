@@ -11,6 +11,7 @@ fragment AuthorFragment on User {
   id
   name
   handle
+  profileImage
 }
 
 fragment CommentFragment on Comment {
@@ -36,12 +37,35 @@ fragment PostFragment on Post {
   title
   body
   status
+  excerpt
+  readTime
   createdAt
   author {
     ...AuthorFragment
   }
   threads {
     ...ThreadFragment
+  }
+}
+
+fragment PostCardFragment on Post {
+  id
+  title
+  body
+  excerpt
+  readTime
+  createdAt
+  images {
+    smallSize
+  }
+  likes {
+    id
+  }
+  threads {
+    id
+  }
+  author {
+    ...AuthorFragment
   }
 }
 

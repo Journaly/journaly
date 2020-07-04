@@ -1,12 +1,5 @@
 query feed {
   feed {
-    id
-    title
-    body
-    author {
-      id
-      name
-      email
-    }
+    ...PostCardFragment
   }
 }

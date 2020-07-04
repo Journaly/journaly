@@ -53,11 +53,22 @@ schema.objectType({
     t.model.title()
     t.model.body()
     t.model.excerpt()
+    t.model.readTime()
     t.model.author()
     t.model.status()
+    t.model.images()
+    t.model.likes({ type: 'PostLike' })
     t.model.threads()
     t.model.language({ type: 'Language' })
     t.model.createdAt()
+  },
+})
+
+schema.objectType({
+  name: 'Image',
+  definition(t) {
+    t.model.id()
+    t.model.smallSize()
   },
 })
 
@@ -89,6 +100,13 @@ schema.objectType({
     t.model.id()
     t.model.country()
     t.model.city()
+  },
+})
+
+schema.objectType({
+  name: 'PostLike',
+  definition(t) {
+    t.model.id()
   },
 })
 
@@ -132,7 +150,20 @@ schema.queryType({
   definition(t) {
     t.list.field('posts', {
       type: 'Post',
-      resolve: async (_parent, _args, ctx) => ctx.db.post.findMany(),
+      args: {
+        status: arg({ type: 'PostStatus', required: true }),
+        authorId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        return ctx.db.post.findMany({
+          where: {
+            AND: {
+              author: { id: args.authorId },
+              status: args.status,
+            },
+          },
+        })
+      },
     }),
       t.field('postById', {
         type: 'Post',

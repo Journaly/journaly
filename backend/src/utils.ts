@@ -10,7 +10,7 @@ type NodeType = {
   children?: NodeType[] | undefined | null
 }
 
-const typeToElStrMap = {
+const typeToElStrMap: { [key: string]: string } = {
   'heading-one': 'h1',
   'heading-two': 'h2',
   'block-quote': 'blockquote',
@@ -19,10 +19,12 @@ const typeToElStrMap = {
   paragraph: 'p',
 }
 
-// Iterate this array rather than the following object for a consistent order.
-const textNodeFormats = ['italic', 'bold', 'underline']
+type textNodeFormatType = 'italic' | 'bold' | 'underline'
 
-const textNodeFormatEls = {
+// Iterate this array rather than the following object for a consistent order.
+const textNodeFormats: textNodeFormatType[] = ['italic', 'bold', 'underline']
+
+const textNodeFormatEls: { [T in textNodeFormatType]: string } = {
   italic: 'em',
   bold: 'strong',
   underline: 'u',
@@ -38,6 +40,18 @@ const breakCharacters = new Set([
   '。', // Ideographic full stop
 ])
 
+const getNodeTagName = (node: NodeType): string => {
+  if (!node.type) {
+    return 'span'
+  }
+
+  if (!(node.type in typeToElStrMap)) {
+    return 'span'
+  }
+
+  return typeToElStrMap[node.type]
+}
+
 const htmlifyEditorNode = (node: NodeType): string => {
   if (!node.type && typeof node.text === 'string') {
     // Wrap text node in each applicable element
@@ -51,7 +65,7 @@ const htmlifyEditorNode = (node: NodeType): string => {
     }, escapeHTML(node.text))
   }
 
-  const tagName = typeToElStrMap[node.type] || 'span'
+  const tagName = getNodeTagName(node)
   const content = (node.children || []).map(htmlifyEditorNode).join('\n')
 
   return `<${tagName}>${content}</${tagName}>`
@@ -61,13 +75,16 @@ export const htmlifyEditorNodes = (value: NodeType[]): string => {
   return value.map(htmlifyEditorNode).join('\n')
 }
 
-const extractBodyTextFromNode = (node: NodeType[]) => {
+const extractBodyTextFromNode = (node: NodeType) => {
   if (!node.type && typeof node.text === 'string') {
     return node.text
   }
 
-  const content = (node.children || [])
-    .filter(({ type }) => !nonBodyTypes.has(type))
+  if (!node.type || nonBodyTypes.has(node.type)) {
+    return ''
+  }
+
+  const content: string = (node.children || [])
     .map(extractBodyTextFromNode)
     .join(' ')
 
@@ -125,8 +142,8 @@ export const hasPostPermissions = (
 ) => {
   const hasPermission =
     original.authorId == currentUser.id ||
-    currentUser.userRole !== 'MODERATOR' ||
-    currentUser.userRole !== 'ADMIN'
+    currentUser.userRole === 'MODERATOR' ||
+    currentUser.userRole === 'ADMIN'
 
   if (!hasPermission) throw new Error('You do not have permission to do that')
   return true

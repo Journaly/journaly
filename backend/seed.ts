@@ -142,8 +142,8 @@ async function main() {
             threads: {
               create: [
                 {
-                  startIndex: 57,
-                  endIndex: 84,
+                  startIndex: 47,
+                  endIndex: 74,
                   highlightedContent: 'I think this is a good song',
                   comments: {
                     create: [
@@ -244,9 +244,9 @@ async function main() {
       threads: {
         create: [
           {
-            startIndex: 15,
-            endIndex: 38,
-            highlightedContent: 'Les Pluies de Castamere',
+            startIndex: 11,
+            endIndex: 36,
+            highlightedContent: "This One's for you, Tywin",
             comments: {
               create: [
                 {

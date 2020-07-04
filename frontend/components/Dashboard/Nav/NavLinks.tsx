@@ -92,15 +92,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           settings page.
         */
 
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
         .nav-top {
           margin-top: 50px;
         }
@@ -142,7 +133,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           font-size: 16px;
           text-align: center;
           color: ${theme.colors.white};
-          animation: fadeIn ${navConstants.transitionDuration}ms linear;
         }
 
         @media (${navConstants.mobileNavOnly}) {
@@ -153,7 +143,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
             font-size: 16px;
             text-align: center;
             color: ${theme.colors.white};
-            animation: fadeIn ${navConstants.transitionDuration}ms linear;
           }
         }
 
@@ -198,7 +187,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           justify-content: normal;
           height: auto;
           padding: 25px;
-          animation: fadeIn ${navConstants.transitionDuration}ms linear;
         }
 
         @media (${navConstants.mobileNavOnly}) {
@@ -207,7 +195,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
             justify-content: normal;
             height: auto;
             padding: 25px;
-            animation: fadeIn ${navConstants.transitionDuration}ms linear;
           }
         }
 

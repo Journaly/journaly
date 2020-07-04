@@ -30,7 +30,18 @@ export type EditorNode = {
   text?: Maybe<Scalars['String']>
   italic?: Maybe<Scalars['Boolean']>
   bold?: Maybe<Scalars['Boolean']>
+  underline?: Maybe<Scalars['Boolean']>
   children?: Maybe<Array<EditorNode>>
+}
+
+export type Image = {
+  __typename?: 'Image'
+  id: Scalars['Int']
+  smallSize: Scalars['String']
+}
+
+export type ImageWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
 }
 
 export type Language = {
@@ -151,11 +162,30 @@ export type Post = {
   title: Scalars['String']
   body: Scalars['String']
   excerpt: Scalars['String']
+  readTime: Scalars['Int']
   author: User
   status: PostStatus
+  images: Array<Image>
+  likes: Array<PostLike>
   threads: Array<Thread>
   language: Language
   createdAt: Scalars['DateTime']
+}
+
+export type PostImagesArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<ImageWhereUniqueInput>
+  before?: Maybe<ImageWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type PostLikesArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<PostLikeWhereUniqueInput>
+  before?: Maybe<PostLikeWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
 }
 
 export type PostThreadsArgs = {
@@ -164,6 +194,15 @@ export type PostThreadsArgs = {
   before?: Maybe<ThreadWhereUniqueInput>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+}
+
+export type PostLike = {
+  __typename?: 'PostLike'
+  id: Scalars['Int']
+}
+
+export type PostLikeWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
 }
 
 export enum PostStatus {
@@ -183,6 +222,11 @@ export type Query = {
   users?: Maybe<Array<User>>
   currentUser?: Maybe<User>
   languages?: Maybe<Array<Language>>
+}
+
+export type QueryPostsArgs = {
+  status: PostStatus
+  authorId: Scalars['Int']
 }
 
 export type QueryPostByIdArgs = {
@@ -337,13 +381,7 @@ export type DeleteCommentMutation = { __typename?: 'Mutation' } & {
 export type FeedQueryVariables = {}
 
 export type FeedQuery = { __typename?: 'Query' } & {
-  feed?: Maybe<
-    Array<
-      { __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body'> & {
-          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'email'>
-        }
-    >
-  >
+  feed?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
 }
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
@@ -351,7 +389,10 @@ export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   'id' | 'name' | 'handle' | 'email' | 'userRole' | 'profileImage'
 >
 
-export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
+  User,
+  'id' | 'name' | 'handle' | 'profileImage'
+>
 
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
@@ -365,10 +406,20 @@ export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
 
 export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
-  'id' | 'title' | 'body' | 'status' | 'createdAt'
+  'id' | 'title' | 'body' | 'status' | 'excerpt' | 'readTime' | 'createdAt'
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
+  }
+
+export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
+  Post,
+  'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt'
+> & {
+    images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
+    likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
+    threads: Array<{ __typename?: 'Thread' } & Pick<Thread, 'id'>>
+    author: { __typename?: 'User' } & AuthorFragmentFragment
   }
 
 export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
@@ -391,6 +442,15 @@ export type PostByIdQueryVariables = {
 
 export type PostByIdQuery = { __typename?: 'Query' } & {
   postById?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
+}
+
+export type PostsQueryVariables = {
+  authorId: Scalars['Int']
+  status: PostStatus
+}
+
+export type PostsQuery = { __typename?: 'Query' } & {
+  posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
 }
 
 export type UpdateCommentMutationVariables = {
@@ -440,6 +500,7 @@ export const AuthorFragmentFragmentDoc = gql`
     id
     name
     handle
+    profileImage
   }
 `
 export const CommentFragmentFragmentDoc = gql`
@@ -470,6 +531,8 @@ export const PostFragmentFragmentDoc = gql`
     title
     body
     status
+    excerpt
+    readTime
     createdAt
     author {
       ...AuthorFragment
@@ -480,6 +543,29 @@ export const PostFragmentFragmentDoc = gql`
   }
   ${AuthorFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
+`
+export const PostCardFragmentFragmentDoc = gql`
+  fragment PostCardFragment on Post {
+    id
+    title
+    body
+    excerpt
+    readTime
+    createdAt
+    images {
+      smallSize
+    }
+    likes {
+      id
+    }
+    threads {
+      id
+    }
+    author {
+      ...AuthorFragment
+    }
+  }
+  ${AuthorFragmentFragmentDoc}
 `
 export const LanguageFragmentFragmentDoc = gql`
   fragment LanguageFragment on Language {
@@ -810,16 +896,10 @@ export type DeleteCommentMutationOptions = ApolloReactCommon.BaseMutationOptions
 export const FeedDocument = gql`
   query feed {
     feed {
-      id
-      title
-      body
-      author {
-        id
-        name
-        email
-      }
+      ...PostCardFragment
     }
   }
+  ${PostCardFragmentFragmentDoc}
 `
 
 /**
@@ -942,6 +1022,45 @@ export type PostByIdQueryResult = ApolloReactCommon.QueryResult<
   PostByIdQuery,
   PostByIdQueryVariables
 >
+export const PostsDocument = gql`
+  query posts($authorId: Int!, $status: PostStatus!) {
+    posts(authorId: $authorId, status: $status) {
+      ...PostCardFragment
+    }
+  }
+  ${PostCardFragmentFragmentDoc}
+`
+
+/**
+ * __usePostsQuery__
+ *
+ * To run a query within a React component, call `usePostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostsQuery({
+ *   variables: {
+ *      authorId: // value for 'authorId'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function usePostsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<PostsQuery, PostsQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<PostsQuery, PostsQueryVariables>(PostsDocument, baseOptions)
+}
+export function usePostsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PostsQuery, PostsQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<PostsQuery, PostsQueryVariables>(PostsDocument, baseOptions)
+}
+export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>
+export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>
+export type PostsQueryResult = ApolloReactCommon.QueryResult<PostsQuery, PostsQueryVariables>
 export const UpdateCommentDocument = gql`
   mutation updateComment($body: String!, $commentId: Int!) {
     updateComment(body: $body, commentId: $commentId) {

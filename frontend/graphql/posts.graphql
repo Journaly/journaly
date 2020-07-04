@@ -1,0 +1,5 @@
+query posts($authorId: Int!, $status: PostStatus!) {
+  posts(authorId: $authorId, status: $status) {
+    ...PostCardFragment
+  }
+}

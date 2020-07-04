@@ -21,3 +21,23 @@ export function MyComponent() {
   return <p>{t('homePage.welcomeMessageTitle')}</p>
 }
 ```
+
+For simple interpolation, follow this pattern:
+
+```json
+{
+  "title": "{{user}}'s posts"
+}
+```
+
+```jsx
+import React from 'react'
+import { useTranslation } from '../config/i18n'
+
+export function MyComponent() {
+  const { t } = useTranslation()
+  const user = 'Jon Snow'
+
+  return <h1>{t('title', { user })}</h1>
+}
+```

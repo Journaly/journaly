@@ -43,7 +43,8 @@ a {
   color: black;
 }
 
-em {
+em,
+cite {
   font-style: italic;
 }
 

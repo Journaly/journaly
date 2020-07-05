@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { navConstants } from './nav-constants'
 import NavLinks from './NavLinks'
-import { black } from '../../../utils'
 import { User as UserType } from '../../../generated/graphql'
 
 interface Props {
@@ -48,7 +47,7 @@ const Nav: React.FC<Props> = ({ currentUser, expanded, collapse }) => {
           width: 100%;
           background-color: rgba(0, 0, 0, 0.4);
           opacity: 0;
-          transition: opacity ${navConstants.transitionDuration}ms ease-in-out;
+          transition: opacity ${navConstants.transitionDuration}ms linear;
           z-index: ${navConstants.zIndex};
         }
 
@@ -69,15 +68,15 @@ const Nav: React.FC<Props> = ({ currentUser, expanded, collapse }) => {
           position: fixed;
           top: 0;
           left: 0;
-          display: flex;
-          flex-direction: column;
+          display: grid;
+          grid-template-rows: 1fr 2fr 1fr;
           height: 100vh;
           width: ${navConstants.navWidth}px;
-          background-color: ${black};
+          background-color: #313131;
           z-index: ${navConstants.zIndex};
           transform: translateX(-100%);
-          transition: transform ${navConstants.transitionDuration}ms ease-in-out,
-            width ${navConstants.transitionDuration}ms ease-in-out;
+          transition: transform ${navConstants.transitionDuration}ms linear,
+            width ${navConstants.transitionDuration}ms linear;
         }
 
         .expanded nav {
@@ -103,7 +102,8 @@ const Nav: React.FC<Props> = ({ currentUser, expanded, collapse }) => {
         }
 
         .nav-logo {
-          margin-bottom: 15px;
+          /* The auto top margin allows the logo to take up enough space, but push itself down */
+          margin: auto 0 15px;
           text-align: center;
         }
 

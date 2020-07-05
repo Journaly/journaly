@@ -2,15 +2,18 @@ import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { navConstants } from './nav-constants'
 import NavLinks from './NavLinks'
-import { User as UserType } from '../../../generated/graphql'
+import { useCurrentUserQuery, User as UserType } from '../../../generated/graphql'
 
 interface Props {
-  currentUser?: UserType
   expanded: boolean
   collapse: () => void
 }
 
-const Nav: React.FC<Props> = ({ currentUser, expanded, collapse }) => {
+const Nav: React.FC<Props> = ({ expanded, collapse }) => {
+  const { data, error } = useCurrentUserQuery()
+  let currentUser: UserType | null = data?.currentUser as UserType
+  if (error) currentUser = null
+
   useEffect(() => {
     setTimeout(() => {
       document.body.classList.remove('block-transitions-on-page-load')

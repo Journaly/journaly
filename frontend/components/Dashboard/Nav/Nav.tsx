@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
+import classNames from 'classnames'
 import { navConstants } from './nav-constants'
 import NavLinks from './NavLinks'
 import { User as UserType } from '../../../generated/graphql'
@@ -11,6 +12,8 @@ interface Props {
 }
 
 const Nav: React.FC<Props> = ({ currentUser, expanded, collapse }) => {
+  const navStyles = classNames('nav-wrapper', { expanded, 'logged-in': Boolean(currentUser) })
+
   useEffect(() => {
     setTimeout(() => {
       document.body.classList.remove('block-transitions-on-page-load')
@@ -25,7 +28,7 @@ const Nav: React.FC<Props> = ({ currentUser, expanded, collapse }) => {
   }
 
   return (
-    <div className={expanded ? 'expanded' : ''}>
+    <div className={navStyles}>
       <div className="nav-background" onClick={handleCollapse} />
 
       <nav>
@@ -105,6 +108,10 @@ const Nav: React.FC<Props> = ({ currentUser, expanded, collapse }) => {
           /* The auto top margin allows the logo to take up enough space, but push itself down */
           margin: auto 0 15px;
           text-align: center;
+        }
+
+        .nav-wrapper:not(.logged-in) .nav-logo {
+          margin: 6px 0 15px;
         }
 
         .nav-logo a {

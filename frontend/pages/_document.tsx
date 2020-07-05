@@ -50,7 +50,6 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
             rel="stylesheet"
           />
           <link rel="shortcut icon" href="/favicon.png" />
-          <link rel="stylesheet" type="text/css" href="/nprogress.css" />
         </Head>
         <body className="block-transitions-on-page-load">
           <Main />

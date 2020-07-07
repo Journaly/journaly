@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
+import classNames from 'classnames'
 import { navConstants } from './nav-constants'
 import NavLinks from './NavLinks'
 import { useCurrentUserQuery, User as UserType } from '../../../generated/graphql'
@@ -13,6 +14,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
   const { data, error } = useCurrentUserQuery()
   let currentUser: UserType | null = data?.currentUser as UserType
   if (error) currentUser = null
+
+  const navStyles = classNames('nav-wrapper', { expanded, 'logged-in': Boolean(currentUser) })
 
   useEffect(() => {
     setTimeout(() => {
@@ -28,7 +31,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
   }
 
   return (
-    <div className={expanded ? 'expanded' : ''}>
+    <div className={navStyles}>
       <div className="nav-background" onClick={handleCollapse} />
 
       <nav>
@@ -108,6 +111,10 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
           /* The auto top margin allows the logo to take up enough space, but push itself down */
           margin: auto 0 15px;
           text-align: center;
+        }
+
+        .nav-wrapper:not(.logged-in) .nav-logo {
+          margin: 6px 0 15px;
         }
 
         .nav-logo a {

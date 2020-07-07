@@ -1,6 +1,7 @@
 import { NextPage } from 'next'
 import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
 import BlogPageLayout from '../../components/Layouts/BlogPageLayout'
+import ExternalLink from '../../elements/ExternalLink'
 import { brandBlue } from '../../utils'
 
 const IntroducingJournalyBlogPost: NextPage = () => (
@@ -12,11 +13,11 @@ const IntroducingJournalyBlogPost: NextPage = () => (
     >
       <p>
         Hi there! I'm Robin. Long-time language enthusiast,{' '}
-        <a href="https://youtube.com/user/TheLifeOfRob">polyglot YouTuber</a>, language teacher, and
-        author of the book{' '}
-        <em>
-          <a href="https://www.kumabrand.com/shop">How To Maintain Languages</a>
-        </em>
+        <ExternalLink href="https://youtube.com/user/TheLifeOfRob">polyglot YouTuber</ExternalLink>,
+        language teacher, and author of the book{' '}
+        <ExternalLink href="https://www.kumabrand.com/shop">
+          <cite>How To Maintain Languages</cite>
+        </ExternalLink>
         . I've spent the last 10 years learning languages and doing everything I can to find the
         most effective and innovative ways to help my students, viewers, and readers learn
         languages.
@@ -92,12 +93,12 @@ const IntroducingJournalyBlogPost: NextPage = () => (
       </p>
 
       <p>
-        In Chapter 5 of <a href="https://www.kumabrand.com/shop">my book</a>, I discuss at length
-        the technique of keeping a journal in the target language to drastically improve speaking
-        accuracy through writing. This tends to be an easier activity to engage in, because most
-        people are already familiar with the concept of journaling. Furthermore, it's actually
-        something that <strong>a lot</strong> of people would love to do <em>anyway</em>, but
-        building and maintaining that positive habit isn't easy.
+        In Chapter 5 of <ExternalLink href="https://www.kumabrand.com/shop">my book</ExternalLink>,
+        I discuss at length the technique of keeping a journal in the target language to drastically
+        improve speaking accuracy through writing. This tends to be an easier activity to engage in,
+        because most people are already familiar with the concept of journaling. Furthermore, it's
+        actually something that <strong>a lot</strong> of people would love to do <em>anyway</em>,
+        but building and maintaining that positive habit isn't easy.
       </p>
 
       <p>
@@ -218,14 +219,14 @@ const IntroducingJournalyBlogPost: NextPage = () => (
 
       <p>
         Please sign up for our mailing list below to be notified as soon as we launch, and check out{' '}
-        <a href="https://youtube.com/user/TheLifeOfRob">my YouTube channel</a> where I'll be posting
-        updates along with my other language content.
+        <ExternalLink href="https://youtube.com/user/TheLifeOfRob">my YouTube channel</ExternalLink>{' '}
+        where I'll be posting updates along with my other language content.
       </p>
 
       <p>
         Got questions? We'd love to talk. Email us at{' '}
         <em>
-          <a href="mailto:robin@journaly.com">robin@journaly.com</a>
+          <ExternalLink href="mailto:robin@journaly.com">robin@journaly.com</ExternalLink>
         </em>
         . Don't be shy!
       </p>
@@ -238,7 +239,7 @@ const IntroducingJournalyBlogPost: NextPage = () => (
         }
 
         p,
-        a,
+        p :global(a),
         ul {
           font-size: 18px;
         }

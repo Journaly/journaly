@@ -12,6 +12,9 @@ const handle = app.getRequestHandler()
   await app.prepare()
   const server = express()
 
+  const path = require.resolve('../public/static/locales/en/common.json')
+  throw path
+
   await nextI18next.initPromise
   server.use(nextI18NextMiddleware(nextI18next))
 

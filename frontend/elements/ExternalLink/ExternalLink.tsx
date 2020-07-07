@@ -13,7 +13,7 @@ type Props = {
 }
 
 const ExternalLink: React.FC<Props> = (props) => {
-  const { ariaLabel, className, icon = false, ...otherProps } = props
+  const { ariaLabel, className, href, icon = false, ...otherProps } = props
 
   const externalLinkClasses = classNames(className, { icon })
 
@@ -24,6 +24,7 @@ const ExternalLink: React.FC<Props> = (props) => {
         rel="noopener noreferrer"
         className={externalLinkClasses}
         aria-label={ariaLabel}
+        href={href.toString()}
         {...otherProps}
       />
 

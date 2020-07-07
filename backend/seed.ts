@@ -49,6 +49,24 @@ async function main() {
       handle: 'jsno',
       name: 'Jon Snow',
       email: 'j@n.com',
+      languagesNative: {
+        create: {
+          language: {
+            connect: {
+              id: Andalish.id,
+            },
+          },
+        },
+      },
+      languagesLearning: {
+        create: {
+          language: {
+            connect: {
+              id: French.id,
+            },
+          },
+        },
+      },
       auth: {
         create: {
           password: hashedPassword,

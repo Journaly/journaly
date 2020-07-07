@@ -2,6 +2,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
 import { server, schema } from 'nexus'
+import './serverless_functions/graphql'
 
 require('dotenv').config({ path: '../.env ' })
 
@@ -32,3 +33,5 @@ server.express.use((request: any, response, next) => {
   }
   next()
 })
+
+export default server

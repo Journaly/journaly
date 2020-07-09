@@ -39,7 +39,7 @@ async function main() {
   await db.language.create({
     data: {
       name: 'Valyrian',
-      dialect: 'Baavosi',
+      dialect: 'Braavosi',
     },
   })
 

@@ -16,6 +16,7 @@ const handle = app.getRequestHandler()
   server.use(nextI18NextMiddleware(nextI18next))
 
   server.get('*', (req, res) => handle(req, res))
+  server.post('*', (req, res) => handle(req, res))
 
   server.listen(port)
 

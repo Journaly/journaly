@@ -106,5 +106,7 @@ dist
 **/*.DS_Store
 *.swp
 
-.vercel
 .nexus
+.tmp_build
+out_functions
+out_publish

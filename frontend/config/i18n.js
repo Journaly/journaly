@@ -12,4 +12,8 @@ module.exports = new NextI18Next({
   },
   // Help nexti18next figure out how to load in a serverless env
   localePath: path.resolve('./public/static/locales'),
+  localeSubpaths: {
+    de: 'de',
+  },
+  ns: ['common', 'post', 'profile', 'settings'],
 })

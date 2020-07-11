@@ -14,6 +14,7 @@ const handle = app.getRequestHandler()
   await nextI18next.initPromise
 
   server.get('*', (req, res) => handle(req, res))
+  server.post('*', (req, res) => handle(req, res))
 
   server.listen(port)
 

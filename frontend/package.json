@@ -17,7 +17,14 @@
     "postbuild": "next-on-netlify",
     "start": "NODE_ENV=production node server/index.js",
     "svgr": "node scripts/svgr.js",
-    "type-check": "tsc"
+    "type-check": "tsc",
+    "prisma": "prisma",
+    "seed": "ts-node backend/seed.ts",
+    "migrate:up": "prisma migrate up --experimental",
+    "migrate:save": "prisma migrate save --experimental",
+    "debug": "ndb -r ts-node/register node_modules/.bin/nexus dev",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio --experimental"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",

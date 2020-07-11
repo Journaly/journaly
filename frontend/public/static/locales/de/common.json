@@ -1,4 +1,7 @@
 {
   "signInPrompt": "Bitte einloggen, um fortzufahren.",
-  "error": "Auf dem Server ist ein Fehler aufgetreten"
+  "error": "Auf dem Server ist ein Fehler aufgetreten",
+  "home": {
+    "reasonsHeader": "Drei Gründe, Journaly zu verwenden"
+  }
 }

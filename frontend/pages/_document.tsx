@@ -9,25 +9,18 @@ import Document, {
 } from 'next/document'
 import { ServerResponse } from 'http'
 
+import { i18n } from '../config/i18n'
+
 interface CustomProps {
   language: string
-}
-
-interface CustomServerResponse extends ServerResponse {
-  locals: {
-    language: string
-  }
 }
 
 class MyDocument extends Document<DocumentProps & { children?: ReactNode } & CustomProps> {
   static async getInitialProps(context: DocumentContext) {
     const initialProps = await Document.getInitialProps(context)
 
-    // Locals comes from the i18n middleware in server/index.js
-    const { language } = (context.res as CustomServerResponse).locals
-
     const additionalProps = {
-      language,
+      language: i18n.language,
     }
 
     return { ...initialProps, ...additionalProps }

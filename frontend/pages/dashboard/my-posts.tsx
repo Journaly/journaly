@@ -28,15 +28,19 @@ const MyPostsPage: NextPage = () => {
     <AuthGate>
       {(currentUser) => (
         <DashboardLayout currentUser={currentUser}>
-          <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
+          <div className="my-posts-page">
+            <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
 
-          <div className="posts-wrapper">
-            <MyPosts status={activeKey} currentUser={currentUser} />
+            <div className="posts-wrapper">
+              <MyPosts status={activeKey} currentUser={currentUser} />
+            </div>
           </div>
 
           <style jsx>{`
-            :global(.tab-toggle) {
-              margin: 0 auto;
+            .my-posts-page {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
             }
             .posts-wrapper {
               margin: 0 auto 50px;

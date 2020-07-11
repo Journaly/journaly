@@ -68,7 +68,6 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
             renderLeaf={renderLeaf}
             placeholder="It all started this morning when..."
             spellCheck
-            autoFocus
             onKeyDown={(event: React.KeyboardEvent) => {
               Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
                 // Convert React keyboard event to native keyboard event

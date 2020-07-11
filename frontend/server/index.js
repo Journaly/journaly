@@ -1,6 +1,5 @@
 const express = require('express')
 const next = require('next')
-const nextI18NextMiddleware = require('next-i18next/middleware').default
 const nextI18next = require('../config/i18n')
 
 const port = parseInt(process.env.PORT || '3000', 10)
@@ -13,7 +12,6 @@ const handle = app.getRequestHandler()
   const server = express()
 
   await nextI18next.initPromise
-  server.use(nextI18NextMiddleware(nextI18next))
 
   server.get('*', (req, res) => handle(req, res))
   server.post('*', (req, res) => handle(req, res))

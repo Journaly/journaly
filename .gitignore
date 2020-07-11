@@ -105,8 +105,10 @@ dist
 
 **/*.DS_Store
 *.swp
+*.swo
 
 .nexus
 .tmp_build
 out_functions
 out_publish
+.vercel

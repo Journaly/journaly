@@ -12,7 +12,7 @@ const ProfilePage: NextPage<InitialProps> = () => {
   return (
     <AuthGate>
       {(currentUser) => (
-        <DashboardLayout currentUser={currentUser} withPadding={false}>
+        <DashboardLayout withPadding={false}>
           <Profile currentUser={currentUser} />
         </DashboardLayout>
       )}

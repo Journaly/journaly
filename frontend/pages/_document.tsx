@@ -7,7 +7,6 @@ import Document, {
   NextScript,
   DocumentProps,
 } from 'next/document'
-import { ServerResponse } from 'http'
 
 import { i18n } from '../config/i18n'
 

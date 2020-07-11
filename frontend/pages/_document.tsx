@@ -1,4 +1,4 @@
-import { useEffect, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import Document, {
   DocumentContext,
   Html,
@@ -17,11 +17,6 @@ interface CustomProps {
 class MyDocument extends Document<DocumentProps & { children?: ReactNode } & CustomProps> {
   static async getInitialProps(context: DocumentContext) {
     const initialProps = await Document.getInitialProps(context)
-
-    useEffect(() => {
-      ;((typeof window === 'undefined' ? {} : window) as any).i18n = i18n
-      console.log('foo')
-    }, [])
 
     const additionalProps = {
       language: i18n.language,

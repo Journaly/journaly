@@ -1,4 +1,5 @@
 import HomeSection from './HomeSection'
+import { useTranslation } from '../../../config/i18n'
 
 type ReasonCardProps = {
   image: string
@@ -14,8 +15,10 @@ const reasonTexts = [
 ]
 
 const ReasonsSection = () => {
+  const { t } = useTranslation('common')
+
   return (
-    <HomeSection sectionHeading="Three Reasons To Use Journaly" grey>
+    <HomeSection sectionHeading={t('home.reasonsHeader')} grey>
       <div className="reasons-container">
         {imageUrls.map((url, i) => (
           <ReasonCard key={i} image={`${imagePath}/${url}`} reasonNumber={i} />

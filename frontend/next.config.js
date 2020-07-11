@@ -1,4 +1,17 @@
+const { nextI18NextRewrites } = require('next-i18next/rewrites')
+
+const localeSubpaths = {
+  de: 'de',
+}
+
 module.exports = {
-  // Target must be serverless
   target: 'serverless',
+  publicRuntimeConfig: {
+    localeSubpaths,
+  },
+  experimental: {
+    async rewrites() {
+      return [...nextI18NextRewrites(localeSubpaths)]
+    },
+  },
 }

@@ -22,7 +22,7 @@ const MyFeedPage: NextPage<InitialProps> = () => {
   return (
     <AuthGate>
       {(currentUser) => (
-        <DashboardLayout currentUser={currentUser}>
+        <DashboardLayout>
           <LoadingWrapper loading={loading} error={error}>
             <MyFeed posts={posts as Post[]} currentUser={currentUser} />
           </LoadingWrapper>

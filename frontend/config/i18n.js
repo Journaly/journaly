@@ -7,9 +7,6 @@ module.exports = new NextI18Next({
   otherLanguages: ['de'],
   // The "dev" fallback language will show the translation key, indicating there is a missing translation
   fallbackLng: process.env.NODE_ENV === 'production' ? 'en' : 'dev',
-  detection: {
-    order: ['navigator', 'cookie'],
-  },
   // Help nexti18next figure out how to load in a serverless env
   localePath: path.resolve('./public/static/locales'),
   localeSubpaths: {

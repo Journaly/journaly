@@ -19,7 +19,7 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
     const initialProps = await Document.getInitialProps(context)
 
     useEffect(() => {
-      ;(typeof window === 'undefined' ? {} : window).i18n = i18n
+      ;((typeof window === 'undefined' ? {} : window) as any).i18n = i18n
       console.log('foo')
     }, [])
 

@@ -2,6 +2,9 @@
   "signInPrompt": "Please sign in to continue.",
   "error": "An error occurred on the server",
   "loading": "Loading...",
+  "home": {
+    "reasonsHeader": "Three Reasons To Use Journaly"
+  },
   "nav": {
     "myFeed": "My Feed",
     "myPosts": "My Posts",

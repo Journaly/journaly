@@ -12,7 +12,6 @@ const handle = app.getRequestHandler()
   const server = express()
 
   await nextI18next.initPromise
-  //server.use(nextI18NextMiddleware(nextI18next()))
 
   server.get('*', (req, res) => handle(req, res))
 

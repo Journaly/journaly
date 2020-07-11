@@ -6,7 +6,6 @@ import { initializeTracking, trackPageView } from '../lib/google-analytics'
 import '../styles/reset.css'
 import '../styles/globalStyles.css'
 import { appWithTranslation } from '../config/i18n'
-import { i18n } from '../config/i18n'
 
 initializeTracking()
 
@@ -24,8 +23,6 @@ class JournalyApp extends App {
     // Track initial page view
     // All others are handled by the `routeChangeComplete` event handler
     trackPageView(this.props.router.asPath)
-    ;((typeof window === 'undefined' ? {} : window) as any).i18n = i18n
-    console.log('foo')
   }
 
   render() {

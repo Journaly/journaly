@@ -7,13 +7,22 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "commonjs",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "plugins": [
+      {
+        "name": "nexus/typescript-language-service"
+      }
+    ],
     "removeComments": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
@@ -21,6 +30,12 @@
     "strict": true,
     "target": "ES6"
   },
-  "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

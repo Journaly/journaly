@@ -1,6 +1,6 @@
 require('dotenv').config({ path: '../../.env ' })
 import jwt from 'jsonwebtoken'
-import { server, schema } from 'nexus'
+import { schema } from 'nexus'
 
 if (process.env.NODE_ENV === 'development') require('nexus').default.reset()
 
@@ -18,7 +18,7 @@ schema.addToContext((request: any) => ({
 
 app.assemble()
 
-function handler(req, res) {
+function handler(req: any, res: any) {
   const { token } = req.cookies
   req.response = res
   if (token) {

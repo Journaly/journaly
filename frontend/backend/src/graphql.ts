@@ -2,6 +2,7 @@ import { use, schema } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'nexus-plugin-prisma'
+import { serialize } from 'cookie'
 
 import { PostUpdateInput } from '.prisma/client/index'
 
@@ -339,10 +340,13 @@ schema.mutationType({
           },
         })
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
-        ctx.response.cookie('token', token, {
-          httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 365,
-        })
+        ctx.response.setHeader(
+          'Set-Cookie',
+          serialize('token', token, {
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24 * 365,
+          }),
+        )
         return user
       },
     }),

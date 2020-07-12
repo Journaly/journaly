@@ -29,7 +29,7 @@ const Header: React.FC<Props> = ({ onMenuClick }) => {
           color: white;
           background-color: ${theme.colors.black};
           /* Show header above scrolled dashboard content */
-          z-index: 1;
+          z-index: ${navConstants.zIndex - 1};
         }
         /* Header should disappear when the mobile nav does */
         @media (${navConstants.aboveMobileNav}) {

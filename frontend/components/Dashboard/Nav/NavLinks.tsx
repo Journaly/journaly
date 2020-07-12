@@ -93,7 +93,12 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
         */
 
         .nav-top {
-          margin-top: 50px;
+          margin-top: 30px;
+        }
+        @media (min-width: ${theme.breakpoints.XS}) {
+          .nav-top {
+            margin-top: 50px;
+          }
         }
 
         .nav-top a {

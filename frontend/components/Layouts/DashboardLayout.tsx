@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import Nav, { navConstants } from '../Dashboard/Nav'
-import { layoutPadding } from '../Dashboard/dashboardConstants'
+import { layoutPadding, headerHeight } from '../Dashboard/dashboardConstants'
 import Header from '../Dashboard/Header'
 import useWindowSize from '../../hooks/useWindowSize'
 
@@ -57,12 +57,20 @@ const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
       <style jsx>{`
         .dashboard {
           position: relative;
-          height: 100vh;
+          height: 100%;
           width: 100%;
+          overflow: hidden;
+        }
+
+        @media (${navConstants.mobileNavOnly}) {
+          .dashboard {
+            padding-top: ${headerHeight};
+          }
         }
 
         .dashboard-container {
           height: 100%;
+          overflow-y: auto;
           transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;
         }
 

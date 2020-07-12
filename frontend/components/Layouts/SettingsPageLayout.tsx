@@ -23,12 +23,12 @@ const SettingsPageLayout: React.FC<Props> = ({ children }) => {
         .settings-container {
           display: flex;
           flex-direction: column;
-          margin: 35px 0;
+          margin-top: 35px;
         }
         @media (min-width: ${theme.breakpoints.SM}) {
           .settings-container {
             flex-direction: row;
-            margin: 65px 0;
+            margin-top: 65px;
           }
         }
 

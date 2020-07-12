@@ -1,6 +1,8 @@
 import React from 'react'
 import theme from '../../../theme'
 import { navConstants } from '../Nav'
+import { headerHeight } from '../dashboardConstants'
+import HamburgerIcon from './HamburgerIcon'
 
 interface Props {
   onMenuClick: () => void
@@ -9,23 +11,25 @@ interface Props {
 const Header: React.FC<Props> = ({ onMenuClick }) => {
   return (
     <div className="header">
-      <div className="hamburger-icon" onClick={onMenuClick}>
-        <div />
-        <div />
-        <div />
-      </div>
+      <HamburgerIcon onClick={onMenuClick} className="hamburger-icon" />
 
       <span className="logo-text">Journaly</span>
 
       <style jsx>{`
         .header {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          height: 72px;
+          height: ${headerHeight};
           padding: 20px 0;
           color: white;
           background-color: ${theme.colors.black};
+          /* Show header above scrolled dashboard content */
+          z-index: 1;
         }
         /* Header should disappear when the mobile nav does */
         @media (${navConstants.aboveMobileNav}) {
@@ -34,28 +38,8 @@ const Header: React.FC<Props> = ({ onMenuClick }) => {
           }
         }
 
-        .hamburger-icon {
+        :global(.hamburger-icon) {
           margin-left: 10px;
-          padding: 10px;
-          cursor: pointer;
-          /* Allow hamburger icon to appear through open, overlaid mobile <Nav /> */
-          z-index: ${navConstants.zIndex + 1};
-        }
-
-        .hamburger-icon div {
-          height: 1px;
-          width: 32px;
-          background-color: white;
-        }
-
-        .hamburger-icon div:nth-child(2) {
-          margin-top: 7px;
-          width: 24px;
-        }
-
-        .hamburger-icon div:nth-child(3) {
-          margin-top: 7px;
-          width: 18px;
         }
 
         .logo-text {

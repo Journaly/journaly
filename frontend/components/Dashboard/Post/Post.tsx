@@ -381,8 +381,9 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           grid-column-gap: 10px;
           grid-template-columns: 80px 1fr 80px;
           grid-auto-rows: 350px 1fr;
+          background-color: ${theme.colors.white};
         }
-        .post-content > * {
+        .post-body {
           grid-column: 2;
           /* Helps to avoid horizontal scroll for this layout */
           min-width: 0;

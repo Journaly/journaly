@@ -6,7 +6,7 @@ if (process.env.NODE_ENV === 'development') require('nexus').default.reset()
 
 const app = require('nexus').default
 
-require('../../nexus/graphql')
+require('../../nexus')
 
 // Watch https://github.com/graphql-nexus/nexus/issues/524
 // and https://github.com/graphql-nexus/nexus/issues/523 for future

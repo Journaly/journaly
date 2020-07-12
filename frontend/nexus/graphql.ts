@@ -1,41 +1,11 @@
-import { use, schema } from 'nexus'
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import { prisma } from 'nexus-plugin-prisma'
-import { serialize } from 'cookie'
+import { schema } from 'nexus'
 
-import { PostUpdateInput } from '.prisma/client/index'
-
-import { processEditorDocument, hasPostPermissions } from './utils'
-import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
-
-use(prisma())
-
-const { arg, intArg, stringArg } = schema
+import { hasPostPermissions } from './utils'
+const { intArg, stringArg } = schema
 
 const languagesM2MDef = (t: any) => {
   t.model.language()
 }
-
-schema.objectType({
-  name: 'User',
-  definition(t) {
-    t.model.id()
-    t.model.name()
-    t.model.email()
-    t.model.handle()
-    t.model.bio()
-    t.model.userRole()
-    t.model.location()
-    t.model.posts({
-      pagination: false,
-    })
-    t.model.profileImage()
-    t.model.createdAt()
-    t.model.languagesNative()
-    t.model.languagesLearning()
-  },
-})
 
 schema.objectType({
   name: 'LanguageLearning',
@@ -45,24 +15,6 @@ schema.objectType({
 schema.objectType({
   name: 'LanguageNative',
   definition: languagesM2MDef,
-})
-
-schema.objectType({
-  name: 'Post',
-  definition(t) {
-    t.model.id()
-    t.model.title()
-    t.model.body()
-    t.model.excerpt()
-    t.model.readTime()
-    t.model.author()
-    t.model.status()
-    t.model.images()
-    t.model.likes({ type: 'PostLike' })
-    t.model.threads()
-    t.model.language({ type: 'Language' })
-    t.model.createdAt()
-  },
 })
 
 schema.objectType({
@@ -131,137 +83,9 @@ schema.objectType({
   },
 })
 
-const EditorNode = schema.inputObjectType({
-  name: 'EditorNode',
-  definition(t) {
-    t.string('type', { nullable: true }),
-      t.string('text', { nullable: true }),
-      t.boolean('italic', { nullable: true }),
-      t.boolean('bold', { nullable: true }),
-      t.boolean('underline', { nullable: true }),
-      t.field('children', {
-        type: EditorNode,
-        list: true,
-        nullable: true,
-      })
-  },
-})
 
 schema.queryType({
   definition(t) {
-    t.list.field('posts', {
-      type: 'Post',
-      args: {
-        status: arg({ type: 'PostStatus', required: true }),
-        authorId: intArg({ required: true }),
-      },
-      resolve: async (_parent, args, ctx) => {
-        return ctx.db.post.findMany({
-          where: {
-            AND: {
-              author: { id: args.authorId },
-              status: args.status,
-            },
-          },
-        })
-      },
-    }),
-      t.field('postById', {
-        type: 'Post',
-        args: {
-          id: intArg(),
-        },
-        resolve: async (_parent, args, ctx) => {
-          const post = await ctx.db.post.findOne({ where: { id: args.id } })
-
-          if (!post) {
-            throw new NotFoundError('Post')
-          }
-
-          if (post.status === 'DRAFT' && post.authorId !== ctx.request.userId) {
-            throw new NotAuthorizedError()
-          }
-
-          return post
-        },
-      }),
-      t.list.field('feed', {
-        type: 'Post',
-        args: {
-          search: stringArg({ required: false }),
-          language: intArg({ required: false }),
-          topic: stringArg({ required: false }),
-          skip: intArg(),
-          first: intArg(),
-        },
-        resolve: async (_parent, args, ctx) => {
-          const filterClauses = []
-
-          if (args.language) {
-            filterClauses.push({
-              language: {
-                id: {
-                  equals: args.language,
-                },
-              },
-            })
-          }
-          if (args.topic) {
-            filterClauses.push({
-              topic: {
-                some: {
-                  name: args.topic,
-                },
-              },
-            })
-          }
-          if (args.search) {
-            filterClauses.push({
-              OR: [
-                {
-                  title: {
-                    contains: args.search,
-                  },
-                },
-                {
-                  body: {
-                    contains: args.search,
-                  },
-                },
-              ],
-            })
-          }
-
-          return ctx.db.post.findMany({
-            where: {
-              AND: filterClauses,
-            },
-            skip: args.skip,
-            first: args.first,
-          })
-        },
-      }),
-      t.list.field('users', {
-        type: 'User',
-        resolve: async (_parent, _args, ctx) => {
-          return ctx.db.user.findMany()
-        },
-      }),
-      t.field('currentUser', {
-        type: 'User',
-        resolve: async (_parent, _args, ctx) => {
-          const userId = ctx.request.userId
-          // check for current userId
-          if (!userId) {
-            return null
-          }
-          return ctx.db.user.findOne({
-            where: {
-              id: userId,
-            },
-          })
-        },
-      })
     t.list.field('languages', {
       type: 'Language',
       resolve: async (_parent, _args, ctx) => {
@@ -321,151 +145,6 @@ const addLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
 
 schema.mutationType({
   definition(t) {
-    t.field('createUser', {
-      type: 'User',
-      args: {
-        handle: stringArg({ required: true }),
-        email: stringArg({ required: true }),
-        password: stringArg({ required: true }),
-      },
-      resolve: async (_parent, args, ctx: any) => {
-        const password = await bcrypt.hash(args.password, 10)
-        const user = await ctx.db.user.create({
-          data: {
-            handle: args.handle,
-            email: args.email.toLowerCase(),
-            auth: {
-              create: { password },
-            },
-          },
-        })
-        const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
-        ctx.response.setHeader(
-          'Set-Cookie',
-          serialize('token', token, {
-            httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24 * 365,
-          }),
-        )
-        return user
-      },
-    }),
-      t.field('loginUser', {
-        type: 'User',
-        args: {
-          identifier: stringArg({ required: true }),
-          password: stringArg({ required: true }),
-        },
-        resolve: async (_parent, args, ctx: any) => {
-          const user = await ctx.db.user.findOne({
-            where: {
-              email: args.identifier,
-            },
-            include: {
-              auth: true,
-            },
-          })
-          if (!user) {
-            throw new Error('User not found')
-          }
-
-          const isValid = await bcrypt.compare(
-            args.password,
-            user.auth.password,
-          )
-
-          if (!isValid) {
-            throw new Error('Invalid password')
-          }
-          const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
-          ctx.response.setHeader(
-            'Set-Cookie',
-            serialize('token', token, {
-              httpOnly: true,
-              maxAge: 1000 * 60 * 60 * 24 * 365,
-            }),
-          )
-          return user
-        },
-      })
-    t.field('createPost', {
-      type: 'Post',
-      args: {
-        title: stringArg({ required: true }),
-        body: EditorNode.asArg({ list: true }),
-        languageId: intArg({ required: true }),
-        status: arg({ type: 'PostStatus' }),
-      },
-      resolve: async (_parent, args, ctx) => {
-        const { title, body, languageId, status } = args
-        const { userId } = ctx.request
-
-        if (!body) {
-          throw new ResolverError('We need a body!', {})
-        }
-
-        return ctx.db.post.create({
-          data: {
-            language: { connect: { id: languageId } },
-            author: { connect: { id: userId } },
-            title,
-            status,
-            ...processEditorDocument(body),
-          },
-        })
-      },
-    })
-    t.field('updatePost', {
-      type: 'Post',
-      args: {
-        postId: intArg({ required: true }),
-        title: stringArg({ required: false }),
-        body: EditorNode.asArg({ list: true, required: false }),
-        status: arg({ type: 'PostStatus', required: false }),
-      },
-      resolve: async (_parent, args, ctx) => {
-        // Check user can actually do this
-        const { userId } = ctx.request
-        if (!userId) throw new NotAuthorizedError()
-
-        const [currentUser, originalPost] = await Promise.all([
-          ctx.db.user.findOne({
-            where: {
-              id: userId,
-            },
-          }),
-          ctx.db.post.findOne({
-            where: {
-              id: args.postId,
-            },
-          }),
-        ])
-
-        if (!currentUser) throw new NotFoundError('User')
-        if (!originalPost) throw new NotFoundError('Post')
-
-        hasPostPermissions(originalPost, currentUser)
-
-        // Actually make the change in the DB
-        let data: PostUpdateInput = {}
-        if (args.title) {
-          data.title = args.title
-        }
-
-        if (args.status) {
-          data.status = args.status
-        }
-
-        if (args.body) {
-          data = { ...data, ...processEditorDocument(args.body) }
-        }
-
-        return ctx.db.post.update({
-          where: { id: args.postId },
-          data,
-        })
-      },
-    })
     t.field('createThread', {
       type: 'Thread',
       args: {

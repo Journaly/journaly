@@ -2,8 +2,8 @@ let handler
 
 if (process.env.NODE_ENV === 'development') {
   require('nexus').default.reset()
+  require('../../nexus')
   const app = require('nexus').default
-  require('../../nexus/graphql')
 
   app.assemble()
   handler = app.server.handlers.playground

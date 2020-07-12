@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from '../../../config/i18n'
-import { layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
+import { layoutTopBottomPadding, layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
 import {
   usePostsQuery,
   Post as PostType,
@@ -43,7 +43,7 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          padding: 0 ${layoutLeftRightPadding};
+          padding: 0 ${layoutLeftRightPadding} ${layoutTopBottomPadding};
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .post-list {

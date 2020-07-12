@@ -6,6 +6,7 @@ import TabToggle from '../../elements/TabToggle'
 import AuthGate from '../../components/AuthGate'
 import MyPosts from '../../components/Dashboard/MyPosts'
 import { PostStatus as PostStatusType } from '../../generated/graphql'
+import theme from '../../theme'
 
 type Tab = {
   key: PostStatusType
@@ -29,7 +30,10 @@ const MyPostsPage: NextPage = () => {
       {(currentUser) => (
         <DashboardLayout>
           <div className="my-posts-page">
+            <h1 className="my-posts-title">My Posts</h1>
+
             <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
+
             <div className="posts-wrapper">
               <MyPosts status={activeKey} currentUser={currentUser} />
             </div>
@@ -41,6 +45,13 @@ const MyPostsPage: NextPage = () => {
               flex-direction: column;
               align-items: center;
             }
+
+            .my-posts-title {
+              margin-bottom: 50px;
+              ${theme.typography.headingLG};
+              text-align: center;
+            }
+
             .posts-wrapper {
               margin: 0 auto 50px;
               padding: 50px 0;

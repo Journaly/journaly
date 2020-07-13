@@ -3,8 +3,6 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 
-import { hasPostPermissions } from './utils'
-
 schema.objectType({
   name: 'User',
   definition(t) {

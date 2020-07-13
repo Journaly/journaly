@@ -48,12 +48,6 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
           }
         }
 
-        .my-posts-title {
-          margin-bottom: 50px;
-          ${theme.typography.headingLG};
-          text-align: center;
-        }
-
         .my-posts {
           display: grid;
           grid-template-columns: 1fr;

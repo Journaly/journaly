@@ -112,3 +112,4 @@ dist
 out_functions
 out_publish
 .vercel
+.api.graphql

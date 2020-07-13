@@ -23,7 +23,6 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
   })
 
   let posts = (data?.posts as PostType[]) || []
-  const title = status === PostStatusType.Published ? 'My Published Posts' : 'My Drafts'
 
   return (
     <div className="my-posts-container">
@@ -32,15 +31,11 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       {loading ? (
         <LoadingSpinner size={60} />
       ) : (
-        <>
-          <h1 className="my-posts-title">{title}</h1>
-
-          <div className="my-posts">
-            {posts?.map((post) => (
-              <PostCard key={post.id} post={post} status={status} />
-            ))}
-          </div>
-        </>
+        <div className="my-posts">
+          {posts?.map((post) => (
+            <PostCard key={post.id} post={post} status={status} />
+          ))}
+        </div>
       )}
 
       <style jsx>{`

@@ -3,35 +3,37 @@ import React from 'react'
 import Button from '../../elements/Button'
 import LanguageSelect from '../LanguageSelect'
 import XIcon from '../Icons/XIcon'
+import theme from '../../theme'
+import { useTranslation } from '../../config/i18n'
 import { LanguageFragmentFragment as LanguageType } from '../../generated/graphql'
 
 type LanguageMultiSelectProps = {
   languages: LanguageType[]
   value: number[]
-  onChange: (newValue: number[]) => void
-  onAdd: (addedId: number) => void
-  onRemove: (removedId: number) => void
-  id: string | undefined
+  onChange?: (newValue: number[]) => void
+  onAdd?: (addedId: number) => void
+  onRemove?: (removedId: number) => void
 }
 
 const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
   languages,
   value,
-  onChange,
-  onAdd,
-  onRemove
-}: LanguageSelectProps) => {
+  onChange = () => undefined,
+  onAdd = () => undefined,
+  onRemove = () => undefined
+}) => {
+  const { t } = useTranslation('common')
   const [selectedLanguage, setSelectedLanguage] = React.useState<number>(-1)
   const selectableLanguages = languages.filter(
     lang => value.find(id => lang.id === id) === undefined)
 
   const addLanguage = () => {
     onAdd(selectedLanguage)
-    onChange([selectedLanguage, ...value])
+    onChange([...value, selectedLanguage])
     setSelectedLanguage(-1)
   }
 
-  const removeLanguage = (removeLanguage) => {
+  const removeLanguage = (removeLanguage: number) => {
     onRemove(removeLanguage)
     onChange(value.filter(lang => lang !== removeLanguage))
     setSelectedLanguage(-1)
@@ -39,9 +41,9 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
 
   return (
     <>
-      {!value.length && <span>Empty...</span>}
+      {!value.length && <span className="empty-message">{t('emptyMessage')}</span>}
       {(value.length > 0) && (
-        <ul>
+        <ul className="lang-list">
           {value.map(id => {
             const lang = languages.find(lang => lang.id === id)
             return (
@@ -79,12 +81,25 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
           onClick={addLanguage}
           disabled={selectedLanguage === -1}
         >
-          Add
+          {t('add')}
         </Button>
       </div>
       <style jsx>{`
+        .empty-message {
+          text-align: center;
+          font-style: italic;
+        }
+
         .lang-row {
           display: flex;
+        }
+
+        .lang-list li {
+          padding: 0 15px;
+        }
+
+        .lang-list li:nth-child(odd) {
+          background-color: ${theme.colors.gray100}
         }
 
         .lang-row .lang {
@@ -100,18 +115,12 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
         }
 
         .add-container {
+          padding-top: 4px;
           display: flex;
         }
       `}</style>
     </>
   )
-}
-
-LanguageMultiSelect.defaultProps = {
-  id: undefined,
-  onChange: () => undefined,
-  onAdd: () => undefined,
-  onRemove: () => undefined,
 }
 
 export default LanguageMultiSelect

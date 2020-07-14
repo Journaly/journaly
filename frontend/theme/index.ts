@@ -53,7 +53,7 @@ const theme: Theme = {
   colors: {
     black: '#393939',
     white: '#ffffff',
-    gray100: '',
+    gray100: '#f6f6f6',
     gray200: '',
     gray300: '',
     gray400: '',

@@ -90,41 +90,16 @@ export type Location = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  createUser?: Maybe<User>
-  loginUser?: Maybe<User>
-  createPost?: Maybe<Post>
-  updatePost?: Maybe<Post>
   createThread?: Maybe<Thread>
   createComment?: Maybe<Comment>
   updateComment?: Maybe<Comment>
   deleteComment?: Maybe<Comment>
+  createPost?: Maybe<Post>
+  updatePost?: Maybe<Post>
+  createUser?: Maybe<User>
+  loginUser?: Maybe<User>
   addLanguageLearning?: Maybe<LanguageLearning>
   addLanguageNative?: Maybe<LanguageNative>
-}
-
-export type MutationCreateUserArgs = {
-  handle: Scalars['String']
-  email: Scalars['String']
-  password: Scalars['String']
-}
-
-export type MutationLoginUserArgs = {
-  identifier: Scalars['String']
-  password: Scalars['String']
-}
-
-export type MutationCreatePostArgs = {
-  title: Scalars['String']
-  body?: Maybe<Array<EditorNode>>
-  languageId: Scalars['Int']
-  status?: Maybe<PostStatus>
-}
-
-export type MutationUpdatePostArgs = {
-  postId: Scalars['Int']
-  title?: Maybe<Scalars['String']>
-  body?: Maybe<Array<EditorNode>>
-  status?: Maybe<PostStatus>
 }
 
 export type MutationCreateThreadArgs = {
@@ -146,6 +121,31 @@ export type MutationUpdateCommentArgs = {
 
 export type MutationDeleteCommentArgs = {
   commentId: Scalars['Int']
+}
+
+export type MutationCreatePostArgs = {
+  title: Scalars['String']
+  body?: Maybe<Array<EditorNode>>
+  languageId: Scalars['Int']
+  status?: Maybe<PostStatus>
+}
+
+export type MutationUpdatePostArgs = {
+  postId: Scalars['Int']
+  title?: Maybe<Scalars['String']>
+  body?: Maybe<Array<EditorNode>>
+  status?: Maybe<PostStatus>
+}
+
+export type MutationCreateUserArgs = {
+  handle: Scalars['String']
+  email: Scalars['String']
+  password: Scalars['String']
+}
+
+export type MutationLoginUserArgs = {
+  identifier: Scalars['String']
+  password: Scalars['String']
 }
 
 export type MutationAddLanguageLearningArgs = {
@@ -239,6 +239,10 @@ export type QueryFeedArgs = {
   topic?: Maybe<Scalars['String']>
   skip?: Maybe<Scalars['Int']>
   first?: Maybe<Scalars['Int']>
+}
+
+export type QueryLanguagesArgs = {
+  hasPosts?: Maybe<Scalars['Boolean']>
 }
 
 export type Thread = {
@@ -426,6 +430,32 @@ export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
   Language,
   'id' | 'name' | 'dialect'
 >
+
+export type LanguagesQueryVariables = {}
+
+export type LanguagesQuery = { __typename?: 'Query' } & {
+  languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
+}
+
+export type LanguagesFormDataQueryVariables = {}
+
+export type LanguagesFormDataQuery = { __typename?: 'Query' } & {
+  languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
+  currentUser?: Maybe<
+    { __typename?: 'User' } & {
+      languagesLearning: Array<
+        { __typename?: 'LanguageLearning' } & {
+          language: { __typename?: 'Language' } & LanguageFragmentFragment
+        }
+      >
+      languagesNative: Array<
+        { __typename?: 'LanguageNative' } & {
+          language: { __typename?: 'Language' } & LanguageFragmentFragment
+        }
+      >
+    }
+  >
+}
 
 export type LoginUserMutationVariables = {
   identifier: Scalars['String']
@@ -930,6 +960,116 @@ export function useFeedLazyQuery(
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
 export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
+export const LanguagesDocument = gql`
+  query languages {
+    languages {
+      ...LanguageFragment
+    }
+  }
+  ${LanguageFragmentFragmentDoc}
+`
+
+/**
+ * __useLanguagesQuery__
+ *
+ * To run a query within a React component, call `useLanguagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLanguagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLanguagesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLanguagesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<LanguagesQuery, LanguagesQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<LanguagesQuery, LanguagesQueryVariables>(
+    LanguagesDocument,
+    baseOptions,
+  )
+}
+export function useLanguagesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<LanguagesQuery, LanguagesQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<LanguagesQuery, LanguagesQueryVariables>(
+    LanguagesDocument,
+    baseOptions,
+  )
+}
+export type LanguagesQueryHookResult = ReturnType<typeof useLanguagesQuery>
+export type LanguagesLazyQueryHookResult = ReturnType<typeof useLanguagesLazyQuery>
+export type LanguagesQueryResult = ApolloReactCommon.QueryResult<
+  LanguagesQuery,
+  LanguagesQueryVariables
+>
+export const LanguagesFormDataDocument = gql`
+  query languagesFormData {
+    languages {
+      ...LanguageFragment
+    }
+    currentUser {
+      languagesLearning {
+        language {
+          ...LanguageFragment
+        }
+      }
+      languagesNative {
+        language {
+          ...LanguageFragment
+        }
+      }
+    }
+  }
+  ${LanguageFragmentFragmentDoc}
+`
+
+/**
+ * __useLanguagesFormDataQuery__
+ *
+ * To run a query within a React component, call `useLanguagesFormDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLanguagesFormDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLanguagesFormDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLanguagesFormDataQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    LanguagesFormDataQuery,
+    LanguagesFormDataQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<LanguagesFormDataQuery, LanguagesFormDataQueryVariables>(
+    LanguagesFormDataDocument,
+    baseOptions,
+  )
+}
+export function useLanguagesFormDataLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    LanguagesFormDataQuery,
+    LanguagesFormDataQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<LanguagesFormDataQuery, LanguagesFormDataQueryVariables>(
+    LanguagesFormDataDocument,
+    baseOptions,
+  )
+}
+export type LanguagesFormDataQueryHookResult = ReturnType<typeof useLanguagesFormDataQuery>
+export type LanguagesFormDataLazyQueryHookResult = ReturnType<typeof useLanguagesFormDataLazyQuery>
+export type LanguagesFormDataQueryResult = ApolloReactCommon.QueryResult<
+  LanguagesFormDataQuery,
+  LanguagesFormDataQueryVariables
+>
 export const LoginUserDocument = gql`
   mutation loginUser($identifier: String!, $password: String!) {
     loginUser(identifier: $identifier, password: $password) {

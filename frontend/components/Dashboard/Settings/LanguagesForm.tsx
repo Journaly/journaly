@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTranslation } from '../../../config/i18n'
 import {
-  useLanguagesFormDataQuery
+  useLanguagesFormDataQuery,
+  useAddLanguageLearningMutation,
 } from '../../../generated/graphql'
 
 import LanguageMultiSelect from '../../../components/LanguageMultiSelect'
@@ -11,11 +12,16 @@ import Button, { ButtonVariant } from '../../../elements/Button'
 
 const LanguagesForm: React.FC<LanguagesFormProps> = () => {
   const { t } = useTranslation('settings')
-  const { data, loading } = useLanguagesFormDataQuery()
+  const { data, refetch, loading } = useLanguagesFormDataQuery()
+  const [addLearningLanguage] = useAddLanguageLearningMutation()
   
   const learningLanguages = (data?.currentUser.languagesLearning || []).map(x => x.language.id)
-  const onLearningAdd = (langId) => {
-    console.log(langId)
+  const onLearningAdd = async (languageId) => {
+    await addLearningLanguage({
+      variables: { languageId }
+    })
+
+    refetch()
   }
 
   return (

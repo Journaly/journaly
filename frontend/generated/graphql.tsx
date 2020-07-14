@@ -310,6 +310,18 @@ export enum UserRole {
   ProUser = 'PRO_USER',
 }
 
+export type AddLanguageLearningMutationVariables = {
+  languageId: Scalars['Int']
+}
+
+export type AddLanguageLearningMutation = { __typename?: 'Mutation' } & {
+  addLanguageLearning?: Maybe<
+    { __typename?: 'LanguageLearning' } & {
+      language: { __typename?: 'Language' } & Pick<Language, 'id'>
+    }
+  >
+}
+
 export type CreateCommentMutationVariables = {
   body: Scalars['String']
   threadId: Scalars['Int']
@@ -604,6 +616,58 @@ export const LanguageFragmentFragmentDoc = gql`
     dialect
   }
 `
+export const AddLanguageLearningDocument = gql`
+  mutation addLanguageLearning($languageId: Int!) {
+    addLanguageLearning(languageId: $languageId) {
+      language {
+        id
+      }
+    }
+  }
+`
+export type AddLanguageLearningMutationFn = ApolloReactCommon.MutationFunction<
+  AddLanguageLearningMutation,
+  AddLanguageLearningMutationVariables
+>
+
+/**
+ * __useAddLanguageLearningMutation__
+ *
+ * To run a mutation, you first call `useAddLanguageLearningMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddLanguageLearningMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addLanguageLearningMutation, { data, loading, error }] = useAddLanguageLearningMutation({
+ *   variables: {
+ *      languageId: // value for 'languageId'
+ *   },
+ * });
+ */
+export function useAddLanguageLearningMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddLanguageLearningMutation,
+    AddLanguageLearningMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AddLanguageLearningMutation,
+    AddLanguageLearningMutationVariables
+  >(AddLanguageLearningDocument, baseOptions)
+}
+export type AddLanguageLearningMutationHookResult = ReturnType<
+  typeof useAddLanguageLearningMutation
+>
+export type AddLanguageLearningMutationResult = ApolloReactCommon.MutationResult<
+  AddLanguageLearningMutation
+>
+export type AddLanguageLearningMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddLanguageLearningMutation,
+  AddLanguageLearningMutationVariables
+>
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
     createComment(body: $body, threadId: $threadId) {

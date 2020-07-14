@@ -163,6 +163,7 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           margin-top: 10px;
           margin-bottom: 10px;
           border: 1px solid white;
+          transition: width ${navConstants.transitionDuration}ms linear;
         }
 
         :global(.expanded) .nav-bottom hr {
@@ -185,6 +186,8 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           height: 70px;
           font-size: 16px;
           color: ${theme.colors.white};
+          transition: padding-left ${navConstants.transitionDuration}ms linear,
+            padding-right ${navConstants.transitionDuration}ms linear;
         }
 
         :global(.expanded) .nav-link {
@@ -215,6 +218,7 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
         .nav-link-text {
           margin-left: 0;
           font-size: 10px;
+          transition: margin-left ${navConstants.transitionDuration}ms linear;
         }
 
         :global(.expanded) .nav-link-text {

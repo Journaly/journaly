@@ -2,8 +2,10 @@ import React, { useEffect } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
 import { navConstants } from './nav-constants'
+import HamburgerIcon from '../Header/HamburgerIcon'
 import NavLinks from './NavLinks'
 import { useCurrentUserQuery, User as UserType } from '../../../generated/graphql'
+import theme from '../../../theme'
 
 interface Props {
   expanded: boolean
@@ -35,6 +37,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
       <div className="nav-background" onClick={handleCollapse} />
 
       <nav>
+        <HamburgerIcon onClick={handleCollapse} className="mobile-hamburger-icon" />
+
         {currentUser && <NavLinks onClick={handleCollapse} currentUser={currentUser} />}
 
         <h1 className="nav-logo">
@@ -70,19 +74,39 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
           }
         }
 
+        :global(.mobile-hamburger-icon) {
+          display: none;
+        }
+
+        @media (${navConstants.mobileNavOnly}) {
+          :global(.mobile-hamburger-icon) {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            display: block;
+          }
+        }
+
         nav {
           position: fixed;
           top: 0;
+          bottom: 0;
           left: 0;
           display: grid;
           grid-template-rows: 1fr 2fr 1fr;
-          height: 100vh;
+          grid-gap: 10px;
           width: ${navConstants.navWidth}px;
           background-color: #313131;
           z-index: ${navConstants.zIndex};
           transform: translateX(-100%);
           transition: transform ${navConstants.transitionDuration}ms linear,
             width ${navConstants.transitionDuration}ms linear;
+        }
+
+        @media (min-width: ${theme.breakpoints.XS}) {
+          nav {
+            grid-gap: 30px;
+          }
         }
 
         .expanded nav {

@@ -31,7 +31,7 @@ const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
 
     return false
   }
-  const [navExpanded, setNavExpanded] = useState(false)
+  const [navExpanded, setNavExpanded] = useState(shouldNavBeExpanded())
 
   const dashboardContainerStyles = classNames('dashboard-container', {
     'settings-page': router.pathname.includes('/settings/'),

@@ -2,6 +2,7 @@ import React from 'react'
 import { ApolloError } from '@apollo/client'
 
 import { useTranslation } from '../../config/i18n'
+import LoadingSpinner from '../Icons/LoadingSpinner'
 
 type Props = {
   loading: boolean
@@ -18,7 +19,7 @@ const LoadingWrapper: React.FC<Props> = ({ loading, error, children }) => {
   if (error) {
     return <p>{t('error')}</p>
   } else if (loading) {
-    return <p>{t('loading')}</p>
+    return <LoadingSpinner size={60} />
   } else {
     return <>{children}</>
   }

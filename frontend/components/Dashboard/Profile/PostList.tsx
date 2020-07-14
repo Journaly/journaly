@@ -32,7 +32,7 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
       {error && <p>There was an error retrieving your posts.</p>}
 
       {loading ? (
-        <LoadingSpinner size={60} className="loading-spinner" />
+        <LoadingSpinner size={60} />
       ) : (
         posts.map((post) => <PostCard key={post.id} post={post} />)
       )}
@@ -50,11 +50,6 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
             padding: 25px;
             border-top: 0;
           }
-        }
-
-        :global(.loading-spinner) {
-          display: block;
-          margin: 0 auto;
         }
 
         .posts-title {

@@ -29,7 +29,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       {error && <p>There was an error retrieving your posts.</p>}
 
       {loading ? (
-        <LoadingSpinner size={60} className="loading-spinner" />
+        <LoadingSpinner size={60} />
       ) : (
         <div className="my-posts">
           {posts?.map((post) => (
@@ -46,11 +46,6 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
           to {
             opacity: 1;
           }
-        }
-
-        :global(.loading-spinner) {
-          display: block;
-          margin: 0 auto;
         }
 
         .my-posts {

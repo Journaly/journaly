@@ -12,8 +12,8 @@ type Props = {
 
 const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
   const { query } = useRouter()
+  const total = posts.length
   const currentPage = query.page ? Math.max(parseInt(query.page as string, 10)) : 1
-  const total = 53
 
   console.log(currentUser)
   return (

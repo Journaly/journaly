@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
@@ -17,10 +18,14 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
   const total = posts.length
   const currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
   const showPagination = total > NUM_POSTS_PER_PAGE
+  const pageTitle = 'My Feed'
 
   console.log(currentUser)
   return (
     <div className="my-feed-wrapper">
+      <Head>
+        <title>{pageTitle}</title>
+      </Head>
       <h1>My Feed</h1>
       <div className="my-feed-search">
         <input type="text" placeholder="Search..." />
@@ -42,7 +47,12 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
       </div>
 
       {showPagination && (
-        <Pagination currentPage={currentPage} total={total} numPerPage={NUM_POSTS_PER_PAGE} />
+        <Pagination
+          currentPage={currentPage}
+          total={total}
+          numPerPage={NUM_POSTS_PER_PAGE}
+          title={pageTitle}
+        />
       )}
 
       <style jsx>{`

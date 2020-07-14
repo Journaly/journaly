@@ -1,35 +1,41 @@
 import React from 'react'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 type Props = {
   currentPage: number
   total: number
   numPerPage?: number
+  title?: string
 }
 
 const DEFAULT_NUM_PER_PAGE = 4
 
-const Pagination: React.FC<Props> = ({ currentPage, total, numPerPage = DEFAULT_NUM_PER_PAGE }) => {
+const Pagination: React.FC<Props> = ({
+  currentPage,
+  total,
+  numPerPage = DEFAULT_NUM_PER_PAGE,
+  title,
+}) => {
+  const { pathname } = useRouter()
   const pages = Math.ceil(total / numPerPage)
-  let pageTitle = 'My Feed'
-
-  if (pages > 0) {
-    pageTitle = `My Feed | Page ${currentPage} of ${pages}`
-  }
 
   const adjacentPageUrl = (direction: 1 | -1) => {
     return {
-      pathname: '/dashboard/my-feed',
+      pathname,
       query: { page: currentPage + direction },
     }
   }
 
   return (
     <div className="pagination-wrapper">
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
+      {title && pages > 1 && (
+        <Head>
+          <title>{`${title} | Page ${currentPage} of ${pages}`}</title>
+        </Head>
+      )}
+
       <Link href={adjacentPageUrl(-1)}>
         <a className="adjacent-page-link" aria-disabled={currentPage <= 1}>
           &larr; Prev

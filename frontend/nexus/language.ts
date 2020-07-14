@@ -80,16 +80,19 @@ schema.extendType({
   definition(t) {
     t.list.field('languages', {
       type: 'Language',
-      resolve: async (_parent, _args, ctx) => {
-        return ctx.db.language.findMany({
-          where: {
-            posts: {
-              some: {
-                status: 'PUBLISHED',
-              },
-            },
-          },
-        })
+      args: {
+        hasPosts: schema.booleanArg({ required: false }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const filter = {}
+
+        if (args.hasPosts) {
+          filter.posts = {
+            some: { status: 'PUBLISHED', },
+          }
+        }
+
+        return ctx.db.language.findMany({ where: filter })
       },
     })
   }

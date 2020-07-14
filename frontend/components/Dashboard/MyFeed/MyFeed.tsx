@@ -1,6 +1,8 @@
 import React from 'react'
-
+import Head from 'next/head'
+import { useRouter } from 'next/router'
 import PostCard from '../PostCard'
+import Pagination from '../../Pagination'
 import theme from '../../../theme'
 import { User as UserType, Post as PostType } from '../../../generated/graphql'
 
@@ -9,10 +11,21 @@ type Props = {
   currentUser: UserType
 }
 
+const NUM_POSTS_PER_PAGE = 10
+
 const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
+  const { query } = useRouter()
+  const total = posts.length
+  const currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
+  const showPagination = total > NUM_POSTS_PER_PAGE
+  const pageTitle = 'My Feed'
+
   console.log(currentUser)
   return (
     <div className="my-feed-wrapper">
+      <Head>
+        <title>{pageTitle}</title>
+      </Head>
       <h1>My Feed</h1>
       <div className="my-feed-search">
         <input type="text" placeholder="Search..." />
@@ -32,6 +45,16 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
           <p>Nothing to see yet...</p>
         )}
       </div>
+
+      {showPagination && (
+        <Pagination
+          currentPage={currentPage}
+          total={total}
+          numPerPage={NUM_POSTS_PER_PAGE}
+          title={pageTitle}
+        />
+      )}
+
       <style jsx>{`
         .my-feed-wrapper {
           display: flex;
@@ -81,6 +104,10 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
           grid-gap: 20px;
           grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
           margin-top: 50px;
+        }
+
+        :global(.pagination-wrapper) {
+          margin: 40px 0;
         }
       `}</style>
     </div>

@@ -10,10 +10,13 @@ type Props = {
   currentUser: UserType
 }
 
+const NUM_POSTS_PER_PAGE = 10
+
 const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
   const { query } = useRouter()
   const total = posts.length
-  const currentPage = query.page ? Math.max(parseInt(query.page as string, 10)) : 1
+  const currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
+  const showPagination = total > NUM_POSTS_PER_PAGE
 
   console.log(currentUser)
   return (
@@ -38,7 +41,9 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
         )}
       </div>
 
-      <Pagination currentPage={currentPage} total={total} />
+      {showPagination && (
+        <Pagination currentPage={currentPage} total={total} numPerPage={NUM_POSTS_PER_PAGE} />
+      )}
 
       <style jsx>{`
         .my-feed-wrapper {

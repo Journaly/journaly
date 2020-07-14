@@ -1,7 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import theme from '../../theme'
 
 type Props = {
   currentPage: number

@@ -3,6 +3,7 @@ import { useTranslation } from '../../../config/i18n'
 import {
   useLanguagesFormDataQuery,
   useAddLanguageLearningMutation,
+  useRemoveLanguageLearningMutation,
 } from '../../../generated/graphql'
 
 import LanguageMultiSelect from '../../../components/LanguageMultiSelect'
@@ -14,10 +15,19 @@ const LanguagesForm: React.FC<LanguagesFormProps> = () => {
   const { t } = useTranslation('settings')
   const { data, refetch, loading } = useLanguagesFormDataQuery()
   const [addLearningLanguage] = useAddLanguageLearningMutation()
+  const [removeLearningLanguage] = useRemoveLanguageLearningMutation()
   
   const learningLanguages = (data?.currentUser.languagesLearning || []).map(x => x.language.id)
   const onLearningAdd = async (languageId) => {
     await addLearningLanguage({
+      variables: { languageId }
+    })
+
+    refetch()
+  }
+
+  const onLearningRemove = async (languageId) => {
+    await removeLearningLanguage({
       variables: { languageId }
     })
 
@@ -42,17 +52,10 @@ const LanguagesForm: React.FC<LanguagesFormProps> = () => {
                 languages={data?.languages || []}
                 value={learningLanguages}
                 onAdd={onLearningAdd}
+                onRemove={onLearningRemove}
               />
             </div>
           </div>
-
-          <Button
-            type="submit"
-            className="settings-submit-button"
-            variant={ButtonVariant.Secondary}
-          >
-            {t('updateButton')}
-          </Button>
         </div>
       </SettingsFieldset>
 

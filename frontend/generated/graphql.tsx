@@ -63,6 +63,7 @@ export type LanguagePostsArgs = {
 
 export type LanguageLearning = {
   __typename?: 'LanguageLearning'
+  id: Scalars['Int']
   language: Language
 }
 
@@ -73,6 +74,7 @@ export type LanguageLearningWhereUniqueInput = {
 
 export type LanguageNative = {
   __typename?: 'LanguageNative'
+  id: Scalars['Int']
   language: Language
 }
 
@@ -100,6 +102,8 @@ export type Mutation = {
   loginUser?: Maybe<User>
   addLanguageLearning?: Maybe<LanguageLearning>
   addLanguageNative?: Maybe<LanguageNative>
+  removeLanguageLearning?: Maybe<LanguageLearning>
+  removeLanguageNative?: Maybe<LanguageNative>
 }
 
 export type MutationCreateThreadArgs = {
@@ -153,6 +157,14 @@ export type MutationAddLanguageLearningArgs = {
 }
 
 export type MutationAddLanguageNativeArgs = {
+  languageId: Scalars['Int']
+}
+
+export type MutationRemoveLanguageLearningArgs = {
+  languageId: Scalars['Int']
+}
+
+export type MutationRemoveLanguageNativeArgs = {
   languageId: Scalars['Int']
 }
 
@@ -493,6 +505,14 @@ export type PostsQueryVariables = {
 
 export type PostsQuery = { __typename?: 'Query' } & {
   posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+}
+
+export type RemoveLanguageLearningMutationVariables = {
+  languageId: Scalars['Int']
+}
+
+export type RemoveLanguageLearningMutation = { __typename?: 'Mutation' } & {
+  removeLanguageLearning?: Maybe<{ __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'>>
 }
 
 export type UpdateCommentMutationVariables = {
@@ -1265,6 +1285,56 @@ export function usePostsLazyQuery(
 export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>
 export type PostsQueryResult = ApolloReactCommon.QueryResult<PostsQuery, PostsQueryVariables>
+export const RemoveLanguageLearningDocument = gql`
+  mutation removeLanguageLearning($languageId: Int!) {
+    removeLanguageLearning(languageId: $languageId) {
+      id
+    }
+  }
+`
+export type RemoveLanguageLearningMutationFn = ApolloReactCommon.MutationFunction<
+  RemoveLanguageLearningMutation,
+  RemoveLanguageLearningMutationVariables
+>
+
+/**
+ * __useRemoveLanguageLearningMutation__
+ *
+ * To run a mutation, you first call `useRemoveLanguageLearningMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveLanguageLearningMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeLanguageLearningMutation, { data, loading, error }] = useRemoveLanguageLearningMutation({
+ *   variables: {
+ *      languageId: // value for 'languageId'
+ *   },
+ * });
+ */
+export function useRemoveLanguageLearningMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RemoveLanguageLearningMutation,
+    RemoveLanguageLearningMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    RemoveLanguageLearningMutation,
+    RemoveLanguageLearningMutationVariables
+  >(RemoveLanguageLearningDocument, baseOptions)
+}
+export type RemoveLanguageLearningMutationHookResult = ReturnType<
+  typeof useRemoveLanguageLearningMutation
+>
+export type RemoveLanguageLearningMutationResult = ApolloReactCommon.MutationResult<
+  RemoveLanguageLearningMutation
+>
+export type RemoveLanguageLearningMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RemoveLanguageLearningMutation,
+  RemoveLanguageLearningMutationVariables
+>
 export const UpdateCommentDocument = gql`
   mutation updateComment($body: String!, $commentId: Int!) {
     updateComment(body: $body, commentId: $commentId) {

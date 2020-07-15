@@ -4,11 +4,13 @@ query languagesFormData {
   }
   currentUser {
     languagesLearning {
+      id
       language {
         ...LanguageFragment
       }
     }
     languagesNative {
+      id
       language {
         ...LanguageFragment
       }

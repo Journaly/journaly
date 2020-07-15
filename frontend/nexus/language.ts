@@ -3,6 +3,7 @@ import { schema } from 'nexus'
 type LanguageM2MType = 'LanguageLearning' | 'LanguageNative'
 
 const languagesM2MDef = (t: any) => {
+  t.model.id()
   t.model.language()
 }
 
@@ -41,6 +42,43 @@ const addLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
         language: { connect: { id: args.languageId } },
       },
     })
+  },
+})
+
+const removeLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
+  type: m2mType,
+  args: {
+    languageId: schema.intArg({ required: true }),
+  },
+  resolve: async (_parent: any, args: any, ctx: any) => {
+    const { userId } = ctx.request
+
+    if (!userId) {
+      throw new Error('You must be logged in add languages.')
+    }
+
+    const relFilter = {
+      where: {
+        userId_languageId: {
+          languageId: args.languageId,
+          userId,
+        }
+      },
+      include: {
+        language: true,
+      }
+    }
+
+    const relation = await langM2MModel(ctx.db, m2mType).findOne(relFilter)
+
+    if (!relation) {
+      throw new Error(`Unable to find language relation.`)
+    }
+
+    await langM2MModel(ctx.db, m2mType).delete(relFilter)
+
+    console.log(relation)
+    return relation
   },
 })
 
@@ -103,5 +141,7 @@ schema.extendType({
   definition(t) {
     t.field('addLanguageLearning', addLanguageM2MMutation('LanguageLearning'))
     t.field('addLanguageNative', addLanguageM2MMutation('LanguageNative'))
+    t.field('removeLanguageLearning', removeLanguageM2MMutation('LanguageLearning'))
+    t.field('removeLanguageNative', removeLanguageM2MMutation('LanguageNative'))
   }
 })

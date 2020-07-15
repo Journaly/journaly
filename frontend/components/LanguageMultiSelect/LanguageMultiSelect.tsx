@@ -92,10 +92,7 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
 
         .lang-row {
           display: flex;
-        }
-
-        .lang-list li {
-          padding: 0 15px;
+          padding: 4px 15px;
         }
 
         .lang-list li:nth-child(odd) {
@@ -112,6 +109,9 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
           padding: 0px;
           background-color: transparent;
           -webkit-appearance: none;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
         }
 
         .add-container {

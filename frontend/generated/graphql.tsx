@@ -334,6 +334,18 @@ export type AddLanguageLearningMutation = { __typename?: 'Mutation' } & {
   >
 }
 
+export type AddLanguageNativeMutationVariables = {
+  languageId: Scalars['Int']
+}
+
+export type AddLanguageNativeMutation = { __typename?: 'Mutation' } & {
+  addLanguageNative?: Maybe<
+    { __typename?: 'LanguageNative' } & {
+      language: { __typename?: 'Language' } & Pick<Language, 'id'>
+    }
+  >
+}
+
 export type CreateCommentMutationVariables = {
   body: Scalars['String']
   threadId: Scalars['Int']
@@ -468,14 +480,14 @@ export type LanguagesFormDataQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<
     { __typename?: 'User' } & {
       languagesLearning: Array<
-        { __typename?: 'LanguageLearning' } & {
-          language: { __typename?: 'Language' } & LanguageFragmentFragment
-        }
+        { __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'> & {
+            language: { __typename?: 'Language' } & LanguageFragmentFragment
+          }
       >
       languagesNative: Array<
-        { __typename?: 'LanguageNative' } & {
-          language: { __typename?: 'Language' } & LanguageFragmentFragment
-        }
+        { __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'> & {
+            language: { __typename?: 'Language' } & LanguageFragmentFragment
+          }
       >
     }
   >
@@ -513,6 +525,14 @@ export type RemoveLanguageLearningMutationVariables = {
 
 export type RemoveLanguageLearningMutation = { __typename?: 'Mutation' } & {
   removeLanguageLearning?: Maybe<{ __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'>>
+}
+
+export type RemoveLanguageNativeMutationVariables = {
+  languageId: Scalars['Int']
+}
+
+export type RemoveLanguageNativeMutation = { __typename?: 'Mutation' } & {
+  removeLanguageNative?: Maybe<{ __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'>>
 }
 
 export type UpdateCommentMutationVariables = {
@@ -687,6 +707,56 @@ export type AddLanguageLearningMutationResult = ApolloReactCommon.MutationResult
 export type AddLanguageLearningMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AddLanguageLearningMutation,
   AddLanguageLearningMutationVariables
+>
+export const AddLanguageNativeDocument = gql`
+  mutation addLanguageNative($languageId: Int!) {
+    addLanguageNative(languageId: $languageId) {
+      language {
+        id
+      }
+    }
+  }
+`
+export type AddLanguageNativeMutationFn = ApolloReactCommon.MutationFunction<
+  AddLanguageNativeMutation,
+  AddLanguageNativeMutationVariables
+>
+
+/**
+ * __useAddLanguageNativeMutation__
+ *
+ * To run a mutation, you first call `useAddLanguageNativeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddLanguageNativeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addLanguageNativeMutation, { data, loading, error }] = useAddLanguageNativeMutation({
+ *   variables: {
+ *      languageId: // value for 'languageId'
+ *   },
+ * });
+ */
+export function useAddLanguageNativeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddLanguageNativeMutation,
+    AddLanguageNativeMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AddLanguageNativeMutation,
+    AddLanguageNativeMutationVariables
+  >(AddLanguageNativeDocument, baseOptions)
+}
+export type AddLanguageNativeMutationHookResult = ReturnType<typeof useAddLanguageNativeMutation>
+export type AddLanguageNativeMutationResult = ApolloReactCommon.MutationResult<
+  AddLanguageNativeMutation
+>
+export type AddLanguageNativeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddLanguageNativeMutation,
+  AddLanguageNativeMutationVariables
 >
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
@@ -1097,11 +1167,13 @@ export const LanguagesFormDataDocument = gql`
     }
     currentUser {
       languagesLearning {
+        id
         language {
           ...LanguageFragment
         }
       }
       languagesNative {
+        id
         language {
           ...LanguageFragment
         }
@@ -1334,6 +1406,56 @@ export type RemoveLanguageLearningMutationResult = ApolloReactCommon.MutationRes
 export type RemoveLanguageLearningMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RemoveLanguageLearningMutation,
   RemoveLanguageLearningMutationVariables
+>
+export const RemoveLanguageNativeDocument = gql`
+  mutation removeLanguageNative($languageId: Int!) {
+    removeLanguageNative(languageId: $languageId) {
+      id
+    }
+  }
+`
+export type RemoveLanguageNativeMutationFn = ApolloReactCommon.MutationFunction<
+  RemoveLanguageNativeMutation,
+  RemoveLanguageNativeMutationVariables
+>
+
+/**
+ * __useRemoveLanguageNativeMutation__
+ *
+ * To run a mutation, you first call `useRemoveLanguageNativeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveLanguageNativeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeLanguageNativeMutation, { data, loading, error }] = useRemoveLanguageNativeMutation({
+ *   variables: {
+ *      languageId: // value for 'languageId'
+ *   },
+ * });
+ */
+export function useRemoveLanguageNativeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RemoveLanguageNativeMutation,
+    RemoveLanguageNativeMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    RemoveLanguageNativeMutation,
+    RemoveLanguageNativeMutationVariables
+  >(RemoveLanguageNativeDocument, baseOptions)
+}
+export type RemoveLanguageNativeMutationHookResult = ReturnType<
+  typeof useRemoveLanguageNativeMutation
+>
+export type RemoveLanguageNativeMutationResult = ApolloReactCommon.MutationResult<
+  RemoveLanguageNativeMutation
+>
+export type RemoveLanguageNativeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RemoveLanguageNativeMutation,
+  RemoveLanguageNativeMutationVariables
 >
 export const UpdateCommentDocument = gql`
   mutation updateComment($body: String!, $commentId: Int!) {

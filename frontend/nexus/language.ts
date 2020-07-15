@@ -77,7 +77,6 @@ const removeLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
 
     await langM2MModel(ctx.db, m2mType).delete(relFilter)
 
-    console.log(relation)
     return relation
   },
 })

@@ -1,4 +1,5 @@
 import { schema } from 'nexus'
+import { PostStatus } from '@prisma/client'
 
 type LanguageM2MType = 'LanguageLearning' | 'LanguageNative'
 
@@ -63,9 +64,6 @@ const removeLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
           languageId: args.languageId,
           userId,
         }
-      },
-      include: {
-        language: true,
       }
     }
 
@@ -121,12 +119,15 @@ schema.extendType({
         hasPosts: schema.booleanArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
-        const filter = {}
-
+        let filter
         if (args.hasPosts) {
-          filter.posts = {
-            some: { status: 'PUBLISHED', },
+          filter = {
+            posts: {
+              some: { status: PostStatus.PUBLISHED, },
+            }
           }
+        } else {
+          filter = undefined
         }
 
         return ctx.db.language.findMany({ where: filter })

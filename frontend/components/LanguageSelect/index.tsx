@@ -7,9 +7,8 @@ type LanguageSelectProps = {
   languages: LanguageType[]
   value: number
   onChange: (newValue: number) => void
-  id: string | undefined,
-  className: string | undefined,
-  style: CSS.Properties | undefined,
+  id?: string | undefined,
+  style?: CSS.Properties | undefined,
 }
 
 const LanguageSelect: React.FC<LanguageSelectProps> = ({

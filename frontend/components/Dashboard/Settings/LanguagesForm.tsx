@@ -12,7 +12,7 @@ import LanguageMultiSelect from '../../../components/LanguageMultiSelect'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
 
-type LanguageMutationType = ({ variables: { languageId: number } }) => Promise<any>
+type LanguageMutationType = (arg: { variables: { languageId: number } }) => Promise<any>
 
 const LanguagesForm: React.FC = () => {
   const { t } = useTranslation('settings')
@@ -22,13 +22,13 @@ const LanguagesForm: React.FC = () => {
   const [removeLearningLanguage] = useRemoveLanguageLearningMutation()
   const [removeNativeLanguage] = useRemoveLanguageNativeMutation()
 
-  const mutateLanguageM2M = (mutation: LanguageMutationType) => async languageId => {
+  const mutateLanguageM2M = (mutation: LanguageMutationType) => async (languageId: number) => {
     await mutation({ variables: { languageId } })
     refetch()
   }
   
-  const learningLanguages = (data?.currentUser.languagesLearning || []).map(x => x.language.id)
-  const nativeLanguages = (data?.currentUser.languagesNative || []).map(x => x.language.id)
+  const learningLanguages = (data?.currentUser?.languagesLearning || []).map(x => x.language.id)
+  const nativeLanguages = (data?.currentUser?.languagesNative || []).map(x => x.language.id)
 
   const onLearningAdd = mutateLanguageM2M(addLearningLanguage) 
   const onNativeAdd = mutateLanguageM2M(addNativeLanguage) 
@@ -36,7 +36,7 @@ const LanguagesForm: React.FC = () => {
   const onNativeRemove = mutateLanguageM2M(removeNativeLanguage) 
 
   return (
-    <SettingsForm>
+    <SettingsForm onSubmit={() => undefined}>
       <SettingsFieldset legend={t('profile.languages.legend')}>
         <div className="languages-wrapper">
           <div className="languages-form-fields">

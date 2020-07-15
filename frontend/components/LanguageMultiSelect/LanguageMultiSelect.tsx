@@ -46,6 +46,9 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
         <ul className="lang-list">
           {value.map(id => {
             const lang = languages.find(lang => lang.id === id)
+            if (!lang) {
+              throw Error('`value` should be a subset of `languages.map(x=>x.id)`, but is not.')
+            }
             return (
               <li key={lang.id}>
                 <div className="lang-row">
@@ -70,7 +73,6 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
           languages={selectableLanguages}
           value={selectedLanguage}
           onChange={setSelectedLanguage}
-          className="lang-select"
           style={{ flex: 1 }}
         />
         <Button

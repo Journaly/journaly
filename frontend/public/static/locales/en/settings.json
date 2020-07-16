@@ -22,10 +22,8 @@
     },
     "languages": {
       "legend": "Languages",
-      "nativeLanguagesLabel": "What is your native language?",
-      "nativeLanguagesError": "At least one native language is required.",
-      "learningLanguagesLabel": "What language(s) are you learning?",
-      "learningLanguagesError": "At least one language is required."
+      "nativeLanguagesLabel": "What language(s) do you speak at a native level?",
+      "learningLanguagesLabel": "What language(s) are you learning?"
     },
     "bio": {
       "legend": "Bio",

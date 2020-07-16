@@ -6,3 +6,4 @@ use(prisma())
 import './graphql'
 import './post'
 import './user'
+import './language'

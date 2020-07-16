@@ -1,64 +1,68 @@
 import React from 'react'
-import { useForm } from 'react-hook-form'
 import { useTranslation } from '../../../config/i18n'
-import FormError from '../../../components/FormError'
+import {
+  useLanguagesFormDataQuery,
+  useAddLanguageLearningMutation,
+  useAddLanguageNativeMutation,
+  useRemoveLanguageLearningMutation,
+  useRemoveLanguageNativeMutation,
+} from '../../../generated/graphql'
+
+import LanguageMultiSelect from '../../../components/LanguageMultiSelect'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
-import Button, { ButtonVariant } from '../../../elements/Button'
+
+type LanguageMutationType = (arg: { variables: { languageId: number } }) => Promise<any>
 
 const LanguagesForm: React.FC = () => {
   const { t } = useTranslation('settings')
-  const { handleSubmit, register, errors } = useForm({
-    mode: 'onSubmit',
-    reValidateMode: 'onBlur',
-  })
+  const { data, refetch } = useLanguagesFormDataQuery()
+  const [addLearningLanguage] = useAddLanguageLearningMutation()
+  const [addNativeLanguage] = useAddLanguageNativeMutation()
+  const [removeLearningLanguage] = useRemoveLanguageLearningMutation()
+  const [removeNativeLanguage] = useRemoveLanguageNativeMutation()
 
-  const fieldErrorName = Object.keys(errors)[0] || ''
-  const fieldError = errors[fieldErrorName]
-  const handleLanguagesSubmit = (): void => {}
+  const mutateLanguageM2M = (mutation: LanguageMutationType) => async (languageId: number) => {
+    await mutation({ variables: { languageId } })
+    refetch()
+  }
+  
+  const learningLanguages = (data?.currentUser?.languagesLearning || []).map(x => x.language.id)
+  const nativeLanguages = (data?.currentUser?.languagesNative || []).map(x => x.language.id)
+
+  const onLearningAdd = mutateLanguageM2M(addLearningLanguage) 
+  const onNativeAdd = mutateLanguageM2M(addNativeLanguage) 
+  const onLearningRemove = mutateLanguageM2M(removeLearningLanguage) 
+  const onNativeRemove = mutateLanguageM2M(removeNativeLanguage) 
 
   return (
-    <SettingsForm onSubmit={handleSubmit(handleLanguagesSubmit)} errorInputName={fieldErrorName}>
+    <SettingsForm onSubmit={() => undefined}>
       <SettingsFieldset legend={t('profile.languages.legend')}>
         <div className="languages-wrapper">
-          {fieldError && <FormError error={fieldError.message as string} />}
-
           <div className="languages-form-fields">
             <div className="languages-form-field">
               <label className="settings-label" htmlFor="native-languages">
                 {t('profile.languages.nativeLanguagesLabel')}
               </label>
-              <input
-                type="text"
-                id="native-languages"
-                name="native-languages"
-                className="j-field"
-                ref={register({ required: t('profile.languages.nativeLanguagesError') as string })}
+              <LanguageMultiSelect
+                languages={data?.languages || []}
+                value={nativeLanguages}
+                onAdd={onNativeAdd}
+                onRemove={onNativeRemove}
               />
             </div>
             <div className="languages-form-field">
               <label className="settings-label" htmlFor="learning-languages">
                 {t('profile.languages.learningLanguagesLabel')}
               </label>
-              <input
-                type="text"
-                id="learning-languages"
-                name="learning-languages"
-                className="j-field"
-                ref={register({
-                  required: t('profile.languages.learningLanguagesError') as string,
-                })}
+              <LanguageMultiSelect
+                languages={data?.languages || []}
+                value={learningLanguages}
+                onAdd={onLearningAdd}
+                onRemove={onLearningRemove}
               />
             </div>
           </div>
-
-          <Button
-            type="submit"
-            className="settings-submit-button"
-            variant={ButtonVariant.Secondary}
-          >
-            {t('updateButton')}
-          </Button>
         </div>
       </SettingsFieldset>
 

@@ -63,6 +63,7 @@ export type LanguagePostsArgs = {
 
 export type LanguageLearning = {
   __typename?: 'LanguageLearning'
+  id: Scalars['Int']
   language: Language
 }
 
@@ -73,6 +74,7 @@ export type LanguageLearningWhereUniqueInput = {
 
 export type LanguageNative = {
   __typename?: 'LanguageNative'
+  id: Scalars['Int']
   language: Language
 }
 
@@ -90,41 +92,18 @@ export type Location = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  createUser?: Maybe<User>
-  loginUser?: Maybe<User>
-  createPost?: Maybe<Post>
-  updatePost?: Maybe<Post>
   createThread?: Maybe<Thread>
   createComment?: Maybe<Comment>
   updateComment?: Maybe<Comment>
   deleteComment?: Maybe<Comment>
+  createPost?: Maybe<Post>
+  updatePost?: Maybe<Post>
+  createUser?: Maybe<User>
+  loginUser?: Maybe<User>
   addLanguageLearning?: Maybe<LanguageLearning>
   addLanguageNative?: Maybe<LanguageNative>
-}
-
-export type MutationCreateUserArgs = {
-  handle: Scalars['String']
-  email: Scalars['String']
-  password: Scalars['String']
-}
-
-export type MutationLoginUserArgs = {
-  identifier: Scalars['String']
-  password: Scalars['String']
-}
-
-export type MutationCreatePostArgs = {
-  title: Scalars['String']
-  body?: Maybe<Array<EditorNode>>
-  languageId: Scalars['Int']
-  status?: Maybe<PostStatus>
-}
-
-export type MutationUpdatePostArgs = {
-  postId: Scalars['Int']
-  title?: Maybe<Scalars['String']>
-  body?: Maybe<Array<EditorNode>>
-  status?: Maybe<PostStatus>
+  removeLanguageLearning?: Maybe<LanguageLearning>
+  removeLanguageNative?: Maybe<LanguageNative>
 }
 
 export type MutationCreateThreadArgs = {
@@ -148,11 +127,44 @@ export type MutationDeleteCommentArgs = {
   commentId: Scalars['Int']
 }
 
+export type MutationCreatePostArgs = {
+  title: Scalars['String']
+  body?: Maybe<Array<EditorNode>>
+  languageId: Scalars['Int']
+  status?: Maybe<PostStatus>
+}
+
+export type MutationUpdatePostArgs = {
+  postId: Scalars['Int']
+  title?: Maybe<Scalars['String']>
+  body?: Maybe<Array<EditorNode>>
+  status?: Maybe<PostStatus>
+}
+
+export type MutationCreateUserArgs = {
+  handle: Scalars['String']
+  email: Scalars['String']
+  password: Scalars['String']
+}
+
+export type MutationLoginUserArgs = {
+  identifier: Scalars['String']
+  password: Scalars['String']
+}
+
 export type MutationAddLanguageLearningArgs = {
   languageId: Scalars['Int']
 }
 
 export type MutationAddLanguageNativeArgs = {
+  languageId: Scalars['Int']
+}
+
+export type MutationRemoveLanguageLearningArgs = {
+  languageId: Scalars['Int']
+}
+
+export type MutationRemoveLanguageNativeArgs = {
   languageId: Scalars['Int']
 }
 
@@ -241,6 +253,10 @@ export type QueryFeedArgs = {
   first?: Maybe<Scalars['Int']>
 }
 
+export type QueryLanguagesArgs = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+}
+
 export type Thread = {
   __typename?: 'Thread'
   id: Scalars['Int']
@@ -304,6 +320,30 @@ export enum UserRole {
   Moderator = 'MODERATOR',
   FreeUser = 'FREE_USER',
   ProUser = 'PRO_USER',
+}
+
+export type AddLanguageLearningMutationVariables = {
+  languageId: Scalars['Int']
+}
+
+export type AddLanguageLearningMutation = { __typename?: 'Mutation' } & {
+  addLanguageLearning?: Maybe<
+    { __typename?: 'LanguageLearning' } & {
+      language: { __typename?: 'Language' } & Pick<Language, 'id'>
+    }
+  >
+}
+
+export type AddLanguageNativeMutationVariables = {
+  languageId: Scalars['Int']
+}
+
+export type AddLanguageNativeMutation = { __typename?: 'Mutation' } & {
+  addLanguageNative?: Maybe<
+    { __typename?: 'LanguageNative' } & {
+      language: { __typename?: 'Language' } & Pick<Language, 'id'>
+    }
+  >
 }
 
 export type CreateCommentMutationVariables = {
@@ -427,6 +467,32 @@ export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
   'id' | 'name' | 'dialect'
 >
 
+export type LanguagesQueryVariables = {}
+
+export type LanguagesQuery = { __typename?: 'Query' } & {
+  languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
+}
+
+export type LanguagesFormDataQueryVariables = {}
+
+export type LanguagesFormDataQuery = { __typename?: 'Query' } & {
+  languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
+  currentUser?: Maybe<
+    { __typename?: 'User' } & {
+      languagesLearning: Array<
+        { __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'> & {
+            language: { __typename?: 'Language' } & LanguageFragmentFragment
+          }
+      >
+      languagesNative: Array<
+        { __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'> & {
+            language: { __typename?: 'Language' } & LanguageFragmentFragment
+          }
+      >
+    }
+  >
+}
+
 export type LoginUserMutationVariables = {
   identifier: Scalars['String']
   password: Scalars['String']
@@ -451,6 +517,22 @@ export type PostsQueryVariables = {
 
 export type PostsQuery = { __typename?: 'Query' } & {
   posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+}
+
+export type RemoveLanguageLearningMutationVariables = {
+  languageId: Scalars['Int']
+}
+
+export type RemoveLanguageLearningMutation = { __typename?: 'Mutation' } & {
+  removeLanguageLearning?: Maybe<{ __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'>>
+}
+
+export type RemoveLanguageNativeMutationVariables = {
+  languageId: Scalars['Int']
+}
+
+export type RemoveLanguageNativeMutation = { __typename?: 'Mutation' } & {
+  removeLanguageNative?: Maybe<{ __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'>>
 }
 
 export type UpdateCommentMutationVariables = {
@@ -574,6 +656,108 @@ export const LanguageFragmentFragmentDoc = gql`
     dialect
   }
 `
+export const AddLanguageLearningDocument = gql`
+  mutation addLanguageLearning($languageId: Int!) {
+    addLanguageLearning(languageId: $languageId) {
+      language {
+        id
+      }
+    }
+  }
+`
+export type AddLanguageLearningMutationFn = ApolloReactCommon.MutationFunction<
+  AddLanguageLearningMutation,
+  AddLanguageLearningMutationVariables
+>
+
+/**
+ * __useAddLanguageLearningMutation__
+ *
+ * To run a mutation, you first call `useAddLanguageLearningMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddLanguageLearningMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addLanguageLearningMutation, { data, loading, error }] = useAddLanguageLearningMutation({
+ *   variables: {
+ *      languageId: // value for 'languageId'
+ *   },
+ * });
+ */
+export function useAddLanguageLearningMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddLanguageLearningMutation,
+    AddLanguageLearningMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AddLanguageLearningMutation,
+    AddLanguageLearningMutationVariables
+  >(AddLanguageLearningDocument, baseOptions)
+}
+export type AddLanguageLearningMutationHookResult = ReturnType<
+  typeof useAddLanguageLearningMutation
+>
+export type AddLanguageLearningMutationResult = ApolloReactCommon.MutationResult<
+  AddLanguageLearningMutation
+>
+export type AddLanguageLearningMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddLanguageLearningMutation,
+  AddLanguageLearningMutationVariables
+>
+export const AddLanguageNativeDocument = gql`
+  mutation addLanguageNative($languageId: Int!) {
+    addLanguageNative(languageId: $languageId) {
+      language {
+        id
+      }
+    }
+  }
+`
+export type AddLanguageNativeMutationFn = ApolloReactCommon.MutationFunction<
+  AddLanguageNativeMutation,
+  AddLanguageNativeMutationVariables
+>
+
+/**
+ * __useAddLanguageNativeMutation__
+ *
+ * To run a mutation, you first call `useAddLanguageNativeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddLanguageNativeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addLanguageNativeMutation, { data, loading, error }] = useAddLanguageNativeMutation({
+ *   variables: {
+ *      languageId: // value for 'languageId'
+ *   },
+ * });
+ */
+export function useAddLanguageNativeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddLanguageNativeMutation,
+    AddLanguageNativeMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    AddLanguageNativeMutation,
+    AddLanguageNativeMutationVariables
+  >(AddLanguageNativeDocument, baseOptions)
+}
+export type AddLanguageNativeMutationHookResult = ReturnType<typeof useAddLanguageNativeMutation>
+export type AddLanguageNativeMutationResult = ApolloReactCommon.MutationResult<
+  AddLanguageNativeMutation
+>
+export type AddLanguageNativeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddLanguageNativeMutation,
+  AddLanguageNativeMutationVariables
+>
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
     createComment(body: $body, threadId: $threadId) {
@@ -930,6 +1114,118 @@ export function useFeedLazyQuery(
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
 export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
+export const LanguagesDocument = gql`
+  query languages {
+    languages {
+      ...LanguageFragment
+    }
+  }
+  ${LanguageFragmentFragmentDoc}
+`
+
+/**
+ * __useLanguagesQuery__
+ *
+ * To run a query within a React component, call `useLanguagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLanguagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLanguagesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLanguagesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<LanguagesQuery, LanguagesQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<LanguagesQuery, LanguagesQueryVariables>(
+    LanguagesDocument,
+    baseOptions,
+  )
+}
+export function useLanguagesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<LanguagesQuery, LanguagesQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<LanguagesQuery, LanguagesQueryVariables>(
+    LanguagesDocument,
+    baseOptions,
+  )
+}
+export type LanguagesQueryHookResult = ReturnType<typeof useLanguagesQuery>
+export type LanguagesLazyQueryHookResult = ReturnType<typeof useLanguagesLazyQuery>
+export type LanguagesQueryResult = ApolloReactCommon.QueryResult<
+  LanguagesQuery,
+  LanguagesQueryVariables
+>
+export const LanguagesFormDataDocument = gql`
+  query languagesFormData {
+    languages {
+      ...LanguageFragment
+    }
+    currentUser {
+      languagesLearning {
+        id
+        language {
+          ...LanguageFragment
+        }
+      }
+      languagesNative {
+        id
+        language {
+          ...LanguageFragment
+        }
+      }
+    }
+  }
+  ${LanguageFragmentFragmentDoc}
+`
+
+/**
+ * __useLanguagesFormDataQuery__
+ *
+ * To run a query within a React component, call `useLanguagesFormDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLanguagesFormDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLanguagesFormDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLanguagesFormDataQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    LanguagesFormDataQuery,
+    LanguagesFormDataQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<LanguagesFormDataQuery, LanguagesFormDataQueryVariables>(
+    LanguagesFormDataDocument,
+    baseOptions,
+  )
+}
+export function useLanguagesFormDataLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    LanguagesFormDataQuery,
+    LanguagesFormDataQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<LanguagesFormDataQuery, LanguagesFormDataQueryVariables>(
+    LanguagesFormDataDocument,
+    baseOptions,
+  )
+}
+export type LanguagesFormDataQueryHookResult = ReturnType<typeof useLanguagesFormDataQuery>
+export type LanguagesFormDataLazyQueryHookResult = ReturnType<typeof useLanguagesFormDataLazyQuery>
+export type LanguagesFormDataQueryResult = ApolloReactCommon.QueryResult<
+  LanguagesFormDataQuery,
+  LanguagesFormDataQueryVariables
+>
 export const LoginUserDocument = gql`
   mutation loginUser($identifier: String!, $password: String!) {
     loginUser(identifier: $identifier, password: $password) {
@@ -1061,6 +1357,106 @@ export function usePostsLazyQuery(
 export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>
 export type PostsQueryResult = ApolloReactCommon.QueryResult<PostsQuery, PostsQueryVariables>
+export const RemoveLanguageLearningDocument = gql`
+  mutation removeLanguageLearning($languageId: Int!) {
+    removeLanguageLearning(languageId: $languageId) {
+      id
+    }
+  }
+`
+export type RemoveLanguageLearningMutationFn = ApolloReactCommon.MutationFunction<
+  RemoveLanguageLearningMutation,
+  RemoveLanguageLearningMutationVariables
+>
+
+/**
+ * __useRemoveLanguageLearningMutation__
+ *
+ * To run a mutation, you first call `useRemoveLanguageLearningMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveLanguageLearningMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeLanguageLearningMutation, { data, loading, error }] = useRemoveLanguageLearningMutation({
+ *   variables: {
+ *      languageId: // value for 'languageId'
+ *   },
+ * });
+ */
+export function useRemoveLanguageLearningMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RemoveLanguageLearningMutation,
+    RemoveLanguageLearningMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    RemoveLanguageLearningMutation,
+    RemoveLanguageLearningMutationVariables
+  >(RemoveLanguageLearningDocument, baseOptions)
+}
+export type RemoveLanguageLearningMutationHookResult = ReturnType<
+  typeof useRemoveLanguageLearningMutation
+>
+export type RemoveLanguageLearningMutationResult = ApolloReactCommon.MutationResult<
+  RemoveLanguageLearningMutation
+>
+export type RemoveLanguageLearningMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RemoveLanguageLearningMutation,
+  RemoveLanguageLearningMutationVariables
+>
+export const RemoveLanguageNativeDocument = gql`
+  mutation removeLanguageNative($languageId: Int!) {
+    removeLanguageNative(languageId: $languageId) {
+      id
+    }
+  }
+`
+export type RemoveLanguageNativeMutationFn = ApolloReactCommon.MutationFunction<
+  RemoveLanguageNativeMutation,
+  RemoveLanguageNativeMutationVariables
+>
+
+/**
+ * __useRemoveLanguageNativeMutation__
+ *
+ * To run a mutation, you first call `useRemoveLanguageNativeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveLanguageNativeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeLanguageNativeMutation, { data, loading, error }] = useRemoveLanguageNativeMutation({
+ *   variables: {
+ *      languageId: // value for 'languageId'
+ *   },
+ * });
+ */
+export function useRemoveLanguageNativeMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RemoveLanguageNativeMutation,
+    RemoveLanguageNativeMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    RemoveLanguageNativeMutation,
+    RemoveLanguageNativeMutationVariables
+  >(RemoveLanguageNativeDocument, baseOptions)
+}
+export type RemoveLanguageNativeMutationHookResult = ReturnType<
+  typeof useRemoveLanguageNativeMutation
+>
+export type RemoveLanguageNativeMutationResult = ApolloReactCommon.MutationResult<
+  RemoveLanguageNativeMutation
+>
+export type RemoveLanguageNativeMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RemoveLanguageNativeMutation,
+  RemoveLanguageNativeMutationVariables
+>
 export const UpdateCommentDocument = gql`
   mutation updateComment($body: String!, $commentId: Int!) {
     updateComment(body: $body, commentId: $commentId) {

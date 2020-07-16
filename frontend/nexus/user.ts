@@ -2,6 +2,7 @@ import { schema } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
+import { NotAuthorizedError } from './errors'
 
 schema.objectType({
   name: 'User',
@@ -119,6 +120,35 @@ schema.extendType({
             maxAge: 1000 * 60 * 60 * 24 * 365,
           }),
         )
+        return user
+      },
+    })
+
+    t.field('logout', {
+      type: 'User',
+      resolve: async (_parent, _args, ctx) => {
+        const id = ctx.request.userId
+
+        if (!id) {
+          throw new NotAuthorizedError()
+        }
+
+        const user = await ctx.db.user.findOne({
+          where: { id: ctx.request.userId, },
+        })
+
+        if (!user) {
+          throw new NotAuthorizedError()
+        }
+
+        ctx.response.setHeader(
+          'Set-Cookie',
+          serialize('token', '', {
+            httpOnly: true,
+            expires: new Date(0),
+          }),
+        )
+
         return user
       },
     })

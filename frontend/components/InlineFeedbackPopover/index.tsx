@@ -1,11 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import CSS from 'csstype'
-import { sanitize } from '../../utils'
 
-import { useCreateCommentMutation } from '../../generated/graphql'
-import { Thread as ThreadType } from '../../generated/graphql'
 import theme from '../../theme'
+import { sanitize } from '../../utils'
+import {
+  useCreateCommentMutation,
+  UserFragmentFragment as UserType,
+  Thread as ThreadType,
+} from '../../generated/graphql'
 
 type DOMOffsetTarget = {
   x: number
@@ -21,11 +24,13 @@ type PopoverProps = {
 type ThreadProps = {
   thread: ThreadType
   onNewComment: any
+  currentUser: UserType | null | undefined
 }
 
 type InlineFeedbackPopoverProps = {
   target: DOMOffsetTarget
   thread: ThreadType
+  currentUser: UserType | null | undefined
   onNewComment: any
 }
 
@@ -92,7 +97,7 @@ const Popover: React.FC<PopoverProps> = ({ target, children }) => {
   return ReactDOM.createPortal(popover, popoverRoot)
 }
 
-const Thread: React.FC<ThreadProps> = ({ thread, onNewComment }) => {
+const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) => {
   const [commentBody, setCommentBody] = React.useState<string>('')
   const [createComment, { loading }] = useCreateCommentMutation({
     onCompleted: () => {
@@ -138,21 +143,23 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment }) => {
 
           {!thread.comments.length && <div className="empty-notice">No comments... yet!</div>}
         </div>
-        <form onSubmit={createNewComment}>
-          <fieldset>
-            <div className="new-comment-block">
-              <textarea
-                placeholder="Add a comment..."
-                value={commentBody}
-                onChange={(e) => setCommentBody(e.target.value)}
-                disabled={loading}
-              />
-              <button type="submit" disabled={loading}>
-                Submit
-              </button>
-            </div>
-          </fieldset>
-        </form>
+        { currentUser && (
+          <form onSubmit={createNewComment}>
+            <fieldset>
+              <div className="new-comment-block">
+                <textarea
+                  placeholder="Add a comment..."
+                  value={commentBody}
+                  onChange={(e) => setCommentBody(e.target.value)}
+                  disabled={loading}
+                />
+                <button type="submit" disabled={loading}>
+                  Submit
+                </button>
+              </div>
+            </fieldset>
+          </form>
+        )}
       </div>
       <style jsx>{`
         .thread {
@@ -220,9 +227,10 @@ const InlineFeedbackPopover: React.FC<InlineFeedbackPopoverProps> = ({
   target,
   thread,
   onNewComment,
+  currentUser,
 }) => (
   <Popover target={target}>
-    <Thread thread={thread} onNewComment={onNewComment} />
+    <Thread thread={thread} onNewComment={onNewComment} currentUser={currentUser} />
   </Popover>
 )
 

@@ -4,8 +4,8 @@ import NavLink from '../../NavLink'
 import FeedIcon from '../../Icons/FeedIcon'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 import { navConstants } from './nav-constants'
-import { useTranslation } from '../../../config/i18n'
-import { User as UserType } from '../../../generated/graphql'
+import { Router, useTranslation } from '../../../config/i18n'
+import { useLogoutMutation, User as UserType } from '../../../generated/graphql'
 import theme from '../../../theme'
 
 interface Props {
@@ -15,12 +15,11 @@ interface Props {
 
 const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
   const { t } = useTranslation()
-  const logout = (): void => {
-    // TODO: implement logout functionality
-  }
+  const [logout] = useLogoutMutation()
   const handleLogOut = (): void => {
     onClick()
     logout()
+    Router.push('/')
   }
 
   return (

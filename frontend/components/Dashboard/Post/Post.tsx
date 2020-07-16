@@ -47,7 +47,10 @@ const CommentSelectionButton = ({ position, display, onClick }: CommentSelection
       <LeaveACommentIcon primaryColor="white" secondaryColor="white" size={30} />
       <style jsx>{`
         .comment-btn {
-          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 0 2px 2px;
           width: 35px;
           height: 35px;
           font-size: 14px;
@@ -347,13 +350,14 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       <CommentSelectionButton
         onClick={createThreadHandler}
         position={commentButtonPosition}
-        display={displayCommentButton}
+        display={displayCommentButton && !!currentUser}
       />
       <div id="popover-root" />
       {activeThread && (
         <InlineFeedbackPopover
           thread={activeThread}
           target={popoverPosition}
+          currentUser={currentUser}
           onNewComment={refetch}
         />
       )}

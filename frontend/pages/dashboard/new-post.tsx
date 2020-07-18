@@ -29,10 +29,13 @@ const NewPostPage: NextPage = () => {
   const { languagesLearning = [], languagesNative = [] } = currentUser || {}
 
   const router = useRouter()
-  const [title, setTitle] = React.useState<string>('')
   const [langId, setLangId] = React.useState<number>(-1)
+  const [title, setTitle, resetTitle] = useAutosavedState<string>('', {
+    key: 'new-post:title',
+    debounceTime: 1000,
+  })
   const [body, setBody, resetBody] = useAutosavedState<Node[]>(initialValue, {
-    key: 'new-post',
+    key: 'new-post:body',
     debounceTime: 1000,
   })
 
@@ -42,6 +45,7 @@ const NewPostPage: NextPage = () => {
         return
       }
 
+      resetTitle()
       resetBody()
       router.push({ pathname: `/post/${createPost.id}` })
     },

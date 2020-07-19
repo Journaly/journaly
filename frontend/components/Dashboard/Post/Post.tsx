@@ -448,6 +448,13 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
         .post-body p {
           margin: 20px 0;
         }
+
+        .post-controls {
+          grid-column: 2;
+          align-self: end;
+          justify-self: end;
+          margin-bottom: 20px;
+        }
       `}</style>
     </div>
   )

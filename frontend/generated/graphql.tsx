@@ -138,6 +138,7 @@ export type MutationCreatePostArgs = {
 export type MutationUpdatePostArgs = {
   postId: Scalars['Int']
   title?: Maybe<Scalars['String']>
+  languageId?: Maybe<Scalars['Int']>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
 }
@@ -425,7 +426,11 @@ export type EditPostQueryVariables = {
 }
 
 export type EditPostQuery = { __typename?: 'Query' } & {
-  postById?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc'>>
+  postById?: Maybe<
+    { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc'> & {
+        language: { __typename?: 'Language' } & Pick<Language, 'id'>
+      }
+  >
   currentUser?: Maybe<
     { __typename?: 'User' } & {
       languagesLearning: Array<
@@ -577,6 +582,7 @@ export type UpdateCommentMutation = { __typename?: 'Mutation' } & {
 export type UpdatePostMutationVariables = {
   postId: Scalars['Int']
   title?: Maybe<Scalars['String']>
+  languageId?: Maybe<Scalars['Int']>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
 }
@@ -1112,6 +1118,9 @@ export const EditPostDocument = gql`
     postById(id: $id) {
       title
       bodySrc
+      language {
+        id
+      }
     }
     currentUser {
       languagesLearning {
@@ -1638,8 +1647,20 @@ export type UpdateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions
   UpdateCommentMutationVariables
 >
 export const UpdatePostDocument = gql`
-  mutation updatePost($postId: Int!, $title: String, $body: [EditorNode!], $status: PostStatus) {
-    updatePost(body: $body, title: $title, status: $status, postId: $postId) {
+  mutation updatePost(
+    $postId: Int!
+    $title: String
+    $languageId: Int
+    $body: [EditorNode!]
+    $status: PostStatus
+  ) {
+    updatePost(
+      body: $body
+      title: $title
+      languageId: $languageId
+      status: $status
+      postId: $postId
+    ) {
       ...PostFragment
     }
   }
@@ -1665,6 +1686,7 @@ export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
  *   variables: {
  *      postId: // value for 'postId'
  *      title: // value for 'title'
+ *      languageId: // value for 'languageId'
  *      body: // value for 'body'
  *      status: // value for 'status'
  *   },

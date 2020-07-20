@@ -179,6 +179,7 @@ schema.extendType({
       args: {
         postId: schema.intArg({ required: true }),
         title: schema.stringArg({ required: false }),
+        languageId: schema.intArg({ required: false }),
         body: EditorNode.asArg({ list: true, required: false }),
         status: schema.arg({ type: 'PostStatus', required: false }),
       },
@@ -209,6 +210,10 @@ schema.extendType({
         let data: PostUpdateInput = {}
         if (args.title) {
           data.title = args.title
+        }
+
+        if (args.languageId) {
+          data.language = { connect: {id: args.languageId } }
         }
 
         if (args.status) {

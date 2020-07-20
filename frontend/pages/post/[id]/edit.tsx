@@ -3,6 +3,7 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Node } from 'slate'
 import { withApollo } from '../../../lib/apollo'
+import { useTranslation } from '../../../config/i18n'
 
 import DashboardLayout from '../../../components/Layouts/DashboardLayout'
 import JournalyEditor from '../../../components/JournalyEditor'
@@ -11,8 +12,7 @@ import theme from '../../../theme'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import {
   useEditPostQuery,
-  useCreatePostMutation,
-  PostStatus as PostStatusType,
+  useUpdatePostMutation,
 } from '../../../generated/graphql'
 import AuthGate from '../../../components/AuthGate'
 
@@ -24,13 +24,14 @@ const initialValue = [
 ]
 
 const EditPostPage: NextPage = () => {
-  const idStr = useRouter().query.id as string
+  const router = useRouter()
+  const idStr = router.query.id as string
   const id = parseInt(idStr, 10)
 
   const { data: { currentUser, postById } = {} } = useEditPostQuery({ variables: { id } })
   const { languagesLearning = [], languagesNative = [] } = currentUser || {}
 
-  const router = useRouter()
+  const { t } = useTranslation('post')
   const [langId, setLangId] = React.useState<number>(-1)
   const [title, setTitle] = React.useState<string>('')
   const [body, setBody] = React.useState<Node[]>(initialValue)
@@ -38,37 +39,41 @@ const EditPostPage: NextPage = () => {
   React.useEffect(() => {
     if (postById) {
       setTitle(postById.title)
+      setLangId(postById.language.id)
       setBody(JSON.parse(postById.bodySrc) as Node[])
     }
   }, [postById])
 
-  const [createPost] = useCreatePostMutation({
-    onCompleted: ({ createPost }) => {
-      if (!createPost) {
-        return
-      }
-
-      router.push({ pathname: `/post/${createPost.id}` })
-    },
-  })
+  const [updatePost] = useUpdatePostMutation()
 
   const userLanguages = languagesLearning
     .map((x) => x.language)
     .concat(languagesNative.map((x) => x.language))
 
-  const createNewPost = (status: PostStatusType) => {
-    createPost({
-      variables: { title, body, status, languageId: langId },
+  const savePost = async () => {
+    const { data } = await updatePost({
+      variables: {
+        languageId: langId,
+        postId: id,
+        title,
+        body,
+      },
     })
+
+    if (!data.updatePost) {
+      return
+    }
+
+    router.push({ pathname: `/post/${data.updatePost.id}` })
   }
 
   return (
     <AuthGate>
       <DashboardLayout>
         <form id="edit-post">
-          <h1>Let's write a post</h1>
+          <h1>{t('editPost')}</h1>
 
-          <label htmlFor="post-title">Title</label>
+          <label htmlFor="post-title">{t('titleLabel')}</label>
           <input
             className="j-field"
             id="post-title"
@@ -80,7 +85,7 @@ const EditPostPage: NextPage = () => {
             autoComplete="off"
           />
 
-          <label htmlFor="post-language">Language</label>
+          <label htmlFor="post-language">{t('languageLabel')}</label>
           <LanguageSelect
             id="language"
             languages={userLanguages}
@@ -100,22 +105,10 @@ const EditPostPage: NextPage = () => {
               data-test="post-submit"
               onClick={(e: React.MouseEvent) => {
                 e.preventDefault()
-                createNewPost(PostStatusType.Published)
+                savePost()
               }}
             >
-              Publish!
-            </Button>
-            <Button
-              type="submit"
-              disabled={!title || langId === -1}
-              variant={ButtonVariant.Secondary}
-              data-test="post-draft"
-              onClick={(e: React.MouseEvent) => {
-                e.preventDefault()
-                createNewPost(PostStatusType.Draft)
-              }}
-            >
-              Save Draft
+              {t('save')}
             </Button>
           </div>
           <style jsx>{`
@@ -132,7 +125,6 @@ const EditPostPage: NextPage = () => {
               display: flex;
               flex-direction: row;
               margin: 0 auto;
-              width: 200px;
               justify-content: space-between;
             }
 
@@ -152,5 +144,9 @@ const EditPostPage: NextPage = () => {
     </AuthGate>
   )
 }
+
+EditPostPage.getInitialProps = async () => ({
+  namespacesRequired: ['common', 'post'],
+})
 
 export default withApollo(EditPostPage)

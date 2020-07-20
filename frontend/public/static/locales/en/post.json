@@ -3,5 +3,10 @@
   "publishDraft": "Publish Draft",
   "readTime": "{{minutes}} min. read",
   "readAction": "Read post",
+  "editPost": "Edit Post",
+  "editPostAction": "Edit Post",
+  "titleLabel": "Title",
+  "languageLabel": "Language",
+  "save": "Save",
   "finishAction": "Finish post"
 }

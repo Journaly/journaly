@@ -2,20 +2,19 @@ import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Node } from 'slate'
-import { withApollo } from '../../lib/apollo'
+import { withApollo } from '../../../lib/apollo'
+import { useTranslation } from '../../../config/i18n'
 
-import DashboardLayout from '../../components/Layouts/DashboardLayout'
-import JournalyEditor from '../../components/JournalyEditor'
-import LanguageSelect from '../../components/LanguageSelect'
-import theme from '../../theme'
-import Button, { ButtonVariant } from '../../elements/Button'
+import DashboardLayout from '../../../components/Layouts/DashboardLayout'
+import JournalyEditor from '../../../components/JournalyEditor'
+import LanguageSelect from '../../../components/LanguageSelect'
+import theme from '../../../theme'
+import Button, { ButtonVariant } from '../../../elements/Button'
 import {
-  useCurrentUserQuery,
-  useCreatePostMutation,
-  PostStatus as PostStatusType,
-} from '../../generated/graphql'
-import AuthGate from '../../components/AuthGate'
-import useAutosavedState from '../../hooks/useAutosavedState'
+  useEditPostQuery,
+  useUpdatePostMutation,
+} from '../../../generated/graphql'
+import AuthGate from '../../../components/AuthGate'
 
 const initialValue = [
   {
@@ -24,50 +23,57 @@ const initialValue = [
   },
 ]
 
-const NewPostPage: NextPage = () => {
-  const { data: { currentUser } = {} } = useCurrentUserQuery()
+const EditPostPage: NextPage = () => {
+  const router = useRouter()
+  const idStr = router.query.id as string
+  const id = parseInt(idStr, 10)
+
+  const { data: { currentUser, postById } = {} } = useEditPostQuery({ variables: { id } })
   const { languagesLearning = [], languagesNative = [] } = currentUser || {}
 
-  const router = useRouter()
+  const { t } = useTranslation('post')
   const [langId, setLangId] = React.useState<number>(-1)
-  const [title, setTitle, resetTitle] = useAutosavedState<string>('', {
-    key: 'new-post:title',
-    debounceTime: 1000,
-  })
-  const [body, setBody, resetBody] = useAutosavedState<Node[]>(initialValue, {
-    key: 'new-post:body',
-    debounceTime: 1000,
-  })
+  const [title, setTitle] = React.useState<string>('')
+  const [body, setBody] = React.useState<Node[]>(initialValue)
 
-  const [createPost] = useCreatePostMutation({
-    onCompleted: ({ createPost }) => {
-      if (!createPost) {
-        return
-      }
+  React.useEffect(() => {
+    if (postById) {
+      setTitle(postById.title)
+      setLangId(postById.language.id)
+      setBody(JSON.parse(postById.bodySrc) as Node[])
+    }
+  }, [postById])
 
-      resetTitle()
-      resetBody()
-      router.push({ pathname: `/post/${createPost.id}` })
-    },
-  })
+  const [updatePost] = useUpdatePostMutation()
 
   const userLanguages = languagesLearning
     .map((x) => x.language)
     .concat(languagesNative.map((x) => x.language))
 
-  const createNewPost = (status: PostStatusType) => {
-    createPost({
-      variables: { title, body, status, languageId: langId },
+  const savePost = async () => {
+    const { data } = await updatePost({
+      variables: {
+        languageId: langId,
+        postId: id,
+        title,
+        body,
+      },
     })
+
+    if (!data || !data.updatePost) {
+      return
+    }
+
+    router.push({ pathname: `/post/${data.updatePost.id}` })
   }
 
   return (
     <AuthGate>
       <DashboardLayout>
-        <form id="new-post">
-          <h1>Let's write a post</h1>
+        <form id="edit-post">
+          <h1>{t('editPost')}</h1>
 
-          <label htmlFor="post-title">Title</label>
+          <label htmlFor="post-title">{t('titleLabel')}</label>
           <input
             className="j-field"
             id="post-title"
@@ -79,7 +85,7 @@ const NewPostPage: NextPage = () => {
             autoComplete="off"
           />
 
-          <label htmlFor="post-language">Language</label>
+          <label htmlFor="post-language">{t('languageLabel')}</label>
           <LanguageSelect
             id="language"
             languages={userLanguages}
@@ -99,22 +105,10 @@ const NewPostPage: NextPage = () => {
               data-test="post-submit"
               onClick={(e: React.MouseEvent) => {
                 e.preventDefault()
-                createNewPost(PostStatusType.Published)
+                savePost()
               }}
             >
-              Publish!
-            </Button>
-            <Button
-              type="submit"
-              disabled={!title || langId === -1}
-              variant={ButtonVariant.Secondary}
-              data-test="post-draft"
-              onClick={(e: React.MouseEvent) => {
-                e.preventDefault()
-                createNewPost(PostStatusType.Draft)
-              }}
-            >
-              Save Draft
+              {t('save')}
             </Button>
           </div>
           <style jsx>{`
@@ -131,7 +125,6 @@ const NewPostPage: NextPage = () => {
               display: flex;
               flex-direction: row;
               margin: 0 auto;
-              width: 200px;
               justify-content: space-between;
             }
 
@@ -152,4 +145,8 @@ const NewPostPage: NextPage = () => {
   )
 }
 
-export default withApollo(NewPostPage)
+EditPostPage.getInitialProps = async () => ({
+  namespacesRequired: ['common', 'post'],
+})
+
+export default withApollo(EditPostPage)

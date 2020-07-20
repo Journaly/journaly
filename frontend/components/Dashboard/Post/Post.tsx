@@ -463,6 +463,12 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           align-self: end;
           justify-self: end;
           margin-bottom: 20px;
+
+          display: flex;
+        }
+
+        .post-controls > :global(button) {
+          margin-left: 5px;
         }
       `}</style>
     </div>

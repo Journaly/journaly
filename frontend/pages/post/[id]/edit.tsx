@@ -60,7 +60,7 @@ const EditPostPage: NextPage = () => {
       },
     })
 
-    if (!data.updatePost) {
+    if (!data || !data.updatePost) {
       return
     }
 

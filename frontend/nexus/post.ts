@@ -19,6 +19,7 @@ schema.objectType({
     t.model.threads()
     t.model.language({ type: 'Language' })
     t.model.createdAt()
+    t.model.bodySrc()
   },
 })
 
@@ -29,16 +30,16 @@ schema.objectType({
 const EditorNode = schema.inputObjectType({
   name: 'EditorNode',
   definition(t) {
-    t.string('type', { nullable: true }),
-      t.string('text', { nullable: true }),
-      t.boolean('italic', { nullable: true }),
-      t.boolean('bold', { nullable: true }),
-      t.boolean('underline', { nullable: true }),
-      t.field('children', {
-        type: EditorNode,
-        list: true,
-        nullable: true,
-      })
+    t.string('type', { nullable: true })
+    t.string('text', { nullable: true })
+    t.boolean('italic', { nullable: true })
+    t.boolean('bold', { nullable: true })
+    t.boolean('underline', { nullable: true })
+    t.field('children', {
+      type: EditorNode,
+      list: true,
+      nullable: true,
+    })
   },
 })
 

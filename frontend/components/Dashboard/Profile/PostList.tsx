@@ -44,6 +44,8 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
           justify-content: center;
           align-items: center;
           padding: 0 ${layoutLeftRightPadding} ${layoutTopBottomPadding};
+          background-color: ${theme.colors.white};
+          box-shadow: 0px 8px 10px #00000029;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .post-list {

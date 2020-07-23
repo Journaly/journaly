@@ -19,7 +19,7 @@ const Profile: React.FC<Props> = ({ currentUser }) => {
         .profile-wrapper {
           display: flex;
           flex-direction: column;
-          height: 100%;
+          height: 100vh;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-wrapper {

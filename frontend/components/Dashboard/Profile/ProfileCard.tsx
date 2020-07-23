@@ -100,6 +100,7 @@ const ProfileCard: React.FC<Props> = ({ currentUser }) => {
           align-items: center;
           padding: 30px 25px;
           color: ${theme.colors.white};
+          box-shadow: 0px 8px 10px #00000029;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-card {

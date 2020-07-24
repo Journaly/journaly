@@ -112,6 +112,7 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
           right: 0;
           bottom: 7px;
           padding: 0;
+          pointer-events: none;
         }
 
         .my-feed-select {

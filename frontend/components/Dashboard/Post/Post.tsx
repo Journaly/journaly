@@ -15,7 +15,7 @@ import theme from '../../../theme'
 import PostBodyStyles from '../../PostBodyStyles'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
-import { useTranslation } from '../../../config/i18n'
+import { Router, useTranslation } from '../../../config/i18n'
 
 // TODO: Remove any when Types are fixed with PR #17
 interface IPostProps {
@@ -336,13 +336,22 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
         {currentUser && post.author.id === currentUser.id && (
           <div className="post-controls">
             {post.status === 'DRAFT' && (
-              <Button
-                type="button"
-                variant={ButtonVariant.Secondary}
-                onClick={setPostStatus(PostStatus.Published)}
-              >
-                {t('publishDraft')}
-              </Button>
+              <>
+                <Button
+                  type="button"
+                  variant={ButtonVariant.Secondary}
+                  onClick={() => { Router.push(`/post/${post.id}/edit`) }}
+                >
+                  {t('editPostAction')}
+                </Button>
+                <Button
+                  type="button"
+                  variant={ButtonVariant.Secondary}
+                  onClick={setPostStatus(PostStatus.Published)}
+                >
+                  {t('publishDraft')}
+                </Button>
+              </>
             )}
           </div>
         )}
@@ -447,6 +456,19 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
 
         .post-body p {
           margin: 20px 0;
+        }
+
+        .post-controls {
+          grid-column: 2;
+          align-self: end;
+          justify-self: end;
+          margin-bottom: 20px;
+
+          display: flex;
+        }
+
+        .post-controls > :global(button) {
+          margin-left: 5px;
         }
       `}</style>
     </div>

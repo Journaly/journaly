@@ -1,5 +1,5 @@
-mutation updatePost($postId: Int!, $title: String, $body: [EditorNode!], $status: PostStatus) {
-  updatePost(body: $body, title: $title, status: $status, postId: $postId) {
+mutation updatePost($postId: Int!, $title: String, $languageId: Int, $body: [EditorNode!], $status: PostStatus) {
+  updatePost(body: $body, title: $title, languageId: $languageId, status: $status, postId: $postId) {
     ...PostFragment
   }
 }

@@ -19,6 +19,7 @@ schema.objectType({
     t.model.threads()
     t.model.language({ type: 'Language' })
     t.model.createdAt()
+    t.model.bodySrc()
   },
 })
 
@@ -29,16 +30,16 @@ schema.objectType({
 const EditorNode = schema.inputObjectType({
   name: 'EditorNode',
   definition(t) {
-    t.string('type', { nullable: true }),
-      t.string('text', { nullable: true }),
-      t.boolean('italic', { nullable: true }),
-      t.boolean('bold', { nullable: true }),
-      t.boolean('underline', { nullable: true }),
-      t.field('children', {
-        type: EditorNode,
-        list: true,
-        nullable: true,
-      })
+    t.string('type', { nullable: true })
+    t.string('text', { nullable: true })
+    t.boolean('italic', { nullable: true })
+    t.boolean('bold', { nullable: true })
+    t.boolean('underline', { nullable: true })
+    t.field('children', {
+      type: EditorNode,
+      list: true,
+      nullable: true,
+    })
   },
 })
 
@@ -178,6 +179,7 @@ schema.extendType({
       args: {
         postId: schema.intArg({ required: true }),
         title: schema.stringArg({ required: false }),
+        languageId: schema.intArg({ required: false }),
         body: EditorNode.asArg({ list: true, required: false }),
         status: schema.arg({ type: 'PostStatus', required: false }),
       },
@@ -208,6 +210,10 @@ schema.extendType({
         let data: PostUpdateInput = {}
         if (args.title) {
           data.title = args.title
+        }
+
+        if (args.languageId) {
+          data.language = { connect: {id: args.languageId } }
         }
 
         if (args.status) {

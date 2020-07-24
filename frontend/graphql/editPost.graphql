@@ -1,0 +1,21 @@
+query editPost($id: Int!) {
+  postById(id: $id) {
+    title
+    bodySrc
+    language {
+      id
+    }
+  }
+  currentUser {
+    languagesLearning {
+      language {
+        ...LanguageFragment
+      }
+    }
+    languagesNative {
+      language {
+        ...LanguageFragment
+      }
+    }
+  }
+}

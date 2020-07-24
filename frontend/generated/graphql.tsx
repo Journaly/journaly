@@ -138,6 +138,7 @@ export type MutationCreatePostArgs = {
 export type MutationUpdatePostArgs = {
   postId: Scalars['Int']
   title?: Maybe<Scalars['String']>
+  languageId?: Maybe<Scalars['Int']>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
 }
@@ -183,6 +184,7 @@ export type Post = {
   threads: Array<Thread>
   language: Language
   createdAt: Scalars['DateTime']
+  bodySrc: Scalars['String']
 }
 
 export type PostImagesArgs = {
@@ -419,6 +421,32 @@ export type DeleteCommentMutation = { __typename?: 'Mutation' } & {
   deleteComment?: Maybe<{ __typename?: 'Comment' } & Pick<Comment, 'id'>>
 }
 
+export type EditPostQueryVariables = {
+  id: Scalars['Int']
+}
+
+export type EditPostQuery = { __typename?: 'Query' } & {
+  postById?: Maybe<
+    { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc'> & {
+        language: { __typename?: 'Language' } & Pick<Language, 'id'>
+      }
+  >
+  currentUser?: Maybe<
+    { __typename?: 'User' } & {
+      languagesLearning: Array<
+        { __typename?: 'LanguageLearning' } & {
+          language: { __typename?: 'Language' } & LanguageFragmentFragment
+        }
+      >
+      languagesNative: Array<
+        { __typename?: 'LanguageNative' } & {
+          language: { __typename?: 'Language' } & LanguageFragmentFragment
+        }
+      >
+    }
+  >
+}
+
 export type FeedQueryVariables = {}
 
 export type FeedQuery = { __typename?: 'Query' } & {
@@ -554,6 +582,7 @@ export type UpdateCommentMutation = { __typename?: 'Mutation' } & {
 export type UpdatePostMutationVariables = {
   postId: Scalars['Int']
   title?: Maybe<Scalars['String']>
+  languageId?: Maybe<Scalars['Int']>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
 }
@@ -1084,6 +1113,69 @@ export type DeleteCommentMutationOptions = ApolloReactCommon.BaseMutationOptions
   DeleteCommentMutation,
   DeleteCommentMutationVariables
 >
+export const EditPostDocument = gql`
+  query editPost($id: Int!) {
+    postById(id: $id) {
+      title
+      bodySrc
+      language {
+        id
+      }
+    }
+    currentUser {
+      languagesLearning {
+        language {
+          ...LanguageFragment
+        }
+      }
+      languagesNative {
+        language {
+          ...LanguageFragment
+        }
+      }
+    }
+  }
+  ${LanguageFragmentFragmentDoc}
+`
+
+/**
+ * __useEditPostQuery__
+ *
+ * To run a query within a React component, call `useEditPostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEditPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEditPostQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useEditPostQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<EditPostQuery, EditPostQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<EditPostQuery, EditPostQueryVariables>(
+    EditPostDocument,
+    baseOptions,
+  )
+}
+export function useEditPostLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<EditPostQuery, EditPostQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<EditPostQuery, EditPostQueryVariables>(
+    EditPostDocument,
+    baseOptions,
+  )
+}
+export type EditPostQueryHookResult = ReturnType<typeof useEditPostQuery>
+export type EditPostLazyQueryHookResult = ReturnType<typeof useEditPostLazyQuery>
+export type EditPostQueryResult = ApolloReactCommon.QueryResult<
+  EditPostQuery,
+  EditPostQueryVariables
+>
 export const FeedDocument = gql`
   query feed {
     feed {
@@ -1555,8 +1647,20 @@ export type UpdateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions
   UpdateCommentMutationVariables
 >
 export const UpdatePostDocument = gql`
-  mutation updatePost($postId: Int!, $title: String, $body: [EditorNode!], $status: PostStatus) {
-    updatePost(body: $body, title: $title, status: $status, postId: $postId) {
+  mutation updatePost(
+    $postId: Int!
+    $title: String
+    $languageId: Int
+    $body: [EditorNode!]
+    $status: PostStatus
+  ) {
+    updatePost(
+      body: $body
+      title: $title
+      languageId: $languageId
+      status: $status
+      postId: $postId
+    ) {
       ...PostFragment
     }
   }
@@ -1582,6 +1686,7 @@ export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
  *   variables: {
  *      postId: // value for 'postId'
  *      title: // value for 'title'
+ *      languageId: // value for 'languageId'
  *      body: // value for 'body'
  *      status: // value for 'status'
  *   },

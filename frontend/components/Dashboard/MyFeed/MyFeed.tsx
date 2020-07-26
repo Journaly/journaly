@@ -5,7 +5,7 @@ import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
 import theme from '../../../theme'
 import { User as UserType, Post as PostType } from '../../../generated/graphql'
-import ChevronDownIcon from '../../Icons/ChevronDownIcon'
+import ChevronIcon from '../../Icons/ChevronIcon'
 
 type Props = {
   posts: PostType[]
@@ -35,13 +35,13 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
             <select name="topic" id="topic" className="search-filter">
               <option value="Topic">Topic</option>
             </select>
-            <ChevronDownIcon className="select-arrow" />
+            <ChevronIcon className="select-arrow" />
           </div>
           <div className="search-filter-container">
             <select name="language" id="language" className="search-filter">
               <option value="language">Language</option>
             </select>
-            <ChevronDownIcon className="select-arrow" />
+            <ChevronIcon className="select-arrow" />
           </div>
         </div>
       </div>

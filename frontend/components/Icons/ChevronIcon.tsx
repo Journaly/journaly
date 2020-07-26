@@ -5,7 +5,7 @@ interface SVGRProps {
   size?: number
 }
 
-function ChevronDownIcon({
+function ChevronIcon({
   title,
   titleId,
   size = 35,
@@ -19,4 +19,4 @@ function ChevronDownIcon({
   )
 }
 
-export default ChevronDownIcon
+export default ChevronIcon

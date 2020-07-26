@@ -33,13 +33,21 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
         <div className="my-feed-select">
           <div className="search-filter-container">
             <select name="topic" id="topic" className="search-filter">
-              <option value="Topic">Topic</option>
+              <option value="Topic" selected disabled>
+                Topic
+              </option>
+              <option value="rock climbing">rock climbing</option>
+              <option value="cooking">cooking</option>
+              <option value="drawing">drawing</option>
+              <option value="history">History</option>
             </select>
             <ChevronIcon className="select-arrow" />
           </div>
           <div className="search-filter-container">
             <select name="language" id="language" className="search-filter">
-              <option value="language">Language</option>
+              <option value="language" selected disabled>
+                Language
+              </option>
             </select>
             <ChevronIcon className="select-arrow" />
           </div>
@@ -104,15 +112,38 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
         .search-filter {
           -webkit-appearance: none;
           -moz-appearance: none;
+          -ms-appearance: none;
+          appearance: none;
+          cursor: pointer;
+        }
+        .search-filter:focus {
+          outline: none;
+        }
+        .search-filter::-ms-expand {
+          display: none;
         }
 
         :global(.select-arrow) {
           position: absolute;
           display: block;
           right: 0;
-          bottom: 7px;
+          bottom: 0;
           padding: 0;
-          pointer-events: none;
+           {
+            /* pointer-events: none; */
+          }
+           {
+            /* TODO: update to blacker with #184 */
+          }
+          cursor: pointer;
+          background: #313131;
+          border-radius: 0 5px 5px 0;
+          fill: ${theme.colors.white};
+          transition: 0.25s all ease;
+        }
+
+        :global(.select-arrow:hover) {
+          fill: ${theme.colors.blueLight};
         }
 
         .my-feed-select {

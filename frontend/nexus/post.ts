@@ -111,7 +111,6 @@ schema.extendType({
         const filterClauses = []
         if (!args.first) args.first = 10
         if (args.first > 50) args.first = 50
-        console.log(args)
 
         if (args.language) {
           filterClauses.push({

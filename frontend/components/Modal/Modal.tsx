@@ -7,16 +7,30 @@ import modalConstants from './modalConstants'
 import useFocusTrap from '../../hooks/useFocusTrap'
 import { white } from '../../utils'
 
-interface Props {
+type Props = {
   onClose: () => void
   title: React.ReactNode
   body: React.ReactNode
+  onFormSubmit?: (event: React.FormEvent<HTMLFormElement>) => void
   footer?: React.ReactNode
   ariaLabelledBy?: string
   ariaDescribedBy?: string
   triggerElementId?: string
   maxWidth?: string
   maxHeight?: string
+}
+
+type ModalContentProps = {
+  children: React.ReactNode
+  className: string
+  role: string
+  type: 'form' | 'div'
+  onClick: (event: React.MouseEvent) => void
+  onSubmit?: Props['onFormSubmit']
+}
+
+const ModalContent: React.FC<ModalContentProps> = ({ type, children, ...otherProps }) => {
+  return React.createElement(type, otherProps, children)
 }
 
 const Modal: React.FC<Props> = (props) => {
@@ -27,6 +41,7 @@ const Modal: React.FC<Props> = (props) => {
     title,
     body,
     footer,
+    onFormSubmit,
     ariaLabelledBy,
     ariaDescribedBy,
     triggerElementId = '',
@@ -42,31 +57,30 @@ const Modal: React.FC<Props> = (props) => {
   })
 
   const handleModalBodyScroll = (event: Event): void => {
-    if ((event.target as Element)?.scrollTop > 28) {
-      setShouldFadeInTitle(true)
-      return
-    }
-    setShouldFadeInTitle(false)
+    const shouldFade = (event.target as Element)?.scrollTop > 28
+    setShouldFadeInTitle(shouldFade)
   }
 
   return ReactDOM.createPortal(
     <div className="modal-container" onClick={onClose}>
       <div className="modal-wrapper">
-        <div
+        <ModalContent
+          type={onFormSubmit ? 'form' : 'div'}
           className="modal-content"
           role="dialog"
           aria-modal="true"
           aria-labelledby={ariaLabelledBy}
           aria-describedby={ariaDescribedBy}
           data-test="modal"
-          onClick={(event) => event.stopPropagation()}
+          onClick={(event: React.MouseEvent) => event.stopPropagation()}
+          onSubmit={onFormSubmit}
         >
           <ModalHeader title={title} onClose={onClose} showTitle={shouldFadeInTitle} />
           <ModalBody ariaLabelledBy={ariaLabelledBy} title={title} onScroll={handleModalBodyScroll}>
             {body}
           </ModalBody>
           {footer && <ModalFooter>{footer}</ModalFooter>}
-        </div>
+        </ModalContent>
       </div>
       <style jsx>{`
         @keyframes enterFromBottom {
@@ -113,7 +127,7 @@ const Modal: React.FC<Props> = (props) => {
             padding: 64px 0;
           }
         }
-        .modal-content {
+        :global(.modal-content) {
           flex-grow: 1;
           display: flex;
           flex-direction: column;
@@ -122,12 +136,12 @@ const Modal: React.FC<Props> = (props) => {
           background-color: ${white};
         }
         @media (min-width: ${modalConstants.modalBreakpoint}) {
-          .modal-content {
+          :global(.modal-content) {
             flex-grow: 0;
             max-height: ${maxHeight};
             border-radius: 8px;
           }
-          .modal-content .modal-body {
+          :global(.modal-content) .modal-body {
             ${Boolean(footer) && `padding-bottom: 48px;`};
           }
         }

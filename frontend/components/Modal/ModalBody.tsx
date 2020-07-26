@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import modalConstants from './modalConstants'
+import theme from '../../theme'
 
 interface Props {
   title: React.ReactNode
@@ -43,9 +44,7 @@ const ModalBody: React.FC<Props> = (props) => {
 
         h1 {
           margin-bottom: 16px;
-          font-size: 24px;
-          line-height: 32px;
-          font-weight: 500;
+          ${theme.typography.headingXL};
         }
       `}</style>
     </div>

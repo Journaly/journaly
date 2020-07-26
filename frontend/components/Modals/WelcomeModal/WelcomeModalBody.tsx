@@ -36,8 +36,8 @@ const WelcomeModalBody: React.FC = () => {
     <div>
       <p className="welcome-description">
         Let's get started by adding the languages you speak and are learning. This helps us find
-        relevant content for you as well as let other users know a bit more about you. If you ever
-        need to update your languages or profile information, you can do so on the settings page.
+        relevant content for you as well as let other users know a bit more about you. If you want
+        to add your languages later, you can always update them on the settings page.
       </p>
 
       <div className="languages-form-field">

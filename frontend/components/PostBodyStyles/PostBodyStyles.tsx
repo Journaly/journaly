@@ -25,6 +25,10 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
         list-style-type: decimal;
         list-style-position: inside;
       }
+
+      .${parentClassName} h2 {
+        ${theme.typography.headingLG};
+      }
     `}</style>
   )
 }

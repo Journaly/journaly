@@ -32,17 +32,17 @@ const ModalHeader: React.FC<Props> = ({ onClose, title, showTitle }) => {
           }
         }
 
-        :global(.modal-close-button) {
+        .modal-header :global(.modal-close-button) {
           position: absolute;
           top: 8px;
           right: 16px;
           border-radius: 8px;
         }
-        :global(.modal-close-button):hover {
+        .modal-header :global(.modal-close-button):hover {
           background-color: ${lightGrey};
         }
         @media (min-width: ${modalConstants.modalBreakpoint}) {
-          :global(.modal-close-button) {
+          .modal-header :global(.modal-close-button) {
             top: 16px;
           }
         }

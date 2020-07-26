@@ -11,7 +11,7 @@ type BreakpointSize = keyof typeof breakpoints
 type Breakpoint = { readonly [key in BreakpointSize]: string }
 type Colors =
   | 'black'
-  | 'blacker'
+  | 'charcoal'
   | 'white'
   | 'gray100'
   | 'gray200'
@@ -53,8 +53,7 @@ export type Theme = {
 const theme: Theme = {
   colors: {
     black: '#393939',
-    // TODO: revisit color name
-    blacker: '#313131',
+    charcoal: '#313131',
     white: '#ffffff',
     gray100: '#f6f6f6',
     gray200: '',

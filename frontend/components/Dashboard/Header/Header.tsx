@@ -27,7 +27,7 @@ const Header: React.FC<Props> = ({ onMenuClick }) => {
           height: ${headerHeight};
           padding: 20px 0;
           color: white;
-          background-color: ${theme.colors.black};
+          background-color: ${theme.colors.charcoal};
           /* Show header above scrolled dashboard content */
           z-index: ${navConstants.zIndex - 1};
         }

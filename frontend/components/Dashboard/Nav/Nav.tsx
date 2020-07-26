@@ -96,7 +96,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
           grid-template-rows: 1fr 2fr 1fr;
           grid-gap: 10px;
           width: ${navConstants.navWidth}px;
-          background-color: #313131;
+          background-color: ${theme.colors.charcoal};
           z-index: ${navConstants.zIndex};
           transform: translateX(-100%);
           transition: transform ${navConstants.transitionDuration}ms linear,

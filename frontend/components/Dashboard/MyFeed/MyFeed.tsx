@@ -5,6 +5,7 @@ import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
 import theme from '../../../theme'
 import { User as UserType, Post as PostType } from '../../../generated/graphql'
+import ChevronIcon from '../../Icons/ChevronIcon'
 
 type Props = {
   posts: PostType[]
@@ -28,14 +29,20 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
       </Head>
       <h1>My Feed</h1>
       <div className="my-feed-search">
-        <input type="text" placeholder="Search..." />
+        <input type="text" placeholder="Search..." className="search-box" />
         <div className="my-feed-select">
-          <select name="topic" id="topic">
-            <option value="Topic">Topic</option>
-          </select>
-          <select name="language" id="language">
-            <option value="language">Language</option>
-          </select>
+          <div className="search-filter-container">
+            <select name="topic" id="topic" className="search-filter">
+              <option value="Topic">Topic</option>
+            </select>
+            <ChevronIcon className="select-arrow" />
+          </div>
+          <div className="search-filter-container">
+            <select name="language" id="language" className="search-filter">
+              <option value="language">Language</option>
+            </select>
+            <ChevronIcon className="select-arrow" />
+          </div>
         </div>
       </div>
       <div className="my-feed-container">
@@ -77,23 +84,38 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
         .my-feed-search input,
         .my-feed-search select {
           border-radius: 5px;
-          height: 30px;
+          height: 50px;
           box-shadow: 0px 8px 10px #00000029;
-          padding: 10px 0 10px 10px;
           font-size: 16px;
           background: white;
+          padding: 10px;
+          width: 100%;
         }
 
-        .my-feed-search select {
-          height: 50px;
-        }
-
-        .my-feed-search input {
-          width: calc(100% - 10px);
+        .search-box {
           margin-bottom: 20px;
+          width: 100%;
         }
 
-        .my-feed-search .my-feed-select {
+        .search-filter-container {
+          position: relative;
+        }
+
+        .search-filter {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+        }
+
+        :global(.select-arrow) {
+          position: absolute;
+          display: block;
+          right: 0;
+          bottom: 7px;
+          padding: 0;
+          pointer-events: none;
+        }
+
+        .my-feed-select {
           display: grid;
           grid-gap: 20px;
           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

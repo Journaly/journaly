@@ -5,12 +5,15 @@ import MyFeed from '../../components/Dashboard/MyFeed'
 import { useFeedQuery, Post } from '../../generated/graphql'
 import LoadingWrapper from '../../components/LoadingWrapper'
 import AuthGate from '../../components/AuthGate'
+import { useApplicationState } from '../../hooks/useApplicationState'
 
 interface InitialProps {
   namespacesRequired: string[]
 }
 
 const MyFeedPage: NextPage<InitialProps> = () => {
+  const { currentUser } = useApplicationState()
+
   const { loading, error, data } = useFeedQuery({
     variables: {
       published: true,

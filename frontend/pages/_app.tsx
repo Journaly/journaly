@@ -6,6 +6,7 @@ import { initializeTracking, trackPageView } from '../lib/google-analytics'
 import '../styles/reset.css'
 import '../styles/globalStyles.css'
 import { appWithTranslation } from '../config/i18n'
+import { ApplicationStateProvider } from '../state/ApplicationStateProvider'
 
 initializeTracking()
 
@@ -34,7 +35,9 @@ class JournalyApp extends App {
           <title>Journaly</title>
           <link rel="stylesheet" type="text/css" href="/nprogress.css" />
         </Head>
-        <Component {...pageProps} />
+        <ApplicationStateProvider>
+          <Component {...pageProps} />
+        </ApplicationStateProvider>
       </>
     )
   }

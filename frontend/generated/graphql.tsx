@@ -220,6 +220,12 @@ export type PostLikeWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>
 }
 
+export type PostPage = {
+  __typename?: 'PostPage'
+  posts?: Maybe<Array<Post>>
+  count?: Maybe<Scalars['Int']>
+}
+
 export enum PostStatus {
   Draft = 'DRAFT',
   Published = 'PUBLISHED',
@@ -233,7 +239,7 @@ export type Query = {
   __typename?: 'Query'
   posts?: Maybe<Array<Post>>
   postById?: Maybe<Post>
-  feed?: Maybe<Array<Post>>
+  feed?: Maybe<PostPage>
   users?: Maybe<Array<User>>
   currentUser?: Maybe<User>
   languages?: Maybe<Array<Language>>
@@ -447,10 +453,17 @@ export type EditPostQuery = { __typename?: 'Query' } & {
   >
 }
 
-export type FeedQueryVariables = {}
+export type FeedQueryVariables = {
+  first: Scalars['Int']
+  skip: Scalars['Int']
+}
 
 export type FeedQuery = { __typename?: 'Query' } & {
-  feed?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+  feed?: Maybe<
+    { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
+        posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+      }
+  >
 }
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
@@ -1177,9 +1190,12 @@ export type EditPostQueryResult = ApolloReactCommon.QueryResult<
   EditPostQueryVariables
 >
 export const FeedDocument = gql`
-  query feed {
-    feed {
-      ...PostCardFragment
+  query feed($first: Int!, $skip: Int!) {
+    feed(first: $first, skip: $skip) {
+      posts {
+        ...PostCardFragment
+      }
+      count
     }
   }
   ${PostCardFragmentFragmentDoc}
@@ -1197,6 +1213,8 @@ export const FeedDocument = gql`
  * @example
  * const { data, loading, error } = useFeedQuery({
  *   variables: {
+ *      first: // value for 'first'
+ *      skip: // value for 'skip'
  *   },
  * });
  */

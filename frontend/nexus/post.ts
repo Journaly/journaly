@@ -23,6 +23,20 @@ schema.objectType({
   },
 })
 
+// Represents a paginated set of posts.
+// Includes 1 page and the total number of posts.
+// posts: the returned page after filtering.
+// count: the total posts matching the filter.
+schema.objectType({
+  name: 'PostPage',
+  definition(t) {
+    t.list.field('posts', {
+      type: 'Post',
+    })
+    t.int('count')
+  },
+})
+
 // Input type modeling the FE editor data structure. Not the best typing as this
 // is concepturally the untion of two types, internal nodes and leaf nodes, but
 // AFAIK GQL does not have a native union type, so we simply unify all the fields
@@ -84,8 +98,8 @@ schema.extendType({
       },
     })
 
-    t.list.field('feed', {
-      type: 'Post',
+    t.field('feed', {
+      type: 'PostPage',
       args: {
         search: schema.stringArg({ required: false }),
         language: schema.intArg({ required: false }),
@@ -95,6 +109,8 @@ schema.extendType({
       },
       resolve: async (_parent, args, ctx) => {
         const filterClauses = []
+        if (!args.first) args.first = 10
+        if (args.first > 50) args.first = 50
 
         if (args.language) {
           filterClauses.push({
@@ -131,13 +147,25 @@ schema.extendType({
           })
         }
 
-        return ctx.db.post.findMany({
+        const countQuery = ctx.db.post.count({
+          where: {
+            AND: filterClauses,
+          },
+        })
+
+        const postQuery = ctx.db.post.findMany({
           where: {
             AND: filterClauses,
           },
           skip: args.skip,
           first: args.first,
         })
+
+        const [count, posts] = await Promise.all([countQuery, postQuery])
+        return {
+          count,
+          posts,
+        }
       },
     })
   },
@@ -213,7 +241,7 @@ schema.extendType({
         }
 
         if (args.languageId) {
-          data.language = { connect: {id: args.languageId } }
+          data.language = { connect: { id: args.languageId } }
         }
 
         if (args.status) {

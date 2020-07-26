@@ -6,18 +6,11 @@ import Link from 'next/link'
 type Props = {
   currentPage: number
   total: number
-  numPerPage?: number
+  numPerPage: number
   title?: string
 }
 
-const DEFAULT_NUM_PER_PAGE = 4
-
-const Pagination: React.FC<Props> = ({
-  currentPage,
-  total,
-  numPerPage = DEFAULT_NUM_PER_PAGE,
-  title,
-}) => {
+const Pagination: React.FC<Props> = ({ currentPage, total, numPerPage, title }) => {
   const { pathname } = useRouter()
   const pages = Math.ceil(total / numPerPage)
 

@@ -109,6 +109,10 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
           position: relative;
         }
 
+        .search-filter-container:hover :global(.select-arrow) {
+          fill: ${theme.colors.blueLight};
+        }
+
         .search-filter {
           -webkit-appearance: none;
           -moz-appearance: none;
@@ -129,21 +133,11 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
           right: 0;
           bottom: 0;
           padding: 0;
-           {
-            /* pointer-events: none; */
-          }
-           {
-            /* TODO: update to blacker with #184 */
-          }
-          cursor: pointer;
-          background: #313131;
+          pointer-events: none;
+          background: ${theme.colors.charcoal};
           border-radius: 0 5px 5px 0;
           fill: ${theme.colors.white};
           transition: 0.25s all ease;
-        }
-
-        :global(.select-arrow:hover) {
-          fill: ${theme.colors.blueLight};
         }
 
         .my-feed-select {

@@ -4,23 +4,35 @@ import { useRouter } from 'next/router'
 import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
 import theme from '../../../theme'
-import { User as UserType, Post as PostType } from '../../../generated/graphql'
+import { User as UserType, useFeedQuery } from '../../../generated/graphql'
 import ChevronIcon from '../../Icons/ChevronIcon'
+import LoadingWrapper from '../../LoadingWrapper'
 
 type Props = {
-  posts: PostType[]
   currentUser: UserType
 }
 
 const NUM_POSTS_PER_PAGE = 10
 
-const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
+const MyFeed: React.FC<Props> = ({ currentUser }) => {
+  // Pull query params off the router instance
   const { query } = useRouter()
-  const total = posts.length
   const currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
-  const showPagination = total > NUM_POSTS_PER_PAGE
+
+  // fetch posts for the feed!
+  const { loading, error, data } = useFeedQuery({
+    variables: {
+      first: NUM_POSTS_PER_PAGE,
+      skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
+    },
+  })
+
+  const posts = data?.feed?.posts
+  const count = data?.feed?.count || 0
+  const showPagination = count > NUM_POSTS_PER_PAGE
   const pageTitle = 'My Feed'
 
+  // TODO will likley be used for event logging
   console.log(currentUser)
   return (
     <div className="my-feed-wrapper">
@@ -32,8 +44,8 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
         <input type="text" placeholder="Search..." className="search-box" />
         <div className="my-feed-select">
           <div className="search-filter-container">
-            <select name="topic" id="topic" className="search-filter">
-              <option value="Topic" selected disabled>
+            <select name="topic" id="topic" className="search-filter" defaultValue="Topic">
+              <option value="Topic" disabled>
                 Topic
               </option>
               <option value="rock climbing">rock climbing</option>
@@ -44,8 +56,8 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
             <ChevronIcon className="select-arrow" />
           </div>
           <div className="search-filter-container">
-            <select name="language" id="language" className="search-filter">
-              <option value="language" selected disabled>
+            <select name="language" id="language" className="search-filter" defaultValue="language">
+              <option value="language" disabled>
                 Language
               </option>
             </select>
@@ -53,22 +65,24 @@ const MyFeed: React.FC<Props> = ({ posts, currentUser }) => {
           </div>
         </div>
       </div>
-      <div className="my-feed-container">
-        {posts.length > 0 ? (
-          posts.map((post) => <PostCard key={post.id} post={post} stacked avatar />)
-        ) : (
-          <p>Nothing to see yet...</p>
-        )}
-      </div>
+      <LoadingWrapper loading={loading} error={error}>
+        <div className="my-feed-container">
+          {posts && posts.length > 0 ? (
+            posts.map((post) => <PostCard key={post.id} post={post} stacked avatar />)
+          ) : (
+            <p>Nothing to see yet...</p>
+          )}
+        </div>
 
-      {showPagination && (
-        <Pagination
-          currentPage={currentPage}
-          total={total}
-          numPerPage={NUM_POSTS_PER_PAGE}
-          title={pageTitle}
-        />
-      )}
+        {showPagination && (
+          <Pagination
+            currentPage={currentPage}
+            total={count}
+            numPerPage={NUM_POSTS_PER_PAGE}
+            title={pageTitle}
+          />
+        )}
+      </LoadingWrapper>
 
       <style jsx>{`
         .my-feed-wrapper {

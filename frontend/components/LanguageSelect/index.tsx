@@ -2,7 +2,6 @@ import React from 'react'
 import classNames from 'classnames'
 
 import { LanguageFragmentFragment as LanguageType } from '../../generated/graphql'
-import ChevronIcon from '../Icons/ChevronIcon'
 
 type LanguageSelectProps = {
   languages: LanguageType[]
@@ -35,8 +34,6 @@ const LanguageSelect: React.FC<LanguageSelectProps> = ({
         ))}
       </select>
 
-      <ChevronIcon className="select-arrow" />
-
       <style jsx>{`
         .language-select-container {
           position: relative;
@@ -44,19 +41,7 @@ const LanguageSelect: React.FC<LanguageSelectProps> = ({
         }
 
         select {
-          -webkit-appearance: none;
-          -moz-appearance: none;
-          appearance: none;
           width: 100%;
-        }
-
-        .language-select-container :global(svg) {
-          position: absolute;
-          display: block;
-          right: 0;
-          bottom: 7px;
-          padding: 0;
-          pointer-events: none;
         }
       `}</style>
     </div>

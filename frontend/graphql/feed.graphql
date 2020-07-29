@@ -1,5 +1,8 @@
-query feed {
-  feed {
-    ...PostCardFragment
+query feed($first: Int!, $skip: Int!) {
+  feed(first: $first, skip: $skip) {
+    posts {
+      ...PostCardFragment
+    }
+    count
   }
 }

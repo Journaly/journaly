@@ -8,7 +8,7 @@ interface SVGRProps {
 function ChevronIcon({
   title,
   titleId,
-  size = 35,
+  size = 50,
   ...props
 }: React.SVGProps<SVGSVGElement> & SVGRProps) {
   return (

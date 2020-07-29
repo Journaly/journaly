@@ -3,14 +3,17 @@ import Link from 'next/link'
 import classNames from 'classnames'
 import { useTranslation } from '../../../config/i18n'
 import { formatShortDate } from '../../../utils/date'
-import { Post as PostType, PostStatus as PostStatusType } from '../../../generated/graphql'
+import {
+  PostStatus as PostStatusType,
+  PostCardFragmentFragment as PostCardType,
+} from '../../../generated/graphql'
 import LikeIcon from '../../Icons/LikeIcon'
 import CommentIcon from '../../Icons/CommentIcon'
 import theme from '../../../theme'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type Props = {
-  post: PostType
+  post: PostCardType
   status?: PostStatusType
   avatar?: boolean
   stacked?: boolean

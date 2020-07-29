@@ -20,12 +20,13 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
   value,
   onChange = () => undefined,
   onAdd = () => undefined,
-  onRemove = () => undefined
+  onRemove = () => undefined,
 }) => {
   const { t } = useTranslation('common')
   const [selectedLanguage, setSelectedLanguage] = React.useState<number>(-1)
   const selectableLanguages = languages.filter(
-    lang => value.find(id => lang.id === id) === undefined)
+    (lang) => value.find((id) => lang.id === id) === undefined,
+  )
 
   const addLanguage = () => {
     onAdd(selectedLanguage)
@@ -35,17 +36,16 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
 
   const removeLanguage = (removeLanguage: number) => {
     onRemove(removeLanguage)
-    onChange(value.filter(lang => lang !== removeLanguage))
+    onChange(value.filter((lang) => lang !== removeLanguage))
     setSelectedLanguage(-1)
   }
 
   return (
     <>
-      {!value.length && <span className="empty-message">{t('emptyMessage')}</span>}
-      {(value.length > 0) && (
+      {value.length > 0 && (
         <ul className="lang-list">
-          {value.map(id => {
-            const lang = languages.find(lang => lang.id === id)
+          {value.map((id) => {
+            const lang = languages.find((lang) => lang.id === id)
             if (!lang) {
               throw Error('`value` should be a subset of `languages.map(x=>x.id)`, but is not.')
             }
@@ -60,7 +60,7 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
                     className="remove-lang-button"
                     onClick={() => removeLanguage(lang.id)}
                   >
-                    <XIcon />
+                    <XIcon size={20} />
                   </button>
                 </div>
               </li>
@@ -73,23 +73,22 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
           languages={selectableLanguages}
           value={selectedLanguage}
           onChange={setSelectedLanguage}
-          style={{ flex: 1 }}
+          className="language-select"
         />
-        <Button
-          style={{
-            alignSelf: 'stretch',
-            marginLeft: '5px'
-          }}
-          onClick={addLanguage}
-          disabled={selectedLanguage === -1}
-        >
+        <Button className="add-button" onClick={addLanguage} disabled={selectedLanguage === -1}>
           {t('add')}
         </Button>
       </div>
       <style jsx>{`
-        .empty-message {
-          text-align: center;
-          font-style: italic;
+        .lang-list {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .lang-list li {
+          margin: 4px 8px 4px 0;
+          border-radius: 16px;
+          background-color: ${theme.colors.gray100};
         }
 
         .lang-row {
@@ -97,12 +96,9 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
           padding: 4px 15px;
         }
 
-        .lang-list li:nth-child(odd) {
-          background-color: ${theme.colors.gray100}
-        }
-
         .lang-row .lang {
           flex: 1;
+          margin-right: 4px;
         }
 
         .remove-lang-button {
@@ -117,8 +113,14 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
         }
 
         .add-container {
-          padding-top: 4px;
+          margin-top: 4px;
           display: flex;
+        }
+
+        .add-container :global(.add-button) {
+          align-self: stretch;
+          flex: 0 0 70px;
+          margin-left: 10px;
         }
       `}</style>
     </>

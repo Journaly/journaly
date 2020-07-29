@@ -15,7 +15,7 @@ const WelcomeModal: React.FC<Props> = ({ show, onClose }) => {
     if (show) {
       setTimeout(() => {
         setDelayedShow(true)
-      }, 5000)
+      }, 1000)
     } else {
       setDelayedShow(false)
     }

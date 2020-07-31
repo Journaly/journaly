@@ -125,7 +125,7 @@ const NewPostPage: NextPage = () => {
             name="post-image"
             placeholder="The headline image for your post"
           />
-          {images && <img src={images[0].smallSize} alt="Upload preview" />}
+          {images.length && <img src={images[0].smallSize} alt="Upload preview" />}
 
           <label htmlFor="post-language">Language</label>
           <LanguageSelect

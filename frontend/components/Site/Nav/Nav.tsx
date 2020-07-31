@@ -13,22 +13,22 @@ const Nav = () => {
         <Logo />
 
         <ul className="nav-items">
-          <NavLink href="/about" key="About">
+          <NavLink href="/about">
             <a className="nav-link">About</a>
           </NavLink>
-          <NavLink href="/blog/introducing-journaly" key="Blog">
+          <NavLink href="/blog/introducing-journaly">
             <a className="nav-link">Blog</a>
           </NavLink>
           {currentUser ? (
-            <NavLink href="/dashboard/my-feed" key="Dashboard">
+            <NavLink href="/dashboard/my-feed">
               <a className="nav-link">Dashboard</a>
             </NavLink>
           ) : (
             <>
-              <NavLink href="/dashboard/login" key="Log in">
+              <NavLink href="/dashboard/login">
                 <a className="nav-link">Log in</a>
               </NavLink>
-              <NavLink href="/dashboard/signup" key="Sign up">
+              <NavLink href="/dashboard/signup">
                 <a className="nav-link">Sign up</a>
               </NavLink>
             </>

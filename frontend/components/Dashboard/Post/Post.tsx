@@ -16,8 +16,6 @@ import PostBodyStyles from '../../PostBodyStyles'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 import { Router, useTranslation } from '../../../config/i18n'
-
-// TODO: Remove any when Types are fixed with PR #17
 interface IPostProps {
   post: PostType | any
   currentUser: UserType | null | undefined
@@ -340,7 +338,9 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
                 <Button
                   type="button"
                   variant={ButtonVariant.Secondary}
-                  onClick={() => { Router.push(`/post/${post.id}/edit`) }}
+                  onClick={() => {
+                    Router.push(`/post/${post.id}/edit`)
+                  }}
                 >
                   {t('editPostAction')}
                 </Button>

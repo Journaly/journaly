@@ -24,6 +24,16 @@ const initialValue = [
   },
 ]
 
+type Image = {
+  smallSize: string
+  largeSize: string
+  imageRole: string
+}
+
+interface HTMLInputEvent extends React.FormEvent {
+  target: HTMLInputElement & EventTarget
+}
+
 const NewPostPage: NextPage = () => {
   const { data: { currentUser } = {} } = useCurrentUserQuery()
   const { languagesLearning = [], languagesNative = [] } = currentUser || {}
@@ -38,6 +48,31 @@ const NewPostPage: NextPage = () => {
     key: 'new-post:body',
     debounceTime: 1000,
   })
+  const [images, setImages, resetImages] = useAutosavedState<Image[]>([])
+
+  const uploadFile = async (e: HTMLInputEvent) => {
+    const files = e.target.files
+    const data = new FormData()
+
+    if (files) {
+      data.append('file', files[0])
+      data.append('upload_preset', 'journaly')
+    }
+
+    const response = await fetch('https://api.cloudinary.com/v1_1/journaly/image/upload', {
+      method: 'POST',
+      body: data,
+    })
+
+    const file = await response.json()
+    setImages([
+      {
+        smallSize: file.secure_url,
+        largeSize: file.eager[0].secure_url,
+        imageRole: 'HEADLINE',
+      },
+    ])
+  }
 
   const [createPost] = useCreatePostMutation({
     onCompleted: ({ createPost }) => {
@@ -47,6 +82,7 @@ const NewPostPage: NextPage = () => {
 
       resetTitle()
       resetBody()
+      resetImages()
       router.push({ pathname: `/post/${createPost.id}` })
     },
   })
@@ -57,7 +93,7 @@ const NewPostPage: NextPage = () => {
 
   const createNewPost = (status: PostStatusType) => {
     createPost({
-      variables: { title, body, status, languageId: langId },
+      variables: { title, body, status, languageId: langId, images },
     })
   }
 
@@ -78,6 +114,18 @@ const NewPostPage: NextPage = () => {
             placeholder="The Greatest Story Never Told..."
             autoComplete="off"
           />
+
+          <label htmlFor="post-image">Post Image</label>
+          <input
+            className="j-field"
+            id="post-image"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            type="file"
+            name="post-image"
+            placeholder="The headline image for your post"
+          />
+          {images && <img src={images[0].smallSize} alt="Upload preview" />}
 
           <label htmlFor="post-language">Language</label>
           <LanguageSelect

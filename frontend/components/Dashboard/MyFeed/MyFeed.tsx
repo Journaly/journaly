@@ -163,8 +163,13 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
         .my-feed-container {
           display: grid;
           grid-gap: 20px;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          justify-items: center;
+          width: 100%;
           margin-top: 50px;
+        }
+        .my-feed-container :global(.post-card-container) {
+          max-width: 400px;
         }
 
         :global(.pagination-wrapper) {

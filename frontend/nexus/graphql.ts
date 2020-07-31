@@ -1,6 +1,7 @@
 import { schema } from 'nexus'
 
 import { hasPostPermissions } from './utils'
+import { transport, makeEmail } from '../lib/mail'
 const { intArg, stringArg } = schema
 
 schema.objectType({
@@ -90,21 +91,40 @@ schema.mutationType({
         body: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
+        /**
+         * 1. Grab the commenter's `userId`.
+         */
         const { userId } = ctx.request
-
         if (!userId) {
           throw new Error('You must be logged in to post comments.')
         }
 
+        /**
+         * 2. Find the `thread` that this comment belongs to.
+         */
         const thread = await ctx.db.thread.findOne({
           where: { id: args.threadId },
         })
-
         if (!thread) {
           throw new Error(`Unable to find thread with id ${args.threadId}`)
         }
 
-        return await ctx.db.comment.create({
+        /**
+         * 3. Find the `post` that comment `thread` belongs to.
+         * 4. Get the `author` of that post, too.
+         */
+        const post = await ctx.db.post.findOne({
+          where: {
+            id: thread.postId,
+          },
+        })
+        const postAuthor = post.author
+
+        /**
+         * 5. Create the comment.
+         * 6. Get the `author` of the comment, too.
+         */
+        const comment = await ctx.db.comment.create({
           data: {
             body: args.body,
             author: {
@@ -115,6 +135,30 @@ schema.mutationType({
             },
           },
         })
+        const commentAuthor = comment.author.name
+
+        /**
+         * 7. Create and send an email notification.
+         */
+        const mailResponse = await transport.sendMail({
+          from: 'robin@journaly.com',
+          to: postAuthor.email,
+          subject: "You've got feedback!",
+          html: makeEmail(`
+            Great news! ${commentAuthor} left you some feedback on your journal entry: ${post.title}.
+            \n\n
+            Comment thread: ${thread.highlightedContent}
+            \n\n
+            Comment: ${comment.body}
+            \n\n
+            Click <a href="${process.env.FRONTEND_URL}/post/${post.id}">here</a> to go to your journal entry!
+          `),
+        })
+        if (mailResponse) {
+          return { message: 'Email sent!' }
+        } else {
+          throw new Error('Something went wrong sending the email notification!')
+        }
       },
     })
     t.field('updateComment', {
@@ -193,6 +237,5 @@ schema.mutationType({
         return comment
       },
     })
-
   },
 })

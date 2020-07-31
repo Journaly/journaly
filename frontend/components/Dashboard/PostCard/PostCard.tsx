@@ -218,6 +218,7 @@ const PostCard: React.FC<Props> = ({
         .post-subtext {
           ${theme.typography.paragraphSM};
           color: #95989a;
+          white-space: nowrap;
         }
 
         .post-action {

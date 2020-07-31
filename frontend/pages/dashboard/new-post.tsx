@@ -120,7 +120,7 @@ const NewPostPage: NextPage = () => {
             className="j-field"
             id="post-image"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={uploadFile}
             type="file"
             name="post-image"
             placeholder="The headline image for your post"

@@ -14,7 +14,7 @@ schema.objectType({
     t.model.readTime()
     t.model.author()
     t.model.status()
-    t.model.images()
+    t.model.images({ type: 'Image', list: true })
     t.model.likes({ type: 'PostLike' })
     t.model.threads()
     t.model.language({ type: 'Language' })
@@ -181,9 +181,10 @@ schema.extendType({
         body: EditorNode.asArg({ list: true }),
         languageId: schema.intArg({ required: true }),
         status: schema.arg({ type: 'PostStatus' }),
+        images: schema.arg({ type: 'Image', list: true }),
       },
       resolve: async (_parent, args, ctx) => {
-        const { title, body, languageId, status } = args
+        const { title, body, languageId, status, images } = args
         const { userId } = ctx.request
 
         if (!body) {
@@ -196,6 +197,7 @@ schema.extendType({
             author: { connect: { id: userId } },
             title,
             status,
+            images,
             ...processEditorDocument(body),
           },
         })

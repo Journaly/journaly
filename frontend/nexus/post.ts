@@ -156,6 +156,9 @@ schema.extendType({
         const postQuery = ctx.db.post.findMany({
           where: {
             AND: filterClauses,
+            status: {
+              not: 'DRAFT',
+            },
           },
           skip: args.skip,
           first: args.first,

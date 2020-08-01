@@ -20,6 +20,6 @@ font-size: 20px;
 ">
   <h2>Howdy, Journaler!</h2>
   ${text}
-  <p>Robin &commat; Journaly</p>
+  <p>Robin @ Journaly</p>
 </div>
 `

@@ -5,9 +5,9 @@ export const transport = nodemailer.createTransport({
   port: parseInt(process.env.MAIL_PORT || '25', 10),
   auth: {
     user: process.env.MAIL_USER as string,
-    pass: process.env.MAIL_PASS as string,
+    pass: process.env.MAIL_PASSWORD as string,
   },
-  secure: true,
+  secure: process.env.MAIL_SECURE === 'true',
 })
 
 export const makeEmail = (text: string) => `
@@ -19,8 +19,7 @@ export const makeEmail = (text: string) => `
 font-size: 20px;
 ">
   <h2>Howdy, Journaler!</h2>
-  <p>${text}</p>
-
+  ${text}
   <p>Robin &commat; Journaly</p>
 </div>
 `

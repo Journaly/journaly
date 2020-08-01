@@ -8,7 +8,9 @@ import {
   useCreateCommentMutation,
   UserFragmentFragment as UserType,
   Thread as ThreadType,
+  useUpdateCommentMutation,
 } from '../../generated/graphql'
+import Button, { ButtonSize } from '../../elements/Button'
 
 type DOMOffsetTarget = {
   x: number
@@ -24,6 +26,7 @@ type PopoverProps = {
 type ThreadProps = {
   thread: ThreadType
   onNewComment: any
+  onUpdateComment: any
   currentUser: UserType | null | undefined
 }
 
@@ -32,6 +35,7 @@ type InlineFeedbackPopoverProps = {
   thread: ThreadType
   currentUser: UserType | null | undefined
   onNewComment: any
+  onUpdateComment: any
 }
 
 const VP_PADDING = 20
@@ -97,7 +101,7 @@ const Popover: React.FC<PopoverProps> = ({ target, children }) => {
   return ReactDOM.createPortal(popover, popoverRoot)
 }
 
-const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) => {
+const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, currentUser }) => {
   const [commentBody, setCommentBody] = React.useState<string>('')
   const [createComment, { loading }] = useCreateCommentMutation({
     onCompleted: () => {
@@ -112,6 +116,23 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) =>
     createComment({
       variables: {
         threadId: thread.id,
+        body: commentBody,
+      },
+    })
+  }
+
+  const [updateComment, { loading: updateLoading }] = useUpdateCommentMutation({
+    onCompleted: () => {
+      onUpdateComment()
+      setCommentBody('')
+    },
+  })
+
+  const updateExistingComment = (e: React.FormEvent<HTMLFontElement>) => {
+    e.preventDefault()
+    updateComment({
+      variables: {
+        commentId: 1,
         body: commentBody,
       },
     })
@@ -136,14 +157,17 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) =>
                       : `@${comment.author.handle}`}
                   </span>
                 </div>
-                <div className="body-block">{comment.body}</div>
+                <div className="body-block">
+                  <p>{comment.body}</p>
+                  <Button size={ButtonSize.Small}>edit</Button>
+                </div>
               </div>
             )
           })}
 
           {!thread.comments.length && <div className="empty-notice">No comments... yet!</div>}
         </div>
-        { currentUser && (
+        {currentUser && (
           <form onSubmit={createNewComment}>
             <fieldset>
               <div className="new-comment-block">
@@ -218,6 +242,11 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) =>
           padding: 5px 15px;
           cursor: pointer;
         }
+
+        .body-block {
+          display: flex;
+          justify-content: space-between;
+        }
       `}</style>
     </div>
   )
@@ -227,10 +256,16 @@ const InlineFeedbackPopover: React.FC<InlineFeedbackPopoverProps> = ({
   target,
   thread,
   onNewComment,
+  onUpdateComment,
   currentUser,
 }) => (
   <Popover target={target}>
-    <Thread thread={thread} onNewComment={onNewComment} currentUser={currentUser} />
+    <Thread
+      thread={thread}
+      onNewComment={onNewComment}
+      onUpdateComment={onUpdateComment}
+      currentUser={currentUser}
+    />
   </Popover>
 )
 

@@ -340,7 +340,9 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
                 <Button
                   type="button"
                   variant={ButtonVariant.Secondary}
-                  onClick={() => { Router.push(`/post/${post.id}/edit`) }}
+                  onClick={() => {
+                    Router.push(`/post/${post.id}/edit`)
+                  }}
                 >
                   {t('editPostAction')}
                 </Button>
@@ -368,6 +370,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           target={popoverPosition}
           currentUser={currentUser}
           onNewComment={refetch}
+          onUpdateComment={refetch}
         />
       )}
       <PostBodyStyles parentClassName="post-body" />

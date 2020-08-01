@@ -3,7 +3,7 @@ mutation createPost(
   $body: [EditorNode!]
   $languageId: Int!
   $status: PostStatus!
-  $images: [Images]!
+  $images: [Images!]
 ) {
   createPost(
     title: $title

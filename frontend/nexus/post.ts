@@ -14,14 +14,17 @@ schema.objectType({
     t.model.readTime()
     t.model.author()
     t.model.status()
-    t.model.images({ type: 'Image', list: true })
-    t.model.likes({ type: 'PostLike' })
+    t.model.images()
+    t.model.likes()
     t.model.threads()
-    t.model.language({ type: 'Language' })
+    t.model.language()
     t.model.createdAt()
     t.model.bodySrc()
   },
 })
+
+// create object for image
+//
 
 // Represents a paginated set of posts.
 // Includes 1 page and the total number of posts.
@@ -191,16 +194,30 @@ schema.extendType({
           throw new ResolverError('We need a body!', {})
         }
 
-        return ctx.db.post.create({
+        const post = await ctx.db.post.create({
           data: {
             language: { connect: { id: languageId } },
             author: { connect: { id: userId } },
             title,
             status,
-            images,
             ...processEditorDocument(body),
           },
         })
+
+        for (let image of images) {
+          if (image.imageRole === 'HEADLINE') {
+            ctx.db.image.create({
+              ...image,
+              post: {
+                connect: {
+                  id: post.id,
+                },
+              },
+            })
+          }
+        }
+
+        return post
       },
     })
 

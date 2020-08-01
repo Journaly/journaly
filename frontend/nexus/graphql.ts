@@ -1,6 +1,7 @@
 import { schema } from 'nexus'
 
 import { hasPostPermissions } from './utils'
+import { NotFoundError } from './errors'
 import { transport, makeEmail } from '../lib/mail'
 const { intArg, stringArg } = schema
 
@@ -100,7 +101,7 @@ schema.mutationType({
           where: { id: args.threadId },
         })
         if (!thread) {
-          throw new Error(`Unable to find thread with id ${args.threadId}`)
+          throw new NotFoundError('thread')
         }
 
         const post = await ctx.db.post.findOne({
@@ -111,6 +112,10 @@ schema.mutationType({
             author: true,
           },
         })
+
+        if (!post) {
+          throw new NotFoundError('post')
+        }
 
         const comment = await ctx.db.comment.create({
           data: {

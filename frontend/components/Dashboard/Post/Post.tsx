@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import { sanitize, formatShortDate } from '../../../utils'
+import { sanitize, formatLongDate } from '../../../utils'
 
 import {
   Post as PostType,
@@ -325,7 +325,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
             <p>
               by <em>{post.author.handle}</em>
             </p>
-            <p>{formatShortDate(post.createdAt)}, 2020</p>
+            <p>{formatLongDate(post.createdAt)}</p>
           </div>
           {post.status === 'DRAFT' && <div className="draft-badge">{t('draft')}</div>}
         </div>

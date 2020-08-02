@@ -52,8 +52,24 @@ const getNodeTagName = (node: NodeType): string => {
   return typeToElStrMap[node.type]
 }
 
+const isEmptyParagraph = (node: NodeType): boolean => {
+  if (node.type !== 'paragraph')
+    return false
+
+  if (node.children && node.children.length > 0) 
+    return false
+
+  return true
+}
+
 const htmlifyEditorNode = (node: NodeType): string => {
   if (!node.type && typeof node.text === 'string') {
+    // Special case for empty p tags. Slate renders these as a para with a br
+    // inside, so we follow suit here for consistency between editor and view
+    if (isEmptyParagraph(node)) {
+      return '<p><br></p>'
+    }
+
     // Wrap text node in each applicable element
     return textNodeFormats.reduce((textNodeMarkup, format) => {
       if (node[format]) {
@@ -126,7 +142,6 @@ export const generateExcerpt = (
   return bodyText.substr(0, end)
 }
 
-// TODO: enhance accuracy by taking into account HTML tags (only look at text and disregard HTML)
 export const readTime = (text: string): number => {
   const numWords = text.split(' ').length
 
@@ -134,13 +149,13 @@ export const readTime = (text: string): number => {
 }
 
 export const processEditorDocument = (document: NodeType[]) => {
-  const body = htmlifyEditorNodes(document)
+  const bodyText = extractBodyText(document)
 
   return {
-    body,
+    body: htmlifyEditorNodes(document),
     bodySrc: JSON.stringify(document),
     excerpt: generateExcerpt(document),
-    readTime: readTime(body),
+    readTime: readTime(bodyText),
   }
 }
 

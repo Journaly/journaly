@@ -26,6 +26,10 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
         list-style-position: inside;
       }
 
+      .${parentClassName} p {
+        min-height: 1.5em;
+      }
+
       .${parentClassName} h2 {
         ${theme.typography.headingLG};
       }

@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import { sanitize } from '../../../utils'
+import { sanitize, formatShortDate } from '../../../utils'
 
 import {
   Post as PostType,
@@ -321,10 +321,11 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
           <div className="post-header-info">
             <h1>{post.title}</h1>
-            <p> -- </p>
+            <p> &mdash; </p>
             <p>
               by <em>{post.author.handle}</em>
             </p>
+            <p>{formatShortDate(post.createdAt)}, 2020</p>
           </div>
           {post.status === 'DRAFT' && <div className="draft-badge">{t('draft')}</div>}
         </div>

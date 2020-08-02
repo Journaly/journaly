@@ -240,7 +240,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
 
       // Get the index of where the comment starts & ends within the preOrderList
       const startElIndex = offsets.filter((offset) => offset <= startIndex).length - 1
-      const endElIndex = offsets.filter((offset) => offset <= endIndex).length - 1
+      const endElIndex = offsets.filter((offset) => offset < endIndex).length - 1
 
       // Construct the range the comment will occupy
       const range = document.createRange()

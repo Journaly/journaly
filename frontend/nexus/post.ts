@@ -162,6 +162,9 @@ schema.extendType({
           },
           skip: args.skip,
           first: args.first,
+          orderBy: {
+            createdAt: 'desc',
+          },
         })
 
         const [count, posts] = await Promise.all([countQuery, postQuery])

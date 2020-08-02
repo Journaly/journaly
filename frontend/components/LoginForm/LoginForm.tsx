@@ -154,7 +154,7 @@ const LoginForm: React.FC = () => {
             background-position: 100% 100%;
           }
         }
-        &[aria-busy='true']::before {
+        fieldset[aria-busy='true']::before {
           background-size: 50% auto;
           animation: loading 0.5s linear infinite;
         }
@@ -178,7 +178,7 @@ const LoginForm: React.FC = () => {
           color: ${theme.colors.red};
           font-style: italic;
         }
-        
+
         :global(.form-error) {
           margin-bottom: 24px;
         }

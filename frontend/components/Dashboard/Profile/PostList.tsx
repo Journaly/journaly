@@ -41,7 +41,6 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
         .post-list {
           display: flex;
           flex-direction: column;
-          justify-content: center;
           align-items: center;
           padding: 0 ${layoutLeftRightPadding} ${layoutTopBottomPadding};
           background-color: ${theme.colors.white};
@@ -57,11 +56,6 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
         .posts-title {
           margin: 40px 0;
           ${theme.typography.headingLG};
-        }
-        @media (min-width: ${theme.breakpoints.MD}) {
-          .posts-title {
-            display: none;
-          }
         }
 
         .post-list :global(.post-card-container) {

@@ -67,6 +67,9 @@ fragment PostCardFragment on Post {
   author {
     ...AuthorFragment
   }
+  language {
+    ...LanguageFragment
+  }
 }
 
 fragment LanguageFragment on Language {

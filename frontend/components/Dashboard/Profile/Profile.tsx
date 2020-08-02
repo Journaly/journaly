@@ -29,7 +29,7 @@ const Profile: React.FC<Props> = ({ currentUser }) => {
 
           .profile-wrapper > :global(div) {
             flex-basis: 50%;
-            min-height: 850px;
+            max-height: 850px;
           }
         }
       `}</style>

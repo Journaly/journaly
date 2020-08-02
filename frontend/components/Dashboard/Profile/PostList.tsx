@@ -50,6 +50,7 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
           .post-list {
             padding: 25px;
             border-top: 0;
+            overflow: auto;
           }
         }
 

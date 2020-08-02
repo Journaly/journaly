@@ -26,7 +26,6 @@ interface IPostProps {
 
 // Elements whose boundaries a comment can cross
 const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
-let allSelections: number[][] = []
 
 type CommentSelectionButtonProps = {
   position: {
@@ -111,6 +110,13 @@ function isSelectionCommentable(selection: Selection, parentElement: HTMLElement
     return false
   }
 
+  if (
+    !isChildOf(selection.anchorNode, parentElement) ||
+    !isChildOf(selection.focusNode, parentElement)
+  ) {
+    return false
+  }
+
   const nodeList = buildPostOrderList(parentElement)
   // Index of the element that contains the beginning of the selection
   let startIdx = nodeList.indexOf(selection.anchorNode)
@@ -161,6 +167,19 @@ function buildPreOrderListAndOffsets(selectableTextArea: HTMLElement) {
   }
 
   return [preOrderList, offsets]
+}
+
+function isChildOf(el, target) {
+  let current = el
+  while (current.parentElement) {
+    if (current.parentElement === target) {
+      return true
+    }
+
+    current = current.parentElement
+  }
+
+  return false
 }
 
 const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) => {
@@ -214,6 +233,39 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     })
   }, [selectableRef.current, post.threads.length])
 
+  React.useEffect(() => {
+    const onSelectionChange = () => {
+      const selection = window.getSelection()
+
+      if (
+        !selection ||
+        !selection.rangeCount ||
+        !selectableRef.current ||
+        !isSelectionCommentable(selection, selectableRef.current) ||
+        !selection.toString().trim().length
+      ) {
+        setDisplayCommentButton(false)
+        return
+      }
+
+      const selectionDims = selection.getRangeAt(0).getBoundingClientRect()
+      const x = selectionDims.x + selectionDims.width / 2
+      const y = selectionDims.y - selectionDims.height -  20
+
+      setDisplayCommentButton(true)
+      setCommentButtonPosition({
+        x: `${x}px`,
+        y: `${y}px`,
+      })
+    }
+
+    document.addEventListener('selectionchange', onSelectionChange)
+
+    return () => {
+      document.removeEventListener('selectionchange', onSelectionChange)
+    }
+  }, [selectableRef.current])
+
   const sanitizedHTML = sanitize(post.body)
 
   const createThreadHandler = (e: React.MouseEvent) => {
@@ -233,8 +285,6 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       // Find the index of the start of the selection relative to the start of the selectableTextArea
       const startIndex = offsets[startElementIdxInPOL] + firstRange.startOffset
       const endIndex = offsets[endElementIdxInPOL] + firstRange.endOffset
-      // Temporary local state > will be stored in DB
-      allSelections.push([startIndex, endIndex])
 
       const highlightedContent = highlightRange(firstRange, -1)
       window.getSelection()?.empty()
@@ -249,33 +299,6 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
         },
       })
     }
-  }
-
-  const selectableTextAreaMouseUp: React.MouseEventHandler = (e) => {
-    const x = e.pageX - 40
-    const y = e.pageY - 50
-
-    setTimeout(() => {
-      // mouseup fires before the selection is created/accessible, so wait
-      // for the scheduler to idle before we look at the selection. Event
-      // properties are taken off above because the event is freed as soon
-      // as event processing ends.
-      const selection = window.getSelection()
-      if (
-        !selection ||
-        !selectableRef.current ||
-        !isSelectionCommentable(selection, selectableRef.current) ||
-        !selection.toString().trim().length
-      ) {
-        return
-      }
-
-      setDisplayCommentButton(true)
-      setCommentButtonPosition({
-        x: `${x}px`,
-        y: `${y}px`,
-      })
-    }, 0)
   }
 
   const onMouseDownHandler = () => {
@@ -326,8 +349,6 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
         <div
           className="post-body selectable-text-area"
           ref={selectableRef}
-          onMouseUp={selectableTextAreaMouseUp}
-          onMouseDown={onMouseDownHandler}
           onClick={onThreadClick}
         >
           <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />

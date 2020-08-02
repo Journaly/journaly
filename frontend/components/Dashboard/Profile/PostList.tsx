@@ -57,6 +57,11 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
           margin: 40px 0;
           ${theme.typography.headingLG};
         }
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .posts-title {
+            margin: 5px 0 40px;
+          }
+        }
 
         .post-list :global(.post-card-container) {
           margin-bottom: 50px;

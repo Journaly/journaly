@@ -168,6 +168,14 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
           width: 100%;
           margin-top: 50px;
         }
+        @media (min-width: 1600px) {
+          .my-feed-container {
+            grid-template-columns: repeat(3, 400px);
+            grid-gap: 40px;
+            justify-content: center;
+          }
+        }
+
         .my-feed-container :global(.post-card-container) {
           max-width: 400px;
         }

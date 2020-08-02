@@ -41,7 +41,6 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
         .post-list {
           display: flex;
           flex-direction: column;
-          justify-content: center;
           align-items: center;
           padding: 0 ${layoutLeftRightPadding} ${layoutTopBottomPadding};
           background-color: ${theme.colors.white};
@@ -51,6 +50,7 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
           .post-list {
             padding: 25px;
             border-top: 0;
+            overflow: auto;
           }
         }
 
@@ -60,7 +60,7 @@ const PostList: React.FC<Props> = ({ currentUserId }) => {
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .posts-title {
-            display: none;
+            margin: 5px 0 40px;
           }
         }
 

@@ -38,6 +38,7 @@ const PostCard: React.FC<Props> = ({
     threads,
     author: { handle, name, profileImage },
     createdAt,
+    language: { name: languageName },
   } = post
   const isDraft = status === PostStatusType.Draft
   const isPublished = status === PostStatusType.Published
@@ -59,14 +60,17 @@ const PostCard: React.FC<Props> = ({
 
             <div className="post-avatar-and-data">
               {avatar && (
-                <div className="post-avatar">
-                  {profileImage ? (
-                    <img className="profile-image" src={profileImage} alt="" />
-                  ) : (
-                    <BlankAvatarIcon size={27} />
-                  )}
+                <div>
+                  <div className="post-avatar">
+                    {profileImage ? (
+                      <img className="profile-image" src={profileImage} alt="" />
+                    ) : (
+                      <BlankAvatarIcon size={27} />
+                    )}
 
-                  <p className="author">{handle || name}</p>
+                    <p className="author">{handle || name}</p>
+                  </div>
+                  <p className="post-language">{languageName}</p>
                 </div>
               )}
 
@@ -192,6 +196,19 @@ const PostCard: React.FC<Props> = ({
 
         .author {
           font-size: 14px;
+        }
+
+        .post-language {
+          line-height: 1;
+          padding: 2px 5px;
+          color: ${theme.colors.charcoal};
+
+          text-transform: uppercase;
+          border: 2px solid ${theme.colors.charcoal};
+          border-radius: 4px;
+          font-weight: 600;
+          font-size: 12px;
+          display: inline-block;
         }
 
         .post-stats {

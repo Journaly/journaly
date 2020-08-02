@@ -18,3 +18,7 @@ export const getUTCDate = (dateString: DateString = Date.now()): Date => {
 export const formatShortDate = (date: string): string => {
   return format(parseISO(date), 'MMM d')
 }
+
+export const formatLongDate = (date: string): string => {
+  return format(parseISO(date), 'MMMM d, yyyy')
+}

@@ -502,6 +502,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
     threads: Array<{ __typename?: 'Thread' } & Pick<Thread, 'id'>>
     author: { __typename?: 'User' } & AuthorFragmentFragment
+    language: { __typename?: 'Language' } & LanguageFragmentFragment
   }
 
 export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
@@ -675,6 +676,13 @@ export const PostFragmentFragmentDoc = gql`
   ${AuthorFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
 `
+export const LanguageFragmentFragmentDoc = gql`
+  fragment LanguageFragment on Language {
+    id
+    name
+    dialect
+  }
+`
 export const PostCardFragmentFragmentDoc = gql`
   fragment PostCardFragment on Post {
     id
@@ -695,15 +703,12 @@ export const PostCardFragmentFragmentDoc = gql`
     author {
       ...AuthorFragment
     }
+    language {
+      ...LanguageFragment
+    }
   }
   ${AuthorFragmentFragmentDoc}
-`
-export const LanguageFragmentFragmentDoc = gql`
-  fragment LanguageFragment on Language {
-    id
-    name
-    dialect
-  }
+  ${LanguageFragmentFragmentDoc}
 `
 export const AddLanguageLearningDocument = gql`
   mutation addLanguageLearning($languageId: Int!) {

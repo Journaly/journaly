@@ -319,7 +319,13 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       <div className="post-content">
         <div className="post-header">
           <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
-          <h1>{post.title}</h1>
+          <div className="post-header-info">
+            <h1>{post.title}</h1>
+            <p> -- </p>
+            <p>
+              by <em>{post.author.handle}</em>
+            </p>
+          </div>
           {post.status === 'DRAFT' && <div className="draft-badge">{t('draft')}</div>}
         </div>
 
@@ -340,7 +346,9 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
                 <Button
                   type="button"
                   variant={ButtonVariant.Secondary}
-                  onClick={() => { Router.push(`/post/${post.id}/edit`) }}
+                  onClick={() => {
+                    Router.push(`/post/${post.id}/edit`)
+                  }}
                 >
                   {t('editPostAction')}
                 </Button>
@@ -434,15 +442,18 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           filter: brightness(0.3);
         }
 
-        h1 {
+        .post-header-info {
           position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        h1 {
           font-size: 64px;
           line-height: 1.2;
           text-align: center;
           color: white;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
           margin: 0;
         }
 

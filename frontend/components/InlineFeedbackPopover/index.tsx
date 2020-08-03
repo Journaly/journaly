@@ -9,6 +9,8 @@ import {
   UserFragmentFragment as UserType,
   Thread as ThreadType,
 } from '../../generated/graphql'
+import Comment from './Comment'
+import Button from '../../elements/Button'
 
 type DOMOffsetTarget = {
   x: number
@@ -24,6 +26,7 @@ type PopoverProps = {
 type ThreadProps = {
   thread: ThreadType
   onNewComment: any
+  onUpdateComment: any
   currentUser: UserType | null | undefined
 }
 
@@ -32,6 +35,7 @@ type InlineFeedbackPopoverProps = {
   thread: ThreadType
   currentUser: UserType | null | undefined
   onNewComment: any
+  onUpdateComment: any
 }
 
 const VP_PADDING = 20
@@ -86,7 +90,7 @@ const Popover: React.FC<PopoverProps> = ({ target, children }) => {
           max-height: ${ownHeight}px;
 
           background-color: #f9f9f9;
-          border: 1px solid #dadada;
+          border: 1px solid ${theme.colors.gray400};
           box-shadow: #00000045 5px 5px 33px;
           border-radius: 3px;
         }
@@ -97,7 +101,7 @@ const Popover: React.FC<PopoverProps> = ({ target, children }) => {
   return ReactDOM.createPortal(popover, popoverRoot)
 }
 
-const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) => {
+const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, currentUser }) => {
   const [commentBody, setCommentBody] = React.useState<string>('')
   const [createComment, { loading }] = useCreateCommentMutation({
     onCompleted: () => {
@@ -127,23 +131,20 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) =>
       <div className="thread-body">
         <div className="comments">
           {thread.comments.map((comment, idx) => {
+            const canEdit = currentUser?.id === comment.author.id
             return (
-              <div className="comment" key={idx}>
-                <div className="author-block">
-                  <span className="author-identifier">
-                    {comment.author.name
-                      ? `${comment.author.name} (@${comment.author.handle})`
-                      : `@${comment.author.handle}`}
-                  </span>
-                </div>
-                <div className="body-block">{comment.body}</div>
-              </div>
+              <Comment
+                comment={comment}
+                canEdit={canEdit}
+                key={idx}
+                onUpdateComment={onUpdateComment}
+              />
             )
           })}
 
           {!thread.comments.length && <div className="empty-notice">No comments... yet!</div>}
         </div>
-        { currentUser && (
+        {currentUser && (
           <form onSubmit={createNewComment}>
             <fieldset>
               <div className="new-comment-block">
@@ -153,9 +154,9 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) =>
                   onChange={(e) => setCommentBody(e.target.value)}
                   disabled={loading}
                 />
-                <button type="submit" disabled={loading}>
+                <Button type="submit" disabled={loading} className="submit-btn">
                   Submit
-                </button>
+                </Button>
               </div>
             </fieldset>
           </form>
@@ -171,14 +172,16 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) =>
         }
 
         .thread-subject {
-          border-bottom: 1px solid #dadada;
+          border-bottom: 1px solid ${theme.colors.gray400};
           text-align: center;
           padding: 5px 20px;
+          margin: 0 10px;
         }
 
         .thread-body {
           flex: 1;
           overflow-y: auto;
+          padding: 10px;
         }
 
         .highlighted-content {
@@ -186,7 +189,7 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) =>
         }
 
         .comments {
-          padding: 5px 20px;
+          padding: 5px 0;
         }
 
         .empty-notice {
@@ -195,28 +198,24 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, currentUser }) =>
           font-style: italic;
         }
 
-        .author-block {
-          font-weight: bold;
-          font-size: 0.75em;
-        }
-
         .new-comment-block {
           display: flex;
           flex-direction: row;
+          border-top: 1px solid ${theme.colors.gray400};
+          margin-top: 5px;
         }
 
         .new-comment-block textarea {
           flex: 1;
           min-height: 4em;
           background-color: #f9f9f9;
-          padding: 0.5em 1em;
+          padding: 5px 0;
           font-family: 'Source Sans Pro', sans-serif;
+          margin-right: 10px;
         }
 
-        .new-comment-block button {
-          background-color: #f9f9f9;
-          padding: 5px 15px;
-          cursor: pointer;
+        .new-comment-block textarea:focus {
+          outline: none;
         }
       `}</style>
     </div>
@@ -227,10 +226,16 @@ const InlineFeedbackPopover: React.FC<InlineFeedbackPopoverProps> = ({
   target,
   thread,
   onNewComment,
+  onUpdateComment,
   currentUser,
 }) => (
   <Popover target={target}>
-    <Thread thread={thread} onNewComment={onNewComment} currentUser={currentUser} />
+    <Thread
+      thread={thread}
+      onNewComment={onNewComment}
+      onUpdateComment={onUpdateComment}
+      currentUser={currentUser}
+    />
   </Popover>
 )
 

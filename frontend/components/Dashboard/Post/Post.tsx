@@ -377,6 +377,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           target={popoverPosition}
           currentUser={currentUser}
           onNewComment={refetch}
+          onUpdateComment={refetch}
         />
       )}
       <PostBodyStyles parentClassName="post-body" />

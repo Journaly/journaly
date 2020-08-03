@@ -32,6 +32,8 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
 
       .${parentClassName} h2 {
         ${theme.typography.headingLG};
+        margin: 10px 0;
+        font-weight: 600;
       }
     `}</style>
   )

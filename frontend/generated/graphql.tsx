@@ -220,6 +220,12 @@ export type PostLikeWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>
 }
 
+export type PostPage = {
+  __typename?: 'PostPage'
+  posts?: Maybe<Array<Post>>
+  count?: Maybe<Scalars['Int']>
+}
+
 export enum PostStatus {
   Draft = 'DRAFT',
   Published = 'PUBLISHED',
@@ -233,7 +239,7 @@ export type Query = {
   __typename?: 'Query'
   posts?: Maybe<Array<Post>>
   postById?: Maybe<Post>
-  feed?: Maybe<Array<Post>>
+  feed?: Maybe<PostPage>
   users?: Maybe<Array<User>>
   currentUser?: Maybe<User>
   languages?: Maybe<Array<Language>>
@@ -447,10 +453,17 @@ export type EditPostQuery = { __typename?: 'Query' } & {
   >
 }
 
-export type FeedQueryVariables = {}
+export type FeedQueryVariables = {
+  first: Scalars['Int']
+  skip: Scalars['Int']
+}
 
 export type FeedQuery = { __typename?: 'Query' } & {
-  feed?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+  feed?: Maybe<
+    { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
+        posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+      }
+  >
 }
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
@@ -465,7 +478,7 @@ export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
 
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
-  'body' | 'createdAt'
+  'id' | 'body' | 'createdAt'
 > & { author: { __typename?: 'User' } & AuthorFragmentFragment }
 
 export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
@@ -489,6 +502,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
     threads: Array<{ __typename?: 'Thread' } & Pick<Thread, 'id'>>
     author: { __typename?: 'User' } & AuthorFragmentFragment
+    language: { __typename?: 'Language' } & LanguageFragmentFragment
   }
 
 export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
@@ -623,6 +637,7 @@ export const AuthorFragmentFragmentDoc = gql`
 `
 export const CommentFragmentFragmentDoc = gql`
   fragment CommentFragment on Comment {
+    id
     body
     createdAt
     author {
@@ -662,6 +677,13 @@ export const PostFragmentFragmentDoc = gql`
   ${AuthorFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
 `
+export const LanguageFragmentFragmentDoc = gql`
+  fragment LanguageFragment on Language {
+    id
+    name
+    dialect
+  }
+`
 export const PostCardFragmentFragmentDoc = gql`
   fragment PostCardFragment on Post {
     id
@@ -682,15 +704,12 @@ export const PostCardFragmentFragmentDoc = gql`
     author {
       ...AuthorFragment
     }
+    language {
+      ...LanguageFragment
+    }
   }
   ${AuthorFragmentFragmentDoc}
-`
-export const LanguageFragmentFragmentDoc = gql`
-  fragment LanguageFragment on Language {
-    id
-    name
-    dialect
-  }
+  ${LanguageFragmentFragmentDoc}
 `
 export const AddLanguageLearningDocument = gql`
   mutation addLanguageLearning($languageId: Int!) {
@@ -1177,9 +1196,12 @@ export type EditPostQueryResult = ApolloReactCommon.QueryResult<
   EditPostQueryVariables
 >
 export const FeedDocument = gql`
-  query feed {
-    feed {
-      ...PostCardFragment
+  query feed($first: Int!, $skip: Int!) {
+    feed(first: $first, skip: $skip) {
+      posts {
+        ...PostCardFragment
+      }
+      count
     }
   }
   ${PostCardFragmentFragmentDoc}
@@ -1197,6 +1219,8 @@ export const FeedDocument = gql`
  * @example
  * const { data, loading, error } = useFeedQuery({
  *   variables: {
+ *      first: // value for 'first'
+ *      skip: // value for 'skip'
  *   },
  * });
  */

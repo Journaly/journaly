@@ -3,14 +3,17 @@ import Link from 'next/link'
 import classNames from 'classnames'
 import { useTranslation } from '../../../config/i18n'
 import { formatShortDate } from '../../../utils/date'
-import { Post as PostType, PostStatus as PostStatusType } from '../../../generated/graphql'
+import {
+  PostStatus as PostStatusType,
+  PostCardFragmentFragment as PostCardType,
+} from '../../../generated/graphql'
 import LikeIcon from '../../Icons/LikeIcon'
 import CommentIcon from '../../Icons/CommentIcon'
 import theme from '../../../theme'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type Props = {
-  post: PostType
+  post: PostCardType
   status?: PostStatusType
   avatar?: boolean
   stacked?: boolean
@@ -35,6 +38,7 @@ const PostCard: React.FC<Props> = ({
     threads,
     author: { handle, name, profileImage },
     createdAt,
+    language: { name: languageName },
   } = post
   const isDraft = status === PostStatusType.Draft
   const isPublished = status === PostStatusType.Published
@@ -56,14 +60,17 @@ const PostCard: React.FC<Props> = ({
 
             <div className="post-avatar-and-data">
               {avatar && (
-                <div className="post-avatar">
-                  {profileImage ? (
-                    <img className="profile-image" src={profileImage} alt="" />
-                  ) : (
-                    <BlankAvatarIcon size={27} />
-                  )}
+                <div>
+                  <div className="post-avatar">
+                    {profileImage ? (
+                      <img className="profile-image" src={profileImage} alt="" />
+                    ) : (
+                      <BlankAvatarIcon size={27} />
+                    )}
 
-                  <p className="author">{handle || name}</p>
+                    <p className="author">{handle || name}</p>
+                  </div>
+                  <p className="post-language">{languageName}</p>
                 </div>
               )}
 
@@ -191,6 +198,19 @@ const PostCard: React.FC<Props> = ({
           font-size: 14px;
         }
 
+        .post-language {
+          line-height: 1;
+          padding: 2px 5px;
+          color: ${theme.colors.charcoal};
+
+          text-transform: uppercase;
+          border: 2px solid ${theme.colors.charcoal};
+          border-radius: 4px;
+          font-weight: 600;
+          font-size: 12px;
+          display: inline-block;
+        }
+
         .post-stats {
           display: flex;
           align-items: center;
@@ -215,6 +235,7 @@ const PostCard: React.FC<Props> = ({
         .post-subtext {
           ${theme.typography.paragraphSM};
           color: #95989a;
+          white-space: nowrap;
         }
 
         .post-action {

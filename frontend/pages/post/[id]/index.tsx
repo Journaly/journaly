@@ -17,11 +17,11 @@ const PostPage: NextPage = () => {
   const { loading: userLoading, error: userError, data: userData } = useCurrentUserQuery()
 
   return (
-    <DashboardLayout>
-      <LoadingWrapper loading={postLoading || userLoading} error={postError || userError}>
+    <LoadingWrapper loading={postLoading || userLoading} error={postError || userError}>
+      <DashboardLayout>
         <Post post={postData?.postById} currentUser={userData?.currentUser} refetch={refetch} />
-      </LoadingWrapper>
-    </DashboardLayout>
+      </DashboardLayout>
+    </LoadingWrapper>
   )
 }
 

@@ -1,6 +1,8 @@
 import { schema } from 'nexus'
 
 import { hasPostPermissions } from './utils'
+import { NotFoundError } from './errors'
+import { transport, makeEmail } from '../lib/mail'
 const { intArg, stringArg } = schema
 
 schema.objectType({
@@ -91,7 +93,6 @@ schema.mutationType({
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
-
         if (!userId) {
           throw new Error('You must be logged in to post comments.')
         }
@@ -99,12 +100,24 @@ schema.mutationType({
         const thread = await ctx.db.thread.findOne({
           where: { id: args.threadId },
         })
-
         if (!thread) {
-          throw new Error(`Unable to find thread with id ${args.threadId}`)
+          throw new NotFoundError('thread')
         }
 
-        return await ctx.db.comment.create({
+        const post = await ctx.db.post.findOne({
+          where: {
+            id: thread.postId,
+          },
+          include: {
+            author: true,
+          },
+        })
+
+        if (!post) {
+          throw new NotFoundError('post')
+        }
+
+        const comment = await ctx.db.comment.create({
           data: {
             body: args.body,
             author: {
@@ -114,7 +127,25 @@ schema.mutationType({
               connect: { id: thread.id },
             },
           },
+          include: {
+            author: true,
+          },
         })
+
+        await transport.sendMail({
+          from: 'robin@journaly.com',
+          to: post.author.email,
+          subject: "You've got feedback!",
+          html: makeEmail(`
+            <p>Great news! <strong>@${comment.author.handle}</strong> left you some feedback!</p>
+            <p><strong>Journal entry:</strong> ${post.title}</p>
+            <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
+            <p><strong>Comment:</strong> "${comment.body}"</p>
+            <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
+          `),
+        })
+        // TODO: Set up logging and check for successful `mailResponse`
+        return comment
       },
     })
     t.field('updateComment', {
@@ -193,6 +224,5 @@ schema.mutationType({
         return comment
       },
     })
-
   },
 })

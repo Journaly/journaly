@@ -15,6 +15,7 @@ fragment AuthorFragment on User {
 }
 
 fragment CommentFragment on Comment {
+  id
   body
   createdAt
   author {
@@ -66,6 +67,9 @@ fragment PostCardFragment on Post {
   }
   author {
     ...AuthorFragment
+  }
+  language {
+    ...LanguageFragment
   }
 }
 

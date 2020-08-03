@@ -1,10 +1,8 @@
 import React from 'react'
 
-import Button from '../../elements/Button'
 import LanguageSelect from '../LanguageSelect'
 import XIcon from '../Icons/XIcon'
 import theme from '../../theme'
-import { useTranslation } from '../../config/i18n'
 import { LanguageFragmentFragment as LanguageType } from '../../generated/graphql'
 
 type LanguageMultiSelectProps = {
@@ -20,32 +18,31 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
   value,
   onChange = () => undefined,
   onAdd = () => undefined,
-  onRemove = () => undefined
+  onRemove = () => undefined,
 }) => {
-  const { t } = useTranslation('common')
   const [selectedLanguage, setSelectedLanguage] = React.useState<number>(-1)
   const selectableLanguages = languages.filter(
-    lang => value.find(id => lang.id === id) === undefined)
+    (lang) => value.find((id) => lang.id === id) === undefined,
+  )
 
-  const addLanguage = () => {
-    onAdd(selectedLanguage)
-    onChange([...value, selectedLanguage])
+  const handleOnChange = (addedLanguage: number) => {
+    onAdd(addedLanguage)
+    onChange([...value, addedLanguage])
     setSelectedLanguage(-1)
   }
 
   const removeLanguage = (removeLanguage: number) => {
     onRemove(removeLanguage)
-    onChange(value.filter(lang => lang !== removeLanguage))
+    onChange(value.filter((lang) => lang !== removeLanguage))
     setSelectedLanguage(-1)
   }
 
   return (
-    <>
-      {!value.length && <span className="empty-message">{t('emptyMessage')}</span>}
-      {(value.length > 0) && (
+    <div className="language-multiselect">
+      {value.length > 0 && (
         <ul className="lang-list">
-          {value.map(id => {
-            const lang = languages.find(lang => lang.id === id)
+          {value.map((id) => {
+            const lang = languages.find((lang) => lang.id === id)
             if (!lang) {
               throw Error('`value` should be a subset of `languages.map(x=>x.id)`, but is not.')
             }
@@ -60,7 +57,7 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
                     className="remove-lang-button"
                     onClick={() => removeLanguage(lang.id)}
                   >
-                    <XIcon />
+                    <XIcon size={20} />
                   </button>
                 </div>
               </li>
@@ -68,28 +65,26 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
           })}
         </ul>
       )}
-      <div className="add-container">
-        <LanguageSelect
-          languages={selectableLanguages}
-          value={selectedLanguage}
-          onChange={setSelectedLanguage}
-          style={{ flex: 1 }}
-        />
-        <Button
-          style={{
-            alignSelf: 'stretch',
-            marginLeft: '5px'
-          }}
-          onClick={addLanguage}
-          disabled={selectedLanguage === -1}
-        >
-          {t('add')}
-        </Button>
-      </div>
+      <LanguageSelect
+        languages={selectableLanguages}
+        value={selectedLanguage}
+        onChange={handleOnChange}
+        className="language-select"
+      />
       <style jsx>{`
-        .empty-message {
-          text-align: center;
-          font-style: italic;
+        .language-multiselect :global(.language-select) {
+          margin-top: 4px;
+        }
+
+        .lang-list {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .lang-list li {
+          margin: 4px 8px 4px 0;
+          border-radius: 16px;
+          background-color: ${theme.colors.gray100};
         }
 
         .lang-row {
@@ -97,12 +92,9 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
           padding: 4px 15px;
         }
 
-        .lang-list li:nth-child(odd) {
-          background-color: ${theme.colors.gray100}
-        }
-
         .lang-row .lang {
           flex: 1;
+          margin-right: 4px;
         }
 
         .remove-lang-button {
@@ -115,13 +107,8 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
           flex-direction: column;
           justify-content: center;
         }
-
-        .add-container {
-          padding-top: 4px;
-          display: flex;
-        }
       `}</style>
-    </>
+    </div>
   )
 }
 

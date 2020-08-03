@@ -20,8 +20,7 @@ type DOMOffsetTarget = {
 }
 
 type PopoverProps = {
-  target: DOMOffsetTarget,
-  children: JSX.Element[] | JSX.Element
+  target: DOMOffsetTarget
 }
 
 type ThreadProps = {
@@ -41,7 +40,7 @@ type InlineFeedbackPopoverProps = {
 
 const VP_PADDING = 20
 
-const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({ target, children }, ref) => {
+const Popover: React.FC<PopoverProps> = ({ target, children }) => {
   const popoverRoot = document.getElementById('popover-root') as HTMLElement
 
   const ownPosition: CSS.Properties = {}
@@ -76,7 +75,7 @@ const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({ target, childr
   }
 
   const popover = (
-    <div ref={ref}>
+    <>
       <div className="popover-container" style={ownPosition}>
         {children}
       </div>
@@ -96,11 +95,11 @@ const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({ target, childr
           border-radius: 3px;
         }
       `}</style>
-    </div>
+    </>
   )
 
   return ReactDOM.createPortal(popover, popoverRoot)
-})
+}
 
 const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, currentUser }) => {
   const [commentBody, setCommentBody] = React.useState<string>('')
@@ -223,14 +222,14 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, 
   )
 }
 
-const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPopoverProps>(({
+const InlineFeedbackPopover: React.FC<InlineFeedbackPopoverProps> = ({
   target,
   thread,
   onNewComment,
   onUpdateComment,
   currentUser,
-}, ref) => (
-  <Popover target={target} ref={ref}>
+}) => (
+  <Popover target={target}>
     <Thread
       thread={thread}
       onNewComment={onNewComment}
@@ -238,6 +237,6 @@ const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPop
       currentUser={currentUser}
     />
   </Popover>
-))
+)
 
 export default InlineFeedbackPopover

@@ -478,7 +478,7 @@ export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
 
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
-  'body' | 'createdAt'
+  'id' | 'body' | 'createdAt'
 > & { author: { __typename?: 'User' } & AuthorFragmentFragment }
 
 export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
@@ -637,6 +637,7 @@ export const AuthorFragmentFragmentDoc = gql`
 `
 export const CommentFragmentFragmentDoc = gql`
   fragment CommentFragment on Comment {
+    id
     body
     createdAt
     author {

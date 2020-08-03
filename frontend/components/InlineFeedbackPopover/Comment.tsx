@@ -94,7 +94,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         )}
         {canEdit && isEditMode && (
           <Button size={ButtonSize.Small} onClick={updateExistingComment} disabled={loading}>
-            save
+            Save
           </Button>
         )}
       </div>

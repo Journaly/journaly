@@ -90,7 +90,7 @@ const Popover: React.FC<PopoverProps> = ({ target, children }) => {
           max-height: ${ownHeight}px;
 
           background-color: #f9f9f9;
-          border: 1px solid #dadada;
+          border: 1px solid ${theme.colors.gray400};
           box-shadow: #00000045 5px 5px 33px;
           border-radius: 3px;
         }
@@ -172,9 +172,10 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, 
         }
 
         .thread-subject {
-          border-bottom: 1px solid #dadada;
+          border-bottom: 1px solid ${theme.colors.gray400};
           text-align: center;
           padding: 5px 20px;
+          margin: 0 10px;
         }
 
         .thread-body {
@@ -200,6 +201,8 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, 
         .new-comment-block {
           display: flex;
           flex-direction: row;
+          border-top: 1px solid ${theme.colors.gray400};
+          margin-top: 5px;
         }
 
         .new-comment-block textarea {

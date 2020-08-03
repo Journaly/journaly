@@ -306,6 +306,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     if (selectableRef.current && selection) {
       // 🚨 Bad things will happen here if browsers start to support multiple ranges
       const firstRange = selection.getRangeAt(0)
+      const selectionDims = firstRange.getBoundingClientRect()
 
       const [preOrderList, offsets] = buildPreOrderListAndOffsets(selectableRef.current)
       // Find the index of the first Text node in the selection within the preOrderList
@@ -316,8 +317,15 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       const endIndex = offsets[endElementIdxInPOL] + firstRange.endOffset
 
       const highlightedContent = highlightRange(firstRange, -1)
+
       window.getSelection()?.empty()
       setDisplayCommentButton(false)
+      setPopoverPosition({
+        x: selectionDims.x,
+        y: selectionDims.y,
+        w: selectionDims.width,
+        h: selectionDims.height,
+      })
 
       createThread({
         variables: {

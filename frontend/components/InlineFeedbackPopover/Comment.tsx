@@ -112,7 +112,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           object-fit: cover;
         }
 
-        :global(svg) {
+        :global(.author-block svg) {
           border-radius: 50%;
           background-color: ${theme.colors.blueLight};
         }

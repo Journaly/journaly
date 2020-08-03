@@ -75,7 +75,11 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         )}
         {canEdit && !isEditMode && (
           <div className="edit-block">
-            <Button size={ButtonSize.Small} onClick={() => setIsEditMode(true)}>
+            <Button
+              size={ButtonSize.Small}
+              onClick={() => setIsEditMode(true)}
+              className="edit-btn"
+            >
               Edit
             </Button>
             <Button
@@ -112,7 +116,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           object-fit: cover;
         }
 
-        :global(.author-block svg) {
+        .author-block :global(svg) {
           border-radius: 50%;
           background-color: ${theme.colors.blueLight};
         }
@@ -126,7 +130,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           display: flex;
         }
 
-        :global(button:first-child) {
+        :global(.edit-btn) {
           margin-right: 5px;
         }
 

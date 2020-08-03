@@ -76,7 +76,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         {canEdit && !isEditMode && (
           <div className="edit-block">
             <Button size={ButtonSize.Small} onClick={() => setIsEditMode(true)}>
-              edit
+              Edit
             </Button>
             <Button
               size={ButtonSize.Small}
@@ -84,7 +84,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
               onClick={deleteExistingComment}
               disabled={deleteLoading}
             >
-              delete
+              Delete
             </Button>
           </div>
         )}

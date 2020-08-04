@@ -74,7 +74,7 @@ const NewPostPage: NextPage = () => {
     })
   }
 
-  const fileInput = useRef(null)
+  const fileInput = useRef<HTMLInputElement>(null)
 
   const [createPost] = useCreatePostMutation({
     onCompleted: ({ createPost }) => {

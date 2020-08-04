@@ -66,7 +66,7 @@ const Select = React.forwardRef<HTMLSelectElement, Props>(
 
         <div className="select-icon">
           {loading ? (
-            <LoadingSpinner size={35} fill={theme.colors.white} />
+            <LoadingSpinner size={35} fill={theme.colors.blueLight} />
           ) : (
             <ChevronIcon className="select-arrow" />
           )}

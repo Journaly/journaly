@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Node } from 'slate'
@@ -37,7 +37,7 @@ const NewPostPage: NextPage = () => {
   const { languagesLearning = [], languagesNative = [] } = currentUser || {}
 
   const router = useRouter()
-  const [langId, setLangId] = React.useState<number>(-1)
+  const [langId, setLangId] = useState<number>(-1)
   const [title, setTitle, resetTitle] = useAutosavedState<string>('', {
     key: 'new-post:title',
     debounceTime: 1000,
@@ -52,7 +52,10 @@ const NewPostPage: NextPage = () => {
     imageRole: ImageRole.Headline,
   })
 
+  const [uploadingImage, setUploadingImage] = useState(false)
+
   const uploadFile = async (e: HTMLInputEvent) => {
+    setUploadingImage(true)
     const files = e.target.files
     const data = new FormData()
 
@@ -72,6 +75,7 @@ const NewPostPage: NextPage = () => {
       largeSize: file.eager[0].secure_url,
       imageRole: ImageRole.Headline,
     })
+    setUploadingImage(false)
   }
 
   const fileInput = useRef<HTMLInputElement>(null)
@@ -156,6 +160,7 @@ const NewPostPage: NextPage = () => {
                     }
                   }}
                   className="image-upload-btn"
+                  loading={uploadingImage}
                 >
                   Upload Image
                 </Button>

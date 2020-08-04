@@ -12,7 +12,7 @@ type Props = {
   currentUser: UserType
 }
 
-const NUM_POSTS_PER_PAGE = 10
+const NUM_POSTS_PER_PAGE = 9
 
 const MyFeed: React.FC<Props> = ({ currentUser }) => {
   // Pull query params off the router instance
@@ -163,8 +163,21 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
         .my-feed-container {
           display: grid;
           grid-gap: 20px;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          justify-items: center;
+          width: 100%;
           margin-top: 50px;
+        }
+        @media (min-width: 1600px) {
+          .my-feed-container {
+            grid-template-columns: repeat(3, 400px);
+            grid-gap: 40px;
+            justify-content: center;
+          }
+        }
+
+        .my-feed-container :global(.post-card-container) {
+          max-width: 400px;
         }
 
         :global(.pagination-wrapper) {

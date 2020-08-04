@@ -3,6 +3,7 @@ import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
 import BlogPageLayout from '../../components/Layouts/BlogPageLayout'
 import ExternalLink from '../../elements/ExternalLink'
 import { brandBlue } from '../../utils'
+import { withApollo } from '../../lib/apollo'
 
 const IntroducingJournalyBlogPost: NextPage = () => (
   <LandingPageLayout>
@@ -270,4 +271,4 @@ IntroducingJournalyBlogPost.getInitialProps = async () => ({
   namespacesRequired: [],
 })
 
-export default IntroducingJournalyBlogPost
+export default withApollo(IntroducingJournalyBlogPost)

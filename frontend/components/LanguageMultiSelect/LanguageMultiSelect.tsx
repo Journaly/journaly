@@ -1,10 +1,8 @@
 import React from 'react'
 
-import Button from '../../elements/Button'
 import LanguageSelect from '../LanguageSelect'
 import XIcon from '../Icons/XIcon'
 import theme from '../../theme'
-import { useTranslation } from '../../config/i18n'
 import { LanguageFragmentFragment as LanguageType } from '../../generated/graphql'
 
 type LanguageMultiSelectProps = {
@@ -22,15 +20,14 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
   onAdd = () => undefined,
   onRemove = () => undefined,
 }) => {
-  const { t } = useTranslation('common')
   const [selectedLanguage, setSelectedLanguage] = React.useState<number>(-1)
   const selectableLanguages = languages.filter(
     (lang) => value.find((id) => lang.id === id) === undefined,
   )
 
-  const addLanguage = () => {
-    onAdd(selectedLanguage)
-    onChange([...value, selectedLanguage])
+  const handleOnChange = (addedLanguage: number) => {
+    onAdd(addedLanguage)
+    onChange([...value, addedLanguage])
     setSelectedLanguage(-1)
   }
 
@@ -41,7 +38,7 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
   }
 
   return (
-    <>
+    <div className="language-multiselect">
       {value.length > 0 && (
         <ul className="lang-list">
           {value.map((id) => {
@@ -68,18 +65,17 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
           })}
         </ul>
       )}
-      <div className="add-container">
-        <LanguageSelect
-          languages={selectableLanguages}
-          value={selectedLanguage}
-          onChange={setSelectedLanguage}
-          className="language-select"
-        />
-        <Button className="add-button" onClick={addLanguage} disabled={selectedLanguage === -1}>
-          {t('add')}
-        </Button>
-      </div>
+      <LanguageSelect
+        languages={selectableLanguages}
+        value={selectedLanguage}
+        onChange={handleOnChange}
+        className="language-select"
+      />
       <style jsx>{`
+        .language-multiselect :global(.language-select) {
+          margin-top: 4px;
+        }
+
         .lang-list {
           display: flex;
           flex-wrap: wrap;
@@ -111,19 +107,8 @@ const LanguageMultiSelect: React.FC<LanguageMultiSelectProps> = ({
           flex-direction: column;
           justify-content: center;
         }
-
-        .add-container {
-          margin-top: 4px;
-          display: flex;
-        }
-
-        .add-container :global(.add-button) {
-          align-self: stretch;
-          flex: 0 0 70px;
-          margin-left: 10px;
-        }
       `}</style>
-    </>
+    </div>
   )
 }
 

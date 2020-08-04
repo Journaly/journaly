@@ -58,7 +58,7 @@ const theme: Theme = {
     gray100: '#f6f6f6',
     gray200: '',
     gray300: '',
-    gray400: '',
+    gray400: '#dadada',
     gray500: '',
     gray600: '',
     gray700: '',

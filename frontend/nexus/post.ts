@@ -14,7 +14,7 @@ schema.objectType({
     t.model.readTime()
     t.model.author()
     t.model.status()
-    t.model.images()
+    t.model.images({ type: 'Image' })
     t.model.likes()
     t.model.threads()
     t.model.language()
@@ -28,7 +28,7 @@ schema.objectType({
   name: 'Image',
   definition(t) {
     t.model.id()
-    t.model.imageRole({})
+    // t.model.imageRole({})
     t.model.smallSize()
     t.model.largeSize()
   },

@@ -4,14 +4,6 @@ import { hasPostPermissions } from './utils'
 const { intArg, stringArg } = schema
 
 schema.objectType({
-  name: 'Image',
-  definition(t) {
-    t.model.id()
-    t.model.smallSize()
-  },
-})
-
-schema.objectType({
   name: 'Thread',
   definition(t) {
     t.model.id()
@@ -193,6 +185,5 @@ schema.mutationType({
         return comment
       },
     })
-
   },
 })

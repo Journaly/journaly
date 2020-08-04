@@ -1,18 +1,31 @@
 import React from 'react'
 import { PostStatus } from '../../generated/graphql'
 import { useTranslation } from '../../config/i18n'
+import { formatLongDate } from '../../utils'
 
 type PostHeaderProps = {
   postTitle: string
   postStatus: PostStatus
+  publishDate: string
+  authorName: string
 }
 
-const PostHeader: React.FC<PostHeaderProps> = ({ postTitle, postStatus }) => {
+const PostHeader: React.FC<PostHeaderProps> = ({
+  postTitle,
+  postStatus,
+  authorName,
+  publishDate,
+}) => {
   const { t } = useTranslation('post')
   return (
     <div className="post-header">
       <img src="/images/samples/sample-post-img.jpg" alt={postTitle} />
       <h1>{postTitle}</h1>
+      <p> &mdash; </p>
+      <p>
+        by <em>{authorName}</em>
+      </p>
+      <p>{formatLongDate(publishDate)}</p>
       {postStatus === 'DRAFT' && <div className="draft-badge">{t('draft')}</div>}
       <style jsx>{`
         .post-header {
@@ -47,15 +60,18 @@ const PostHeader: React.FC<PostHeaderProps> = ({ postTitle, postStatus }) => {
           filter: brightness(0.3);
         }
 
-        h1 {
+        .post-header-info {
           position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        h1 {
           font-size: 64px;
           line-height: 1.2;
           text-align: center;
           color: white;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
           margin: 0;
         }
       `}</style>

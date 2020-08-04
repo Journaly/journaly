@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Node } from 'slate'
@@ -18,6 +18,8 @@ import {
 } from '../../generated/graphql'
 import AuthGate from '../../components/AuthGate'
 import useAutosavedState from '../../hooks/useAutosavedState'
+import PostHeader from '../../components/PostHeader'
+import XIcon from '../../components/Icons/XIcon'
 
 const initialValue = [
   {
@@ -44,7 +46,11 @@ const NewPostPage: NextPage = () => {
     key: 'new-post:body',
     debounceTime: 1000,
   })
-  const [images, setImages, resetImages] = useAutosavedState<ImageInput[]>([])
+  const [image, setImage, resetImage] = useAutosavedState<ImageInput>({
+    smallSize: '/images/samples/sample-post-img.jpg',
+    largeSize: '/images/samples/sample-post-img.jpg',
+    imageRole: ImageRole.Headline,
+  })
 
   const uploadFile = async (e: HTMLInputEvent) => {
     const files = e.target.files
@@ -61,14 +67,14 @@ const NewPostPage: NextPage = () => {
     })
 
     const file = await response.json()
-    setImages([
-      {
-        smallSize: file.secure_url,
-        largeSize: file.eager[0].secure_url,
-        imageRole: ImageRole.Headline,
-      },
-    ])
+    setImage({
+      smallSize: file.secure_url,
+      largeSize: file.eager[0].secure_url,
+      imageRole: ImageRole.Headline,
+    })
   }
+
+  const fileInput = useRef(null)
 
   const [createPost] = useCreatePostMutation({
     onCompleted: ({ createPost }) => {
@@ -78,7 +84,7 @@ const NewPostPage: NextPage = () => {
 
       resetTitle()
       resetBody()
-      resetImages()
+      resetImage()
       router.push({ pathname: `/post/${createPost.id}` })
     },
   })
@@ -88,6 +94,8 @@ const NewPostPage: NextPage = () => {
     .concat(languagesNative.map((x) => x.language))
 
   const createNewPost = (status: PostStatusType) => {
+    const images = []
+    images.push(image)
     createPost({
       variables: { title, body, status, languageId: langId, images },
     })
@@ -99,7 +107,9 @@ const NewPostPage: NextPage = () => {
         <form id="new-post">
           <h1>Let's write a post</h1>
 
-          <label htmlFor="post-title">Title</label>
+          <label htmlFor="post-title" className="title-input">
+            Title
+          </label>
           <input
             className="j-field"
             id="post-title"
@@ -111,18 +121,15 @@ const NewPostPage: NextPage = () => {
             autoComplete="off"
           />
 
-          <label htmlFor="post-image">Post Image</label>
           <input
-            className="j-field"
+            className="j-field image-upload-input"
             id="post-image"
             onChange={uploadFile}
             type="file"
             name="post-image"
             placeholder="The headline image for your post"
+            ref={fileInput}
           />
-          {images.length && (
-            <img className="preview-image" src={images[0].smallSize} alt="Upload preview" />
-          )}
 
           <label htmlFor="post-language">Language</label>
           <LanguageSelect
@@ -131,6 +138,35 @@ const NewPostPage: NextPage = () => {
             value={langId}
             onChange={setLangId}
           />
+
+          <div className="header-preview-container">
+            <PostHeader
+              postTitle={title}
+              postStatus={PostStatusType.Published}
+              publishDate={new Date().toISOString()}
+              authorName={currentUser?.name || 'anonymous'}
+              postImage={image.largeSize || '/images/samples/sample-post-img.jpg'}
+            >
+              <div className="header-preview-options">
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    if (fileInput && fileInput.current) {
+                      fileInput.current.click()
+                    }
+                  }}
+                  className="image-upload-btn"
+                >
+                  Upload Image
+                </Button>
+                <XIcon
+                  className="cancel-image-icon"
+                  color={theme.colors.white}
+                  onClick={() => resetImage()}
+                />
+              </div>
+            </PostHeader>
+          </div>
 
           <div className="editor-padding">
             <JournalyEditor value={body} setValue={setBody} />
@@ -194,6 +230,44 @@ const NewPostPage: NextPage = () => {
             .preview-image {
               flex: 0;
               align-self: center;
+            }
+
+            .header-preview-container {
+              display: grid;
+              grid-auto-rows: 350px 1fr;
+              margin-top: 24px;
+            }
+
+            .image-upload-input {
+              display: none;
+            }
+
+            .header-preview-options {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+            }
+
+            :global(.post-header .header-preview-options) {
+              position: absolute;
+              top: 10px;
+              right: 10px;
+            }
+
+            :global(.post-header .image-upload-btn) {
+              margin-right: 5px;
+            }
+
+            label {
+              margin-top: 10px;
+            }
+
+            .title-input {
+              margin-top: 0;
+            }
+
+            :global(.post-header .cancel-image-icon:hover) {
+              cursor: pointer;
             }
           `}</style>
         </form>

@@ -8,25 +8,32 @@ type PostHeaderProps = {
   postStatus: PostStatus
   publishDate: string
   authorName: string
+  postImage: string
+  children?: React.ReactNode
 }
 
 const PostHeader: React.FC<PostHeaderProps> = ({
+  children,
   postTitle,
   postStatus,
   authorName,
   publishDate,
+  postImage,
 }) => {
   const { t } = useTranslation('post')
   return (
     <div className="post-header">
-      <img src="/images/samples/sample-post-img.jpg" alt={postTitle} />
-      <h1>{postTitle}</h1>
-      <p> &mdash; </p>
-      <p>
-        by <em>{authorName}</em>
-      </p>
-      <p>{formatLongDate(publishDate)}</p>
+      <img src={postImage} alt={postTitle} />
+      <div className="post-header-info">
+        <h1>{postTitle}</h1>
+        <p> &mdash; </p>
+        <p>
+          by <em>{authorName}</em>
+        </p>
+        <p>{formatLongDate(publishDate)}</p>
+      </div>
       {postStatus === 'DRAFT' && <div className="draft-badge">{t('draft')}</div>}
+      {children}
       <style jsx>{`
         .post-header {
           position: relative;

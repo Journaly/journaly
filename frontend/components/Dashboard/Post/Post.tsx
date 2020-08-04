@@ -9,6 +9,8 @@ import {
   PostStatus,
   useCreateThreadMutation,
   useUpdatePostMutation,
+  Image as ImageType,
+  ImageRole,
 } from '../../../generated/graphql'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
@@ -355,7 +357,6 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
   }
 
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
-
   return (
     <div className="post-container">
       <Head>
@@ -369,6 +370,10 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           postStatus={post.status}
           publishDate={post.createdAt}
           authorName={post.author.name}
+          postImage={
+            (post.images || []).find((i: ImageType) => i.imageRole === ImageRole.Headline)
+              ?.largeSize || '/images/samples/sample-post-img.jpg'
+          }
         />
         <div className="post-body selectable-text-area" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />

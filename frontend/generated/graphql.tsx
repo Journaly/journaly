@@ -507,6 +507,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
+    images: Array<{ __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'imageRole'>>
   }
 
 export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
@@ -687,6 +688,11 @@ export const PostFragmentFragmentDoc = gql`
     }
     threads {
       ...ThreadFragment
+    }
+    images {
+      id
+      largeSize
+      imageRole
     }
   }
   ${AuthorFragmentFragmentDoc}

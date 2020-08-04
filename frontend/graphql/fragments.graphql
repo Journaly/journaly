@@ -47,6 +47,11 @@ fragment PostFragment on Post {
   threads {
     ...ThreadFragment
   }
+  images {
+    id
+    largeSize
+    imageRole
+  }
 }
 
 fragment PostCardFragment on Post {

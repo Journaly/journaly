@@ -3,8 +3,15 @@ mutation createPost(
   $body: [EditorNode!]
   $languageId: Int!
   $status: PostStatus!
+  $images: [ImageInput!]
 ) {
-  createPost(title: $title, body: $body, languageId: $languageId, status: $status) {
+  createPost(
+    title: $title
+    body: $body
+    languageId: $languageId
+    status: $status
+    images: $images
+  ) {
     id
   }
 }

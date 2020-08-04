@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import { sanitize, formatLongDate } from '../../../utils'
+import { sanitize } from '../../../utils'
 
 import {
   Post as PostType,

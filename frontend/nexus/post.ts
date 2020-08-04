@@ -24,7 +24,15 @@ schema.objectType({
 })
 
 // create object for image
-//
+schema.objectType({
+  name: 'Image',
+  definition(t) {
+    t.model.id()
+    t.model.imageRole({})
+    t.model.smallSize()
+    t.model.largeSize()
+  },
+})
 
 // Represents a paginated set of posts.
 // Includes 1 page and the total number of posts.

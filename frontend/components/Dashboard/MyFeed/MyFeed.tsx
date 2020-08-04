@@ -12,7 +12,7 @@ type Props = {
   currentUser: UserType
 }
 
-const NUM_POSTS_PER_PAGE = 10
+const NUM_POSTS_PER_PAGE = 9
 
 const MyFeed: React.FC<Props> = ({ currentUser }) => {
   // Pull query params off the router instance

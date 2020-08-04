@@ -229,7 +229,7 @@ const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPop
   onNewComment,
   onUpdateComment,
   currentUser,
-}) => (
+}, ref) => (
   <Popover target={target} ref={ref}>
     <Thread
       thread={thread}

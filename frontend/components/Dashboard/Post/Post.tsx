@@ -243,11 +243,15 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       const endElIndex = offsets.filter((offset) => offset < endIndex).length - 1
 
       // Construct the range the comment will occupy
-      const range = document.createRange()
-      range.setStart(preOrderList[startElIndex], startIndex - offsets[startElIndex])
-      range.setEnd(preOrderList[endElIndex], endIndex - offsets[endElIndex])
-
-      highlightRange(range, id)
+      try {
+        const range = document.createRange()
+        range.setStart(preOrderList[startElIndex], startIndex - offsets[startElIndex])
+        range.setEnd(preOrderList[endElIndex], endIndex - offsets[endElIndex])
+        highlightRange(range, id)
+      } catch (e) {
+        console.warn('Error attempting to highlight area for a thread. Error:', e)
+        return
+      }
     })
   }, [post.threads.length])
 

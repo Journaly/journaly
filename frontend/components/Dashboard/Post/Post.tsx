@@ -16,6 +16,7 @@ import PostBodyStyles from '../../PostBodyStyles'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 import { Router, useTranslation } from '../../../config/i18n'
+import PostHeader from '../../PostHeader'
 interface IPostProps {
   post: PostType | any
   currentUser: UserType | null | undefined
@@ -315,12 +316,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
         </title>
       </Head>
       <div className="post-content">
-        <div className="post-header">
-          <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
-          <h1>{post.title}</h1>
-          {post.status === 'DRAFT' && <div className="draft-badge">{t('draft')}</div>}
-        </div>
-
+        <PostHeader postTitle={post.title} postStatus={post.status} />
         <div
           className="post-body selectable-text-area"
           ref={selectableRef}
@@ -400,50 +396,6 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           grid-column: 2;
           /* Helps to avoid horizontal scroll for this layout */
           min-width: 0;
-        }
-
-        .post-header {
-          position: relative;
-          grid-column: 1 / -1;
-          text-align: center;
-          color: white;
-          margin-bottom: 40px;
-        }
-
-        .draft-badge {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-
-          line-height: 1;
-          padding: 2px 5px;
-          color: white;
-
-          text-transform: uppercase;
-          border: 2px solid white;
-          border-radius: 4px;
-          font-weight: bold;
-          font-size: 12px;
-        }
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          filter: brightness(0.3);
-        }
-
-        h1 {
-          position: absolute;
-          font-size: 64px;
-          line-height: 1.2;
-          text-align: center;
-          color: white;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          margin: 0;
         }
 
         h2 {

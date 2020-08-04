@@ -13,6 +13,8 @@ import {
   useCurrentUserQuery,
   useCreatePostMutation,
   PostStatus as PostStatusType,
+  ImageInput,
+  ImageRole,
 } from '../../generated/graphql'
 import AuthGate from '../../components/AuthGate'
 import useAutosavedState from '../../hooks/useAutosavedState'
@@ -23,12 +25,6 @@ const initialValue = [
     children: [{ text: '' }],
   },
 ]
-
-type Image = {
-  smallSize: string
-  largeSize: string
-  imageRole: string
-}
 
 interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
@@ -48,7 +44,7 @@ const NewPostPage: NextPage = () => {
     key: 'new-post:body',
     debounceTime: 1000,
   })
-  const [images, setImages, resetImages] = useAutosavedState<Image[]>([])
+  const [images, setImages, resetImages] = useAutosavedState<ImageInput[]>([])
 
   const uploadFile = async (e: HTMLInputEvent) => {
     const files = e.target.files
@@ -69,7 +65,7 @@ const NewPostPage: NextPage = () => {
       {
         smallSize: file.secure_url,
         largeSize: file.eager[0].secure_url,
-        imageRole: 'HEADLINE',
+        imageRole: ImageRole.Headline,
       },
     ])
   }
@@ -119,13 +115,14 @@ const NewPostPage: NextPage = () => {
           <input
             className="j-field"
             id="post-image"
-            value={title}
             onChange={uploadFile}
             type="file"
             name="post-image"
             placeholder="The headline image for your post"
           />
-          {images.length && <img src={images[0].smallSize} alt="Upload preview" />}
+          {images.length && (
+            <img className="preview-image" src={images[0].smallSize} alt="Upload preview" />
+          )}
 
           <label htmlFor="post-language">Language</label>
           <LanguageSelect
@@ -192,6 +189,11 @@ const NewPostPage: NextPage = () => {
             }
             .editor-padding {
               padding: 25px 0;
+            }
+
+            .preview-image {
+              flex: 0;
+              align-self: center;
             }
           `}</style>
         </form>

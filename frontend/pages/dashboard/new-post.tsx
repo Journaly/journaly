@@ -98,10 +98,8 @@ const NewPostPage: NextPage = () => {
     .concat(languagesNative.map((x) => x.language))
 
   const createNewPost = (status: PostStatusType) => {
-    const images = []
-    images.push(image)
     createPost({
-      variables: { title, body, status, languageId: langId, images },
+      variables: { title, body, status, languageId: langId, images: [image] },
     })
   }
 

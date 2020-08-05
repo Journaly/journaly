@@ -25,7 +25,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
   const [uploadingImage, setUploadingImage] = useState(false)
   const fileInput = useRef<HTMLInputElement>(null)
 
-  const [updateUser] = useUpdateUserMutation()
+  const [updateUser, { loading: loadingUpdateUser }] = useUpdateUserMutation()
 
   const uploadFile = async (e: HTMLInputEvent) => {
     setUploadingImage(true)
@@ -60,6 +60,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
 
   const handleUpdateUser = (e: React.FormEvent) => {
     e.preventDefault()
+
     updateUser({
       variables: {
         userId: currentUser.id,
@@ -87,7 +88,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
               }}
               className="settings-submit-button"
               variant={ButtonVariant.Secondary}
-              disabled={uploadingImage}
+              loading={uploadingImage}
             >
               {t('profile.details.submitImage')}
             </Button>
@@ -164,6 +165,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
               className="settings-submit-button"
               variant={ButtonVariant.Secondary}
               onClick={(e) => handleUpdateUser(e)}
+              loading={loadingUpdateUser}
             >
               {t('updateButton')}
             </Button>

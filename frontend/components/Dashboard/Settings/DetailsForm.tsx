@@ -57,9 +57,6 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
   const fieldError = errors[fieldErrorName]
 
   const handleDetailsSubmit = (): void => {}
-  const handleSubmitImageClick = (): void => {
-    // TODO save new image
-  }
 
   const handleUpdateUser = (e: React.FormEvent) => {
     e.preventDefault()

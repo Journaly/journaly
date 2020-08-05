@@ -268,7 +268,7 @@ schema.extendType({
         }
 
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
-          data = { ...data, publishedAt: new Date().toISOString() }
+          data.publishedAt = new Date().toISOString()
         }
 
         return ctx.db.post.update({

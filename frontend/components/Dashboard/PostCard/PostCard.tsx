@@ -90,7 +90,7 @@ const PostCard: React.FC<Props> = ({
                 )}
 
                 <div className="post-subtext">
-                  {publishedAt ? formatShortDate(publishedAt) : formatShortDate(createdAt)} -{' '}
+                  {formatShortDate(publishedAt || createdAt) -{' '}
                   {t('readTime', { minutes: readTime })}
                 </div>
               </div>

@@ -21,6 +21,7 @@ schema.objectType({
     t.model.createdAt()
     t.model.bodySrc()
     t.model.images()
+    t.model.publishedAt()
   },
 })
 
@@ -173,6 +174,7 @@ schema.extendType({
       resolve: async (_parent, args, ctx) => {
         const { title, body, languageId, status, images } = args
         const { userId } = ctx.request
+        const isPublished = status === 'PUBLISHED'
 
         if (!body) {
           throw new ResolverError('We need a body!', {})
@@ -184,6 +186,7 @@ schema.extendType({
             author: { connect: { id: userId } },
             title,
             status,
+            publishedAt: isPublished ? new Date().toISOString() : null,
             ...processEditorDocument(body),
           },
         })
@@ -262,6 +265,10 @@ schema.extendType({
 
         if (args.body) {
           data = { ...data, ...processEditorDocument(args.body) }
+        }
+
+        if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
+          data = { ...data, publishedAt: new Date().toISOString() }
         }
 
         return ctx.db.post.update({

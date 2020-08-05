@@ -38,6 +38,7 @@ const PostCard: React.FC<Props> = ({
     threads,
     author: { handle, name, profileImage },
     createdAt,
+    publishedAt,
     language: { name: languageName },
   } = post
   const isDraft = status === PostStatusType.Draft

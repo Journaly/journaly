@@ -41,6 +41,7 @@ fragment PostFragment on Post {
   excerpt
   readTime
   createdAt
+  publishedAt
   author {
     ...AuthorFragment
   }
@@ -61,6 +62,7 @@ fragment PostCardFragment on Post {
   excerpt
   readTime
   createdAt
+  publishedAt
   images {
     smallSize
   }

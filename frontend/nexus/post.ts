@@ -145,7 +145,7 @@ schema.extendType({
           skip: args.skip,
           first: args.first,
           orderBy: {
-            createdAt: 'desc',
+            publishedAt: 'desc',
           },
         })
 

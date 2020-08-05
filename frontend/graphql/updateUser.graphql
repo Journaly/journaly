@@ -1,0 +1,17 @@
+mutation updateUser(
+  $userId: Int!
+  $email: String
+  $name: String
+  $handle: String
+  $profileImage: String
+) {
+  updateUser(
+    userId: $userId
+    email: $email
+    name: $name
+    handle: $handle
+    profileImage: $profileImage
+  ) {
+    ...UserFragment
+  }
+}

@@ -3,6 +3,7 @@ import { schema } from 'nexus'
 import { processEditorDocument, hasPostPermissions } from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import { PostUpdateInput } from '.prisma/client/index'
+import { EditorNode, ImageInput } from './inputTypes'
 
 schema.objectType({
   name: 'Post',
@@ -14,12 +15,12 @@ schema.objectType({
     t.model.readTime()
     t.model.author()
     t.model.status()
-    t.model.images()
-    t.model.likes({ type: 'PostLike' })
+    t.model.likes()
     t.model.threads()
-    t.model.language({ type: 'Language' })
+    t.model.language()
     t.model.createdAt()
     t.model.bodySrc()
+    t.model.images()
   },
 })
 
@@ -34,26 +35,6 @@ schema.objectType({
       type: 'Post',
     })
     t.int('count')
-  },
-})
-
-// Input type modeling the FE editor data structure. Not the best typing as this
-// is concepturally the untion of two types, internal nodes and leaf nodes, but
-// AFAIK GQL does not have a native union type, so we simply unify all the fields
-// and make them all nullable.
-const EditorNode = schema.inputObjectType({
-  name: 'EditorNode',
-  definition(t) {
-    t.string('type', { nullable: true })
-    t.string('text', { nullable: true })
-    t.boolean('italic', { nullable: true })
-    t.boolean('bold', { nullable: true })
-    t.boolean('underline', { nullable: true })
-    t.field('children', {
-      type: EditorNode,
-      list: true,
-      nullable: true,
-    })
   },
 })
 
@@ -187,16 +168,17 @@ schema.extendType({
         body: EditorNode.asArg({ list: true }),
         languageId: schema.intArg({ required: true }),
         status: schema.arg({ type: 'PostStatus' }),
+        images: ImageInput.asArg({ list: true }),
       },
       resolve: async (_parent, args, ctx) => {
-        const { title, body, languageId, status } = args
+        const { title, body, languageId, status, images } = args
         const { userId } = ctx.request
 
         if (!body) {
           throw new ResolverError('We need a body!', {})
         }
 
-        return ctx.db.post.create({
+        const post = await ctx.db.post.create({
           data: {
             language: { connect: { id: languageId } },
             author: { connect: { id: userId } },
@@ -205,6 +187,30 @@ schema.extendType({
             ...processEditorDocument(body),
           },
         })
+
+        if (images) {
+          const insertPromises = []
+
+          for (let image of images) {
+            if (image.imageRole === 'HEADLINE') {
+              insertPromises.push(
+                ctx.db.image.create({
+                  data: {
+                    ...image,
+                    post: {
+                      connect: {
+                        id: post.id,
+                      },
+                    },
+                  },
+                }),
+              )
+            }
+          }
+          await Promise.all(insertPromises)
+        }
+
+        return post
       },
     })
 

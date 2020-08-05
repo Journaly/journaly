@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import { sanitize, formatLongDate } from '../../../utils'
+import { sanitize } from '../../../utils'
 
 import {
   Post as PostType,
@@ -9,6 +9,8 @@ import {
   PostStatus,
   useCreateThreadMutation,
   useUpdatePostMutation,
+  Image as ImageType,
+  ImageRole,
 } from '../../../generated/graphql'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
@@ -16,8 +18,7 @@ import PostBodyStyles from '../../PostBodyStyles'
 import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 import { Router, useTranslation } from '../../../config/i18n'
-
-// TODO: Remove any when Types are fixed with PR #17
+import PostHeader from '../../PostHeader'
 interface IPostProps {
   post: PostType | any
   currentUser: UserType | null | undefined
@@ -182,22 +183,15 @@ type PostContentProps = {
   body: string
 }
 
-const PostContent = React.memo(React.forwardRef<HTMLDivElement, PostContentProps>((
-  { body },
-  ref
-) => {
-  // Break this into a memoizable component so we don't have to re-sanitize
-  // and re-render so much
-  const sanitizedHTML = sanitize(body)
+const PostContent = React.memo(
+  React.forwardRef<HTMLDivElement, PostContentProps>(({ body }, ref) => {
+    // Break this into a memoizable component so we don't have to re-sanitize
+    // and re-render so much
+    const sanitizedHTML = sanitize(body)
 
-  return (
-    <div
-      ref={ref}
-      dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
-    />
-  )
-}))
-          
+    return <div ref={ref} dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
+  }),
+)
 
 const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) => {
   const { t } = useTranslation('post')
@@ -271,7 +265,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
 
       const selectionDims = selection.getRangeAt(0).getBoundingClientRect()
       const x = selectionDims.x + selectionDims.width / 2
-      const y = selectionDims.y - selectionDims.height -  20
+      const y = selectionDims.y - selectionDims.height - 20
 
       setDisplayCommentButton(true)
       setCommentButtonPosition({
@@ -281,11 +275,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     }
 
     const onDocumentMouseDown = (e: MouseEvent) => {
-      if (
-        !e.target ||
-        !popoverRef.current ||
-        isChildOf((e.target as Node), popoverRef.current)
-      ) {
+      if (!e.target || !popoverRef.current || isChildOf(e.target as Node, popoverRef.current)) {
         return
       }
 
@@ -367,32 +357,25 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
   }
 
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
-
   return (
     <div className="post-container">
       <Head>
         <title>
-          {post.author.name} | {post.title}
+          {post.author.handle} | {post.title}
         </title>
       </Head>
       <div className="post-content">
-        <div className="post-header">
-          <img src="/images/samples/sample-post-img.jpg" alt={post.title} />
-          <div className="post-header-info">
-            <h1>{post.title}</h1>
-            <p> &mdash; </p>
-            <p>
-              by <em>{post.author.handle}</em>
-            </p>
-            <p>{formatLongDate(post.createdAt)}</p>
-          </div>
-          {post.status === 'DRAFT' && <div className="draft-badge">{t('draft')}</div>}
-        </div>
-
-        <div
-          className="post-body selectable-text-area"
-          onClick={onThreadClick}
-        >
+        <PostHeader
+          postTitle={post.title}
+          postStatus={post.status}
+          publishDate={post.createdAt}
+          authorName={post.author.handle}
+          postImage={
+            (post.images || []).find((i: ImageType) => i.imageRole === ImageRole.Headline)
+              ?.largeSize || '/images/samples/sample-post-img.jpg'
+          }
+        />
+        <div className="post-body selectable-text-area" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
         </div>
 
@@ -467,53 +450,6 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           grid-column: 2;
           /* Helps to avoid horizontal scroll for this layout */
           min-width: 0;
-        }
-
-        .post-header {
-          position: relative;
-          grid-column: 1 / -1;
-          text-align: center;
-          color: white;
-          margin-bottom: 40px;
-        }
-
-        .draft-badge {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-
-          line-height: 1;
-          padding: 2px 5px;
-          color: white;
-
-          text-transform: uppercase;
-          border: 2px solid white;
-          border-radius: 4px;
-          font-weight: bold;
-          font-size: 12px;
-        }
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          filter: brightness(0.3);
-        }
-
-        .post-header-info {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-
-        h1 {
-          font-size: 64px;
-          line-height: 1.2;
-          text-align: center;
-          color: white;
-          margin: 0;
         }
 
         h2 {

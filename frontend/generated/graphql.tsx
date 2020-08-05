@@ -37,7 +37,20 @@ export type EditorNode = {
 export type Image = {
   __typename?: 'Image'
   id: Scalars['Int']
+  imageRole: ImageRole
   smallSize: Scalars['String']
+  largeSize: Scalars['String']
+}
+
+export type ImageInput = {
+  smallSize: Scalars['String']
+  largeSize: Scalars['String']
+  imageRole: ImageRole
+}
+
+export enum ImageRole {
+  Headline = 'HEADLINE',
+  Inline = 'INLINE',
 }
 
 export type ImageWhereUniqueInput = {
@@ -133,6 +146,7 @@ export type MutationCreatePostArgs = {
   body?: Maybe<Array<EditorNode>>
   languageId: Scalars['Int']
   status?: Maybe<PostStatus>
+  images?: Maybe<Array<ImageInput>>
 }
 
 export type MutationUpdatePostArgs = {
@@ -179,20 +193,12 @@ export type Post = {
   readTime: Scalars['Int']
   author: User
   status: PostStatus
-  images: Array<Image>
   likes: Array<PostLike>
   threads: Array<Thread>
   language: Language
   createdAt: Scalars['DateTime']
   bodySrc: Scalars['String']
-}
-
-export type PostImagesArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<ImageWhereUniqueInput>
-  before?: Maybe<ImageWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+  images: Array<Image>
 }
 
 export type PostLikesArgs = {
@@ -207,6 +213,14 @@ export type PostThreadsArgs = {
   skip?: Maybe<Scalars['Int']>
   after?: Maybe<ThreadWhereUniqueInput>
   before?: Maybe<ThreadWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type PostImagesArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<ImageWhereUniqueInput>
+  before?: Maybe<ImageWhereUniqueInput>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
 }
@@ -373,6 +387,7 @@ export type CreatePostMutationVariables = {
   body?: Maybe<Array<EditorNode>>
   languageId: Scalars['Int']
   status: PostStatus
+  images?: Maybe<Array<ImageInput>>
 }
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
@@ -492,6 +507,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
+    images: Array<{ __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'imageRole'>>
   }
 
 export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
@@ -672,6 +688,11 @@ export const PostFragmentFragmentDoc = gql`
     }
     threads {
       ...ThreadFragment
+    }
+    images {
+      id
+      largeSize
+      imageRole
     }
   }
   ${AuthorFragmentFragmentDoc}
@@ -871,8 +892,15 @@ export const CreatePostDocument = gql`
     $body: [EditorNode!]
     $languageId: Int!
     $status: PostStatus!
+    $images: [ImageInput!]
   ) {
-    createPost(title: $title, body: $body, languageId: $languageId, status: $status) {
+    createPost(
+      title: $title
+      body: $body
+      languageId: $languageId
+      status: $status
+      images: $images
+    ) {
       id
     }
   }
@@ -899,6 +927,7 @@ export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      body: // value for 'body'
  *      languageId: // value for 'languageId'
  *      status: // value for 'status'
+ *      images: // value for 'images'
  *   },
  * });
  */

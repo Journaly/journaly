@@ -77,7 +77,11 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
       <SettingsFieldset legend={t('profile.details.legend')}>
         <div className="details-wrapper">
           <div className="profile-image-wrapper">
-            {profileImage ? <img src={profileImage} alt="" /> : <BlankAvatarIcon size={130} />}
+            {profileImage ? (
+              <img src={profileImage} alt="" />
+            ) : (
+              <BlankAvatarIcon className="blank-avatar" size={130} />
+            )}
 
             <Button
               onClick={(e) => {
@@ -209,7 +213,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
           border-radius: 50%;
           object-fit: cover;
         }
-        .profile-image-wrapper :global(svg) {
+        .profile-image-wrapper :global(.blank-avatar) {
           border-radius: 50%;
           background-color: ${theme.colors.blueLight};
         }

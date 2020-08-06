@@ -3,6 +3,7 @@ interface SVGRProps {
   title?: string
   titleId?: string
   size?: number
+  className?: string
 }
 
 function BlankAvatarIcon({

@@ -10,10 +10,17 @@ import {
 } from 'slate-react'
 import { withHistory } from 'slate-history'
 import isHotkey from 'is-hotkey'
+import classNames from 'classnames'
 import theme from '../../theme'
 import PostBodyStyles from '../PostBodyStyles'
 import Toolbar from './Toolbar'
-import Button from './Button'
+import FormatBoldIcon from '../Icons/FormatBoldIcon'
+import FormatItalicIcon from '../Icons/FormatItalicIcon'
+import FormatUnderlinedIcon from '../Icons/FormatUnderlinedIcon'
+import FormatTitleIcon from '../Icons/FormatTitleIcon'
+import FormatQuoteIcon from '../Icons/FormatQuoteIcon'
+import FormatListNumberedIcon from '../Icons/FormatListNumberedIcon'
+import FormatListBulletedIcon from '../Icons/FormatListBulletedIcon'
 
 /**
  * The Journaly Rich Text Editor
@@ -31,8 +38,9 @@ const HOTKEYS: { [key in HotKey]: string } = {
 }
 
 type ButtonProps = {
+  type: 'mark' | 'block'
   format: string
-  icon: string
+  children: React.ReactNode
 }
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
@@ -55,13 +63,27 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
       <div className="editor-container">
         <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
           <Toolbar>
-            <MarkButton format="bold" icon="format_bold" />
-            <MarkButton format="italic" icon="format_italic" />
-            <MarkButton format="underline" icon="format_underlined" />
-            <BlockButton format="heading-two" icon="format_title" />
-            <BlockButton format="block-quote" icon="format_quote" />
-            <BlockButton format="numbered-list" icon="format_list_numbered" />
-            <BlockButton format="bulleted-list" icon="format_list_bulleted" />
+            <ToolbarButton type="mark" format="bold">
+              <FormatBoldIcon title="Bold" titleId="toolbar-bold-icon" />
+            </ToolbarButton>
+            <ToolbarButton type="mark" format="italic">
+              <FormatItalicIcon title="Italic" titleId="toolbar-italic-icon" />
+            </ToolbarButton>
+            <ToolbarButton type="mark" format="underline">
+              <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
+            </ToolbarButton>
+            <ToolbarButton type="block" format="heading-two">
+              <FormatTitleIcon title="Apply heading" titleId="toolbar-title-icon" />
+            </ToolbarButton>
+            <ToolbarButton type="block" format="block-quote">
+              <FormatQuoteIcon title="Block quote" titleId="toolbar-quote-icon" />
+            </ToolbarButton>
+            <ToolbarButton type="block" format="numbered-list">
+              <FormatListNumberedIcon title="Numbered list" titleId="toolbar-list-numbered-icon" />
+            </ToolbarButton>
+            <ToolbarButton type="block" format="bulleted-list">
+              <FormatListBulletedIcon title="Bulleted list" titleId="toolbar-list-bulleted-icon" />
+            </ToolbarButton>
           </Toolbar>
           <Editable
             renderElement={renderElement}
@@ -169,35 +191,46 @@ const Leaf: React.FC<RenderLeafProps> = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>
 }
 
-const MarkButton: React.FC<ButtonProps> = ({ format, icon }) => {
+const ToolbarButton: React.FC<ButtonProps> = ({ type, format, children }) => {
   const editor = useSlate()
+  const active = type === 'mark' ? isMarkActive(editor, format) : isBlockActive(editor, format)
+  const buttonClasses = classNames('toolbar-button', { active })
+
+  const handleMouseDown = (event: React.MouseEvent) => {
+    event.preventDefault()
+    if (type === 'mark') {
+      toggleMark(editor, format)
+    } else if (type === 'block') {
+      toggleBlock(editor, format)
+    }
+  }
 
   return (
-    <Button
-      active={isMarkActive(editor, format)}
-      onMouseDown={(event: React.MouseEvent) => {
-        event.preventDefault()
-        toggleMark(editor, format)
-      }}
-      iconSrc={`/images/icons/journaly-editor/${icon}.svg`}
-      iconAlt={icon.replace(/_/g, ' ')}
-    />
-  )
-}
+    <div className={buttonClasses} onMouseDown={handleMouseDown}>
+      {children}
 
-const BlockButton: React.FC<ButtonProps> = ({ format, icon }) => {
-  const editor = useSlate()
+      <style jsx>{`
+        .toolbar-button {
+          height: 100%;
+          margin-right: 10px;
+          border-radius: 5px;
+          background-color: ${theme.colors.gray800};
+          cursor: pointer;
+        }
 
-  return (
-    <Button
-      active={isBlockActive(editor, format)}
-      onMouseDown={(event) => {
-        event.preventDefault()
-        toggleBlock(editor, format)
-      }}
-      iconSrc={`/images/icons/journaly-editor/${icon}.svg`}
-      iconAlt={icon.replace(/_/g, ' ')}
-    />
+        .toolbar-button:hover {
+          box-shadow: 0px 8px 10px #00000029;
+        }
+
+        .toolbar-button :global(svg) {
+          display: block;
+        }
+
+        .toolbar-button.active :global(svg) {
+          fill: ${theme.colors.blueLight};
+        }
+      `}</style>
+    </div>
   )
 }
 

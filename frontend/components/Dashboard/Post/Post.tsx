@@ -361,15 +361,15 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     <div className="post-container">
       <Head>
         <title>
-          {post.author.name} | {post.title}
+          {post.author.handle} | {post.title}
         </title>
       </Head>
       <div className="post-content">
         <PostHeader
           postTitle={post.title}
           postStatus={post.status}
-          publishDate={post.createdAt}
-          authorName={post.author.name}
+          publishDate={post.publishedAt ? post.publishedAt : post.createdAt}
+          authorName={post.author.handle}
           postImage={
             (post.images || []).find((i: ImageType) => i.imageRole === ImageRole.Headline)
               ?.largeSize || '/images/samples/sample-post-img.jpg'

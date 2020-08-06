@@ -208,6 +208,7 @@ export type Post = {
   createdAt: Scalars['DateTime']
   bodySrc: Scalars['String']
   images: Array<Image>
+  publishedAt?: Maybe<Scalars['DateTime']>
 }
 
 export type PostLikesArgs = {
@@ -512,7 +513,7 @@ export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
 
 export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
-  'id' | 'title' | 'body' | 'status' | 'excerpt' | 'readTime' | 'createdAt'
+  'id' | 'title' | 'body' | 'status' | 'excerpt' | 'readTime' | 'createdAt' | 'publishedAt'
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
@@ -521,7 +522,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
 
 export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
-  'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt'
+  'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt' | 'publishedAt'
 > & {
     images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
@@ -704,6 +705,7 @@ export const PostFragmentFragmentDoc = gql`
     excerpt
     readTime
     createdAt
+    publishedAt
     author {
       ...AuthorFragment
     }
@@ -734,6 +736,7 @@ export const PostCardFragmentFragmentDoc = gql`
     excerpt
     readTime
     createdAt
+    publishedAt
     images {
       smallSize
     }

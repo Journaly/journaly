@@ -88,20 +88,18 @@ schema.extendType({
     t.field('updateUser', {
       type: 'User',
       args: {
-        userId: schema.intArg({ required: true }),
-        handle: schema.stringArg({ required: false }),
         email: schema.stringArg({ required: false }),
         name: schema.stringArg({ required: false }),
         profileImage: schema.stringArg({ required: false }),
       },
       resolve: async (_parent, args, ctx: any) => {
+        const { userId } = ctx.request
         const updates = { ...args }
-        delete updates.userId
 
         return ctx.db.user.update({
           data: updates,
           where: {
-            id: args.userId,
+            id: userId,
           },
         })
       },

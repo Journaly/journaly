@@ -18,6 +18,7 @@ interface HTMLInputEvent extends React.FormEvent {
 }
 
 const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
+  const [handle, setHandle] = useState(currentUser.handle)
   const [email, setEmail] = useState(currentUser.email)
   const [name, setName] = useState(currentUser.name || '')
   const [profileImage, setProfileImage] = useState(currentUser.profileImage)
@@ -60,7 +61,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
       updateUser({
         variables: {
           userId: currentUser.id,
-          handle: currentUser.handle,
+          handle,
           name,
           email,
           profileImage,
@@ -114,7 +115,9 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                 <input
                   type="text"
                   name="handle"
-                  value={currentUser.handle}
+                  value={handle}
+                  onChange={(e) => setHandle(e.target.value)}
+                  ref={register({ required: t('profile.details.displayNameError') as string })}
                   className="j-field"
                   disabled={true}
                 />

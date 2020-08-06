@@ -124,18 +124,21 @@ schema.mutationType({
           },
         })
 
-        await transport.sendMail({
-          from: 'robin@journaly.com',
-          to: post.author.email,
-          subject: "You've got feedback!",
-          html: makeEmail(`
-            <p>Great news! <strong>@${comment.author.handle}</strong> left you some feedback!</p>
-            <p><strong>Journal entry:</strong> ${post.title}</p>
-            <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
-            <p><strong>Comment:</strong> "${comment.body}"</p>
-            <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
-          `),
-        })
+        if (comment.author.id !== post.author.id) {
+          await transport.sendMail({
+            from: 'robin@journaly.com',
+            to: post.author.email,
+            subject: "You've got feedback!",
+            html: makeEmail(`
+              <p>Great news! <strong>@${comment.author.handle}</strong> left you some feedback!</p>
+              <p><strong>Journal entry:</strong> ${post.title}</p>
+              <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
+              <p><strong>Comment:</strong> "${comment.body}"</p>
+              <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
+            `),
+          })
+        }
+
         // TODO: Set up logging and check for successful `mailResponse`
         return comment
       },

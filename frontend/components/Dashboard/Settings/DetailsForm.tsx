@@ -60,7 +60,6 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
     if (!loadingUpdateUser && Object.keys(errors).length === 0) {
       updateUser({
         variables: {
-          userId: currentUser.id,
           handle,
           name,
           email,

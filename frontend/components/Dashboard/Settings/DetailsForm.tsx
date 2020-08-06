@@ -128,7 +128,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
               </div>
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="name">
-                  Name
+                  {t('profile.details.nameLabel')}
                 </label>
                 <input
                   type="text"

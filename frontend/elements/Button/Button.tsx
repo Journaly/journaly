@@ -70,6 +70,7 @@ const Button: React.FC<Props> = (props) => {
       className={buttonClasses}
       disabled={loading || disabled}
       aria-busy={loading}
+      type={type}
       {...otherProps}
     >
       {icon ? children : <span className="button-text">{children}</span>}

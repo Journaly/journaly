@@ -86,6 +86,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   fileInput.current.click()
                 }
               }}
+              type="button"
               className="settings-submit-button"
               variant={ButtonVariant.Secondary}
               loading={uploadingImage}

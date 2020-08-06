@@ -117,7 +117,7 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
 
         .profile-image :global(svg) {
           border-radius: 50%;
-          background-color: ${theme.colors.blue};
+          background-color: ${theme.colors.blueLight};
         }
 
         .current-user-name,

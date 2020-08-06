@@ -116,9 +116,9 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   type="text"
                   name="handle"
                   value={handle}
+                  className="j-field"
                   onChange={(e) => setHandle(e.target.value)}
                   ref={register({ required: t('profile.details.displayNameError') as string })}
-                  className="j-field"
                   disabled={true}
                 />
               </div>

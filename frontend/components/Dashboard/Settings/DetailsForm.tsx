@@ -56,20 +56,18 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
   const fieldErrorName = Object.keys(errors)[0] || ''
   const fieldError = errors[fieldErrorName]
 
-  const handleDetailsSubmit = (): void => {}
-
-  const handleUpdateUser = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    updateUser({
-      variables: {
-        userId: currentUser.id,
-        handle,
-        name,
-        email,
-        profileImage,
-      },
-    })
+  const handleDetailsSubmit = (): void => {
+    if (!loadingUpdateUser && Object.keys(errors).length === 0) {
+      updateUser({
+        variables: {
+          userId: currentUser.id,
+          handle,
+          name,
+          email,
+          profileImage,
+        },
+      })
+    }
   }
 
   return (
@@ -112,7 +110,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
               />
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="handle">
-                  Display Name
+                  {t('profile.details.displayNameLabel')}
                 </label>
                 <input
                   type="text"
@@ -120,21 +118,21 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   value={handle}
                   className="j-field"
                   onChange={(e) => setHandle(e.target.value)}
-                  ref={register({ required: t('profile.details.handleError') as string })}
+                  ref={register({ required: t('profile.details.displayNameError') as string })}
                   disabled={true}
                 />
               </div>
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="email">
-                  Email
+                  {t('profile.details.emailLabel')}
                 </label>
                 <input
                   type="text"
-                  name="handle"
+                  name="email"
                   value={email}
                   className="j-field"
                   onChange={(e) => setEmail(e.target.value)}
-                  ref={register({ required: t('profile.details.handleError') as string })}
+                  ref={register({ required: t('profile.details.emailError') as string })}
                 />
               </div>
               <div className="details-form-field">
@@ -170,7 +168,6 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
               type="submit"
               className="settings-submit-button"
               variant={ButtonVariant.Secondary}
-              onClick={(e) => handleUpdateUser(e)}
               loading={loadingUpdateUser}
             >
               {t('updateButton')}

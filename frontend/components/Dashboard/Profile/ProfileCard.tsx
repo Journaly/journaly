@@ -7,6 +7,7 @@ import GlobeIcon from '../../../components/Icons/GlobeIcon'
 import ExternalLink from '../../../elements/ExternalLink'
 import theme from '../../../theme'
 import { User as UserType } from '../../../generated/graphql'
+import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type Props = {
   currentUser: UserType
@@ -16,7 +17,6 @@ const ProfileCard: React.FC<Props> = ({ currentUser }) => {
   const { t } = useTranslation('profile')
 
   const user = {
-    image: '/images/robin-small.png',
     speaks: ['English'],
     learns: ['Japanese, French'],
     likes: ['cooking, reading, movies, design'],
@@ -31,20 +31,34 @@ const ProfileCard: React.FC<Props> = ({ currentUser }) => {
 
   const name = currentUser.name || currentUser.handle
   const showSeparator = user.facebook || user.instagram || user.youtube || user.website
+  const profileImage = currentUser.profileImage
+  const speaks = []
+  const learns = []
+
+  for (let language of currentUser.languagesNative) {
+    speaks.push(language.language.name)
+  }
+  for (let language of currentUser.languagesLearning) {
+    learns.push(language.language.name)
+  }
 
   return (
     <div className="profile-card">
       <div className="profile-header">
         <h1 className="profile-name">{name}</h1>
 
-        <img className="profile-image-mobile" src={user.image} />
+        {profileImage ? (
+          <img className="profile-image-mobile" src={profileImage} />
+        ) : (
+          <BlankAvatarIcon className="blank-avatar-mobile" size={130} />
+        )}
 
         <div className="languages-and-interests">
           <p>
-            <span>{t('card.speaks')}:</span> {user.speaks.join(', ')}
+            <span>{t('card.speaks')}:</span> {speaks.join(', ')}
           </p>
           <p>
-            <span>{t('card.learns')}:</span> {user.learns.join(', ')}
+            <span>{t('card.learns')}:</span> {learns.join(', ')}
           </p>
           {user.likes.length && (
             <p>
@@ -55,7 +69,11 @@ const ProfileCard: React.FC<Props> = ({ currentUser }) => {
       </div>
 
       <div className="profile-body">
-        <img className="profile-image-desktop" src={user.image} />
+        {profileImage ? (
+          <img className="profile-image-desktop" src={profileImage} />
+        ) : (
+          <BlankAvatarIcon className="blank-avatar-desktop" size={130} />
+        )}
 
         {user.bio && <p className="bio">{user.bio}</p>}
       </div>
@@ -171,6 +189,12 @@ const ProfileCard: React.FC<Props> = ({ currentUser }) => {
           }
         }
 
+        .profile-card :global(.blank-avatar-mobile),
+        .profile-card :global(.blank-avatar-desktop) {
+          border-radius: 50%;
+          background-color: ${theme.colors.blueLight};
+        }
+
         .profile-image-mobile,
         .profile-image-desktop {
           width: 150px;
@@ -178,11 +202,15 @@ const ProfileCard: React.FC<Props> = ({ currentUser }) => {
           border-radius: 50%;
           object-fit: cover;
         }
-        .profile-image-mobile {
+        .profile-image-mobile,
+        .profile-card :global(.blank-avatar-mobile) {
           margin: 30px 0 20px;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-image-mobile {
+            display: none;
+          }
+          .profile-card :global(.blank-avatar-mobile) {
             display: none;
           }
         }
@@ -205,8 +233,16 @@ const ProfileCard: React.FC<Props> = ({ currentUser }) => {
         .profile-image-desktop {
           display: none;
         }
+        .profile-card :global(.blank-avatar-desktop) {
+          display: none;
+        }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-image-desktop {
+            display: block;
+            margin: 0 auto 40px;
+          }
+
+          .profile-card :global(.blank-avatar-desktop) {
             display: block;
             margin: 0 auto 40px;
           }

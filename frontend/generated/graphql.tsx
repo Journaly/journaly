@@ -165,8 +165,6 @@ export type MutationCreateUserArgs = {
 }
 
 export type MutationUpdateUserArgs = {
-  userId: Scalars['Int']
-  handle?: Maybe<Scalars['String']>
   email?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
   profileImage?: Maybe<Scalars['String']>
@@ -632,10 +630,8 @@ export type UpdatePostMutation = { __typename?: 'Mutation' } & {
 }
 
 export type UpdateUserMutationVariables = {
-  userId: Scalars['Int']
   email?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
-  handle?: Maybe<Scalars['String']>
   profileImage?: Maybe<Scalars['String']>
 }
 
@@ -1787,20 +1783,8 @@ export type UpdatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdatePostMutationVariables
 >
 export const UpdateUserDocument = gql`
-  mutation updateUser(
-    $userId: Int!
-    $email: String
-    $name: String
-    $handle: String
-    $profileImage: String
-  ) {
-    updateUser(
-      userId: $userId
-      email: $email
-      name: $name
-      handle: $handle
-      profileImage: $profileImage
-    ) {
+  mutation updateUser($email: String, $name: String, $profileImage: String) {
+    updateUser(email: $email, name: $name, profileImage: $profileImage) {
       ...UserFragment
     }
   }
@@ -1824,10 +1808,8 @@ export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
  * @example
  * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
  *   variables: {
- *      userId: // value for 'userId'
  *      email: // value for 'email'
  *      name: // value for 'name'
- *      handle: // value for 'handle'
  *      profileImage: // value for 'profileImage'
  *   },
  * });

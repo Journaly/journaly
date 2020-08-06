@@ -132,6 +132,10 @@ const Button: React.FC<Props> = (props) => {
           color: ${theme.colors.white};
           border: 1px solid gray;
         }
+        .${ButtonVariant.Secondary}:focus:not(:disabled) {
+          outline: none;
+          border-width: 2px;
+        }
         .${ButtonVariant.Destructive}:hover:not(:disabled) {
           background-color: tomato;
           border: 1px solid tomato;

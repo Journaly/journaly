@@ -38,6 +38,7 @@ const PostCard: React.FC<Props> = ({
     threads,
     author: { handle, name, profileImage },
     createdAt,
+    publishedAt,
     language: { name: languageName },
   } = post
   const isDraft = status === PostStatusType.Draft
@@ -89,7 +90,8 @@ const PostCard: React.FC<Props> = ({
                 )}
 
                 <div className="post-subtext">
-                  {formatShortDate(createdAt)} - {t('readTime', { minutes: readTime })}
+                  {formatShortDate(publishedAt || createdAt)} -{' '}
+                  {t('readTime', { minutes: readTime })}
                 </div>
               </div>
             </div>

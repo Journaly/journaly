@@ -4,6 +4,7 @@ import { useTranslation } from '../../../config/i18n'
 import FormError from '../../../components/FormError'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
+import useImageUpload from '../../../hooks/useImageUpload'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
 import { User as UserType, useUpdateUserMutation } from '../../../generated/graphql'
@@ -21,30 +22,22 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
   const [handle, setHandle] = useState(currentUser.handle)
   const [email, setEmail] = useState(currentUser.email)
   const [name, setName] = useState(currentUser.name || '')
-  const [profileImage, setProfileImage] = useState(currentUser.profileImage)
-  const [uploadingImage, setUploadingImage] = useState(false)
   const fileInput = useRef<HTMLInputElement>(null)
 
   const [updateUser, { loading: loadingUpdateUser }] = useUpdateUserMutation()
 
-  const uploadFile = async (e: HTMLInputEvent) => {
-    setUploadingImage(true)
-    const files = e.target.files
-    const data = new FormData()
+  const [image, uploadingImage, onFileInputChange] = useImageUpload()
+  const profileImage = image?.secure_url || currentUser.profileImage
 
-    if (files) {
-      data.append('file', files[0])
-      data.append('upload_preset', 'journaly')
+  const updateUserProfileImage = async (e: HTMLInputEvent) => {
+    const image = await onFileInputChange(e)
+    if (image) {
+      updateUser({
+        variables: {
+          profileImage: image.secure_url,
+        },
+      })
     }
-
-    const response = await fetch('https://api.cloudinary.com/v1_1/journaly/image/upload', {
-      method: 'POST',
-      body: data,
-    })
-
-    const file = await response.json()
-    setProfileImage(file.secure_url)
-    setUploadingImage(false)
   }
 
   const { t } = useTranslation('settings')
@@ -101,7 +94,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
             <div className="details-form-fields">
               <input
                 className="image-upload-input"
-                onChange={uploadFile}
+                onChange={updateUserProfileImage}
                 type="file"
                 name="profile-image"
                 ref={fileInput}

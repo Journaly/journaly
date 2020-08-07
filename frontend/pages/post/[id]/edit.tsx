@@ -1,7 +1,7 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Node } from 'slate'
+import { Editor, Node } from 'slate'
 import { withApollo } from '../../../lib/apollo'
 import { useTranslation } from '../../../config/i18n'
 
@@ -35,6 +35,7 @@ const EditPostPage: NextPage = () => {
   const [langId, setLangId] = React.useState<number>(-1)
   const [title, setTitle] = React.useState<string>('')
   const [body, setBody] = React.useState<Node[]>(initialValue)
+  const slateRef = React.useRef<Editor>(null)
 
   React.useEffect(() => {
     if (postById) {
@@ -94,7 +95,7 @@ const EditPostPage: NextPage = () => {
           />
 
           <div className="editor-padding">
-            <JournalyEditor value={body} setValue={setBody} />
+            <JournalyEditor value={body} setValue={setBody} slateRef={slateRef} />
           </div>
 
           <div className="button-container">

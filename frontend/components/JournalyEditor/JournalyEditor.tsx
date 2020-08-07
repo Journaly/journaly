@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useEffect, useMemo, useCallback } from 'react'
 import { createEditor, Editor, Transforms, Node } from 'slate'
 import {
   Slate,
@@ -48,15 +48,21 @@ const LIST_TYPES = ['numbered-list', 'bulleted-list']
 type JournalyEditorProps = {
   value: Node[]
   setValue: (value: Node[]) => void
+  slateRef: React.RefObject<Editor>
 }
 
 const JournalyEditor: React.FC<JournalyEditorProps> = ({
   value,
   setValue,
+  slateRef,
 }: JournalyEditorProps) => {
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+
+  useEffect(() => {
+    (slateRef as React.MutableRefObject<Editor>).current = editor
+  }, [editor])
 
   return (
     <div className="editor-wrapper">

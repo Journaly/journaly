@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Node } from 'slate'
+import { Editor, Node } from 'slate'
 import { withApollo } from '../../lib/apollo'
 
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
@@ -35,6 +35,7 @@ interface HTMLInputEvent extends React.FormEvent {
 const NewPostPage: NextPage = () => {
   const { data: { currentUser } = {} } = useCurrentUserQuery()
   const { languagesLearning = [], languagesNative = [] } = currentUser || {}
+  const slateRef = useRef<Editor>(null)
 
   const router = useRouter()
   const [langId, setLangId] = useState<number>(-1)
@@ -82,8 +83,15 @@ const NewPostPage: NextPage = () => {
 
   const [createPost] = useCreatePostMutation({
     onCompleted: ({ createPost }) => {
-      if (!createPost) {
+      if (!(createPost && slateRef.current)) {
         return
+      }
+
+      // Must clear any active selection before clearing content or the editor
+      // will violently explode. See https://github.com/ianstormtaylor/slate/issues/3477
+      slateRef.current.selection = {
+        anchor: { path: [0,0], offset:0 },
+        focus: { path: [0,0], offset: 0 },
       }
 
       resetTitle()
@@ -172,7 +180,7 @@ const NewPostPage: NextPage = () => {
           </div>
 
           <div className="editor-padding">
-            <JournalyEditor value={body} setValue={setBody} />
+            <JournalyEditor value={body} setValue={setBody} slateRef={slateRef} />
           </div>
 
           <div className="button-container">

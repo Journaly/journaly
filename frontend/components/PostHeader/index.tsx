@@ -2,6 +2,7 @@ import React from 'react'
 import { PostStatus } from '../../generated/graphql'
 import { useTranslation } from '../../config/i18n'
 import { formatLongDate } from '../../utils'
+import theme from '../../theme'
 
 type PostHeaderProps = {
   postTitle: string
@@ -69,17 +70,37 @@ const PostHeader: React.FC<PostHeaderProps> = ({
 
         .post-header-info {
           position: absolute;
+          width: 90%;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
         }
 
         h1 {
-          font-size: 64px;
+          font-size: 40px;
           line-height: 1.2;
           text-align: center;
           color: white;
           margin: 0;
+        }
+
+        p {
+          font-size: 14px;
+        }
+
+        @media (min-width: ${theme.breakpoints.MD}) {
+          h1 {
+            font-size: 50px;
+          }
+          p {
+            font-size: 16px;
+          }
+        }
+
+        @media (min-width: ${theme.breakpoints.LG}) {
+          h1 {
+            font-size: 64px;
+          }
         }
       `}</style>
     </div>

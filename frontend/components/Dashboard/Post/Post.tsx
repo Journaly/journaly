@@ -368,7 +368,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
         <PostHeader
           postTitle={post.title}
           postStatus={post.status}
-          publishDate={post.createdAt}
+          publishDate={post.publishedAt ? post.publishedAt : post.createdAt}
           authorName={post.author.handle}
           postImage={
             (post.images || []).find((i: ImageType) => i.imageRole === ImageRole.Headline)
@@ -442,10 +442,29 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
         .post-content {
           display: grid;
           grid-column-gap: 10px;
-          grid-template-columns: 80px 1fr 80px;
+          grid-template-columns: 10px 1fr 10px;
           grid-auto-rows: 350px 1fr;
           background-color: ${theme.colors.white};
         }
+
+        @media (min-width: ${theme.breakpoints.SM}) {
+          .post-content {
+            grid-template-columns: 25px 1fr 25px;
+          }
+        }
+
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .post-content {
+            grid-template-columns: 50px 1fr 50px;
+          }
+        }
+
+        @media (min-width: ${theme.breakpoints.LG}) {
+          .post-content {
+            grid-template-columns: 80px 1fr 80px;
+          }
+        }
+
         .post-body {
           grid-column: 2;
           /* Helps to avoid horizontal scroll for this layout */

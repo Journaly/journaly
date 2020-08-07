@@ -1,13 +1,45 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from '../../../config/i18n'
 import FormError from '../../../components/FormError'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
+import useImageUpload from '../../../hooks/useImageUpload'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
+import { User as UserType, useUpdateUserMutation } from '../../../generated/graphql'
+import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
-const DetailsForm: React.FC = () => {
+type DetailsFormProps = {
+  currentUser: UserType
+}
+
+interface HTMLInputEvent extends React.FormEvent {
+  target: HTMLInputElement & EventTarget
+}
+
+const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
+  const [handle, setHandle] = useState(currentUser.handle)
+  const [email, setEmail] = useState(currentUser.email)
+  const [name, setName] = useState(currentUser.name || '')
+  const fileInput = useRef<HTMLInputElement>(null)
+
+  const [updateUser, { loading: loadingUpdateUser }] = useUpdateUserMutation()
+
+  const [image, uploadingImage, onFileInputChange] = useImageUpload()
+  const profileImage = image?.secure_url || currentUser.profileImage
+
+  const updateUserProfileImage = async (e: HTMLInputEvent) => {
+    const image = await onFileInputChange(e)
+    if (image) {
+      updateUser({
+        variables: {
+          profileImage: image.secure_url,
+        },
+      })
+    }
+  }
+
   const { t } = useTranslation('settings')
   const { handleSubmit, register, errors } = useForm({
     mode: 'onSubmit',
@@ -17,9 +49,16 @@ const DetailsForm: React.FC = () => {
   const fieldErrorName = Object.keys(errors)[0] || ''
   const fieldError = errors[fieldErrorName]
 
-  const handleDetailsSubmit = (): void => {}
-  const handleSubmitImageClick = (): void => {
-    // TODO save new image
+  const handleDetailsSubmit = (): void => {
+    if (!loadingUpdateUser && Object.keys(errors).length === 0) {
+      updateUser({
+        variables: {
+          name,
+          email,
+          profileImage,
+        },
+      })
+    }
   }
 
   return (
@@ -27,12 +66,23 @@ const DetailsForm: React.FC = () => {
       <SettingsFieldset legend={t('profile.details.legend')}>
         <div className="details-wrapper">
           <div className="profile-image-wrapper">
-            <img className="profile-image" src="/images/robin-small.png" />
+            {profileImage ? (
+              <img src={profileImage} alt="" />
+            ) : (
+              <BlankAvatarIcon className="blank-avatar" size={130} />
+            )}
 
             <Button
-              onClick={handleSubmitImageClick}
+              onClick={(e) => {
+                e.preventDefault()
+                if (fileInput && fileInput.current) {
+                  fileInput.current.click()
+                }
+              }}
+              type="button"
               className="settings-submit-button"
               variant={ButtonVariant.Secondary}
+              loading={uploadingImage}
             >
               {t('profile.details.submitImage')}
             </Button>
@@ -42,33 +92,52 @@ const DetailsForm: React.FC = () => {
             {fieldError && <FormError error={fieldError.message as string} />}
 
             <div className="details-form-fields">
-              <div className="details-form-field">
-                <label className="settings-label" htmlFor="first-name">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="first-name"
-                  name="first-name"
-                  className="j-field"
-                  ref={register({ required: t('profile.details.firstNameError') as string })}
-                />
-              </div>
-              <div className="details-form-field">
-                <label className="settings-label" htmlFor="last-name">
-                  Last Name
-                </label>
-                <input type="text" id="last-name" name="last-name" className="j-field" />
-              </div>
+              <input
+                className="image-upload-input"
+                onChange={updateUserProfileImage}
+                type="file"
+                name="profile-image"
+                ref={fileInput}
+              />
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="handle">
-                  Handle
+                  {t('profile.details.displayNameLabel')}
                 </label>
                 <input
                   type="text"
                   name="handle"
+                  value={handle}
                   className="j-field"
-                  ref={register({ required: t('profile.details.handleError') as string })}
+                  onChange={(e) => setHandle(e.target.value)}
+                  ref={register({ required: t('profile.details.displayNameError') as string })}
+                  disabled={true}
+                />
+              </div>
+              <div className="details-form-field">
+                <label className="settings-label" htmlFor="email">
+                  {t('profile.details.emailLabel')}
+                </label>
+                <input
+                  type="text"
+                  name="email"
+                  value={email}
+                  className="j-field"
+                  onChange={(e) => setEmail(e.target.value)}
+                  ref={register({ required: t('profile.details.emailError') as string })}
+                />
+              </div>
+              <div className="details-form-field">
+                <label className="settings-label" htmlFor="name">
+                  {t('profile.details.nameLabel')}
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={name}
+                  className="j-field"
+                  onChange={(e) => setName(e.target.value)}
+                  ref={register()}
                 />
               </div>
               <div className="details-form-field">
@@ -81,6 +150,7 @@ const DetailsForm: React.FC = () => {
                   name="location"
                   className="j-field"
                   ref={register()}
+                  disabled={true}
                 />
               </div>
             </div>
@@ -89,6 +159,7 @@ const DetailsForm: React.FC = () => {
               type="submit"
               className="settings-submit-button"
               variant={ButtonVariant.Secondary}
+              loading={loadingUpdateUser}
             >
               {t('updateButton')}
             </Button>
@@ -125,11 +196,15 @@ const DetailsForm: React.FC = () => {
           }
         }
 
-        .profile-image {
+        .profile-image-wrapper :global(img) {
           width: 100%;
           height: 150px;
           border-radius: 50%;
           object-fit: cover;
+        }
+        .profile-image-wrapper :global(.blank-avatar) {
+          border-radius: 50%;
+          background-color: ${theme.colors.blueLight};
         }
 
         .details-form-fields-wrapper {
@@ -165,6 +240,10 @@ const DetailsForm: React.FC = () => {
         .details-form-field {
           display: flex;
           flex-direction: column;
+        }
+
+        .image-upload-input {
+          display: none;
         }
       `}</style>
     </SettingsForm>

@@ -112,6 +112,7 @@ export type Mutation = {
   createPost?: Maybe<Post>
   updatePost?: Maybe<Post>
   createUser?: Maybe<User>
+  updateUser?: Maybe<User>
   loginUser?: Maybe<User>
   logout?: Maybe<User>
   addLanguageLearning?: Maybe<LanguageLearning>
@@ -163,6 +164,12 @@ export type MutationCreateUserArgs = {
   password: Scalars['String']
 }
 
+export type MutationUpdateUserArgs = {
+  email?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
+  profileImage?: Maybe<Scalars['String']>
+}
+
 export type MutationLoginUserArgs = {
   identifier: Scalars['String']
   password: Scalars['String']
@@ -199,6 +206,7 @@ export type Post = {
   createdAt: Scalars['DateTime']
   bodySrc: Scalars['String']
   images: Array<Image>
+  publishedAt?: Maybe<Scalars['DateTime']>
 }
 
 export type PostLikesArgs = {
@@ -503,7 +511,7 @@ export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
 
 export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
-  'id' | 'title' | 'body' | 'status' | 'excerpt' | 'readTime' | 'createdAt'
+  'id' | 'title' | 'body' | 'status' | 'excerpt' | 'readTime' | 'createdAt' | 'publishedAt'
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
@@ -512,7 +520,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
 
 export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
-  'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt'
+  'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt' | 'publishedAt'
 > & {
     images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
@@ -621,6 +629,16 @@ export type UpdatePostMutation = { __typename?: 'Mutation' } & {
   updatePost?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
 }
 
+export type UpdateUserMutationVariables = {
+  email?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
+  profileImage?: Maybe<Scalars['String']>
+}
+
+export type UpdateUserMutation = { __typename?: 'Mutation' } & {
+  updateUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
+}
+
 export type UsersQueryVariables = {}
 
 export type UsersQuery = { __typename?: 'Query' } & {
@@ -683,6 +701,7 @@ export const PostFragmentFragmentDoc = gql`
     excerpt
     readTime
     createdAt
+    publishedAt
     author {
       ...AuthorFragment
     }
@@ -713,6 +732,7 @@ export const PostCardFragmentFragmentDoc = gql`
     excerpt
     readTime
     createdAt
+    publishedAt
     images {
       smallSize
     }
@@ -1761,6 +1781,55 @@ export type UpdatePostMutationResult = ApolloReactCommon.MutationResult<UpdatePo
 export type UpdatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdatePostMutation,
   UpdatePostMutationVariables
+>
+export const UpdateUserDocument = gql`
+  mutation updateUser($email: String, $name: String, $profileImage: String) {
+    updateUser(email: $email, name: $name, profileImage: $profileImage) {
+      ...UserFragment
+    }
+  }
+  ${UserFragmentFragmentDoc}
+`
+export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateUserMutation,
+  UpdateUserMutationVariables
+>
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      name: // value for 'name'
+ *      profileImage: // value for 'profileImage'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateUserMutation,
+    UpdateUserMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(
+    UpdateUserDocument,
+    baseOptions,
+  )
+}
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>
+export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<UpdateUserMutation>
+export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateUserMutation,
+  UpdateUserMutationVariables
 >
 export const UsersDocument = gql`
   query users {

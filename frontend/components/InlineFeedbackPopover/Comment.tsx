@@ -111,6 +111,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         }
 
         .profile-image {
+          border-radius: 50%;
           width: 27px;
           height: 27px;
           object-fit: cover;

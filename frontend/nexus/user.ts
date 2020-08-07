@@ -49,7 +49,7 @@ schema.extendType({
         })
       },
     })
-  }
+  },
 })
 
 schema.extendType({
@@ -85,6 +85,26 @@ schema.extendType({
       },
     })
 
+    t.field('updateUser', {
+      type: 'User',
+      args: {
+        email: schema.stringArg({ required: false }),
+        name: schema.stringArg({ required: false }),
+        profileImage: schema.stringArg({ required: false }),
+      },
+      resolve: async (_parent, args, ctx: any) => {
+        const { userId } = ctx.request
+        const updates = { ...args }
+
+        return ctx.db.user.update({
+          data: updates,
+          where: {
+            id: userId,
+          },
+        })
+      },
+    })
+
     t.field('loginUser', {
       type: 'User',
       args: {
@@ -104,10 +124,7 @@ schema.extendType({
           throw new Error('User not found')
         }
 
-        const isValid = await bcrypt.compare(
-          args.password,
-          user.auth.password,
-        )
+        const isValid = await bcrypt.compare(args.password, user.auth.password)
 
         if (!isValid) {
           throw new Error('Invalid password')
@@ -134,7 +151,7 @@ schema.extendType({
         }
 
         const user = await ctx.db.user.findOne({
-          where: { id: ctx.request.userId, },
+          where: { id: ctx.request.userId },
         })
 
         if (!user) {

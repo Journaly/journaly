@@ -77,8 +77,8 @@ const PostHeader: React.FC<PostHeaderProps> = ({
         }
 
         h1 {
-          font-size: 32px;
-          line-height: 1;
+          font-size: 40px;
+          line-height: 1.2;
           text-align: center;
           color: white;
           margin: 0;
@@ -91,7 +91,6 @@ const PostHeader: React.FC<PostHeaderProps> = ({
         @media (min-width: ${theme.breakpoints.MD}) {
           h1 {
             font-size: 50px;
-            line-height: 1;
           }
           p {
             font-size: 16px;
@@ -101,7 +100,6 @@ const PostHeader: React.FC<PostHeaderProps> = ({
         @media (min-width: ${theme.breakpoints.LG}) {
           h1 {
             font-size: 64px;
-            line-height: 1.2;
           }
         }
       `}</style>

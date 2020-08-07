@@ -32,9 +32,6 @@ const MyFeed: React.FC<Props> = () => {
   const showPagination = count > NUM_POSTS_PER_PAGE
   const pageTitle = 'My Feed'
 
-  console.log(count)
-
-  // TODO will likley be used for event logging
   return (
     <div className="my-feed-wrapper">
       <Head>

@@ -150,6 +150,7 @@ const PostCard: React.FC<Props> = ({
           flex-direction: column;
           justify-content: space-between;
           height: 100%;
+          min-width: 190px;
           padding: 12px;
         }
         @media (min-width: ${theme.breakpoints.MD}) {

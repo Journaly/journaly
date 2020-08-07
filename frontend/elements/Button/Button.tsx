@@ -70,6 +70,7 @@ const Button: React.FC<Props> = (props) => {
       className={buttonClasses}
       disabled={loading || disabled}
       aria-busy={loading}
+      type={type}
       {...otherProps}
     >
       {icon ? children : <span className="button-text">{children}</span>}
@@ -127,8 +128,13 @@ const Button: React.FC<Props> = (props) => {
           border: 1px solid ${theme.colors.blue};
         }
         .${ButtonVariant.Secondary}:hover:not(:disabled) {
-          background-color: gray;
+          background-color: ${theme.colors.blue};
+          color: ${theme.colors.white};
           border: 1px solid gray;
+        }
+        .${ButtonVariant.Secondary}:focus:not(:disabled) {
+          outline: none;
+          border-width: 2px;
         }
         .${ButtonVariant.Destructive}:hover:not(:disabled) {
           background-color: tomato;

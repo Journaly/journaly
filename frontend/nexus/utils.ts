@@ -16,6 +16,7 @@ const typeToElStrMap: { [key: string]: string } = {
   'block-quote': 'blockquote',
   'bulleted-list': 'ul',
   'numbered-list': 'ol',
+  'list-item': 'li',
   paragraph: 'p',
 }
 

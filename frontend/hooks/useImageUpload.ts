@@ -9,7 +9,12 @@ type Image = {
   eager: [string]
 }
 
-type useImageUploadType = [Image | null, boolean, (e: HTMLInputEvent) => Promise<Image>]
+type useImageUploadType = [
+  Image | null,
+  boolean,
+  (e: HTMLInputEvent) => Promise<Image>,
+  () => void,
+]
 
 const useImageUpload = (): useImageUploadType => {
   const [image, setImage] = useState<Image | null>(null)
@@ -36,7 +41,7 @@ const useImageUpload = (): useImageUploadType => {
     return file
   }
 
-  return [image, uploadingImage, onFileInputChange]
+  return [image, uploadingImage, onFileInputChange, () => setImage(null)]
 }
 
 export default useImageUpload

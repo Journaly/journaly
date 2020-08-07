@@ -1,49 +1,100 @@
 import React from 'react'
+import { Editor, Node } from 'slate'
 
-import {
-  User as UserType
-} from '../../generated/graphql'
+import FileInput from '../../components/FileInput'
+import LanguageSelect from '../../components/LanguageSelect'
+import PostHeader from '../../components/PostHeader'
+import JournalyEditor from '../../components/JournalyEditor'
+import XIcon from '../../components/Icons/XIcon'
+import theme from '../../theme'
+import useImageUpload from '../../hooks/useImageUpload'
 import useAutosavedState from '../../hooks/useAutosavedState'
+import {
+  User as UserType,
+  PostStatus as PostStatusType,
+  ImageInput,
+  ImageRole,
+} from '../../generated/graphql'
 
 type PostData = {
   title: string
   languageId: number
-  image: ImageInput
+  image?: ImageInput | null
   body: Node[]
+  clear: () => void
 }
 
 type PostEditorProps = {
-  currentUser: User
+  currentUser: UserType
   autosaveKey: string
-  React.RefObject
+  dataRef: React.RefObject<PostData>,
+  initialData: PostData,
 }
+
+const DEFAULT_IMAGE_URL = '/images/samples/sample-post-img.jpg'
 
 const PostEditor: React.FC<PostEditorProps> = ({
   currentUser,
-  autosaveKey
+  autosaveKey,
+  initialData,
+  dataRef,
 }) => {
-  const slateRef = useRef<Editor>(null)
+  const slateRef = React.useRef<Editor>(null)
 
-  const [langId, setLangId] = useState<number>(-1)
-  const [title, setTitle, resetTitle] = useAutosavedState<string>('', {
+  const [langId, setLangId, resetLangId] = useAutosavedState<number>(initialData.languageId, {
+    key: `${autosaveKey}:langId`,
+    debounceTime: 1000,
+  })
+  const [title, setTitle, resetTitle] = useAutosavedState<string>(initialData.title, {
     key: `${autosaveKey}:title`,
     debounceTime: 1000,
   })
-  const [body, setBody, resetBody] = useAutosavedState<Node[]>(initialValue, {
+  const [body, setBody, resetBody] = useAutosavedState<Node[]>(initialData.body, {
     key: `${autosaveKey}:body`,
     debounceTime: 1000,
   })
-  const [image, setImage, resetImage] = useAutosavedState<ImageInput>({
-    smallSize: '/images/samples/sample-post-img.jpg',
-    largeSize: '/images/samples/sample-post-img.jpg',
-    imageRole: ImageRole.Headline,
-  }, { key: `${autosaveKey}:image` })
-
 
   const { languagesLearning = [], languagesNative = [] } = currentUser || {}
   const userLanguages = languagesLearning
     .map((x) => x.language)
     .concat(languagesNative.map((x) => x.language))
+
+  const [image, uploadingImage, onFileInputChange, resetImage] = useImageUpload()
+  const postImage = image?.secure_url || initialData.image?.largeSize || DEFAULT_IMAGE_URL
+
+  React.useEffect(() => {
+    const clear = () => {
+      if (!slateRef.current) {
+        return
+      }
+
+      // Must clear any active selection before clearing content or the editor
+      // will violently explode. See https://github.com/ianstormtaylor/slate/issues/3477
+      slateRef.current.selection = {
+        anchor: { path: [0,0], offset:0 },
+        focus: { path: [0,0], offset: 0 },
+      }
+
+      resetTitle()
+      resetBody()
+      resetImage()
+      resetLangId()
+    }
+
+    const returnImage = !image ? null : {
+      largeSize: image.secure_url,
+      smallSize: image.eager[0].secure_url,
+      imageRole: ImageRole.Headline,
+    }
+
+    ;(dataRef as React.MutableRefObject<PostData>).current = {
+      title,
+      body,
+      clear,
+      image: returnImage,
+      languageId: langId,
+    }
+  }, [title, langId, image, body])
 
   return (
     <div className="post-editor">
@@ -61,16 +112,6 @@ const PostEditor: React.FC<PostEditorProps> = ({
         autoComplete="off"
       />
 
-      <input
-        className="j-field image-upload-input"
-        id="post-image"
-        onChange={uploadFile}
-        type="file"
-        name="post-image"
-        placeholder="The headline image for your post"
-        ref={fileInput}
-      />
-
       <label htmlFor="post-language">Language</label>
       <LanguageSelect
         id="language"
@@ -85,21 +126,16 @@ const PostEditor: React.FC<PostEditorProps> = ({
           postStatus={PostStatusType.Published}
           publishDate={new Date().toISOString()}
           authorName={currentUser?.name || 'anonymous'}
-          postImage={image.largeSize || '/images/samples/sample-post-img.jpg'}
+          postImage={postImage}
         >
           <div className="header-preview-options">
-            <Button
-              onClick={(e) => {
-                e.preventDefault()
-                if (fileInput && fileInput.current) {
-                  fileInput.current.click()
-                }
-              }}
+            <FileInput
               className="image-upload-btn"
               loading={uploadingImage}
+              onChange={onFileInputChange}
             >
               Upload Image
-            </Button>
+            </FileInput>
             <XIcon
               className="cancel-image-icon"
               color={theme.colors.white}
@@ -172,4 +208,5 @@ const PostEditor: React.FC<PostEditorProps> = ({
   )
 }
 
+export { PostData }
 export default PostEditor

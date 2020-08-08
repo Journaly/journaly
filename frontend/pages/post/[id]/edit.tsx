@@ -6,7 +6,7 @@ import { withApollo } from '../../../lib/apollo'
 import { useTranslation } from '../../../config/i18n'
 
 import DashboardLayout from '../../../components/Layouts/DashboardLayout'
-import PostEditor, { PostData } from '../../../components/PostEditor'
+import PostEditor, { validatePostData, PostData } from '../../../components/PostEditor'
 import theme from '../../../theme'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import {
@@ -28,6 +28,7 @@ const EditPostPage: NextPage = () => {
   const idStr = router.query.id as string
   const id = parseInt(idStr, 10)
   const { t } = useTranslation('post')
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
   const { data: { currentUser, postById } = {} } = useEditPostQuery({ variables: { id } })
   const dataRef = React.useRef<PostData>()
@@ -59,6 +60,12 @@ const EditPostPage: NextPage = () => {
 
   const savePost = async () => {
     if (!dataRef.current) {
+      return
+    }
+
+    const [valid, message] = validatePostData(dataRef.current, t)
+    if (!valid) {
+      setErrorMessage(message)
       return
     }
 
@@ -111,6 +118,11 @@ const EditPostPage: NextPage = () => {
               {t('save')}
             </Button>
           </div>
+          { errorMessage && (
+            <span className="error-message">
+              {errorMessage}
+            </span>
+          )}
           <style jsx>{`
             #edit-post {
               display: flex;
@@ -133,12 +145,9 @@ const EditPostPage: NextPage = () => {
               justify-content: space-between;
             }
 
-            #new-post {
-              display: flex;
-              flex-direction: column;
-              background-color: white;
-              padding: 25px;
-              box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
+            .error-message {
+              ${theme.typography.error}
+              text-align: center;
             }
           `}</style>
         </form>

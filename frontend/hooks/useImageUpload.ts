@@ -6,7 +6,7 @@ interface HTMLInputEvent extends React.FormEvent {
 
 type Image = {
   secure_url: string
-  eager: [string]
+  eager: [{ secure_url: string }]
 }
 
 type useImageUploadType = [

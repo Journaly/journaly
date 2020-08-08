@@ -1,6 +1,8 @@
 {
   "draft": "draft",
   "publishDraft": "Publish Draft",
+  "saveDraftCTA": "Save Draft",
+  "publishCTA": "Publish!",
   "readTime": "{{minutes}} min. read",
   "readAction": "Read post",
   "editPost": "Edit Post",
@@ -8,5 +10,7 @@
   "titleLabel": "Title",
   "languageLabel": "Language",
   "save": "Save",
-  "finishAction": "Finish post"
+  "finishAction": "Finish post",
+  "noLanguageError": "Please select a language.",
+  "emptyTitleError": "Please specify a non-empty title."
 }

@@ -273,27 +273,28 @@ schema.extendType({
         }
 
         if (args.images) {
-          const insertPromises = []
-
-          await ctx.db.image.deleteMany({
-            where: {
-              postId: args.postId,
-              imageRole: 'HEADLINE',
-            }
-          })
-
           const headlineImage = args.images.find(i => i.imageRole === 'HEADLINE')
 
-          await ctx.db.image.create({
-            data: {
-              ...headlineImage,
-              post: {
-                connect: {
-                  id: args.postId,
+          if (headlineImage) {
+            await ctx.db.image.deleteMany({
+              where: {
+                postId: args.postId,
+                imageRole: 'HEADLINE',
+              }
+            })
+
+
+            await ctx.db.image.create({
+              data: {
+                ...headlineImage,
+                post: {
+                  connect: {
+                    id: args.postId,
+                  },
                 },
               },
-            },
-          })
+            })
+          }
         }
 
         return ctx.db.post.update({

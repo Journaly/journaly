@@ -27,8 +27,25 @@ type PostData = {
 type PostEditorProps = {
   currentUser: UserType
   autosaveKey: string
-  dataRef: React.RefObject<PostData>,
-  initialData: PostData,
+  dataRef: React.RefObject<PostData>
+  initialData: PostData
+}
+
+type validatePostDataSignature = (
+  data: PostData,
+  t: (arg0: string) => string
+) => [boolean, string]
+
+const validatePostData: validatePostDataSignature = (data, t) => {
+  if (!data.title.length) {
+    return [false, t('emptyTitleError')]
+  }
+
+  if (data.languageId === -1) {
+    return [false, t('noLanguageError')]
+  }
+
+  return [true, '']
 }
 
 const DEFAULT_IMAGE_URL = '/images/samples/sample-post-img.jpg'
@@ -205,5 +222,5 @@ const PostEditor: React.FC<PostEditorProps> = ({
   )
 }
 
-export { PostData }
+export { validatePostData, PostData }
 export default PostEditor

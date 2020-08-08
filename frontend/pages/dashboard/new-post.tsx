@@ -5,7 +5,7 @@ import { Editor, Node } from 'slate'
 import { withApollo } from '../../lib/apollo'
 
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
-import PostEditor, { PostData } from '../../components/PostEditor'
+import PostEditor, { PostData, validatePostData } from '../../components/PostEditor'
 import theme from '../../theme'
 import Button, { ButtonVariant } from '../../elements/Button'
 import {
@@ -18,6 +18,7 @@ import {
 import AuthGate from '../../components/AuthGate'
 import useAutosavedState from '../../hooks/useAutosavedState'
 import PostHeader from '../../components/PostHeader'
+import { useTranslation } from '../../config/i18n'
 
 const initialData = {
   title: '',
@@ -40,11 +41,18 @@ const NewPostPage: NextPage = () => {
   const { data: { currentUser } = {} } = useCurrentUserQuery()
   const dataRef = React.useRef<PostData>()
   const router = useRouter()
-
+  const { t } = useTranslation('post')
   const [createPost] = useCreatePostMutation()
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
   const createNewPost = async (status: PostStatusType) => {
     if (!(createPost && dataRef.current)) {
+      return
+    }
+
+    const [valid, message] = validatePostData(dataRef.current, t)
+    if (!valid) {
+      setErrorMessage(message)
       return
     }
 
@@ -82,7 +90,7 @@ const NewPostPage: NextPage = () => {
                 createNewPost(PostStatusType.Published)
               }}
             >
-              Publish!
+              {t('publishCTA')}
             </Button>
             <Button
               type="submit"
@@ -93,9 +101,14 @@ const NewPostPage: NextPage = () => {
                 createNewPost(PostStatusType.Draft)
               }}
             >
-              Save Draft
+              {t('saveDraftCTA')}
             </Button>
           </div>
+          { errorMessage && (
+            <span className="error-message">
+              {errorMessage}
+            </span>
+          )}
           <style jsx>{`
             display: flex;
             flex-direction: column;
@@ -124,6 +137,11 @@ const NewPostPage: NextPage = () => {
 
             :global(.post-header .cancel-image-icon:hover) {
               cursor: pointer;
+            }
+
+            .error-message {
+              ${theme.typography.error}
+              text-align: center;
             }
           `}</style>
         </form>

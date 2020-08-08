@@ -375,7 +375,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
               ?.largeSize || '/images/samples/sample-post-img.jpg'
           }
         />
-        <div className="post-body selectable-text-area" onClick={onThreadClick}>
+        <div className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
         </div>
 

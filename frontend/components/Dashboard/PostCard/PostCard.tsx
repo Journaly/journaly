@@ -54,7 +54,7 @@ const PostCard: React.FC<Props> = ({
           <img className="post-image" src={displayImage} alt={imageAlt} />
 
           <div className="post-card-details">
-            <div className="post-text">
+            <div className="post-text" dir="auto">
               <h1 className="post-title">{title}</h1>
               <p className="post-excerpt">{excerpt}</p>
             </div>

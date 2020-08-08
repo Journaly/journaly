@@ -458,6 +458,9 @@ export type EditPostQuery = { __typename?: 'Query' } & {
   postById?: Maybe<
     { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc'> & {
         language: { __typename?: 'Language' } & Pick<Language, 'id'>
+        images: Array<
+          { __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'smallSize' | 'imageRole'>
+        >
       }
   >
   currentUser?: Maybe<
@@ -1188,6 +1191,12 @@ export const EditPostDocument = gql`
       bodySrc
       language {
         id
+      }
+      images {
+        id
+        largeSize
+        smallSize
+        imageRole
       }
     }
     currentUser {

@@ -5,6 +5,12 @@ query editPost($id: Int!) {
     language {
       id
     }
+    images {
+      id
+      largeSize
+      smallSize
+      imageRole
+    }
   }
   currentUser {
     languagesLearning {

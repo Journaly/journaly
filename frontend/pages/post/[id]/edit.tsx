@@ -10,6 +10,7 @@ import PostEditor, { PostData } from '../../../components/PostEditor'
 import theme from '../../../theme'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import {
+  ImageRole,
   useEditPostQuery,
   useUpdatePostMutation,
 } from '../../../generated/graphql'
@@ -35,10 +36,22 @@ const EditPostPage: NextPage = () => {
 
   React.useEffect(() => {
     if (postById) {
+      const {
+        title,
+        bodySrc,
+        language: { id: languageId },
+        images
+      } = postById
+
+      const image = images.find(
+        ({ imageRole }) => imageRole === ImageRole.Headline
+      ) || null
+
       setInitialData({
-        title: postById.title,
-        languageId: postById.language.id,
-        body: JSON.parse(postById.bodySrc) as Node[],
+        title,
+        languageId,
+        body: JSON.parse(bodySrc) as Node[],
+        image,
         clear: () => null
       })
     }

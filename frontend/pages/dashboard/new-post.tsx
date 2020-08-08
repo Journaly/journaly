@@ -129,6 +129,7 @@ const NewPostPage: NextPage = () => {
             name="title"
             placeholder="The Greatest Story Never Told..."
             autoComplete="off"
+            dir="auto"
           />
 
           <input

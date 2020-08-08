@@ -6,8 +6,7 @@ import { withApollo } from '../../../lib/apollo'
 import { useTranslation } from '../../../config/i18n'
 
 import DashboardLayout from '../../../components/Layouts/DashboardLayout'
-import JournalyEditor from '../../../components/JournalyEditor'
-import LanguageSelect from '../../../components/LanguageSelect'
+import PostEditor, { PostData } from '../../../components/PostEditor'
 import theme from '../../../theme'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import {
@@ -27,29 +26,23 @@ const EditPostPage: NextPage = () => {
   const router = useRouter()
   const idStr = router.query.id as string
   const id = parseInt(idStr, 10)
+  const { t } = useTranslation('post')
 
   const { data: { currentUser, postById } = {} } = useEditPostQuery({ variables: { id } })
-  const { languagesLearning = [], languagesNative = [] } = currentUser || {}
-
-  const { t } = useTranslation('post')
-  const [langId, setLangId] = React.useState<number>(-1)
-  const [title, setTitle] = React.useState<string>('')
-  const [body, setBody] = React.useState<Node[]>(initialValue)
-  const slateRef = React.useRef<Editor>(null)
+  const dataRef = React.useRef<PostData>()
+  const [initialData, setInitialData] = React.useState<PostData | null>(null)
+  const [updatePost] = useUpdatePostMutation()
 
   React.useEffect(() => {
     if (postById) {
-      setTitle(postById.title)
-      setLangId(postById.language.id)
-      setBody(JSON.parse(postById.bodySrc) as Node[])
+      setInitialData({
+        title: postById.title,
+        languageId: postById.language.id,
+        body: JSON.parse(postById.bodySrc) as Node[],
+        clear: () => null
+      })
     }
   }, [postById])
-
-  const [updatePost] = useUpdatePostMutation()
-
-  const userLanguages = languagesLearning
-    .map((x) => x.language)
-    .concat(languagesNative.map((x) => x.language))
 
   const savePost = async () => {
     const { data } = await updatePost({
@@ -74,34 +67,18 @@ const EditPostPage: NextPage = () => {
         <form id="edit-post">
           <h1>{t('editPost')}</h1>
 
-          <label htmlFor="post-title">{t('titleLabel')}</label>
-          <input
-            className="j-field"
-            id="post-title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            type="text"
-            name="title"
-            placeholder="The Greatest Story Never Told..."
-            autoComplete="off"
-          />
-
-          <label htmlFor="post-language">{t('languageLabel')}</label>
-          <LanguageSelect
-            id="language"
-            languages={userLanguages}
-            value={langId}
-            onChange={setLangId}
-          />
-
-          <div className="editor-padding">
-            <JournalyEditor value={body} setValue={setBody} slateRef={slateRef} />
-          </div>
+          { initialData && (
+            <PostEditor
+              currentUser={currentUser}
+              autosaveKey={`edit-post:${id}`}
+              dataRef={dataRef}
+              initialData={initialData}
+            />
+          )}
 
           <div className="button-container">
             <Button
               type="submit"
-              disabled={!title || langId === -1}
               variant={ButtonVariant.Primary}
               data-test="post-submit"
               onClick={(e: React.MouseEvent) => {
@@ -113,8 +90,13 @@ const EditPostPage: NextPage = () => {
             </Button>
           </div>
           <style jsx>{`
-            display: flex;
-            flex-direction: column;
+            #edit-post {
+              display: flex;
+              flex-direction: column;
+              background-color: white;
+              padding: 25px;
+              box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
+            }
 
             h1 {
               margin: 50px auto;
@@ -135,9 +117,6 @@ const EditPostPage: NextPage = () => {
               background-color: white;
               padding: 25px;
               box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
-            }
-            .editor-padding {
-              padding: 25px 0;
             }
           `}</style>
         </form>

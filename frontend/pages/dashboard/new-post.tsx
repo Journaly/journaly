@@ -5,7 +5,7 @@ import { Editor, Node } from 'slate'
 import { withApollo } from '../../lib/apollo'
 
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
-import PostEditor from '../../components/PostEditor'
+import PostEditor, { PostData } from '../../components/PostEditor'
 import theme from '../../theme'
 import Button, { ButtonVariant } from '../../elements/Button'
 import {
@@ -120,48 +120,6 @@ const NewPostPage: NextPage = () => {
               background-color: white;
               padding: 25px;
               box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
-            }
-            .editor-padding {
-              padding: 25px 0;
-            }
-
-            .preview-image {
-              flex: 0;
-              align-self: center;
-            }
-
-            .header-preview-container {
-              display: grid;
-              grid-auto-rows: 350px 1fr;
-              margin-top: 24px;
-            }
-
-            .image-upload-input {
-              display: none;
-            }
-
-            .header-preview-options {
-              display: flex;
-              flex-direction: row;
-              align-items: center;
-            }
-
-            :global(.post-header .header-preview-options) {
-              position: absolute;
-              top: 10px;
-              right: 10px;
-            }
-
-            :global(.post-header .image-upload-btn) {
-              margin-right: 5px;
-            }
-
-            label {
-              margin-top: 10px;
-            }
-
-            .title-input {
-              margin-top: 0;
             }
 
             :global(.post-header .cancel-image-icon:hover) {

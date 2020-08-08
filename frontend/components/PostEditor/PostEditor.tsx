@@ -153,9 +153,6 @@ const PostEditor: React.FC<PostEditorProps> = ({
         .post-editor {
           display: flex;
           flex-direction: column;
-          background-color: white;
-          padding: 25px;
-          box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
         }
         .editor-padding {
           padding: 25px 0;

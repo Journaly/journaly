@@ -63,6 +63,7 @@ const EditPostPage: NextPage = () => {
     }
 
     const { title, languageId, image, body, clear } = dataRef.current
+    const images = image ? [image] : []
 
     const { data } = await updatePost({
       variables: {
@@ -70,6 +71,7 @@ const EditPostPage: NextPage = () => {
         title,
         languageId,
         body,
+        images,
       },
     })
 

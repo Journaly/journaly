@@ -13,6 +13,7 @@ query editPost($id: Int!) {
     }
   }
   currentUser {
+    ...UserFragment
     languagesLearning {
       language {
         ...LanguageFragment

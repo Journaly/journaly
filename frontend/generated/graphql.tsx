@@ -156,6 +156,7 @@ export type MutationUpdatePostArgs = {
   languageId?: Maybe<Scalars['Int']>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
+  images?: Maybe<Array<ImageInput>>
 }
 
 export type MutationCreateUserArgs = {
@@ -475,7 +476,7 @@ export type EditPostQuery = { __typename?: 'Query' } & {
           language: { __typename?: 'Language' } & LanguageFragmentFragment
         }
       >
-    }
+    } & UserFragmentFragment
   >
 }
 
@@ -626,6 +627,7 @@ export type UpdatePostMutationVariables = {
   languageId?: Maybe<Scalars['Int']>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
+  images?: Maybe<Array<ImageInput>>
 }
 
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
@@ -1200,6 +1202,7 @@ export const EditPostDocument = gql`
       }
     }
     currentUser {
+      ...UserFragment
       languagesLearning {
         language {
           ...LanguageFragment
@@ -1212,6 +1215,7 @@ export const EditPostDocument = gql`
       }
     }
   }
+  ${UserFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
 `
 
@@ -1735,13 +1739,15 @@ export const UpdatePostDocument = gql`
     $languageId: Int
     $body: [EditorNode!]
     $status: PostStatus
+    $images: [ImageInput!]
   ) {
     updatePost(
+      postId: $postId
       body: $body
       title: $title
       languageId: $languageId
       status: $status
-      postId: $postId
+      images: $images
     ) {
       ...PostFragment
     }
@@ -1771,6 +1777,7 @@ export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      languageId: // value for 'languageId'
  *      body: // value for 'body'
  *      status: // value for 'status'
+ *      images: // value for 'images'
  *   },
  * });
  */

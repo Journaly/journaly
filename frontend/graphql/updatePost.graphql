@@ -1,5 +1,19 @@
-mutation updatePost($postId: Int!, $title: String, $languageId: Int, $body: [EditorNode!], $status: PostStatus) {
-  updatePost(body: $body, title: $title, languageId: $languageId, status: $status, postId: $postId) {
+mutation updatePost(
+  $postId: Int!
+  $title: String
+  $languageId: Int
+  $body: [EditorNode!]
+  $status: PostStatus
+  $images: [ImageInput!]
+) {
+  updatePost(
+    postId: $postId
+    body: $body
+    title: $title
+    languageId: $languageId
+    status: $status
+    images: $images
+  ) {
     ...PostFragment
   }
 }

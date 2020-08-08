@@ -45,11 +45,17 @@ const EditPostPage: NextPage = () => {
   }, [postById])
 
   const savePost = async () => {
+    if (!dataRef.current) {
+      return
+    }
+
+    const { title, languageId, image, body, clear } = dataRef.current
+
     const { data } = await updatePost({
       variables: {
-        languageId: langId,
         postId: id,
         title,
+        languageId,
         body,
       },
     })
@@ -58,6 +64,7 @@ const EditPostPage: NextPage = () => {
       return
     }
 
+    clear()
     router.push({ pathname: `/post/${data.updatePost.id}` })
   }
 

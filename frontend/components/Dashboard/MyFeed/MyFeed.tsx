@@ -14,7 +14,7 @@ type Props = {
 
 const NUM_POSTS_PER_PAGE = 9
 
-const MyFeed: React.FC<Props> = ({ currentUser }) => {
+const MyFeed: React.FC<Props> = () => {
   // Pull query params off the router instance
   const { query } = useRouter()
   const currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
@@ -32,8 +32,6 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   const showPagination = count > NUM_POSTS_PER_PAGE
   const pageTitle = 'My Feed'
 
-  // TODO will likley be used for event logging
-  console.log(currentUser)
   return (
     <div className="my-feed-wrapper">
       <Head>

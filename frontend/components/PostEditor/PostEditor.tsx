@@ -128,6 +128,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         name="title"
         placeholder="The Greatest Story Never Told..."
         autoComplete="off"
+        dir="auto"
       />
 
       <label htmlFor="post-language">Language</label>

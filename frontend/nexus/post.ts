@@ -132,6 +132,9 @@ schema.extendType({
         const countQuery = ctx.db.post.count({
           where: {
             AND: filterClauses,
+            status: {
+              not: 'DRAFT',
+            },
           },
         })
 

@@ -25,7 +25,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
   return (
     <div className="post-header">
       <img src={postImage} alt={postTitle} />
-      <div className="post-header-info">
+      <div className="post-header-info" dir="auto">
         <h1>{postTitle}</h1>
         <p> &mdash; </p>
         <p>

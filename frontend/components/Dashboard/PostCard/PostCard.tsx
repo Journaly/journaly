@@ -54,7 +54,7 @@ const PostCard: React.FC<Props> = ({
           <img className="post-image" src={displayImage} alt={imageAlt} />
 
           <div className="post-card-details">
-            <div className="post-text">
+            <div className="post-text" dir="auto">
               <h1 className="post-title">{title}</h1>
               <p className="post-excerpt">{excerpt}</p>
             </div>
@@ -91,7 +91,7 @@ const PostCard: React.FC<Props> = ({
 
                 <div className="post-subtext">
                   {formatShortDate(publishedAt || createdAt)} -{' '}
-                  {t('readTime', { minutes: readTime })}
+                  {t('readTime', { minutes: readTime || 1 })}
                 </div>
               </div>
             </div>
@@ -150,6 +150,7 @@ const PostCard: React.FC<Props> = ({
           flex-direction: column;
           justify-content: space-between;
           height: 100%;
+          min-width: 190px;
           padding: 12px;
         }
         @media (min-width: ${theme.breakpoints.MD}) {

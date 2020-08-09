@@ -77,13 +77,11 @@ fragment PostCardFragment on Post {
   readTime
   createdAt
   publishedAt
+  commentCount
   images {
     smallSize
   }
   likes {
-    id
-  }
-  threads {
     id
   }
   author {

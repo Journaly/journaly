@@ -22,6 +22,17 @@ schema.objectType({
     t.model.bodySrc()
     t.model.images()
     t.model.publishedAt()
+    t.int('commentCount', {
+      resolve(parent, _args, ctx, _info) {
+        return ctx.db.comment.count({
+          where: {
+            thread: {
+              postId: parent.id
+            }
+          }
+        })
+      }
+    })
   },
 })
 

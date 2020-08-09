@@ -1,7 +1,8 @@
 import React from 'react'
 import Head from 'next/head'
-import { sanitize } from '../../../utils'
+import { toast } from 'react-toastify'
 
+import { sanitize } from '../../../utils'
 import {
   Post as PostType,
   UserFragmentFragment as UserType,
@@ -212,7 +213,12 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       setActiveThreadId(createThread.id)
     },
   })
-  const [updatePost] = useUpdatePostMutation({ onCompleted: refetch })
+  const [updatePost] = useUpdatePostMutation({
+    onCompleted: () => {
+      refetch()
+      toast.success('Your draft has been published.')
+    },
+  })
 
   React.useEffect(() => {
     if (!selectableRef.current) {

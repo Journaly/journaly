@@ -5,17 +5,14 @@ query editPost($id: Int!) {
     language {
       id
     }
+    images {
+      id
+      largeSize
+      smallSize
+      imageRole
+    }
   }
   currentUser {
-    languagesLearning {
-      language {
-        ...LanguageFragment
-      }
-    }
-    languagesNative {
-      language {
-        ...LanguageFragment
-      }
-    }
+    ...UserWithLanguagesFragment
   }
 }

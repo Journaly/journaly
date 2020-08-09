@@ -156,6 +156,7 @@ export type MutationUpdatePostArgs = {
   languageId?: Maybe<Scalars['Int']>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
+  images?: Maybe<Array<ImageInput>>
 }
 
 export type MutationCreateUserArgs = {
@@ -426,20 +427,7 @@ export type CreateUserMutation = { __typename?: 'Mutation' } & {
 export type CurrentUserQueryVariables = {}
 
 export type CurrentUserQuery = { __typename?: 'Query' } & {
-  currentUser?: Maybe<
-    { __typename?: 'User' } & {
-      languagesLearning: Array<
-        { __typename?: 'LanguageLearning' } & {
-          language: { __typename?: 'Language' } & LanguageFragmentFragment
-        }
-      >
-      languagesNative: Array<
-        { __typename?: 'LanguageNative' } & {
-          language: { __typename?: 'Language' } & LanguageFragmentFragment
-        }
-      >
-    } & UserFragmentFragment
-  >
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type DeleteCommentMutationVariables = {
@@ -458,22 +446,12 @@ export type EditPostQuery = { __typename?: 'Query' } & {
   postById?: Maybe<
     { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc'> & {
         language: { __typename?: 'Language' } & Pick<Language, 'id'>
+        images: Array<
+          { __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'smallSize' | 'imageRole'>
+        >
       }
   >
-  currentUser?: Maybe<
-    { __typename?: 'User' } & {
-      languagesLearning: Array<
-        { __typename?: 'LanguageLearning' } & {
-          language: { __typename?: 'Language' } & LanguageFragmentFragment
-        }
-      >
-      languagesNative: Array<
-        { __typename?: 'LanguageNative' } & {
-          language: { __typename?: 'Language' } & LanguageFragmentFragment
-        }
-      >
-    }
-  >
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type FeedQueryVariables = {
@@ -493,6 +471,19 @@ export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
   'id' | 'name' | 'handle' | 'email' | 'userRole' | 'profileImage'
 >
+
+export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
+  languagesLearning: Array<
+    { __typename?: 'LanguageLearning' } & {
+      language: { __typename?: 'Language' } & LanguageFragmentFragment
+    }
+  >
+  languagesNative: Array<
+    { __typename?: 'LanguageNative' } & {
+      language: { __typename?: 'Language' } & LanguageFragmentFragment
+    }
+  >
+} & UserFragmentFragment
 
 export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
   User,
@@ -623,6 +614,7 @@ export type UpdatePostMutationVariables = {
   languageId?: Maybe<Scalars['Int']>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
+  images?: Maybe<Array<ImageInput>>
 }
 
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
@@ -660,6 +652,30 @@ export const UserFragmentFragmentDoc = gql`
     userRole
     profileImage
   }
+`
+export const LanguageFragmentFragmentDoc = gql`
+  fragment LanguageFragment on Language {
+    id
+    name
+    dialect
+  }
+`
+export const UserWithLanguagesFragmentFragmentDoc = gql`
+  fragment UserWithLanguagesFragment on User {
+    ...UserFragment
+    languagesLearning {
+      language {
+        ...LanguageFragment
+      }
+    }
+    languagesNative {
+      language {
+        ...LanguageFragment
+      }
+    }
+  }
+  ${UserFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
 `
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {
@@ -716,13 +732,6 @@ export const PostFragmentFragmentDoc = gql`
   }
   ${AuthorFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
-`
-export const LanguageFragmentFragmentDoc = gql`
-  fragment LanguageFragment on Language {
-    id
-    name
-    dialect
-  }
 `
 export const PostCardFragmentFragmentDoc = gql`
   fragment PostCardFragment on Post {
@@ -1081,21 +1090,10 @@ export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const CurrentUserDocument = gql`
   query currentUser {
     currentUser {
-      ...UserFragment
-      languagesLearning {
-        language {
-          ...LanguageFragment
-        }
-      }
-      languagesNative {
-        language {
-          ...LanguageFragment
-        }
-      }
+      ...UserWithLanguagesFragment
     }
   }
-  ${UserFragmentFragmentDoc}
-  ${LanguageFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
 `
 
 /**
@@ -1189,21 +1187,18 @@ export const EditPostDocument = gql`
       language {
         id
       }
+      images {
+        id
+        largeSize
+        smallSize
+        imageRole
+      }
     }
     currentUser {
-      languagesLearning {
-        language {
-          ...LanguageFragment
-        }
-      }
-      languagesNative {
-        language {
-          ...LanguageFragment
-        }
-      }
+      ...UserWithLanguagesFragment
     }
   }
-  ${LanguageFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
 `
 
 /**
@@ -1726,13 +1721,15 @@ export const UpdatePostDocument = gql`
     $languageId: Int
     $body: [EditorNode!]
     $status: PostStatus
+    $images: [ImageInput!]
   ) {
     updatePost(
+      postId: $postId
       body: $body
       title: $title
       languageId: $languageId
       status: $status
-      postId: $postId
+      images: $images
     ) {
       ...PostFragment
     }
@@ -1762,6 +1759,7 @@ export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      languageId: // value for 'languageId'
  *      body: // value for 'body'
  *      status: // value for 'status'
+ *      images: // value for 'images'
  *   },
  * });
  */

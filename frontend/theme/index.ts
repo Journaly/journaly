@@ -39,6 +39,7 @@ type Typography =
   | 'headingLG'
   | 'headingXL'
   | 'displaySM'
+  | 'error'
 
 export type Theme = {
   colors: {
@@ -132,6 +133,10 @@ const theme: Theme = {
       font-size: 40px;
       line-height: 56px;
       font-weight: 400;
+    `,
+    error: `
+      color: #c42f14;
+      font-size: 11px;
     `,
   },
 }

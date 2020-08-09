@@ -228,6 +228,7 @@ schema.extendType({
         languageId: schema.intArg({ required: false }),
         body: EditorNode.asArg({ list: true, required: false }),
         status: schema.arg({ type: 'PostStatus', required: false }),
+        images: ImageInput.asArg({ list: true }),
       },
       resolve: async (_parent, args, ctx) => {
         // Check user can actually do this
@@ -272,6 +273,31 @@ schema.extendType({
 
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
           data.publishedAt = new Date().toISOString()
+        }
+
+        if (args.images) {
+          const headlineImage = args.images.find(i => i.imageRole === 'HEADLINE')
+
+          if (headlineImage) {
+            await ctx.db.image.deleteMany({
+              where: {
+                postId: args.postId,
+                imageRole: 'HEADLINE',
+              }
+            })
+
+
+            await ctx.db.image.create({
+              data: {
+                ...headlineImage,
+                post: {
+                  connect: {
+                    id: args.postId,
+                  },
+                },
+              },
+            })
+          }
         }
 
         return ctx.db.post.update({

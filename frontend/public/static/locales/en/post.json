@@ -8,5 +8,6 @@
   "titleLabel": "Title",
   "languageLabel": "Language",
   "save": "Save",
-  "finishAction": "Finish post"
+  "finishAction": "Finish post",
+  "draftPublishedSuccess": "Your post has been successfully published!"
 }

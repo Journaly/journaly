@@ -216,7 +216,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
   const [updatePost] = useUpdatePostMutation({
     onCompleted: () => {
       refetch()
-      toast.success('Your draft has been published.')
+      toast.success(t('draftPublishedSuccess'))
     },
   })
 

@@ -1,15 +1,5 @@
 query currentUser {
   currentUser {
-    ...UserFragment
-    languagesLearning {
-      language {
-        ...LanguageFragment
-      }
-    }
-    languagesNative {
-      language {
-        ...LanguageFragment
-      }
-    }
+    ...UserWithLanguagesFragment
   }
 }

@@ -7,6 +7,20 @@ fragment UserFragment on User {
   profileImage
 }
 
+fragment UserWithLanguagesFragment on User {
+  ...UserFragment
+  languagesLearning {
+    language {
+      ...LanguageFragment
+    }
+  }
+  languagesNative {
+    language {
+      ...LanguageFragment
+    }
+  }
+}
+
 fragment AuthorFragment on User {
   id
   name

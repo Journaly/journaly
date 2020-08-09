@@ -427,20 +427,7 @@ export type CreateUserMutation = { __typename?: 'Mutation' } & {
 export type CurrentUserQueryVariables = {}
 
 export type CurrentUserQuery = { __typename?: 'Query' } & {
-  currentUser?: Maybe<
-    { __typename?: 'User' } & {
-      languagesLearning: Array<
-        { __typename?: 'LanguageLearning' } & {
-          language: { __typename?: 'Language' } & LanguageFragmentFragment
-        }
-      >
-      languagesNative: Array<
-        { __typename?: 'LanguageNative' } & {
-          language: { __typename?: 'Language' } & LanguageFragmentFragment
-        }
-      >
-    } & UserFragmentFragment
-  >
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type DeleteCommentMutationVariables = {
@@ -464,20 +451,7 @@ export type EditPostQuery = { __typename?: 'Query' } & {
         >
       }
   >
-  currentUser?: Maybe<
-    { __typename?: 'User' } & {
-      languagesLearning: Array<
-        { __typename?: 'LanguageLearning' } & {
-          language: { __typename?: 'Language' } & LanguageFragmentFragment
-        }
-      >
-      languagesNative: Array<
-        { __typename?: 'LanguageNative' } & {
-          language: { __typename?: 'Language' } & LanguageFragmentFragment
-        }
-      >
-    } & UserFragmentFragment
-  >
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type FeedQueryVariables = {
@@ -497,6 +471,19 @@ export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
   'id' | 'name' | 'handle' | 'email' | 'userRole' | 'profileImage'
 >
+
+export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
+  languagesLearning: Array<
+    { __typename?: 'LanguageLearning' } & {
+      language: { __typename?: 'Language' } & LanguageFragmentFragment
+    }
+  >
+  languagesNative: Array<
+    { __typename?: 'LanguageNative' } & {
+      language: { __typename?: 'Language' } & LanguageFragmentFragment
+    }
+  >
+} & UserFragmentFragment
 
 export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
   User,
@@ -666,6 +653,30 @@ export const UserFragmentFragmentDoc = gql`
     profileImage
   }
 `
+export const LanguageFragmentFragmentDoc = gql`
+  fragment LanguageFragment on Language {
+    id
+    name
+    dialect
+  }
+`
+export const UserWithLanguagesFragmentFragmentDoc = gql`
+  fragment UserWithLanguagesFragment on User {
+    ...UserFragment
+    languagesLearning {
+      language {
+        ...LanguageFragment
+      }
+    }
+    languagesNative {
+      language {
+        ...LanguageFragment
+      }
+    }
+  }
+  ${UserFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
+`
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {
     id
@@ -721,13 +732,6 @@ export const PostFragmentFragmentDoc = gql`
   }
   ${AuthorFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
-`
-export const LanguageFragmentFragmentDoc = gql`
-  fragment LanguageFragment on Language {
-    id
-    name
-    dialect
-  }
 `
 export const PostCardFragmentFragmentDoc = gql`
   fragment PostCardFragment on Post {
@@ -1086,21 +1090,10 @@ export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const CurrentUserDocument = gql`
   query currentUser {
     currentUser {
-      ...UserFragment
-      languagesLearning {
-        language {
-          ...LanguageFragment
-        }
-      }
-      languagesNative {
-        language {
-          ...LanguageFragment
-        }
-      }
+      ...UserWithLanguagesFragment
     }
   }
-  ${UserFragmentFragmentDoc}
-  ${LanguageFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
 `
 
 /**
@@ -1202,21 +1195,10 @@ export const EditPostDocument = gql`
       }
     }
     currentUser {
-      ...UserFragment
-      languagesLearning {
-        language {
-          ...LanguageFragment
-        }
-      }
-      languagesNative {
-        language {
-          ...LanguageFragment
-        }
-      }
+      ...UserWithLanguagesFragment
     }
   }
-  ${UserFragmentFragmentDoc}
-  ${LanguageFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
 `
 
 /**

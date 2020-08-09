@@ -1,7 +1,6 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Editor, Node } from 'slate'
 import { withApollo } from '../../lib/apollo'
 
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
@@ -12,17 +11,13 @@ import {
   useCurrentUserQuery,
   useCreatePostMutation,
   PostStatus as PostStatusType,
-  ImageInput,
-  ImageRole,
 } from '../../generated/graphql'
 import AuthGate from '../../components/AuthGate'
-import useAutosavedState from '../../hooks/useAutosavedState'
-import PostHeader from '../../components/PostHeader'
 import { useTranslation } from '../../config/i18n'
 
 const initialData = {
   title: '',
-  languageId: '',
+  languageId: -1,
   image: null,
   body: [
     {
@@ -31,10 +26,6 @@ const initialData = {
     },
   ],
   clear: () => null
-}
-
-interface HTMLInputEvent extends React.FormEvent {
-  target: HTMLInputElement & EventTarget
 }
 
 const NewPostPage: NextPage = () => {
@@ -63,6 +54,11 @@ const NewPostPage: NextPage = () => {
       variables: { title, body, status, languageId, images },
     })
 
+    if (!createPostResponse?.data?.createPost) {
+      console.error('Got empty response when attempting to create post.')
+      return
+    }
+
     clear()
     router.push({ pathname: `/post/${createPostResponse.data.createPost.id}` })
   }
@@ -73,12 +69,14 @@ const NewPostPage: NextPage = () => {
         <form id="new-post">
           <h1>Let's write a post</h1>
 
-          <PostEditor
-            currentUser={currentUser}
-            autosaveKey="new-post"
-            dataRef={dataRef}
-            initialData={initialData}
-          />
+          { currentUser && (
+            <PostEditor
+              currentUser={currentUser}
+              autosaveKey="new-post"
+              dataRef={dataRef}
+              initialData={initialData}
+            />
+          )}
 
           <div className="button-container">
             <Button

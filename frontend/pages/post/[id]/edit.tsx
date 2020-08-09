@@ -1,7 +1,7 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Editor, Node } from 'slate'
+import { Node } from 'slate'
 import { withApollo } from '../../../lib/apollo'
 import { useTranslation } from '../../../config/i18n'
 
@@ -15,13 +15,6 @@ import {
   useUpdatePostMutation,
 } from '../../../generated/graphql'
 import AuthGate from '../../../components/AuthGate'
-
-const initialValue = [
-  {
-    type: 'paragraph',
-    children: [{ text: '' }],
-  },
-]
 
 const EditPostPage: NextPage = () => {
   const router = useRouter()
@@ -96,7 +89,7 @@ const EditPostPage: NextPage = () => {
         <form id="edit-post">
           <h1>{t('editPost')}</h1>
 
-          { initialData && (
+          { initialData && currentUser && (
             <PostEditor
               currentUser={currentUser}
               autosaveKey={`edit-post:${id}`}

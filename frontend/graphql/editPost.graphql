@@ -13,16 +13,6 @@ query editPost($id: Int!) {
     }
   }
   currentUser {
-    ...UserFragment
-    languagesLearning {
-      language {
-        ...LanguageFragment
-      }
-    }
-    languagesNative {
-      language {
-        ...LanguageFragment
-      }
-    }
+    ...UserWithLanguagesFragment
   }
 }

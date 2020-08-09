@@ -1,16 +1,17 @@
 import React from 'react'
 import { Editor, Node } from 'slate'
 
-import FileInput from '../../components/FileInput'
-import LanguageSelect from '../../components/LanguageSelect'
-import PostHeader from '../../components/PostHeader'
-import JournalyEditor from '../../components/JournalyEditor'
-import XIcon from '../../components/Icons/XIcon'
+import FileInput from '../FileInput'
+import LanguageSelect from '../LanguageSelect'
+import PostHeader from '../PostHeader'
+import JournalyEditor from '../JournalyEditor'
+import XIcon from '../Icons/XIcon'
+import { ButtonVariant } from '../../elements/Button'
 import theme from '../../theme'
 import useImageUpload from '../../hooks/useImageUpload'
 import useAutosavedState from '../../hooks/useAutosavedState'
 import {
-  User as UserType,
+  UserWithLanguagesFragmentFragment as UserWithLanguagesType,
   PostStatus as PostStatusType,
   ImageInput,
   ImageRole,
@@ -25,9 +26,9 @@ type PostData = {
 }
 
 type PostEditorProps = {
-  currentUser: UserType
+  currentUser: UserWithLanguagesType
   autosaveKey: string
-  dataRef: React.RefObject<PostData>
+  dataRef: React.MutableRefObject<PostData | undefined>
   initialData: PostData
 }
 
@@ -104,7 +105,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
       imageRole: ImageRole.Headline,
     }
 
-    ;(dataRef as React.MutableRefObject<PostData>).current = {
+    dataRef.current = {
       title,
       body,
       clear,
@@ -147,6 +148,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         >
           <div className="header-preview-options">
             <FileInput
+              variant={ButtonVariant.Primary}
               className="image-upload-btn"
               loading={uploadingImage}
               onChange={onFileInputChange}
@@ -222,5 +224,6 @@ const PostEditor: React.FC<PostEditorProps> = ({
   )
 }
 
-export { validatePostData, PostData }
+export type { PostData }
+export { validatePostData }
 export default PostEditor

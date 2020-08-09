@@ -35,7 +35,7 @@ const PostCard: React.FC<Props> = ({
     readTime,
     images,
     likes,
-    threads,
+    commentCount,
     author: { handle, name, profileImage },
     createdAt,
     publishedAt,
@@ -84,7 +84,7 @@ const PostCard: React.FC<Props> = ({
                     </div>
                     <div className="post-stat">
                       <CommentIcon />
-                      <span>{threads.length}</span>
+                      <span>{commentCount}</span>
                     </div>
                   </div>
                 )}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 import {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
@@ -33,6 +34,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
       },
     })
     setIsEditMode(false)
+    toast.success('Your comment has been updated.')
   }
 
   const [deleteComment, { loading: deleteLoading }] = useDeleteCommentMutation({

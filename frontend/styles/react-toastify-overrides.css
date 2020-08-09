@@ -1,0 +1,13 @@
+/*
+ * Docs for overriding default react-toastify styles
+ * https://fkhadra.github.io/react-toastify/how-to-style/
+ */
+@media (min-width: 481px) {
+  .Toastify__toast {
+    border-radius: 5px;
+  }
+}
+
+.Toastify__toast--success {
+  background-color: #4391c9;
+}

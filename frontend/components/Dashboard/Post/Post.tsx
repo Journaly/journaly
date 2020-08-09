@@ -415,7 +415,6 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
         position={commentButtonPosition}
         display={displayCommentButton && !!currentUser}
       />
-      <div id="popover-root" />
       {activeThread && (
         <InlineFeedbackPopover
           thread={activeThread}

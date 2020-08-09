@@ -41,6 +41,7 @@ class JournalyApp extends App {
         </Head>
         <Component {...pageProps} />
         <ToastContainer />
+        <div id="popover-root" />
       </>
     )
   }

@@ -23,7 +23,7 @@ schema.objectType({
     t.model.images()
     t.model.publishedAt()
     t.int('commentCount', {
-      resolve(parent, args, ctx, info) {
+      resolve(parent, _args, ctx, _info) {
         return ctx.db.comment.count({
           where: {
             thread: {

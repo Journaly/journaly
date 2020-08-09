@@ -2,10 +2,15 @@ import App from 'next/app'
 import Head from 'next/head'
 import Router, { withRouter } from 'next/router'
 import NProgress from 'nprogress'
+import { ToastContainer } from 'react-toastify'
+
 import { initializeTracking, trackPageView } from '../lib/google-analytics'
+import { appWithTranslation } from '../config/i18n'
+
 import '../styles/reset.css'
 import '../styles/globalStyles.css'
-import { appWithTranslation } from '../config/i18n'
+import 'react-toastify/dist/ReactToastify.css'
+import '../styles/react-toastify-overrides.css'
 
 initializeTracking()
 
@@ -35,6 +40,7 @@ class JournalyApp extends App {
           <link rel="stylesheet" type="text/css" href="/nprogress.css" />
         </Head>
         <Component {...pageProps} />
+        <ToastContainer />
       </>
     )
   }

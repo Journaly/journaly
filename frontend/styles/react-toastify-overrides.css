@@ -1,0 +1,21 @@
+/*
+ * Docs for overriding default react-toastify styles
+ * https://fkhadra.github.io/react-toastify/how-to-style/
+ */
+
+.Toastify__toast {
+  padding: 12px;
+}
+@media (min-width: 481px) {
+  .Toastify__toast {
+    border-radius: 5px;
+  }
+}
+
+.Toastify__toast-body {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.Toastify__toast--success {
+  background-color: #4391c9;
+}

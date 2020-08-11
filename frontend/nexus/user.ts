@@ -49,6 +49,26 @@ schema.extendType({
         })
       },
     })
+
+    t.field('userById', {
+      type: 'User',
+      args: {
+        id: schema.intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const user = await ctx.db.user.findOne({
+          where: {
+            id: args.id,
+          },
+        })
+
+        if (!user) {
+          throw new Error('User not found')
+        }
+
+        return user
+      },
+    })
   },
 })
 

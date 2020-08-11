@@ -9,7 +9,6 @@ type PostHeaderProps = {
   postStatus: PostStatus
   publishDate: string
   authorName: string
-  authorId: number
   postImage: string
   children?: React.ReactNode
 }

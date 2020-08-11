@@ -28,6 +28,20 @@ fragment AuthorFragment on User {
   profileImage
 }
 
+fragment AuthorWithLanguagesFragment on User {
+  ...AuthorFragment
+  languagesLearning {
+    language {
+      ...LanguageFragment
+    }
+  }
+  languagesNative {
+    language {
+      ...LanguageFragment
+    }
+  }
+}
+
 fragment CommentFragment on Comment {
   id
   body
@@ -57,7 +71,7 @@ fragment PostFragment on Post {
   createdAt
   publishedAt
   author {
-    ...AuthorFragment
+    ...AuthorWithLanguagesFragment
   }
   threads {
     ...ThreadFragment

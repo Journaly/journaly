@@ -496,6 +496,19 @@ export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
   'id' | 'name' | 'handle' | 'profileImage'
 >
 
+export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
+  languagesLearning: Array<
+    { __typename?: 'LanguageLearning' } & {
+      language: { __typename?: 'Language' } & LanguageFragmentFragment
+    }
+  >
+  languagesNative: Array<
+    { __typename?: 'LanguageNative' } & {
+      language: { __typename?: 'Language' } & LanguageFragmentFragment
+    }
+  >
+} & AuthorFragmentFragment
+
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
   'id' | 'body' | 'createdAt'
@@ -510,7 +523,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
   'id' | 'title' | 'body' | 'status' | 'excerpt' | 'readTime' | 'createdAt' | 'publishedAt'
 > & {
-    author: { __typename?: 'User' } & AuthorFragmentFragment
+    author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
     images: Array<{ __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'imageRole'>>
   }
@@ -698,6 +711,23 @@ export const AuthorFragmentFragmentDoc = gql`
     profileImage
   }
 `
+export const AuthorWithLanguagesFragmentFragmentDoc = gql`
+  fragment AuthorWithLanguagesFragment on User {
+    ...AuthorFragment
+    languagesLearning {
+      language {
+        ...LanguageFragment
+      }
+    }
+    languagesNative {
+      language {
+        ...LanguageFragment
+      }
+    }
+  }
+  ${AuthorFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
+`
 export const CommentFragmentFragmentDoc = gql`
   fragment CommentFragment on Comment {
     id
@@ -732,7 +762,7 @@ export const PostFragmentFragmentDoc = gql`
     createdAt
     publishedAt
     author {
-      ...AuthorFragment
+      ...AuthorWithLanguagesFragment
     }
     threads {
       ...ThreadFragment
@@ -743,7 +773,7 @@ export const PostFragmentFragmentDoc = gql`
       imageRole
     }
   }
-  ${AuthorFragmentFragmentDoc}
+  ${AuthorWithLanguagesFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
 `
 export const PostCardFragmentFragmentDoc = gql`

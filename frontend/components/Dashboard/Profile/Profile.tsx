@@ -6,14 +6,14 @@ import { User as UserType } from '../../../generated/graphql'
 import theme from '../../../theme'
 
 type Props = {
-  currentUser: UserType
+  user: UserType
 }
 
-const Profile: React.FC<Props> = ({ currentUser }) => {
+const Profile: React.FC<Props> = ({ user }) => {
   return (
     <div className="profile-wrapper">
-      <ProfileCard currentUser={currentUser} />
-      <PostList currentUserId={currentUser.id} />
+      <ProfileCard user={user} />
+      <PostList userId={user.id} />
 
       <style jsx>{`
         .profile-wrapper {

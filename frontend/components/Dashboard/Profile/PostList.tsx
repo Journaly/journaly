@@ -11,15 +11,15 @@ import theme from '../../../theme'
 import LoadingSpinner from '../../Icons/LoadingSpinner'
 
 type Props = {
-  currentUserId: number
+  userId: number
 }
 
-const PostList: React.FC<Props> = ({ currentUserId }) => {
+const PostList: React.FC<Props> = ({ userId }) => {
   const { t } = useTranslation(['profile'])
   const { loading, data, error } = usePostsQuery({
     variables: {
       status: PostStatusType.Published,
-      authorId: currentUserId,
+      authorId: userId,
     },
   })
 

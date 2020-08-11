@@ -266,6 +266,7 @@ export type Query = {
   feed?: Maybe<PostPage>
   users?: Maybe<Array<User>>
   currentUser?: Maybe<User>
+  userById?: Maybe<User>
   languages?: Maybe<Array<Language>>
 }
 
@@ -284,6 +285,10 @@ export type QueryFeedArgs = {
   topic?: Maybe<Scalars['String']>
   skip?: Maybe<Scalars['Int']>
   first?: Maybe<Scalars['Int']>
+}
+
+export type QueryUserByIdArgs = {
+  id: Scalars['Int']
 }
 
 export type QueryLanguagesArgs = {
@@ -629,6 +634,14 @@ export type UpdateUserMutationVariables = {
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
   updateUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
+}
+
+export type UserByIdQueryVariables = {
+  id: Scalars['Int']
+}
+
+export type UserByIdQuery = { __typename?: 'Query' } & {
+  userById?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type UsersQueryVariables = {}
@@ -1826,6 +1839,53 @@ export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<UpdateUs
 export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
+>
+export const UserByIdDocument = gql`
+  query userById($id: Int!) {
+    userById(id: $id) {
+      ...UserWithLanguagesFragment
+    }
+  }
+  ${UserWithLanguagesFragmentFragmentDoc}
+`
+
+/**
+ * __useUserByIdQuery__
+ *
+ * To run a query within a React component, call `useUserByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserByIdQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<UserByIdQuery, UserByIdQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<UserByIdQuery, UserByIdQueryVariables>(
+    UserByIdDocument,
+    baseOptions,
+  )
+}
+export function useUserByIdLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserByIdQuery, UserByIdQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<UserByIdQuery, UserByIdQueryVariables>(
+    UserByIdDocument,
+    baseOptions,
+  )
+}
+export type UserByIdQueryHookResult = ReturnType<typeof useUserByIdQuery>
+export type UserByIdLazyQueryHookResult = ReturnType<typeof useUserByIdLazyQuery>
+export type UserByIdQueryResult = ApolloReactCommon.QueryResult<
+  UserByIdQuery,
+  UserByIdQueryVariables
 >
 export const UsersDocument = gql`
   query users {

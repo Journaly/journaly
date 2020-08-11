@@ -10,15 +10,13 @@ import { User as UserType } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type Props = {
-  currentUser: UserType
+  user: UserType
 }
 
-const ProfileCard: React.FC<Props> = ({ currentUser }) => {
+const ProfileCard: React.FC<Props> = ({ user }) => {
   const { t } = useTranslation('profile')
 
-  const user = {
-    speaks: ['English'],
-    learns: ['Japanese, French'],
+  const sampleUser = {
     likes: ['cooking, reading, movies, design'],
     bio:
       'Praesent commodo a quis at dui taciti sagittis senectus inceptos nascetur, dictumst accumsan quam tortor dictum in ultrices natoque sodales, venenatis et iaculis aliquet blandit mi mauris faucibus molestie. Libero suspendisse urna placerat elit non est metus vivamus justo, duis nam ridiculus mattis eu gravida tellus curae, maecenas nisi pellentesque elementum imperdiet mus ac varius.',
@@ -29,16 +27,17 @@ const ProfileCard: React.FC<Props> = ({ currentUser }) => {
     website: 'https://robinmacpherson.com',
   }
 
-  const name = currentUser.name || currentUser.handle
-  const showSeparator = user.facebook || user.instagram || user.youtube || user.website
-  const profileImage = currentUser.profileImage
+  const name = user.name || user.handle
+  const showSeparator =
+    sampleUser.facebook || sampleUser.instagram || sampleUser.youtube || sampleUser.website
+  const profileImage = user.profileImage
   const speaks = []
   const learns = []
 
-  for (let language of currentUser.languagesNative) {
+  for (let language of user.languagesNative) {
     speaks.push(language.language.name)
   }
-  for (let language of currentUser.languagesLearning) {
+  for (let language of user.languagesLearning) {
     learns.push(language.language.name)
   }
 
@@ -60,9 +59,9 @@ const ProfileCard: React.FC<Props> = ({ currentUser }) => {
           <p>
             <span>{t('card.learns')}:</span> {learns.join(', ')}
           </p>
-          {user.likes.length && (
+          {sampleUser.likes.length && (
             <p>
-              <span>{t('card.likes')}:</span> {user.likes.join(', ')}
+              <span>{t('card.likes')}:</span> {sampleUser.likes.join(', ')}
             </p>
           )}
         </div>
@@ -75,35 +74,35 @@ const ProfileCard: React.FC<Props> = ({ currentUser }) => {
           <BlankAvatarIcon className="blank-avatar-desktop" size={130} />
         )}
 
-        {user.bio && <p className="bio">{user.bio}</p>}
+        {sampleUser.bio && <p className="bio">{sampleUser.bio}</p>}
       </div>
 
       <div className="profile-footer">
-        {user.location && (
+        {sampleUser.location && (
           <>
-            <p className="location">{user.location}</p>
+            <p className="location">{sampleUser.location}</p>
             {showSeparator && <div className="separator">- -</div>}
           </>
         )}
 
         <div className="social-links">
-          {user.facebook && (
-            <ExternalLink href={user.facebook} className="social-link">
+          {sampleUser.facebook && (
+            <ExternalLink href={sampleUser.facebook} className="social-link">
               <FacebookIcon />
             </ExternalLink>
           )}
-          {user.instagram && (
-            <ExternalLink href={user.instagram} className="social-link">
+          {sampleUser.instagram && (
+            <ExternalLink href={sampleUser.instagram} className="social-link">
               <InstagramIcon />
             </ExternalLink>
           )}
-          {user.youtube && (
-            <ExternalLink href={user.youtube} className="social-link">
+          {sampleUser.youtube && (
+            <ExternalLink href={sampleUser.youtube} className="social-link">
               <YoutubeIcon />
             </ExternalLink>
           )}
-          {user.website && (
-            <ExternalLink href={user.website} className="social-link">
+          {sampleUser.website && (
+            <ExternalLink href={sampleUser.website} className="social-link">
               <GlobeIcon />
             </ExternalLink>
           )}

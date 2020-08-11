@@ -1,0 +1,5 @@
+query userById($id: Int!) {
+  userById(id: $id) {
+    ...UserWithLanguagesFragment
+  }
+}

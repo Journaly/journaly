@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 import { PostStatus } from '../../generated/graphql'
 import { useTranslation } from '../../config/i18n'
 import { formatLongDate } from '../../utils'
@@ -20,7 +19,6 @@ const PostHeader: React.FC<PostHeaderProps> = ({
   postTitle,
   postStatus,
   authorName,
-  authorId,
   publishDate,
   postImage,
 }) => {
@@ -32,12 +30,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
         <h1>{postTitle}</h1>
         <p> &mdash; </p>
         <p>
-          by{' '}
-          <Link href={`/dashboard/profile/${authorId}`}>
-            <a>
-              <em>{authorName}</em>
-            </a>
-          </Link>
+          by <em>{authorName}</em>
         </p>
         <p>{formatLongDate(publishDate)}</p>
       </div>
@@ -94,10 +87,6 @@ const PostHeader: React.FC<PostHeaderProps> = ({
 
         p {
           font-size: 14px;
-        }
-
-        a {
-          color: ${theme.colors.white};
         }
 
         @media (min-width: ${theme.breakpoints.MD}) {

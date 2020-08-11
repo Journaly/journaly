@@ -14,7 +14,6 @@ type Props = {
 }
 
 const ProfileCard: React.FC<Props> = ({ user }) => {
-  console.log(user)
   const { t } = useTranslation('profile')
 
   const sampleUser = {

@@ -6,7 +6,7 @@ import { User as UserType } from '../../../generated/graphql'
 import theme from '../../../theme'
 
 type Props = {
-  user: UserType
+  user: UserType | any
 }
 
 const Profile: React.FC<Props> = ({ user }) => {

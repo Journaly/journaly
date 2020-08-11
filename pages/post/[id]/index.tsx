@@ -7,6 +7,8 @@ import Post from '../../../components/Dashboard/Post'
 import LoadingWrapper from '../../../components/LoadingWrapper'
 import DashboardLayout from '../../../components/Layouts/DashboardLayout'
 import { useCurrentUserQuery, usePostByIdQuery } from '../../../generated/graphql'
+import PostAuthorCard from '../../../components/Dashboard/Post/PostAuthorCard'
+import PostComments from '../../../components/Dashboard/Post/PostComments'
 
 const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
@@ -19,7 +21,19 @@ const PostPage: NextPage = () => {
   return (
     <LoadingWrapper loading={postLoading || userLoading} error={postError || userError}>
       <DashboardLayout>
-        <Post post={postData?.postById} currentUser={userData?.currentUser} refetch={refetch} />
+        <div className="post-page-wrapper">
+          <Post post={postData?.postById} currentUser={userData?.currentUser} refetch={refetch} />
+          <div className="post-lower-section">
+            <PostComments />
+            <PostAuthorCard author={postData?.postById?.author} />
+          </div>
+          <style jsx>{`
+            .post-lower-section {
+              display: flex;
+              justify-content: space-between;
+            }
+          `}</style>
+        </div>
       </DashboardLayout>
     </LoadingWrapper>
   )

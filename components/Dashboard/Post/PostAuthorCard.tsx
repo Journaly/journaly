@@ -21,7 +21,14 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
           <p className="author-name">{author.handle}</p>
         </a>
       </Link>
-      <div className="language-info">author</div>
+      <div className="language-info">
+        <p className="author-info-heading">Languages</p>
+        <ul>
+          {author.languagesLearning.map((language) => (
+            <li key={language.language.id}>{language.language.name}</li>
+          ))}
+        </ul>
+      </div>
       <style jsx>{`
         .container {
           background-color: ${theme.colors.white};
@@ -34,6 +41,7 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
           display: flex;
           align-items: center;
           padding-bottom: 10px;
+          margin-bottom: 5px;
           border-bottom: 1px solid ${theme.colors.gray400};
         }
 
@@ -49,6 +57,11 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
           border-radius: 50%;
           background-color: ${theme.colors.blueLight};
           margin-right: 10px;
+        }
+
+        .author-info-heading {
+          ${theme.typography.headingSM};
+          font-weight: 600;
         }
       `}</style>
     </div>

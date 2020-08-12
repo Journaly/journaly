@@ -1,11 +1,11 @@
 import React from 'react'
 import Link from 'next/link'
 import theme from '../../../theme'
-import { AuthorWithLanguagesFragmentFragment as Author } from '../../../generated/graphql'
+import { AuthorWithLanguagesFragmentFragment as Author, Language } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type PostAuthorCardProps = {
-  author: Author
+  author: Author | any
 }
 
 const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
@@ -24,9 +24,10 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
       <div className="language-info">
         <p className="author-info-heading">Languages</p>
         <ul>
-          {author.languagesLearning.map((language) => (
-            <li key={language.language.id}>{language.language.name}</li>
-          ))}
+          {author.languagesLearning.map((languageParent: any) => {
+            const language: Language = languageParent.language
+            return <li key={language.id}>{language.name}</li>
+          })}
         </ul>
       </div>
       <style jsx>{`

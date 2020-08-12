@@ -601,6 +601,15 @@ export type PostsQuery = { __typename?: 'Query' } & {
   posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
 }
 
+export type ProfileQueryVariables = {
+  userId: Scalars['Int']
+}
+
+export type ProfileQuery = { __typename?: 'Query' } & {
+  userById?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+}
+
 export type RemoveLanguageLearningMutationVariables = {
   languageId: Scalars['Int']
 }
@@ -1607,6 +1616,54 @@ export function usePostsLazyQuery(
 export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>
 export type PostsQueryResult = ApolloReactCommon.QueryResult<PostsQuery, PostsQueryVariables>
+export const ProfileDocument = gql`
+  query profile($userId: Int!) {
+    userById(id: $userId) {
+      ...UserWithLanguagesFragment
+    }
+    posts(authorId: $userId, status: PUBLISHED) {
+      ...PostCardFragment
+    }
+  }
+  ${UserWithLanguagesFragmentFragmentDoc}
+  ${PostCardFragmentFragmentDoc}
+`
+
+/**
+ * __useProfileQuery__
+ *
+ * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useProfileQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<ProfileQuery, ProfileQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<ProfileQuery, ProfileQueryVariables>(
+    ProfileDocument,
+    baseOptions,
+  )
+}
+export function useProfileLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<ProfileQuery, ProfileQueryVariables>(
+    ProfileDocument,
+    baseOptions,
+  )
+}
+export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>
+export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>
+export type ProfileQueryResult = ApolloReactCommon.QueryResult<ProfileQuery, ProfileQueryVariables>
 export const RemoveLanguageLearningDocument = gql`
   mutation removeLanguageLearning($languageId: Int!) {
     removeLanguageLearning(languageId: $languageId) {

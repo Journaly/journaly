@@ -42,8 +42,16 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
         .container {
           background-color: ${theme.colors.white};
           box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.09);
-          width: 38%;
+          width: 100%;
           padding: 20px;
+          margin-bottom: 25px;
+        }
+
+        @media (min-width: ${theme.breakpoints.XS}) {
+          .container {
+            width: 38%;
+            margin-bottom: 0;
+          }
         }
 
         .author-info {

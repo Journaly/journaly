@@ -9,6 +9,7 @@ import DashboardLayout from '../../../components/Layouts/DashboardLayout'
 import { useCurrentUserQuery, usePostByIdQuery } from '../../../generated/graphql'
 import PostAuthorCard from '../../../components/Dashboard/Post/PostAuthorCard'
 import PostComments from '../../../components/Dashboard/Post/PostComments'
+import theme from '../../../theme'
 
 const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
@@ -30,7 +31,13 @@ const PostPage: NextPage = () => {
           <style jsx>{`
             .post-lower-section {
               display: flex;
+              flex-direction: column-reverse;
               justify-content: space-between;
+            }
+            @media (min-width: ${theme.breakpoints.XS}) {
+              .post-lower-section {
+                flex-direction: row;
+              }
             }
           `}</style>
         </div>

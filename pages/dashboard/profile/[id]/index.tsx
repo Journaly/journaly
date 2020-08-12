@@ -32,7 +32,7 @@ const ProfilePage: NextPage<InitialProps> = () => {
 }
 
 ProfilePage.getInitialProps = async () => ({
-  namespacesRequired: ['profile', 'post'],
+  namespacesRequired: ['common', 'profile', 'post'],
 })
 
 export default withApollo(ProfilePage)

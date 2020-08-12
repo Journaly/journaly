@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Link from 'next/link'
 import {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
@@ -53,11 +54,15 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
   return (
     <div className="comment">
       <div className="author-block">
-        {comment.author.profileImage ? (
-          <img className="profile-image" src={comment.author.profileImage} alt="" />
-        ) : (
-          <BlankAvatarIcon size={20} />
-        )}
+        <Link href={`/dashboard/profile/${comment.author.id}`}>
+          <a className="author-info">
+            {comment.author.profileImage ? (
+              <img className="profile-image" src={comment.author.profileImage} alt="" />
+            ) : (
+              <BlankAvatarIcon size={20} />
+            )}
+          </a>
+        </Link>
         <span className="author-identifier">
           {comment.author.name
             ? `${comment.author.name} (@${comment.author.handle})`

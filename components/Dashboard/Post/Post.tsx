@@ -20,6 +20,7 @@ import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 import { Router, useTranslation } from '../../../config/i18n'
 import PostHeader from '../../PostHeader'
+
 interface IPostProps {
   post: PostType | any
   currentUser: UserType | null | undefined

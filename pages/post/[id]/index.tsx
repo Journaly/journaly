@@ -29,6 +29,11 @@ const PostPage: NextPage = () => {
             <PostAuthorCard author={postData?.postById?.author} />
           </div>
           <style jsx>{`
+            .post-page-wrapper {
+              max-width: 1200px;
+              margin: 0 auto;
+            }
+
             .post-lower-section {
               display: flex;
               flex-direction: column-reverse;

@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import theme from '../../../theme'
-import { AuthorWithLanguagesFragmentFragment as Author, Language } from '../../../generated/graphql'
+import { AuthorWithLanguagesFragmentFragment as Author } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type PostAuthorCardProps = {
@@ -9,6 +9,15 @@ type PostAuthorCardProps = {
 }
 
 const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
+  let languages = []
+
+  for (let language of author.languagesLearning) {
+    languages.push(language.language.name)
+  }
+  for (let language of author.languagesNative) {
+    languages.push(language.language.name)
+  }
+
   return (
     <div className="container">
       <Link href={`/dashboard/profile/${author.id}`}>
@@ -24,9 +33,8 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
       <div className="language-info">
         <p className="author-info-heading">Languages</p>
         <ul>
-          {author.languagesLearning.map((languageParent: any) => {
-            const language: Language = languageParent.language
-            return <li key={language.id}>{language.name}</li>
+          {languages.map((language) => {
+            return <li key={language}>{language}</li>
           })}
         </ul>
       </div>

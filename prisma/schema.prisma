@@ -31,6 +31,8 @@ model User {
   pageView          PageView[]
   profileImage      String?
   comment           Comment[]
+  PostCommentLike   PostCommentLike[]
+  PostComment       PostComment[]
 }
 
 model Auth {
@@ -73,27 +75,28 @@ model SocialMedia {
 }
 
 model Post {
-  id          Int         @default(autoincrement()) @id
+  id          Int           @default(autoincrement()) @id
   title       String
   body        String
-  bodySrc     String      @default("")
+  bodySrc     String        @default("")
   excerpt     String
-  status      PostStatus  @default(DRAFT)
+  status      PostStatus    @default(DRAFT)
   images      Image[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   publishedAt DateTime?
-  author      User        @relation(fields: [authorId], references: [id])
+  author      User          @relation(fields: [authorId], references: [id])
   authorId    Int
-  readTime    Int         @default(1)
+  readTime    Int           @default(1)
   likes       PostLike[]
-  topic       Topic[]     @relation(references: [id])
-  language    Language    @relation(fields: [languageId], references: [id])
+  topic       Topic[]       @relation(references: [id])
+  language    Language      @relation(fields: [languageId], references: [id])
   languageId  Int
   longitude   Float?
   latitude    Float?
   threads     Thread[]
   postTopics  PostTopic[]
+  PostComment PostComment[]
 }
 
 model Language {
@@ -164,16 +167,40 @@ model CommentLike {
   commentId Int
 }
 
+model PostCommentLike {
+  id            Int          @default(autoincrement()) @id
+  createdAt     DateTime     @default(now())
+  author        User         @relation(fields: [userId], references: [id])
+  userId        Int
+  comment       Comment      @relation(fields: [commentId], references: [id])
+  commentId     Int
+  PostComment   PostComment? @relation(fields: [postCommentId], references: [id])
+  postCommentId Int?
+}
+
 model Comment {
-  id        Int           @default(autoincrement()) @id
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id              Int               @default(autoincrement()) @id
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  body            String
+  author          User              @relation(fields: [authorId], references: [id])
+  authorId        Int
+  thread          Thread            @relation(fields: [threadId], references: [id])
+  threadId        Int
+  likes           CommentLike[]
+  PostCommentLike PostCommentLike[]
+}
+
+model PostComment {
+  id        Int               @default(autoincrement()) @id
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
   body      String
-  author    User          @relation(fields: [authorId], references: [id])
+  author    User              @relation(fields: [authorId], references: [id])
   authorId  Int
-  thread    Thread        @relation(fields: [threadId], references: [id])
-  threadId  Int
-  likes     CommentLike[]
+  post      Post              @relation(fields: [postId], references: [id])
+  postId    Int
+  likes     PostCommentLike[]
 }
 
 model Thread {

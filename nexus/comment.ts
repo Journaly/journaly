@@ -61,6 +61,36 @@ schema.mutationType({
         })
       },
     })
+
+    t.field('deleteThread', {
+      type: 'Thread',
+      args: {
+        threadId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const thread = await ctx.db.thread.findOne({
+          where: {
+            id: args.threadId,
+          },
+          include: {
+            comments: true,
+          },
+        })
+
+        if (!thread) throw new Error('Thread not found.')
+
+        if (thread.comments.length !== 0) {
+          throw new Error('Cannot delete a thread containing comments.')
+        }
+
+        return ctx.db.thread.delete({
+          where: {
+            id: args.threadId,
+          },
+        })
+      },
+    })
+
     t.field('createComment', {
       type: 'Comment',
       args: {

@@ -1,11 +1,33 @@
 import React from 'react'
 import theme from '../../../theme'
+import { useCreatePostCommentMutation } from '../../../generated/graphql'
 
-const PostAuthorCard: React.FC = () => {
+const PostComments: React.FC = ({ post, onNewPostComment, onUpdateComment, currentUser }) => {
+  const [postCommentBody, setPostCommentBody] = React.useState<string>('')
+  const [createPostComment, { loading }] = useCreatePostCommentMutation({
+    onCompleted: () => {
+      onNewPostComment()
+      setPostCommentBody('')
+    },
+  })
+
+  const createNewPostComment = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    createPostComment({
+      variables: {
+        postId: post.id,
+        body: postCommentBody,
+      },
+    })
+  }
+
   return (
     <div className="container">
       <h1>Comments</h1>
-      <p>Coming soon!</p>
+      <div className="post-comments">
+        <p>No comments, yet...</p>
+      </div>
       <style jsx>{`
         .container {
           background-color: ${theme.colors.white};
@@ -30,4 +52,4 @@ const PostAuthorCard: React.FC = () => {
   )
 }
 
-export default PostAuthorCard
+export default PostComments

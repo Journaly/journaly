@@ -18,20 +18,28 @@ const PostPage: NextPage = () => {
     variables: { id },
   })
   const { loading: userLoading, error: userError, data: userData } = useCurrentUserQuery()
+  const post = postData?.postById
+  const postComments = post?.postComments
+  const hasPostData = post && postComments.length >= 0
 
   return (
     <LoadingWrapper loading={postLoading || userLoading} error={postError || userError}>
       <DashboardLayout>
         <div className="post-page-wrapper">
-          <Post post={postData?.postById} currentUser={userData?.currentUser} refetch={refetch} />
-          <div className="post-lower-section">
-            <PostComments
-              post={postData?.postById}
-              currentUser={userData?.currentUser}
-              refetch={refetch}
-            />
-            <PostAuthorCard author={postData?.postById?.author} />
-          </div>
+          {hasPostData && (
+            <>
+              <Post post={post} currentUser={userData?.currentUser} refetch={refetch} />
+              <div className="post-lower-section">
+                <PostComments
+                  comments={postComments}
+                  currentUser={userData?.currentUser || null}
+                  onNewPostComment={refetch}
+                  onUpdatePostComment={refetch}
+                />
+                <PostAuthorCard author={postData?.postById?.author} />
+              </div>
+            </>
+          )}
           <style jsx>{`
             .post-page-wrapper {
               max-width: 1200px;

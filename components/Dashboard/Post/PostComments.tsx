@@ -2,19 +2,19 @@ import React from 'react'
 import theme from '../../../theme'
 import {
   useCreatePostCommentMutation,
-  Post as PostType,
-  User as UserType,
+  PostCommentFragmentFragment as PostCommentType,
+  UserWithLanguagesFragmentFragment as UserType,
 } from '../../../generated/graphql'
 
 type PostCommentsProps = {
-  post: PostType
-  currentUser: UserType
-  onNewPostComment: any
-  onUpdatePostComment: any
+  comments: PostCommentType[]
+  currentUser: UserType | null
+  onNewPostComment: () => void
+  onUpdatePostComment: () => void
 }
 
 const PostComments: React.FC<PostCommentsProps> = ({
-  post,
+  comments,
   onNewPostComment,
   onUpdateComment,
   currentUser,
@@ -42,6 +42,15 @@ const PostComments: React.FC<PostCommentsProps> = ({
     <div className="container">
       <h1>Comments</h1>
       <div className="post-comments">
+        {!post.postComments.length && (
+          <div>No comments... yet!</div>
+        )}
+        {post.postComments.map((postComment, idx) => {
+          const canEdit = currentUser?.id === postComment.author.id
+          return (
+            <p>A comment!</p>
+          )
+        }}
         <p>No comments, yet...</p>
       </div>
       <style jsx>{`

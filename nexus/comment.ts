@@ -332,7 +332,7 @@ schema.mutationType({
 
         hasPostPermissions(originalPostComment, currentUser)
 
-        const postComment = await ctx.db.comment.update({
+        const postComment = await ctx.db.postComment.update({
           data: {
             body: args.body,
           },

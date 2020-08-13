@@ -17,6 +17,7 @@ schema.objectType({
     t.model.status()
     t.model.likes()
     t.model.threads()
+    t.model.postComments()
     t.model.language()
     t.model.createdAt()
     t.model.bodySrc()
@@ -27,11 +28,11 @@ schema.objectType({
         return ctx.db.comment.count({
           where: {
             thread: {
-              postId: parent.id
-            }
-          }
+              postId: parent.id,
+            },
+          },
         })
-      }
+      },
     })
   },
 })
@@ -288,16 +289,15 @@ schema.extendType({
         }
 
         if (args.images) {
-          const headlineImage = args.images.find(i => i.imageRole === 'HEADLINE')
+          const headlineImage = args.images.find((i) => i.imageRole === 'HEADLINE')
 
           if (headlineImage) {
             await ctx.db.image.deleteMany({
               where: {
                 postId: args.postId,
                 imageRole: 'HEADLINE',
-              }
+              },
             })
-
 
             await ctx.db.image.create({
               data: {

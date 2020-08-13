@@ -1,5 +1,5 @@
 import escapeHTML from 'escape-html'
-import { User, Post, Comment } from '.prisma/client'
+import { User, Post, Comment, PostComment } from '.prisma/client'
 
 type NodeType = {
   text?: string | null
@@ -54,11 +54,9 @@ const getNodeTagName = (node: NodeType): string => {
 }
 
 const isEmptyParagraph = (node: NodeType): boolean => {
-  if (node.type !== 'paragraph')
-    return false
+  if (node.type !== 'paragraph') return false
 
-  if (node.children && node.children.length > 0) 
-    return false
+  if (node.children && node.children.length > 0) return false
 
   return true
 }
@@ -101,9 +99,7 @@ const extractBodyTextFromNode = (node: NodeType) => {
     return ''
   }
 
-  const content: string = (node.children || [])
-    .map(extractBodyTextFromNode)
-    .join(' ')
+  const content: string = (node.children || []).map(extractBodyTextFromNode).join(' ')
 
   return content
 }
@@ -112,11 +108,7 @@ const extractBodyText = (document: NodeType[]) => {
   return document.map(extractBodyTextFromNode).join(' ')
 }
 
-export const generateExcerpt = (
-  document: NodeType[],
-  length = 200,
-  tolerance = 20,
-) => {
+export const generateExcerpt = (document: NodeType[], length = 200, tolerance = 20) => {
   // `length` is the max number of characters (codepoints) in the excerpt,
   // tolerance is the number of characters we'll back-track looking for a word
   // or sentence break to cut off at
@@ -162,10 +154,7 @@ export const processEditorDocument = (document: NodeType[]) => {
 
 // Takes in an original Post or Comment and a currently logged in User and checks that
 // the currentUser has permission to update or delete that Post/Comment
-export const hasPostPermissions = (
-  original: Post | Comment,
-  currentUser: User,
-) => {
+export const hasPostPermissions = (original: Post | Comment | PostComment, currentUser: User) => {
   const hasPermission =
     original.authorId == currentUser.id ||
     currentUser.userRole === 'MODERATOR' ||

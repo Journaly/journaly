@@ -56,7 +56,7 @@ const Toolbar: React.FC = ({ children }) => {
 
         .is-fixed .editor-toolbar {
           position: fixed;
-          top: calc(${headerHeight}px + ${fixedDistanceFromTop}px);
+          top: calc(${headerHeight} + ${fixedDistanceFromTop}px);
           left: 50%;
           transform: translateX(-50%);
           padding: 15px;

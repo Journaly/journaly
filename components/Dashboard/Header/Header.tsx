@@ -24,7 +24,7 @@ const Header: React.FC<Props> = ({ onMenuClick }) => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          height: ${headerHeight}px;
+          height: ${headerHeight};
           padding: 20px 0;
           color: white;
           background-color: ${theme.colors.charcoal};

@@ -64,7 +64,7 @@ const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
 
         @media (${navConstants.mobileNavOnly}) {
           .dashboard {
-            padding-top: ${headerHeight}px;
+            padding-top: ${headerHeight};
           }
         }
 

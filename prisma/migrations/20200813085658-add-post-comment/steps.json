@@ -136,59 +136,6 @@
     {
       "tag": "CreateField",
       "model": "PostCommentLike",
-      "field": "comment",
-      "type": "Comment",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "PostCommentLike",
-          "field": "comment"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "PostCommentLike",
-          "field": "comment"
-        },
-        "directive": "relation"
-      },
-      "argument": "fields",
-      "value": "[commentId]"
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "PostCommentLike",
-          "field": "comment"
-        },
-        "directive": "relation"
-      },
-      "argument": "references",
-      "value": "[id]"
-    },
-    {
-      "tag": "CreateField",
-      "model": "PostCommentLike",
-      "field": "commentId",
-      "type": "Int",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "PostCommentLike",
       "field": "PostComment",
       "type": "PostComment",
       "arity": "Optional"
@@ -475,13 +422,6 @@
       "model": "Post",
       "field": "PostComment",
       "type": "PostComment",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Comment",
-      "field": "PostCommentLike",
-      "type": "PostCommentLike",
       "arity": "List"
     }
   ]

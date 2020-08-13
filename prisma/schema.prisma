@@ -172,23 +172,20 @@ model PostCommentLike {
   createdAt     DateTime     @default(now())
   author        User         @relation(fields: [userId], references: [id])
   userId        Int
-  comment       Comment      @relation(fields: [commentId], references: [id])
-  commentId     Int
   PostComment   PostComment? @relation(fields: [postCommentId], references: [id])
   postCommentId Int?
 }
 
 model Comment {
-  id              Int               @default(autoincrement()) @id
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  body            String
-  author          User              @relation(fields: [authorId], references: [id])
-  authorId        Int
-  thread          Thread            @relation(fields: [threadId], references: [id])
-  threadId        Int
-  likes           CommentLike[]
-  PostCommentLike PostCommentLike[]
+  id        Int           @default(autoincrement()) @id
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  body      String
+  author    User          @relation(fields: [authorId], references: [id])
+  authorId  Int
+  thread    Thread        @relation(fields: [threadId], references: [id])
+  threadId  Int
+  likes     CommentLike[]
 }
 
 model PostComment {

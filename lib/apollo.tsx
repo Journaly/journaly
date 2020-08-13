@@ -160,6 +160,8 @@ function createApolloClient(initialState: ApolloClientCache = {}, headers = {}) 
     } else {
       graphqlUri = `http://${deploymentHost || 'localhost:3000'}/api/graphql`
     }
+  } else {
+    graphqlUri = `${document.location.origin}/api/graphql`
   }
 
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient

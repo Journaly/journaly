@@ -1,0 +1,8 @@
+query profile($userId: Int!) {
+  userById(id: $userId) {
+    ...UserWithLanguagesFragment
+  }
+  posts(authorId: $userId, status: PUBLISHED) {
+    ...PostCardFragment
+  }
+}

@@ -144,11 +144,31 @@ function initApolloClient(initialState?: ApolloClientCache, headers = {}) {
  * @param  {Object} [initialState={}]
  */
 function createApolloClient(initialState: ApolloClientCache = {}, headers = {}) {
+  let graphqlUri = '/api/graphql'
+
+  if (typeof window === 'undefined') {
+    // If doing SSR, we have to absolutize this URL. On client domain can be
+    // inferred from document location.
+    const deploymentHost = process.env.DEPLOYMENT_URL || process.env.VERCEL_URL
+
+    if (process.env.NODE_ENV === 'production') {
+      if (!deploymentHost) {
+        throw new Error('In production, one of `DEPLOYMENT_URL` or `VERCEL_URL` must be set.')
+      }
+
+      graphqlUri = `https://${deploymentHost}/api/graphql`
+    } else {
+      graphqlUri = `http://${deploymentHost || 'localhost:3000'}/api/graphql`
+    }
+  } else {
+    graphqlUri = `${document.location.origin}/api/graphql`
+  }
+
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({
     ssrMode: typeof window === 'undefined', // Disables forceFetch on the server (so queries are only run once)
     link: new HttpLink({
-      uri: '/api/graphql', // Server URL (must be absolute)
+      uri: graphqlUri,
       credentials: 'include', // Additional fetch() options like `credentials` or `headers`
       headers,
       fetch,

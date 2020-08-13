@@ -1,0 +1,5 @@
+mutation updatePostComment($body: String!, $postCommentId: Int!) {
+  updatePostComment(body: $body, postCommentId: $postCommentId) {
+    ...PostCommentFragment
+  }
+}

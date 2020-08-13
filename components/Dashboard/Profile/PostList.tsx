@@ -2,40 +2,23 @@ import React from 'react'
 import { useTranslation } from '../../../config/i18n'
 import { layoutTopBottomPadding, layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
 import {
-  usePostsQuery,
-  Post as PostType,
-  PostStatus as PostStatusType,
+  PostCardFragmentFragment as PostType,
 } from '../../../generated/graphql'
 import PostCard from '../PostCard'
 import theme from '../../../theme'
-import LoadingSpinner from '../../Icons/LoadingSpinner'
 
 type Props = {
-  userId: number
+  posts: PostType[]
 }
 
-const PostList: React.FC<Props> = ({ userId }) => {
+const PostList: React.FC<Props> = ({ posts }) => {
   const { t } = useTranslation(['profile'])
-  const { loading, data, error } = usePostsQuery({
-    variables: {
-      status: PostStatusType.Published,
-      authorId: userId,
-    },
-  })
-
-  const posts = (data?.posts as PostType[]) || []
 
   return (
     <div className="post-list">
       <h1 className="posts-title">{t('postsTitle')}</h1>
 
-      {error && <p>There was an error retrieving your posts.</p>}
-
-      {loading ? (
-        <LoadingSpinner size={60} />
-      ) : (
-        posts.map((post) => <PostCard key={post.id} post={post} />)
-      )}
+      { posts.map((post) => <PostCard key={post.id} post={post} />) }
 
       <style jsx>{`
         .post-list {

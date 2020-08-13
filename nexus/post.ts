@@ -62,10 +62,11 @@ schema.extendType({
       resolve: async (_parent, args, ctx) => {
         return ctx.db.post.findMany({
           where: {
-            AND: {
-              author: { id: args.authorId },
-              status: args.status,
-            },
+            author: { id: args.authorId },
+            status: args.status,
+          },
+          orderBy: {
+            publishedAt: 'desc',
           },
         })
       },

@@ -27,6 +27,17 @@ schema.objectType({
   },
 })
 
+schema.objectType({
+  name: 'PostComment',
+  definition(t) {
+    t.model.id()
+    t.model.author()
+    t.model.authorId()
+    t.model.body()
+    t.model.createdAt()
+  },
+})
+
 schema.mutationType({
   definition(t) {
     t.field('createThread', {
@@ -231,6 +242,65 @@ schema.mutationType({
         })
 
         return comment
+      },
+    })
+
+    t.field('createPostComment', {
+      type: 'PostComment',
+      args: {
+        postId: intArg({ required: true }),
+        body: stringArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) {
+          throw new Error('You must be logged in to post comments.')
+        }
+
+        const post = await ctx.db.post.findOne({
+          where: {
+            id: args.postId,
+          },
+          include: {
+            author: true,
+          },
+        })
+
+        if (!post) {
+          throw new NotFoundError('post')
+        }
+
+        const postComment = await ctx.db.postComment.create({
+          data: {
+            body: args.body,
+            author: {
+              connect: { id: userId },
+            },
+            post: {
+              connect: { id: postId },
+            },
+          },
+          include: {
+            author: true,
+          },
+        })
+
+        if (postComment.author.id !== post.author.id) {
+          await transport.sendMail({
+            from: 'robin@journaly.com',
+            to: post.author.email,
+            subject: "You've got feedback!",
+            html: makeEmail(`
+              <p>Great news! <strong>@${postComment.author.handle}</strong> left you some feedback!</p>
+              <p><strong>Journal entry:</strong> ${post.title}</p>
+              <p><strong>Comment:</strong> "${postComment.body}"</p>
+              <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
+            `),
+          })
+        }
+
+        // TODO: Set up logging and check for successful `mailResponse`
+        return postComment
       },
     })
   },

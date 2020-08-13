@@ -17,7 +17,7 @@ const Toolbar: React.FC = ({ children }) => {
 
   const handleScroll = () => {
     if (toolbarRef.current) {
-      if (!isFixed && window.pageYOffset >= toolbarRef.current.offsetTop) {
+      if (!isFixed && window.pageYOffset >= toolbarRef.current.offsetTop - fixedDistanceFromTop) {
         setIsFixed(true)
         return
       }

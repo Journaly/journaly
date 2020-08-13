@@ -277,7 +277,7 @@ schema.mutationType({
               connect: { id: userId },
             },
             post: {
-              connect: { id: postId },
+              connect: { id: post.id },
             },
           },
           include: {
@@ -300,6 +300,83 @@ schema.mutationType({
         }
 
         // TODO: Set up logging and check for successful `mailResponse`
+        return postComment
+      },
+    })
+
+    t.field('updatePostComment', {
+      type: 'PostComment',
+      args: {
+        postCommentId: intArg({ required: true }),
+        body: stringArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new Error('You must be logged in to do that.')
+
+        const [currentUser, originalPostComment] = await Promise.all([
+          ctx.db.user.findOne({
+            where: {
+              id: userId,
+            },
+          }),
+          ctx.db.postComment.findOne({
+            where: {
+              id: args.postCommentId,
+            },
+          }),
+        ])
+
+        if (!currentUser) throw new Error('User not found.')
+        if (!originalPostComment) throw new Error('Comment not found.')
+
+        hasPostPermissions(originalPostComment, currentUser)
+
+        const postComment = await ctx.db.comment.update({
+          data: {
+            body: args.body,
+          },
+          where: {
+            id: args.postCommentId,
+          },
+        })
+
+        return postComment
+      },
+    })
+    t.field('deletePostComment', {
+      type: 'PostComment',
+      args: {
+        postCommentId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new Error('You must be logged in to do that.')
+
+        const currentUser = await ctx.db.user.findOne({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (!currentUser) throw new Error('User not found.')
+
+        const originalPostComment = await ctx.db.postComment.findOne({
+          where: {
+            id: args.postCommentId,
+          },
+        })
+
+        if (!originalPostComment) throw new Error('Comment not found.')
+
+        hasPostPermissions(originalPostComment, currentUser)
+
+        const postComment = await ctx.db.postComment.delete({
+          where: {
+            id: args.postCommentId,
+          },
+        })
+
         return postComment
       },
     })

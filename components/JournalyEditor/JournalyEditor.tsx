@@ -61,7 +61,7 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
   useEffect(() => {
-    (slateRef as React.MutableRefObject<Editor>).current = editor
+    ;(slateRef as React.MutableRefObject<Editor>).current = editor
   }, [editor])
 
   return (
@@ -222,6 +222,10 @@ const ToolbarButton: React.FC<ButtonProps> = ({ type, format, children }) => {
           border-radius: 5px;
           background-color: ${theme.colors.gray800};
           cursor: pointer;
+        }
+
+        .toolbar-button:last-child {
+          margin-right: 0;
         }
 
         .toolbar-button:hover {

@@ -7,3 +7,4 @@
 20200625141833-remove-language-learning-unique-constraint-on-user-id
 20200702185801-fix-issues
 20200805064655-add-published-at-to-posts
+20200812181436-add-post-comment

@@ -25,7 +25,11 @@ const PostPage: NextPage = () => {
         <div className="post-page-wrapper">
           <Post post={postData?.postById} currentUser={userData?.currentUser} refetch={refetch} />
           <div className="post-lower-section">
-            <PostComments />
+            <PostComments
+              post={postData?.postById}
+              currentUser={userData?.currentUser}
+              refetch={refetch}
+            />
             <PostAuthorCard author={postData?.postById?.author} />
           </div>
           <style jsx>{`

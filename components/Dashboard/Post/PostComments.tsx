@@ -1,8 +1,24 @@
 import React from 'react'
 import theme from '../../../theme'
-import { useCreatePostCommentMutation } from '../../../generated/graphql'
+import {
+  useCreatePostCommentMutation,
+  Post as PostType,
+  User as UserType,
+} from '../../../generated/graphql'
 
-const PostComments: React.FC = ({ post, onNewPostComment, onUpdateComment, currentUser }) => {
+type PostCommentsProps = {
+  post: PostType
+  currentUser: UserType
+  onNewPostComment: any
+  onUpdatePostComment: any
+}
+
+const PostComments: React.FC<PostCommentsProps> = ({
+  post,
+  onNewPostComment,
+  onUpdateComment,
+  currentUser,
+}) => {
   const [postCommentBody, setPostCommentBody] = React.useState<string>('')
   const [createPostComment, { loading }] = useCreatePostCommentMutation({
     onCompleted: () => {

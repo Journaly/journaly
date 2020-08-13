@@ -420,7 +420,7 @@
     {
       "tag": "CreateField",
       "model": "Post",
-      "field": "PostComment",
+      "field": "postComments",
       "type": "PostComment",
       "arity": "List"
     }

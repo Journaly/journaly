@@ -75,28 +75,28 @@ model SocialMedia {
 }
 
 model Post {
-  id          Int           @default(autoincrement()) @id
-  title       String
-  body        String
-  bodySrc     String        @default("")
-  excerpt     String
-  status      PostStatus    @default(DRAFT)
-  images      Image[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  publishedAt DateTime?
-  author      User          @relation(fields: [authorId], references: [id])
-  authorId    Int
-  readTime    Int           @default(1)
-  likes       PostLike[]
-  topic       Topic[]       @relation(references: [id])
-  language    Language      @relation(fields: [languageId], references: [id])
-  languageId  Int
-  longitude   Float?
-  latitude    Float?
-  threads     Thread[]
-  postTopics  PostTopic[]
-  PostComment PostComment[]
+  id           Int           @default(autoincrement()) @id
+  title        String
+  body         String
+  bodySrc      String        @default("")
+  excerpt      String
+  status       PostStatus    @default(DRAFT)
+  images       Image[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  publishedAt  DateTime?
+  author       User          @relation(fields: [authorId], references: [id])
+  authorId     Int
+  readTime     Int           @default(1)
+  likes        PostLike[]
+  topic        Topic[]       @relation(references: [id])
+  language     Language      @relation(fields: [languageId], references: [id])
+  languageId   Int
+  longitude    Float?
+  latitude     Float?
+  threads      Thread[]
+  postTopics   PostTopic[]
+  postComments PostComment[]
 }
 
 model Language {

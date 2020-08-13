@@ -225,6 +225,7 @@ export type Post = {
   status: PostStatus
   likes: Array<PostLike>
   threads: Array<Thread>
+  postComments: Array<PostComment>
   language: Language
   createdAt: Scalars['DateTime']
   bodySrc: Scalars['String']
@@ -249,6 +250,14 @@ export type PostThreadsArgs = {
   last?: Maybe<Scalars['Int']>
 }
 
+export type PostPostCommentsArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<PostCommentWhereUniqueInput>
+  before?: Maybe<PostCommentWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
 export type PostImagesArgs = {
   skip?: Maybe<Scalars['Int']>
   after?: Maybe<ImageWhereUniqueInput>
@@ -264,6 +273,10 @@ export type PostComment = {
   authorId: Scalars['Int']
   body: Scalars['String']
   createdAt: Scalars['DateTime']
+}
+
+export type PostCommentWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
 }
 
 export type PostLike = {
@@ -519,6 +532,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
 > & {
     author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
+    postComments: Array<{ __typename?: 'PostComment' } & PostCommentFragmentFragment>
     images: Array<{ __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'imageRole'>>
   }
 
@@ -786,17 +800,6 @@ export const AuthorFragmentFragmentDoc = gql`
     profileImage
   }
 `
-export const PostCommentFragmentFragmentDoc = gql`
-  fragment PostCommentFragment on PostComment {
-    id
-    body
-    createdAt
-    author {
-      ...AuthorFragment
-    }
-  }
-  ${AuthorFragmentFragmentDoc}
-`
 export const AuthorWithLanguagesFragmentFragmentDoc = gql`
   fragment AuthorWithLanguagesFragment on User {
     ...AuthorFragment
@@ -837,6 +840,17 @@ export const ThreadFragmentFragmentDoc = gql`
   }
   ${CommentFragmentFragmentDoc}
 `
+export const PostCommentFragmentFragmentDoc = gql`
+  fragment PostCommentFragment on PostComment {
+    id
+    body
+    createdAt
+    author {
+      ...AuthorFragment
+    }
+  }
+  ${AuthorFragmentFragmentDoc}
+`
 export const PostFragmentFragmentDoc = gql`
   fragment PostFragment on Post {
     id
@@ -853,6 +867,9 @@ export const PostFragmentFragmentDoc = gql`
     threads {
       ...ThreadFragment
     }
+    postComments {
+      ...PostCommentFragment
+    }
     images {
       id
       largeSize
@@ -861,6 +878,7 @@ export const PostFragmentFragmentDoc = gql`
   }
   ${AuthorWithLanguagesFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
+  ${PostCommentFragmentFragmentDoc}
 `
 export const PostCardFragmentFragmentDoc = gql`
   fragment PostCardFragment on Post {

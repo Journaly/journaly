@@ -1,19 +1,23 @@
 import React from 'react'
 import theme from '../../../theme'
+import PostComment from './PostComment'
 import {
   useCreatePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
   UserWithLanguagesFragmentFragment as UserType,
 } from '../../../generated/graphql'
+import Button from '../../../elements/Button'
 
 type PostCommentsProps = {
+  postId: number
   comments: PostCommentType[]
   currentUser: UserType | null
   onNewPostComment: () => void
-  onUpdatePostComment: () => void
+  onUpdateComment: () => void
 }
 
 const PostComments: React.FC<PostCommentsProps> = ({
+  postId,
   comments,
   onNewPostComment,
   onUpdateComment,
@@ -32,7 +36,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
 
     createPostComment({
       variables: {
-        postId: post.id,
+        postId,
         body: postCommentBody,
       },
     })
@@ -42,17 +46,36 @@ const PostComments: React.FC<PostCommentsProps> = ({
     <div className="container">
       <h1>Comments</h1>
       <div className="post-comments">
-        {!post.postComments.length && (
-          <div>No comments... yet!</div>
-        )}
-        {post.postComments.map((postComment, idx) => {
-          const canEdit = currentUser?.id === postComment.author.id
+        {!comments.length && <div>No comments... yet!</div>}
+        {comments.map((comment, idx) => {
+          const canEdit = currentUser?.id === comment.author.id
           return (
-            <p>A comment!</p>
+            <PostComment
+              comment={comment}
+              canEdit={canEdit}
+              onUpdateComment={onUpdateComment}
+              key={idx}
+            />
           )
-        }}
-        <p>No comments, yet...</p>
+        })}
       </div>
+      {currentUser && (
+        <form onSubmit={createNewPostComment}>
+          <fieldset>
+            <div className="new-comment-block">
+              <textarea
+                placeholder="Add a comment..."
+                value={postCommentBody}
+                onChange={(e) => setPostCommentBody(e.target.value)}
+                disabled={loading}
+              />
+              <Button type="submit" disabled={loading} className="submit-btn">
+                Submit
+              </Button>
+            </div>
+          </fieldset>
+        </form>
+      )}
       <style jsx>{`
         .container {
           background-color: ${theme.colors.white};
@@ -60,6 +83,10 @@ const PostComments: React.FC<PostCommentsProps> = ({
           width: 100%;
           padding: 20px;
           text-align: center;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          max-height: 100%;
         }
 
         @media (min-width: ${theme.breakpoints.XS}) {
@@ -71,6 +98,36 @@ const PostComments: React.FC<PostCommentsProps> = ({
         h1 {
           ${theme.typography.headingLG};
           margin-bottom: 20px;
+        }
+
+        .comments {
+          padding: 5px 0;
+        }
+
+        .empty-notice {
+          text-align: center;
+          padding: 20px;
+          font-style: italic;
+        }
+
+        .new-comment-block {
+          display: flex;
+          flex-direction: row;
+          border-top: 1px solid ${theme.colors.gray400};
+          margin-top: 5px;
+        }
+
+        .new-comment-block textarea {
+          flex: 1;
+          min-height: 4em;
+          background-color: #f9f9f9;
+          padding: 5px 0;
+          font-family: 'Source Sans Pro', sans-serif;
+          margin-right: 10px;
+        }
+
+        .new-comment-block textarea:focus {
+          outline: none;
         }
       `}</style>
     </div>

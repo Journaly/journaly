@@ -10,11 +10,13 @@ fragment UserFragment on User {
 fragment UserWithLanguagesFragment on User {
   ...UserFragment
   languagesLearning {
+    id
     language {
       ...LanguageFragment
     }
   }
   languagesNative {
+    id
     language {
       ...LanguageFragment
     }

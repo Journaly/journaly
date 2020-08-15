@@ -24,12 +24,10 @@ const MyFeedPage: NextPage<InitialProps> = () => {
 
   return (
     <AuthGate>
-      {(currentUser) => (
-        <DashboardLayout>
-          <MyFeed currentUser={currentUser} />
-          <WelcomeModal show={shouldShowWelcomeModal} onClose={handleWelcomeModalClose} />
-        </DashboardLayout>
-      )}
+      <DashboardLayout>
+        <MyFeed />
+        <WelcomeModal show={shouldShowWelcomeModal} onClose={handleWelcomeModalClose} />
+      </DashboardLayout>
     </AuthGate>
   )
 }

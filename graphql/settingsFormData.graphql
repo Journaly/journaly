@@ -1,0 +1,19 @@
+query settingsFormData {
+  languages {
+    ...LanguageFragment
+  }
+  currentUser {
+    languagesLearning {
+      id
+      language {
+        ...LanguageFragment
+      }
+    }
+    languagesNative {
+      id
+      language {
+        ...LanguageFragment
+      }
+    }
+  }
+}

@@ -12,21 +12,23 @@ type PostCommentsProps = {
   postId: number
   comments: PostCommentType[]
   currentUser: UserType | null
-  onNewPostComment: () => void
+  onNewComment: () => void
   onUpdateComment: () => void
+  onDeleteComment: () => void
 }
 
 const PostComments: React.FC<PostCommentsProps> = ({
   postId,
   comments,
-  onNewPostComment,
+  onNewComment,
   onUpdateComment,
+  onDeleteComment,
   currentUser,
 }) => {
   const [postCommentBody, setPostCommentBody] = React.useState<string>('')
   const [createPostComment, { loading }] = useCreatePostCommentMutation({
     onCompleted: () => {
-      onNewPostComment()
+      onNewComment()
       setPostCommentBody('')
     },
   })
@@ -53,7 +55,9 @@ const PostComments: React.FC<PostCommentsProps> = ({
             <PostComment
               comment={comment}
               canEdit={canEdit}
+              onNewComment={onNewComment}
               onUpdateComment={onUpdateComment}
+              onDeleteComment={onDeleteComment}
               key={idx}
             />
           )
@@ -100,6 +104,10 @@ const PostComments: React.FC<PostCommentsProps> = ({
           margin-bottom: 20px;
         }
 
+        .post-comments {
+          margin-bottom: 5px;
+        }
+
         .comments {
           padding: 5px 0;
         }
@@ -121,8 +129,9 @@ const PostComments: React.FC<PostCommentsProps> = ({
           flex: 1;
           min-height: 4em;
           background-color: #f9f9f9;
-          padding: 5px 0;
+          padding: 5px;
           font-family: 'Source Sans Pro', sans-serif;
+          margin-top: 10px;
           margin-right: 10px;
         }
 

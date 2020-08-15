@@ -12,7 +12,6 @@ import theme from '../../../theme'
 type PostCommentProps = {
   comment: PostCommentType
   canEdit: boolean
-  onNewComment: () => void
   onUpdateComment: () => void
   onDeleteComment: () => void
 }
@@ -20,7 +19,6 @@ type PostCommentProps = {
 const PostComment: React.FC<PostCommentProps> = ({
   comment,
   canEdit,
-  onNewComment,
   onUpdateComment,
   onDeleteComment,
 }) => {
@@ -47,7 +45,7 @@ const PostComment: React.FC<PostCommentProps> = ({
   const [deleteComment, { loading: deleteLoading }] = useDeletePostCommentMutation({
     onCompleted: () => {
       // just refetches the post as in updateComment
-      onUpdateComment()
+      onDeleteComment()
     },
   })
 

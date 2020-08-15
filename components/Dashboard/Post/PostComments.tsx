@@ -55,7 +55,6 @@ const PostComments: React.FC<PostCommentsProps> = ({
             <PostComment
               comment={comment}
               canEdit={canEdit}
-              onNewComment={onNewComment}
               onUpdateComment={onUpdateComment}
               onDeleteComment={onDeleteComment}
               key={idx}

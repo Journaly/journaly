@@ -22,6 +22,31 @@ type Props = {
   className?: string
 }
 
+/*
+ * Pass in all options, the current value of the Select (which is an empty string if no
+ * value is selected), and an onChange handler that updates the current value.
+ *
+ * Example usage
+ * const options = [
+ *   { value: '0', displayName: 'Orange' },
+ *   { value: '1', displayName: 'Apple' },
+ *   { value: '2', displayName: 'Mango' },
+ * ]
+ *
+ * const [fruitValue, setFruitValue] = useState('')
+ *
+ * const handleFruitChange = (value: string) => {
+ *   setFruitValue(value)
+ * }
+ *
+ * <Select
+ *   options={options}
+ *   value={fruitValue}
+ *   placeholder="Choose a fruit"
+ *   onChange={handleFruitChange}
+ * />
+ */
+
 const Select = React.forwardRef<HTMLSelectElement, Props>(
   (
     {
@@ -113,6 +138,8 @@ const Select = React.forwardRef<HTMLSelectElement, Props>(
             height: 50px;
             width: 50px;
             background: ${theme.colors.charcoal};
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
             pointer-events: none;
           }
 

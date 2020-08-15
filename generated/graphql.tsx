@@ -488,14 +488,14 @@ export type UserFragmentFragment = { __typename?: 'User' } & Pick<
 
 export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
   languagesLearning: Array<
-    { __typename?: 'LanguageLearning' } & {
-      language: { __typename?: 'Language' } & LanguageFragmentFragment
-    }
+    { __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'> & {
+        language: { __typename?: 'Language' } & LanguageFragmentFragment
+      }
   >
   languagesNative: Array<
-    { __typename?: 'LanguageNative' } & {
-      language: { __typename?: 'Language' } & LanguageFragmentFragment
-    }
+    { __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'> & {
+        language: { __typename?: 'Language' } & LanguageFragmentFragment
+      }
   >
 } & UserFragmentFragment
 
@@ -736,6 +736,26 @@ export type LogoutMutation = { __typename?: 'Mutation' } & {
   logout?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
 }
 
+export type SettingsFormDataQueryVariables = {}
+
+export type SettingsFormDataQuery = { __typename?: 'Query' } & {
+  languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
+  currentUser?: Maybe<
+    { __typename?: 'User' } & {
+      languagesLearning: Array<
+        { __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'> & {
+            language: { __typename?: 'Language' } & LanguageFragmentFragment
+          }
+      >
+      languagesNative: Array<
+        { __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'> & {
+            language: { __typename?: 'Language' } & LanguageFragmentFragment
+          }
+      >
+    }
+  >
+}
+
 export type UpdateUserMutationVariables = {
   email?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
@@ -787,11 +807,13 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
   fragment UserWithLanguagesFragment on User {
     ...UserFragment
     languagesLearning {
+      id
       language {
         ...LanguageFragment
       }
     }
     languagesNative {
+      id
       language {
         ...LanguageFragment
       }
@@ -2179,6 +2201,72 @@ export type LogoutMutationResult = ApolloReactCommon.MutationResult<LogoutMutati
 export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<
   LogoutMutation,
   LogoutMutationVariables
+>
+export const SettingsFormDataDocument = gql`
+  query settingsFormData {
+    languages {
+      ...LanguageFragment
+    }
+    currentUser {
+      languagesLearning {
+        id
+        language {
+          ...LanguageFragment
+        }
+      }
+      languagesNative {
+        id
+        language {
+          ...LanguageFragment
+        }
+      }
+    }
+  }
+  ${LanguageFragmentFragmentDoc}
+`
+
+/**
+ * __useSettingsFormDataQuery__
+ *
+ * To run a query within a React component, call `useSettingsFormDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingsFormDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingsFormDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingsFormDataQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    SettingsFormDataQuery,
+    SettingsFormDataQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<SettingsFormDataQuery, SettingsFormDataQueryVariables>(
+    SettingsFormDataDocument,
+    baseOptions,
+  )
+}
+export function useSettingsFormDataLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    SettingsFormDataQuery,
+    SettingsFormDataQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<SettingsFormDataQuery, SettingsFormDataQueryVariables>(
+    SettingsFormDataDocument,
+    baseOptions,
+  )
+}
+export type SettingsFormDataQueryHookResult = ReturnType<typeof useSettingsFormDataQuery>
+export type SettingsFormDataLazyQueryHookResult = ReturnType<typeof useSettingsFormDataLazyQuery>
+export type SettingsFormDataQueryResult = ApolloReactCommon.QueryResult<
+  SettingsFormDataQuery,
+  SettingsFormDataQueryVariables
 >
 export const UpdateUserDocument = gql`
   mutation updateUser($email: String, $name: String, $profileImage: String) {

@@ -1,21 +1,26 @@
 import React from 'react'
 import Link from 'next/link'
 import theme from '../../../theme'
-import { AuthorWithLanguagesFragmentFragment as Author } from '../../../generated/graphql'
+import {
+  AuthorWithLanguagesFragmentFragment as Author,
+  LanguageNative as LanguageNativeType,
+  LanguageLearning as LanguageLearningType,
+} from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
+import { languageNameWithDialect } from '../../../utils/languages'
 
 type PostAuthorCardProps = {
   author: Author | any
 }
 
 const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
-  let languages = []
+  let languages: (LanguageNativeType | LanguageLearningType)[] = []
 
   for (let language of author.languagesLearning) {
-    languages.push(language.language.name)
+    languages.push(language)
   }
   for (let language of author.languagesNative) {
-    languages.push(language.language.name)
+    languages.push(language)
   }
 
   return (
@@ -33,8 +38,8 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
       <div className="language-info">
         <p className="author-info-heading">Languages</p>
         <ul>
-          {languages.map((language) => {
-            return <li key={language}>{language}</li>
+          {languages.map(({ language }) => {
+            return <li key={language.id}>{languageNameWithDialect(language)}</li>
           })}
         </ul>
       </div>

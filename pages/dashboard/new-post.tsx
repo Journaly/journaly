@@ -25,7 +25,7 @@ const initialData = {
       children: [{ text: '' }],
     },
   ],
-  clear: () => null
+  clear: () => null,
 }
 
 const NewPostPage: NextPage = () => {
@@ -69,7 +69,7 @@ const NewPostPage: NextPage = () => {
         <form id="new-post">
           <h1>Let's write a post</h1>
 
-          { currentUser && (
+          {currentUser && (
             <PostEditor
               currentUser={currentUser}
               autosaveKey="new-post"
@@ -102,11 +102,7 @@ const NewPostPage: NextPage = () => {
               {t('saveDraftCTA')}
             </Button>
           </div>
-          { errorMessage && (
-            <span className="error-message">
-              {errorMessage}
-            </span>
-          )}
+          {errorMessage && <span className="error-message">{errorMessage}</span>}
           <style jsx>{`
             display: flex;
             flex-direction: column;
@@ -147,5 +143,9 @@ const NewPostPage: NextPage = () => {
     </AuthGate>
   )
 }
+
+NewPostPage.getInitialProps = async () => ({
+  namespacesRequired: ['post'],
+})
 
 export default withApollo(NewPostPage)

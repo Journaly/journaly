@@ -12,7 +12,6 @@
     "settings": "Settings",
     "logOut": "Log Out"
   },
-  "add": "Add",
   "emptyMessage": "Empty...",
   "e404": "Resource not found",
   "e403": "Not Authorized"

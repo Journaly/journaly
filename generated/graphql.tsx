@@ -457,6 +457,14 @@ export type DeletePostCommentMutation = { __typename?: 'Mutation' } & {
   deletePostComment?: Maybe<{ __typename?: 'PostComment' } & Pick<PostComment, 'id'>>
 }
 
+export type DeleteThreadMutationVariables = {
+  threadId: Scalars['Int']
+}
+
+export type DeleteThreadMutation = { __typename?: 'Mutation' } & {
+  deleteThread?: Maybe<{ __typename?: 'Thread' } & Pick<Thread, 'id'>>
+}
+
 export type UpdateCommentMutationVariables = {
   body: Scalars['String']
   commentId: Scalars['Int']
@@ -1165,6 +1173,52 @@ export type DeletePostCommentMutationResult = ApolloReactCommon.MutationResult<
 export type DeletePostCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   DeletePostCommentMutation,
   DeletePostCommentMutationVariables
+>
+export const DeleteThreadDocument = gql`
+  mutation deleteThread($threadId: Int!) {
+    deleteThread(threadId: $threadId) {
+      id
+    }
+  }
+`
+export type DeleteThreadMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteThreadMutation,
+  DeleteThreadMutationVariables
+>
+
+/**
+ * __useDeleteThreadMutation__
+ *
+ * To run a mutation, you first call `useDeleteThreadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteThreadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteThreadMutation, { data, loading, error }] = useDeleteThreadMutation({
+ *   variables: {
+ *      threadId: // value for 'threadId'
+ *   },
+ * });
+ */
+export function useDeleteThreadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteThreadMutation,
+    DeleteThreadMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<DeleteThreadMutation, DeleteThreadMutationVariables>(
+    DeleteThreadDocument,
+    baseOptions,
+  )
+}
+export type DeleteThreadMutationHookResult = ReturnType<typeof useDeleteThreadMutation>
+export type DeleteThreadMutationResult = ApolloReactCommon.MutationResult<DeleteThreadMutation>
+export type DeleteThreadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteThreadMutation,
+  DeleteThreadMutationVariables
 >
 export const UpdateCommentDocument = gql`
   mutation updateComment($body: String!, $commentId: Int!) {

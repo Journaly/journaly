@@ -4,13 +4,17 @@ import { useRouter } from 'next/router'
 import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
 import theme from '../../../theme'
-import { useFeedQuery } from '../../../generated/graphql'
+import { User as UserType, useFeedQuery } from '../../../generated/graphql'
 import Select from '../../../elements/Select'
 import LoadingWrapper from '../../LoadingWrapper'
 
 const NUM_POSTS_PER_PAGE = 9
 
-const MyFeed: React.FC = () => {
+type Props = {
+  currentUser: UserType
+}
+
+const MyFeed: React.FC<Props> = () => {
   const [topic, setTopic] = useState('')
   const [language, setLanguage] = useState('')
   // Pull query params off the router instance

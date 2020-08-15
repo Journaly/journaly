@@ -142,7 +142,7 @@ const PostComment: React.FC<PostCommentProps> = ({
           display: flex;
         }
 
-        :global(.edit-btn) {
+        .edit-block :global(.edit-btn) {
           margin-right: 5px;
         }
 
@@ -153,6 +153,7 @@ const PostComment: React.FC<PostCommentProps> = ({
           padding: 5px 0;
           margin-right: 10px;
           background-color: #f9f9f9;
+          resize: vertical;
         }
       `}</style>
     </div>

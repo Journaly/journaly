@@ -64,19 +64,17 @@ const PostComments: React.FC<PostCommentsProps> = ({
       </div>
       {currentUser && (
         <form onSubmit={createNewPostComment}>
-          <fieldset>
-            <div className="new-comment-block">
-              <textarea
-                placeholder="Add a comment..."
-                value={postCommentBody}
-                onChange={(e) => setPostCommentBody(e.target.value)}
-                disabled={loading}
-              />
-              <Button type="submit" disabled={loading} className="submit-btn">
-                Submit
-              </Button>
-            </div>
-          </fieldset>
+          <div className="new-comment-block">
+            <textarea
+              placeholder="Add a comment..."
+              value={postCommentBody}
+              onChange={(e) => setPostCommentBody(e.target.value)}
+              disabled={loading}
+            />
+            <Button type="submit" disabled={loading} className="submit-btn">
+              Submit
+            </Button>
+          </div>
         </form>
       )}
       <style jsx>{`

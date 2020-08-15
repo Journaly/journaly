@@ -6,7 +6,11 @@ import { withApollo } from '../../../lib/apollo'
 import Post from '../../../components/Dashboard/Post'
 import LoadingWrapper from '../../../components/LoadingWrapper'
 import DashboardLayout from '../../../components/Layouts/DashboardLayout'
-import { useCurrentUserQuery, usePostByIdQuery } from '../../../generated/graphql'
+import {
+  useCurrentUserQuery,
+  usePostByIdQuery,
+  PostFragmentFragment as PostType,
+} from '../../../generated/graphql'
 import PostAuthorCard from '../../../components/Dashboard/Post/PostAuthorCard'
 import PostComments from '../../../components/Dashboard/Post/PostComments'
 import theme from '../../../theme'
@@ -19,15 +23,28 @@ const PostPage: NextPage = () => {
   })
   const { loading: userLoading, error: userError, data: userData } = useCurrentUserQuery()
 
+  const post: PostType | undefined | null = postData?.postById
+
   return (
     <LoadingWrapper loading={postLoading || userLoading} error={postError || userError}>
       <DashboardLayout>
         <div className="post-page-wrapper">
-          <Post post={postData?.postById} currentUser={userData?.currentUser} refetch={refetch} />
-          <div className="post-lower-section">
-            <PostComments />
-            <PostAuthorCard author={postData?.postById?.author} />
-          </div>
+          {post && post.postComments && (
+            <>
+              <Post post={post} currentUser={userData?.currentUser} refetch={refetch} />
+              <div className="post-lower-section">
+                <PostComments
+                  postId={post.id}
+                  comments={post.postComments}
+                  currentUser={userData?.currentUser || null}
+                  onNewComment={refetch}
+                  onUpdateComment={refetch}
+                  onDeleteComment={refetch}
+                />
+                <PostAuthorCard author={postData?.postById?.author} />
+              </div>
+            </>
+          )}
           <style jsx>{`
             .post-page-wrapper {
               max-width: 1200px;

@@ -53,6 +53,15 @@ fragment CommentFragment on Comment {
   }
 }
 
+fragment PostCommentFragment on PostComment {
+  id
+  body
+  createdAt
+  author {
+    ...AuthorFragment
+  }
+}
+
 fragment ThreadFragment on Thread {
   id
   startIndex
@@ -78,8 +87,12 @@ fragment PostFragment on Post {
   threads {
     ...ThreadFragment
   }
+  postComments {
+    ...PostCommentFragment
+  }
   images {
     id
+    smallSize
     largeSize
     imageRole
   }

@@ -7,7 +7,7 @@ import { sanitize } from '../../utils'
 import {
   useCreateCommentMutation,
   UserFragmentFragment as UserType,
-  Thread as ThreadType,
+  ThreadFragmentFragment as ThreadType,
 } from '../../generated/graphql'
 import Comment from './Comment'
 import Button from '../../elements/Button'
@@ -20,7 +20,7 @@ type DOMOffsetTarget = {
 }
 
 type PopoverProps = {
-  target: DOMOffsetTarget,
+  target: DOMOffsetTarget
   children: JSX.Element[] | JSX.Element
 }
 
@@ -223,21 +223,17 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, 
   )
 }
 
-const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPopoverProps>(({
-  target,
-  thread,
-  onNewComment,
-  onUpdateComment,
-  currentUser,
-}, ref) => (
-  <Popover target={target} ref={ref}>
-    <Thread
-      thread={thread}
-      onNewComment={onNewComment}
-      onUpdateComment={onUpdateComment}
-      currentUser={currentUser}
-    />
-  </Popover>
-))
+const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPopoverProps>(
+  ({ target, thread, onNewComment, onUpdateComment, currentUser }, ref) => (
+    <Popover target={target} ref={ref}>
+      <Thread
+        thread={thread}
+        onNewComment={onNewComment}
+        onUpdateComment={onUpdateComment}
+        currentUser={currentUser}
+      />
+    </Popover>
+  ),
+)
 
 export default InlineFeedbackPopover

@@ -1,25 +1,31 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import {
-  useUpdateCommentMutation,
-  useDeleteCommentMutation,
-  CommentFragmentFragment as CommentType,
-} from '../../generated/graphql'
-import Button, { ButtonSize, ButtonVariant } from '../../elements/Button'
-import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
-import theme from '../../theme'
+  useUpdatePostCommentMutation,
+  useDeletePostCommentMutation,
+  PostCommentFragmentFragment as PostCommentType,
+} from '../../../generated/graphql'
+import Button, { ButtonSize, ButtonVariant } from '../../../elements/Button'
+import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
+import theme from '../../../theme'
 
-type CommentProps = {
-  comment: CommentType
+type PostCommentProps = {
+  comment: PostCommentType
   canEdit: boolean
-  onUpdateComment: any
+  onUpdateComment: () => void
+  onDeleteComment: () => void
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) => {
+const PostComment: React.FC<PostCommentProps> = ({
+  comment,
+  canEdit,
+  onUpdateComment,
+  onDeleteComment,
+}) => {
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
 
-  const [updateComment, { loading }] = useUpdateCommentMutation({
+  const [updateComment, { loading }] = useUpdatePostCommentMutation({
     onCompleted: () => {
       onUpdateComment()
       setUpdatingCommentBody('')
@@ -29,24 +35,24 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
   const updateExistingComment = () => {
     updateComment({
       variables: {
-        commentId: comment.id,
+        postCommentId: comment.id,
         body: updatingCommentBody,
       },
     })
     setIsEditMode(false)
   }
 
-  const [deleteComment, { loading: deleteLoading }] = useDeleteCommentMutation({
+  const [deleteComment, { loading: deleteLoading }] = useDeletePostCommentMutation({
     onCompleted: () => {
       // just refetches the post as in updateComment
-      onUpdateComment()
+      onDeleteComment()
     },
   })
 
   const deleteExistingComment = () => {
     deleteComment({
       variables: {
-        commentId: comment.id,
+        postCommentId: comment.id,
       },
     })
   }
@@ -154,4 +160,4 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
   )
 }
 
-export default Comment
+export default PostComment

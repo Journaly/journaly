@@ -12,10 +12,18 @@ import theme from '../../../theme'
 type PostCommentProps = {
   comment: PostCommentType
   canEdit: boolean
+  onNewComment: () => void
   onUpdateComment: () => void
+  onDeleteComment: () => void
 }
 
-const PostComment: React.FC<PostCommentProps> = ({ comment, canEdit, onUpdateComment }) => {
+const PostComment: React.FC<PostCommentProps> = ({
+  comment,
+  canEdit,
+  onNewComment,
+  onUpdateComment,
+  onDeleteComment,
+}) => {
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
 
@@ -29,7 +37,7 @@ const PostComment: React.FC<PostCommentProps> = ({ comment, canEdit, onUpdateCom
   const updateExistingComment = () => {
     updateComment({
       variables: {
-        commentId: comment.id,
+        postCommentId: comment.id,
         body: updatingCommentBody,
       },
     })
@@ -46,7 +54,7 @@ const PostComment: React.FC<PostCommentProps> = ({ comment, canEdit, onUpdateCom
   const deleteExistingComment = () => {
     deleteComment({
       variables: {
-        commentId: comment.id,
+        postCommentId: comment.id,
       },
     })
   }

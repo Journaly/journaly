@@ -18,7 +18,6 @@ export type Comment = {
   author: User
   body: Scalars['String']
   createdAt: Scalars['DateTime']
-  authorId: Scalars['Int']
 }
 
 export type CommentWhereUniqueInput = {
@@ -270,7 +269,6 @@ export type PostComment = {
   __typename?: 'PostComment'
   id: Scalars['Int']
   author: User
-  authorId: Scalars['Int']
   body: Scalars['String']
   createdAt: Scalars['DateTime']
 }
@@ -541,7 +539,9 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
     author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
     postComments: Array<{ __typename?: 'PostComment' } & PostCommentFragmentFragment>
-    images: Array<{ __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'imageRole'>>
+    images: Array<
+      { __typename?: 'Image' } & Pick<Image, 'id' | 'smallSize' | 'largeSize' | 'imageRole'>
+    >
   }
 
 export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
@@ -880,6 +880,7 @@ export const PostFragmentFragmentDoc = gql`
     }
     images {
       id
+      smallSize
       largeSize
       imageRole
     }

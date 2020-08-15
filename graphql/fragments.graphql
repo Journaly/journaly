@@ -90,6 +90,7 @@ fragment PostFragment on Post {
   }
   images {
     id
+    smallSize
     largeSize
     imageRole
   }

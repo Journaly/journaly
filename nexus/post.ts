@@ -1,6 +1,6 @@
 import { schema } from 'nexus'
 
-import { processEditorDocument, hasPostPermissions } from './utils'
+import { processEditorDocument, hasAuthorPermissions } from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import { PostUpdateInput } from '.prisma/client/index'
 import { EditorNode, ImageInput } from './inputTypes'
@@ -264,7 +264,7 @@ schema.extendType({
         if (!currentUser) throw new NotFoundError('User')
         if (!originalPost) throw new NotFoundError('Post')
 
-        hasPostPermissions(originalPost, currentUser)
+        hasAuthorPermissions(originalPost, currentUser)
 
         // Actually make the change in the DB
         let data: PostUpdateInput = {}

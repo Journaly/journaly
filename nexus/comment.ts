@@ -1,6 +1,6 @@
 import { schema } from 'nexus'
 
-import { hasPostPermissions } from './utils'
+import { hasAuthorPermissions } from './utils'
 import { NotFoundError } from './errors'
 import { transport, makeEmail } from '../lib/mail'
 const { intArg, stringArg } = schema
@@ -23,7 +23,6 @@ schema.objectType({
     t.model.author()
     t.model.body()
     t.model.createdAt()
-    t.model.authorId()
   },
 })
 
@@ -32,7 +31,6 @@ schema.objectType({
   definition(t) {
     t.model.id()
     t.model.author()
-    t.model.authorId()
     t.model.body()
     t.model.createdAt()
   },
@@ -194,7 +192,7 @@ schema.mutationType({
         if (!currentUser) throw new Error('User not found.')
         if (!originalComment) throw new Error('Comment not found.')
 
-        hasPostPermissions(originalComment, currentUser)
+        hasAuthorPermissions(originalComment, currentUser)
 
         const comment = await ctx.db.comment.update({
           data: {
@@ -233,7 +231,7 @@ schema.mutationType({
 
         if (!originalComment) throw new Error('Comment not found.')
 
-        hasPostPermissions(originalComment, currentUser)
+        hasAuthorPermissions(originalComment, currentUser)
 
         const comment = await ctx.db.comment.delete({
           where: {
@@ -330,7 +328,7 @@ schema.mutationType({
         if (!currentUser) throw new Error('User not found.')
         if (!originalPostComment) throw new Error('Comment not found.')
 
-        hasPostPermissions(originalPostComment, currentUser)
+        hasAuthorPermissions(originalPostComment, currentUser)
 
         const postComment = await ctx.db.postComment.update({
           data: {
@@ -369,7 +367,7 @@ schema.mutationType({
 
         if (!originalPostComment) throw new Error('Comment not found.')
 
-        hasPostPermissions(originalPostComment, currentUser)
+        hasAuthorPermissions(originalPostComment, currentUser)
 
         const postComment = await ctx.db.postComment.delete({
           where: {

@@ -1,5 +1,5 @@
 import escapeHTML from 'escape-html'
-import { User, Post, Comment, PostComment } from '.prisma/client'
+import { User } from '.prisma/client'
 
 type NodeType = {
   text?: string | null
@@ -9,6 +9,8 @@ type NodeType = {
   type?: string | null
   children?: NodeType[] | undefined | null
 }
+
+type AuthoredObject = { authorId: number }
 
 const typeToElStrMap: { [key: string]: string } = {
   'heading-one': 'h1',
@@ -154,7 +156,7 @@ export const processEditorDocument = (document: NodeType[]) => {
 
 // Takes in an original Post or Comment and a currently logged in User and checks that
 // the currentUser has permission to update or delete that Post/Comment
-export const hasPostPermissions = (original: Post | Comment | PostComment, currentUser: User) => {
+export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User) => {
   const hasPermission =
     original.authorId == currentUser.id ||
     currentUser.userRole === 'MODERATOR' ||

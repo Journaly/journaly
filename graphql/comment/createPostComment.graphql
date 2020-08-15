@@ -1,0 +1,10 @@
+mutation createPostComment($body: String!, $postId: Int!) {
+  createPostComment(body: $body, postId: $postId) {
+    body
+    author {
+      id
+      name
+      handle
+    }
+  }
+}

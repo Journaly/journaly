@@ -4,9 +4,9 @@ import { toast } from 'react-toastify'
 
 import { sanitize } from '../../../utils'
 import {
-  Post as PostType,
+  PostFragmentFragment as PostType,
   UserFragmentFragment as UserType,
-  Thread as ThreadType,
+  ThreadFragmentFragment as ThreadType,
   PostStatus,
   useCreateThreadMutation,
   useUpdatePostMutation,
@@ -22,7 +22,7 @@ import { Router, useTranslation } from '../../../config/i18n'
 import PostHeader from '../../PostHeader'
 
 interface IPostProps {
-  post: PostType | any
+  post: PostType
   currentUser: UserType | null | undefined
   refetch: any
 }

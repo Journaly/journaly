@@ -100,7 +100,8 @@ schema.extendType({
           'Set-Cookie',
           serialize('token', token, {
             httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24 * 365,
+            maxAge: 60 * 60 * 24 * 365,
+            path: '/',
           }),
         )
         return user
@@ -156,7 +157,8 @@ schema.extendType({
           'Set-Cookie',
           serialize('token', token, {
             httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24 * 365,
+            maxAge: 60 * 60 * 24 * 365,
+            path: '/',
           }),
         )
         return user
@@ -185,6 +187,7 @@ schema.extendType({
           serialize('token', '', {
             httpOnly: true,
             expires: new Date(0),
+            path: '/',
           }),
         )
 

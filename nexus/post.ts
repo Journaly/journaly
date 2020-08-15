@@ -1,6 +1,6 @@
 import { schema } from 'nexus'
 
-import { processEditorDocument, hasPostPermissions } from './utils'
+import { processEditorDocument, hasAuthorPermissions } from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import { PostUpdateInput } from '.prisma/client/index'
 import { EditorNode, ImageInput } from './inputTypes'
@@ -17,6 +17,7 @@ schema.objectType({
     t.model.status()
     t.model.likes()
     t.model.threads()
+    t.model.postComments()
     t.model.language()
     t.model.createdAt()
     t.model.bodySrc()
@@ -27,11 +28,11 @@ schema.objectType({
         return ctx.db.comment.count({
           where: {
             thread: {
-              postId: parent.id
-            }
-          }
+              postId: parent.id,
+            },
+          },
         })
-      }
+      },
     })
   },
 })
@@ -62,10 +63,11 @@ schema.extendType({
       resolve: async (_parent, args, ctx) => {
         return ctx.db.post.findMany({
           where: {
-            AND: {
-              author: { id: args.authorId },
-              status: args.status,
-            },
+            author: { id: args.authorId },
+            status: args.status,
+          },
+          orderBy: {
+            publishedAt: 'desc',
           },
         })
       },
@@ -262,7 +264,7 @@ schema.extendType({
         if (!currentUser) throw new NotFoundError('User')
         if (!originalPost) throw new NotFoundError('Post')
 
-        hasPostPermissions(originalPost, currentUser)
+        hasAuthorPermissions(originalPost, currentUser)
 
         // Actually make the change in the DB
         let data: PostUpdateInput = {}
@@ -287,16 +289,15 @@ schema.extendType({
         }
 
         if (args.images) {
-          const headlineImage = args.images.find(i => i.imageRole === 'HEADLINE')
+          const headlineImage = args.images.find((i) => i.imageRole === 'HEADLINE')
 
           if (headlineImage) {
             await ctx.db.image.deleteMany({
               where: {
                 postId: args.postId,
                 imageRole: 'HEADLINE',
-              }
+              },
             })
-
 
             await ctx.db.image.create({
               data: {

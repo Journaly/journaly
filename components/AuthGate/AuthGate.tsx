@@ -36,10 +36,15 @@ const AuthGate: React.FC<Props> = ({ children }) => {
 
   const currentUser = data?.currentUser as UserType
 
-  if (!(currentUser || loading || error)) {
+  if (loading || error) {
+    return null
+  }
+
+  if (!currentUser && typeof window !== 'undefined') {
     router.push({
       pathname: '/dashboard/login',
     })
+
     return null
   }
 

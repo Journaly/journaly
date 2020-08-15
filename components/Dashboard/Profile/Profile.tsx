@@ -2,18 +2,19 @@ import React from 'react'
 import ProfileCard from './ProfileCard'
 import PostList from './PostList'
 import { layoutPadding } from '../../Dashboard/dashboardConstants'
-import { User as UserType } from '../../../generated/graphql'
+import { User as UserType, PostCardFragmentFragment as PostCardType } from '../../../generated/graphql'
 import theme from '../../../theme'
 
 type Props = {
   user: UserType | any
+  posts: PostCardType[]
 }
 
-const Profile: React.FC<Props> = ({ user }) => {
+const Profile: React.FC<Props> = ({ user, posts }) => {
   return (
     <div className="profile-wrapper">
       <ProfileCard user={user} />
-      <PostList userId={user.id} />
+      <PostList posts={posts} />
 
       <style jsx>{`
         .profile-wrapper {

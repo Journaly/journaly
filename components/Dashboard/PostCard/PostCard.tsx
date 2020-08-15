@@ -105,6 +105,7 @@ const PostCard: React.FC<Props> = ({
 
       <style jsx>{`
         .post-card-container {
+          flex-shrink: 0;
           display: flex;
           flex-direction: column;
           background-color: ${theme.colors.white};

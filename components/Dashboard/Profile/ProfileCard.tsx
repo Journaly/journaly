@@ -18,8 +18,6 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
 
   const sampleUser = {
     likes: ['cooking, reading, movies, design'],
-    bio:
-      'Praesent commodo a quis at dui taciti sagittis senectus inceptos nascetur, dictumst accumsan quam tortor dictum in ultrices natoque sodales, venenatis et iaculis aliquet blandit mi mauris faucibus molestie. Libero suspendisse urna placerat elit non est metus vivamus justo, duis nam ridiculus mattis eu gravida tellus curae, maecenas nisi pellentesque elementum imperdiet mus ac varius.',
     location: 'San Francisco, United States',
     facebook: 'https://www.facebook.com/robinmacpherson.co',
     instagram: 'https://instagram.com/my-link',
@@ -74,7 +72,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           <BlankAvatarIcon className="blank-avatar-desktop" size={130} />
         )}
 
-        {sampleUser.bio && <p className="bio">{sampleUser.bio}</p>}
+        {user.bio && <p className="bio">{user.bio}</p>}
       </div>
 
       <div className="profile-footer">

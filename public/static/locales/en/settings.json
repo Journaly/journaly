@@ -27,7 +27,10 @@
     },
     "bio": {
       "legend": "Bio",
-      "bioLabel": "Tell us about yourself!"
+      "bioLabel": "Tell us about yourself!",
+      "bioError": "Your bio must be {{characters}} characters or less",
+      "bioInputDescription": "Maximum {{characters}} characters",
+      "bioSuccess": "Bio successfully updated."
     },
     "interests": {
       "legend": "Interests",
@@ -40,6 +43,9 @@
       "youtubePlaceholder": "youtube.com/c/YourChannel",
       "instagramPlaceholder": "instagram.com/YourPage",
       "personalWebsitePlaceholder": "Do you have a website?"
+    },
+    "error": {
+      "updateError": "There was an error updating your profile."
     }
   },
   "accountForm": {

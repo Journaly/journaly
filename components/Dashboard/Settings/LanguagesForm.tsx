@@ -1,42 +1,35 @@
 import React from 'react'
+import { ApolloQueryResult } from '@apollo/client'
 import { useTranslation } from '../../../config/i18n'
 import {
-  useLanguagesFormDataQuery,
-  useAddLanguageLearningMutation,
-  useAddLanguageNativeMutation,
-  useRemoveLanguageLearningMutation,
-  useRemoveLanguageNativeMutation,
+  LanguagesFormDataQuery,
+  Language as LanguageType,
+  LanguageNative as LanguageNativeType,
+  LanguageLearning as LanguageLearningType,
 } from '../../../generated/graphql'
 
-import LanguageMultiSelect from '../../../components/LanguageMultiSelect'
+import NativeLanguageFormField from '../../../components/NativeLanguageFormField'
+import LearningLanguageFormField from '../../../components/LearningLanguageFormField'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
 
-type LanguageMutationType = (arg: { variables: { languageId: number } }) => Promise<any>
+type Props = {
+  languages: LanguageType[]
+  nativeLanguages: LanguageNativeType[]
+  learningLanguages: LanguageLearningType[]
+  refetch: () => Promise<ApolloQueryResult<LanguagesFormDataQuery>>
+}
 
-const LanguagesForm: React.FC = () => {
+const LanguagesForm: React.FC<Props> = ({
+  languages,
+  nativeLanguages,
+  learningLanguages,
+  refetch,
+}) => {
   const { t } = useTranslation('settings')
-  const { data, refetch } = useLanguagesFormDataQuery()
-  const [addLearningLanguage] = useAddLanguageLearningMutation()
-  const [addNativeLanguage] = useAddLanguageNativeMutation()
-  const [removeLearningLanguage] = useRemoveLanguageLearningMutation()
-  const [removeNativeLanguage] = useRemoveLanguageNativeMutation()
-
-  const mutateLanguageM2M = (mutation: LanguageMutationType) => async (languageId: number) => {
-    await mutation({ variables: { languageId } })
-    refetch()
-  }
-  
-  const learningLanguages = (data?.currentUser?.languagesLearning || []).map(x => x.language.id)
-  const nativeLanguages = (data?.currentUser?.languagesNative || []).map(x => x.language.id)
-
-  const onLearningAdd = mutateLanguageM2M(addLearningLanguage) 
-  const onNativeAdd = mutateLanguageM2M(addNativeLanguage) 
-  const onLearningRemove = mutateLanguageM2M(removeLearningLanguage) 
-  const onNativeRemove = mutateLanguageM2M(removeNativeLanguage) 
 
   return (
-    <SettingsForm onSubmit={() => undefined}>
+    <SettingsForm>
       <SettingsFieldset legend={t('profile.languages.legend')}>
         <div className="languages-wrapper">
           <div className="languages-form-fields">
@@ -44,22 +37,22 @@ const LanguagesForm: React.FC = () => {
               <label className="settings-label" htmlFor="native-languages">
                 {t('profile.languages.nativeLanguagesLabel')}
               </label>
-              <LanguageMultiSelect
-                languages={data?.languages || []}
-                value={nativeLanguages}
-                onAdd={onNativeAdd}
-                onRemove={onNativeRemove}
+
+              <NativeLanguageFormField
+                languages={languages}
+                nativeLanguages={nativeLanguages}
+                refetch={refetch}
               />
             </div>
             <div className="languages-form-field">
               <label className="settings-label" htmlFor="learning-languages">
                 {t('profile.languages.learningLanguagesLabel')}
               </label>
-              <LanguageMultiSelect
-                languages={data?.languages || []}
-                value={learningLanguages}
-                onAdd={onLearningAdd}
-                onRemove={onLearningRemove}
+
+              <LearningLanguageFormField
+                languages={languages}
+                learningLanguages={learningLanguages}
+                refetch={refetch}
               />
             </div>
           </div>

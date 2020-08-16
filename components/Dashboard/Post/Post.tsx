@@ -4,9 +4,9 @@ import { toast } from 'react-toastify'
 
 import { sanitize } from '../../../utils'
 import {
-  Post as PostType,
+  PostFragmentFragment as PostType,
   UserFragmentFragment as UserType,
-  Thread as ThreadType,
+  ThreadFragmentFragment as ThreadType,
   PostStatus,
   useCreateThreadMutation,
   useUpdatePostMutation,
@@ -16,13 +16,13 @@ import {
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
 import PostBodyStyles from '../../PostBodyStyles'
-import LeaveACommentIcon from '../../Icons/LeaveACommentIcon'
+import PencilIcon from '../../Icons/PencilIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 import { Router, useTranslation } from '../../../config/i18n'
 import PostHeader from '../../PostHeader'
 
 interface IPostProps {
-  post: PostType | any
+  post: PostType
   currentUser: UserType | null | undefined
   refetch: any
 }
@@ -42,7 +42,7 @@ type CommentSelectionButtonProps = {
 const CommentSelectionButton = ({ position, display, onClick }: CommentSelectionButtonProps) => {
   return (
     <button onMouseDown={onClick} className="comment-btn">
-      <LeaveACommentIcon primaryColor="white" secondaryColor="white" size={30} />
+      <PencilIcon size={24} className="edit-icon" />
       <style jsx>{`
         .comment-btn {
           display: ${display ? 'flex' : 'none'};
@@ -53,7 +53,7 @@ const CommentSelectionButton = ({ position, display, onClick }: CommentSelection
           height: 35px;
           font-size: 14px;
           line-height: 1;
-          background-color: ${theme.colors.gray800};
+          background-color: ${theme.colors.charcoal};
           border-radius: 5px;
           cursor: pointer;
           position: absolute;
@@ -63,8 +63,8 @@ const CommentSelectionButton = ({ position, display, onClick }: CommentSelection
           transition: background-color 0.2s ease-in-out;
         }
 
-        .comment-btn:hover {
-          background-color: ${theme.colors.blueLight};
+        .comment-btn:hover :global(#g-stroke) {
+          stroke: ${theme.colors.blueLight};
         }
       `}</style>
     </button>
@@ -423,6 +423,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           currentUser={currentUser}
           onNewComment={refetch}
           onUpdateComment={refetch}
+          onDeleteThread={refetch}
           ref={popoverRef}
         />
       )}

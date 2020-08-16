@@ -1,10 +1,8 @@
 import { schema } from 'nexus'
 
 schema.objectType({
-  name: 'Location',
+  name: 'PostLike',
   definition(t) {
     t.model.id()
-    t.model.country()
-    t.model.city()
   },
 })

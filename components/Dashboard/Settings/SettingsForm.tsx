@@ -5,7 +5,7 @@ import theme from '../../../theme'
 type Props = {
   className?: string
   children: React.ReactNode
-  onSubmit: () => void
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void
   errorInputName?: string
 }
 

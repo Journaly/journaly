@@ -7,10 +7,11 @@ import { sanitize } from '../../utils'
 import {
   useCreateCommentMutation,
   UserFragmentFragment as UserType,
-  Thread as ThreadType,
+  ThreadFragmentFragment as ThreadType,
+  useDeleteThreadMutation,
 } from '../../generated/graphql'
 import Comment from './Comment'
-import Button from '../../elements/Button'
+import Button, { ButtonVariant } from '../../elements/Button'
 
 type DOMOffsetTarget = {
   x: number
@@ -20,14 +21,15 @@ type DOMOffsetTarget = {
 }
 
 type PopoverProps = {
-  target: DOMOffsetTarget,
+  target: DOMOffsetTarget
   children: JSX.Element[] | JSX.Element
 }
 
 type ThreadProps = {
   thread: ThreadType
-  onNewComment: any
-  onUpdateComment: any
+  onNewComment: () => void
+  onUpdateComment: () => void
+  onDeleteThread: () => void
   currentUser: UserType | null | undefined
 }
 
@@ -35,8 +37,9 @@ type InlineFeedbackPopoverProps = {
   target: DOMOffsetTarget
   thread: ThreadType
   currentUser: UserType | null | undefined
-  onNewComment: any
-  onUpdateComment: any
+  onNewComment: () => void
+  onUpdateComment: () => void
+  onDeleteThread: () => void
 }
 
 const VP_PADDING = 20
@@ -91,7 +94,7 @@ const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({ target, childr
           max-height: ${ownHeight}px;
 
           background-color: #f9f9f9;
-          border: 1px solid ${theme.colors.gray400};
+          border: none;
           box-shadow: #00000045 5px 5px 33px;
           border-radius: 3px;
         }
@@ -102,12 +105,23 @@ const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({ target, childr
   return ReactDOM.createPortal(popover, popoverRoot)
 })
 
-const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, currentUser }) => {
+const Thread: React.FC<ThreadProps> = ({
+  thread,
+  onNewComment,
+  onUpdateComment,
+  onDeleteThread,
+  currentUser,
+}) => {
   const [commentBody, setCommentBody] = React.useState<string>('')
   const [createComment, { loading }] = useCreateCommentMutation({
     onCompleted: () => {
       onNewComment()
       setCommentBody('')
+    },
+  })
+  const [deleteThread] = useDeleteThreadMutation({
+    onCompleted: () => {
+      onDeleteThread()
     },
   })
 
@@ -120,6 +134,16 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, 
         body: commentBody,
       },
     })
+  }
+
+  const cancelNewComment = () => {
+    if (thread.comments.length === 0) {
+      deleteThread({
+        variables: {
+          threadId: thread.id,
+        },
+      })
+    }
   }
 
   const sanitizedHTML = sanitize(thread.highlightedContent)
@@ -155,9 +179,29 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, 
                   onChange={(e) => setCommentBody(e.target.value)}
                   disabled={loading}
                 />
-                <Button type="submit" disabled={loading} className="submit-btn">
-                  Submit
-                </Button>
+                <div className="btn-container">
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="new-comment-btn"
+                    variant={ButtonVariant.PrimaryDark}
+                    style={{
+                      marginBottom: '5px',
+                    }}
+                  >
+                    Submit
+                  </Button>
+                  {thread.comments.length === 0 && (
+                    <Button
+                      onClick={() => cancelNewComment()}
+                      disabled={loading}
+                      variant={ButtonVariant.Secondary}
+                      className="new-comment-btn"
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                </div>
               </div>
             </fieldset>
           </form>
@@ -204,6 +248,7 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, 
           flex-direction: row;
           border-top: 1px solid ${theme.colors.gray400};
           margin-top: 5px;
+          padding-top: 10px;
         }
 
         .new-comment-block textarea {
@@ -218,26 +263,33 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, 
         .new-comment-block textarea:focus {
           outline: none;
         }
+
+        .btn-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .btn-container :global(.new-comment-btn) {
+          width: 100%;
+        }
       `}</style>
     </div>
   )
 }
 
-const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPopoverProps>(({
-  target,
-  thread,
-  onNewComment,
-  onUpdateComment,
-  currentUser,
-}, ref) => (
-  <Popover target={target} ref={ref}>
-    <Thread
-      thread={thread}
-      onNewComment={onNewComment}
-      onUpdateComment={onUpdateComment}
-      currentUser={currentUser}
-    />
-  </Popover>
-))
+const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPopoverProps>(
+  ({ target, thread, onNewComment, onUpdateComment, onDeleteThread, currentUser }, ref) => (
+    <Popover target={target} ref={ref}>
+      <Thread
+        thread={thread}
+        onNewComment={onNewComment}
+        onUpdateComment={onUpdateComment}
+        currentUser={currentUser}
+        onDeleteThread={onDeleteThread}
+      />
+    </Popover>
+  ),
+)
 
 export default InlineFeedbackPopover

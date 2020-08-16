@@ -16,6 +16,7 @@ export enum ButtonSize {
 export enum ButtonVariant {
   Primary = 'primary',
   Secondary = 'secondary',
+  Dark = 'dark',
   Destructive = 'destructive',
   DestructiveSecondary = 'destructiveSecondary',
 }
@@ -62,6 +63,8 @@ const Button: React.FC<Props> = (props) => {
     loadingColor = theme.colors.blueLight
   } else if (variant === ButtonVariant.DestructiveSecondary) {
     loadingColor = theme.colors.red
+  } else if (variant === ButtonVariant.Dark) {
+    loadingColor = theme.colors.blueLight
   }
 
   return (
@@ -112,6 +115,11 @@ const Button: React.FC<Props> = (props) => {
           background-color: ${theme.colors.white};
           border: 1px solid ${theme.colors.blueLight};
         }
+        .${ButtonVariant.Dark} {
+          color: ${theme.colors.white};
+          background-color: ${theme.colors.charcoal};
+          border: none;
+        }
         .${ButtonVariant.Destructive} {
           color: ${theme.colors.white};
           background-color: ${theme.colors.red};
@@ -132,9 +140,16 @@ const Button: React.FC<Props> = (props) => {
           color: ${theme.colors.white};
           border: 1px solid gray;
         }
+        .${ButtonVariant.Dark}:hover:not(:disabled) {
+          color: ${theme.colors.blueLight};
+        }
         .${ButtonVariant.Secondary}:focus:not(:disabled) {
           outline: none;
           border-width: 2px;
+        }
+        .${ButtonVariant.Dark}:focus:not(:disabled) {
+          outline: none;
+          border-width: 0;
         }
         .${ButtonVariant.Destructive}:hover:not(:disabled) {
           background-color: tomato;

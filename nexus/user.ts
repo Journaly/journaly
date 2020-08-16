@@ -114,6 +114,7 @@ schema.extendType({
         email: schema.stringArg({ required: false }),
         name: schema.stringArg({ required: false }),
         profileImage: schema.stringArg({ required: false }),
+        bio: schema.stringArg({ required: false }),
       },
       resolve: async (_parent, args, ctx: any) => {
         const { userId } = ctx.request

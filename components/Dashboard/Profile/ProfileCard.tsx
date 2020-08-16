@@ -5,6 +5,8 @@ import InstagramIcon from '../../../components/Icons/InstagramIcon'
 import YoutubeIcon from '../../../components/Icons/YoutubeIcon'
 import GlobeIcon from '../../../components/Icons/GlobeIcon'
 import ExternalLink from '../../../elements/ExternalLink'
+import { sanitize } from '../../../utils'
+import { languageNameWithDialect } from '../../../utils/languages'
 import theme from '../../../theme'
 import { User as UserType } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
@@ -18,8 +20,6 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
 
   const sampleUser = {
     likes: ['cooking, reading, movies, design'],
-    bio:
-      'Praesent commodo a quis at dui taciti sagittis senectus inceptos nascetur, dictumst accumsan quam tortor dictum in ultrices natoque sodales, venenatis et iaculis aliquet blandit mi mauris faucibus molestie. Libero suspendisse urna placerat elit non est metus vivamus justo, duis nam ridiculus mattis eu gravida tellus curae, maecenas nisi pellentesque elementum imperdiet mus ac varius.',
     location: 'San Francisco, United States',
     facebook: 'https://www.facebook.com/robinmacpherson.co',
     instagram: 'https://instagram.com/my-link',
@@ -31,15 +31,8 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
   const showSeparator =
     sampleUser.facebook || sampleUser.instagram || sampleUser.youtube || sampleUser.website
   const profileImage = user.profileImage
-  const speaks = []
-  const learns = []
-
-  for (let language of user.languagesNative) {
-    speaks.push(language.language.name)
-  }
-  for (let language of user.languagesLearning) {
-    learns.push(language.language.name)
-  }
+  const speaks = user.languagesNative.map(({ language }) => languageNameWithDialect(language))
+  const learns = user.languagesLearning.map(({ language }) => languageNameWithDialect(language))
 
   return (
     <div className="profile-card">
@@ -74,7 +67,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           <BlankAvatarIcon className="blank-avatar-desktop" size={130} />
         )}
 
-        {sampleUser.bio && <p className="bio">{sampleUser.bio}</p>}
+        {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
       </div>
 
       <div className="profile-footer">

@@ -5,6 +5,7 @@ import InstagramIcon from '../../../components/Icons/InstagramIcon'
 import YoutubeIcon from '../../../components/Icons/YoutubeIcon'
 import GlobeIcon from '../../../components/Icons/GlobeIcon'
 import ExternalLink from '../../../elements/ExternalLink'
+import { languageNameWithDialect } from '../../../utils/languages'
 import theme from '../../../theme'
 import { User as UserType } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
@@ -29,15 +30,8 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
   const showSeparator =
     sampleUser.facebook || sampleUser.instagram || sampleUser.youtube || sampleUser.website
   const profileImage = user.profileImage
-  const speaks = []
-  const learns = []
-
-  for (let language of user.languagesNative) {
-    speaks.push(language.language.name)
-  }
-  for (let language of user.languagesLearning) {
-    learns.push(language.language.name)
-  }
+  const speaks = user.languagesNative.map(({ language }) => languageNameWithDialect(language))
+  const learns = user.languagesLearning.map(({ language }) => languageNameWithDialect(language))
 
   return (
     <div className="profile-card">

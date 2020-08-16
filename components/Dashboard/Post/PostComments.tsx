@@ -87,6 +87,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
           background-color: ${theme.colors.white};
           box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.09);
           width: 100%;
+          height: 100%;
           padding: 20px;
           text-align: center;
           display: flex;

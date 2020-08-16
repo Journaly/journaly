@@ -29,7 +29,7 @@ const LanguagesForm: React.FC<Props> = ({
   const { t } = useTranslation('settings')
 
   return (
-    <SettingsForm onSubmit={() => undefined}>
+    <SettingsForm>
       <SettingsFieldset legend={t('profile.languages.legend')}>
         <div className="languages-wrapper">
           <div className="languages-form-fields">

@@ -184,6 +184,7 @@ model Thread {
   post               Post      @relation(fields: [postId], references: [id])
   postId             Int
   comments           Comment[]
+  subscriptions      ThreadSubscription[]
 }
 
 model Image {
@@ -200,6 +201,16 @@ model Prompt {
   text    String
   topic   Topic  @relation(fields: [topicId], references: [id])
   topicId Int
+}
+
+model ThreadSubscription {
+  id        Int      @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  thread    Thread   @relation(fields: [threadId], references: [id])
+  threadId  Int
+  @@unique([userId, threadId])
 }
 
 model UserSubscription {

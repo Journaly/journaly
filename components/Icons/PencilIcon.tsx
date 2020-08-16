@@ -9,7 +9,7 @@ function PencilIcon({ title, titleId, size, ...props }: React.SVGProps<SVGSVGEle
   return (
     <svg
       height={size}
-      viewBox="0 0 {size} {size}"
+      viewBox={`0 0 ${size} ${size}`}
       width={size}
       aria-labelledby={titleId}
       {...props}

@@ -171,7 +171,7 @@ schema.mutationType({
           }
         })
 
-        const mailPromises = []
+        const mailPromises: Promise<any>[] = []
         thread.subscriptions.forEach(({ user }) => {
           if (user.id === userId) {
             // This is the user creating the comment, do not notify them.

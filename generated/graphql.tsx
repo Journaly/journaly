@@ -190,6 +190,7 @@ export type MutationUpdateUserArgs = {
   email?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
   profileImage?: Maybe<Scalars['String']>
+  bio?: Maybe<Scalars['String']>
 }
 
 export type MutationLoginUserArgs = {
@@ -483,7 +484,7 @@ export type UpdatePostCommentMutation = { __typename?: 'Mutation' } & {
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'name' | 'handle' | 'email' | 'userRole' | 'profileImage'
+  'id' | 'name' | 'handle' | 'email' | 'bio' | 'userRole' | 'profileImage'
 >
 
 export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
@@ -741,18 +742,18 @@ export type SettingsFormDataQueryVariables = {}
 export type SettingsFormDataQuery = { __typename?: 'Query' } & {
   languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
   currentUser?: Maybe<
-    { __typename?: 'User' } & {
-      languagesLearning: Array<
-        { __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'> & {
-            language: { __typename?: 'Language' } & LanguageFragmentFragment
-          }
-      >
-      languagesNative: Array<
-        { __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'> & {
-            language: { __typename?: 'Language' } & LanguageFragmentFragment
-          }
-      >
-    }
+    { __typename?: 'User' } & Pick<User, 'bio'> & {
+        languagesLearning: Array<
+          { __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'> & {
+              language: { __typename?: 'Language' } & LanguageFragmentFragment
+            }
+        >
+        languagesNative: Array<
+          { __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'> & {
+              language: { __typename?: 'Language' } & LanguageFragmentFragment
+            }
+        >
+      }
   >
 }
 
@@ -760,6 +761,7 @@ export type UpdateUserMutationVariables = {
   email?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
   profileImage?: Maybe<Scalars['String']>
+  bio?: Maybe<Scalars['String']>
 }
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
@@ -792,6 +794,7 @@ export const UserFragmentFragmentDoc = gql`
     name
     handle
     email
+    bio
     userRole
     profileImage
   }
@@ -2208,6 +2211,7 @@ export const SettingsFormDataDocument = gql`
       ...LanguageFragment
     }
     currentUser {
+      bio
       languagesLearning {
         id
         language {
@@ -2269,8 +2273,8 @@ export type SettingsFormDataQueryResult = ApolloReactCommon.QueryResult<
   SettingsFormDataQueryVariables
 >
 export const UpdateUserDocument = gql`
-  mutation updateUser($email: String, $name: String, $profileImage: String) {
-    updateUser(email: $email, name: $name, profileImage: $profileImage) {
+  mutation updateUser($email: String, $name: String, $profileImage: String, $bio: String) {
+    updateUser(email: $email, name: $name, profileImage: $profileImage, bio: $bio) {
       ...UserFragment
     }
   }
@@ -2297,6 +2301,7 @@ export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
  *      email: // value for 'email'
  *      name: // value for 'name'
  *      profileImage: // value for 'profileImage'
+ *      bio: // value for 'bio'
  *   },
  * });
  */

@@ -3,6 +3,7 @@ query settingsFormData {
     ...LanguageFragment
   }
   currentUser {
+    bio
     languagesLearning {
       id
       language {

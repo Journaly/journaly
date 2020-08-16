@@ -169,6 +169,7 @@ const PostComment: React.FC<PostCommentProps> = ({
 
         .edit-block {
           display: flex;
+          margin-left: 10px;
         }
 
         .edit-block span {

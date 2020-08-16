@@ -163,6 +163,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
 
         .edit-block {
           display: flex;
+          margin-left: 10px;
         }
 
         .edit-block span {

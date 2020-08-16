@@ -73,9 +73,9 @@ const PostComments: React.FC<PostCommentsProps> = ({
             />
             <Button
               type="submit"
-              disabled={loading}
+              loading={loading}
               className="submit-btn"
-              variant={ButtonVariant.Dark}
+              variant={ButtonVariant.PrimaryDark}
             >
               Submit
             </Button>

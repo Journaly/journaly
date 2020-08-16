@@ -16,7 +16,7 @@ export enum ButtonSize {
 export enum ButtonVariant {
   Primary = 'primary',
   Secondary = 'secondary',
-  Dark = 'dark',
+  PrimaryDark = 'primaryDark',
   Destructive = 'destructive',
   DestructiveSecondary = 'destructiveSecondary',
 }
@@ -63,7 +63,7 @@ const Button: React.FC<Props> = (props) => {
     loadingColor = theme.colors.blueLight
   } else if (variant === ButtonVariant.DestructiveSecondary) {
     loadingColor = theme.colors.red
-  } else if (variant === ButtonVariant.Dark) {
+  } else if (variant === ButtonVariant.PrimaryDark) {
     loadingColor = theme.colors.blueLight
   }
 
@@ -115,7 +115,7 @@ const Button: React.FC<Props> = (props) => {
           background-color: ${theme.colors.white};
           border: 1px solid ${theme.colors.blueLight};
         }
-        .${ButtonVariant.Dark} {
+        .${ButtonVariant.PrimaryDark} {
           color: ${theme.colors.white};
           background-color: ${theme.colors.charcoal};
           border: none;
@@ -140,14 +140,14 @@ const Button: React.FC<Props> = (props) => {
           color: ${theme.colors.white};
           border: 1px solid gray;
         }
-        .${ButtonVariant.Dark}:hover:not(:disabled) {
+        .${ButtonVariant.PrimaryDark}:hover:not(:disabled) {
           color: ${theme.colors.blueLight};
         }
         .${ButtonVariant.Secondary}:focus:not(:disabled) {
           outline: none;
           border-width: 2px;
         }
-        .${ButtonVariant.Dark}:focus:not(:disabled) {
+        .${ButtonVariant.PrimaryDark}:focus:not(:disabled) {
           outline: none;
           border-width: 0;
         }

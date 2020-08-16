@@ -98,8 +98,8 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           <Button
             size={ButtonSize.Small}
             onClick={updateExistingComment}
-            disabled={loading}
-            variant={ButtonVariant.Dark}
+            loading={loading}
+            variant={ButtonVariant.PrimaryDark}
             style={{
               marginRight: '5px',
             }}

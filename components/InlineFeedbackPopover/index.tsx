@@ -184,7 +184,7 @@ const Thread: React.FC<ThreadProps> = ({
                     type="submit"
                     disabled={loading}
                     className="new-comment-btn"
-                    variant={ButtonVariant.Dark}
+                    variant={ButtonVariant.PrimaryDark}
                     style={{
                       marginBottom: '5px',
                     }}

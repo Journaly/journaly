@@ -104,8 +104,8 @@ const PostComment: React.FC<PostCommentProps> = ({
           <Button
             size={ButtonSize.Small}
             onClick={updateExistingComment}
-            disabled={loading}
-            variant={ButtonVariant.Dark}
+            loading={loading}
+            variant={ButtonVariant.PrimaryDark}
             style={{
               marginRight: '5px',
             }}

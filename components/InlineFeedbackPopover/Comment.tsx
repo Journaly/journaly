@@ -38,7 +38,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
     setIsEditMode(false)
   }
 
-  const [deleteComment, { loading: deleteLoading }] = useDeleteCommentMutation({
+  const [deleteComment] = useDeleteCommentMutation({
     onCompleted: () => {
       // just refetches the post as in updateComment
       onUpdateComment()

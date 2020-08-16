@@ -92,7 +92,6 @@ const PostComments: React.FC<PostCommentsProps> = ({
           text-align: center;
           display: flex;
           flex-direction: column;
-          overflow: hidden;
           max-height: 100%;
         }
 

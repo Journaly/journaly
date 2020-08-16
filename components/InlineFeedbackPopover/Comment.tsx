@@ -130,6 +130,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           display: flex;
           flex-direction: column;
           width: 100%;
+          min-width: 0;
         }
         .author-block {
           display: flex;
@@ -155,10 +156,12 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         }
 
         .body-block {
-          display: flex;
-          justify-content: space-between;
-          overflow-wrap: anywhere;
+          margin-right: 10px;
           text-align: left;
+        }
+
+        .body-block :global(p) {
+          word-wrap: break-word;
         }
 
         .edit-block {
@@ -183,11 +186,11 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
 
         textarea {
           flex: 1;
-          margin-right: 10px;
+          width: 100%;
           outline: none;
           padding: 5px 0;
           margin-right: 10px;
-          background-color: none;
+          background-color: transparent;
           resize: vertical;
         }
       `}</style>

@@ -136,6 +136,7 @@ const PostComment: React.FC<PostCommentProps> = ({
           display: flex;
           flex-direction: column;
           width: 100%;
+          min-width: 0;
         }
 
         .author-block {
@@ -162,9 +163,12 @@ const PostComment: React.FC<PostCommentProps> = ({
         }
 
         .body-block {
-          display: flex;
-          overflow-wrap: anywhere;
+          margin-right: 10px;
           text-align: left;
+        }
+
+        .body-block :global(p) {
+          word-wrap: break-word;
         }
 
         .edit-block {
@@ -189,11 +193,10 @@ const PostComment: React.FC<PostCommentProps> = ({
 
         textarea {
           flex: 1;
-          margin-right: 10px;
+          width: 100%;
           outline: none;
           padding: 5px 0;
           margin-right: 10px;
-          background-color: none;
           resize: vertical;
         }
       `}</style>

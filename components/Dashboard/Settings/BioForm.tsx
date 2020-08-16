@@ -4,15 +4,33 @@ import { useTranslation } from '../../../config/i18n'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
 import Button, { ButtonVariant } from '../../../elements/Button'
+import { useUpdateUserMutation } from '../../../generated/graphql'
 
-const BioForm: React.FC = () => {
+type Props = {
+  bio: string
+}
+
+type FormValues = {
+  bio: string
+}
+
+const BioForm: React.FC<Props> = ({ bio }) => {
   const { t } = useTranslation('settings')
-  const { handleSubmit, register } = useForm({
+  const [updateUser, { loading }] = useUpdateUserMutation()
+  const { handleSubmit, register } = useForm<FormValues>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
   })
 
-  const handleBioSubmit = (): void => {}
+  const handleBioSubmit = ({ bio }: FormValues): void => {
+    if (!loading) {
+      updateUser({
+        variables: {
+          bio,
+        },
+      })
+    }
+  }
 
   return (
     <SettingsForm onSubmit={handleSubmit(handleBioSubmit)}>
@@ -23,13 +41,21 @@ const BioForm: React.FC = () => {
               {t('profile.bio.bioLabel')}
             </label>
             {/* TODO: add native maxlength attribute when we know how long this field can be */}
-            <textarea rows={4} id="bio" name="bio" className="j-textarea" ref={register()} />
+            <textarea
+              rows={4}
+              id="bio"
+              name="bio"
+              className="j-textarea"
+              defaultValue={bio}
+              ref={register()}
+            />
           </div>
 
           <Button
             type="submit"
             className="settings-submit-button"
             variant={ButtonVariant.Secondary}
+            loading={loading}
           >
             {t('updateButton')}
           </Button>

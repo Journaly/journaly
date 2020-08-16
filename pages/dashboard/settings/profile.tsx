@@ -35,7 +35,7 @@ const ProfileInfo: NextPage = () => {
                   learningLanguages={data?.currentUser?.languagesLearning as LanguageLearningType[]}
                   refetch={refetch}
                 />
-                <BioForm />
+                <BioForm bio={data?.currentUser?.bio || ''} />
                 <InterestsForm />
                 <SocialForm />
               </>

@@ -5,6 +5,7 @@ import InstagramIcon from '../../../components/Icons/InstagramIcon'
 import YoutubeIcon from '../../../components/Icons/YoutubeIcon'
 import GlobeIcon from '../../../components/Icons/GlobeIcon'
 import ExternalLink from '../../../elements/ExternalLink'
+import { sanitize } from '../../../utils'
 import { languageNameWithDialect } from '../../../utils/languages'
 import theme from '../../../theme'
 import { User as UserType } from '../../../generated/graphql'
@@ -66,7 +67,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           <BlankAvatarIcon className="blank-avatar-desktop" size={130} />
         )}
 
-        {user.bio && <p className="bio">{user.bio}</p>}
+        {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
       </div>
 
       <div className="profile-footer">

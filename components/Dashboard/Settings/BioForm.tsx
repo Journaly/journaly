@@ -1,5 +1,6 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { sanitize } from '../../../utils'
 import { useTranslation } from '../../../config/i18n'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
@@ -22,11 +23,11 @@ const BioForm: React.FC<Props> = ({ bio }) => {
     reValidateMode: 'onBlur',
   })
 
-  const handleBioSubmit = ({ bio }: FormValues): void => {
+  const handleBioSubmit = (data: FormValues): void => {
     if (!loading) {
       updateUser({
         variables: {
-          bio,
+          bio: sanitize(data.bio),
         },
       })
     }
@@ -46,7 +47,7 @@ const BioForm: React.FC<Props> = ({ bio }) => {
               id="bio"
               name="bio"
               className="j-textarea"
-              defaultValue={bio}
+              defaultValue={sanitize(bio)}
               ref={register()}
             />
           </div>

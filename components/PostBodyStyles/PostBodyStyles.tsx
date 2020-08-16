@@ -46,6 +46,12 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
         margin: 10px 0;
         font-weight: 600;
       }
+
+      @media (min-width: ${theme.breakpoints.SM}) {
+        .${parentClassName} h2 {
+          ${theme.typography.headingXL};
+        }
+      }
     `}</style>
   )
 }

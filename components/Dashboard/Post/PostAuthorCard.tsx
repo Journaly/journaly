@@ -14,33 +14,52 @@ type PostAuthorCardProps = {
 }
 
 const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
-  let languages: (LanguageNativeType | LanguageLearningType)[] = []
+  let languagesNative: LanguageNativeType[] = []
+  let languagesLearning: LanguageLearningType[] = []
 
   for (let language of author.languagesLearning) {
-    languages.push(language)
+    languagesLearning.push(language)
   }
   for (let language of author.languagesNative) {
-    languages.push(language)
+    languagesNative.push(language)
   }
 
   return (
     <div className="container">
-      <Link href={`/dashboard/profile/${author.id}`}>
-        <a className="author-info">
-          {author.profileImage ? (
-            <img src={author.profileImage} alt="" />
-          ) : (
-            <BlankAvatarIcon size={60} />
-          )}
-          <p className="author-name">{author.handle}</p>
-        </a>
-      </Link>
+      <div className="author-info-container">
+        <Link href={`/dashboard/profile/${author.id}`}>
+          <a className="author-info">
+            {author.profileImage ? (
+              <img src={author.profileImage} alt="" />
+            ) : (
+              <BlankAvatarIcon size={60} />
+            )}
+          </a>
+        </Link>
+        <p className="author-name">{author.handle}</p>
+      </div>
       <div className="language-info">
-        <p className="author-info-heading">Languages</p>
-        <ul>
-          {languages.map(({ language }) => {
+        <p className="author-info-heading">Native</p>
+        <ul className="language-list">
+          {languagesNative.map(({ language }) => {
             return <li key={language.id}>{languageNameWithDialect(language)}</li>
           })}
+        </ul>
+        <p className="author-info-heading">Learning</p>
+        <ul className="language-list">
+          {languagesLearning.map(({ language }) => {
+            return <li key={language.id}>{languageNameWithDialect(language)}</li>
+          })}
+        </ul>
+      </div>
+      <div className="stats">
+        <p className="author-info-heading">Has written</p>
+        <ul>
+          <li>10 posts</li>
+        </ul>
+        <p className="author-info-heading">Has received</p>
+        <ul>
+          <li>64 thanks</li>
         </ul>
       </div>
       <style jsx>{`
@@ -60,12 +79,14 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
           }
         }
 
-        .author-info {
+        .author-info-container {
           display: flex;
+          flex-direction: column;
           align-items: center;
           padding-bottom: 10px;
           margin-bottom: 5px;
           border-bottom: 1px solid ${theme.colors.gray400};
+          font-weight: 600;
         }
 
         .author-info img {
@@ -73,18 +94,29 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
           height: 60px;
           border-radius: 50%;
           object-fit: cover;
-          margin-right: 10px;
         }
 
         .author-info :global(svg) {
           border-radius: 50%;
           background-color: ${theme.colors.blueLight};
-          margin-right: 10px;
         }
 
         .author-info-heading {
-          ${theme.typography.headingSM};
+          font-size: 11px;
+          text-transform: uppercase;
+          line-height: 1;
           font-weight: 600;
+          margin-top: 10px;
+        }
+
+        .language-info {
+          padding-bottom: 8px;
+          border-bottom: 1px solid ${theme.colors.gray400};
+        }
+
+        .language-list li {
+          display: inline-block;
+          margin-right: 8px;
         }
       `}</style>
     </div>

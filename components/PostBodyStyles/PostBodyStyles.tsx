@@ -14,6 +14,7 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
         padding-left: 10px;
         color: ${theme.colors.gray800};
         font-style: italic;
+        font-weight: 600;
       }
 
       .${parentClassName} ul {
@@ -28,12 +29,28 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
 
       .${parentClassName} p {
         min-height: 1.5em;
+        font-weight: 300;
+        font-size: 18px;
+        line-height: 24px;
+      }
+
+      @media (min-width: ${theme.breakpoints.SM}) {
+        .${parentClassName} p {
+          font-size: 20px;
+          line-height: 28px;
+        }
       }
 
       .${parentClassName} h2 {
         ${theme.typography.headingLG};
         margin: 10px 0;
         font-weight: 600;
+      }
+
+      @media (min-width: ${theme.breakpoints.SM}) {
+        .${parentClassName} h2 {
+          ${theme.typography.headingXL};
+        }
       }
     `}</style>
   )

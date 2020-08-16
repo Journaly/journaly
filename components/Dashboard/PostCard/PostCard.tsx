@@ -130,7 +130,7 @@ const PostCard: React.FC<Props> = ({
 
         .post-image {
           width: 100%;
-          height: 125px;
+          height: 225px;
           object-fit: cover;
           border-top-right-radius: ${postBorderRadius};
           border-top-left-radius: ${postBorderRadius};

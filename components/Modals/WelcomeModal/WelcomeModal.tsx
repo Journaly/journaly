@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Modal from '../../../components/Modal'
 import WelcomeModalBody from './WelcomeModalBody'
 import Button from '../../../elements/Button'
+import { LanguagesFormDataQuery, useLanguagesFormDataQuery } from '../../../generated/graphql'
 
 type Props = {
   show: boolean
@@ -10,21 +11,24 @@ type Props = {
 
 const WelcomeModal: React.FC<Props> = ({ show, onClose }) => {
   const [delayedShow, setDelayedShow] = useState(false)
+  const { loading, data, error, refetch } = useLanguagesFormDataQuery()
 
   useEffect(() => {
-    if (show) {
+    if (show && !loading && !error) {
       setTimeout(() => {
         setDelayedShow(true)
       }, 1000)
     } else {
       setDelayedShow(false)
     }
-  }, [show])
+  }, [show, loading, error])
 
   return delayedShow ? (
     <Modal
       title="Welcome to Journaly!"
-      body={<WelcomeModalBody />}
+      body={
+        <WelcomeModalBody languageFormData={data as LanguagesFormDataQuery} refetch={refetch} />
+      }
       footer={<Button onClick={onClose}>Done</Button>}
       onClose={onClose}
     />

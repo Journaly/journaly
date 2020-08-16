@@ -2,10 +2,10 @@ import React from 'react'
 import { Editor, Node } from 'slate'
 
 import FileInput from '../FileInput'
-import LanguageSelect from '../LanguageSelect'
 import PostHeader from '../PostHeader'
 import JournalyEditor from '../JournalyEditor'
 import XIcon from '../Icons/XIcon'
+import Select from '../../elements/Select'
 import { ButtonVariant } from '../../elements/Button'
 import theme from '../../theme'
 import useImageUpload from '../../hooks/useImageUpload'
@@ -16,6 +16,7 @@ import {
   ImageInput,
   ImageRole,
 } from '../../generated/graphql'
+import { languageNameWithDialect } from '../../utils/languages'
 
 type PostData = {
   title: string
@@ -32,10 +33,7 @@ type PostEditorProps = {
   initialData: PostData
 }
 
-type validatePostDataSignature = (
-  data: PostData,
-  t: (arg0: string) => string
-) => [boolean, string]
+type validatePostDataSignature = (data: PostData, t: (arg0: string) => string) => [boolean, string]
 
 const validatePostData: validatePostDataSignature = (data, t) => {
   if (!data.title.length) {
@@ -73,9 +71,12 @@ const PostEditor: React.FC<PostEditorProps> = ({
   })
 
   const { languagesLearning = [], languagesNative = [] } = currentUser || {}
-  const userLanguages = languagesLearning
-    .map((x) => x.language)
-    .concat(languagesNative.map((x) => x.language))
+  const userLanguages = [...languagesLearning, ...languagesNative].map(({ language }) => {
+    const value = language.id.toString()
+    const displayName = languageNameWithDialect(language)
+
+    return { value, displayName }
+  })
 
   const [image, uploadingImage, onFileInputChange, resetImage] = useImageUpload()
   const postImage = image?.secure_url || initialData.image?.largeSize || DEFAULT_IMAGE_URL
@@ -89,8 +90,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
       // Must clear any active selection before clearing content or the editor
       // will violently explode. See https://github.com/ianstormtaylor/slate/issues/3477
       slateRef.current.selection = {
-        anchor: { path: [0,0], offset:0 },
-        focus: { path: [0,0], offset: 0 },
+        anchor: { path: [0, 0], offset: 0 },
+        focus: { path: [0, 0], offset: 0 },
       }
 
       resetTitle()
@@ -99,11 +100,13 @@ const PostEditor: React.FC<PostEditorProps> = ({
       resetLangId()
     }
 
-    const returnImage = !image ? null : {
-      largeSize: image.secure_url,
-      smallSize: image.eager[0].secure_url,
-      imageRole: ImageRole.Headline,
-    }
+    const returnImage = !image
+      ? null
+      : {
+          largeSize: image.secure_url,
+          smallSize: image.eager[0].secure_url,
+          imageRole: ImageRole.Headline,
+        }
 
     dataRef.current = {
       title,
@@ -132,11 +135,12 @@ const PostEditor: React.FC<PostEditorProps> = ({
       />
 
       <label htmlFor="post-language">Language</label>
-      <LanguageSelect
+      <Select
         id="language"
-        languages={userLanguages}
-        value={langId}
-        onChange={setLangId}
+        options={userLanguages}
+        value={langId ? langId.toString() : ''}
+        onChange={(value) => setLangId(parseInt(value, 10))}
+        placeholder="Select language"
       />
 
       <div className="header-preview-container">

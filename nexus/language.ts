@@ -63,8 +63,8 @@ const removeLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
         userId_languageId: {
           languageId: args.languageId,
           userId,
-        }
-      }
+        },
+      },
     }
 
     const relation = await langM2MModel(ctx.db, m2mType).findOne(relFilter)
@@ -78,7 +78,6 @@ const removeLanguageM2MMutation = (m2mType: LanguageM2MType) => ({
     return relation
   },
 })
-
 
 schema.objectType({
   name: 'Language',
@@ -123,8 +122,8 @@ schema.extendType({
         if (args.hasPosts) {
           filter = {
             posts: {
-              some: { status: PostStatus.PUBLISHED, },
-            }
+              some: { status: PostStatus.PUBLISHED },
+            },
           }
         } else {
           filter = undefined
@@ -133,7 +132,7 @@ schema.extendType({
         return ctx.db.language.findMany({ where: filter })
       },
     })
-  }
+  },
 })
 
 schema.extendType({
@@ -143,5 +142,5 @@ schema.extendType({
     t.field('addLanguageNative', addLanguageM2MMutation('LanguageNative'))
     t.field('removeLanguageLearning', removeLanguageM2MMutation('LanguageLearning'))
     t.field('removeLanguageNative', removeLanguageM2MMutation('LanguageNative'))
-  }
+  },
 })

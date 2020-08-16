@@ -16,6 +16,8 @@ type FormValues = {
   bio: string
 }
 
+const BIO_MAX_LENGTH = 400
+
 const BioForm: React.FC<Props> = ({ bio }) => {
   const { t } = useTranslation('settings')
   const [updateUser, { loading }] = useUpdateUserMutation({
@@ -35,7 +37,7 @@ const BioForm: React.FC<Props> = ({ bio }) => {
     if (!loading) {
       updateUser({
         variables: {
-          bio: sanitize(data.bio),
+          bio: sanitize(data.bio.trim().slice(0, BIO_MAX_LENGTH)),
         },
       })
     }
@@ -49,13 +51,14 @@ const BioForm: React.FC<Props> = ({ bio }) => {
             <label className="settings-label" htmlFor="bio">
               {t('profile.bio.bioLabel')}
             </label>
-            {/* TODO: add native maxlength attribute when we know how long this field can be */}
+
             <textarea
               rows={4}
               id="bio"
               name="bio"
               className="j-textarea"
               defaultValue={sanitize(bio)}
+              maxLength={BIO_MAX_LENGTH}
               ref={register()}
             />
           </div>

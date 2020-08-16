@@ -100,14 +100,30 @@ const PostComment: React.FC<PostCommentProps> = ({
         </div>
       )}
       {canEdit && isEditMode && (
-        <Button
-          size={ButtonSize.Small}
-          onClick={updateExistingComment}
-          disabled={loading}
-          variant={ButtonVariant.Dark}
-        >
-          Save
-        </Button>
+        <>
+          <Button
+            size={ButtonSize.Small}
+            onClick={updateExistingComment}
+            disabled={loading}
+            variant={ButtonVariant.Dark}
+            style={{
+              marginRight: '5px',
+            }}
+          >
+            Save
+          </Button>
+          <Button
+            size={ButtonSize.Small}
+            onClick={() => {
+              setUpdatingCommentBody(comment.body)
+              setIsEditMode(false)
+            }}
+            disabled={loading}
+            variant={ButtonVariant.Secondary}
+          >
+            Cancel
+          </Button>
+        </>
       )}
       <style jsx>{`
         .comment {

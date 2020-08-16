@@ -157,6 +157,8 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         .body-block {
           display: flex;
           justify-content: space-between;
+          overflow-wrap: anywhere;
+          text-align: left;
         }
 
         .edit-block {

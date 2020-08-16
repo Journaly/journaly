@@ -163,8 +163,8 @@ const PostComment: React.FC<PostCommentProps> = ({
 
         .body-block {
           display: flex;
-          justify-content: space-between;
-          flex: 1;
+          overflow-wrap: anywhere;
+          text-align: left;
         }
 
         .edit-block {

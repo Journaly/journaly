@@ -423,6 +423,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           currentUser={currentUser}
           onNewComment={refetch}
           onUpdateComment={refetch}
+          onDeleteThread={refetch}
           ref={popoverRef}
         />
       )}

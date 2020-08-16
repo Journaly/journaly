@@ -6,7 +6,7 @@ import {
   PostCommentFragmentFragment as PostCommentType,
   UserWithLanguagesFragmentFragment as UserType,
 } from '../../../generated/graphql'
-import Button from '../../../elements/Button'
+import Button, { ButtonVariant } from '../../../elements/Button'
 
 type PostCommentsProps = {
   postId: number
@@ -71,7 +71,12 @@ const PostComments: React.FC<PostCommentsProps> = ({
               onChange={(e) => setPostCommentBody(e.target.value)}
               disabled={loading}
             />
-            <Button type="submit" disabled={loading} className="submit-btn">
+            <Button
+              type="submit"
+              disabled={loading}
+              className="submit-btn"
+              variant={ButtonVariant.Dark}
+            >
               Submit
             </Button>
           </div>
@@ -125,7 +130,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
         .new-comment-block textarea {
           flex: 1;
           min-height: 4em;
-          background-color: #f9f9f9;
+          background-color: none;
           padding: 5px;
           font-family: 'Source Sans Pro', sans-serif;
           margin-top: 10px;

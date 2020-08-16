@@ -10,7 +10,7 @@ import {
   ThreadFragmentFragment as ThreadType,
 } from '../../generated/graphql'
 import Comment from './Comment'
-import Button from '../../elements/Button'
+import Button, { ButtonVariant } from '../../elements/Button'
 
 type DOMOffsetTarget = {
   x: number
@@ -91,7 +91,7 @@ const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({ target, childr
           max-height: ${ownHeight}px;
 
           background-color: #f9f9f9;
-          border: 1px solid ${theme.colors.gray400};
+          border: none;
           box-shadow: #00000045 5px 5px 33px;
           border-radius: 3px;
         }
@@ -155,7 +155,12 @@ const Thread: React.FC<ThreadProps> = ({ thread, onNewComment, onUpdateComment, 
                   onChange={(e) => setCommentBody(e.target.value)}
                   disabled={loading}
                 />
-                <Button type="submit" disabled={loading} className="submit-btn">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="submit-btn"
+                  variant={ButtonVariant.Dark}
+                >
                   Submit
                 </Button>
               </div>

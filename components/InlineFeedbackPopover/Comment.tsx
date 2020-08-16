@@ -8,6 +8,8 @@ import {
 import Button, { ButtonSize, ButtonVariant } from '../../elements/Button'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import theme from '../../theme'
+import EditIcon from '../Icons/EditIcon'
+import DeleteIcon from '../Icons/DeleteIcon'
 
 type CommentProps = {
   comment: CommentType
@@ -53,57 +55,66 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
 
   return (
     <div className="comment">
-      <div className="author-block">
-        <Link href={`/dashboard/profile/${comment.author.id}`}>
-          <a className="author-info">
-            {comment.author.profileImage ? (
-              <img className="profile-image" src={comment.author.profileImage} alt="" />
-            ) : (
-              <BlankAvatarIcon size={20} />
-            )}
-          </a>
-        </Link>
-        <span className="author-identifier">
-          {comment.author.name
-            ? `${comment.author.name} (@${comment.author.handle})`
-            : `@${comment.author.handle}`}
-        </span>
+      <div className="author-body-container">
+        <div className="author-block">
+          <Link href={`/dashboard/profile/${comment.author.id}`}>
+            <a className="author-info">
+              {comment.author.profileImage ? (
+                <img className="profile-image" src={comment.author.profileImage} alt="" />
+              ) : (
+                <BlankAvatarIcon size={20} />
+              )}
+            </a>
+          </Link>
+          <span className="author-identifier">
+            {comment.author.name
+              ? `${comment.author.name} (@${comment.author.handle})`
+              : `@${comment.author.handle}`}
+          </span>
+        </div>
+        <div className="body-block">
+          {isEditMode ? (
+            <textarea
+              value={updatingCommentBody}
+              onChange={(e) => setUpdatingCommentBody(e.target.value)}
+            />
+          ) : (
+            <p>{comment.body}</p>
+          )}
+        </div>
       </div>
-      <div className="body-block">
-        {isEditMode ? (
-          <textarea
-            value={updatingCommentBody}
-            onChange={(e) => setUpdatingCommentBody(e.target.value)}
-          />
-        ) : (
-          <p>{comment.body}</p>
-        )}
-        {canEdit && !isEditMode && (
-          <div className="edit-block">
-            <Button
-              size={ButtonSize.Small}
-              onClick={() => setIsEditMode(true)}
-              className="edit-btn"
-            >
-              Edit
-            </Button>
-            <Button
-              size={ButtonSize.Small}
-              variant={ButtonVariant.Destructive}
-              onClick={deleteExistingComment}
-              disabled={deleteLoading}
-            >
-              Delete
-            </Button>
-          </div>
-        )}
-        {canEdit && isEditMode && (
-          <Button size={ButtonSize.Small} onClick={updateExistingComment} disabled={loading}>
-            Save
-          </Button>
-        )}
-      </div>
+      {canEdit && !isEditMode && (
+        <div className="edit-block">
+          <span className="edit-btn" onClick={() => setIsEditMode(true)}>
+            <EditIcon size={24} />
+          </span>
+          <span className="delete-btn" onClick={deleteExistingComment}>
+            <DeleteIcon size={24} />
+          </span>
+        </div>
+      )}
+      {canEdit && isEditMode && (
+        <Button
+          size={ButtonSize.Small}
+          onClick={updateExistingComment}
+          disabled={loading}
+          variant={ButtonVariant.Dark}
+        >
+          Save
+        </Button>
+      )}
       <style jsx>{`
+        .comment {
+          margin-bottom: 10px;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .author-body-container {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+        }
         .author-block {
           display: flex;
           align-items: center;
@@ -136,8 +147,19 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           display: flex;
         }
 
-        .edit-block :global(.edit-btn) {
+        .edit-block span {
           margin-right: 5px;
+          display: flex;
+          align-items: center;
+        }
+
+        .edit-btn :global(svg:hover) {
+          cursor: pointer;
+          fill: ${theme.colors.blueLight};
+        }
+        .delete-btn :global(svg:hover) {
+          cursor: pointer;
+          fill: ${theme.colors.red};
         }
 
         textarea {
@@ -146,7 +168,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           outline: none;
           padding: 5px 0;
           margin-right: 10px;
-          background-color: #f9f9f9;
+          background-color: none;
           resize: vertical;
         }
       `}</style>

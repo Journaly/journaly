@@ -28,6 +28,8 @@
     "bio": {
       "legend": "Bio",
       "bioLabel": "Tell us about yourself!",
+      "bioError": "Your bio must be {{characters}} characters or less",
+      "bioInputDescription": "Maximum {{characters}} characters",
       "bioSuccess": "Bio successfully updated."
     },
     "interests": {

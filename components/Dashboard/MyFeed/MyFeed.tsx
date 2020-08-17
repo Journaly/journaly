@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
 import theme from '../../../theme'
-import { User as UserType, useFeedQuery } from '../../../generated/graphql'
+import { User as UserType, useFeedQuery, useLanguagesQuery } from '../../../generated/graphql'
 import Select from '../../../elements/Select'
 import LoadingWrapper from '../../LoadingWrapper'
 
@@ -28,6 +28,15 @@ const MyFeed: React.FC<Props> = () => {
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
     },
   })
+
+  const { data: languagesData } = useLanguagesQuery({
+    variables: {
+      hasPosts: true,
+    },
+  })
+
+  const languageList = languagesData?.languages
+  console.log(languageList)
 
   const posts = data?.feed?.posts
   const count = data?.feed?.count || 0
@@ -67,13 +76,13 @@ const MyFeed: React.FC<Props> = () => {
             onChange={handleTopicChange}
           />
 
-          <Select
-            options={[]}
+          {/* <Select
+            options={languageList}
             value={language}
             placeholder="Language"
             name="langauge"
             onChange={handleLanguageChange}
-          />
+          /> */}
         </div>
       </div>
       <LoadingWrapper loading={loading} error={error}>

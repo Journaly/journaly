@@ -70,15 +70,19 @@ schema.mutationType({
         })
 
         // Subscribe the post author to every thread made on their posts
-        await ctx.db.threadSubscription.create({
-          data: {
-            user: {
-              connect: { id: post.authorId },
-            },
-            thread: {
-              connect: { id: thread.id }
+        const subData = {
+          user: { connect: { id: post.authorId }, },
+          thread: { connect: { id: thread.id } }
+        }
+        await ctx.db.threadSubscription.upsert({
+          create: subData,
+          update: subData,
+          where: {
+            userId_threadId: {
+              userId: post.authorId,
+              threadId: thread.id
             }
-          }
+          },
         })
 
         return thread
@@ -160,15 +164,19 @@ schema.mutationType({
           },
         })
 
-        await ctx.db.threadSubscription.create({
-          data: {
-            user: {
-              connect: { id: userId },
-            },
-            thread: {
-              connect: { id: thread.id }
+        const subData = {
+          user: { connect: { id: userId }, },
+          thread: { connect: { id: thread.id } }
+        }
+        await ctx.db.threadSubscription.upsert({
+          create: subData,
+          update: subData,
+          where: {
+            userId_threadId: {
+              threadId: thread.id,
+              userId,
             }
-          }
+          },
         })
 
         const mailPromises: Promise<any>[] = []

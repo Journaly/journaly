@@ -8,7 +8,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: us-west-1
-  environment: ${self.custom.settings}
+  environment: ${self:custom.settings}
 
   iamRoleStatements:
     - Effect: 'Allow'

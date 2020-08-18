@@ -1,15 +1,20 @@
 service: j-mail
 
 custom:
-  settings:
-    ACCOUNT_ID: ${process.env.AWS_ACCOUNT_ID}
+  dotenv:
+    include:
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_USER
+      - MAIL_PASSWORD
+      - MAIL_SECURE
+      - AWS_ACCOUNT_ID
 
 provider:
   name: aws
   runtime: nodejs12.x
   profile: serverless-admin
   region: us-west-1
-  environment: ${self:custom.settings}
 
   iamRoleStatements:
     - Effect: 'Allow'
@@ -24,15 +29,15 @@ functions:
       - http:
           method: get
           path: hello
-  sqsHello:
-    handler: handler.sqsHello
+  processJMailQueue:
+    handler: handler.processJMailQueue
     events:
       - sqs:
           arn:
             Fn::GetAtt:
               - JMailQueue
               - Arn
-          batchSize: 1
+          batchSize: 10
 
 resources:
   Resources:
@@ -40,3 +45,7 @@ resources:
       Type: 'AWS::SQS::Queue'
       Properties:
         QueueName: 'JMailQueue'
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dotenv-plugin

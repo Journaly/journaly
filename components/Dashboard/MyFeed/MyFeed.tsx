@@ -7,6 +7,7 @@ import theme from '../../../theme'
 import { User as UserType, useFeedQuery, useLanguagesQuery } from '../../../generated/graphql'
 import Select from '../../../elements/Select'
 import LoadingWrapper from '../../LoadingWrapper'
+import MultiSelect from '../../../elements/MultiSelect'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -15,8 +16,35 @@ type Props = {
 }
 
 const MyFeed: React.FC<Props> = () => {
+  /**
+   * Topic filter selection state
+   */
   const [topic, setTopic] = useState('')
-  const [language, setLanguage] = useState('')
+
+  /**
+   * Language filter selection state
+   */
+
+  // Fetch languages that have at least 1 post
+  const { data: languagesData } = useLanguagesQuery({
+    variables: {
+      hasPosts: true,
+    },
+  })
+  const languageList = languagesData?.languages
+
+  const [addedLanguageId, setAddedLanguageId] = useState(-1)
+  const [removedLanguageId, setRemovedLanguageId] = useState(-1)
+  const [selectedLanguageFilters, setSelectedLanguageFilters] = useState(
+    languageList?.map((language) => language.id.toString()),
+    console.log(),
+  )
+
+  // const [language, setLanguage] = useState('')
+
+  /**
+   * Pagination handling
+   */
   // Pull query params off the router instance
   const { query } = useRouter()
   const currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
@@ -28,15 +56,6 @@ const MyFeed: React.FC<Props> = () => {
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
     },
   })
-
-  const { data: languagesData } = useLanguagesQuery({
-    variables: {
-      hasPosts: true,
-    },
-  })
-
-  const languageList = languagesData?.languages
-  console.log(languageList)
 
   const posts = data?.feed?.posts
   const count = data?.feed?.count || 0
@@ -75,6 +94,8 @@ const MyFeed: React.FC<Props> = () => {
             name="topic"
             onChange={handleTopicChange}
           />
+
+          <MultiSelect />
 
           {/* <Select
             options={languageList}

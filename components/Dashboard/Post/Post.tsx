@@ -271,8 +271,8 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       }
 
       const selectionDims = selection.getRangeAt(0).getBoundingClientRect()
-      const x = selectionDims.x + selectionDims.width / 2
-      const y = selectionDims.y - selectionDims.height - 20
+      const x = selectionDims.x + selectionDims.width / 2 + window.scrollX
+      const y = selectionDims.y - selectionDims.height - 20 + window.scrollY
 
       setDisplayCommentButton(true)
       setCommentButtonPosition({
@@ -322,8 +322,8 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       window.getSelection()?.empty()
       setDisplayCommentButton(false)
       setPopoverPosition({
-        x: selectionDims.x,
-        y: selectionDims.y,
+        x: selectionDims.x + window.scrollX,
+        y: selectionDims.y + window.scrollY,
         w: selectionDims.width,
         h: selectionDims.height,
       })

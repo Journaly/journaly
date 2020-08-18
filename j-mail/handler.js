@@ -1,6 +1,6 @@
 'use strict'
 
-import AWS from 'aws-sdk'
+const AWS = require('aws-sdk')
 const sqs = new AWS.SQS({ region: 'us-west-1' })
 
 const AWS_ACCOUNT = process.env.ACCOUNT_ID
@@ -33,6 +33,7 @@ module.exports.hello = (event, context, callback) => {
           message: data.MessageId,
         }),
       }
+      callback(null, response)
     }
   })
 }

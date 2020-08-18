@@ -7,6 +7,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs12.x
+  profile: serverless-admin
   region: us-west-1
   environment: ${self:custom.settings}
 
@@ -21,17 +22,17 @@ functions:
     handler: handler.hello
     events:
       - http:
-        method: get
-        path: hello
+          method: get
+          path: hello
   sqsHello:
     handler: handler.sqsHello
     events:
       - sqs:
-        arn:
-          Fn::GetAtt:
-            - JMailQueue
-            - Arn
-        batchSize: 1
+          arn:
+            Fn::GetAtt:
+              - JMailQueue
+              - Arn
+          batchSize: 1
 
 resources:
   Resources:

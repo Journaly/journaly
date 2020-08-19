@@ -98,7 +98,7 @@ schema.extendType({
       args: {
         search: schema.stringArg({ required: false }),
         languages: schema.intArg({ required: false, list: true }),
-        topic: schema.stringArg({ required: false }),
+        topic: schema.intArg({ required: false }),
         skip: schema.intArg(),
         first: schema.intArg(),
       },
@@ -108,15 +108,20 @@ schema.extendType({
         if (args.first > 50) args.first = 50
 
         if (args.languages) {
+          const languageFilters = []
+
           for (let language of args.languages) {
-            filterClauses.push({
+            languageFilters.push({
               language: {
                 id: {
-                  equals: args.language,
+                  equals: language,
                 },
               },
             })
           }
+          filterClauses.push({
+            OR: languageFilters,
+          })
         }
         if (args.topic) {
           filterClauses.push({
@@ -168,6 +173,7 @@ schema.extendType({
         })
 
         const [count, posts] = await Promise.all([countQuery, postQuery])
+        console.log(JSON.stringify(filterClauses, null, 3))
         return {
           count,
           posts,

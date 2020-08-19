@@ -31,14 +31,14 @@ const MyFeed: React.FC<Props> = () => {
       hasPosts: true,
     },
   })
-  const languageList = languagesData?.languages
-  console.log(languageList)
+  const languageOptions = (languagesData?.languages || []).map(({ id, name }) => ({
+    value: id.toString(),
+    displayName: name,
+  }))
 
   // const [addedLanguageId, setAddedLanguageId] = useState(-1)
   // const [removedLanguageId, setRemovedLanguageId] = useState(-1)
-  const [selectedLanguageFilters, setSelectedLanguageFilters] = useState(
-    languageList?.map((language) => language.id.toString()),
-  )
+  const [selectedLanguageFilters, setSelectedLanguageFilters] = useState([])
 
   // console.log(selectedLanguageFilters)
 
@@ -56,6 +56,7 @@ const MyFeed: React.FC<Props> = () => {
     variables: {
       first: NUM_POSTS_PER_PAGE,
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
+      languages: selectedLanguageFilters.map((id) => parseInt(id, 10)),
     },
   })
 
@@ -75,11 +76,11 @@ const MyFeed: React.FC<Props> = () => {
     setTopic(value)
   }
 
-  const handleAddLanguageFilter = (value: string) => {
-    // const languageId = parseInt(value, 10)
-    // setAddedLanguageId(languageId)
-    setSelectedLanguageFilters()
-  }
+  // const handleAddLanguageFilter = (value: string) => {
+  //   // const languageId = parseInt(value, 10)
+  //   // setAddedLanguageId(languageId)
+  //   setSelectedLanguageFilters()
+  // }
 
   return (
     <div className="my-feed-wrapper">
@@ -100,19 +101,12 @@ const MyFeed: React.FC<Props> = () => {
           />
 
           <MultiSelect
-            options={languageList}
+            options={languageOptions}
             selectedOptionValues={selectedLanguageFilters}
             placeholder="Languages"
-            onAdd={set}
+            onAdd={(id) => setSelectedLanguageFilters([...selectedLanguageFilters, id])}
+            // onRemove={(id) => setSelectedLanguageFilters()}
           />
-
-          {/* <Select
-            options={languageList}
-            value={language}
-            placeholder="Language"
-            name="langauge"
-            onChange={handleLanguageChange}
-          /> */}
         </div>
       </div>
       <LoadingWrapper loading={loading} error={error}>

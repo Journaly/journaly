@@ -1,5 +1,5 @@
-query feed($first: Int!, $skip: Int!) {
-  feed(first: $first, skip: $skip) {
+query feed($first: Int!, $skip: Int!, $search: String, $languages: [Int!], $topic: Int) {
+  feed(first: $first, skip: $skip, search: $search, languages: $languages, topic: $topic) {
     posts {
       ...PostCardFragment
     }

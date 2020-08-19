@@ -102,7 +102,7 @@ schema.objectType({
           where: {
             AND: {
               languageId: parent.id,
-              status: 'PUBLISHED',
+              status: PostStatus.PUBLISHED,
             },
           },
         })

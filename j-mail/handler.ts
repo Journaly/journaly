@@ -6,8 +6,26 @@ const sqs = new AWS.SQS({ region: 'us-west-1' })
 const QUEUE_URL = `https://sqs.us-west-1.amazonaws.com/${process.env.AWS_ACCOUNT_ID}/JMailQueue`
 
 module.exports.hello = (event, context, callback) => {
+  const emailBody = `
+      <div className="email" style="
+        border: 1px solid black;
+        padding: 20px;
+        font-family: sans-serif;
+        line-height: 2;
+      font-size: 20px;
+      ">
+        <h2>Howdy, Journaler!</h2>
+        Who cares!
+        <p>Robin @ Journaly</p>
+      </div>
+    `
   const params = {
-    MessageBody: // JSON.stringify...
+    MessageBody: JSON.stringify({
+      to: 'bill',
+      from: 'Gill',
+      subject: 'Hi!',
+      body: emailBody,
+    }),
     QueueUrl: QUEUE_URL,
   }
 
@@ -38,7 +56,9 @@ module.exports.hello = (event, context, callback) => {
 }
 
 module.exports.processJMailQueue = async (event, context, callback) => {
-  console.log(event)
+  console.log('event', event)
+  console.log('event.Records', event.Records)
+
   const transport = nodemailer.createTransport({
     host: process.env.MAIL_HOST as string,
     port: parseInt(process.env.MAIL_PORT || '25', 10),
@@ -49,26 +69,14 @@ module.exports.processJMailQueue = async (event, context, callback) => {
     secure: process.env.MAIL_SECURE === 'true',
   })
 
-  const emailBody = `
-    <div className="email" style="
-      border: 1px solid black;
-      padding: 20px;
-      font-family: sans-serif;
-      line-height: 2;
-    font-size: 20px;
-    ">
-      <h2>Howdy, Journaler!</h2>
-      Who cares!
-      <p>Robin @ Journaly</p>
-    </div>
-  `
-
-  await transport.sendMail({
-    from: 'robin@journaly.com',
-    to: 'hello@robinmacpherson.co',
-    subject: "You've got feedback!",
-    html: emailBody,
-  })
+  for (let record in event.Records) {
+    await transport.sendMail({
+      from: 'robin@journaly.com',
+      to: 'hello@robinmacpherson.co',
+      subject: "You've got feedback!",
+      html: emailBody,
+    })
+  }
 
   console.log('Success!')
 

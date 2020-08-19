@@ -63,6 +63,7 @@ export type Language = {
   posts: Array<Post>
   dialect?: Maybe<Scalars['String']>
   learningUsers?: Maybe<Array<User>>
+  postCount?: Maybe<Scalars['Int']>
 }
 
 export type LanguagePostsArgs = {
@@ -557,7 +558,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
 
 export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
   Language,
-  'id' | 'name' | 'dialect'
+  'id' | 'name' | 'dialect' | 'postCount'
 >
 
 export type AddLanguageLearningMutationVariables = {
@@ -804,6 +805,7 @@ export const LanguageFragmentFragmentDoc = gql`
     id
     name
     dialect
+    postCount
   }
 `
 export const UserWithLanguagesFragmentFragmentDoc = gql`

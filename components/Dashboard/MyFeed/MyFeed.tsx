@@ -32,13 +32,15 @@ const MyFeed: React.FC<Props> = () => {
     },
   })
   const languageList = languagesData?.languages
+  console.log(languageList)
 
-  const [addedLanguageId, setAddedLanguageId] = useState(-1)
-  const [removedLanguageId, setRemovedLanguageId] = useState(-1)
+  // const [addedLanguageId, setAddedLanguageId] = useState(-1)
+  // const [removedLanguageId, setRemovedLanguageId] = useState(-1)
   const [selectedLanguageFilters, setSelectedLanguageFilters] = useState(
     languageList?.map((language) => language.id.toString()),
-    console.log(),
   )
+
+  // console.log(selectedLanguageFilters)
 
   // const [language, setLanguage] = useState('')
 
@@ -73,8 +75,10 @@ const MyFeed: React.FC<Props> = () => {
     setTopic(value)
   }
 
-  const handleLanguageChange = (value: string): void => {
-    setLanguage(value)
+  const handleAddLanguageFilter = (value: string) => {
+    // const languageId = parseInt(value, 10)
+    // setAddedLanguageId(languageId)
+    setSelectedLanguageFilters()
   }
 
   return (
@@ -95,7 +99,12 @@ const MyFeed: React.FC<Props> = () => {
             onChange={handleTopicChange}
           />
 
-          <MultiSelect />
+          <MultiSelect
+            options={languageList}
+            selectedOptionValues={selectedLanguageFilters}
+            placeholder="Languages"
+            onAdd={set}
+          />
 
           {/* <Select
             options={languageList}

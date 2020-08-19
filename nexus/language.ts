@@ -96,6 +96,18 @@ schema.objectType({
         return result.map((r) => r.user)
       },
     })
+    t.int('postCount', {
+      resolve(parent, _args, ctx, info) {
+        return ctx.db.post.count({
+          where: {
+            AND: {
+              languageId: parent.id,
+              status: 'PUBLISHED',
+            },
+          },
+        })
+      },
+    })
   },
 })
 

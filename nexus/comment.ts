@@ -60,7 +60,7 @@ schema.mutationType({
           throw new Error(`Unable to find post with id ${postId}`)
         }
 
-        return await ctx.db.thread.create({
+        const thread = await ctx.db.thread.create({
           data: {
             startIndex,
             endIndex,
@@ -68,6 +68,24 @@ schema.mutationType({
             post: { connect: { id: postId } },
           },
         })
+
+        // Subscribe the post author to every thread made on their posts
+        const subData = {
+          user: { connect: { id: post.authorId }, },
+          thread: { connect: { id: thread.id } }
+        }
+        await ctx.db.threadSubscription.upsert({
+          create: subData,
+          update: subData,
+          where: {
+            userId_threadId: {
+              userId: post.authorId,
+              threadId: thread.id
+            }
+          },
+        })
+
+        return thread
       },
     })
 
@@ -114,22 +132,21 @@ schema.mutationType({
 
         const thread = await ctx.db.thread.findOne({
           where: { id: args.threadId },
+          include: {
+            subscriptions: {
+              include: {
+                user: true,
+              },
+            },
+            post: {
+              include: {
+                author: true,
+              }
+            },
+          },
         })
         if (!thread) {
           throw new NotFoundError('thread')
-        }
-
-        const post = await ctx.db.post.findOne({
-          where: {
-            id: thread.postId,
-          },
-          include: {
-            author: true,
-          },
-        })
-
-        if (!post) {
-          throw new NotFoundError('post')
         }
 
         const comment = await ctx.db.comment.create({
@@ -147,25 +164,51 @@ schema.mutationType({
           },
         })
 
-        if (comment.author.id !== post.author.id) {
-          await transport.sendMail({
+        const subData = {
+          user: { connect: { id: userId }, },
+          thread: { connect: { id: thread.id } }
+        }
+        await ctx.db.threadSubscription.upsert({
+          create: subData,
+          update: subData,
+          where: {
+            userId_threadId: {
+              threadId: thread.id,
+              userId,
+            }
+          },
+        })
+
+        const mailPromises: Promise<any>[] = []
+        thread.subscriptions.forEach(({ user }) => {
+          if (user.id === userId) {
+            // This is the user creating the comment, do not notify them.
+            return
+          }
+
+          const promise = transport.sendMail({
             from: 'robin@journaly.com',
-            to: post.author.email,
-            subject: "You've got feedback!",
+            to: user.email,
+            subject: `New activity on a thread in ${thread.post.title}`,
             html: makeEmail(`
-              <p>Great news! <strong>@${comment.author.handle}</strong> left you some feedback!</p>
-              <p><strong>Journal entry:</strong> ${post.title}</p>
+              <p>Heads up! <strong>@${comment.author.handle}</strong> commented on a post you're subscribed to!</p>
+              <p><strong>Journal entry:</strong> ${thread.post.title}</p>
               <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
               <p><strong>Comment:</strong> "${comment.body}"</p>
-              <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
+              <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${thread.post.id}">here</a> to go to your journal entry!</p>
             `),
           })
-        }
 
+          mailPromises.push(promise)
+        })
+
+        await Promise.all(mailPromises)
         // TODO: Set up logging and check for successful `mailResponse`
+
         return comment
       },
     })
+
     t.field('updateComment', {
       type: 'Comment',
       args: {

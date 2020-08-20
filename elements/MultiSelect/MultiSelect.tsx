@@ -1,19 +1,19 @@
 import React from 'react'
-import Select, { Option } from '../../elements/Select/Select'
+import Select, { Option, OptionValue } from '../../elements/Select/Select'
 import XIcon from '../../components/Icons/XIcon'
 import theme from '../../theme'
 
 export type { Option }
 
-type Props = {
-  options: Option[]
-  selectedOptionValues: string[]
+type Props<T extends OptionValue> = {
+  options: Option<T>[]
+  selectedOptionValues: T[]
   placeholder: string
   name?: string
   id?: string
   loading?: boolean
-  onAdd?: (value: string) => void
-  onRemove?: (value: string) => void
+  onAdd?: (value: T) => void
+  onRemove?: (value: T) => void
 }
 
 /*
@@ -48,7 +48,7 @@ type Props = {
  * which shows a spinner and disables the select.
  */
 
-const MultiSelect: React.FC<Props> = ({
+const MultiSelect = <T extends OptionValue>({
   options,
   selectedOptionValues,
   placeholder,
@@ -57,9 +57,9 @@ const MultiSelect: React.FC<Props> = ({
   loading = false,
   onAdd = () => {},
   onRemove = () => {},
-}) => {
-  const availableOptions: Option[] = []
-  const selectedOptions: Option[] = []
+}: Props<T>) => {
+  const availableOptions: Option<T>[] = []
+  const selectedOptions: Option<T>[] = []
 
   options.forEach((option) => {
     const selectedOption = selectedOptionValues.find(

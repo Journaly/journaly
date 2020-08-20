@@ -32,7 +32,7 @@ const MyFeed: React.FC<Props> = () => {
     },
   })
   const languageOptions = (languagesData?.languages || []).map(({ id, name }) => ({
-    value: id.toString(),
+    value: id,
     displayName: name,
   }))
 

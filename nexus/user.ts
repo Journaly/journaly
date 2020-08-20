@@ -118,7 +118,10 @@ schema.extendType({
       },
       resolve: async (_parent, args, ctx: any) => {
         const { userId } = ctx.request
-        const updates = { ...args }
+        const updates = {
+          ...args,
+          email: args.email?.toLowerCase(),
+        }
 
         return ctx.db.user.update({
           data: updates,
@@ -138,7 +141,7 @@ schema.extendType({
       resolve: async (_parent, args, ctx: any) => {
         const user = await ctx.db.user.findOne({
           where: {
-            email: args.identifier,
+            email: args.identifier.toLowerCase(),
           },
           include: {
             auth: true,

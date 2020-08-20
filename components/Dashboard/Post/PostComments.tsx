@@ -70,6 +70,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
               value={postCommentBody}
               onChange={(e) => setPostCommentBody(e.target.value)}
               disabled={loading}
+              rows={4}
             />
             <Button
               type="submit"
@@ -121,20 +122,18 @@ const PostComments: React.FC<PostCommentsProps> = ({
         }
 
         .new-comment-block {
-          display: flex;
-          flex-direction: row;
           border-top: 1px solid ${theme.colors.gray400};
           margin-top: 5px;
         }
 
         .new-comment-block textarea {
-          flex: 1;
           min-height: 4em;
-          background-color: none;
+          width: 100%;
           padding: 5px;
-          font-family: 'Source Sans Pro', sans-serif;
+          background-color: transparent;
           margin-top: 10px;
           margin-right: 10px;
+          resize: vertical;
         }
 
         .new-comment-block textarea:focus {

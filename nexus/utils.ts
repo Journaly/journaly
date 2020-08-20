@@ -1,5 +1,6 @@
 import escapeHTML from 'escape-html'
 import { User } from '.prisma/client'
+import AWS from 'aws-sdk'
 
 type NodeType = {
   text?: string | null
@@ -164,4 +165,17 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
 
   if (!hasPermission) throw new Error('You do not have permission to do that')
   return true
+}
+
+/**
+ * JMail Email Handler
+ * @param post - the post that was commented on
+ * @param comment - the comment the was written
+ */
+
+const sqs = new AWS.SQS({ region: 'us-west-1' })
+const QUEUE_URL = `https://sqs.us-west-1.amazonaws.com/${process.env.AWS_ACCOUNT_ID}/JMailQueue`
+
+export const sendJmail = (post, comment) => {
+  // Do the thang!
 }

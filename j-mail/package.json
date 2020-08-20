@@ -22,7 +22,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "aws-sdk": "^2.735.0",
+    "aws-sdk": "^2.737.0",
     "nodemailer": "^6.4.11"
   }
 }

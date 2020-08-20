@@ -21,10 +21,10 @@ module.exports.hello = (event, context, callback) => {
     `
   const params = {
     MessageBody: JSON.stringify({
-      to: 'bill',
-      from: 'Gill',
+      to: 'hello@robinmacpherson.co',
+      from: 'robin@journaly.com',
       subject: 'Hi!',
-      body: emailBody,
+      html: emailBody,
     }),
     QueueUrl: QUEUE_URL,
   }
@@ -56,9 +56,6 @@ module.exports.hello = (event, context, callback) => {
 }
 
 module.exports.processJMailQueue = async (event, context, callback) => {
-  console.log('event', event)
-  console.log('event.Records', event.Records)
-
   const transport = nodemailer.createTransport({
     host: process.env.MAIL_HOST as string,
     port: parseInt(process.env.MAIL_PORT || '25', 10),
@@ -69,12 +66,14 @@ module.exports.processJMailQueue = async (event, context, callback) => {
     secure: process.env.MAIL_SECURE === 'true',
   })
 
-  for (let record in event.Records) {
+  for (let record of event.Records) {
+    const { to, from, subject, html } = JSON.parse(record.body)
+
     await transport.sendMail({
-      from: 'robin@journaly.com',
-      to: 'hello@robinmacpherson.co',
-      subject: "You've got feedback!",
-      html: emailBody,
+      to,
+      from,
+      subject,
+      html,
     })
   }
 

@@ -45,6 +45,17 @@ resources:
       Type: 'AWS::SQS::Queue'
       Properties:
         QueueName: 'JMailQueue'
+        RedrivePolicy:
+          deadLetterTargetArn:
+            'Fn::GetAtt':
+              - JMailDeadLetterQueue
+              - Arn
+          maxReceiveCount: 3
+    JMailDeadLetterQueue:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: 'JMailDeadLetterQueue'
+        MessageRetentionPeriod: 1209600
 
 plugins:
   - serverless-plugin-typescript

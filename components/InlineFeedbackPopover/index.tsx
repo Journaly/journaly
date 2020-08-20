@@ -185,9 +185,6 @@ const Thread: React.FC<ThreadProps> = ({
                     disabled={loading}
                     className="new-comment-btn"
                     variant={ButtonVariant.PrimaryDark}
-                    style={{
-                      marginBottom: '5px',
-                    }}
                   >
                     Submit
                   </Button>
@@ -196,7 +193,6 @@ const Thread: React.FC<ThreadProps> = ({
                       onClick={() => cancelNewComment()}
                       disabled={loading}
                       variant={ButtonVariant.Secondary}
-                      className="new-comment-btn"
                     >
                       Cancel
                     </Button>
@@ -244,20 +240,18 @@ const Thread: React.FC<ThreadProps> = ({
         }
 
         .new-comment-block {
-          display: flex;
-          flex-direction: row;
           border-top: 1px solid ${theme.colors.gray400};
           margin-top: 5px;
           padding-top: 10px;
         }
 
         .new-comment-block textarea {
-          flex: 1;
           min-height: 4em;
-          background-color: #f9f9f9;
+          width: 100%;
+          background-color: transparent;
           padding: 5px 0;
-          font-family: 'Source Sans Pro', sans-serif;
           margin-right: 10px;
+          resize: vertical;
         }
 
         .new-comment-block textarea:focus {
@@ -266,12 +260,11 @@ const Thread: React.FC<ThreadProps> = ({
 
         .btn-container {
           display: flex;
-          flex-direction: column;
-          justify-content: center;
+          align-items: center;
         }
 
         .btn-container :global(.new-comment-btn) {
-          width: 100%;
+          margin-right: 10px;
         }
       `}</style>
     </div>

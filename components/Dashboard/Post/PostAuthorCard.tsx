@@ -27,7 +27,7 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
   return (
     <div className="container">
       <div className="author-info-container">
-        <Link href={`/dashboard/profile/${author.id}`}>
+        <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${author.id}`}>
           <a className="author-info">
             {author.profileImage ? (
               <img src={author.profileImage} alt="" />

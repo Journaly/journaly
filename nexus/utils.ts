@@ -1,6 +1,7 @@
+import AWS from 'aws-sdk'
 import escapeHTML from 'escape-html'
 import { User } from '.prisma/client'
-import AWS from 'aws-sdk'
+import { makeEmail } from '../lib/mail'
 
 type NodeType = {
   text?: string | null
@@ -173,9 +174,54 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
  * @param comment - the comment the was written
  */
 
+// AWS.config.getCredentials(function (error) {
+//   if (error) console.log(error.stack)
+//   else {
+//     console.log('Access key:', AWS.config.credentials?.accessKeyId)
+//   }
+// })
 const sqs = new AWS.SQS({ region: 'us-west-1' })
 const QUEUE_URL = `https://sqs.us-west-1.amazonaws.com/${process.env.AWS_ACCOUNT_ID}/JMailQueue`
 
-export const sendJmail = (post, comment) => {
-  // Do the thang!
+export const sendJmail = (thread, comment, user) => {
+  const params = {
+    MessageBody: JSON.stringify({
+      from: 'robin@journaly.com',
+      to: user.email,
+      subject: `New activity on a thread in ${thread.post.title}`,
+      html: makeEmail(`
+              <p>Heads up! <strong>@${comment.author.handle}</strong> commented on a post you're subscribed to!</p>
+              <p><strong>Journal entry:</strong> ${thread.post.title}</p>
+              <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
+              <p><strong>Comment:</strong> "${comment.body}"</p>
+              <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${thread.post.id}">here</a> to go to your journal entry!</p>
+            `),
+    }),
+    QueueUrl: QUEUE_URL,
+  }
+
+  sqs.sendMessage(params, function (err, data) {
+    if (err) {
+      console.log('error', 'Failed to send message' + err)
+
+      const response = {
+        statusCode: 500,
+        body: JSON.stringify({
+          message: 'ERROR',
+        }),
+      }
+
+      callback(null, response)
+    } else {
+      console.log('data:', data.MessageId)
+
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: data.MessageId,
+        }),
+      }
+      callback(null, response)
+    }
+  })
 }

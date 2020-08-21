@@ -1,6 +1,6 @@
 import { schema } from 'nexus'
 
-import { hasAuthorPermissions } from './utils'
+import { hasAuthorPermissions, sendJmail } from './utils'
 import { NotFoundError } from './errors'
 import { transport, makeEmail } from '../lib/mail'
 const { intArg, stringArg } = schema
@@ -71,8 +71,8 @@ schema.mutationType({
 
         // Subscribe the post author to every thread made on their posts
         const subData = {
-          user: { connect: { id: post.authorId }, },
-          thread: { connect: { id: thread.id } }
+          user: { connect: { id: post.authorId } },
+          thread: { connect: { id: thread.id } },
         }
         await ctx.db.threadSubscription.upsert({
           create: subData,
@@ -80,8 +80,8 @@ schema.mutationType({
           where: {
             userId_threadId: {
               userId: post.authorId,
-              threadId: thread.id
-            }
+              threadId: thread.id,
+            },
           },
         })
 
@@ -141,7 +141,7 @@ schema.mutationType({
             post: {
               include: {
                 author: true,
-              }
+              },
             },
           },
         })
@@ -165,8 +165,8 @@ schema.mutationType({
         })
 
         const subData = {
-          user: { connect: { id: userId }, },
-          thread: { connect: { id: thread.id } }
+          user: { connect: { id: userId } },
+          thread: { connect: { id: thread.id } },
         }
         await ctx.db.threadSubscription.upsert({
           create: subData,
@@ -175,34 +175,23 @@ schema.mutationType({
             userId_threadId: {
               threadId: thread.id,
               userId,
-            }
+            },
           },
         })
 
-        const mailPromises: Promise<any>[] = []
+        // const mailPromises: Promise<any>[] = []
         thread.subscriptions.forEach(({ user }) => {
           if (user.id === userId) {
             // This is the user creating the comment, do not notify them.
             return
           }
 
-          const promise = transport.sendMail({
-            from: 'robin@journaly.com',
-            to: user.email,
-            subject: `New activity on a thread in ${thread.post.title}`,
-            html: makeEmail(`
-              <p>Heads up! <strong>@${comment.author.handle}</strong> commented on a post you're subscribed to!</p>
-              <p><strong>Journal entry:</strong> ${thread.post.title}</p>
-              <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
-              <p><strong>Comment:</strong> "${comment.body}"</p>
-              <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${thread.post.id}">here</a> to go to your journal entry!</p>
-            `),
-          })
+          sendJmail(thread, comment, user)
 
-          mailPromises.push(promise)
+          // mailPromises.push(promise)
         })
 
-        await Promise.all(mailPromises)
+        // await Promise.all(mailPromises)
         // TODO: Set up logging and check for successful `mailResponse`
 
         return comment

@@ -1,4 +1,5 @@
 # J-Mail
+
 ## A splendid email queue service @ Journaly.
 
 J-Mail is a simple service that uses AWS Lambda & SQS to process events that require a transactional email to be sent from the application. This enables important functionality such as email batching.

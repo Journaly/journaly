@@ -1,6 +1,6 @@
 import { schema } from 'nexus'
 
-import { hasAuthorPermissions, sendJmail } from './utils'
+import { hasAuthorPermissions, sendCommentNotification } from './utils'
 import { NotFoundError } from './errors'
 import { transport, makeEmail } from '../lib/mail'
 const { intArg, stringArg } = schema
@@ -179,19 +179,25 @@ schema.mutationType({
           },
         })
 
-        // const mailPromises: Promise<any>[] = []
+        const mailPromises: Promise<any>[] = []
         thread.subscriptions.forEach(({ user }) => {
           if (user.id === userId) {
             // This is the user creating the comment, do not notify them.
             return
           }
+          console.log('going to send!')
+          const promise = sendCommentNotification({
+            post: thread.post,
+            thread,
+            comment,
+            commentAuthor: comment.author,
+            user,
+          })
 
-          sendJmail(thread, comment, user)
-
-          // mailPromises.push(promise)
+          mailPromises.push(promise)
         })
 
-        // await Promise.all(mailPromises)
+        await Promise.all(mailPromises)
         // TODO: Set up logging and check for successful `mailResponse`
 
         return comment

@@ -1,7 +1,8 @@
 import AWS from 'aws-sdk'
 import escapeHTML from 'escape-html'
-import { User } from '.prisma/client'
+import { User, Thread, Comment } from '.prisma/client'
 import { makeEmail } from '../lib/mail'
+import { Post } from '../generated/graphql'
 
 type NodeType = {
   text?: string | null
@@ -174,54 +175,67 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
  * @param comment - the comment the was written
  */
 
-// AWS.config.getCredentials(function (error) {
-//   if (error) console.log(error.stack)
-//   else {
-//     console.log('Access key:', AWS.config.credentials?.accessKeyId)
-//   }
-// })
-const sqs = new AWS.SQS({ region: 'us-west-1' })
-const QUEUE_URL = `https://sqs.us-west-1.amazonaws.com/${process.env.AWS_ACCOUNT_ID}/JMailQueue`
+AWS.config.credentials = new AWS.Credentials(
+  process.env.JAWS_ACCESS_KEY_ID,
+  process.env.JAWS_SECRET_ACCESS_KEY,
+)
 
-export const sendJmail = (thread, comment, user) => {
+const sqs = new AWS.SQS({ region: 'us-west-1' })
+const QUEUE_URL = process.env.JMAIL_QUEUE_URL
+
+type SendCommentNotificationArgs = {
+  post: Post
+  thread: Thread
+  comment: Comment
+  commentAuthor: User
+  user: User
+}
+
+type EmailParams = {
+  from: string
+  to: string
+  subject: string
+  html: string
+}
+
+export const sendJmail = (emailParams: EmailParams) => {
+  console.log('Ho!')
   const params = {
-    MessageBody: JSON.stringify({
-      from: 'robin@journaly.com',
-      to: user.email,
-      subject: `New activity on a thread in ${thread.post.title}`,
-      html: makeEmail(`
-              <p>Heads up! <strong>@${comment.author.handle}</strong> commented on a post you're subscribed to!</p>
-              <p><strong>Journal entry:</strong> ${thread.post.title}</p>
-              <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
-              <p><strong>Comment:</strong> "${comment.body}"</p>
-              <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${thread.post.id}">here</a> to go to your journal entry!</p>
-            `),
-    }),
+    MessageBody: JSON.stringify(emailParams),
     QueueUrl: QUEUE_URL,
   }
 
-  sqs.sendMessage(params, function (err, data) {
-    if (err) {
-      console.log('error', 'Failed to send message' + err)
-
-      const response = {
-        statusCode: 500,
-        body: JSON.stringify({
-          message: 'ERROR',
-        }),
+  return new Promise((res, rej) => {
+    sqs.sendMessage(params, function (err, data) {
+      if (err) {
+        console.log('rej')
+        rej(err)
+      } else {
+        console.log('res')
+        res(data)
       }
+    })
+  })
+}
 
-      callback(null, response)
-    } else {
-      console.log('data:', data.MessageId)
-
-      const response = {
-        statusCode: 200,
-        body: JSON.stringify({
-          message: data.MessageId,
-        }),
-      }
-      callback(null, response)
-    }
+export const sendCommentNotification = ({
+  post,
+  thread,
+  comment,
+  commentAuthor,
+  user,
+}: SendCommentNotificationArgs) => {
+  console.log('hey!')
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: user.email,
+    subject: `New activity on a thread in ${post.title}`,
+    html: makeEmail(`
+      <p>Heads up! <strong>@${commentAuthor.handle}</strong> commented on a post you're subscribed to!</p>
+      <p><strong>Journal entry:</strong> ${post.title}</p>
+      <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
+      <p><strong>Comment:</strong> "${comment.body}"</p>
+      <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
+    `),
   })
 }

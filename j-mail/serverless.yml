@@ -1,34 +1,26 @@
 service: j-mail
 
-custom:
-  dotenv:
-    include:
-      - MAIL_HOST
-      - MAIL_PORT
-      - MAIL_USER
-      - MAIL_PASSWORD
-      - MAIL_SECURE
-      - AWS_ACCOUNT_ID
-
 provider:
   name: aws
+  stage: ${opt:stage, 'dev'}
+  environment:
+    MAIL_HOST: ${file(./.env.${opt:stage, 'dev'})}
+    MAIL_PORT: ${file(./.env.${opt:stage, 'dev'})}
+    MAIL_USER: ${file(./.env.${opt:stage, 'dev'})}
+    MAIL_PASSWORD: ${file(./.env.${opt:stage, 'dev'})}
+    MAIL_SECURE: ${file(./.env.${opt:stage, 'dev'})}
+    AWS_ACCOUNT_ID: ${file(./.env.${opt:stage, 'dev'})}
   runtime: nodejs12.x
   profile: serverless-admin
-  region: us-west-1
+  region: us-east-2
 
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
         - 'sqs:SendMessage'
-      Resource: 'arn:aws:sqs:${self:provider.region}:*:JMailQueue'
+      Resource: 'arn:aws:sqs:${self:provider.region}:*:JMailQueue-${opt:stage}'
 
 functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          method: get
-          path: hello
   processJMailQueue:
     handler: handler.processJMailQueue
     events:
@@ -44,7 +36,7 @@ resources:
     JMailQueue:
       Type: 'AWS::SQS::Queue'
       Properties:
-        QueueName: 'JMailQueue'
+        QueueName: 'JMailQueue-${opt:stage}'
         RedrivePolicy:
           deadLetterTargetArn:
             'Fn::GetAtt':
@@ -54,9 +46,8 @@ resources:
     JMailDeadLetterQueue:
       Type: 'AWS::SQS::Queue'
       Properties:
-        QueueName: 'JMailDeadLetterQueue'
+        QueueName: 'JMailDeadLetterQueue-${opt:stage}'
         MessageRetentionPeriod: 1209600
 
 plugins:
   - serverless-plugin-typescript
-  - serverless-dotenv-plugin

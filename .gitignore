@@ -119,3 +119,5 @@ out_publish
 .env.stage
 .env.staging
 .env.prod
+config.stage.json
+config.prod.json

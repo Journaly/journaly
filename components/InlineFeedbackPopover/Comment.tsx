@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Link from 'next/link'
 import {
   useUpdateCommentMutation,
@@ -19,6 +19,7 @@ type CommentProps = {
 }
 
 const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) => {
+  const editTextarea = useRef<HTMLInputElement>(null)
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
 
@@ -79,9 +80,9 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         <div className="body-block">
           {isEditMode ? (
             <textarea
+              ref={editTextarea}
               value={updatingCommentBody}
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
-              autoFocus
             />
           ) : (
             <p>{comment.body}</p>
@@ -90,7 +91,17 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
       </div>
       {canEdit && !isEditMode && (
         <div className="edit-block">
-          <span className="edit-btn" onClick={() => setIsEditMode(true)}>
+          <span
+            className="edit-btn"
+            onClick={() => {
+              setIsEditMode(true)
+              const el = editTextarea.current
+              if (el) {
+                el.focus()
+                el.setSelectionRange(el.value.length, el.value.length)
+              }
+            }}
+          >
             <EditIcon size={24} />
           </span>
           <span className="delete-btn" onClick={deleteExistingComment}>

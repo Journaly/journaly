@@ -115,3 +115,7 @@ out_publish
 .vercel
 .api.graphql
 .vscode
+
+.env.stage
+.env.staging
+.env.prod

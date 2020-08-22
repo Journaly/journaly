@@ -2,14 +2,14 @@ service: j-mail
 
 provider:
   name: aws
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, ''}
   environment:
-    MAIL_HOST: ${file(./.env.${opt:stage, ''})}
-    MAIL_PORT: ${file(./.env.${opt:stage, ''})}
-    MAIL_USER: ${file(./.env.${opt:stage, ''})}
-    MAIL_PASSWORD: ${file(./.env.${opt:stage, ''})}
-    MAIL_SECURE: ${file(./.env.${opt:stage, ''})}
-    JAWS_ACCOUNT_ID: ${file(./.env.${opt:stage, ''})}
+    MAIL_HOST: ${file(./config.${opt:stage, ''}.json):MAIL_HOST}
+    MAIL_PORT: ${file(./config.${opt:stage, ''}.json):MAIL_PORT}
+    MAIL_USER: ${file(./config.${opt:stage, ''}.json):MAIL_USER}
+    MAIL_PASSWORD: ${file(./config.${opt:stage, ''}.json):MAIL_PASSWORD}
+    MAIL_SECURE: ${file(./config.${opt:stage, ''}.json):MAIL_SECURE}
+    JAWS_ACCOUNT_ID: ${file(./config.${opt:stage, ''}.json):JAWS_ACCOUNT_ID}
   runtime: nodejs12.x
   profile: serverless-admin
   region: us-east-2

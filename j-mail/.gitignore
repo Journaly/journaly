@@ -7,3 +7,4 @@ jspm_packages
 .env.dev
 .env.stage
 .env.prod
+config.stage.json

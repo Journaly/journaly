@@ -178,7 +178,7 @@ AWS.config.credentials = new AWS.Credentials(
   process.env.JAWS_ACCESS_KEY_ID!,
   process.env.JAWS_SECRET_ACCESS_KEY!,
 )
-const sqs = new AWS.SQS({ region: 'us-west-1' })
+const sqs = new AWS.SQS({ region: 'us-east-2' })
 
 type SendCommentNotificationArgs = {
   post: Post

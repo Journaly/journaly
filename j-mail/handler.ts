@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 
-module.exports.processJMailQueue = async (event, context, callback) => {
+module.exports.processJMailQueue = async (event: any, context: any) => {
   const transport = nodemailer.createTransport({
     host: process.env.MAIL_HOST as string,
     port: parseInt(process.env.MAIL_PORT || '25', 10),

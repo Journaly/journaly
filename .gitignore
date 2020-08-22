@@ -115,3 +115,5 @@ out_publish
 .vercel
 .api.graphql
 .vscode
+config.prod.json
+config.stage.json

@@ -4,12 +4,12 @@ provider:
   name: aws
   stage: ${opt:stage, 'dev'}
   environment:
-    MAIL_HOST: ${file(./.env.${opt:stage, 'dev'})}
-    MAIL_PORT: ${file(./.env.${opt:stage, 'dev'})}
-    MAIL_USER: ${file(./.env.${opt:stage, 'dev'})}
-    MAIL_PASSWORD: ${file(./.env.${opt:stage, 'dev'})}
-    MAIL_SECURE: ${file(./.env.${opt:stage, 'dev'})}
-    AWS_ACCOUNT_ID: ${file(./.env.${opt:stage, 'dev'})}
+    MAIL_HOST: ${file(./.env.${opt:stage, ''})}
+    MAIL_PORT: ${file(./.env.${opt:stage, ''})}
+    MAIL_USER: ${file(./.env.${opt:stage, ''})}
+    MAIL_PASSWORD: ${file(./.env.${opt:stage, ''})}
+    MAIL_SECURE: ${file(./.env.${opt:stage, ''})}
+    AWS_ACCOUNT_ID: ${file(./.env.${opt:stage, ''})}
   runtime: nodejs12.x
   profile: serverless-admin
   region: us-east-2

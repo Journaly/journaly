@@ -1,8 +1,7 @@
 import AWS from 'aws-sdk'
 import escapeHTML from 'escape-html'
-import { User, Thread, Comment } from '.prisma/client'
+import { User, Thread, Comment, Post } from '.prisma/client'
 import { makeEmail } from '../lib/mail'
-import { Post } from '../generated/graphql'
 
 type NodeType = {
   text?: string | null
@@ -176,8 +175,8 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
  */
 
 AWS.config.credentials = new AWS.Credentials(
-  process.env.JAWS_ACCESS_KEY_ID,
-  process.env.JAWS_SECRET_ACCESS_KEY,
+  process.env.JAWS_ACCESS_KEY_ID!,
+  process.env.JAWS_SECRET_ACCESS_KEY!,
 )
 
 const sqs = new AWS.SQS({ region: 'us-west-1' })
@@ -198,20 +197,22 @@ type EmailParams = {
   html: string
 }
 
+type SqsParams = {
+  MessageBody: string
+  QueueUrl: string
+}
+
 export const sendJmail = (emailParams: EmailParams) => {
-  console.log('Ho!')
-  const params = {
+  const params: SqsParams = {
     MessageBody: JSON.stringify(emailParams),
-    QueueUrl: QUEUE_URL,
+    QueueUrl: QUEUE_URL!,
   }
 
   return new Promise((res, rej) => {
     sqs.sendMessage(params, function (err, data) {
       if (err) {
-        console.log('rej')
         rej(err)
       } else {
-        console.log('res')
         res(data)
       }
     })
@@ -225,7 +226,6 @@ export const sendCommentNotification = ({
   commentAuthor,
   user,
 }: SendCommentNotificationArgs) => {
-  console.log('hey!')
   return sendJmail({
     from: 'robin@journaly.com',
     to: user.email,

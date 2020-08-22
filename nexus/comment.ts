@@ -12,7 +12,11 @@ schema.objectType({
     t.model.startIndex()
     t.model.endIndex()
     t.model.highlightedContent()
-    t.model.comments()
+    t.model.comments({
+      ordering: {
+        createdAt: true,
+      },
+    })
   },
 })
 
@@ -71,8 +75,8 @@ schema.mutationType({
 
         // Subscribe the post author to every thread made on their posts
         const subData = {
-          user: { connect: { id: post.authorId }, },
-          thread: { connect: { id: thread.id } }
+          user: { connect: { id: post.authorId } },
+          thread: { connect: { id: thread.id } },
         }
         await ctx.db.threadSubscription.upsert({
           create: subData,
@@ -80,8 +84,8 @@ schema.mutationType({
           where: {
             userId_threadId: {
               userId: post.authorId,
-              threadId: thread.id
-            }
+              threadId: thread.id,
+            },
           },
         })
 
@@ -141,7 +145,7 @@ schema.mutationType({
             post: {
               include: {
                 author: true,
-              }
+              },
             },
           },
         })
@@ -165,8 +169,8 @@ schema.mutationType({
         })
 
         const subData = {
-          user: { connect: { id: userId }, },
-          thread: { connect: { id: thread.id } }
+          user: { connect: { id: userId } },
+          thread: { connect: { id: thread.id } },
         }
         await ctx.db.threadSubscription.upsert({
           create: subData,
@@ -175,7 +179,7 @@ schema.mutationType({
             userId_threadId: {
               threadId: thread.id,
               userId,
-            }
+            },
           },
         })
 

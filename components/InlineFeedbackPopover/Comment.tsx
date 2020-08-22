@@ -10,6 +10,7 @@ import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import theme from '../../theme'
 import EditIcon from '../Icons/EditIcon'
 import DeleteIcon from '../Icons/DeleteIcon'
+// import { formatRelativeDate } from '../../utils'
 
 type CommentProps = {
   comment: CommentType
@@ -66,11 +67,16 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
               )}
             </a>
           </Link>
-          <span className="author-identifier">
-            {comment.author.name
-              ? `${comment.author.name} (@${comment.author.handle})`
-              : `@${comment.author.handle}`}
-          </span>
+          <div className="identifier-date-block">
+            <span className="author-identifier">
+              {comment.author.name
+                ? `${comment.author.name} (@${comment.author.handle})`
+                : `@${comment.author.handle}`}
+            </span>
+            <span className="comment-date">
+              {/* {formatRelativeDate(Date.now(), comment.createdAt)} */}
+            </span>
+          </div>
         </div>
         <div className="body-block">
           {isEditMode ? (
@@ -143,16 +149,35 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           margin-left: 5px;
         }
 
+        .author-info {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
         .profile-image {
           border-radius: 50%;
-          width: 27px;
-          height: 27px;
+          width: 30px;
+          height: 30px;
           object-fit: cover;
         }
 
         .author-block :global(svg) {
+          width: 30px;
+          height: 30px;
           border-radius: 50%;
           background-color: ${theme.colors.blueLight};
+        }
+
+        .identifier-date-block {
+          display: flex;
+          flex-direction: column;
+          line-height: 1.2;
+        }
+
+        .comment-date {
+          font-weight: 400;
+          color: ${theme.colors.gray600};
         }
 
         .body-block {

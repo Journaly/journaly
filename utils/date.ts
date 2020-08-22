@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, formatDistance } from 'date-fns'
 
 type DateString = string | number
 
@@ -21,4 +21,14 @@ export const formatShortDate = (date: string): string => {
 
 export const formatLongDate = (date: string): string => {
   return format(parseISO(date), 'MMMM d, yyyy')
+}
+
+/**
+ * Format a date in relative time
+ * @param date the date
+ * @param baseDate the date to compare with
+ */
+
+export const formatRelativeDate = (date: Date, baseDate: Date): string => {
+  return formatDistance(date, baseDate)
 }

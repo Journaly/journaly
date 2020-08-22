@@ -4,7 +4,8 @@
   "description": "An email notification queueing service.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy:stage": "sls deploy --stage stage",
+    "deploy:prod": "sls deploy --stage prod"
   },
   "repository": {
     "type": "git",

@@ -97,9 +97,6 @@
     "prettier": "^2.0.1",
     "pretty-quick": "^2.0.1",
     "prompts": "^2.3.2",
-    "tslint": "^6.1.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.2.0",
     "typescript": "^3.8.3"
   }
 }

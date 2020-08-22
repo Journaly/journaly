@@ -185,7 +185,6 @@ schema.mutationType({
             // This is the user creating the comment, do not notify them.
             return
           }
-          console.log('going to send!')
           const promise = sendCommentNotification({
             post: thread.post,
             thread,

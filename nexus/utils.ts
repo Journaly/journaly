@@ -180,7 +180,6 @@ AWS.config.credentials = new AWS.Credentials(
 )
 
 const sqs = new AWS.SQS({ region: 'us-west-1' })
-const QUEUE_URL = process.env.JMAIL_QUEUE_URL
 
 type SendCommentNotificationArgs = {
   post: Post
@@ -203,9 +202,10 @@ type SqsParams = {
 }
 
 export const sendJmail = (emailParams: EmailParams) => {
+  const QUEUE_URL = process.env.JMAIL_QUEUE_URL!
   const params: SqsParams = {
     MessageBody: JSON.stringify(emailParams),
-    QueueUrl: QUEUE_URL!,
+    QueueUrl: QUEUE_URL,
   }
 
   return new Promise((res, rej) => {

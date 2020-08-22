@@ -9,7 +9,7 @@ provider:
     MAIL_USER: ${file(./.env.${opt:stage, ''})}
     MAIL_PASSWORD: ${file(./.env.${opt:stage, ''})}
     MAIL_SECURE: ${file(./.env.${opt:stage, ''})}
-    AWS_ACCOUNT_ID: ${file(./.env.${opt:stage, ''})}
+    JAWS_ACCOUNT_ID: ${file(./.env.${opt:stage, ''})}
   runtime: nodejs12.x
   profile: serverless-admin
   region: us-east-2

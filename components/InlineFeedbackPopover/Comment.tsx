@@ -10,7 +10,7 @@ import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import theme from '../../theme'
 import EditIcon from '../Icons/EditIcon'
 import DeleteIcon from '../Icons/DeleteIcon'
-// import { formatRelativeDate } from '../../utils'
+import { formatDateRelativeToNow } from '../../utils'
 
 type CommentProps = {
   comment: CommentType
@@ -73,9 +73,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
                 ? `${comment.author.name} (@${comment.author.handle})`
                 : `@${comment.author.handle}`}
             </span>
-            <span className="comment-date">
-              {/* {formatRelativeDate(Date.now(), comment.createdAt)} */}
-            </span>
+            <span className="comment-date">{formatDateRelativeToNow(comment.createdAt)} ago</span>
           </div>
         </div>
         <div className="body-block">
@@ -83,6 +81,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
             <textarea
               value={updatingCommentBody}
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
+              autoFocus
             />
           ) : (
             <p>{comment.body}</p>
@@ -181,7 +180,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         }
 
         .body-block {
-          margin-right: 10px;
+          margin: 5px 10px 10px 0;
           text-align: left;
         }
 
@@ -213,10 +212,12 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           flex: 1;
           width: 100%;
           outline: none;
-          padding: 5px 0;
+          padding: 5px;
           margin-right: 10px;
           background-color: transparent;
           resize: vertical;
+          border: 1px solid ${theme.colors.gray400};
+          border-radius: 5px;
         }
       `}</style>
     </div>

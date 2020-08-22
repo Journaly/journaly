@@ -1,7 +1,7 @@
 import React from 'react'
 import { NextPage } from 'next'
 import Error, { ErrorProps } from 'next/error'
-import { useTranslation } from '../config/i18n'
+import { useTranslation } from '@config/i18n'
 
 const ErrorPage: NextPage<ErrorProps> = ({ statusCode }) => {
   const { t } = useTranslation()

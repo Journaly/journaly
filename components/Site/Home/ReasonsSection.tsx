@@ -1,5 +1,5 @@
 import HomeSection from './HomeSection'
-import { useTranslation } from '../../../config/i18n'
+import { useTranslation } from '@config/i18n'
 
 type ReasonCardProps = {
   image: string

@@ -1,9 +1,9 @@
 import React from 'react'
+import { User as UserType, PostCardFragmentFragment as PostCardType } from '@generated'
+import { layoutPadding } from '@components/Dashboard/dashboardConstants'
 import ProfileCard from './ProfileCard'
 import PostList from './PostList'
-import { layoutPadding } from '../../Dashboard/dashboardConstants'
-import { User as UserType, PostCardFragmentFragment as PostCardType } from '../../../generated/graphql'
-import theme from '../../../theme'
+import theme from '@theme'
 
 type Props = {
   user: UserType | any

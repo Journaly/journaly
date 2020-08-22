@@ -2,7 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 
-import { sanitize } from '../../../utils'
+import { sanitize } from '@utils'
 import {
   PostFragmentFragment as PostType,
   UserFragmentFragment as UserType,
@@ -12,14 +12,14 @@ import {
   useUpdatePostMutation,
   Image as ImageType,
   ImageRole,
-} from '../../../generated/graphql'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import theme from '../../../theme'
-import PostBodyStyles from '../../PostBodyStyles'
-import PencilIcon from '../../Icons/PencilIcon'
-import InlineFeedbackPopover from '../../InlineFeedbackPopover'
-import { Router, useTranslation } from '../../../config/i18n'
-import PostHeader from '../../PostHeader'
+} from '@generated'
+import { Router, useTranslation } from '@config/i18n'
+import Button, { ButtonVariant } from '@elements/Button'
+import PostHeader from '@components/PostHeader'
+import PencilIcon from '@components/Icons/PencilIcon'
+import PostBodyStyles from '@components/PostBodyStyles'
+import InlineFeedbackPopover from '@components/InlineFeedbackPopover'
+import theme from '@theme'
 
 interface IPostProps {
   post: PostType

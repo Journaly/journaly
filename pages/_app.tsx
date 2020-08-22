@@ -4,8 +4,8 @@ import Router, { withRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { ToastContainer } from 'react-toastify'
 
-import { initializeTracking, trackPageView } from '../lib/google-analytics'
-import { appWithTranslation } from '../config/i18n'
+import { initializeTracking, trackPageView } from '@lib/google-analytics'
+import { appWithTranslation } from '@config/i18n'
 
 import '../styles/reset.css'
 import '../styles/globalStyles.css'

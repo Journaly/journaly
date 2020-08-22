@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { NextPage } from 'next'
-import { withApollo } from '../../lib/apollo'
-import DashboardLayout from '../../components/Layouts/DashboardLayout'
-import MyFeed from '../../components/Dashboard/MyFeed'
-import AuthGate from '../../components/AuthGate'
-import WelcomeModal from '../../components/Modals/WelcomeModal'
+import { withApollo } from '@lib/apollo'
+import DashboardLayout from '@components/Layouts/DashboardLayout'
+import MyFeed from '@components/Dashboard/MyFeed'
+import AuthGate from '@components/AuthGate'
+import WelcomeModal from '@components/Modals/WelcomeModal'
 
 interface InitialProps {
   namespacesRequired: string[]

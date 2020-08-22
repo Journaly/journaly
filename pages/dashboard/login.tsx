@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
-import { withApollo } from '../../lib/apollo'
-import LoginForm from '../../components/LoginForm'
-import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
+import { withApollo } from '@lib/apollo'
+import LoginForm from '@components/LoginForm'
+import LandingPageLayout from '@components/Layouts/LandingPageLayout'
 
 const LoginPage: NextPage = () => (
   <LandingPageLayout>

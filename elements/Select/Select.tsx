@@ -1,9 +1,9 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import LoadingSpinner from '../../components/Icons/LoadingSpinner'
-import ChevronIcon from '../../components/Icons/ChevronIcon'
-import theme from '../../theme'
+import theme from '@theme'
+import LoadingSpinner from '@components/Icons/LoadingSpinner'
+import ChevronIcon from '@components/Icons/ChevronIcon'
 
 export type Option = {
   value: string

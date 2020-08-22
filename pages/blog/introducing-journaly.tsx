@@ -1,9 +1,9 @@
 import { NextPage } from 'next'
-import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
-import BlogPageLayout from '../../components/Layouts/BlogPageLayout'
-import ExternalLink from '../../elements/ExternalLink'
-import { brandBlue } from '../../utils'
-import { withApollo } from '../../lib/apollo'
+import { brandBlue } from '@utils'
+import { withApollo } from '@lib/apollo'
+import ExternalLink from '@elements/ExternalLink'
+import LandingPageLayout from '@components/Layouts/LandingPageLayout'
+import BlogPageLayout from '@components/Layouts/BlogPageLayout'
 
 const IntroducingJournalyBlogPost: NextPage = () => (
   <LandingPageLayout>

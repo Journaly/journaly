@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { white } from '../../utils'
+import { white } from '@utils'
 
 const Logo = () => (
   <Link href="/">

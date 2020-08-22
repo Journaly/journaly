@@ -1,7 +1,7 @@
 import React from 'react'
-import theme from '../../../theme'
-import { navConstants } from '../Nav'
-import { headerHeight } from '../dashboardConstants'
+import theme from '@theme'
+import { navConstants } from '@components/Dashboard/Nav'
+import { headerHeight } from '@components/Dashboard/dashboardConstants'
 import HamburgerIcon from './HamburgerIcon'
 
 interface Props {

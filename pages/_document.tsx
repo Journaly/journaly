@@ -8,7 +8,7 @@ import Document, {
   DocumentProps,
 } from 'next/document'
 
-import { i18n } from '../config/i18n'
+import { i18n } from '@config/i18n'
 
 interface CustomProps {
   language: string

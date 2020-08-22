@@ -1,16 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
-import NavLink from '../../NavLink'
-import FeedIcon from '../../Icons/FeedIcon'
-import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
+import { Router, useTranslation } from '@config/i18n'
+import { useLogoutMutation, useCurrentUserQuery, User as UserType } from '@generated'
+import NavLink from '@components/NavLink'
+import FeedIcon from '@components/Icons/FeedIcon'
+import BlankAvatarIcon from '@components/Icons/BlankAvatarIcon'
 import { navConstants } from './nav-constants'
-import { Router, useTranslation } from '../../../config/i18n'
-import {
-  useLogoutMutation,
-  useCurrentUserQuery,
-  User as UserType,
-} from '../../../generated/graphql'
-import theme from '../../../theme'
+import theme from '@theme'
 
 interface Props {
   onClick: () => void

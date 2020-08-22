@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import LoadingWrapper from '../LoadingWrapper'
-import { useCurrentUserQuery, User as UserType } from '../../generated/graphql'
+import LoadingWrapper from '@components/LoadingWrapper'
+import { useCurrentUserQuery, User as UserType } from '@generated'
 
 /**
  * Checks that the user is logged in.

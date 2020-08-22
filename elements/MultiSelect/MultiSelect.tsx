@@ -1,7 +1,7 @@
 import React from 'react'
-import Select, { Option } from '../../elements/Select/Select'
-import XIcon from '../../components/Icons/XIcon'
-import theme from '../../theme'
+import theme from '@theme'
+import Select, { Option } from '@elements/Select/Select'
+import XIcon from '@components/Icons/XIcon'
 
 export type { Option }
 

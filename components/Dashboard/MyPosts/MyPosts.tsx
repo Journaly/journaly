@@ -4,10 +4,10 @@ import {
   Post as PostType,
   User as UserType,
   usePostsQuery,
-} from '../../../generated/graphql'
-import LoadingSpinner from '../../Icons/LoadingSpinner'
-import PostCard from '../PostCard'
-import theme from '../../../theme'
+} from '@generated'
+import LoadingSpinner from '@components/Icons/LoadingSpinner'
+import PostCard from '@components/Dashboard/PostCard'
+import theme from '@theme'
 
 type Props = {
   currentUser: UserType

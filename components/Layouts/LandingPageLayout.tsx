@@ -1,4 +1,4 @@
-import Nav from '../Site/Nav'
+import Nav from '@components/Site/Nav'
 
 const LandingPageLayout: React.FC = ({ children }) => (
   <div>

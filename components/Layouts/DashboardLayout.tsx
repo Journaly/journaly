@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
-import Nav, { navConstants } from '../Dashboard/Nav'
-import { layoutPadding, headerHeight } from '../Dashboard/dashboardConstants'
-import Header from '../Dashboard/Header'
-import useWindowSize from '../../hooks/useWindowSize'
+import Nav, { navConstants } from '@components/Dashboard/Nav'
+import { layoutPadding, headerHeight } from '@components/Dashboard/dashboardConstants'
+import Header from '@components/Dashboard/Header'
+import useWindowSize from '@hooks/useWindowSize'
 
 interface Props {
   children: React.ReactNode

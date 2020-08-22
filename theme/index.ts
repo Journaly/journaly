@@ -1,4 +1,4 @@
-import { fromEntries } from '../utils'
+import { fromEntries } from '@utils'
 
 export const breakpoints = {
   XS: 600,

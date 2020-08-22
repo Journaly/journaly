@@ -1,5 +1,5 @@
-import { width, lightGrey } from '../../../utils'
-import theme from '../../../theme'
+import { width, lightGrey } from '@utils'
+import theme from '@theme'
 
 type Props = {
   sectionHeading: string

@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { width } from '../../../utils'
-import theme from '../../../theme'
-import Button, { ButtonSize } from '../../../elements/Button'
+import { width } from '@utils'
+import theme from '@theme'
+import Button, { ButtonSize } from '@elements/Button'
 
 const TopSection = () => (
   <div className="home-section-top">

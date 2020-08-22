@@ -1,20 +1,20 @@
 import React from 'react'
 import { NextPage } from 'next'
-import { withApollo } from '../../../lib/apollo'
-import SettingsPageLayout from '../../../components/Layouts/SettingsPageLayout'
-import LoadingSpinner from '../../../components/Icons/LoadingSpinner'
-import DetailsForm from '../../../components/Dashboard/Settings/DetailsForm'
-import LanguagesForm from '../../../components/Dashboard/Settings/LanguagesForm'
-import BioForm from '../../../components/Dashboard/Settings/BioForm'
-import InterestsForm from '../../../components/Dashboard/Settings/InterestsForm'
-import SocialForm from '../../../components/Dashboard/Settings/SocialForm'
-import AuthGate from '../../../components/AuthGate'
+import { withApollo } from '@lib/apollo'
 import {
   useSettingsFormDataQuery,
   Language as LanguageType,
   LanguageNative as LanguageNativeType,
   LanguageLearning as LanguageLearningType,
-} from '../../../generated/graphql'
+} from '@generated'
+import SettingsPageLayout from '@components/Layouts/SettingsPageLayout'
+import LoadingSpinner from '@components/Icons/LoadingSpinner'
+import DetailsForm from '@components/Dashboard/Settings/DetailsForm'
+import LanguagesForm from '@components/Dashboard/Settings/LanguagesForm'
+import BioForm from '@components/Dashboard/Settings/BioForm'
+import InterestsForm from '@components/Dashboard/Settings/InterestsForm'
+import SocialForm from '@components/Dashboard/Settings/SocialForm'
+import AuthGate from '@components/AuthGate'
 
 const ProfileInfo: NextPage = () => {
   const { loading, data, refetch } = useSettingsFormDataQuery()

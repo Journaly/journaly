@@ -2,19 +2,15 @@ import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Node } from 'slate'
-import { withApollo } from '../../../lib/apollo'
-import { useTranslation } from '../../../config/i18n'
 
-import DashboardLayout from '../../../components/Layouts/DashboardLayout'
-import PostEditor, { validatePostData, PostData } from '../../../components/PostEditor'
-import theme from '../../../theme'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import {
-  ImageRole,
-  useEditPostQuery,
-  useUpdatePostMutation,
-} from '../../../generated/graphql'
-import AuthGate from '../../../components/AuthGate'
+import { withApollo } from '@lib/apollo'
+import { useTranslation } from '@config/i18n'
+import { ImageRole, useEditPostQuery, useUpdatePostMutation } from '@generated'
+import Button, { ButtonVariant } from '@elements/Button'
+import AuthGate from '@components/AuthGate'
+import DashboardLayout from '@components/Layouts/DashboardLayout'
+import PostEditor, { validatePostData, PostData } from '@components/PostEditor'
+import theme from '@theme'
 
 const EditPostPage: NextPage = () => {
   const router = useRouter()
@@ -34,19 +30,17 @@ const EditPostPage: NextPage = () => {
         title,
         bodySrc,
         language: { id: languageId },
-        images
+        images,
       } = postById
 
-      const image = images.find(
-        ({ imageRole }) => imageRole === ImageRole.Headline
-      ) || null
+      const image = images.find(({ imageRole }) => imageRole === ImageRole.Headline) || null
 
       setInitialData({
         title,
         languageId,
         body: JSON.parse(bodySrc) as Node[],
         image,
-        clear: () => null
+        clear: () => null,
       })
     }
   }, [postById])
@@ -89,7 +83,7 @@ const EditPostPage: NextPage = () => {
         <form id="edit-post">
           <h1>{t('editPost')}</h1>
 
-          { initialData && currentUser && (
+          {initialData && currentUser && (
             <PostEditor
               currentUser={currentUser}
               autosaveKey={`edit-post:${id}`}
@@ -111,11 +105,7 @@ const EditPostPage: NextPage = () => {
               {t('save')}
             </Button>
           </div>
-          { errorMessage && (
-            <span className="error-message">
-              {errorMessage}
-            </span>
-          )}
+          {errorMessage && <span className="error-message">{errorMessage}</span>}
           <style jsx>{`
             #edit-post {
               display: flex;

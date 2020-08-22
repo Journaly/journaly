@@ -1,14 +1,14 @@
 import React, { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { useTranslation } from '../../../config/i18n'
-import FormError from '../../../components/FormError'
-import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
-import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
-import useImageUpload from '../../../hooks/useImageUpload'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import theme from '../../../theme'
-import { User as UserType, useUpdateUserMutation } from '../../../generated/graphql'
-import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
+import { useTranslation } from '@config/i18n'
+import useImageUpload from '@hooks/useImageUpload'
+import { User as UserType, useUpdateUserMutation } from '@generated'
+import Button, { ButtonVariant } from '@elements/Button'
+import FormError from '@components/FormError'
+import SettingsForm from '@components/Dashboard/Settings/SettingsForm'
+import SettingsFieldset from '@components/Dashboard/Settings/SettingsFieldset'
+import BlankAvatarIcon from '@components/Icons/BlankAvatarIcon'
+import theme from '@theme'
 
 type DetailsFormProps = {
   currentUser: UserType

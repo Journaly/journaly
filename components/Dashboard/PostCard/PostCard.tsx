@@ -1,16 +1,13 @@
 import React from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
-import { useTranslation } from '../../../config/i18n'
-import { formatShortDate } from '../../../utils/date'
-import {
-  PostStatus as PostStatusType,
-  PostCardFragmentFragment as PostCardType,
-} from '../../../generated/graphql'
-import LikeIcon from '../../Icons/LikeIcon'
-import CommentIcon from '../../Icons/CommentIcon'
-import theme from '../../../theme'
-import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
+import { useTranslation } from '@config/i18n'
+import { PostStatus as PostStatusType, PostCardFragmentFragment as PostCardType } from '@generated'
+import LikeIcon from '@components/Icons/LikeIcon'
+import CommentIcon from '@components/Icons/CommentIcon'
+import BlankAvatarIcon from '@components/Icons/BlankAvatarIcon'
+import theme from '@theme'
+import { formatShortDate } from '@utils/date'
 
 type Props = {
   post: PostCardType

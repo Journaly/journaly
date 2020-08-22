@@ -1,4 +1,4 @@
-import { trackEvent } from '../lib/google-analytics'
+import { trackEvent } from '@lib/google-analytics'
 import { EventArgs } from 'react-ga'
 
 const USER_CATEGORY = 'Users'

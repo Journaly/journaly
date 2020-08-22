@@ -1,13 +1,13 @@
 import React from 'react'
 import Link from 'next/link'
-import theme from '../../../theme'
+import theme from '@theme'
 import {
   AuthorWithLanguagesFragmentFragment as Author,
   LanguageNative as LanguageNativeType,
   LanguageLearning as LanguageLearningType,
-} from '../../../generated/graphql'
-import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
-import { languageNameWithDialect } from '../../../utils/languages'
+} from '@generated'
+import BlankAvatarIcon from '@components/Icons/BlankAvatarIcon'
+import { languageNameWithDialect } from '@utils/languages'
 
 type PostAuthorCardProps = {
   author: Author | any

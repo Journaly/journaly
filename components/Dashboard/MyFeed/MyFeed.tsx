@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import PostCard from '../PostCard'
-import Pagination from '../../Pagination'
-import theme from '../../../theme'
-import { User as UserType, useFeedQuery } from '../../../generated/graphql'
-import Select from '../../../elements/Select'
-import LoadingWrapper from '../../LoadingWrapper'
+import { User as UserType, useFeedQuery } from '@generated'
+import Select from '@elements/Select'
+import Pagination from '@components/Pagination'
+import PostCard from '@components/Dashboard/PostCard'
+import LoadingWrapper from '@components/LoadingWrapper'
+import theme from '@theme'
 
 const NUM_POSTS_PER_PAGE = 9
 

@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
+import { useCurrentUserQuery, User as UserType } from '@generated'
+import HamburgerIcon from '@components/Dashboard/Header/HamburgerIcon'
 import { navConstants } from './nav-constants'
-import HamburgerIcon from '../Header/HamburgerIcon'
 import NavLinks from './NavLinks'
-import { useCurrentUserQuery, User as UserType } from '../../../generated/graphql'
-import theme from '../../../theme'
+import theme from '@theme'
 
 interface Props {
   expanded: boolean

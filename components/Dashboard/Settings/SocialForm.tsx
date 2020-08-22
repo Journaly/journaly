@@ -1,11 +1,11 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useTranslation } from '../../../config/i18n'
-import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
-import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
-import XIcon from '../../../components/Icons/XIcon'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import theme from '../../../theme'
+import { useTranslation } from '@config/i18n'
+import Button, { ButtonVariant } from '@elements/Button'
+import SettingsForm from '@components/Dashboard/Settings/SettingsForm'
+import SettingsFieldset from '@components/Dashboard/Settings/SettingsFieldset'
+import XIcon from '@components/Icons/XIcon'
+import theme from '@theme'
 
 const SocialForm: React.FC = () => {
   const { t } = useTranslation('settings')

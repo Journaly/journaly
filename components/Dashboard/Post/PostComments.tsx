@@ -1,12 +1,12 @@
 import React from 'react'
-import theme from '../../../theme'
-import PostComment from './PostComment'
 import {
   useCreatePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
   UserWithLanguagesFragmentFragment as UserType,
-} from '../../../generated/graphql'
-import Button, { ButtonVariant } from '../../../elements/Button'
+} from '@generated'
+import Button, { ButtonVariant } from '@elements/Button'
+import PostComment from './PostComment'
+import theme from '@theme'
 
 type PostCommentsProps = {
   postId: number

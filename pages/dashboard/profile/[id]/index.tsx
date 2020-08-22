@@ -2,11 +2,11 @@ import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
-import { withApollo } from '../../../../lib/apollo'
-import LoadingWrapper from '../../../../components/LoadingWrapper'
-import DashboardLayout from '../../../../components/Layouts/DashboardLayout'
-import { useProfileQuery } from '../../../../generated/graphql'
-import Profile from '../../../../components/Dashboard/Profile'
+import { withApollo } from '@lib/apollo'
+import { useProfileQuery } from '@generated'
+import LoadingWrapper from '@components/LoadingWrapper'
+import DashboardLayout from '@components/Layouts/DashboardLayout'
+import Profile from '@components/Dashboard/Profile'
 
 interface InitialProps {
   namespacesRequired: string[]
@@ -23,9 +23,7 @@ const ProfilePage: NextPage<InitialProps> = () => {
   return (
     <LoadingWrapper loading={loading} error={error}>
       <DashboardLayout>
-        { data?.userById && data?.posts && (
-          <Profile user={data?.userById} posts={data?.posts} />
-        )}
+        {data?.userById && data?.posts && <Profile user={data?.userById} posts={data?.posts} />}
       </DashboardLayout>
     </LoadingWrapper>
   )

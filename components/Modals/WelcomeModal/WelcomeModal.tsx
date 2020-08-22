@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import Modal from '../../../components/Modal'
+import { LanguagesFormDataQuery, useLanguagesFormDataQuery } from '@generated'
+import Button from '@elements/Button'
+import Modal from '@components/Modal'
 import WelcomeModalBody from './WelcomeModalBody'
-import Button from '../../../elements/Button'
-import { LanguagesFormDataQuery, useLanguagesFormDataQuery } from '../../../generated/graphql'
 
 type Props = {
   show: boolean

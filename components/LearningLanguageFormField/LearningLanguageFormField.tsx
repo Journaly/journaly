@@ -6,9 +6,9 @@ import {
   LanguageLearning as LanguageLearningType,
   useAddLanguageLearningMutation,
   useRemoveLanguageLearningMutation,
-} from '../../generated/graphql'
-import MultiSelect from '../../elements/MultiSelect/MultiSelect'
-import { languageNameWithDialect } from '../../utils/languages'
+} from '@generated'
+import MultiSelect from '@elements/MultiSelect/MultiSelect'
+import { languageNameWithDialect } from '@utils/languages'
 
 type LanguageMutationType = (arg: { variables: { languageId: number } }) => Promise<any>
 

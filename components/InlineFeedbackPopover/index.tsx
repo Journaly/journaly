@@ -2,16 +2,16 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import CSS from 'csstype'
 
-import theme from '../../theme'
-import { sanitize } from '../../utils'
+import theme from '@theme'
+import { sanitize } from '@utils'
 import {
   useCreateCommentMutation,
   UserFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
   useDeleteThreadMutation,
-} from '../../generated/graphql'
+} from '@generated'
 import Comment from './Comment'
-import Button, { ButtonVariant } from '../../elements/Button'
+import Button, { ButtonVariant } from '@elements/Button'
 
 type DOMOffsetTarget = {
   x: number

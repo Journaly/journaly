@@ -13,7 +13,7 @@ When using translations in a React component, default to using the [useTranslati
 
 ```jsx
 import React from 'react'
-import { useTranslation } from '../config/i18n'
+import { useTranslation } from '@config/i18n'
 
 export function MyComponent() {
   const { t } = useTranslation()
@@ -32,7 +32,7 @@ For simple interpolation, follow this pattern:
 
 ```jsx
 import React from 'react'
-import { useTranslation } from '../config/i18n'
+import { useTranslation } from '@config/i18n'
 
 export function MyComponent() {
   const { t } = useTranslation()

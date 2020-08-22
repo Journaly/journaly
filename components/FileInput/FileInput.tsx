@@ -1,5 +1,5 @@
 import React from 'react'
-import Button, { ButtonVariant } from '../../elements/Button'
+import Button, { ButtonVariant } from '@elements/Button'
 
 interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
@@ -39,12 +39,7 @@ const FileInput: React.FC<FileInputProps> = ({
       >
         {children}
       </Button>
-      <input
-        className="file-input"
-        onChange={onChange}
-        type="file"
-        ref={fileInput}
-      />
+      <input className="file-input" onChange={onChange} type="file" ref={fileInput} />
       <style jsx>{`
         .file-input {
           display: none;

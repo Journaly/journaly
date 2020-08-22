@@ -2,8 +2,8 @@ import React from 'react'
 import CSS from 'csstype'
 import classNames from 'classnames'
 
-import theme from '../../theme'
-import LoadingSpinner from '../../components/Icons/LoadingSpinner'
+import theme from '@theme'
+import LoadingSpinner from '@components/Icons/LoadingSpinner'
 
 type Type = 'button' | 'submit' | 'reset'
 

@@ -1,14 +1,14 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { sanitize } from '../../../utils'
-import { useTranslation } from '../../../config/i18n'
-import FormError from '../../../components/FormError'
-import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
-import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import { useUpdateUserMutation } from '../../../generated/graphql'
-import theme from '../../../theme'
+import { useTranslation } from '@config/i18n'
+import { useUpdateUserMutation } from '@generated'
+import Button, { ButtonVariant } from '@elements/Button'
+import FormError from '@components/FormError'
+import SettingsForm from '@components/Dashboard/Settings/SettingsForm'
+import SettingsFieldset from '@components/Dashboard/Settings/SettingsFieldset'
+import theme from '@theme'
+import { sanitize } from '@utils'
 
 type Props = {
   bio: string

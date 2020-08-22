@@ -3,15 +3,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { trackLogIn } from '../../events/users'
-import {
-  useLoginUserMutation,
-  CurrentUserDocument,
-  useCurrentUserQuery,
-} from '../../generated/graphql'
-import FormError from '../FormError'
-import Button from '../../elements/Button'
-import { brandBlue } from '../../utils'
-import theme from '../../theme'
+import { useLoginUserMutation, CurrentUserDocument, useCurrentUserQuery } from '@generated'
+import Button from '@elements/Button'
+import FormError from '@components/FormError'
+import { brandBlue } from '@utils'
+import theme from '@theme'
 
 const LoginForm: React.FC = () => {
   const router = useRouter()

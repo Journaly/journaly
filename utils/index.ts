@@ -2,7 +2,6 @@ import xss from 'xss'
 export * from './breakpoints'
 export * from './colors'
 export * from './css'
-export * from './date'
 
 // Polyfill Object.fromEntries
 export function fromEntries<V>(iterable: Iterable<[string, V]>) {

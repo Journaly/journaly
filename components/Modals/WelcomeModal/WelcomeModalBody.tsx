@@ -1,14 +1,14 @@
 import React from 'react'
-import { useTranslation } from '../../../config/i18n'
+import { useTranslation } from '@config/i18n'
 import { ApolloQueryResult } from '@apollo/client'
 import {
   LanguagesFormDataQuery,
   Language as LanguageType,
   LanguageNative as LanguageNativeType,
   LanguageLearning as LanguageLearningType,
-} from '../../../generated/graphql'
-import NativeLanguageFormField from '../../../components/NativeLanguageFormField'
-import LearningLanguageFormField from '../../../components/LearningLanguageFormField'
+} from '@generated'
+import NativeLanguageFormField from '@components/NativeLanguageFormField'
+import LearningLanguageFormField from '@components/LearningLanguageFormField'
 
 type Props = {
   languageFormData: LanguagesFormDataQuery

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { useTranslation } from '../../../config/i18n'
-import theme from '../../../theme'
+import { useTranslation } from '@config/i18n'
+import theme from '@theme'
 
 const Breadcrumbs: React.FC = () => {
   const { pathname } = useRouter()

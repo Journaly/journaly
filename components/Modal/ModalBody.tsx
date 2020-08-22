@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import modalConstants from './modalConstants'
-import theme from '../../theme'
+import theme from '@theme'
 
 interface Props {
   title: React.ReactNode

@@ -1,8 +1,8 @@
 import React from 'react'
-import { PostStatus } from '../../generated/graphql'
-import { useTranslation } from '../../config/i18n'
-import { formatLongDate } from '../../utils'
-import theme from '../../theme'
+import { PostStatus } from '@generated'
+import { useTranslation } from '@config/i18n'
+import { formatLongDate } from '@utils/date'
+import theme from '@theme'
 
 type PostHeaderProps = {
   postTitle: string

@@ -4,12 +4,12 @@ import {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
   CommentFragmentFragment as CommentType,
-} from '../../generated/graphql'
-import Button, { ButtonSize, ButtonVariant } from '../../elements/Button'
-import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
-import theme from '../../theme'
-import EditIcon from '../Icons/EditIcon'
-import DeleteIcon from '../Icons/DeleteIcon'
+} from '@generated'
+import Button, { ButtonSize, ButtonVariant } from '@elements/Button'
+import BlankAvatarIcon from '@components/Icons/BlankAvatarIcon'
+import EditIcon from '@components/Icons/EditIcon'
+import DeleteIcon from '@components/Icons/DeleteIcon'
+import theme from '@theme'
 
 type CommentProps = {
   comment: CommentType

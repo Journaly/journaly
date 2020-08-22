@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import theme from '../../theme'
+import theme from '@theme'
 
 type ErrorProps = {
   error: React.ReactNode

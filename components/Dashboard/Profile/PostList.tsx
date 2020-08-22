@@ -1,11 +1,12 @@
 import React from 'react'
-import { useTranslation } from '../../../config/i18n'
-import { layoutTopBottomPadding, layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
+import { useTranslation } from '@config/i18n'
+import { PostCardFragmentFragment as PostType } from '@generated'
 import {
-  PostCardFragmentFragment as PostType,
-} from '../../../generated/graphql'
-import PostCard from '../PostCard'
-import theme from '../../../theme'
+  layoutTopBottomPadding,
+  layoutLeftRightPadding,
+} from '@components/Dashboard/dashboardConstants'
+import PostCard from '@components/Dashboard/PostCard'
+import theme from '@theme'
 
 type Props = {
   posts: PostType[]
@@ -18,7 +19,9 @@ const PostList: React.FC<Props> = ({ posts }) => {
     <div className="post-list">
       <h1 className="posts-title">{t('postsTitle')}</h1>
 
-      { posts.map((post) => <PostCard key={post.id} post={post} />) }
+      {posts.map((post) => (
+        <PostCard key={post.id} post={post} />
+      ))}
 
       <style jsx>{`
         .post-list {

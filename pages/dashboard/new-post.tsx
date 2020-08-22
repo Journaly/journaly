@@ -1,19 +1,19 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { withApollo } from '../../lib/apollo'
 
-import DashboardLayout from '../../components/Layouts/DashboardLayout'
-import PostEditor, { PostData, validatePostData } from '../../components/PostEditor'
-import theme from '../../theme'
-import Button, { ButtonVariant } from '../../elements/Button'
+import { withApollo } from '@lib/apollo'
+import { useTranslation } from '@config/i18n'
 import {
   useCurrentUserQuery,
   useCreatePostMutation,
   PostStatus as PostStatusType,
-} from '../../generated/graphql'
-import AuthGate from '../../components/AuthGate'
-import { useTranslation } from '../../config/i18n'
+} from '@generated'
+import Button, { ButtonVariant } from '@elements/Button'
+import AuthGate from '@components/AuthGate'
+import DashboardLayout from '@components/Layouts/DashboardLayout'
+import PostEditor, { PostData, validatePostData } from '@components/PostEditor'
+import theme from '@theme'
 
 const initialData = {
   title: '',

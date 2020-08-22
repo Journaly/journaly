@@ -10,6 +10,7 @@ import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 import theme from '../../../theme'
 import EditIcon from '../../Icons/EditIcon'
 import DeleteIcon from '../../Icons/DeleteIcon'
+import { formatDateRelativeToNow } from '../../../utils'
 
 type PostCommentProps = {
   comment: PostCommentType
@@ -72,11 +73,14 @@ const PostComment: React.FC<PostCommentProps> = ({
               )}
             </a>
           </Link>
-          <span className="author-identifier">
-            {comment.author.name
-              ? `${comment.author.name} (@${comment.author.handle})`
-              : `@${comment.author.handle}`}
-          </span>
+          <div className="identifier-date-block">
+            <span className="author-identifier">
+              {comment.author.name
+                ? `${comment.author.name} (@${comment.author.handle})`
+                : `@${comment.author.handle}`}
+            </span>
+            <span className="comment-date">{formatDateRelativeToNow(comment.createdAt)} ago</span>
+          </div>
         </div>
         <div className="body-block">
           {isEditMode ? (
@@ -150,10 +154,16 @@ const PostComment: React.FC<PostCommentProps> = ({
           margin-left: 5px;
         }
 
+        .author-info {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
         .profile-image {
           border-radius: 50%;
-          width: 27px;
-          height: 27px;
+          width: 30px;
+          height: 30px;
           object-fit: cover;
         }
 
@@ -162,8 +172,19 @@ const PostComment: React.FC<PostCommentProps> = ({
           background-color: ${theme.colors.blueLight};
         }
 
+        .identifier-date-block {
+          display: flex;
+          flex-direction: column;
+          line-height: 1.2;
+        }
+
+        .comment-date {
+          font-weight: 400;
+          color: ${theme.colors.gray600};
+        }
+
         .body-block {
-          margin-right: 10px;
+          margin: 5px 10px 10px 0;
           text-align: left;
         }
 
@@ -195,9 +216,11 @@ const PostComment: React.FC<PostCommentProps> = ({
           flex: 1;
           width: 100%;
           outline: none;
-          padding: 5px 0;
+          padding: 5px;
           margin-right: 10px;
           resize: vertical;
+          border: 1px solid ${theme.colors.gray400};
+          border-radius: 5px;
         }
       `}</style>
     </div>

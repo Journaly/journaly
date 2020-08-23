@@ -1,0 +1,53 @@
+service: j-mail
+
+provider:
+  name: aws
+  stage: ${opt:stage, ''}
+  environment:
+    MAIL_HOST: ${file(./config.${opt:stage, ''}.json):MAIL_HOST}
+    MAIL_PORT: ${file(./config.${opt:stage, ''}.json):MAIL_PORT}
+    MAIL_USER: ${file(./config.${opt:stage, ''}.json):MAIL_USER}
+    MAIL_PASSWORD: ${file(./config.${opt:stage, ''}.json):MAIL_PASSWORD}
+    MAIL_SECURE: ${file(./config.${opt:stage, ''}.json):MAIL_SECURE}
+    JAWS_ACCOUNT_ID: ${file(./config.${opt:stage, ''}.json):JAWS_ACCOUNT_ID}
+  runtime: nodejs12.x
+  profile: serverless-admin
+  region: us-east-2
+
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'sqs:SendMessage'
+      Resource: 'arn:aws:sqs:${self:provider.region}:*:JMailQueue-${opt:stage}'
+
+functions:
+  processJMailQueue:
+    handler: handler.processJMailQueue
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - JMailQueue
+              - Arn
+          batchSize: 10
+
+resources:
+  Resources:
+    JMailQueue:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: 'JMailQueue-${opt:stage}'
+        RedrivePolicy:
+          deadLetterTargetArn:
+            'Fn::GetAtt':
+              - JMailDeadLetterQueue
+              - Arn
+          maxReceiveCount: 3
+    JMailDeadLetterQueue:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: 'JMailDeadLetterQueue-${opt:stage}'
+        MessageRetentionPeriod: 1209600
+
+plugins:
+  - serverless-plugin-typescript

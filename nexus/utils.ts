@@ -1,5 +1,7 @@
+import AWS from 'aws-sdk'
 import escapeHTML from 'escape-html'
-import { User } from '.prisma/client'
+import { User, Thread, Comment, Post, PostComment } from '.prisma/client'
+import { makeEmail } from '../lib/mail'
 
 type NodeType = {
   text?: string | null
@@ -164,4 +166,100 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
 
   if (!hasPermission) throw new Error('You do not have permission to do that')
   return true
+}
+
+/**
+ * JMail Email Handler
+ * @param post - the post that was commented on
+ * @param comment - the comment the was written
+ */
+
+AWS.config.credentials = new AWS.Credentials(
+  process.env.JAWS_ACCESS_KEY_ID!,
+  process.env.JAWS_SECRET_ACCESS_KEY!,
+)
+const sqs = new AWS.SQS({ region: 'us-east-2' })
+
+type SendCommentNotificationArgs = {
+  post: Post
+  thread: Thread
+  comment: Comment
+  commentAuthor: User
+  user: User
+}
+
+type SendPostCommentNotificationArgs = {
+  post: Post
+  postAuthor: User
+  postComment: PostComment
+  postCommentAuthor: User
+}
+
+type EmailParams = {
+  from: string
+  to: string
+  subject: string
+  html: string
+}
+
+type SqsParams = {
+  MessageBody: string
+  QueueUrl: string
+}
+
+export const sendJmail = (emailParams: EmailParams) => {
+  const params: SqsParams = {
+    MessageBody: JSON.stringify(emailParams),
+    QueueUrl: process.env.JMAIL_QUEUE_URL!,
+  }
+
+  return new Promise((res, rej) => {
+    sqs.sendMessage(params, function (err, data) {
+      if (err) {
+        rej(err)
+      } else {
+        res(data)
+      }
+    })
+  })
+}
+
+export const sendCommentNotification = ({
+  post,
+  thread,
+  comment,
+  commentAuthor,
+  user,
+}: SendCommentNotificationArgs) => {
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: user.email,
+    subject: `New activity on a thread in ${post.title}`,
+    html: makeEmail(`
+      <p>Heads up! <strong>@${commentAuthor.handle}</strong> commented on a post you're subscribed to!</p>
+      <p><strong>Journal entry:</strong> ${post.title}</p>
+      <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
+      <p><strong>Comment:</strong> "${comment.body}"</p>
+      <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
+    `),
+  })
+}
+
+export const sendPostCommentNotification = ({
+  post,
+  postAuthor,
+  postComment,
+  postCommentAuthor,
+}: SendPostCommentNotificationArgs) => {
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: postAuthor.email,
+    subject: "You've got feedback!",
+    html: makeEmail(`
+      <p>Great news! <strong>@${postCommentAuthor.handle}</strong> left you some feedback!</p>
+      <p><strong>Journal entry:</strong> ${post.title}</p>
+      <p><strong>Comment:</strong> "${postComment.body}"</p>
+      <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
+    `),
+  })
 }

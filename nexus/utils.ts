@@ -2,6 +2,7 @@ import AWS from 'aws-sdk'
 import escapeHTML from 'escape-html'
 import { User, Thread, Comment, Post } from '.prisma/client'
 import { makeEmail } from '../lib/mail'
+import { PostComment } from '../generated/graphql'
 
 type NodeType = {
   text?: string | null
@@ -188,6 +189,13 @@ type SendCommentNotificationArgs = {
   user: User
 }
 
+type SendPostCommentNotificationArgs = {
+  post: Post
+  postAuthor: User
+  postComment: PostComment
+  postCommentAuthor: User
+}
+
 type EmailParams = {
   from: string
   to: string
@@ -233,6 +241,25 @@ export const sendCommentNotification = ({
       <p><strong>Journal entry:</strong> ${post.title}</p>
       <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
       <p><strong>Comment:</strong> "${comment.body}"</p>
+      <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
+    `),
+  })
+}
+
+export const sendPostCommentNotification = ({
+  post,
+  postAuthor,
+  postComment,
+  postCommentAuthor,
+}: SendPostCommentNotificationArgs) => {
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: postAuthor.email,
+    subject: "You've got feedback!",
+    html: makeEmail(`
+      <p>Great news! <strong>@${postCommentAuthor.handle}</strong> left you some feedback!</p>
+      <p><strong>Journal entry:</strong> ${post.title}</p>
+      <p><strong>Comment:</strong> "${postComment.body}"</p>
       <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
     `),
   })

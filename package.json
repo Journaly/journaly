@@ -44,6 +44,7 @@
     "@types/jsonwebtoken": "^8.3.8",
     "@types/node": "^13.9.0",
     "@types/nodemailer": "^6.4.0",
+    "aws-sdk": "^2.737.0",
     "bcryptjs": "^2.4.3",
     "classnames": "^2.2.6",
     "cookie": "^0.4.1",
@@ -57,7 +58,6 @@
     "next-i18next": "^5.0.0-beta.3",
     "nexus": "^0.25.0",
     "nexus-plugin-prisma": "^0.9.0",
-    "nodemailer": "^6.4.10",
     "nprogress": "^0.2.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
@@ -97,9 +97,6 @@
     "prettier": "^2.0.1",
     "pretty-quick": "^2.0.1",
     "prompts": "^2.3.2",
-    "tslint": "^6.1.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.2.0",
     "typescript": "^3.8.3"
   }
 }

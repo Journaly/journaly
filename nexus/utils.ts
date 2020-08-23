@@ -1,8 +1,7 @@
 import AWS from 'aws-sdk'
 import escapeHTML from 'escape-html'
-import { User, Thread, Comment, Post } from '.prisma/client'
+import { User, Thread, Comment, Post, PostComment } from '.prisma/client'
 import { makeEmail } from '../lib/mail'
-import { PostComment } from '../generated/graphql'
 
 type NodeType = {
   text?: string | null

@@ -2,7 +2,6 @@ import { schema } from 'nexus'
 
 import { hasAuthorPermissions, sendCommentNotification, sendPostCommentNotification } from './utils'
 import { NotFoundError } from './errors'
-import { makeEmail } from '../lib/mail'
 const { intArg, stringArg } = schema
 
 schema.objectType({

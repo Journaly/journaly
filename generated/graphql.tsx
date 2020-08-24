@@ -63,6 +63,7 @@ export type Language = {
   posts: Array<Post>
   dialect?: Maybe<Scalars['String']>
   learningUsers?: Maybe<Array<User>>
+  postCount?: Maybe<Scalars['Int']>
 }
 
 export type LanguagePostsArgs = {
@@ -324,8 +325,8 @@ export type QueryPostByIdArgs = {
 
 export type QueryFeedArgs = {
   search?: Maybe<Scalars['String']>
-  language?: Maybe<Scalars['Int']>
-  topic?: Maybe<Scalars['String']>
+  languages?: Maybe<Array<Scalars['Int']>>
+  topic?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   first?: Maybe<Scalars['Int']>
 }
@@ -560,6 +561,12 @@ export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
   'id' | 'name' | 'dialect'
 >
 
+export type LanguageWithPostCountFragmentFragment = { __typename?: 'Language' } & Pick<
+  Language,
+  'postCount'
+> &
+  LanguageFragmentFragment
+
 export type AddLanguageLearningMutationVariables = {
   languageId: Scalars['Int']
 }
@@ -584,10 +591,12 @@ export type AddLanguageNativeMutation = { __typename?: 'Mutation' } & {
   >
 }
 
-export type LanguagesQueryVariables = {}
+export type LanguagesQueryVariables = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+}
 
 export type LanguagesQuery = { __typename?: 'Query' } & {
-  languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
+  languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageWithPostCountFragmentFragment>>
 }
 
 export type LanguagesFormDataQueryVariables = {}
@@ -657,6 +666,9 @@ export type EditPostQuery = { __typename?: 'Query' } & {
 export type FeedQueryVariables = {
   first: Scalars['Int']
   skip: Scalars['Int']
+  search?: Maybe<Scalars['String']>
+  languages?: Maybe<Array<Scalars['Int']>>
+  topic?: Maybe<Scalars['Int']>
 }
 
 export type FeedQuery = { __typename?: 'Query' } & {
@@ -938,6 +950,13 @@ export const PostCardFragmentFragmentDoc = gql`
     }
   }
   ${AuthorFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
+`
+export const LanguageWithPostCountFragmentFragmentDoc = gql`
+  fragment LanguageWithPostCountFragment on Language {
+    ...LanguageFragment
+    postCount
+  }
   ${LanguageFragmentFragmentDoc}
 `
 export const CreateCommentDocument = gql`
@@ -1447,12 +1466,12 @@ export type AddLanguageNativeMutationOptions = ApolloReactCommon.BaseMutationOpt
   AddLanguageNativeMutationVariables
 >
 export const LanguagesDocument = gql`
-  query languages {
-    languages {
-      ...LanguageFragment
+  query languages($hasPosts: Boolean) {
+    languages(hasPosts: $hasPosts) {
+      ...LanguageWithPostCountFragment
     }
   }
-  ${LanguageFragmentFragmentDoc}
+  ${LanguageWithPostCountFragmentFragmentDoc}
 `
 
 /**
@@ -1467,6 +1486,7 @@ export const LanguagesDocument = gql`
  * @example
  * const { data, loading, error } = useLanguagesQuery({
  *   variables: {
+ *      hasPosts: // value for 'hasPosts'
  *   },
  * });
  */
@@ -1781,8 +1801,8 @@ export type EditPostQueryResult = ApolloReactCommon.QueryResult<
   EditPostQueryVariables
 >
 export const FeedDocument = gql`
-  query feed($first: Int!, $skip: Int!) {
-    feed(first: $first, skip: $skip) {
+  query feed($first: Int!, $skip: Int!, $search: String, $languages: [Int!], $topic: Int) {
+    feed(first: $first, skip: $skip, search: $search, languages: $languages, topic: $topic) {
       posts {
         ...PostCardFragment
       }
@@ -1806,6 +1826,9 @@ export const FeedDocument = gql`
  *   variables: {
  *      first: // value for 'first'
  *      skip: // value for 'skip'
+ *      search: // value for 'search'
+ *      languages: // value for 'languages'
+ *      topic: // value for 'topic'
  *   },
  * });
  */

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { NextPage } from 'next'
 import { withApollo } from '../../lib/apollo'
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
@@ -10,24 +10,13 @@ interface InitialProps {
   namespacesRequired: string[]
 }
 
-const welcomeModalKey = 'welcome-modal-july-2020'
-
 const MyFeedPage: NextPage<InitialProps> = () => {
-  const hasSeenModalBefore =
-    typeof window !== 'undefined' ? localStorage.getItem(welcomeModalKey) : false
-  const [shouldShowWelcomeModal, setShouldShowWelcomeModal] = useState(!hasSeenModalBefore)
-
-  const handleWelcomeModalClose = () => {
-    setShouldShowWelcomeModal(false)
-    localStorage.setItem(welcomeModalKey, 'seen')
-  }
-
   return (
     <AuthGate>
       {(currentUser) => (
         <DashboardLayout>
           <MyFeed currentUser={currentUser} />
-          <WelcomeModal show={shouldShowWelcomeModal} onClose={handleWelcomeModalClose} />
+          <WelcomeModal />
         </DashboardLayout>
       )}
     </AuthGate>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import {
   useUpdateCommentMutation,
@@ -22,6 +22,16 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
   const editTextarea = useRef<HTMLInputElement>(null)
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
+
+  useEffect(() => {
+    const el = editTextarea.current
+    console.log('1', el)
+    if (el) {
+      console.log('2', el)
+      el.focus()
+      el.setSelectionRange(el.value.length, el.value.length)
+    }
+  }, [editTextarea.current])
 
   const [updateComment, { loading }] = useUpdateCommentMutation({
     onCompleted: () => {
@@ -95,11 +105,6 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
             className="edit-btn"
             onClick={() => {
               setIsEditMode(true)
-              const el = editTextarea.current
-              if (el) {
-                el.focus()
-                el.setSelectionRange(el.value.length, el.value.length)
-              }
             }}
           >
             <EditIcon size={24} />

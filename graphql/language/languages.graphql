@@ -1,5 +1,5 @@
-query languages {
-  languages {
-    ...LanguageFragment
+query languages($hasPosts: Boolean) {
+  languages(hasPosts: $hasPosts) {
+    ...LanguageWithPostCountFragment
   }
 }

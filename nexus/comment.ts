@@ -1,8 +1,7 @@
 import { schema } from 'nexus'
 
-import { hasAuthorPermissions } from './utils'
+import { hasAuthorPermissions, sendCommentNotification, sendPostCommentNotification } from './utils'
 import { NotFoundError } from './errors'
-import { transport, makeEmail } from '../lib/mail'
 const { intArg, stringArg } = schema
 
 schema.objectType({
@@ -189,18 +188,12 @@ schema.mutationType({
             // This is the user creating the comment, do not notify them.
             return
           }
-
-          const promise = transport.sendMail({
-            from: 'robin@journaly.com',
-            to: user.email,
-            subject: `New activity on a thread in ${thread.post.title}`,
-            html: makeEmail(`
-              <p>Heads up! <strong>@${comment.author.handle}</strong> commented on a post you're subscribed to!</p>
-              <p><strong>Journal entry:</strong> ${thread.post.title}</p>
-              <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
-              <p><strong>Comment:</strong> "${comment.body}"</p>
-              <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${thread.post.id}">here</a> to go to your journal entry!</p>
-            `),
+          const promise = sendCommentNotification({
+            post: thread.post,
+            thread,
+            comment,
+            commentAuthor: comment.author,
+            user,
           })
 
           mailPromises.push(promise)
@@ -331,16 +324,11 @@ schema.mutationType({
         })
 
         if (postComment.author.id !== post.author.id) {
-          await transport.sendMail({
-            from: 'robin@journaly.com',
-            to: post.author.email,
-            subject: "You've got feedback!",
-            html: makeEmail(`
-              <p>Great news! <strong>@${postComment.author.handle}</strong> left you some feedback!</p>
-              <p><strong>Journal entry:</strong> ${post.title}</p>
-              <p><strong>Comment:</strong> "${postComment.body}"</p>
-              <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
-            `),
+          await sendPostCommentNotification({
+            post,
+            postAuthor: post.author,
+            postComment,
+            postCommentAuthor: postComment.author,
           })
         }
 

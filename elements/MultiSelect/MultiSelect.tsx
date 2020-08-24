@@ -1,19 +1,19 @@
 import React from 'react'
-import Select, { Option } from '../../elements/Select/Select'
+import Select, { Option, OptionValue } from '../../elements/Select/Select'
 import XIcon from '../../components/Icons/XIcon'
 import theme from '../../theme'
 
 export type { Option }
 
-type Props = {
-  options: Option[]
-  selectedOptionValues: string[]
+type Props<T extends OptionValue> = {
+  options: Option<T>[]
+  selectedOptionValues: T[]
   placeholder: string
   name?: string
   id?: string
   loading?: boolean
-  onAdd?: (value: string) => void
-  onRemove?: (value: string) => void
+  onAdd?: (value: T) => void
+  onRemove?: (value: T) => void
 }
 
 /*
@@ -48,7 +48,7 @@ type Props = {
  * which shows a spinner and disables the select.
  */
 
-const MultiSelect: React.FC<Props> = ({
+const MultiSelect = <T extends OptionValue>({
   options,
   selectedOptionValues,
   placeholder,
@@ -57,9 +57,9 @@ const MultiSelect: React.FC<Props> = ({
   loading = false,
   onAdd = () => {},
   onRemove = () => {},
-}) => {
-  const availableOptions: Option[] = []
-  const selectedOptions: Option[] = []
+}: Props<T>) => {
+  const availableOptions: Option<T>[] = []
+  const selectedOptions: Option<T>[] = []
 
   options.forEach((option) => {
     const selectedOption = selectedOptionValues.find(
@@ -78,12 +78,12 @@ const MultiSelect: React.FC<Props> = ({
       {selectedOptions.length > 0 && (
         <ul className="selected-options">
           {selectedOptions.map((selectedOption, i) => {
-            const { value, displayName } = selectedOption
+            const { value, displayName, selectedDisplayName } = selectedOption
 
             return (
               <li key={`${value}-${i}`}>
                 <div className="selected-option-row">
-                  <span className="selected-option">{displayName}</span>
+                  <span className="selected-option">{selectedDisplayName || displayName}</span>
 
                   <button
                     type="button"
@@ -101,7 +101,6 @@ const MultiSelect: React.FC<Props> = ({
 
       <Select
         options={availableOptions}
-        value=""
         placeholder={placeholder}
         loading={loading}
         name={name}
@@ -128,6 +127,7 @@ const MultiSelect: React.FC<Props> = ({
           margin: 4px 8px 4px 0;
           border-radius: 16px;
           background-color: ${theme.colors.gray100};
+          box-shadow: 0px 3px 4px #00000029;
         }
 
         .selected-option-row {

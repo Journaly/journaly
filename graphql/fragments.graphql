@@ -127,3 +127,8 @@ fragment LanguageFragment on Language {
   name
   dialect
 }
+
+fragment LanguageWithPostCountFragment on Language {
+  ...LanguageFragment
+  postCount
+}

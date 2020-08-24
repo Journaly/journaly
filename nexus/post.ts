@@ -112,8 +112,8 @@ schema.extendType({
       type: 'PostPage',
       args: {
         search: schema.stringArg({ required: false }),
-        language: schema.intArg({ required: false }),
-        topic: schema.stringArg({ required: false }),
+        languages: schema.intArg({ required: false, list: true }),
+        topic: schema.intArg({ required: false }),
         skip: schema.intArg(),
         first: schema.intArg(),
       },
@@ -122,20 +122,27 @@ schema.extendType({
         if (!args.first) args.first = 10
         if (args.first > 50) args.first = 50
 
-        if (args.language) {
-          filterClauses.push({
-            language: {
-              id: {
-                equals: args.language,
+        if (args.languages) {
+          const languageFilters = []
+
+          for (let language of args.languages) {
+            languageFilters.push({
+              language: {
+                id: {
+                  equals: language,
+                },
               },
-            },
+            })
+          }
+          filterClauses.push({
+            OR: languageFilters,
           })
         }
         if (args.topic) {
           filterClauses.push({
             topic: {
               some: {
-                name: args.topic,
+                id: args.topic,
               },
             },
           })

@@ -4,9 +4,10 @@ import { useRouter } from 'next/router'
 import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
 import theme from '../../../theme'
-import { User as UserType, useFeedQuery } from '../../../generated/graphql'
-import Select from '../../../elements/Select'
+import { User as UserType, useFeedQuery, useLanguagesQuery } from '../../../generated/graphql'
+// import Select from '../../../elements/Select'
 import LoadingWrapper from '../../LoadingWrapper'
+import MultiSelect from '../../../elements/MultiSelect'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -14,9 +15,47 @@ type Props = {
   currentUser: UserType
 }
 
-const MyFeed: React.FC<Props> = () => {
-  const [topic, setTopic] = useState('')
-  const [language, setLanguage] = useState('')
+const MyFeed: React.FC<Props> = ({ currentUser }) => {
+  /**
+   * Topic filter selection state
+   */
+  // const [topic, setTopic] = useState('')
+
+  /**
+   * Language filter selection state
+   */
+
+  // Fetch languages that have at least 1 post
+  const { data: languagesData } = useLanguagesQuery({
+    variables: {
+      hasPosts: true,
+    },
+  })
+  const languageOptions = (languagesData?.languages || []).map(({ id, name, postCount }) => ({
+    value: id,
+    displayName: `${name} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
+    selectedDisplayName: `${name}`,
+  }))
+  const languageOptionIds = new Set((languagesData?.languages || []).map(({ id }) => id))
+
+  let userLanguages: Set<number> = new Set([])
+
+  for (let languageLearning of currentUser.languagesLearning) {
+    if (languageOptionIds.has(languageLearning.language.id))
+      userLanguages.add(languageLearning.language.id)
+  }
+  for (let languageNative of currentUser.languagesNative) {
+    if (languageOptionIds.has(languageNative.language.id))
+      userLanguages.add(languageNative.language.id)
+  }
+
+  const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>([
+    ...userLanguages.values(),
+  ])
+
+  /**
+   * Pagination handling
+   */
   // Pull query params off the router instance
   const { query } = useRouter()
   const currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
@@ -26,6 +65,7 @@ const MyFeed: React.FC<Props> = () => {
     variables: {
       first: NUM_POSTS_PER_PAGE,
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
+      languages: selectedLanguageFilters.length ? selectedLanguageFilters : null,
     },
   })
 
@@ -34,21 +74,18 @@ const MyFeed: React.FC<Props> = () => {
   const showPagination = count > NUM_POSTS_PER_PAGE
   const pageTitle = 'My Feed'
 
-  const topicOptions = [
-    { value: 'rock_climbing', displayName: 'Rock climbing' },
-    { value: 'cooking', displayName: 'Cooking' },
-    { value: 'drawing', displayName: 'Drawing' },
-    { value: 'history', displayName: 'History' },
-  ]
+  /* TEMPORARY until topics built
+    const topicOptions = [
+      { value: 'rock_climbing', displayName: 'Rock climbing' },
+      { value: 'cooking', displayName: 'Cooking' },
+      { value: 'drawing', displayName: 'Drawing' },
+      { value: 'history', displayName: 'History' },
+    ]
 
-  const handleTopicChange = (value: string): void => {
-    setTopic(value)
-  }
-
-  const handleLanguageChange = (value: string): void => {
-    setLanguage(value)
-  }
-
+    const handleTopicChange = (value: string): void => {
+      setTopic(value)
+    }
+  */
   return (
     <div className="my-feed-wrapper">
       <Head>
@@ -59,20 +96,24 @@ const MyFeed: React.FC<Props> = () => {
         <input type="text" placeholder="Search..." className="search-box" />
 
         <div className="my-feed-select">
-          <Select
+          {/* <Select
             options={topicOptions}
             value={topic}
             placeholder="Topic"
             name="topic"
             onChange={handleTopicChange}
-          />
+          /> */}
 
-          <Select
-            options={[]}
-            value={language}
-            placeholder="Language"
-            name="langauge"
-            onChange={handleLanguageChange}
+          <MultiSelect
+            options={languageOptions}
+            selectedOptionValues={selectedLanguageFilters}
+            placeholder="Languages"
+            onAdd={(id) => setSelectedLanguageFilters([...selectedLanguageFilters, id])}
+            onRemove={(id) =>
+              setSelectedLanguageFilters(
+                selectedLanguageFilters.filter((languageId) => languageId !== id),
+              )
+            }
           />
         </div>
       </div>
@@ -104,7 +145,7 @@ const MyFeed: React.FC<Props> = () => {
         }
 
         h1 {
-          margin: 50px auto;
+          margin: 0 auto 40px;
           text-align: center;
           ${theme.typography.headingXL};
         }
@@ -132,7 +173,7 @@ const MyFeed: React.FC<Props> = () => {
         .my-feed-select {
           display: grid;
           grid-gap: 20px;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          grid-template-columns: repeat(auto-fit);
         }
 
         .my-feed-container {

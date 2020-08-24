@@ -1,0 +1,28 @@
+{
+  "name": "j-mail",
+  "version": "1.0.0",
+  "description": "An email notification queueing service.",
+  "main": "index.js",
+  "scripts": {
+    "deploy:stage": "sls deploy --stage stage",
+    "deploy:prod": "sls deploy --stage prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Journaly/journaly.git"
+  },
+  "author": "Journaly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Journaly/journaly/issues"
+  },
+  "homepage": "https://github.com/Journaly/journaly#readme",
+  "devDependencies": {
+    "serverless-plugin-typescript": "^1.1.9",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.737.0",
+    "nodemailer": "^6.4.11"
+  }
+}

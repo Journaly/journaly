@@ -127,7 +127,7 @@ schema.extendType({
           filterClauses.push({
             topic: {
               some: {
-                name: args.topic,
+                id: args.topic,
               },
             },
           })
@@ -173,7 +173,6 @@ schema.extendType({
         })
 
         const [count, posts] = await Promise.all([countQuery, postQuery])
-        console.log(JSON.stringify(filterClauses, null, 3))
         return {
           count,
           posts,

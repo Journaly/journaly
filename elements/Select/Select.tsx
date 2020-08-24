@@ -10,11 +10,12 @@ export type OptionValue = string | number
 export type Option<T extends OptionValue> = {
   value: T
   displayName: string
+  selectedDisplayName?: string
 }
 
 type Props<T extends OptionValue> = {
   options: Option<T>[]
-  value: T
+  value?: T | undefined
   placeholder: string
   onChange: (value: T, event?: React.ChangeEvent<HTMLSelectElement>) => void
   disabled?: boolean
@@ -64,8 +65,8 @@ const SelectBase = <T extends OptionValue>(
   ref: Ref<HTMLSelectElement>,
 ) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { selectedIndex } = event.currentTarget
-    const selectedOption = options[selectedIndex]
+    const { selectedIndex } = event.target
+    const selectedOption = options[selectedIndex - 1]
     onChange(selectedOption.value, event)
   }
 

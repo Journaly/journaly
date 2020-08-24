@@ -97,7 +97,7 @@ schema.objectType({
       },
     })
     t.int('postCount', {
-      resolve(parent, _args, ctx, info) {
+      resolve(parent, _args, ctx) {
         return ctx.db.post.count({
           where: {
             AND: {

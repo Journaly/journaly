@@ -78,12 +78,12 @@ const MultiSelect = <T extends OptionValue>({
       {selectedOptions.length > 0 && (
         <ul className="selected-options">
           {selectedOptions.map((selectedOption, i) => {
-            const { value, displayName } = selectedOption
+            const { value, displayName, selectedDisplayName } = selectedOption
 
             return (
               <li key={`${value}-${i}`}>
                 <div className="selected-option-row">
-                  <span className="selected-option">{displayName}</span>
+                  <span className="selected-option">{selectedDisplayName || displayName}</span>
 
                   <button
                     type="button"
@@ -101,7 +101,6 @@ const MultiSelect = <T extends OptionValue>({
 
       <Select
         options={availableOptions}
-        value=""
         placeholder={placeholder}
         loading={loading}
         name={name}
@@ -128,6 +127,7 @@ const MultiSelect = <T extends OptionValue>({
           margin: 4px 8px 4px 0;
           border-radius: 16px;
           background-color: ${theme.colors.gray100};
+          box-shadow: 0px 3px 4px #00000029;
         }
 
         .selected-option-row {

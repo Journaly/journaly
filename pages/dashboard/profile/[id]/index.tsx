@@ -5,7 +5,12 @@ import { useRouter } from 'next/router'
 import { withApollo } from '../../../../lib/apollo'
 import LoadingWrapper from '../../../../components/LoadingWrapper'
 import DashboardLayout from '../../../../components/Layouts/DashboardLayout'
-import { useProfileQuery } from '../../../../generated/graphql'
+import {
+  useProfileQuery,
+  useCurrentUserQuery,
+  User as UserType,
+  Post as PostType,
+} from '../../../../generated/graphql'
 import Profile from '../../../../components/Dashboard/Profile'
 
 interface InitialProps {
@@ -14,18 +19,28 @@ interface InitialProps {
 
 const ProfilePage: NextPage<InitialProps> = () => {
   const idStr = useRouter().query.id as string
-  const id = parseInt(idStr, 10)
+  const userId = parseInt(idStr, 10)
 
-  const { data, loading, error } = useProfileQuery({
-    variables: { userId: id },
+  const {
+    data: userData,
+    loading: loadingCurrentUser,
+    error: currentUserError,
+  } = useCurrentUserQuery()
+  const { data: profileData, loading: loadingProfile, error: profileError } = useProfileQuery({
+    variables: { userId },
   })
 
+  const isLoading = loadingCurrentUser || loadingProfile
+  const hasError = currentUserError || profileError
+
   return (
-    <LoadingWrapper loading={loading} error={error}>
+    <LoadingWrapper loading={isLoading} error={hasError}>
       <DashboardLayout>
-        { data?.userById && data?.posts && (
-          <Profile user={data?.userById} posts={data?.posts} />
-        )}
+        <Profile
+          isLoggedInUser={userData?.currentUser?.id === userId}
+          user={profileData?.userById as UserType}
+          posts={profileData?.posts as PostType[]}
+        />
       </DashboardLayout>
     </LoadingWrapper>
   )

@@ -41,3 +41,5 @@ export function MyComponent() {
   return <h1>{t('title', { user })}</h1>
 }
 ```
+
+If you have DOM elements within your translation, use the [Trans component](https://react.i18next.com/latest/trans-component). If your translated text uses the Next.js `<Link />` component (or our custom `<NavLink />` component), then you'll have to use `<TranslationLink />` instead, as `<Link />` expects a single child element and the react-i18next [passes the children down as a string](https://github.com/i18next/react-i18next/issues/1090#issuecomment-615426145), causing a rendering error.

@@ -1,24 +1,38 @@
 import React from 'react'
-import { useTranslation } from '../../../config/i18n'
+import { useTranslation, Trans } from '../../../config/i18n'
+import { PostCardFragmentFragment as PostType, User as UserType } from '../../../generated/graphql'
 import { layoutTopBottomPadding, layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
-import {
-  PostCardFragmentFragment as PostType,
-} from '../../../generated/graphql'
+import TranslationLink from '../../TranslationLink'
 import PostCard from '../PostCard'
 import theme from '../../../theme'
 
 type Props = {
+  isLoggedInUser: boolean
+  user: UserType
   posts: PostType[]
 }
 
-const PostList: React.FC<Props> = ({ posts }) => {
+const PostList: React.FC<Props> = ({ isLoggedInUser, user, posts }) => {
   const { t } = useTranslation(['profile'])
 
   return (
     <div className="post-list">
       <h1 className="posts-title">{t('postsTitle')}</h1>
 
-      { posts.map((post) => <PostCard key={post.id} post={post} />) }
+      {posts.length ? (
+        posts.map((post) => <PostCard key={post.id} post={post} />)
+      ) : (
+        <div className="empty-list">
+          {isLoggedInUser ? (
+            <Trans>
+              You have no recent posts.{' '}
+              <TranslationLink href="/dashboard/new-post">Write a new post</TranslationLink>!
+            </Trans>
+          ) : (
+            t('emptyPosts', { user: user.name || user.handle })
+          )}
+        </div>
+      )}
 
       <style jsx>{`
         .post-list {

@@ -2,19 +2,23 @@ import React from 'react'
 import ProfileCard from './ProfileCard'
 import PostList from './PostList'
 import { layoutPadding } from '../../Dashboard/dashboardConstants'
-import { User as UserType, PostCardFragmentFragment as PostCardType } from '../../../generated/graphql'
+import {
+  User as UserType,
+  PostCardFragmentFragment as PostCardType,
+} from '../../../generated/graphql'
 import theme from '../../../theme'
 
 type Props = {
-  user: UserType | any
+  isLoggedInUser: boolean
+  user: UserType
   posts: PostCardType[]
 }
 
-const Profile: React.FC<Props> = ({ user, posts }) => {
+const Profile: React.FC<Props> = ({ isLoggedInUser, user, posts }) => {
   return (
     <div className="profile-wrapper">
       <ProfileCard user={user} />
-      <PostList posts={posts} />
+      <PostList isLoggedInUser={isLoggedInUser} user={user} posts={posts} />
 
       <style jsx>{`
         .profile-wrapper {

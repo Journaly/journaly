@@ -141,7 +141,12 @@ schema.extendType({
           filter = undefined
         }
 
-        return ctx.db.language.findMany({ where: filter })
+        return ctx.db.language.findMany({
+          where: filter,
+          orderBy: {
+            name: 'asc',
+          },
+        })
       },
     })
   },

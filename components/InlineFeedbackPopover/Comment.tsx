@@ -19,19 +19,9 @@ type CommentProps = {
 }
 
 const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) => {
-  const editTextarea = useRef<HTMLInputElement>(null)
+  const editTextarea = useRef<HTMLTextAreaElement>(null)
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
-
-  useEffect(() => {
-    const el = editTextarea.current
-    console.log('1', el)
-    if (el) {
-      console.log('2', el)
-      el.focus()
-      el.setSelectionRange(el.value.length, el.value.length)
-    }
-  }, [editTextarea.current])
 
   const [updateComment, { loading }] = useUpdateCommentMutation({
     onCompleted: () => {
@@ -105,6 +95,13 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
             className="edit-btn"
             onClick={() => {
               setIsEditMode(true)
+              setTimeout(() => {
+                const el = editTextarea.current
+                if (el) {
+                  el.focus()
+                  el.setSelectionRange(el.value.length, el.value.length)
+                }
+              }, 0)
             }}
           >
             <EditIcon size={24} />

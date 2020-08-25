@@ -87,13 +87,6 @@ schema.extendType({
           where: {
             id: args.id,
           },
-          include: {
-            postComments: {
-              orderBy: {
-                createdAt: 'desc',
-              },
-            },
-          },
         })
 
         if (!post) {

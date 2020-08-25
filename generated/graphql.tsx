@@ -894,7 +894,7 @@ export const ThreadFragmentFragmentDoc = gql`
     startIndex
     endIndex
     highlightedContent
-    comments {
+    comments(orderBy: { createdAt: asc }) {
       ...CommentFragment
     }
   }

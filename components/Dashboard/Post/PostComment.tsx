@@ -170,6 +170,8 @@ const PostComment: React.FC<PostCommentProps> = ({
         .author-block :global(svg) {
           border-radius: 50%;
           background-color: ${theme.colors.blueLight};
+          width: 30px;
+          height: 30px;
         }
 
         .identifier-date-block {
@@ -181,6 +183,7 @@ const PostComment: React.FC<PostCommentProps> = ({
         .comment-date {
           font-weight: 400;
           color: ${theme.colors.gray600};
+          text-align: left;
         }
 
         .body-block {

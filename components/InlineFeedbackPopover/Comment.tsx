@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import Link from 'next/link'
 import {
   useUpdateCommentMutation,
@@ -26,7 +26,6 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
   const [updateComment, { loading }] = useUpdateCommentMutation({
     onCompleted: () => {
       onUpdateComment()
-      setUpdatingCommentBody('')
     },
   })
 
@@ -95,6 +94,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
             className="edit-btn"
             onClick={() => {
               setIsEditMode(true)
+              setUpdatingCommentBody(comment.body)
               setTimeout(() => {
                 const el = editTextarea.current
                 if (el) {

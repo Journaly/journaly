@@ -17,7 +17,11 @@ schema.objectType({
     t.model.status()
     t.model.likes()
     t.model.threads()
-    t.model.postComments()
+    t.model.postComments({
+      ordering: {
+        createdAt: true,
+      },
+    })
     t.model.language()
     t.model.createdAt()
     t.model.bodySrc()
@@ -79,7 +83,11 @@ schema.extendType({
         id: schema.intArg(),
       },
       resolve: async (_parent, args, ctx) => {
-        const post = await ctx.db.post.findOne({ where: { id: args.id } })
+        const post = await ctx.db.post.findOne({
+          where: {
+            id: args.id,
+          },
+        })
 
         if (!post) {
           throw new NotFoundError('Post')

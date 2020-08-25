@@ -11,7 +11,11 @@ schema.objectType({
     t.model.startIndex()
     t.model.endIndex()
     t.model.highlightedContent()
-    t.model.comments()
+    t.model.comments({
+      ordering: {
+        createdAt: true,
+      },
+    })
   },
 })
 

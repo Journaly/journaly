@@ -1,4 +1,5 @@
 import { format, parseISO } from 'date-fns'
+import distanceInWordsToNow from 'date-fns/formatDistanceToNow'
 
 type DateString = string | number
 
@@ -21,4 +22,14 @@ export const formatShortDate = (date: string): string => {
 
 export const formatLongDate = (date: string): string => {
   return format(parseISO(date), 'MMMM d, yyyy')
+}
+
+/**
+ * Format a date in relative time
+ * @param date the date
+ * @param baseDate the date to compare with
+ */
+
+export const formatDateRelativeToNow = (date: string): string => {
+  return distanceInWordsToNow(parseISO(date))
 }

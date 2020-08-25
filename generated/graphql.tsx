@@ -215,6 +215,11 @@ export type MutationRemoveLanguageNativeArgs = {
   languageId: Scalars['Int']
 }
 
+export enum OrderByArg {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
 export type Post = {
   __typename?: 'Post'
   id: Scalars['Int']
@@ -252,6 +257,7 @@ export type PostThreadsArgs = {
 }
 
 export type PostPostCommentsArgs = {
+  orderBy?: Maybe<PostPostCommentsOrderByInput>
   skip?: Maybe<Scalars['Int']>
   after?: Maybe<PostCommentWhereUniqueInput>
   before?: Maybe<PostCommentWhereUniqueInput>
@@ -292,6 +298,10 @@ export type PostPage = {
   __typename?: 'PostPage'
   posts?: Maybe<Array<Post>>
   count?: Maybe<Scalars['Int']>
+}
+
+export type PostPostCommentsOrderByInput = {
+  createdAt?: Maybe<OrderByArg>
 }
 
 export enum PostStatus {
@@ -349,11 +359,16 @@ export type Thread = {
 }
 
 export type ThreadCommentsArgs = {
+  orderBy?: Maybe<ThreadCommentsOrderByInput>
   skip?: Maybe<Scalars['Int']>
   after?: Maybe<CommentWhereUniqueInput>
   before?: Maybe<CommentWhereUniqueInput>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+}
+
+export type ThreadCommentsOrderByInput = {
+  createdAt?: Maybe<OrderByArg>
 }
 
 export type ThreadWhereUniqueInput = {
@@ -879,7 +894,7 @@ export const ThreadFragmentFragmentDoc = gql`
     startIndex
     endIndex
     highlightedContent
-    comments {
+    comments(orderBy: { createdAt: asc }) {
       ...CommentFragment
     }
   }

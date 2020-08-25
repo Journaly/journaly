@@ -68,7 +68,7 @@ fragment ThreadFragment on Thread {
   startIndex
   endIndex
   highlightedContent
-  comments {
+  comments(orderBy: { createdAt: asc }) {
     ...CommentFragment
   }
 }
@@ -88,7 +88,7 @@ fragment PostFragment on Post {
   threads {
     ...ThreadFragment
   }
-  postComments {
+  postComments(orderBy: { createdAt: asc }) {
     ...PostCommentFragment
   }
   images {

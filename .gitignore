@@ -117,3 +117,4 @@ out_publish
 .vscode
 config.prod.json
 config.stage.json
+api.graphql

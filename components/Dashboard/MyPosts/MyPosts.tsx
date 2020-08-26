@@ -75,7 +75,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
 
         @media (min-width: ${theme.breakpoints.SM}) {
           .my-posts {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
 

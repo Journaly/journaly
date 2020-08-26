@@ -85,7 +85,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
           }
 
           .my-posts :global(.post-card-container) {
-            max-width: 768px;
+            width: 768px;
             margin: 0 auto;
           }
         }

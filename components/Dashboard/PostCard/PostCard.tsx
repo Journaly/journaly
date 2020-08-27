@@ -7,6 +7,7 @@ import {
   PostStatus as PostStatusType,
   PostCardFragmentFragment as PostCardType,
 } from '../../../generated/graphql'
+import LineClamp from '../../../elements/LineClamp'
 import LikeIcon from '../../Icons/LikeIcon'
 import CommentIcon from '../../Icons/CommentIcon'
 import theme from '../../../theme'
@@ -55,8 +56,12 @@ const PostCard: React.FC<Props> = ({
 
           <div className="post-card-details">
             <div className="post-text" dir="auto">
-              <h1 className="post-title">{title}</h1>
-              <p className="post-excerpt">{excerpt}</p>
+              <h1 className="post-title">
+                <LineClamp lines={1} text={title} />
+              </h1>
+              <p className="post-excerpt">
+                <LineClamp lines={2} text={excerpt} />
+              </p>
             </div>
 
             <div className="post-avatar-and-data">
@@ -171,7 +176,12 @@ const PostCard: React.FC<Props> = ({
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-top: 12px;
+          margin-top: 24px;
+        }
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .post-avatar-and-data:not(.stacked) {
+            margin-top: 14px;
+          }
         }
 
         .stacked .post-avatar-and-data {

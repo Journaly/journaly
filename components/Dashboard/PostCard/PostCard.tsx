@@ -138,6 +138,7 @@ const PostCard: React.FC<Props> = ({
         @media (min-width: ${theme.breakpoints.MD}) {
           :not(.stacked) .post-image {
             width: 125px;
+            height: 125px;
             align-self: center;
             margin-right: 30px;
             border-radius: 0;

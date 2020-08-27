@@ -75,7 +75,8 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
 
         @media (min-width: ${theme.breakpoints.SM}) {
           .my-posts {
-            grid-template-columns: 1fr 1fr;
+            /* Ensure both columns have equal width */
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
 
@@ -85,7 +86,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
           }
 
           .my-posts :global(.post-card-container) {
-            max-width: 768px;
+            width: 768px;
             margin: 0 auto;
           }
         }

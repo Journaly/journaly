@@ -17,6 +17,7 @@ const LineClamp: React.FC<Props> = ({ lines, text }) => {
           overflow: hidden;
           display: -webkit-box;
           text-overflow: ellipsis;
+          word-break: break-all;
         }
       `}</style>
     </div>

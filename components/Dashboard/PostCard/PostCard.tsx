@@ -176,7 +176,12 @@ const PostCard: React.FC<Props> = ({
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-top: 14px;
+          margin-top: 24px;
+        }
+        @media (min-width: ${theme.breakpoints.MD}) {
+          .post-avatar-and-data:not(.stacked) {
+            margin-top: 14px;
+          }
         }
 
         .stacked .post-avatar-and-data {

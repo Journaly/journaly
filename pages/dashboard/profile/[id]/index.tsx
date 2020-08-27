@@ -35,7 +35,7 @@ const ProfilePage: NextPage<InitialProps> = () => {
 
   return (
     <LoadingWrapper loading={isLoading} error={hasError}>
-      <DashboardLayout>
+      <DashboardLayout withPadding={false}>
         <Profile
           isLoggedInUser={userData?.currentUser?.id === userId}
           user={profileData?.userById as UserType}

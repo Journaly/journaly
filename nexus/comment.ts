@@ -104,6 +104,7 @@ schema.mutationType({
           },
           include: {
             comments: true,
+            subscriptions: true,
           },
         })
 
@@ -113,6 +114,11 @@ schema.mutationType({
           throw new Error('Cannot delete a thread containing comments.')
         }
 
+        await ctx.db.threadSubscription.deleteMany({
+          where: {
+            threadId: thread.id,
+          },
+        })
         return ctx.db.thread.delete({
           where: {
             id: args.threadId,

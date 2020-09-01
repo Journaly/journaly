@@ -104,7 +104,6 @@ schema.mutationType({
           },
           include: {
             comments: true,
-            subscriptions: true,
           },
         })
 

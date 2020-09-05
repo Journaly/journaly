@@ -131,15 +131,6 @@ schema.extendType({
             OR: languageFilters,
           })
         }
-        if (args.topic) {
-          filterClauses.push({
-            topic: {
-              some: {
-                id: args.topic,
-              },
-            },
-          })
-        }
         if (args.search) {
           filterClauses.push({
             OR: [

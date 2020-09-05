@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator prisma_client {
@@ -117,12 +117,11 @@ model Location {
 }
 
 model Topic {
-  id                Int            @default(autoincrement()) @id
-  devName           String
-  userInterests     UserInterest[]
-  postTopics        PostTopic[]
-  prompt            Prompt[]
-  topicTranslations TopicTranslation[]
+  id            Int            @default(autoincrement()) @id
+  devName       String
+  userInterests UserInterest[]
+  postTopics    PostTopic[]
+  prompt        Prompt[]
 }
 
 model TopicTranslation {

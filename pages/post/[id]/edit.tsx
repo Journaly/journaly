@@ -11,6 +11,7 @@ import theme from '../../../theme'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import {
   ImageRole,
+  UiLanguage as UILanguage,
   useEditPostQuery,
   useUpdatePostMutation,
 } from '../../../generated/graphql'
@@ -23,7 +24,12 @@ const EditPostPage: NextPage = () => {
   const { t } = useTranslation('post')
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
-  const { data: { currentUser, postById } = {} } = useEditPostQuery({ variables: { id } })
+  const { data: { currentUser, topics, postById } = {} } = useEditPostQuery({
+    variables: {
+      uiLanguage: UILanguage.English,
+      id
+    }
+  })
   const dataRef = React.useRef<PostData>()
   const [initialData, setInitialData] = React.useState<PostData | null>(null)
   const [updatePost] = useUpdatePostMutation()
@@ -92,6 +98,7 @@ const EditPostPage: NextPage = () => {
           { initialData && currentUser && (
             <PostEditor
               currentUser={currentUser}
+              topics={topics}
               autosaveKey={`edit-post:${id}`}
               dataRef={dataRef}
               initialData={initialData}

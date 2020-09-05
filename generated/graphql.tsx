@@ -322,6 +322,7 @@ export type Query = {
   currentUser?: Maybe<User>
   userById?: Maybe<User>
   languages?: Maybe<Array<Language>>
+  topics?: Maybe<Array<Topic>>
 }
 
 export type QueryPostsArgs = {
@@ -349,6 +350,10 @@ export type QueryLanguagesArgs = {
   hasPosts?: Maybe<Scalars['Boolean']>
 }
 
+export type QueryTopicsArgs = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+}
+
 export type Thread = {
   __typename?: 'Thread'
   id: Scalars['Int']
@@ -373,6 +378,28 @@ export type ThreadCommentsOrderByInput = {
 
 export type ThreadWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>
+}
+
+export type Topic = {
+  __typename?: 'Topic'
+  id: Scalars['Int']
+  name?: Maybe<Scalars['String']>
+}
+
+export type TopicNameArgs = {
+  uiLanguage: UiLanguage
+}
+
+export type TopicTranslation = {
+  __typename?: 'TopicTranslation'
+  id: Scalars['Int']
+  name: Scalars['String']
+  uiLanguage: UiLanguage
+}
+
+export enum UiLanguage {
+  English = 'ENGLISH',
+  German = 'GERMAN',
 }
 
 export type User = {
@@ -582,6 +609,8 @@ export type LanguageWithPostCountFragmentFragment = { __typename?: 'Language' } 
 > &
   LanguageFragmentFragment
 
+export type TopicFragmentFragment = { __typename?: 'Topic' } & Pick<Topic, 'id' | 'name'>
+
 export type AddLanguageLearningMutationVariables = {
   languageId: Scalars['Int']
 }
@@ -664,6 +693,7 @@ export type CreatePostMutation = { __typename?: 'Mutation' } & {
 
 export type EditPostQueryVariables = {
   id: Scalars['Int']
+  uiLanguage: UiLanguage
 }
 
 export type EditPostQuery = { __typename?: 'Query' } & {
@@ -675,6 +705,7 @@ export type EditPostQuery = { __typename?: 'Query' } & {
         >
       }
   >
+  topics?: Maybe<Array<{ __typename?: 'Topic' } & TopicFragmentFragment>>
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
@@ -927,7 +958,7 @@ export const PostFragmentFragmentDoc = gql`
     threads {
       ...ThreadFragment
     }
-    postComments {
+    postComments(orderBy: { createdAt: asc }) {
       ...PostCommentFragment
     }
     images {
@@ -973,6 +1004,12 @@ export const LanguageWithPostCountFragmentFragmentDoc = gql`
     postCount
   }
   ${LanguageFragmentFragmentDoc}
+`
+export const TopicFragmentFragmentDoc = gql`
+  fragment TopicFragment on Topic {
+    id
+    name(uiLanguage: $uiLanguage)
+  }
 `
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
@@ -1756,7 +1793,7 @@ export type CreatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreatePostMutationVariables
 >
 export const EditPostDocument = gql`
-  query editPost($id: Int!) {
+  query editPost($id: Int!, $uiLanguage: UILanguage!) {
     postById(id: $id) {
       title
       bodySrc
@@ -1770,10 +1807,14 @@ export const EditPostDocument = gql`
         imageRole
       }
     }
+    topics {
+      ...TopicFragment
+    }
     currentUser {
       ...UserWithLanguagesFragment
     }
   }
+  ${TopicFragmentFragmentDoc}
   ${UserWithLanguagesFragmentFragmentDoc}
 `
 
@@ -1790,6 +1831,7 @@ export const EditPostDocument = gql`
  * const { data, loading, error } = useEditPostQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
  */

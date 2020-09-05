@@ -6,6 +6,15 @@ import { PostUpdateInput } from '.prisma/client/index'
 import { EditorNode, ImageInput } from './inputTypes'
 
 schema.objectType({
+  name: 'PostTopic',
+  definition(t) {
+    t.model.id()
+    t.model.post()
+    t.model.topic()
+  },
+})
+
+schema.objectType({
   name: 'Post',
   definition(t) {
     t.model.id()
@@ -17,6 +26,7 @@ schema.objectType({
     t.model.status()
     t.model.likes()
     t.model.threads()
+    t.model.postTopics({ type: 'PostTopic' })
     t.model.postComments({
       ordering: {
         createdAt: true,
@@ -190,6 +200,7 @@ schema.extendType({
         title: schema.stringArg({ required: true }),
         body: EditorNode.asArg({ list: true }),
         languageId: schema.intArg({ required: true }),
+        topicIds: schema.intArg({ list: true, required: false }),
         status: schema.arg({ type: 'PostStatus' }),
         images: ImageInput.asArg({ list: true }),
       },
@@ -235,6 +246,19 @@ schema.extendType({
           await Promise.all(insertPromises)
         }
 
+        if (args.topicIds) {
+          const insertPromises = args.topicIds.map(topicId => {
+            return ctx.db.postTopic.create({
+              data: {
+                post: { connect: { id: args.postId } },
+                topic: { connect: { id: topicId } },
+              }
+            })
+          })
+
+          await Promise.all(insertPromises)
+        }
+
         return post
       },
     })
@@ -245,6 +269,7 @@ schema.extendType({
         postId: schema.intArg({ required: true }),
         title: schema.stringArg({ required: false }),
         languageId: schema.intArg({ required: false }),
+        topicIds: schema.intArg({ list: true, required: false }),
         body: EditorNode.asArg({ list: true, required: false }),
         status: schema.arg({ type: 'PostStatus', required: false }),
         images: ImageInput.asArg({ list: true }),
@@ -316,6 +341,23 @@ schema.extendType({
               },
             })
           }
+        }
+
+        if (args.topicIds) {
+          await ctx.db.postTopic.deleteMany({
+            where: { postId: args.postId }
+          })
+
+          const insertPromises = args.topicIds.map(topicId => {
+            return ctx.db.postTopic.create({
+              data: {
+                post: { connect: { id: args.postId } },
+                topic: { connect: { id: topicId } },
+              }
+            })
+          })
+
+          await Promise.all(insertPromises)
         }
 
         return ctx.db.post.update({

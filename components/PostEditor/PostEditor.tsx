@@ -23,6 +23,7 @@ import { languageNameWithDialect } from '../../utils/languages'
 type PostData = {
   title: string
   languageId: number
+  topicIds: number[]
   image?: ImageInput | null
   body: Node[]
   clear: () => void
@@ -85,7 +86,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
   const [image, uploadingImage, onFileInputChange, resetImage] = useImageUpload()
   const postImage = image?.secure_url || initialData.image?.largeSize || DEFAULT_IMAGE_URL
 
-  const [selectedTopics, setSelectedTopics] = React.useState<number[]>([])
+  const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
   const formattedTopicOptions = (topics || []).map(({ name, id }) => ({
     value: id,
     displayName: name || '',
@@ -126,8 +127,9 @@ const PostEditor: React.FC<PostEditorProps> = ({
       clear,
       image: returnImage,
       languageId: langId,
+      topicIds: selectedTopics,
     }
-  }, [title, langId, image, body])
+  }, [title, langId, image, body, selectedTopics])
 
   return (
     <div className="post-editor">

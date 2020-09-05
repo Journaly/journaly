@@ -1,6 +1,4 @@
 import { schema } from 'nexus'
-// import { /* PostStatus, UILanguage */ } from '@prisma/client'
-
 
 schema.objectType({
   name: 'TopicTranslation',
@@ -44,7 +42,7 @@ schema.extendType({
       args: {
         hasPosts: schema.booleanArg({ required: false }),
       },
-      resolve: async (_parent, args, ctx) => {
+      resolve: async (_parent, _args, ctx) => {
         let filter = undefined
         /*
         if (args.hasPosts) {

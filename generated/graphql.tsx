@@ -168,6 +168,7 @@ export type MutationCreatePostArgs = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
   languageId: Scalars['Int']
+  topicIds?: Maybe<Array<Scalars['Int']>>
   status?: Maybe<PostStatus>
   images?: Maybe<Array<ImageInput>>
 }
@@ -176,6 +177,7 @@ export type MutationUpdatePostArgs = {
   postId: Scalars['Int']
   title?: Maybe<Scalars['String']>
   languageId?: Maybe<Scalars['Int']>
+  topicIds?: Maybe<Array<Scalars['Int']>>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
   images?: Maybe<Array<ImageInput>>
@@ -231,6 +233,7 @@ export type Post = {
   status: PostStatus
   likes: Array<PostLike>
   threads: Array<Thread>
+  postTopics: Array<PostTopic>
   postComments: Array<PostComment>
   language: Language
   createdAt: Scalars['DateTime']
@@ -252,6 +255,14 @@ export type PostThreadsArgs = {
   skip?: Maybe<Scalars['Int']>
   after?: Maybe<ThreadWhereUniqueInput>
   before?: Maybe<ThreadWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type PostPostTopicsArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<PostTopicWhereUniqueInput>
+  before?: Maybe<PostTopicWhereUniqueInput>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
 }
@@ -285,6 +296,11 @@ export type PostCommentWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>
 }
 
+export type PostIdTopicIdCompoundUniqueInput = {
+  postId: Scalars['Int']
+  topicId: Scalars['Int']
+}
+
 export type PostLike = {
   __typename?: 'PostLike'
   id: Scalars['Int']
@@ -307,6 +323,18 @@ export type PostPostCommentsOrderByInput = {
 export enum PostStatus {
   Draft = 'DRAFT',
   Published = 'PUBLISHED',
+}
+
+export type PostTopic = {
+  __typename?: 'PostTopic'
+  id: Scalars['Int']
+  post: Post
+  topic: Topic
+}
+
+export type PostTopicWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+  postId_topicId?: Maybe<PostIdTopicIdCompoundUniqueInput>
 }
 
 export type PostWhereUniqueInput = {
@@ -703,6 +731,9 @@ export type EditPostQuery = { __typename?: 'Query' } & {
         images: Array<
           { __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'smallSize' | 'imageRole'>
         >
+        postTopics: Array<
+          { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
+        >
       }
   >
   topics?: Maybe<Array<{ __typename?: 'Topic' } & TopicFragmentFragment>>
@@ -746,6 +777,7 @@ export type UpdatePostMutationVariables = {
   postId: Scalars['Int']
   title?: Maybe<Scalars['String']>
   languageId?: Maybe<Scalars['Int']>
+  topicIds?: Maybe<Array<Scalars['Int']>>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
   images?: Maybe<Array<ImageInput>>
@@ -1806,6 +1838,11 @@ export const EditPostDocument = gql`
         smallSize
         imageRole
       }
+      postTopics {
+        topic {
+          ...TopicFragment
+        }
+      }
     }
     topics {
       ...TopicFragment
@@ -1993,6 +2030,7 @@ export const UpdatePostDocument = gql`
     $postId: Int!
     $title: String
     $languageId: Int
+    $topicIds: [Int!]
     $body: [EditorNode!]
     $status: PostStatus
     $images: [ImageInput!]
@@ -2004,6 +2042,7 @@ export const UpdatePostDocument = gql`
       languageId: $languageId
       status: $status
       images: $images
+      topicIds: $topicIds
     ) {
       ...PostFragment
     }
@@ -2031,6 +2070,7 @@ export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      postId: // value for 'postId'
  *      title: // value for 'title'
  *      languageId: // value for 'languageId'
+ *      topicIds: // value for 'topicIds'
  *      body: // value for 'body'
  *      status: // value for 'status'
  *      images: // value for 'images'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { I18nContext } from 'next-i18next'
+import { I18nContext as ctx } from 'next-i18next'
 
 import { UiLanguage as UILanguage } from '../generated/graphql'
 
@@ -10,9 +10,9 @@ const langCodeToUILangMap = {
 
 
 const useUILanguage = () => {
-  const { i18n: { language } } = React.useContext(I18nContext)
+  const { i18n: { language } } = React.useContext(ctx)
 
-  return langCodeToUILangMap[language] || 'en'
+  return langCodeToUILangMap[language] || UILanguage.English
 }
 
 export default useUILanguage

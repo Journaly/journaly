@@ -11,6 +11,11 @@ query editPost($id: Int!, $uiLanguage: UILanguage!) {
       smallSize
       imageRole
     }
+    postTopics {
+      topic {
+        ...TopicFragment
+      }
+    }
   }
   topics {
     ...TopicFragment

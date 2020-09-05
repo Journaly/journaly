@@ -38,7 +38,8 @@ const EditPostPage: NextPage = () => {
         title,
         bodySrc,
         language: { id: languageId },
-        images
+        images,
+        postTopics,
       } = postById
 
       const image = images.find(
@@ -46,11 +47,12 @@ const EditPostPage: NextPage = () => {
       ) || null
 
       setInitialData({
+        body: JSON.parse(bodySrc) as Node[],
+        topicIds: postTopics.map(x => x.topic.id),
+        clear: () => null,
         title,
         languageId,
-        body: JSON.parse(bodySrc) as Node[],
         image,
-        clear: () => null
       })
     }
   }, [postById])
@@ -66,7 +68,7 @@ const EditPostPage: NextPage = () => {
       return
     }
 
-    const { title, languageId, image, body, clear } = dataRef.current
+    const { title, languageId, topicIds, image, body, clear } = dataRef.current
     const images = image ? [image] : []
 
     const { data } = await updatePost({
@@ -74,6 +76,7 @@ const EditPostPage: NextPage = () => {
         postId: id,
         title,
         languageId,
+        topicIds,
         body,
         images,
       },

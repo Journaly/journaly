@@ -77,7 +77,7 @@ const NewPostPage: NextPage = () => {
           {currentUser && (
             <PostEditor
               currentUser={currentUser}
-              topics={topics}
+              topics={topics || []}
               autosaveKey="new-post"
               dataRef={dataRef}
               initialData={initialData}

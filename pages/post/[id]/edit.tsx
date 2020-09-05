@@ -99,7 +99,7 @@ const EditPostPage: NextPage = () => {
           { initialData && currentUser && (
             <PostEditor
               currentUser={currentUser}
-              topics={topics}
+              topics={topics || []}
               autosaveKey={`edit-post:${id}`}
               dataRef={dataRef}
               initialData={initialData}

@@ -2,6 +2,7 @@ mutation createPost(
   $title: String!
   $body: [EditorNode!]
   $languageId: Int!
+  $topicIds: [Int!]
   $status: PostStatus!
   $images: [ImageInput!]
 ) {
@@ -9,6 +10,7 @@ mutation createPost(
     title: $title
     body: $body
     languageId: $languageId
+    topicIds: $topicIds
     status: $status
     images: $images
   ) {

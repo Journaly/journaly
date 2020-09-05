@@ -711,6 +711,7 @@ export type CreatePostMutationVariables = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
   languageId: Scalars['Int']
+  topicIds?: Maybe<Array<Scalars['Int']>>
   status: PostStatus
   images?: Maybe<Array<ImageInput>>
 }
@@ -754,6 +755,15 @@ export type FeedQuery = { __typename?: 'Query' } & {
         posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
       }
   >
+}
+
+export type NewPostQueryVariables = {
+  uiLanguage: UiLanguage
+}
+
+export type NewPostQuery = { __typename?: 'Query' } & {
+  topics?: Maybe<Array<{ __typename?: 'Topic' } & TopicFragmentFragment>>
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type PostByIdQueryVariables = {
@@ -1767,6 +1777,7 @@ export const CreatePostDocument = gql`
     $title: String!
     $body: [EditorNode!]
     $languageId: Int!
+    $topicIds: [Int!]
     $status: PostStatus!
     $images: [ImageInput!]
   ) {
@@ -1774,6 +1785,7 @@ export const CreatePostDocument = gql`
       title: $title
       body: $body
       languageId: $languageId
+      topicIds: $topicIds
       status: $status
       images: $images
     ) {
@@ -1802,6 +1814,7 @@ export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      title: // value for 'title'
  *      body: // value for 'body'
  *      languageId: // value for 'languageId'
+ *      topicIds: // value for 'topicIds'
  *      status: // value for 'status'
  *      images: // value for 'images'
  *   },
@@ -1939,6 +1952,54 @@ export function useFeedLazyQuery(
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
 export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
+export const NewPostDocument = gql`
+  query newPost($uiLanguage: UILanguage!) {
+    topics {
+      ...TopicFragment
+    }
+    currentUser {
+      ...UserWithLanguagesFragment
+    }
+  }
+  ${TopicFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
+`
+
+/**
+ * __useNewPostQuery__
+ *
+ * To run a query within a React component, call `useNewPostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewPostQuery({
+ *   variables: {
+ *      uiLanguage: // value for 'uiLanguage'
+ *   },
+ * });
+ */
+export function useNewPostQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<NewPostQuery, NewPostQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<NewPostQuery, NewPostQueryVariables>(
+    NewPostDocument,
+    baseOptions,
+  )
+}
+export function useNewPostLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<NewPostQuery, NewPostQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<NewPostQuery, NewPostQueryVariables>(
+    NewPostDocument,
+    baseOptions,
+  )
+}
+export type NewPostQueryHookResult = ReturnType<typeof useNewPostQuery>
+export type NewPostLazyQueryHookResult = ReturnType<typeof useNewPostLazyQuery>
+export type NewPostQueryResult = ApolloReactCommon.QueryResult<NewPostQuery, NewPostQueryVariables>
 export const PostByIdDocument = gql`
   query postById($id: Int!) {
     postById(id: $id) {

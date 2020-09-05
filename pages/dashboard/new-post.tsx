@@ -8,16 +8,18 @@ import PostEditor, { PostData, validatePostData } from '../../components/PostEdi
 import theme from '../../theme'
 import Button, { ButtonVariant } from '../../elements/Button'
 import {
-  useCurrentUserQuery,
+  useNewPostQuery,
   useCreatePostMutation,
   PostStatus as PostStatusType,
 } from '../../generated/graphql'
 import AuthGate from '../../components/AuthGate'
 import { useTranslation } from '../../config/i18n'
+import useUILanguage from '../../hooks/useUILanguage'
 
 const initialData = {
   title: '',
   languageId: -1,
+  topicIds: [],
   image: null,
   body: [
     {
@@ -29,7 +31,10 @@ const initialData = {
 }
 
 const NewPostPage: NextPage = () => {
-  const { data: { currentUser } = {} } = useCurrentUserQuery()
+  const uiLanguage = useUILanguage()
+  const { data: { currentUser, topics } = {} } = useNewPostQuery({
+    variables: { uiLanguage }
+  })
   const dataRef = React.useRef<PostData>()
   const router = useRouter()
   const { t } = useTranslation('post')
@@ -47,11 +52,11 @@ const NewPostPage: NextPage = () => {
       return
     }
 
-    const { title, languageId, image, body, clear } = dataRef.current
+    const { title, languageId, topicIds, image, body, clear } = dataRef.current
     const images = image ? [image] : []
 
     const createPostResponse = await createPost({
-      variables: { title, body, status, languageId, images },
+      variables: { title, body, status, languageId, topicIds, images },
     })
 
     if (!createPostResponse?.data?.createPost) {
@@ -72,6 +77,7 @@ const NewPostPage: NextPage = () => {
           {currentUser && (
             <PostEditor
               currentUser={currentUser}
+              topics={topics}
               autosaveKey="new-post"
               dataRef={dataRef}
               initialData={initialData}

@@ -246,11 +246,14 @@ schema.extendType({
           await Promise.all(insertPromises)
         }
 
+        console.log(args)
         if (args.topicIds) {
+          console.log('here')
           const insertPromises = args.topicIds.map(topicId => {
+            console.log('there', post.id, topicId)
             return ctx.db.postTopic.create({
               data: {
-                post: { connect: { id: args.postId } },
+                post: { connect: { id: post.id } },
                 topic: { connect: { id: topicId } },
               }
             })

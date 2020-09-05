@@ -11,11 +11,11 @@ import theme from '../../../theme'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import {
   ImageRole,
-  UiLanguage as UILanguage,
   useEditPostQuery,
   useUpdatePostMutation,
 } from '../../../generated/graphql'
 import AuthGate from '../../../components/AuthGate'
+import useUILanguage from '../../../hooks/useUILanguage'
 
 const EditPostPage: NextPage = () => {
   const router = useRouter()
@@ -23,12 +23,10 @@ const EditPostPage: NextPage = () => {
   const id = parseInt(idStr, 10)
   const { t } = useTranslation('post')
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const uiLanguage = useUILanguage()
 
   const { data: { currentUser, topics, postById } = {} } = useEditPostQuery({
-    variables: {
-      uiLanguage: UILanguage.English,
-      id
-    }
+    variables: { uiLanguage, id }
   })
   const dataRef = React.useRef<PostData>()
   const [initialData, setInitialData] = React.useState<PostData | null>(null)

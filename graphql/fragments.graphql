@@ -54,6 +54,16 @@ fragment CommentFragment on Comment {
   }
 }
 
+fragment CommentLikeFragment on CommentLike {
+  id
+  author {
+    ...AuthorFragment
+  }
+  commment {
+    ...CommentFragment
+  }
+}
+
 fragment PostCommentFragment on PostComment {
   id
   body

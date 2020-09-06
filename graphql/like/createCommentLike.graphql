@@ -1,0 +1,5 @@
+mutation createCommentLike($commentId: Int!) {
+  createCommentLike(commentId: $commentId) {
+    ...CommentLikeFragment
+  }
+}

@@ -4,6 +4,7 @@ import {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
   CommentFragmentFragment as CommentType,
+  useCreateCommentMutation,
 } from '../../generated/graphql'
 import Button, { ButtonSize, ButtonVariant } from '../../elements/Button'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
@@ -17,12 +18,21 @@ type CommentProps = {
   comment: CommentType
   canEdit: boolean
   onUpdateComment: any
+  currentUserId: number
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) => {
+const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, currentUserId }) => {
   const editTextarea = useRef<HTMLTextAreaElement>(null)
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
+  const [hasLikedComment, setHasLikedComment] = useState<boolean>(false)
+
+  // Check to see if the currentUser has already liked this comment
+  for (let like of comment.likes) {
+    if (like.author === currentUserId) {
+      setHasLikedComment(true)
+    }
+  }
 
   const [updateComment, { loading }] = useUpdateCommentMutation({
     onCompleted: () => {
@@ -53,6 +63,22 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         commentId: comment.id,
       },
     })
+  }
+
+  const [createCommentLike] = useCreateCommentLikeMutation({
+    onCompleted: () => {
+      // just refetches the post as in updateComment
+      onUpdateComment()
+    },
+  })
+
+  const createNewCommentLike = () => {
+    createCommentLike({
+      variables: {
+        commentId: comment.id,
+      },
+    })
+    setHasLikedComment(true)
   }
 
   return (
@@ -140,8 +166,8 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
       )}
       {!canEdit && (
         <div className="edit-block">
-          <span className="like-btn" onClick={deleteExistingComment}>
-            <LikeIcon filled={false} />
+          <span className="like-btn" onClick={createNewCommentLike}>
+            <LikeIcon filled={hasLikedComment} />
           </span>
         </div>
       )}

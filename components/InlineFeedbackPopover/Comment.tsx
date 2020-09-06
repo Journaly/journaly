@@ -11,6 +11,7 @@ import theme from '../../theme'
 import EditIcon from '../Icons/EditIcon'
 import DeleteIcon from '../Icons/DeleteIcon'
 import { formatDateRelativeToNow } from '../../utils'
+import LikeIcon from '../Icons/LikeIcon'
 
 type CommentProps = {
   comment: CommentType
@@ -137,6 +138,13 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           </Button>
         </>
       )}
+      {!canEdit && (
+        <div className="edit-block">
+          <span className="like-btn" onClick={deleteExistingComment}>
+            <LikeIcon filled={false} />
+          </span>
+        </div>
+      )}
       <style jsx>{`
         .comment {
           margin-bottom: 10px;
@@ -219,6 +227,9 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         .delete-btn :global(svg:hover) {
           cursor: pointer;
           fill: ${theme.colors.red};
+        }
+        .like-btn :global(svg:hover) {
+          cursor: pointer;
         }
 
         textarea {

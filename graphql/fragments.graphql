@@ -52,6 +52,14 @@ fragment CommentFragment on Comment {
   author {
     ...AuthorFragment
   }
+  likes {
+    id
+    author {
+      id
+      name
+      handle
+    }
+  }
 }
 
 fragment CommentLikeFragment on CommentLike {

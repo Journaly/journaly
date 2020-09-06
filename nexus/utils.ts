@@ -188,6 +188,14 @@ type SendCommentNotificationArgs = {
   user: User
 }
 
+type SendCommentLikeNotificationArgs = {
+  post: Post
+  thread: Thread
+  comment: Comment
+  commentAuthor: User
+  commentLikeAuthor: User
+}
+
 type SendPostCommentNotificationArgs = {
   post: Post
   postAuthor: User
@@ -237,6 +245,29 @@ export const sendCommentNotification = ({
     subject: `New activity on a thread in ${post.title}`,
     html: makeEmail(`
       <p>Heads up! <strong>@${commentAuthor.handle}</strong> commented on a post you're subscribed to!</p>
+      <p><strong>Journal entry:</strong> ${post.title}</p>
+      <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
+      <p><strong>Comment:</strong> "${comment.body}"</p>
+      <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
+    `),
+  })
+}
+
+export const sendCommentLikeNotification = ({
+  post,
+  thread,
+  comment,
+  commentAuthor,
+  commentLikeAuthor,
+}: SendCommentLikeNotificationArgs) => {
+  const commentLikeAuthorDisplayName = commentLikeAuthor.name || commentLikeAuthor.handle
+
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: commentAuthor.email,
+    subject: `${commentLikeAuthorDisplayName} said thank you!`,
+    html: makeEmail(`
+      <p>Heads up! <strong>@${commentLikeAuthorDisplayName}</strong> said thank you for your comment on their post!</p>
       <p><strong>Journal entry:</strong> ${post.title}</p>
       <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
       <p><strong>Comment:</strong> "${comment.body}"</p>

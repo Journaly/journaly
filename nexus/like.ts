@@ -1,6 +1,5 @@
 import { schema } from 'nexus'
 import { sendCommentLikeNotification } from './utils'
-import { threadId } from 'worker_threads'
 
 const { intArg } = schema
 
@@ -27,7 +26,7 @@ schema.mutationType({
       args: {
         commentId: intArg({ required: true }),
       },
-      resolve: async (parent, args, ctx) => {
+      resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
         if (!userId) {
           throw new Error('You must be logged in to create threads.')
@@ -41,6 +40,7 @@ schema.mutationType({
           include: {
             author: true,
             thread: true,
+            likes: true,
           },
         })
 
@@ -69,6 +69,9 @@ schema.mutationType({
                 id: comment.id,
               },
             },
+          },
+          include: {
+            author: true,
           },
         })
 

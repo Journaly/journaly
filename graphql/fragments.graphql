@@ -6,6 +6,8 @@ fragment UserFragment on User {
   bio
   userRole
   profileImage
+  postsWrittenCount
+  thanksReceivedCount
 }
 
 fragment UserWithLanguagesFragment on User {
@@ -29,6 +31,8 @@ fragment AuthorFragment on User {
   name
   handle
   profileImage
+  postsWrittenCount
+  thanksReceivedCount
 }
 
 fragment AuthorWithLanguagesFragment on User {

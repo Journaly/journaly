@@ -55,11 +55,11 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
       <div className="stats">
         <p className="author-info-heading">Has written</p>
         <ul>
-          <li>10 posts</li>
+          <li>{author.postsWrittenCount} posts</li>
         </ul>
         <p className="author-info-heading">Has received</p>
         <ul>
-          <li>64 thanks</li>
+          <li>{author.thanksReceivedCount} thanks</li>
         </ul>
       </div>
       <style jsx>{`

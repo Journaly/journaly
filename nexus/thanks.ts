@@ -1,5 +1,5 @@
 import { schema } from 'nexus'
-import { sendCommentThanksNotification } from './utils'
+import { sendCommentThanksNotification, hasAuthorPermissions } from './utils'
 
 const { intArg } = schema
 
@@ -74,6 +74,42 @@ schema.extendType({
 
         return commentThanks
       },
-    })
+    }),
+      t.field('deleteCommentThanks', {
+        type: 'CommentThanks',
+        args: {
+          commentThanksId: intArg({ required: true }),
+        },
+        resolve: async (_parent, args, ctx) => {
+          const { userId } = ctx.request
+          if (!userId) throw new Error('You must be logged in to do that.')
+
+          const { commentThanksId } = args
+
+          const currentUser = await ctx.db.user.findOne({
+            where: {
+              id: userId,
+            },
+          })
+
+          if (!currentUser) throw new Error('User not found.')
+
+          const originalCommentThanks = await ctx.db.commentThanks.findOne({
+            where: {
+              id: commentThanksId,
+            },
+          })
+
+          if (!originalCommentThanks) throw new Error('CommentThanks not found.')
+
+          hasAuthorPermissions(originalCommentThanks, currentUser)
+
+          return await ctx.db.commentThanks.delete({
+            where: {
+              id: commentThanksId,
+            },
+          })
+        },
+      })
   },
 })

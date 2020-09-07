@@ -156,6 +156,7 @@ export type Mutation = {
   removeLanguageLearning?: Maybe<LanguageLearning>
   removeLanguageNative?: Maybe<LanguageNative>
   createCommentThanks?: Maybe<CommentThanks>
+  deleteCommentThanks?: Maybe<CommentThanks>
 }
 
 export type MutationCreateThreadArgs = {
@@ -250,6 +251,10 @@ export type MutationRemoveLanguageNativeArgs = {
 
 export type MutationCreateCommentThanksArgs = {
   commentId: Scalars['Int']
+}
+
+export type MutationDeleteCommentThanksArgs = {
+  commentThanksId: Scalars['Int']
 }
 
 export enum OrderByArg {
@@ -799,6 +804,14 @@ export type CreateCommentThanksMutationVariables = {
 
 export type CreateCommentThanksMutation = { __typename?: 'Mutation' } & {
   createCommentThanks?: Maybe<{ __typename?: 'CommentThanks' } & CommentThanksFragmentFragment>
+}
+
+export type DeleteCommentThanksMutationVariables = {
+  commentThanksId: Scalars['Int']
+}
+
+export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
+  deleteCommentThanks?: Maybe<{ __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'>>
 }
 
 export type CreateUserMutationVariables = {
@@ -2199,6 +2212,56 @@ export type CreateCommentThanksMutationResult = ApolloReactCommon.MutationResult
 export type CreateCommentThanksMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateCommentThanksMutation,
   CreateCommentThanksMutationVariables
+>
+export const DeleteCommentThanksDocument = gql`
+  mutation deleteCommentThanks($commentThanksId: Int!) {
+    deleteCommentThanks(commentThanksId: $commentThanksId) {
+      id
+    }
+  }
+`
+export type DeleteCommentThanksMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteCommentThanksMutation,
+  DeleteCommentThanksMutationVariables
+>
+
+/**
+ * __useDeleteCommentThanksMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentThanksMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentThanksMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentThanksMutation, { data, loading, error }] = useDeleteCommentThanksMutation({
+ *   variables: {
+ *      commentThanksId: // value for 'commentThanksId'
+ *   },
+ * });
+ */
+export function useDeleteCommentThanksMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteCommentThanksMutation,
+    DeleteCommentThanksMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DeleteCommentThanksMutation,
+    DeleteCommentThanksMutationVariables
+  >(DeleteCommentThanksDocument, baseOptions)
+}
+export type DeleteCommentThanksMutationHookResult = ReturnType<
+  typeof useDeleteCommentThanksMutation
+>
+export type DeleteCommentThanksMutationResult = ApolloReactCommon.MutationResult<
+  DeleteCommentThanksMutation
+>
+export type DeleteCommentThanksMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteCommentThanksMutation,
+  DeleteCommentThanksMutationVariables
 >
 export const CreateUserDocument = gql`
   mutation createUser($handle: String!, $email: String!, $password: String!) {

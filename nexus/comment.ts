@@ -26,7 +26,7 @@ schema.objectType({
     t.model.author()
     t.model.body()
     t.model.createdAt()
-    t.model.likes()
+    t.model.thanks()
   },
 })
 

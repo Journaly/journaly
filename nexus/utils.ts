@@ -188,12 +188,12 @@ type SendCommentNotificationArgs = {
   user: User
 }
 
-type SendCommentLikeNotificationArgs = {
+type SendCommentThanksNotificationArgs = {
   post: Post
   thread: Thread
   comment: Comment
   commentAuthor: User
-  commentLikeAuthor: User
+  commentThanksAuthor: User
 }
 
 type SendPostCommentNotificationArgs = {
@@ -253,21 +253,21 @@ export const sendCommentNotification = ({
   })
 }
 
-export const sendCommentLikeNotification = ({
+export const sendCommentThanksNotification = ({
   post,
   thread,
   comment,
   commentAuthor,
-  commentLikeAuthor,
-}: SendCommentLikeNotificationArgs) => {
-  const commentLikeAuthorDisplayName = commentLikeAuthor.name || commentLikeAuthor.handle
+  commentThanksAuthor,
+}: SendCommentThanksNotificationArgs) => {
+  const commentThanksAuthorDisplayName = commentThanksAuthor.name || commentThanksAuthor.handle
 
   return sendJmail({
     from: 'robin@journaly.com',
     to: commentAuthor.email,
-    subject: `${commentLikeAuthorDisplayName} said thank you!`,
+    subject: `${commentThanksAuthorDisplayName} said thank you!`,
     html: makeEmail(`
-      <p>Heads up! <strong>@${commentLikeAuthorDisplayName}</strong> said thank you for your comment on their post!</p>
+      <p>Heads up! <strong>@${commentThanksAuthorDisplayName}</strong> said thank you for your comment on their post!</p>
       <p><strong>Journal entry:</strong> ${post.title}</p>
       <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
       <p><strong>Comment:</strong> "${comment.body}"</p>

@@ -3,7 +3,7 @@ import theme from '../../theme'
 interface SVGRProps {
   title?: string
   titleId?: string
-  filled: boolean
+  filled?: boolean
 }
 
 function LikeIcon({

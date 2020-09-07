@@ -8,31 +8,32 @@ generator prisma_client {
 }
 
 model User {
-  id                Int                @default(autoincrement()) @id
-  name              String?
-  email             String             @unique
-  handle            String             @unique
-  auth              Auth?
-  userRole          UserRole           @default(FREE_USER)
-  bio               String?
-  posts             Post[]
-  subscription      UserSubscription?
-  socialMedia       SocialMedia[]
-  interests         Topic[]
-  location          Location?          @relation(fields: [locationId], references: [id])
-  locationId        Int?
-  languagesNative   LanguageNative[]
-  languagesLearning LanguageLearning[]
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  userInterests     UserInterest[]
-  postLike          PostLike[]
-  commentLike       CommentLike[]
-  pageView          PageView[]
-  profileImage      String?
-  comment           Comment[]
-  PostCommentLike   PostCommentLike[]
-  PostComment       PostComment[]
+  id                 Int                  @default(autoincrement()) @id
+  name               String?
+  email              String               @unique
+  handle             String               @unique
+  auth               Auth?
+  userRole           UserRole             @default(FREE_USER)
+  bio                String?
+  posts              Post[]
+  subscription       UserSubscription?
+  socialMedia        SocialMedia[]
+  interests          Topic[]
+  location           Location?            @relation(fields: [locationId], references: [id])
+  locationId         Int?
+  languagesNative    LanguageNative[]
+  languagesLearning  LanguageLearning[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  userInterests      UserInterest[]
+  pageView           PageView[]
+  profileImage       String?
+  ThreadSubscription ThreadSubscription[]
+  PostLike           PostLike[]
+  CommentThanks      CommentThanks[]
+  PostCommentThanks  PostCommentThanks[]
+  Comment            Comment[]
+  PostComment        PostComment[]
 }
 
 model Auth {
@@ -152,60 +153,63 @@ model PostTopic {
 model PostLike {
   id        Int      @default(autoincrement()) @id
   createdAt DateTime @default(now())
-  author    User     @relation(fields: [userId], references: [id])
-  userId    Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
+  @@unique([authorId, postId])
 }
 
-model CommentLike {
+model CommentThanks {
   id        Int      @default(autoincrement()) @id
   createdAt DateTime @default(now())
-  author    User     @relation(fields: [userId], references: [id])
-  userId    Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
   comment   Comment  @relation(fields: [commentId], references: [id])
   commentId Int
+  @@unique([authorId, commentId])
 }
 
-model PostCommentLike {
+model PostCommentThanks {
   id            Int          @default(autoincrement()) @id
   createdAt     DateTime     @default(now())
-  author        User         @relation(fields: [userId], references: [id])
-  userId        Int
+  author        User         @relation(fields: [authorId], references: [id])
+  authorId      Int
   PostComment   PostComment? @relation(fields: [postCommentId], references: [id])
   postCommentId Int?
+  @@unique([authorId, postCommentId])
 }
 
 model Comment {
-  id        Int           @default(autoincrement()) @id
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id        Int             @default(autoincrement()) @id
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
   body      String
-  author    User          @relation(fields: [authorId], references: [id])
+  author    User            @relation(fields: [authorId], references: [id])
   authorId  Int
-  thread    Thread        @relation(fields: [threadId], references: [id])
+  thread    Thread          @relation(fields: [threadId], references: [id])
   threadId  Int
-  likes     CommentLike[]
+  thanks    CommentThanks[]
 }
 
 model PostComment {
-  id        Int               @default(autoincrement()) @id
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  id        Int                 @default(autoincrement()) @id
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
   body      String
-  author    User              @relation(fields: [authorId], references: [id])
+  author    User                @relation(fields: [authorId], references: [id])
   authorId  Int
-  post      Post              @relation(fields: [postId], references: [id])
+  post      Post                @relation(fields: [postId], references: [id])
   postId    Int
-  likes     PostCommentLike[]
+  thanks    PostCommentThanks[]
 }
 
 model Thread {
-  id                 Int       @default(autoincrement()) @id
+  id                 Int                  @default(autoincrement()) @id
   startIndex         Int
   endIndex           Int
   highlightedContent String
-  post               Post      @relation(fields: [postId], references: [id])
+  post               Post                 @relation(fields: [postId], references: [id])
   postId             Int
   comments           Comment[]
   subscriptions      ThreadSubscription[]

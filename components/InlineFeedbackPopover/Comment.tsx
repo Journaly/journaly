@@ -4,7 +4,7 @@ import {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
   CommentFragmentFragment as CommentType,
-  useCreateCommentMutation,
+  useCreateCommentThanksMutation,
 } from '../../generated/graphql'
 import Button, { ButtonSize, ButtonVariant } from '../../elements/Button'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
@@ -18,19 +18,19 @@ type CommentProps = {
   comment: CommentType
   canEdit: boolean
   onUpdateComment: any
-  currentUserId: number
+  currentUserId: number | undefined
 }
 
 const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, currentUserId }) => {
   const editTextarea = useRef<HTMLTextAreaElement>(null)
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
-  const [hasLikedComment, setHasLikedComment] = useState<boolean>(false)
+  const [hasThankedComment, setHasThankedComment] = useState<boolean>(false)
 
   // Check to see if the currentUser has already liked this comment
-  for (let like of comment.likes) {
-    if (like.author === currentUserId) {
-      setHasLikedComment(true)
+  for (let thanks of comment.thanks) {
+    if (thanks.author.id === currentUserId) {
+      setHasThankedComment(true)
     }
   }
 
@@ -65,20 +65,20 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
     })
   }
 
-  const [createCommentLike] = useCreateCommentLikeMutation({
+  const [createCommentThanks] = useCreateCommentThanksMutation({
     onCompleted: () => {
       // just refetches the post as in updateComment
       onUpdateComment()
     },
   })
 
-  const createNewCommentLike = () => {
-    createCommentLike({
+  const createNewCommentThanks = () => {
+    createCommentThanks({
       variables: {
         commentId: comment.id,
       },
     })
-    setHasLikedComment(true)
+    setHasThankedComment(true)
   }
 
   return (
@@ -166,8 +166,8 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
       )}
       {!canEdit && (
         <div className="edit-block">
-          <span className="like-btn" onClick={createNewCommentLike}>
-            <LikeIcon filled={hasLikedComment} />
+          <span className="like-btn" onClick={createNewCommentThanks}>
+            <LikeIcon filled={hasThankedComment} />
           </span>
         </div>
       )}

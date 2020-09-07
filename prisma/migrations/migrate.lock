@@ -3,9 +3,4 @@
 # Prisma Migrate lockfile v1
 # Read more about conflict resolution here: TODO
 
-20200624211600-initial
-20200625141833-remove-language-learning-unique-constraint-on-user-id
-20200702185801-fix-issues
-20200805064655-add-published-at-to-posts
-20200813092954-add-post-comment
-20200816171330-add-thread-subscription-table
+20200907160744-add-thanks-and-db-constraints

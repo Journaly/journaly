@@ -56,7 +56,7 @@ fragment CommentFragment on Comment {
   author {
     ...AuthorFragment
   }
-  likes {
+  thanks {
     id
     author {
       id
@@ -66,13 +66,10 @@ fragment CommentFragment on Comment {
   }
 }
 
-fragment CommentLikeFragment on CommentLike {
+fragment CommentThanksFragment on CommentThanks {
   id
   author {
     ...AuthorFragment
-  }
-  commment {
-    ...CommentFragment
   }
 }
 

@@ -6,6 +6,10 @@ fragment UserFragment on User {
   bio
   userRole
   profileImage
+}
+
+fragment UserWithStatsFragment on User {
+  ...UserFragment
   postsWrittenCount
   thanksReceivedCount
 }
@@ -31,12 +35,16 @@ fragment AuthorFragment on User {
   name
   handle
   profileImage
+}
+
+fragment AuthorWithStatsFragment on User {
+  ...AuthorFragment
   postsWrittenCount
   thanksReceivedCount
 }
 
 fragment AuthorWithLanguagesFragment on User {
-  ...AuthorFragment
+  ...AuthorWithStatsFragment
   languagesLearning {
     language {
       ...LanguageFragment

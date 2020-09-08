@@ -5,6 +5,7 @@ import {
   useDeleteCommentMutation,
   CommentFragmentFragment as CommentType,
   useCreateCommentThanksMutation,
+  useDeleteCommentThanksMutation,
 } from '../../generated/graphql'
 import Button, { ButtonSize, ButtonVariant } from '../../elements/Button'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
@@ -28,11 +29,9 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
   const [hasThankedComment, setHasThankedComment] = useState<boolean>(false)
 
   // Check to see if the currentUser has already liked this comment
-  for (let thanks of comment.thanks) {
-    if (thanks.author.id === currentUserId) {
-      setHasThankedComment(true)
-    }
-  }
+  setHasThankedComment(
+    comment.thanks.find((thanks) => thanks.author.id === currentUserId) !== undefined,
+  )
 
   const [updateComment, { loading }] = useUpdateCommentMutation({
     onCompleted: () => {
@@ -79,6 +78,26 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
       },
     })
     setHasThankedComment(true)
+  }
+
+  const [deleteCommentThanks] = useDeleteCommentThanksMutation({
+    onCompleted: () => {
+      // just refetches the post as in updateComment
+      onUpdateComment()
+    },
+  })
+
+  const deleteExistingCommentThanks = () => {
+    const currentCommentThanks = comment.thanks.find((thanks) => thanks.author.id === currentUserId)
+
+    if (currentCommentThanks) {
+      deleteCommentThanks({
+        variables: {
+          commentThanksId: currentCommentThanks.id,
+        },
+      })
+      setHasThankedComment(false)
+    }
   }
 
   return (
@@ -166,7 +185,10 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
       )}
       {!canEdit && (
         <div className="edit-block">
-          <span className="like-btn" onClick={createNewCommentThanks}>
+          <span
+            className="like-btn"
+            onClick={hasThankedComment ? createNewCommentThanks : deleteExistingCommentThanks}
+          >
             <LikeIcon filled={hasThankedComment} />
           </span>
         </div>

@@ -9,7 +9,7 @@ import DashboardLayout from '../../../components/Layouts/DashboardLayout'
 import {
   useCurrentUserQuery,
   usePostByIdQuery,
-  PostFragmentFragment as PostType,
+  PostWithTopicsFragmentFragment as PostType,
 } from '../../../generated/graphql'
 import PostAuthorCard from '../../../components/Dashboard/Post/PostAuthorCard'
 import PostComments from '../../../components/Dashboard/Post/PostComments'

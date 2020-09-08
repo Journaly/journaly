@@ -99,6 +99,15 @@ fragment PostFragment on Post {
   }
 }
 
+fragment PostWithTopicsFragment on Post {
+  ...PostFragment
+  postTopics {
+    topic {
+      ...TopicFragment
+    }
+  }
+}
+
 fragment PostCardFragment on Post {
   id
   title

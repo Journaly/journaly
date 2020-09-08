@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 
 import { sanitize } from '../../../utils'
 import {
-  PostFragmentFragment as PostType,
+  PostWithTopicsFragmentFragment as PostType,
   UserFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
   PostStatus,

@@ -1,10 +1,5 @@
 query postById($id: Int!, $uiLanguage: UILanguage!) {
   postById(id: $id) {
-    ...PostFragment
-    postTopics {
-      topic {
-        ...TopicFragment
-      }
-    }
+    ...PostWithTopicsFragment 
   }
 }

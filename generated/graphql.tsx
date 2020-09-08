@@ -616,6 +616,12 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
     >
   }
 
+export type PostWithTopicsFragmentFragment = { __typename?: 'Post' } & {
+  postTopics: Array<
+    { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
+  >
+} & PostFragmentFragment
+
 export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
   'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt' | 'publishedAt' | 'commentCount'
@@ -772,13 +778,7 @@ export type PostByIdQueryVariables = {
 }
 
 export type PostByIdQuery = { __typename?: 'Query' } & {
-  postById?: Maybe<
-    { __typename?: 'Post' } & {
-      postTopics: Array<
-        { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
-      >
-    } & PostFragmentFragment
-  >
+  postById?: Maybe<{ __typename?: 'Post' } & PostWithTopicsFragmentFragment>
 }
 
 export type PostsQueryVariables = {
@@ -1021,6 +1021,24 @@ export const PostFragmentFragmentDoc = gql`
   ${ThreadFragmentFragmentDoc}
   ${PostCommentFragmentFragmentDoc}
 `
+export const TopicFragmentFragmentDoc = gql`
+  fragment TopicFragment on Topic {
+    id
+    name(uiLanguage: $uiLanguage)
+  }
+`
+export const PostWithTopicsFragmentFragmentDoc = gql`
+  fragment PostWithTopicsFragment on Post {
+    ...PostFragment
+    postTopics {
+      topic {
+        ...TopicFragment
+      }
+    }
+  }
+  ${PostFragmentFragmentDoc}
+  ${TopicFragmentFragmentDoc}
+`
 export const PostCardFragmentFragmentDoc = gql`
   fragment PostCardFragment on Post {
     id
@@ -1053,12 +1071,6 @@ export const LanguageWithPostCountFragmentFragmentDoc = gql`
     postCount
   }
   ${LanguageFragmentFragmentDoc}
-`
-export const TopicFragmentFragmentDoc = gql`
-  fragment TopicFragment on Topic {
-    id
-    name(uiLanguage: $uiLanguage)
-  }
 `
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
@@ -2010,16 +2022,10 @@ export type NewPostQueryResult = ApolloReactCommon.QueryResult<NewPostQuery, New
 export const PostByIdDocument = gql`
   query postById($id: Int!, $uiLanguage: UILanguage!) {
     postById(id: $id) {
-      ...PostFragment
-      postTopics {
-        topic {
-          ...TopicFragment
-        }
-      }
+      ...PostWithTopicsFragment
     }
   }
-  ${PostFragmentFragmentDoc}
-  ${TopicFragmentFragmentDoc}
+  ${PostWithTopicsFragmentFragmentDoc}
 `
 
 /**

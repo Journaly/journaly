@@ -768,10 +768,17 @@ export type NewPostQuery = { __typename?: 'Query' } & {
 
 export type PostByIdQueryVariables = {
   id: Scalars['Int']
+  uiLanguage: UiLanguage
 }
 
 export type PostByIdQuery = { __typename?: 'Query' } & {
-  postById?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
+  postById?: Maybe<
+    { __typename?: 'Post' } & {
+      postTopics: Array<
+        { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
+      >
+    } & PostFragmentFragment
+  >
 }
 
 export type PostsQueryVariables = {
@@ -2001,12 +2008,18 @@ export type NewPostQueryHookResult = ReturnType<typeof useNewPostQuery>
 export type NewPostLazyQueryHookResult = ReturnType<typeof useNewPostLazyQuery>
 export type NewPostQueryResult = ApolloReactCommon.QueryResult<NewPostQuery, NewPostQueryVariables>
 export const PostByIdDocument = gql`
-  query postById($id: Int!) {
+  query postById($id: Int!, $uiLanguage: UILanguage!) {
     postById(id: $id) {
       ...PostFragment
+      postTopics {
+        topic {
+          ...TopicFragment
+        }
+      }
     }
   }
   ${PostFragmentFragmentDoc}
+  ${TopicFragmentFragmentDoc}
 `
 
 /**
@@ -2022,6 +2035,7 @@ export const PostByIdDocument = gql`
  * const { data, loading, error } = usePostByIdQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
  */

@@ -28,7 +28,7 @@ schema.objectType({
           }
         })
 
-        return translation?.name || null
+        return translation?.name || parent.devName
       },
     })
   },

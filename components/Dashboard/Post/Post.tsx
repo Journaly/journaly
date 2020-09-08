@@ -386,28 +386,32 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           <PostContent body={post.body} ref={selectableRef} />
         </div>
 
-        {currentUser && post.author.id === currentUser.id && (
+        { post.postTopics.length ? (
+          <span className="topics-list">
+            Topics: {post.postTopics.map(({ topic }) => topic.name).join(', ')}
+          </span>
+        ) : null}
+
+        {currentUser && post.author.id === currentUser.id && post.status === 'DRAFT' && (
           <div className="post-controls">
-            {post.status === 'DRAFT' && (
-              <>
-                <Button
-                  type="button"
-                  variant={ButtonVariant.Secondary}
-                  onClick={() => {
-                    Router.push(`/post/${post.id}/edit`)
-                  }}
-                >
-                  {t('editPostAction')}
-                </Button>
-                <Button
-                  type="button"
-                  variant={ButtonVariant.Secondary}
-                  onClick={setPostStatus(PostStatus.Published)}
-                >
-                  {t('publishDraft')}
-                </Button>
-              </>
-            )}
+            <>
+              <Button
+                type="button"
+                variant={ButtonVariant.Secondary}
+                onClick={() => {
+                  Router.push(`/post/${post.id}/edit`)
+                }}
+              >
+                {t('editPostAction')}
+              </Button>
+              <Button
+                type="button"
+                variant={ButtonVariant.Secondary}
+                onClick={setPostStatus(PostStatus.Published)}
+              >
+                {t('publishDraft')}
+              </Button>
+            </>
           </div>
         )}
       </div>
@@ -488,6 +492,12 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
 
         .post-body p {
           margin: 20px 0;
+        }
+
+        .topics-list {
+          grid-column: 2;
+          align-self: end;
+          margin-bottom: 10px;
         }
 
         .post-controls {

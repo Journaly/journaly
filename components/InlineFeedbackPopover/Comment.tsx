@@ -26,12 +26,10 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
   const editTextarea = useRef<HTMLTextAreaElement>(null)
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
-  const [hasThankedComment, setHasThankedComment] = useState<boolean>(false)
 
   // Check to see if the currentUser has already liked this comment
-  setHasThankedComment(
-    comment.thanks.find((thanks) => thanks.author.id === currentUserId) !== undefined,
-  )
+  const hasThankedComment =
+    comment.thanks.find((thanks) => thanks.author.id === currentUserId) !== undefined
 
   const [updateComment, { loading }] = useUpdateCommentMutation({
     onCompleted: () => {
@@ -77,7 +75,6 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
         commentId: comment.id,
       },
     })
-    setHasThankedComment(true)
   }
 
   const [deleteCommentThanks] = useDeleteCommentThanksMutation({
@@ -96,7 +93,6 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
           commentThanksId: currentCommentThanks.id,
         },
       })
-      setHasThankedComment(false)
     }
   }
 
@@ -187,7 +183,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
         <div className="edit-block">
           <span
             className="like-btn"
-            onClick={hasThankedComment ? createNewCommentThanks : deleteExistingCommentThanks}
+            onClick={hasThankedComment ? deleteExistingCommentThanks : createNewCommentThanks}
           >
             <LikeIcon filled={hasThankedComment} />
           </span>

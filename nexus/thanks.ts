@@ -24,7 +24,7 @@ schema.extendType({
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
         if (!userId) {
-          throw new Error('You must be logged in to create threads.')
+          throw new Error('You must be logged in to be thankful.')
         }
 
         const { commentId } = args
@@ -34,18 +34,16 @@ schema.extendType({
           },
           include: {
             author: true,
-            thread: true,
+            thread: {
+              include: {
+                post: true,
+              },
+            },
           },
         })
 
-        const post = await ctx.db.post.findOne({
-          where: {
-            id: comment?.thread.postId,
-          },
-        })
-
-        if (!comment || !post) {
-          throw new Error('Comment or Post record not found.')
+        if (!comment) {
+          throw new Error('Comment not found.')
         }
 
         const commentThanks = await ctx.db.commentThanks.create({
@@ -65,7 +63,7 @@ schema.extendType({
         })
 
         await sendCommentThanksNotification({
-          post,
+          post: comment.thread.post,
           thread: comment.thread,
           comment,
           commentAuthor: comment.author,
@@ -86,20 +84,20 @@ schema.extendType({
 
           const { commentThanksId } = args
 
-          const currentUser = await ctx.db.user.findOne({
-            where: {
-              id: userId,
-            },
-          })
+          const [currentUser, originalCommentThanks] = await Promise.all([
+            ctx.db.user.findOne({
+              where: {
+                id: userId,
+              },
+            }),
+            ctx.db.commentThanks.findOne({
+              where: {
+                id: commentThanksId,
+              },
+            }),
+          ])
 
           if (!currentUser) throw new Error('User not found.')
-
-          const originalCommentThanks = await ctx.db.commentThanks.findOne({
-            where: {
-              id: commentThanksId,
-            },
-          })
-
           if (!originalCommentThanks) throw new Error('CommentThanks not found.')
 
           hasAuthorPermissions(originalCommentThanks, currentUser)

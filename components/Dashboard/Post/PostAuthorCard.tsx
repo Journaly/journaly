@@ -6,6 +6,7 @@ import {
   LanguageNative as LanguageNativeType,
   LanguageLearning as LanguageLearningType,
 } from '../../../generated/graphql'
+import { useTranslation } from '../../../config/i18n'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 import { languageNameWithDialect } from '../../../utils/languages'
 
@@ -14,6 +15,7 @@ type PostAuthorCardProps = {
 }
 
 const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
+  const { t } = useTranslation('post-author-card')
   let languagesNative: LanguageNativeType[] = []
   let languagesLearning: LanguageLearningType[] = []
 
@@ -36,16 +38,16 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
             )}
           </a>
         </Link>
-        <p className="author-name">{author.handle}</p>
+        <p className="author-name">{author.name || author.handle}</p>
       </div>
       <div className="language-info">
-        <p className="author-info-heading">Native</p>
+        <p className="author-info-heading">{t('nativeHeader')}</p>
         <ul className="language-list">
           {languagesNative.map(({ language }) => {
             return <li key={language.id}>{languageNameWithDialect(language)}</li>
           })}
         </ul>
-        <p className="author-info-heading">Learning</p>
+        <p className="author-info-heading">{t('learningHeader')}</p>
         <ul className="language-list">
           {languagesLearning.map(({ language }) => {
             return <li key={language.id}>{languageNameWithDialect(language)}</li>
@@ -53,13 +55,20 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
         </ul>
       </div>
       <div className="stats">
-        <p className="author-info-heading">Has written</p>
+        <p className="author-info-heading">{t('hasWritten')}</p>
         <ul>
-          <li>{author.postsWrittenCount} posts</li>
+          <li>
+            {author.postsWrittenCount}{' '}
+            {author.postsWrittenCount === 1
+              ? t('postsWrittenCountSingular')
+              : t('postsWrittenCountPlural')}
+          </li>
         </ul>
-        <p className="author-info-heading">Has received</p>
+        <p className="author-info-heading">{t('hasReceived')}</p>
         <ul>
-          <li>{author.thanksReceivedCount} thanks</li>
+          <li>
+            {author.thanksReceivedCount} {t('thanksReceivedCount')}
+          </li>
         </ul>
       </div>
       <style jsx>{`

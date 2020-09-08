@@ -179,7 +179,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
           </Button>
         </>
       )}
-      {!canEdit && (
+      {!canEdit && currentUserId && (
         <div className="edit-block">
           <span
             className="like-btn"

@@ -414,36 +414,43 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "ThreadSubscription",
+      "field": "threadSubscriptions",
       "type": "ThreadSubscription",
       "arity": "List"
     },
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "PostLike",
+      "field": "postLikes",
       "type": "PostLike",
       "arity": "List"
     },
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "CommentThanks",
+      "field": "commentThanks",
       "type": "CommentThanks",
       "arity": "List"
     },
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "PostCommentThanks",
+      "field": "postCommentThanks",
       "type": "PostCommentThanks",
       "arity": "List"
     },
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "Comment",
+      "field": "comments",
       "type": "Comment",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "postComments",
+      "type": "PostComment",
       "arity": "List"
     },
     {
@@ -465,6 +472,11 @@
       "tag": "DeleteField",
       "model": "User",
       "field": "PostCommentLike"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "User",
+      "field": "PostComment"
     },
     {
       "tag": "CreateField",

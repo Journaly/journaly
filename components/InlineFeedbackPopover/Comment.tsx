@@ -62,19 +62,14 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
     })
   }
 
-  const [createCommentThanks] = useCreateCommentThanksMutation({
-    onCompleted: () => {
-      // just refetches the post as in updateComment
-      onUpdateComment()
-    },
-  })
-
-  const createNewCommentThanks = () => {
-    createCommentThanks({
+  const [createCommentThanks] = useCreateCommentThanksMutation()
+  const createNewCommentThanks = async () => {
+    await createCommentThanks({
       variables: {
         commentId: comment.id,
       },
     })
+    await onUpdateComment()
   }
 
   const [deleteCommentThanks] = useDeleteCommentThanksMutation({

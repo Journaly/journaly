@@ -21,6 +21,26 @@ schema.objectType({
     t.model.createdAt()
     t.model.languagesNative()
     t.model.languagesLearning()
+    t.int('postsWrittenCount', {
+      resolve(parent, _args, ctx, _info) {
+        return ctx.db.post.count({
+          where: {
+            authorId: parent.id,
+          },
+        })
+      },
+    })
+    t.int('thanksReceivedCount', {
+      resolve(parent, _args, ctx, _info) {
+        return ctx.db.commentThanks.count({
+          where: {
+            comment: {
+              authorId: parent.id,
+            },
+          },
+        })
+      },
+    })
   },
 })
 

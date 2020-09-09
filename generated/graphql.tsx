@@ -12,12 +12,44 @@ export type Scalars = {
   DateTime: any
 }
 
+export type AuthorIdCommentIdCompoundUniqueInput = {
+  authorId: Scalars['Int']
+  commentId: Scalars['Int']
+}
+
+export type AuthorIdPostIdCompoundUniqueInput = {
+  authorId: Scalars['Int']
+  postId: Scalars['Int']
+}
+
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['Int']
   author: User
   body: Scalars['String']
   createdAt: Scalars['DateTime']
+  thanks: Array<CommentThanks>
+}
+
+export type CommentThanksArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<CommentThanksWhereUniqueInput>
+  before?: Maybe<CommentThanksWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type CommentThanks = {
+  __typename?: 'CommentThanks'
+  id: Scalars['Int']
+  commentId: Scalars['Int']
+  author: User
+  comment: Comment
+}
+
+export type CommentThanksWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+  authorId_commentId?: Maybe<AuthorIdCommentIdCompoundUniqueInput>
 }
 
 export type CommentWhereUniqueInput = {
@@ -123,6 +155,8 @@ export type Mutation = {
   addLanguageNative?: Maybe<LanguageNative>
   removeLanguageLearning?: Maybe<LanguageLearning>
   removeLanguageNative?: Maybe<LanguageNative>
+  createCommentThanks?: Maybe<CommentThanks>
+  deleteCommentThanks?: Maybe<CommentThanks>
 }
 
 export type MutationCreateThreadArgs = {
@@ -215,6 +249,14 @@ export type MutationRemoveLanguageNativeArgs = {
   languageId: Scalars['Int']
 }
 
+export type MutationCreateCommentThanksArgs = {
+  commentId: Scalars['Int']
+}
+
+export type MutationDeleteCommentThanksArgs = {
+  commentThanksId: Scalars['Int']
+}
+
 export enum OrderByArg {
   Asc = 'asc',
   Desc = 'desc',
@@ -292,6 +334,7 @@ export type PostLike = {
 
 export type PostLikeWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>
+  authorId_postId?: Maybe<AuthorIdPostIdCompoundUniqueInput>
 }
 
 export type PostPage = {
@@ -389,6 +432,8 @@ export type User = {
   createdAt: Scalars['DateTime']
   languagesNative: Array<LanguageNative>
   languagesLearning: Array<LanguageLearning>
+  postsWrittenCount?: Maybe<Scalars['Int']>
+  thanksReceivedCount?: Maybe<Scalars['Int']>
 }
 
 export type UserLanguagesNativeArgs = {
@@ -500,7 +545,15 @@ export type UpdatePostCommentMutation = { __typename?: 'Mutation' } & {
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'name' | 'handle' | 'email' | 'bio' | 'userRole' | 'profileImage'
+  | 'id'
+  | 'name'
+  | 'handle'
+  | 'email'
+  | 'bio'
+  | 'userRole'
+  | 'profileImage'
+  | 'postsWrittenCount'
+  | 'thanksReceivedCount'
 >
 
 export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
@@ -518,7 +571,7 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 
 export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'name' | 'handle' | 'profileImage'
+  'id' | 'name' | 'handle' | 'profileImage' | 'postsWrittenCount' | 'thanksReceivedCount'
 >
 
 export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
@@ -537,6 +590,18 @@ export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
   'id' | 'body' | 'createdAt'
+> & {
+    author: { __typename?: 'User' } & AuthorFragmentFragment
+    thanks: Array<
+      { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'> & {
+          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+        }
+    >
+  }
+
+export type CommentThanksFragmentFragment = { __typename?: 'CommentThanks' } & Pick<
+  CommentThanks,
+  'id'
 > & { author: { __typename?: 'User' } & AuthorFragmentFragment }
 
 export type PostCommentFragmentFragment = { __typename?: 'PostComment' } & Pick<
@@ -733,6 +798,22 @@ export type ProfileQuery = { __typename?: 'Query' } & {
   posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
 }
 
+export type CreateCommentThanksMutationVariables = {
+  commentId: Scalars['Int']
+}
+
+export type CreateCommentThanksMutation = { __typename?: 'Mutation' } & {
+  createCommentThanks?: Maybe<{ __typename?: 'CommentThanks' } & CommentThanksFragmentFragment>
+}
+
+export type DeleteCommentThanksMutationVariables = {
+  commentThanksId: Scalars['Int']
+}
+
+export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
+  deleteCommentThanks?: Maybe<{ __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'>>
+}
+
 export type CreateUserMutationVariables = {
   handle: Scalars['String']
   email: Scalars['String']
@@ -824,6 +905,8 @@ export const UserFragmentFragmentDoc = gql`
     bio
     userRole
     profileImage
+    postsWrittenCount
+    thanksReceivedCount
   }
 `
 export const LanguageFragmentFragmentDoc = gql`
@@ -858,7 +941,18 @@ export const AuthorFragmentFragmentDoc = gql`
     name
     handle
     profileImage
+    postsWrittenCount
+    thanksReceivedCount
   }
+`
+export const CommentThanksFragmentFragmentDoc = gql`
+  fragment CommentThanksFragment on CommentThanks {
+    id
+    author {
+      ...AuthorFragment
+    }
+  }
+  ${AuthorFragmentFragmentDoc}
 `
 export const AuthorWithLanguagesFragmentFragmentDoc = gql`
   fragment AuthorWithLanguagesFragment on User {
@@ -884,6 +978,14 @@ export const CommentFragmentFragmentDoc = gql`
     createdAt
     author {
       ...AuthorFragment
+    }
+    thanks {
+      id
+      author {
+        id
+        name
+        handle
+      }
     }
   }
   ${AuthorFragmentFragmentDoc}
@@ -927,7 +1029,7 @@ export const PostFragmentFragmentDoc = gql`
     threads {
       ...ThreadFragment
     }
-    postComments {
+    postComments(orderBy: { createdAt: asc }) {
       ...PostCommentFragment
     }
     images {
@@ -2060,6 +2162,107 @@ export function useProfileLazyQuery(
 export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>
 export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>
 export type ProfileQueryResult = ApolloReactCommon.QueryResult<ProfileQuery, ProfileQueryVariables>
+export const CreateCommentThanksDocument = gql`
+  mutation createCommentThanks($commentId: Int!) {
+    createCommentThanks(commentId: $commentId) {
+      ...CommentThanksFragment
+    }
+  }
+  ${CommentThanksFragmentFragmentDoc}
+`
+export type CreateCommentThanksMutationFn = ApolloReactCommon.MutationFunction<
+  CreateCommentThanksMutation,
+  CreateCommentThanksMutationVariables
+>
+
+/**
+ * __useCreateCommentThanksMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentThanksMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentThanksMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentThanksMutation, { data, loading, error }] = useCreateCommentThanksMutation({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useCreateCommentThanksMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateCommentThanksMutation,
+    CreateCommentThanksMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateCommentThanksMutation,
+    CreateCommentThanksMutationVariables
+  >(CreateCommentThanksDocument, baseOptions)
+}
+export type CreateCommentThanksMutationHookResult = ReturnType<
+  typeof useCreateCommentThanksMutation
+>
+export type CreateCommentThanksMutationResult = ApolloReactCommon.MutationResult<
+  CreateCommentThanksMutation
+>
+export type CreateCommentThanksMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateCommentThanksMutation,
+  CreateCommentThanksMutationVariables
+>
+export const DeleteCommentThanksDocument = gql`
+  mutation deleteCommentThanks($commentThanksId: Int!) {
+    deleteCommentThanks(commentThanksId: $commentThanksId) {
+      id
+    }
+  }
+`
+export type DeleteCommentThanksMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteCommentThanksMutation,
+  DeleteCommentThanksMutationVariables
+>
+
+/**
+ * __useDeleteCommentThanksMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentThanksMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentThanksMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentThanksMutation, { data, loading, error }] = useDeleteCommentThanksMutation({
+ *   variables: {
+ *      commentThanksId: // value for 'commentThanksId'
+ *   },
+ * });
+ */
+export function useDeleteCommentThanksMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteCommentThanksMutation,
+    DeleteCommentThanksMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DeleteCommentThanksMutation,
+    DeleteCommentThanksMutationVariables
+  >(DeleteCommentThanksDocument, baseOptions)
+}
+export type DeleteCommentThanksMutationHookResult = ReturnType<
+  typeof useDeleteCommentThanksMutation
+>
+export type DeleteCommentThanksMutationResult = ApolloReactCommon.MutationResult<
+  DeleteCommentThanksMutation
+>
+export type DeleteCommentThanksMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteCommentThanksMutation,
+  DeleteCommentThanksMutationVariables
+>
 export const CreateUserDocument = gql`
   mutation createUser($handle: String!, $email: String!, $password: String!) {
     createUser(handle: $handle, email: $email, password: $password) {

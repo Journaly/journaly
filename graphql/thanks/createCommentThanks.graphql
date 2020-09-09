@@ -1,0 +1,5 @@
+mutation createCommentThanks($commentId: Int!) {
+  createCommentThanks(commentId: $commentId) {
+    ...CommentThanksFragment
+  }
+}

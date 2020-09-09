@@ -8,6 +8,12 @@ fragment UserFragment on User {
   profileImage
 }
 
+fragment UserWithStatsFragment on User {
+  ...UserFragment
+  postsWrittenCount
+  thanksReceivedCount
+}
+
 fragment UserWithLanguagesFragment on User {
   ...UserFragment
   languagesLearning {
@@ -31,8 +37,14 @@ fragment AuthorFragment on User {
   profileImage
 }
 
-fragment AuthorWithLanguagesFragment on User {
+fragment AuthorWithStatsFragment on User {
   ...AuthorFragment
+  postsWrittenCount
+  thanksReceivedCount
+}
+
+fragment AuthorWithLanguagesFragment on User {
+  ...AuthorWithStatsFragment
   languagesLearning {
     language {
       ...LanguageFragment
@@ -49,6 +61,21 @@ fragment CommentFragment on Comment {
   id
   body
   createdAt
+  author {
+    ...AuthorFragment
+  }
+  thanks {
+    id
+    author {
+      id
+      name
+      handle
+    }
+  }
+}
+
+fragment CommentThanksFragment on CommentThanks {
+  id
   author {
     ...AuthorFragment
   }

@@ -1,0 +1,182 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateEnum",
+      "enum": "UILanguage",
+      "values": [
+        "ENGLISH",
+        "GERMAN"
+      ]
+    },
+    {
+      "tag": "CreateModel",
+      "model": "TopicTranslation"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TopicTranslation",
+      "field": "id",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TopicTranslation",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TopicTranslation",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "autoincrement()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TopicTranslation",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "TopicTranslation",
+      "field": "uiLanguage",
+      "type": "UILanguage",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TopicTranslation",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TopicTranslation",
+      "field": "topic",
+      "type": "Topic",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TopicTranslation",
+          "field": "topic"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TopicTranslation",
+          "field": "topic"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[topicId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TopicTranslation",
+          "field": "topic"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TopicTranslation",
+      "field": "topicId",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "TopicTranslation",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[uiLanguage, topicId]"
+            }
+          ]
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Post",
+      "field": "topic"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Topic",
+      "field": "devName",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Topic",
+      "field": "topicTranslations",
+      "type": "TopicTranslation",
+      "arity": "List"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Topic",
+      "field": "name"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Topic",
+      "field": "posts"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Topic",
+      "field": "user"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Topic",
+      "field": "userId"
+    }
+  ]
+}

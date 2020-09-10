@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator prisma_client {
@@ -90,6 +90,7 @@ model Post {
   authorId     Int
   readTime     Int           @default(1)
   likes        PostLike[]
+  topic        Topic[]       @relation(references: [id])
   language     Language      @relation(fields: [languageId], references: [id])
   languageId   Int
   longitude    Float?
@@ -118,22 +119,14 @@ model Location {
 }
 
 model Topic {
-  id                Int            @default(autoincrement()) @id
-  devName           String
-  userInterests     UserInterest[]
-  postTopics        PostTopic[]
-  prompt            Prompt[]
-  topicTranslations TopicTranslation[]
-}
-
-model TopicTranslation {
-  id         Int            @default(autoincrement()) @id
-  uiLanguage UILanguage
-  name       String
-  topic      Topic          @relation(fields: [topicId], references: [id])
-  topicId    Int
-
-  @@unique([uiLanguage, topicId])
+  id            Int            @default(autoincrement()) @id
+  name          String
+  posts         Post[]         @relation(references: [id])
+  user          User?          @relation(fields: [userId], references: [id])
+  userId        Int?
+  userInterests UserInterest[]
+  postTopics    PostTopic[]
+  prompt        Prompt[]
 }
 
 model UserInterest {
@@ -293,9 +286,4 @@ enum SocialMediaPlatform {
   YOUTUBE
   INSTAGRAM
   LINKEDIN
-}
-
-enum UILanguage {
-  ENGLISH
-  GERMAN
 }

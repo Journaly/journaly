@@ -1,0 +1,9 @@
+{
+  "nativeHeader": "Native",
+  "learningHeader": "Learning",
+  "hasWritten": "Has written",
+  "postsWrittenCountSingular": "post",
+  "postsWrittenCountPlural": "posts",
+  "hasReceived": "Has received",
+  "thanksReceivedCount": "thanks"
+}

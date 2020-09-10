@@ -4,6 +4,8 @@ import {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
   CommentFragmentFragment as CommentType,
+  useCreateCommentThanksMutation,
+  useDeleteCommentThanksMutation,
 } from '../../generated/graphql'
 import Button, { ButtonSize, ButtonVariant } from '../../elements/Button'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
@@ -11,17 +13,23 @@ import theme from '../../theme'
 import EditIcon from '../Icons/EditIcon'
 import DeleteIcon from '../Icons/DeleteIcon'
 import { formatDateRelativeToNow } from '../../utils'
+import LikeIcon from '../Icons/LikeIcon'
 
 type CommentProps = {
   comment: CommentType
   canEdit: boolean
   onUpdateComment: any
+  currentUserId: number | undefined
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) => {
+const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, currentUserId }) => {
   const editTextarea = useRef<HTMLTextAreaElement>(null)
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
+
+  // Check to see if the currentUser has already liked this comment
+  const hasThankedComment =
+    comment.thanks.find((thanks) => thanks.author.id === currentUserId) !== undefined
 
   const [updateComment, { loading }] = useUpdateCommentMutation({
     onCompleted: () => {
@@ -52,6 +60,35 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         commentId: comment.id,
       },
     })
+  }
+
+  const [createCommentThanks] = useCreateCommentThanksMutation()
+  const createNewCommentThanks = async () => {
+    await createCommentThanks({
+      variables: {
+        commentId: comment.id,
+      },
+    })
+    await onUpdateComment()
+  }
+
+  const [deleteCommentThanks] = useDeleteCommentThanksMutation({
+    onCompleted: () => {
+      // just refetches the post as in updateComment
+      onUpdateComment()
+    },
+  })
+
+  const deleteExistingCommentThanks = () => {
+    const currentCommentThanks = comment.thanks.find((thanks) => thanks.author.id === currentUserId)
+
+    if (currentCommentThanks) {
+      deleteCommentThanks({
+        variables: {
+          commentThanksId: currentCommentThanks.id,
+        },
+      })
+    }
   }
 
   return (
@@ -137,6 +174,16 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
           </Button>
         </>
       )}
+      {!canEdit && currentUserId && (
+        <div className="edit-block">
+          <span
+            className="like-btn"
+            onClick={hasThankedComment ? deleteExistingCommentThanks : createNewCommentThanks}
+          >
+            <LikeIcon filled={hasThankedComment} />
+          </span>
+        </div>
+      )}
       <style jsx>{`
         .comment {
           margin-bottom: 10px;
@@ -219,6 +266,9 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment }) 
         .delete-btn :global(svg:hover) {
           cursor: pointer;
           fill: ${theme.colors.red};
+        }
+        .like-btn :global(svg:hover) {
+          cursor: pointer;
         }
 
         textarea {

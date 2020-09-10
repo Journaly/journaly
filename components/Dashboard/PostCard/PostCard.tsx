@@ -84,7 +84,7 @@ const PostCard: React.FC<Props> = ({
                 {isPublished && (
                   <div className="post-stats">
                     <div className="post-stat">
-                      <LikeIcon />
+                      <LikeIcon filled={likes.length > 0} />
                       <span>{likes.length}</span>
                     </div>
                     <div className="post-stat">

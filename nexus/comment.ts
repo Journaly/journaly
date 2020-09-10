@@ -26,6 +26,7 @@ schema.objectType({
     t.model.author()
     t.model.body()
     t.model.createdAt()
+    t.model.thanks()
   },
 })
 
@@ -57,7 +58,7 @@ schema.mutationType({
         }
 
         const { postId, startIndex, endIndex, highlightedContent } = args
-        const post = await ctx.db.post.findOne({ where: { id: args.postId } })
+        const post = await ctx.db.post.findOne({ where: { id: postId } })
 
         if (!post) {
           throw new Error(`Unable to find post with id ${postId}`)
@@ -113,6 +114,11 @@ schema.mutationType({
           throw new Error('Cannot delete a thread containing comments.')
         }
 
+        await ctx.db.threadSubscription.deleteMany({
+          where: {
+            threadId: thread.id,
+          },
+        })
         return ctx.db.thread.delete({
           where: {
             id: args.threadId,

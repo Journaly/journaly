@@ -202,6 +202,7 @@ export type MutationCreatePostArgs = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
   languageId: Scalars['Int']
+  topicIds?: Maybe<Array<Scalars['Int']>>
   status?: Maybe<PostStatus>
   images?: Maybe<Array<ImageInput>>
 }
@@ -210,6 +211,7 @@ export type MutationUpdatePostArgs = {
   postId: Scalars['Int']
   title?: Maybe<Scalars['String']>
   languageId?: Maybe<Scalars['Int']>
+  topicIds?: Maybe<Array<Scalars['Int']>>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
   images?: Maybe<Array<ImageInput>>
@@ -273,6 +275,7 @@ export type Post = {
   status: PostStatus
   likes: Array<PostLike>
   threads: Array<Thread>
+  postTopics: Array<PostTopic>
   postComments: Array<PostComment>
   language: Language
   createdAt: Scalars['DateTime']
@@ -294,6 +297,14 @@ export type PostThreadsArgs = {
   skip?: Maybe<Scalars['Int']>
   after?: Maybe<ThreadWhereUniqueInput>
   before?: Maybe<ThreadWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type PostPostTopicsArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<PostTopicWhereUniqueInput>
+  before?: Maybe<PostTopicWhereUniqueInput>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
 }
@@ -327,6 +338,11 @@ export type PostCommentWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>
 }
 
+export type PostIdTopicIdCompoundUniqueInput = {
+  postId: Scalars['Int']
+  topicId: Scalars['Int']
+}
+
 export type PostLike = {
   __typename?: 'PostLike'
   id: Scalars['Int']
@@ -352,6 +368,18 @@ export enum PostStatus {
   Published = 'PUBLISHED',
 }
 
+export type PostTopic = {
+  __typename?: 'PostTopic'
+  id: Scalars['Int']
+  post: Post
+  topic: Topic
+}
+
+export type PostTopicWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+  postId_topicId?: Maybe<PostIdTopicIdCompoundUniqueInput>
+}
+
 export type PostWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>
 }
@@ -365,6 +393,7 @@ export type Query = {
   currentUser?: Maybe<User>
   userById?: Maybe<User>
   languages?: Maybe<Array<Language>>
+  topics?: Maybe<Array<Topic>>
 }
 
 export type QueryPostsArgs = {
@@ -392,6 +421,10 @@ export type QueryLanguagesArgs = {
   hasPosts?: Maybe<Scalars['Boolean']>
 }
 
+export type QueryTopicsArgs = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+}
+
 export type Thread = {
   __typename?: 'Thread'
   id: Scalars['Int']
@@ -416,6 +449,28 @@ export type ThreadCommentsOrderByInput = {
 
 export type ThreadWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>
+}
+
+export type Topic = {
+  __typename?: 'Topic'
+  id: Scalars['Int']
+  name?: Maybe<Scalars['String']>
+}
+
+export type TopicNameArgs = {
+  uiLanguage: UiLanguage
+}
+
+export type TopicTranslation = {
+  __typename?: 'TopicTranslation'
+  id: Scalars['Int']
+  name: Scalars['String']
+  uiLanguage: UiLanguage
+}
+
+export enum UiLanguage {
+  English = 'ENGLISH',
+  German = 'GERMAN',
 }
 
 export type User = {
@@ -545,16 +600,14 @@ export type UpdatePostCommentMutation = { __typename?: 'Mutation' } & {
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  | 'id'
-  | 'name'
-  | 'handle'
-  | 'email'
-  | 'bio'
-  | 'userRole'
-  | 'profileImage'
-  | 'postsWrittenCount'
-  | 'thanksReceivedCount'
+  'id' | 'name' | 'handle' | 'email' | 'bio' | 'userRole' | 'profileImage'
 >
+
+export type UserWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
+  User,
+  'postsWrittenCount' | 'thanksReceivedCount'
+> &
+  UserFragmentFragment
 
 export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
   languagesLearning: Array<
@@ -571,8 +624,14 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 
 export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'name' | 'handle' | 'profileImage' | 'postsWrittenCount' | 'thanksReceivedCount'
+  'id' | 'name' | 'handle' | 'profileImage'
 >
+
+export type AuthorWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
+  User,
+  'postsWrittenCount' | 'thanksReceivedCount'
+> &
+  AuthorFragmentFragment
 
 export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
   languagesLearning: Array<
@@ -585,7 +644,7 @@ export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
       language: { __typename?: 'Language' } & LanguageFragmentFragment
     }
   >
-} & AuthorFragmentFragment
+} & AuthorWithStatsFragmentFragment
 
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
@@ -626,6 +685,12 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
     >
   }
 
+export type PostWithTopicsFragmentFragment = { __typename?: 'Post' } & {
+  postTopics: Array<
+    { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
+  >
+} & PostFragmentFragment
+
 export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
   'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt' | 'publishedAt' | 'commentCount'
@@ -646,6 +711,8 @@ export type LanguageWithPostCountFragmentFragment = { __typename?: 'Language' } 
   'postCount'
 > &
   LanguageFragmentFragment
+
+export type TopicFragmentFragment = { __typename?: 'Topic' } & Pick<Topic, 'id' | 'name'>
 
 export type AddLanguageLearningMutationVariables = {
   languageId: Scalars['Int']
@@ -719,6 +786,7 @@ export type CreatePostMutationVariables = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
   languageId: Scalars['Int']
+  topicIds?: Maybe<Array<Scalars['Int']>>
   status: PostStatus
   images?: Maybe<Array<ImageInput>>
 }
@@ -729,6 +797,7 @@ export type CreatePostMutation = { __typename?: 'Mutation' } & {
 
 export type EditPostQueryVariables = {
   id: Scalars['Int']
+  uiLanguage: UiLanguage
 }
 
 export type EditPostQuery = { __typename?: 'Query' } & {
@@ -738,8 +807,12 @@ export type EditPostQuery = { __typename?: 'Query' } & {
         images: Array<
           { __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'smallSize' | 'imageRole'>
         >
+        postTopics: Array<
+          { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
+        >
       }
   >
+  topics?: Maybe<Array<{ __typename?: 'Topic' } & TopicFragmentFragment>>
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
@@ -759,12 +832,22 @@ export type FeedQuery = { __typename?: 'Query' } & {
   >
 }
 
+export type NewPostQueryVariables = {
+  uiLanguage: UiLanguage
+}
+
+export type NewPostQuery = { __typename?: 'Query' } & {
+  topics?: Maybe<Array<{ __typename?: 'Topic' } & TopicFragmentFragment>>
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+}
+
 export type PostByIdQueryVariables = {
   id: Scalars['Int']
+  uiLanguage: UiLanguage
 }
 
 export type PostByIdQuery = { __typename?: 'Query' } & {
-  postById?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
+  postById?: Maybe<{ __typename?: 'Post' } & PostWithTopicsFragmentFragment>
 }
 
 export type PostsQueryVariables = {
@@ -780,6 +863,7 @@ export type UpdatePostMutationVariables = {
   postId: Scalars['Int']
   title?: Maybe<Scalars['String']>
   languageId?: Maybe<Scalars['Int']>
+  topicIds?: Maybe<Array<Scalars['Int']>>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
   images?: Maybe<Array<ImageInput>>
@@ -905,9 +989,15 @@ export const UserFragmentFragmentDoc = gql`
     bio
     userRole
     profileImage
+  }
+`
+export const UserWithStatsFragmentFragmentDoc = gql`
+  fragment UserWithStatsFragment on User {
+    ...UserFragment
     postsWrittenCount
     thanksReceivedCount
   }
+  ${UserFragmentFragmentDoc}
 `
 export const LanguageFragmentFragmentDoc = gql`
   fragment LanguageFragment on Language {
@@ -941,8 +1031,6 @@ export const AuthorFragmentFragmentDoc = gql`
     name
     handle
     profileImage
-    postsWrittenCount
-    thanksReceivedCount
   }
 `
 export const CommentThanksFragmentFragmentDoc = gql`
@@ -954,9 +1042,17 @@ export const CommentThanksFragmentFragmentDoc = gql`
   }
   ${AuthorFragmentFragmentDoc}
 `
+export const AuthorWithStatsFragmentFragmentDoc = gql`
+  fragment AuthorWithStatsFragment on User {
+    ...AuthorFragment
+    postsWrittenCount
+    thanksReceivedCount
+  }
+  ${AuthorFragmentFragmentDoc}
+`
 export const AuthorWithLanguagesFragmentFragmentDoc = gql`
   fragment AuthorWithLanguagesFragment on User {
-    ...AuthorFragment
+    ...AuthorWithStatsFragment
     languagesLearning {
       language {
         ...LanguageFragment
@@ -968,7 +1064,7 @@ export const AuthorWithLanguagesFragmentFragmentDoc = gql`
       }
     }
   }
-  ${AuthorFragmentFragmentDoc}
+  ${AuthorWithStatsFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
 `
 export const CommentFragmentFragmentDoc = gql`
@@ -1042,6 +1138,24 @@ export const PostFragmentFragmentDoc = gql`
   ${AuthorWithLanguagesFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
   ${PostCommentFragmentFragmentDoc}
+`
+export const TopicFragmentFragmentDoc = gql`
+  fragment TopicFragment on Topic {
+    id
+    name(uiLanguage: $uiLanguage)
+  }
+`
+export const PostWithTopicsFragmentFragmentDoc = gql`
+  fragment PostWithTopicsFragment on Post {
+    ...PostFragment
+    postTopics {
+      topic {
+        ...TopicFragment
+      }
+    }
+  }
+  ${PostFragmentFragmentDoc}
+  ${TopicFragmentFragmentDoc}
 `
 export const PostCardFragmentFragmentDoc = gql`
   fragment PostCardFragment on Post {
@@ -1800,6 +1914,7 @@ export const CreatePostDocument = gql`
     $title: String!
     $body: [EditorNode!]
     $languageId: Int!
+    $topicIds: [Int!]
     $status: PostStatus!
     $images: [ImageInput!]
   ) {
@@ -1807,6 +1922,7 @@ export const CreatePostDocument = gql`
       title: $title
       body: $body
       languageId: $languageId
+      topicIds: $topicIds
       status: $status
       images: $images
     ) {
@@ -1835,6 +1951,7 @@ export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      title: // value for 'title'
  *      body: // value for 'body'
  *      languageId: // value for 'languageId'
+ *      topicIds: // value for 'topicIds'
  *      status: // value for 'status'
  *      images: // value for 'images'
  *   },
@@ -1858,7 +1975,7 @@ export type CreatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreatePostMutationVariables
 >
 export const EditPostDocument = gql`
-  query editPost($id: Int!) {
+  query editPost($id: Int!, $uiLanguage: UILanguage!) {
     postById(id: $id) {
       title
       bodySrc
@@ -1871,11 +1988,20 @@ export const EditPostDocument = gql`
         smallSize
         imageRole
       }
+      postTopics {
+        topic {
+          ...TopicFragment
+        }
+      }
+    }
+    topics {
+      ...TopicFragment
     }
     currentUser {
       ...UserWithLanguagesFragment
     }
   }
+  ${TopicFragmentFragmentDoc}
   ${UserWithLanguagesFragmentFragmentDoc}
 `
 
@@ -1892,6 +2018,7 @@ export const EditPostDocument = gql`
  * const { data, loading, error } = useEditPostQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
  */
@@ -1962,13 +2089,61 @@ export function useFeedLazyQuery(
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
 export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
-export const PostByIdDocument = gql`
-  query postById($id: Int!) {
-    postById(id: $id) {
-      ...PostFragment
+export const NewPostDocument = gql`
+  query newPost($uiLanguage: UILanguage!) {
+    topics {
+      ...TopicFragment
+    }
+    currentUser {
+      ...UserWithLanguagesFragment
     }
   }
-  ${PostFragmentFragmentDoc}
+  ${TopicFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
+`
+
+/**
+ * __useNewPostQuery__
+ *
+ * To run a query within a React component, call `useNewPostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewPostQuery({
+ *   variables: {
+ *      uiLanguage: // value for 'uiLanguage'
+ *   },
+ * });
+ */
+export function useNewPostQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<NewPostQuery, NewPostQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<NewPostQuery, NewPostQueryVariables>(
+    NewPostDocument,
+    baseOptions,
+  )
+}
+export function useNewPostLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<NewPostQuery, NewPostQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<NewPostQuery, NewPostQueryVariables>(
+    NewPostDocument,
+    baseOptions,
+  )
+}
+export type NewPostQueryHookResult = ReturnType<typeof useNewPostQuery>
+export type NewPostLazyQueryHookResult = ReturnType<typeof useNewPostLazyQuery>
+export type NewPostQueryResult = ApolloReactCommon.QueryResult<NewPostQuery, NewPostQueryVariables>
+export const PostByIdDocument = gql`
+  query postById($id: Int!, $uiLanguage: UILanguage!) {
+    postById(id: $id) {
+      ...PostWithTopicsFragment
+    }
+  }
+  ${PostWithTopicsFragmentFragmentDoc}
 `
 
 /**
@@ -1984,6 +2159,7 @@ export const PostByIdDocument = gql`
  * const { data, loading, error } = usePostByIdQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
  */
@@ -2053,6 +2229,7 @@ export const UpdatePostDocument = gql`
     $postId: Int!
     $title: String
     $languageId: Int
+    $topicIds: [Int!]
     $body: [EditorNode!]
     $status: PostStatus
     $images: [ImageInput!]
@@ -2064,6 +2241,7 @@ export const UpdatePostDocument = gql`
       languageId: $languageId
       status: $status
       images: $images
+      topicIds: $topicIds
     ) {
       ...PostFragment
     }
@@ -2091,6 +2269,7 @@ export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      postId: // value for 'postId'
  *      title: // value for 'title'
  *      languageId: // value for 'languageId'
+ *      topicIds: // value for 'topicIds'
  *      body: // value for 'body'
  *      status: // value for 'status'
  *      images: // value for 'images'

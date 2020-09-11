@@ -141,6 +141,11 @@
     },
     {
       "tag": "DeleteField",
+      "model": "User",
+      "field": "interests"
+    },
+    {
+      "tag": "DeleteField",
       "model": "Post",
       "field": "topic"
     },

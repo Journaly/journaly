@@ -18,7 +18,6 @@ model User {
   posts               Post[]
   subscription        UserSubscription?
   socialMedia         SocialMedia[]
-  interests           Topic[]
   location            Location?            @relation(fields: [locationId], references: [id])
   locationId          Int?
   languagesNative     LanguageNative[]
@@ -118,7 +117,7 @@ model Location {
 }
 
 model Topic {
-  id                Int            @default(autoincrement()) @id
+  id                Int                @default(autoincrement()) @id
   devName           String
   userInterests     UserInterest[]
   postTopics        PostTopic[]
@@ -127,10 +126,10 @@ model Topic {
 }
 
 model TopicTranslation {
-  id         Int            @default(autoincrement()) @id
+  id         Int        @default(autoincrement()) @id
   uiLanguage UILanguage
   name       String
-  topic      Topic          @relation(fields: [topicId], references: [id])
+  topic      Topic      @relation(fields: [topicId], references: [id])
   topicId    Int
 
   @@unique([uiLanguage, topicId])

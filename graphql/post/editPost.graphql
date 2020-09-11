@@ -1,4 +1,4 @@
-query editPost($id: Int!) {
+query editPost($id: Int!, $uiLanguage: UILanguage!) {
   postById(id: $id) {
     title
     bodySrc
@@ -11,6 +11,14 @@ query editPost($id: Int!) {
       smallSize
       imageRole
     }
+    postTopics {
+      topic {
+        ...TopicFragment
+      }
+    }
+  }
+  topics {
+    ...TopicFragment
   }
   currentUser {
     ...UserWithLanguagesFragment

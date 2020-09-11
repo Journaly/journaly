@@ -59,9 +59,9 @@ const PostCard: React.FC<Props> = ({
               <h1 className="post-title">
                 <LineClamp lines={1} text={title} />
               </h1>
-              <p className="post-excerpt">
+              <div className="post-excerpt">
                 <LineClamp lines={2} text={excerpt} />
-              </p>
+              </div>
             </div>
 
             <div className="post-avatar-and-data">

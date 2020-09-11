@@ -15,6 +15,7 @@ import {
   useUpdatePostMutation,
 } from '../../../generated/graphql'
 import AuthGate from '../../../components/AuthGate'
+import useUILanguage from '../../../hooks/useUILanguage'
 
 const EditPostPage: NextPage = () => {
   const router = useRouter()
@@ -22,8 +23,11 @@ const EditPostPage: NextPage = () => {
   const id = parseInt(idStr, 10)
   const { t } = useTranslation('post')
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const uiLanguage = useUILanguage()
 
-  const { data: { currentUser, postById } = {} } = useEditPostQuery({ variables: { id } })
+  const { data: { currentUser, topics, postById } = {} } = useEditPostQuery({
+    variables: { uiLanguage, id }
+  })
   const dataRef = React.useRef<PostData>()
   const [initialData, setInitialData] = React.useState<PostData | null>(null)
   const [updatePost] = useUpdatePostMutation()
@@ -34,7 +38,8 @@ const EditPostPage: NextPage = () => {
         title,
         bodySrc,
         language: { id: languageId },
-        images
+        images,
+        postTopics,
       } = postById
 
       const image = images.find(
@@ -42,11 +47,12 @@ const EditPostPage: NextPage = () => {
       ) || null
 
       setInitialData({
+        body: JSON.parse(bodySrc) as Node[],
+        topicIds: postTopics.map(x => x.topic.id),
+        clear: () => null,
         title,
         languageId,
-        body: JSON.parse(bodySrc) as Node[],
         image,
-        clear: () => null
       })
     }
   }, [postById])
@@ -62,7 +68,7 @@ const EditPostPage: NextPage = () => {
       return
     }
 
-    const { title, languageId, image, body, clear } = dataRef.current
+    const { title, languageId, topicIds, image, body, clear } = dataRef.current
     const images = image ? [image] : []
 
     const { data } = await updatePost({
@@ -70,6 +76,7 @@ const EditPostPage: NextPage = () => {
         postId: id,
         title,
         languageId,
+        topicIds,
         body,
         images,
       },
@@ -92,6 +99,7 @@ const EditPostPage: NextPage = () => {
           { initialData && currentUser && (
             <PostEditor
               currentUser={currentUser}
+              topics={topics || []}
               autosaveKey={`edit-post:${id}`}
               dataRef={dataRef}
               initialData={initialData}

@@ -9,17 +9,19 @@ import DashboardLayout from '../../../components/Layouts/DashboardLayout'
 import {
   useCurrentUserQuery,
   usePostByIdQuery,
-  PostFragmentFragment as PostType,
+  PostWithTopicsFragmentFragment as PostType,
 } from '../../../generated/graphql'
 import PostAuthorCard from '../../../components/Dashboard/Post/PostAuthorCard'
 import PostComments from '../../../components/Dashboard/Post/PostComments'
+import useUILanguage from '../../../hooks/useUILanguage'
 import theme from '../../../theme'
 
 const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
   const id = parseInt(idStr, 10)
+  const uiLanguage = useUILanguage()
   const { refetch, loading: postLoading, error: postError, data: postData } = usePostByIdQuery({
-    variables: { id },
+    variables: { id, uiLanguage, },
   })
   const { loading: userLoading, error: userError, data: userData } = useCurrentUserQuery()
 

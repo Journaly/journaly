@@ -126,6 +126,15 @@ fragment PostFragment on Post {
   }
 }
 
+fragment PostWithTopicsFragment on Post {
+  ...PostFragment
+  postTopics {
+    topic {
+      ...TopicFragment
+    }
+  }
+}
+
 fragment PostCardFragment on Post {
   id
   title
@@ -158,4 +167,9 @@ fragment LanguageFragment on Language {
 fragment LanguageWithPostCountFragment on Language {
   ...LanguageFragment
   postCount
+}
+
+fragment TopicFragment on Topic {
+  id
+  name(uiLanguage: $uiLanguage)
 }

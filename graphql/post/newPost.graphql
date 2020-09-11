@@ -1,0 +1,8 @@
+query newPost($uiLanguage: UILanguage!) {
+  topics {
+    ...TopicFragment
+  }
+  currentUser {
+    ...UserWithLanguagesFragment
+  }
+}

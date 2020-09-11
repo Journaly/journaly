@@ -6,12 +6,14 @@ import PostHeader from '../PostHeader'
 import JournalyEditor from '../JournalyEditor'
 import XIcon from '../Icons/XIcon'
 import Select from '../../elements/Select'
+import MultiSelect from '../../elements/MultiSelect'
 import { ButtonVariant } from '../../elements/Button'
 import theme from '../../theme'
 import useImageUpload from '../../hooks/useImageUpload'
 import useAutosavedState from '../../hooks/useAutosavedState'
 import {
   UserWithLanguagesFragmentFragment as UserWithLanguagesType,
+  TopicFragmentFragment as TopicType,
   PostStatus as PostStatusType,
   ImageInput,
   ImageRole,
@@ -21,6 +23,7 @@ import { languageNameWithDialect } from '../../utils/languages'
 type PostData = {
   title: string
   languageId: number
+  topicIds: number[]
   image?: ImageInput | null
   body: Node[]
   clear: () => void
@@ -31,6 +34,7 @@ type PostEditorProps = {
   autosaveKey: string
   dataRef: React.MutableRefObject<PostData | undefined>
   initialData: PostData
+  topics: TopicType[]
 }
 
 type validatePostDataSignature = (data: PostData, t: (arg0: string) => string) => [boolean, string]
@@ -54,6 +58,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
   autosaveKey,
   initialData,
   dataRef,
+  topics,
 }) => {
   const slateRef = React.useRef<Editor>(null)
 
@@ -80,6 +85,14 @@ const PostEditor: React.FC<PostEditorProps> = ({
 
   const [image, uploadingImage, onFileInputChange, resetImage] = useImageUpload()
   const postImage = image?.secure_url || initialData.image?.largeSize || DEFAULT_IMAGE_URL
+
+  const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
+  const formattedTopicOptions = (topics || []).map(({ name, id }) => ({
+    value: id,
+    displayName: name || '',
+  }))
+  const addTopic = (id: number) => setSelectedTopics([...selectedTopics, id])
+  const removeTopic = (id: number) => setSelectedTopics(selectedTopics.filter(tid => tid !== id))
 
   React.useEffect(() => {
     const clear = () => {
@@ -114,8 +127,9 @@ const PostEditor: React.FC<PostEditorProps> = ({
       clear,
       image: returnImage,
       languageId: langId,
+      topicIds: selectedTopics,
     }
-  }, [title, langId, image, body])
+  }, [title, langId, image, body, selectedTopics])
 
   return (
     <div className="post-editor">
@@ -141,6 +155,16 @@ const PostEditor: React.FC<PostEditorProps> = ({
         value={langId ? langId.toString() : ''}
         onChange={(value) => setLangId(parseInt(value, 10))}
         placeholder="Select language"
+      />
+
+      <label htmlFor="post-topics">Topics</label>
+      <MultiSelect
+        id="post-topics"
+        options={formattedTopicOptions}
+        selectedOptionValues={selectedTopics}
+        onAdd={addTopic}
+        onRemove={removeTopic}
+        placeholder="Select a topic"
       />
 
       <div className="header-preview-container">

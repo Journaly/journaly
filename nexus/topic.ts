@@ -16,7 +16,7 @@ schema.objectType({
     t.string('name', {
       nullable: true,
       args: {
-        uiLanguage: schema.arg({ type: 'UILanguage', required: true }), 
+        uiLanguage: schema.arg({ type: 'UILanguage', required: true }),
       },
       async resolve(parent, args, ctx, _info) {
         const translation = await ctx.db.topicTranslation.findOne({
@@ -24,8 +24,8 @@ schema.objectType({
             uiLanguage_topicId: {
               topicId: parent.id,
               uiLanguage: args.uiLanguage,
-            }
-          }
+            },
+          },
         })
 
         return translation?.name || parent.devName
@@ -38,7 +38,7 @@ schema.extendType({
   type: 'Query',
   definition(t) {
     t.list.field('topics', {
-      'type': 'Topic',
+      type: 'Topic',
       args: {
         hasPosts: schema.booleanArg({ required: false }),
       },
@@ -58,8 +58,11 @@ schema.extendType({
 
         return ctx.db.topic.findMany({
           where: filter,
+          orderBy: {
+            devName: 'asc',
+          },
         })
-      }
+      },
     })
-  }
+  },
 })

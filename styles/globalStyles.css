@@ -58,6 +58,7 @@ strong {
 }
 
 .j-link:hover {
+  cursor: pointer;
   text-decoration: underline;
 }
 

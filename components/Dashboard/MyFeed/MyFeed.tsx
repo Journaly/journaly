@@ -122,6 +122,14 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
               )
             }
           />
+          <a
+            className="j-link"
+            onClick={() => {
+              setSelectedLanguageFilters([])
+            }}
+          >
+            {t('clearFilters')}
+          </a>
         </div>
       </div>
       <LoadingWrapper loading={loading} error={error}>

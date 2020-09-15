@@ -10,6 +10,8 @@ import {
   ThreadFragmentFragment as ThreadType,
   useDeleteThreadMutation,
 } from '../../generated/graphql'
+import { useTranslation } from '../../config/i18n'
+
 import Comment from './Comment'
 import Button, { ButtonVariant } from '../../elements/Button'
 
@@ -112,6 +114,8 @@ const Thread: React.FC<ThreadProps> = ({
   onDeleteThread,
   currentUser,
 }) => {
+  const { t } = useTranslation('comment')
+
   const [commentBody, setCommentBody] = React.useState<string>('')
   const [createComment, { loading }] = useCreateCommentMutation({
     onCompleted: () => {
@@ -175,7 +179,7 @@ const Thread: React.FC<ThreadProps> = ({
             <fieldset>
               <div className="new-comment-block">
                 <textarea
-                  placeholder="Add a comment..."
+                  placeholder={t('addCommentPlaceholder')}
                   value={commentBody}
                   onChange={(e) => setCommentBody(e.target.value)}
                   disabled={loading}
@@ -187,7 +191,7 @@ const Thread: React.FC<ThreadProps> = ({
                     className="new-comment-btn"
                     variant={ButtonVariant.PrimaryDark}
                   >
-                    Submit
+                    {t('submit')}
                   </Button>
                   {thread.comments.length === 0 && (
                     <Button
@@ -195,7 +199,7 @@ const Thread: React.FC<ThreadProps> = ({
                       disabled={loading}
                       variant={ButtonVariant.Secondary}
                     >
-                      Cancel
+                      {t('cancel')}
                     </Button>
                   )}
                 </div>

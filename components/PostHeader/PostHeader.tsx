@@ -1,7 +1,9 @@
 import React from 'react'
+
 import { PostStatus } from '../../generated/graphql'
 import { useTranslation } from '../../config/i18n'
 import { formatLongDate } from '../../utils'
+
 import theme from '../../theme'
 
 type PostHeaderProps = {
@@ -29,7 +31,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
         <h1>{postTitle}</h1>
         <p> &mdash; </p>
         <p>
-          by <em>{authorName}</em>
+          {t('postBy')} <em>{authorName}</em>
         </p>
         <p>{formatLongDate(publishDate)}</p>
       </div>

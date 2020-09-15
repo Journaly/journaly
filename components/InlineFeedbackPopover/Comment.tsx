@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import Link from 'next/link'
+
 import {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
@@ -7,6 +8,8 @@ import {
   useCreateCommentThanksMutation,
   useDeleteCommentThanksMutation,
 } from '../../generated/graphql'
+import { useTranslation } from '../../config/i18n'
+
 import Button, { ButtonSize, ButtonVariant } from '../../elements/Button'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import theme from '../../theme'
@@ -23,6 +26,8 @@ type CommentProps = {
 }
 
 const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, currentUserId }) => {
+  const { t } = useTranslation('comment')
+
   const editTextarea = useRef<HTMLTextAreaElement>(null)
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
@@ -110,7 +115,9 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
                 ? `${comment.author.name} (@${comment.author.handle})`
                 : `@${comment.author.handle}`}
             </span>
-            <span className="comment-date">{formatDateRelativeToNow(comment.createdAt)} ago</span>
+            <span className="comment-date">
+              {formatDateRelativeToNow(comment.createdAt)} {t('relativeTimeWord')}
+            </span>
           </div>
         </div>
         <div className="body-block">
@@ -159,7 +166,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
               marginRight: '5px',
             }}
           >
-            Save
+            {t('save')}
           </Button>
           <Button
             size={ButtonSize.Small}
@@ -170,7 +177,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
             disabled={loading}
             variant={ButtonVariant.Secondary}
           >
-            Cancel
+            {t('cancel')}
           </Button>
         </>
       )}

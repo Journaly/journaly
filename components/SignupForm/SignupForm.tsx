@@ -98,7 +98,7 @@ const SignupForm: React.FC = () => {
       <em>
         Already have an account?
         <Link href="/dashboard/login">
-          <a> Log in</a>
+          <a className="j-link"> Log in</a>
         </Link>
       </em>
       <style jsx>{`

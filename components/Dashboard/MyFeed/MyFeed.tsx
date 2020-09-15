@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+
+import { useTranslation } from '../../../config/i18n'
+
 import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
 import theme from '../../../theme'
@@ -16,6 +19,8 @@ type Props = {
 }
 
 const MyFeed: React.FC<Props> = ({ currentUser }) => {
+  const { t } = useTranslation('my-feed')
+
   /**
    * Topic filter selection state
    */
@@ -72,7 +77,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   const posts = data?.feed?.posts
   const count = data?.feed?.count || 0
   const showPagination = count > NUM_POSTS_PER_PAGE
-  const pageTitle = 'My Feed'
+  const pageTitle = t('pageTitle')
 
   /* TEMPORARY until topics built
     const topicOptions = [
@@ -91,7 +96,9 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <h1>My Feed</h1>
+      <h1>
+        {t('generalGreeting')} {currentUser.name || currentUser.handle}!
+      </h1>
       <div className="my-feed-search">
         <input type="text" placeholder="Search..." className="search-box" />
 
@@ -122,7 +129,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
           {posts && posts.length > 0 ? (
             posts.map((post) => <PostCard key={post.id} post={post} stacked avatar />)
           ) : (
-            <p>Nothing to see yet...</p>
+            <p>{t('noPostsMessage')}</p>
           )}
         </div>
 

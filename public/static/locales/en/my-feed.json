@@ -1,0 +1,9 @@
+{
+  "pageTitle": "My Feed",
+  "generalGreeting": "Hello",
+  "morningGreeting": "Good morning",
+  "afternoonGreeting": "Good afternoon",
+  "eveningGreeting": "Good evening",
+  "noPostsMessage": "Nothing to see yet...",
+  "clearFilters": "clear filters"
+}

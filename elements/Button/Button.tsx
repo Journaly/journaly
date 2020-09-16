@@ -19,14 +19,13 @@ export enum ButtonVariant {
   PrimaryDark = 'primaryDark',
   Destructive = 'destructive',
   DestructiveSecondary = 'destructiveSecondary',
+  Link = 'link',
 }
 
 type Props = {
   children: React.ReactNode
   className?: string
   disabled?: boolean
-  icon?: boolean
-  link?: boolean
   loading?: boolean
   id?: string
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
@@ -41,8 +40,6 @@ const Button: React.FC<Props> = (props) => {
     children,
     onClick,
     disabled = false,
-    icon = false,
-    link = false,
     loading = false,
     size = ButtonSize.Default,
     variant = ButtonVariant.Primary,
@@ -52,8 +49,6 @@ const Button: React.FC<Props> = (props) => {
   } = props
 
   const buttonClasses = classNames(className, size, variant, {
-    icon,
-    link,
     loading,
   })
 
@@ -76,7 +71,7 @@ const Button: React.FC<Props> = (props) => {
       type={type}
       {...otherProps}
     >
-      {icon ? children : <span className="button-text">{children}</span>}
+      <span className="button-text">{children}</span>
 
       <div className="loading-indicator">
         <LoadingSpinner size={24} fill={loadingColor} />
@@ -160,14 +155,20 @@ const Button: React.FC<Props> = (props) => {
           border: 1px solid gray;
         }
 
-        button:hover.icon,
-        button:hover.link {
-          background: none;
+        .${ButtonVariant.Link} {
+          display: inline;
+          color: ${theme.colors.blueLight};
+          background-color: transparent;
           border: none;
+          padding: 0;
         }
 
-        button:hover.icon {
-          background-color: gray;
+        .${ButtonVariant.Link}:hover:not(:disabled) {
+          text-decoration: underline;
+        }
+        .${ButtonVariant.Link}:focus:not(:disabled) {
+          outline: none;
+          border-width: 0;
         }
 
         button[disabled] {
@@ -176,22 +177,6 @@ const Button: React.FC<Props> = (props) => {
         }
         button[disabled].loading {
           opacity: 1;
-        }
-
-        .icon,
-        .link {
-          padding: 0;
-          font: inherit;
-          border: none;
-          background: none;
-        }
-
-        .icon {
-          border-radius: 4px;
-        }
-
-        .link {
-          color: ${theme.colors.blueLight};
         }
 
         .loading .button-text {

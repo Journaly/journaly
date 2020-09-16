@@ -11,6 +11,8 @@ import { User as UserType, useFeedQuery, useLanguagesQuery } from '../../../gene
 // import Select from '../../../elements/Select'
 import LoadingWrapper from '../../LoadingWrapper'
 import MultiSelect from '../../../elements/MultiSelect'
+import Button, { ButtonVariant } from '../../../elements/Button'
+import { greetings } from './greetings'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -79,6 +81,18 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   const showPagination = count > NUM_POSTS_PER_PAGE
   const pageTitle = t('pageTitle')
 
+  let greetingLanguage
+
+  if (currentUser.languagesLearning.length === 1) {
+    greetingLanguage = currentUser.languagesLearning[0].language.name
+  }
+
+  if (currentUser.languagesLearning.length > 1) {
+    const index = Math.floor(Math.random() * currentUser.languagesLearning.length)
+    const greetingLanguageKey = currentUser.languagesLearning[index].language.name
+    greetingLanguage = greetings[greetingLanguageKey] ? greetingLanguageKey : 'English'
+  }
+
   /* TEMPORARY until topics built
     const topicOptions = [
       { value: 'rock_climbing', displayName: 'Rock climbing' },
@@ -97,7 +111,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
         <title>{pageTitle}</title>
       </Head>
       <h1>
-        {t('generalGreeting')} {currentUser.name || currentUser.handle}!
+        {greetings[greetingLanguage]} {currentUser.name || currentUser.handle}!
       </h1>
       <div className="my-feed-search">
         <input type="text" placeholder="Search..." className="search-box" />
@@ -122,14 +136,24 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
               )
             }
           />
-          <a
-            className="j-link"
-            onClick={() => {
-              setSelectedLanguageFilters([])
-            }}
-          >
-            {t('clearFilters')}
-          </a>
+          <div className="filter-actions">
+            <Button
+              variant={ButtonVariant.Link}
+              onClick={() => {
+                setSelectedLanguageFilters([])
+              }}
+            >
+              {t('clearFilters')}
+            </Button>
+            <Button
+              variant={ButtonVariant.Link}
+              onClick={() => {
+                setSelectedLanguageFilters([...userLanguages.values()])
+              }}
+            >
+              {t('myLanguages')}
+            </Button>
+          </div>
         </div>
       </div>
       <LoadingWrapper loading={loading} error={error}>
@@ -213,6 +237,13 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
         :global(.pagination-wrapper) {
           margin: 40px 0;
+        }
+
+        .filter-actions {
+          text-align: center;
+        }
+        .filter-actions > :global(button) {
+          margin-right: 10px;
         }
       `}</style>
     </div>

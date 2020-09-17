@@ -93,6 +93,8 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
     greetingLanguage = greetings[greetingLanguageKey] ? greetingLanguageKey : 'English'
   }
 
+  const rightToLeftLanguages = ['Arabic', 'Persian']
+
   /* TEMPORARY until topics built
     const topicOptions = [
       { value: 'rock_climbing', displayName: 'Rock climbing' },
@@ -110,9 +112,15 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <h1>
-        {greetings[greetingLanguage]} {currentUser.name || currentUser.handle}!
-      </h1>
+      {rightToLeftLanguages.includes(greetingLanguage) ? (
+        <h1>
+          !{currentUser.name || currentUser.handle} {greetings[greetingLanguage]}
+        </h1>
+      ) : (
+        <h1>
+          {greetings[greetingLanguage]} {currentUser.name || currentUser.handle}!
+        </h1>
+      )}
       <div className="my-feed-search">
         <input type="text" placeholder="Search..." className="search-box" />
 

@@ -81,7 +81,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   const showPagination = count > NUM_POSTS_PER_PAGE
   const pageTitle = t('pageTitle')
 
-  let greetingLanguage
+  let greetingLanguage = 'English'
 
   if (currentUser.languagesLearning.length === 1) {
     greetingLanguage = currentUser.languagesLearning[0].language.name

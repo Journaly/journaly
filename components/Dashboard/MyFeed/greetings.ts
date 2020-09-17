@@ -1,4 +1,8 @@
-export const greetings = {
+type greetings = {
+  [key: string]: string
+}
+
+export const greetings: greetings = {
   Afrikaans: 'Hallo',
   Arabic: 'مرحبا',
   Azerbaijani: 'Salam',

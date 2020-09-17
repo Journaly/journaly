@@ -1,5 +1,5 @@
 import React from 'react'
-import Button from '../../elements/Button'
+import Button, { ButtonVariant } from '../../elements/Button'
 import XIcon from '../Icons/XIcon'
 import modalConstants from './modalConstants'
 import { truncate, lightGrey } from '../../utils'
@@ -13,7 +13,7 @@ interface Props {
 const ModalHeader: React.FC<Props> = ({ onClose, title, showTitle }) => {
   return (
     <div className="modal-header">
-      <Button icon onClick={onClose} className="modal-close-button">
+      <Button variant={ButtonVariant.Icon} onClick={onClose} className="modal-close-button">
         <XIcon size={40} />
         <span className="screen-reader">Close dialog</span>
       </Button>

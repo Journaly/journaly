@@ -20,6 +20,7 @@ export enum ButtonVariant {
   Destructive = 'destructive',
   DestructiveSecondary = 'destructiveSecondary',
   Link = 'link',
+  Icon = 'icon',
 }
 
 type Props = {
@@ -71,7 +72,7 @@ const Button: React.FC<Props> = (props) => {
       type={type}
       {...otherProps}
     >
-      <span className="button-text">{children}</span>
+      {variant === ButtonVariant.Icon ? children : <span className="button-text">{children}</span>}
 
       <div className="loading-indicator">
         <LoadingSpinner size={24} fill={loadingColor} />
@@ -105,50 +106,54 @@ const Button: React.FC<Props> = (props) => {
           padding: 4px 8px;
         }
 
+        .${ButtonVariant.Primary}:hover:not(:disabled):not(.link):not(.icon) {
+          background-color: ${theme.colors.blue};
+          border: 1px solid ${theme.colors.blue};
+        }
+
         .${ButtonVariant.Secondary} {
           color: ${theme.colors.blueLight};
           background-color: ${theme.colors.white};
           border: 1px solid ${theme.colors.blueLight};
-        }
-        .${ButtonVariant.PrimaryDark} {
-          color: ${theme.colors.white};
-          background-color: ${theme.colors.charcoal};
-          border: none;
-        }
-        .${ButtonVariant.Destructive} {
-          color: ${theme.colors.white};
-          background-color: ${theme.colors.red};
-          border: 1px solid ${theme.colors.red};
-        }
-        .${ButtonVariant.DestructiveSecondary} {
-          color: ${theme.colors.red};
-          background-color: ${theme.colors.white};
-          border: 1px solid ${theme.colors.white};
-        }
-
-        .${ButtonVariant.Primary}:hover:not(:disabled):not(.link):not(.icon) {
-          background-color: ${theme.colors.blue};
-          border: 1px solid ${theme.colors.blue};
         }
         .${ButtonVariant.Secondary}:hover:not(:disabled) {
           background-color: ${theme.colors.blue};
           color: ${theme.colors.white};
           border: 1px solid gray;
         }
-        .${ButtonVariant.PrimaryDark}:hover:not(:disabled) {
-          color: ${theme.colors.blueLight};
-        }
         .${ButtonVariant.Secondary}:focus:not(:disabled) {
           outline: none;
           border-width: 2px;
         }
+
+        .${ButtonVariant.PrimaryDark} {
+          color: ${theme.colors.white};
+          background-color: ${theme.colors.charcoal};
+          border: none;
+        }
+        .${ButtonVariant.PrimaryDark}:hover:not(:disabled) {
+          color: ${theme.colors.blueLight};
+        }
+
         .${ButtonVariant.PrimaryDark}:focus:not(:disabled) {
           outline: none;
           border-width: 0;
         }
+
+        .${ButtonVariant.Destructive} {
+          color: ${theme.colors.white};
+          background-color: ${theme.colors.red};
+          border: 1px solid ${theme.colors.red};
+        }
         .${ButtonVariant.Destructive}:hover:not(:disabled) {
           background-color: tomato;
           border: 1px solid tomato;
+        }
+
+        .${ButtonVariant.DestructiveSecondary} {
+          color: ${theme.colors.red};
+          background-color: ${theme.colors.white};
+          border: 1px solid ${theme.colors.white};
         }
         .${ButtonVariant.DestructiveSecondary}:hover:not(:disabled) {
           background-color: gray;
@@ -162,13 +167,23 @@ const Button: React.FC<Props> = (props) => {
           border: none;
           padding: 0;
         }
-
         .${ButtonVariant.Link}:hover:not(:disabled) {
           text-decoration: underline;
         }
         .${ButtonVariant.Link}:focus:not(:disabled) {
           outline: none;
           border-width: 0;
+        }
+
+        .${ButtonVariant.Icon} {
+          padding: 0;
+          font: inherit;
+          border: none;
+          background-color: transparent;
+          border-radius: 4px;
+        }
+        .${ButtonVariant.Icon}:hover:not(:disabled) {
+          border: none;
         }
 
         button[disabled] {

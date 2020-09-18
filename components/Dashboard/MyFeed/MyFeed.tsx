@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+
+import { useTranslation } from '../../../config/i18n'
+
 import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
 import theme from '../../../theme'
@@ -8,6 +11,8 @@ import { User as UserType, useFeedQuery, useLanguagesQuery } from '../../../gene
 // import Select from '../../../elements/Select'
 import LoadingWrapper from '../../LoadingWrapper'
 import MultiSelect from '../../../elements/MultiSelect'
+import Button, { ButtonVariant } from '../../../elements/Button'
+import { greetings } from './greetings'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -16,6 +21,8 @@ type Props = {
 }
 
 const MyFeed: React.FC<Props> = ({ currentUser }) => {
+  const { t } = useTranslation('my-feed')
+
   /**
    * Topic filter selection state
    */
@@ -72,7 +79,21 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   const posts = data?.feed?.posts
   const count = data?.feed?.count || 0
   const showPagination = count > NUM_POSTS_PER_PAGE
-  const pageTitle = 'My Feed'
+  const pageTitle = t('pageTitle')
+
+  let greetingLanguage = 'English'
+
+  if (currentUser.languagesLearning.length === 1) {
+    greetingLanguage = currentUser.languagesLearning[0].language.name
+  }
+
+  if (currentUser.languagesLearning.length > 1) {
+    const index = Math.floor(Math.random() * currentUser.languagesLearning.length)
+    const greetingLanguageKey = currentUser.languagesLearning[index].language.name
+    greetingLanguage = greetings[greetingLanguageKey] ? greetingLanguageKey : 'English'
+  }
+
+  const rightToLeftLanguages = ['Arabic', 'Persian']
 
   /* TEMPORARY until topics built
     const topicOptions = [
@@ -91,7 +112,15 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <h1>My Feed</h1>
+      {rightToLeftLanguages.includes(greetingLanguage) ? (
+        <h1>
+          !{currentUser.name || currentUser.handle} {greetings[greetingLanguage]}
+        </h1>
+      ) : (
+        <h1>
+          {greetings[greetingLanguage]} {currentUser.name || currentUser.handle}!
+        </h1>
+      )}
       <div className="my-feed-search">
         <input type="text" placeholder="Search..." className="search-box" />
 
@@ -115,6 +144,24 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
               )
             }
           />
+          <div className="filter-actions">
+            <Button
+              variant={ButtonVariant.Link}
+              onClick={() => {
+                setSelectedLanguageFilters([])
+              }}
+            >
+              {t('clearFilters')}
+            </Button>
+            <Button
+              variant={ButtonVariant.Link}
+              onClick={() => {
+                setSelectedLanguageFilters([...userLanguages.values()])
+              }}
+            >
+              {t('myLanguages')}
+            </Button>
+          </div>
         </div>
       </div>
       <LoadingWrapper loading={loading} error={error}>
@@ -122,7 +169,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
           {posts && posts.length > 0 ? (
             posts.map((post) => <PostCard key={post.id} post={post} stacked avatar />)
           ) : (
-            <p>Nothing to see yet...</p>
+            <p>{t('noPostsMessage')}</p>
           )}
         </div>
 
@@ -198,6 +245,13 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
         :global(.pagination-wrapper) {
           margin: 40px 0;
+        }
+
+        .filter-actions {
+          text-align: center;
+        }
+        .filter-actions > :global(button) {
+          margin-right: 10px;
         }
       `}</style>
     </div>

@@ -13,5 +13,6 @@
   "finishAction": "Finish post",
   "noLanguageError": "Please select a language.",
   "emptyTitleError": "Please specify a non-empty title.",
-  "draftPublishedSuccess": "Post successfully published!"
+  "draftPublishedSuccess": "Post successfully published!",
+  "postBy": "by"
 }

@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
+
 import {
   useUpdatePostCommentMutation,
   useDeletePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
 } from '../../../generated/graphql'
+import { useTranslation } from '../../../config/i18n'
+
 import Button, { ButtonSize, ButtonVariant } from '../../../elements/Button'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 import theme from '../../../theme'
@@ -25,6 +28,8 @@ const PostComment: React.FC<PostCommentProps> = ({
   onUpdateComment,
   onDeleteComment,
 }) => {
+  const { t } = useTranslation('comment')
+
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
 
@@ -79,7 +84,9 @@ const PostComment: React.FC<PostCommentProps> = ({
                 ? `${comment.author.name} (@${comment.author.handle})`
                 : `@${comment.author.handle}`}
             </span>
-            <span className="comment-date">{formatDateRelativeToNow(comment.createdAt)} ago</span>
+            <span className="comment-date">
+              {formatDateRelativeToNow(comment.createdAt)} {t('relativeTimeWord')}
+            </span>
           </div>
         </div>
         <div className="body-block">
@@ -114,7 +121,7 @@ const PostComment: React.FC<PostCommentProps> = ({
               marginRight: '5px',
             }}
           >
-            Save
+            {t('save')}
           </Button>
           <Button
             size={ButtonSize.Small}
@@ -125,7 +132,7 @@ const PostComment: React.FC<PostCommentProps> = ({
             disabled={loading}
             variant={ButtonVariant.Secondary}
           >
-            Cancel
+            {t('cancel')}
           </Button>
         </>
       )}

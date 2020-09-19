@@ -198,8 +198,6 @@ schema.extendType({
         identifier: schema.stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx, _info) => {
-        const { userId } = ctx.request
-
         const user = await ctx.db.user.findOne({
           where: {
             email: args.identifier.toLowerCase(),
@@ -218,7 +216,7 @@ schema.extendType({
 
         await ctx.db.auth.update({
           where: {
-            userId,
+            userId: user.id,
           },
           data: {
             resetToken,
@@ -237,8 +235,6 @@ schema.extendType({
         confirmPassword: schema.stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx, _info) => {
-        const { userId } = ctx.request
-
         const { password, confirmPassword, resetToken } = args
 
         if (password !== confirmPassword) throw new Error('Passwords do not match')
@@ -260,7 +256,7 @@ schema.extendType({
         const newPassword = await bcrypt.hash(password, 10)
         const updatedUser = await ctx.db.auth.update({
           where: {
-            userId,
+            userId: user.id,
           },
           data: {
             password: newPassword,

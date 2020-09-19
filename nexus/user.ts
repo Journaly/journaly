@@ -2,6 +2,9 @@ import { schema } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
+import { randomBytes } from 'crypto'
+import { promisify } from 'util'
+
 import { NotAuthorizedError } from './errors'
 
 schema.objectType({
@@ -186,6 +189,98 @@ schema.extendType({
           }),
         )
         return user
+      },
+    })
+
+    t.field('requestResetPassword', {
+      type: 'User',
+      args: {
+        identifier: schema.stringArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx, _info) => {
+        const { userId } = ctx.request
+
+        const user = await ctx.db.user.findOne({
+          where: {
+            email: args.identifier.toLowerCase(),
+          },
+          include: {
+            auth: true,
+          },
+        })
+        if (!user) {
+          throw new Error('User not found')
+        }
+
+        const randomBytesPromisified = promisify(randomBytes)
+        const resetToken = (await randomBytesPromisified(20)).toString('hex')
+        const resetTokenExpiry = Date.now() + 3600000 // 1 hour from now
+
+        await ctx.db.auth.update({
+          where: {
+            userId,
+          },
+          data: {
+            resetToken,
+            resetTokenExpiry,
+          },
+        })
+        return user
+      },
+    })
+
+    t.field('resetPassword', {
+      type: 'User',
+      args: {
+        resetToken: schema.stringArg({ required: true }),
+        password: schema.stringArg({ required: true }),
+        confirmPassword: schema.stringArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx, _info) => {
+        const { userId } = ctx.request
+
+        const { password, confirmPassword, resetToken } = args
+
+        if (password !== confirmPassword) throw new Error('Passwords do not match')
+
+        // Destructure the first (only) user that is returned
+        const [user] = await ctx.db.user.findMany({
+          where: {
+            auth: {
+              resetToken,
+              resetTokenExpiry: {
+                gte: Date.now() - 3600000,
+              },
+            },
+          },
+        })
+
+        if (!user) throw new Error('This reset token is either invalid or has expired')
+
+        const newPassword = await bcrypt.hash(password, 10)
+        const updatedUser = await ctx.db.auth.update({
+          where: {
+            userId,
+          },
+          data: {
+            password: newPassword,
+            resetToken: null,
+            resetTokenExpiry: null,
+          },
+          include: {
+            user: true,
+          },
+        })
+        const token = jwt.sign({ userId: updatedUser.userId }, process.env.APP_SECRET!)
+        ctx.response.setHeader(
+          'Set-Cookie',
+          serialize('token', token, {
+            httpOnly: true,
+            maxAge: 60 * 60 * 24 * 365,
+            path: '/',
+          }),
+        )
+        return updatedUser.user
       },
     })
 

@@ -36,12 +36,12 @@ model User {
 }
 
 model Auth {
-  id               Int       @default(autoincrement()) @id
-  user             User      @relation(fields: [userId], references: [id])
-  userId           Int       @unique
+  id               Int     @default(autoincrement()) @id
+  user             User    @relation(fields: [userId], references: [id])
+  userId           Int     @unique
   password         String
   resetToken       String?
-  resetTokenExpiry DateTime?
+  resetTokenExpiry Int?
 }
 
 model LanguageLearning {

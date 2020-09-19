@@ -3,17 +3,31 @@
     "title": "Log into your account",
     "submitButtonText": "Log In"
   },
+  "signup": {
+    "title": "Sign up for an account",
+    "submitButtonText": "Sign Up!",
+    "goToLoginText": "Already have an account?",
+    "goToLoginLink": "Log in"
+  },
   "requestReset": {
     "title": "Request Password Reset Email",
     "helperText": "Enter your email address and we'll send you a link to reset your password.",
     "submitButtonText": "Request Reset Email",
-    "successMessage": "Reset password link has been sent to your email address!"
+    "successMessage": "Reset password link has been sent to your email address!",
+    "goToLoginText": "Remembered your password?",
+    "goToLoginLink": "Log in"
   },
   "resetPassword": {
     "title": "Reset Your Password",
     "submitButtonText": "Reset Password",
     "successMessage": "You successfully reset your password! Please log in"
   },
+  "handleInputLabel": "Handle",
+  "handleInputHelperMessage": "Can be letters, numbers, -, _, and cannot contain spaces",
+  "handleInputPlaceholder": "Your name, or perhaps a fun pseudonym!",
+  "handleRequiredErrorMessage": "Handle is required",
+  "handleValidationErrorMessage": "Handle may only contain letters, numbers, _, -, with no spaces",
+  "handleMinimumErrorMessage": "Your handle must be at least 3 characters",
   "emailInputLabel": "Email",
   "emailInputPlaceholder": "Your email address",
   "emailRequiredErrorMessage": "Email is required",
@@ -27,8 +41,6 @@
   "confirmPasswordInputPlaceholder": "Re-enter your new password",
   "confirmPasswordRequiredErrorMessage": "Confirm password is required",
   "confirmPasswordValidationErrorMessage": "Invalid confirmPassword address",
-  "goToLoginText": "Remembered your password?",
-  "goToLoginLink": "Log in",
   "goToSignupText": "Don't have an account?",
   "goToSignupLink": "Sign up",
   "goToRequestResetText": "Having trouble logging in?",

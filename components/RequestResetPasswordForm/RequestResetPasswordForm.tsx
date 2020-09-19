@@ -66,9 +66,9 @@ const RequestResetPasswordForm: React.FC = () => {
         <Button type="submit">{t('requestReset.submitButtonText')}</Button>
       </fieldset>
       <em>
-        {t('goToLoginText')}
+        {t('requestReset.goToLoginText')}
         <Link href="/dashboard/login">
-          <a className="j-link"> {t('goToLoginLink')}</a>
+          <a className="j-link"> {t('requestReset.goToLoginLink')}</a>
         </Link>
       </em>
       <style jsx>{`

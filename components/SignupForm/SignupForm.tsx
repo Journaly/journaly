@@ -2,7 +2,8 @@ import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
-import { trackCreateAccount } from '../../events/users'
+
+import { useTranslation } from '../../config/i18n'
 import { useCreateUserMutation, useCurrentUserQuery } from '../../generated/graphql'
 import FormError from '../FormError'
 import Button from '../../elements/Button'
@@ -10,6 +11,8 @@ import { brandBlue } from '../../utils'
 import theme from '../../theme'
 
 const SignupForm: React.FC = () => {
+  const { t } = useTranslation('authentication')
+
   const router = useRouter()
   const { handleSubmit, register, errors } = useForm({
     mode: 'onBlur',
@@ -21,7 +24,6 @@ const SignupForm: React.FC = () => {
 
   const [createUser, { loading, error }] = useCreateUserMutation({
     onCompleted: async () => {
-      trackCreateAccount()
       await refetch()
       router.push({
         pathname: '/dashboard/my-feed',
@@ -44,34 +46,40 @@ const SignupForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={loading} aria-busy={loading}>
-        <h2>Sign up for an account</h2>
+        <h2>{t('signup.title')}</h2>
         {error && <FormError error={error} />}
         <label htmlFor="handle">
-          Display Name
+          {t('handleInputLabel')}
+          <br />
+          <span className="handle-helper-text">{t('handleInputHelperMessage')}</span>
           <input
             type="text"
             name="handle"
-            placeholder="Your name, or perhaps a fun pseudonym!"
+            placeholder={t('handleInputPlaceholder')}
             autoComplete="on"
             ref={register({
-              required: 'Display Name is required',
-              minLength: { value: 3, message: 'Your display name must be at least 3 characters' },
+              required: `${t('handleRequiredErrorMessage')}`,
+              pattern: {
+                value: /^[a-zA-Z0-9_-]{1,}$/i,
+                message: `${t('handleValidationErrorMessage')}`,
+              },
+              minLength: { value: 3, message: `${t('handleMinimumErrorMessage')}` },
             })}
             data-test="display-name"
           />
           <ErrorMessage errors={errors} name="handle" as="p" />
         </label>
         <label htmlFor="email">
-          Email
+          {t('emailInputLabel')}
           <input
             type="text"
-            placeholder="Email address"
+            placeholder={t('emailInputPlaceholder')}
             name="email"
             ref={register({
-              required: 'Email is required',
+              required: `${t('emailRequiredErrorMessage')}`,
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid email address',
+                message: `${t('emailValidationErrorMessage')}`,
               },
             })}
             data-test="email"
@@ -79,26 +87,26 @@ const SignupForm: React.FC = () => {
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>
         <label htmlFor="password">
-          Password
+          {t('passwordInputLabel')}
           <input
             type="password"
-            placeholder="A secure password"
+            placeholder={t('passwordInputPlaceholder')}
             name="password"
             ref={register({
-              required: 'Password is required',
-              minLength: { value: 6, message: 'Password must be at least 6 characters' },
+              required: `${t('passwordRequiredErrorMessage')}`,
+              minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
             })}
             data-test="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>
 
-        <Button type="submit">Sign up!</Button>
+        <Button type="submit">{t('signup.submitButtonText')}</Button>
       </fieldset>
       <em>
-        Already have an account?
+        {t('signup.goToLoginText')}
         <Link href="/dashboard/login">
-          <a className="j-link"> Log in</a>
+          <a className="j-link"> {t('signup.goToLoginLink')}</a>
         </Link>
       </em>
       <style jsx>{`
@@ -195,6 +203,11 @@ const SignupForm: React.FC = () => {
         }
         :global(input[name="${fieldErrorName}"]) {
           border-color: ${theme.colors.red};
+        }
+
+        .handle-helper-text {
+          font-size: 14px;
+          font-style: italic;
         }
       `}</style>
     </form>

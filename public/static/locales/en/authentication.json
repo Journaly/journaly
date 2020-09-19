@@ -1,0 +1,19 @@
+{
+  "requestReset": {
+    "title": "Request Password Reset Email",
+    "helperText": "Enter your email address and we'll send you a link to reset your password.",
+    "submitButtonText": "Request Reset Email",
+    "successMessage": "Reset password link has been sent to your email address!"
+  },
+  "resetPassword": {
+    "title": "Reset Your Password",
+    "submitButtonText": "Reset Password",
+    "successMessage": "You successfully reset your password! Please log in"
+  },
+  "emailInputLabel": "Email",
+  "emailInputPlaceholder": "Your email address",
+  "emailRequiredErrorMessage": "Email is required",
+  "emailValidationErrorMessage": "Invalid email address",
+  "goToLoginText": "Remembered your password?",
+  "goToLoginLink": "Log in"
+}

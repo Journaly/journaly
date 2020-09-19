@@ -1,4 +1,8 @@
 {
+  "login": {
+    "title": "Log into your account",
+    "submitButtonText": "Log In"
+  },
   "requestReset": {
     "title": "Request Password Reset Email",
     "helperText": "Enter your email address and we'll send you a link to reset your password.",
@@ -14,6 +18,19 @@
   "emailInputPlaceholder": "Your email address",
   "emailRequiredErrorMessage": "Email is required",
   "emailValidationErrorMessage": "Invalid email address",
+  "passwordInputLabel": "Password",
+  "passwordInputPlaceholder": "A secure password",
+  "passwordRequiredErrorMessage": "Password is required",
+  "passwordValidationErrorMessage": "Invalid password",
+  "passwordMinimumErrorMessage": "Password must be at least 6 characters",
+  "confirmPasswordInputLabel": "Confirm Password",
+  "confirmPasswordInputPlaceholder": "Re-enter your new password",
+  "confirmPasswordRequiredErrorMessage": "Confirm password is required",
+  "confirmPasswordValidationErrorMessage": "Invalid confirmPassword address",
   "goToLoginText": "Remembered your password?",
-  "goToLoginLink": "Log in"
+  "goToLoginLink": "Log in",
+  "goToSignupText": "Don't have an account?",
+  "goToSignupLink": "Sign up",
+  "goToRequestResetText": "Having trouble logging in?",
+  "goToRequestResetLink": "Reset your password"
 }

@@ -1,11 +1,14 @@
 import React from 'react'
-import theme from '../../../theme'
-import PostComment from './PostComment'
+
 import {
   useCreatePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
   UserWithLanguagesFragmentFragment as UserType,
 } from '../../../generated/graphql'
+import { useTranslation } from '../../../config/i18n'
+
+import theme from '../../../theme'
+import PostComment from './PostComment'
 import Button, { ButtonVariant } from '../../../elements/Button'
 
 type PostCommentsProps = {
@@ -25,6 +28,8 @@ const PostComments: React.FC<PostCommentsProps> = ({
   onDeleteComment,
   currentUser,
 }) => {
+  const { t } = useTranslation('comment')
+
   const [postCommentBody, setPostCommentBody] = React.useState<string>('')
   const [createPostComment, { loading }] = useCreatePostCommentMutation({
     onCompleted: () => {
@@ -46,9 +51,9 @@ const PostComments: React.FC<PostCommentsProps> = ({
 
   return (
     <div className="container">
-      <h1>Comments</h1>
+      <h1>{t('postCommentsTitle')}</h1>
       <div className="post-comments">
-        {!comments.length && <div>No comments... yet!</div>}
+        {!comments.length && <div>{t('noCommentsYetMessage')}</div>}
         {comments.map((comment, idx) => {
           const canEdit = currentUser?.id === comment.author.id
           return (
@@ -66,7 +71,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
         <form onSubmit={createNewPostComment}>
           <div className="new-comment-block">
             <textarea
-              placeholder="Add a comment..."
+              placeholder={t('addCommentPlaceholder')}
               value={postCommentBody}
               onChange={(e) => setPostCommentBody(e.target.value)}
               disabled={loading}
@@ -78,7 +83,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
               className="submit-btn"
               variant={ButtonVariant.PrimaryDark}
             >
-              Submit
+              {t('submit')}
             </Button>
           </div>
         </form>

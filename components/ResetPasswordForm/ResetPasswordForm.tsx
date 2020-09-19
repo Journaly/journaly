@@ -52,50 +52,33 @@ const ResetPasswordForm: React.FC<Props> = ({ resetToken }) => {
       <fieldset disabled={loading} aria-busy={loading}>
         <h2>{t('resetPassword.title')}</h2>
         {error && <FormError error={error} />}
-        <label htmlFor="email">
-          {t('emailInputLabel')}
-          <input
-            type="text"
-            placeholder={t('emailInputPlaceholder')}
-            name="email"
-            ref={register({
-              required: `${t('emailRequiredErrorMessage')}`,
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: `${t('emailValidationErrorMessage')}`,
-              },
-            })}
-            data-test="email"
-          />
-          <ErrorMessage errors={errors} name="email" as="p" />
-        </label>
         <label htmlFor="password">
-          Password
+          {t('passwordInputLabel')}
           <input
             type="password"
-            placeholder="A secure password"
+            placeholder={t('passwordInputPlaceholder')}
             name="password"
             ref={register({
-              required: 'Password is required',
-              minLength: { value: 6, message: 'Password must be at least 6 characters' },
+              required: `${t('passwordRequiredErrorMessage')}`,
+              minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
             })}
             data-test="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>
         <label htmlFor="password">
-          Confirm Password
+          {t('confirmPasswordInputLabel')}
           <input
             type="password"
-            placeholder="Re-enter your new password"
+            placeholder={t('confirmPasswordInputPlaceholder')}
             name="confirmPassword"
             ref={register({
-              required: 'Password is required',
-              minLength: { value: 6, message: 'Password must be at least 6 characters' },
+              required: `${t('confirmPasswordRequiredErrorMessage')}`,
+              minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
             })}
             data-test="confirm-password"
           />
-          <ErrorMessage errors={errors} name="confirm-password" as="p" />
+          <ErrorMessage errors={errors} name="confirmPassword" as="p" />
         </label>
         <Button type="submit">{t('resetPassword.submitButtonText')}</Button>
       </fieldset>

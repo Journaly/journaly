@@ -2,7 +2,8 @@ import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
-import { trackLogIn } from '../../events/users'
+
+import { useTranslation } from '../../config/i18n'
 import {
   useLoginUserMutation,
   CurrentUserDocument,
@@ -14,6 +15,8 @@ import { brandBlue } from '../../utils'
 import theme from '../../theme'
 
 const LoginForm: React.FC = () => {
+  const { t } = useTranslation('authentication')
+
   const router = useRouter()
   const { handleSubmit, register, errors } = useForm({
     mode: 'onBlur',
@@ -25,7 +28,6 @@ const LoginForm: React.FC = () => {
 
   const [loginUser, { loading, error }] = useLoginUserMutation({
     onCompleted: async () => {
-      trackLogIn()
       await refetch()
       router.push({
         pathname: '/dashboard/my-feed',
@@ -48,19 +50,19 @@ const LoginForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={loading} aria-busy={loading}>
-        <h2>Log into your account</h2>
+        <h2>{t('login.title')}</h2>
         {error && <FormError error={error} />}
         <label htmlFor="email">
-          Email
+          {t('emailInputLabel')}
           <input
             type="text"
-            placeholder="Email address"
+            placeholder={t('emailInputPlaceholder')}
             name="email"
             ref={register({
-              required: 'Email is required',
+              required: `${t('emailRequiredErrorMessage')}`,
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid email address',
+                message: `${t('emailValidationErrorMessage')}`,
               },
             })}
             data-test="email"
@@ -68,26 +70,32 @@ const LoginForm: React.FC = () => {
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>
         <label htmlFor="password">
-          Password
+          {t('passwordInputLabel')}
           <input
             type="password"
-            placeholder="A secure password"
+            placeholder={t('passwordInputPlaceholder')}
             name="password"
             ref={register({
-              required: 'Password is required',
-              minLength: { value: 6, message: 'Password must be at least 6 characters' },
+              required: `${t('passwordRequiredErrorMessage')}`,
+              minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
             })}
             data-test="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>
-
-        <Button type="submit">Log In</Button>
+        <Button type="submit">{t('login.submitButtonText')}</Button>
       </fieldset>
       <em>
-        Don't have an account?
+        {t('goToSignupText')}
         <Link href="/dashboard/signup">
-          <a className="j-link"> Sign up</a>
+          <a className="j-link"> {t('goToSignupLink')}</a>
+        </Link>
+      </em>
+      <br />
+      <em>
+        {t('goToRequestResetText')}
+        <Link href="/dashboard/request-reset">
+          <a className="j-link"> {t('goToRequestResetLink')}</a>
         </Link>
       </em>
       <style jsx>{`

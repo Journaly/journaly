@@ -5,13 +5,12 @@ import ResetPasswordForm from '../../components/ResetPasswordForm'
 import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
 
 const ResetPasswordPage: NextPage = () => {
-  const {
-    query: { resetToken },
-  } = useRouter()
+  const { query } = useRouter()
+  const resetToken = query.resetToken as string
 
   return (
     <LandingPageLayout>
-      <ResetPasswordForm resetToken={resetToken} />
+      <ResetPasswordForm resetToken={resetToken!} />
       <style jsx>{`
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

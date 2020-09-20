@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { toast } from 'react-toastify'
@@ -82,12 +81,6 @@ const ResetPasswordForm: React.FC<Props> = ({ resetToken }) => {
         </label>
         <Button type="submit">{t('resetPassword.submitButtonText')}</Button>
       </fieldset>
-      <em>
-        {t('goToLoginText')}
-        <Link href="/dashboard/login">
-          <a className="j-link"> {t('goToLoginLink')}</a>
-        </Link>
-      </em>
       <style jsx>{`
         form {
           box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);

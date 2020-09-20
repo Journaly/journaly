@@ -6,6 +6,7 @@ import { randomBytes } from 'crypto'
 import { promisify } from 'util'
 
 import { NotAuthorizedError } from './errors'
+import { sendPasswordResetTokenEmail } from './utils'
 
 schema.objectType({
   name: 'User',
@@ -108,6 +109,8 @@ schema.extendType({
         password: schema.stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx: any) => {
+        // TODO: validate that handle satisfies a-zA-Z0-9 _ -
+
         const password = await bcrypt.hash(args.password, 10)
         const user = await ctx.db.user.create({
           data: {
@@ -223,6 +226,12 @@ schema.extendType({
             resetTokenExpiry,
           },
         })
+
+        await sendPasswordResetTokenEmail({
+          user,
+          resetToken,
+        })
+
         return user
       },
     })

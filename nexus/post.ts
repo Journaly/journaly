@@ -246,16 +246,13 @@ schema.extendType({
           await Promise.all(insertPromises)
         }
 
-        console.log(args)
         if (args.topicIds) {
-          console.log('here')
-          const insertPromises = args.topicIds.map(topicId => {
-            console.log('there', post.id, topicId)
+          const insertPromises = args.topicIds.map((topicId) => {
             return ctx.db.postTopic.create({
               data: {
                 post: { connect: { id: post.id } },
                 topic: { connect: { id: topicId } },
-              }
+              },
             })
           })
 
@@ -348,15 +345,15 @@ schema.extendType({
 
         if (args.topicIds) {
           await ctx.db.postTopic.deleteMany({
-            where: { postId: args.postId }
+            where: { postId: args.postId },
           })
 
-          const insertPromises = args.topicIds.map(topicId => {
+          const insertPromises = args.topicIds.map((topicId) => {
             return ctx.db.postTopic.create({
               data: {
                 post: { connect: { id: args.postId } },
                 topic: { connect: { id: topicId } },
-              }
+              },
             })
           })
 

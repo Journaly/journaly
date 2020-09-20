@@ -34,7 +34,6 @@ const ResetPasswordForm: React.FC<Props> = ({ resetToken }) => {
   })
 
   const onSubmit = (data: any) => {
-    console.log(data)
     if (!loading && Object.keys(errors).length === 0) {
       resetPassword({
         variables: {

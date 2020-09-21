@@ -109,7 +109,9 @@ schema.extendType({
         password: schema.stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx: any) => {
-        // TODO: validate that handle satisfies a-zA-Z0-9 _ -
+        if (!args.handle.match(/^[a-zA-Z0-9_-]+$/)) {
+          throw new Error('Invalid handle')
+        }
 
         const password = await bcrypt.hash(args.password, 10)
         const user = await ctx.db.user.create({

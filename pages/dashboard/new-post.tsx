@@ -33,7 +33,7 @@ const initialData = {
 const NewPostPage: NextPage = () => {
   const uiLanguage = useUILanguage()
   const { data: { currentUser, topics } = {} } = useNewPostQuery({
-    variables: { uiLanguage }
+    variables: { uiLanguage },
   })
   const dataRef = React.useRef<PostData>()
   const router = useRouter()
@@ -151,7 +151,7 @@ const NewPostPage: NextPage = () => {
 }
 
 NewPostPage.getInitialProps = async () => ({
-  namespacesRequired: ['post'],
+  namespacesRequired: ['common', 'post'],
 })
 
 export default withApollo(NewPostPage)

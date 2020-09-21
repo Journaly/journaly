@@ -137,7 +137,7 @@ const Account: NextPage = () => {
 }
 
 Account.getInitialProps = async () => ({
-  namespacesRequired: ['settings'],
+  namespacesRequired: ['common', 'settings'],
 })
 
 export default withApollo(Account)

@@ -15,7 +15,7 @@ const RequestResetPasswordPage: NextPage = () => (
 )
 
 RequestResetPasswordPage.getInitialProps = async () => ({
-  namespacesRequired: [],
+  namespacesRequired: ['common', 'authentication'],
 })
 
 export default withApollo(RequestResetPasswordPage)

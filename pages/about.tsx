@@ -10,7 +10,7 @@ const AboutPage: NextPage = () => (
 )
 
 AboutPage.getInitialProps = async () => ({
-  namespacesRequired: [],
+  namespacesRequired: ['common'],
 })
 
 export default withApollo(AboutPage)

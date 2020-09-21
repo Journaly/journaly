@@ -21,7 +21,7 @@ const MyPostsPage: NextPage = () => {
   const [activeKey, setActiveKey] = useState<PostStatusType>(tabs[0].key)
 
   const handleToggle = (key: string): void => {
-    // TODO(nick): wire up query params so you can directly link to a tab
+    // TODO: wire up query params so you can directly link to a tab
     setActiveKey(key as PostStatusType)
   }
 
@@ -68,7 +68,7 @@ const MyPostsPage: NextPage = () => {
 }
 
 MyPostsPage.getInitialProps = async () => ({
-  namespacesRequired: [],
+  namespacesRequired: ['my-posts', 'common'],
 })
 
 export default withApollo(MyPostsPage)

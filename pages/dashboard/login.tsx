@@ -15,7 +15,7 @@ const LoginPage: NextPage = () => (
 )
 
 LoginPage.getInitialProps = async () => ({
-  namespacesRequired: [],
+  namespacesRequired: ['common', 'authentication'],
 })
 
 export default withApollo(LoginPage)

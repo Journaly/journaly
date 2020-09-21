@@ -15,7 +15,7 @@ const SignupPage: NextPage = () => (
 )
 
 SignupPage.getInitialProps = async () => ({
-  namespacesRequired: [],
+  namespacesRequired: ['common', 'authentication'],
 })
 
 export default withApollo(SignupPage)

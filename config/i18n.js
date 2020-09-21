@@ -12,5 +12,15 @@ module.exports = new NextI18Next({
   localeSubpaths: {
     de: 'de',
   },
-  ns: ['common', 'post', 'profile', 'settings'],
+  ns: [
+    'common',
+    'post',
+    'profile',
+    'settings',
+    'authentication',
+    'comment',
+    'my-feed',
+    'my-posts',
+    'post-author-card',
+  ],
 })

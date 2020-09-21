@@ -203,6 +203,11 @@ type SendPostCommentNotificationArgs = {
   postCommentAuthor: User
 }
 
+type sendPasswordResetTokenEmailArgs = {
+  user: User
+  resetToken: string
+}
+
 type EmailParams = {
   from: string
   to: string
@@ -291,6 +296,23 @@ export const sendPostCommentNotification = ({
       <p><strong>Journal entry:</strong> ${post.title}</p>
       <p><strong>Comment:</strong> "${postComment.body}"</p>
       <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
+    `),
+  })
+}
+
+export const sendPasswordResetTokenEmail = ({
+  user,
+  resetToken,
+}: sendPasswordResetTokenEmailArgs) => {
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: user.email,
+    subject: 'Your Password Reset Link',
+    html: makeEmail(`
+      <p>I heard you were having some trouble logging in.</>
+      <p>Click <a href="https://${process.env.SITE_DOMAIN}/dashboard/reset-password?resetToken=${resetToken}">here</a> to reset your password!</p>
+      <p>Please note that the link will expire in 1 hour.</p>
+      <p>Warmly,</p>
     `),
   })
 }

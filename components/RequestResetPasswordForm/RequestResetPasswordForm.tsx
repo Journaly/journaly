@@ -2,19 +2,16 @@ import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 import { useTranslation } from '../../config/i18n'
-import {
-  useLoginUserMutation,
-  CurrentUserDocument,
-  useCurrentUserQuery,
-} from '../../generated/graphql'
+import { useRequestResetPasswordMutation } from '../../generated/graphql'
 import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
 import theme from '../../theme'
 
-const LoginForm: React.FC = () => {
+const RequestResetPasswordForm: React.FC = () => {
   const { t } = useTranslation('authentication')
 
   const router = useRouter()
@@ -24,25 +21,21 @@ const LoginForm: React.FC = () => {
 
   const fieldErrorName = Object.keys(errors)[0] || ''
 
-  const { refetch } = useCurrentUserQuery()
-
-  const [loginUser, { loading, error }] = useLoginUserMutation({
+  const [requestReset, { loading, error }] = useRequestResetPasswordMutation({
     onCompleted: async () => {
-      await refetch()
+      toast.success(t('requestReset.successMessage'))
       router.push({
-        pathname: '/dashboard/my-feed',
+        pathname: '/dashboard/login',
       })
     },
   })
 
   const onSubmit = (data: any) => {
     if (!loading && Object.keys(errors).length === 0) {
-      loginUser({
+      requestReset({
         variables: {
           identifier: data.email,
-          password: data.password,
         },
-        refetchQueries: [{ query: CurrentUserDocument }],
       })
     }
   }
@@ -50,7 +43,8 @@ const LoginForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={loading} aria-busy={loading}>
-        <h2>{t('login.title')}</h2>
+        <h2>{t('requestReset.title')}</h2>
+        <p className="helper-text">{t('requestReset.helperText')}</p>
         {error && <FormError error={error} />}
         <label htmlFor="email">
           {t('emailInputLabel')}
@@ -69,33 +63,12 @@ const LoginForm: React.FC = () => {
           />
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>
-        <label htmlFor="password">
-          {t('passwordInputLabel')}
-          <input
-            type="password"
-            placeholder={t('passwordInputPlaceholder')}
-            name="password"
-            ref={register({
-              required: `${t('passwordRequiredErrorMessage')}`,
-              minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
-            })}
-            data-test="password"
-          />
-          <ErrorMessage errors={errors} name="password" as="p" />
-        </label>
-        <Button type="submit">{t('login.submitButtonText')}</Button>
+        <Button type="submit">{t('requestReset.submitButtonText')}</Button>
       </fieldset>
       <em>
-        {t('goToSignupText')}
-        <Link href="/dashboard/signup">
-          <a className="j-link"> {t('goToSignupLink')}</a>
-        </Link>
-      </em>
-      <br />
-      <em>
-        {t('goToRequestResetText')}
-        <Link href="/dashboard/request-reset">
-          <a className="j-link"> {t('goToRequestResetLink')}</a>
+        {t('requestReset.goToLoginText')}
+        <Link href="/dashboard/login">
+          <a className="j-link"> {t('requestReset.goToLoginLink')}</a>
         </Link>
       </em>
       <style jsx>{`
@@ -112,6 +85,14 @@ const LoginForm: React.FC = () => {
         :global(.form-error) {
           margin: 12px 0;
         }
+
+        .helper-text {
+          font-size: 14px;
+          text-align: center;
+          font-style: italic;
+          margin-bottom: 5px;
+        }
+
         label {
           display: block;
           margin-bottom: 10px;
@@ -198,4 +179,4 @@ const LoginForm: React.FC = () => {
   )
 }
 
-export default LoginForm
+export default RequestResetPasswordForm

@@ -1,20 +1,20 @@
 import React from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 import { useTranslation } from '../../config/i18n'
-import {
-  useLoginUserMutation,
-  CurrentUserDocument,
-  useCurrentUserQuery,
-} from '../../generated/graphql'
+import { useResetPasswordMutation } from '../../generated/graphql'
 import FormError from '../FormError'
 import Button from '../../elements/Button'
 import { brandBlue } from '../../utils'
 import theme from '../../theme'
 
-const LoginForm: React.FC = () => {
+type Props = {
+  resetToken: string
+}
+
+const ResetPasswordForm: React.FC<Props> = ({ resetToken }) => {
   const { t } = useTranslation('authentication')
 
   const router = useRouter()
@@ -24,25 +24,23 @@ const LoginForm: React.FC = () => {
 
   const fieldErrorName = Object.keys(errors)[0] || ''
 
-  const { refetch } = useCurrentUserQuery()
-
-  const [loginUser, { loading, error }] = useLoginUserMutation({
+  const [resetPassword, { loading, error }] = useResetPasswordMutation({
     onCompleted: async () => {
-      await refetch()
+      toast.success(t('resetPassword.successMessage'))
       router.push({
-        pathname: '/dashboard/my-feed',
+        pathname: '/dashboard/login',
       })
     },
   })
 
   const onSubmit = (data: any) => {
     if (!loading && Object.keys(errors).length === 0) {
-      loginUser({
+      resetPassword({
         variables: {
-          identifier: data.email,
+          resetToken,
           password: data.password,
+          confirmPassword: data.confirmPassword,
         },
-        refetchQueries: [{ query: CurrentUserDocument }],
       })
     }
   }
@@ -50,25 +48,8 @@ const LoginForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={loading} aria-busy={loading}>
-        <h2>{t('login.title')}</h2>
+        <h2>{t('resetPassword.title')}</h2>
         {error && <FormError error={error} />}
-        <label htmlFor="email">
-          {t('emailInputLabel')}
-          <input
-            type="text"
-            placeholder={t('emailInputPlaceholder')}
-            name="email"
-            ref={register({
-              required: `${t('emailRequiredErrorMessage')}`,
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: `${t('emailValidationErrorMessage')}`,
-              },
-            })}
-            data-test="email"
-          />
-          <ErrorMessage errors={errors} name="email" as="p" />
-        </label>
         <label htmlFor="password">
           {t('passwordInputLabel')}
           <input
@@ -83,21 +64,22 @@ const LoginForm: React.FC = () => {
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>
-        <Button type="submit">{t('login.submitButtonText')}</Button>
+        <label htmlFor="password">
+          {t('confirmPasswordInputLabel')}
+          <input
+            type="password"
+            placeholder={t('confirmPasswordInputPlaceholder')}
+            name="confirmPassword"
+            ref={register({
+              required: `${t('confirmPasswordRequiredErrorMessage')}`,
+              minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
+            })}
+            data-test="confirm-password"
+          />
+          <ErrorMessage errors={errors} name="confirmPassword" as="p" />
+        </label>
+        <Button type="submit">{t('resetPassword.submitButtonText')}</Button>
       </fieldset>
-      <em>
-        {t('goToSignupText')}
-        <Link href="/dashboard/signup">
-          <a className="j-link"> {t('goToSignupLink')}</a>
-        </Link>
-      </em>
-      <br />
-      <em>
-        {t('goToRequestResetText')}
-        <Link href="/dashboard/request-reset">
-          <a className="j-link"> {t('goToRequestResetLink')}</a>
-        </Link>
-      </em>
       <style jsx>{`
         form {
           box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
@@ -112,6 +94,14 @@ const LoginForm: React.FC = () => {
         :global(.form-error) {
           margin: 12px 0;
         }
+
+        .helper-text {
+          font-size: 14px;
+          text-align: center;
+          font-style: italic;
+          margin-bottom: 5px;
+        }
+
         label {
           display: block;
           margin-bottom: 10px;
@@ -198,4 +188,4 @@ const LoginForm: React.FC = () => {
   )
 }
 
-export default LoginForm
+export default ResetPasswordForm

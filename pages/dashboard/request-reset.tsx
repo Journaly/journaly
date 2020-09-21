@@ -1,11 +1,11 @@
 import { NextPage } from 'next'
 import { withApollo } from '../../lib/apollo'
-import LoginForm from '../../components/LoginForm'
+import RequestResetPasswordForm from '../../components/RequestResetPasswordForm'
 import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
 
-const LoginPage: NextPage = () => (
+const RequestResetPasswordPage: NextPage = () => (
   <LandingPageLayout>
-    <LoginForm />
+    <RequestResetPasswordForm />
     <style jsx>{`
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -14,8 +14,8 @@ const LoginPage: NextPage = () => (
   </LandingPageLayout>
 )
 
-LoginPage.getInitialProps = async () => ({
+RequestResetPasswordPage.getInitialProps = async () => ({
   namespacesRequired: ['common', 'authentication'],
 })
 
-export default withApollo(LoginPage)
+export default withApollo(RequestResetPasswordPage)

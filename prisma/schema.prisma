@@ -257,6 +257,16 @@ model UserSubscription {
   updatedAt DateTime @updatedAt
 }
 
+model FollowSubscription {
+  id         Int      @default(autoincrement()) @id
+  createdAt  DateTime @default(now())
+  follower   User     @relation(fields: [followerId], references: [id], name: "follower2Author")
+  followerId Int
+  author     User     @relation(fields: [authorId], references: [id], name: "author2Follower")
+  authorId   Int
+  @@unique([followerId, authorId])
+}
+
 model PageView {
   id                  Int      @default(autoincrement()) @id
   user                User?    @relation(fields: [userId], references: [id])

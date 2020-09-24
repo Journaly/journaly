@@ -12,3 +12,4 @@
 20200908095206-add-thanks-and-db-constraints
 20200910205210-add-topic-translation-table
 20200919143307-update-reset-token-expiry-type
+20200923094139-add-user-follows-m2m

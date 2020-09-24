@@ -33,6 +33,8 @@ model User {
   postCommentThanks   PostCommentThanks[]
   comments            Comment[]
   postComments        PostComment[]
+  followedBy          User[]               @relation("UserFollows", references: [id])
+  following           User[]               @relation("UserFollows", references: [id])
 }
 
 model Auth {
@@ -255,16 +257,6 @@ model UserSubscription {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model FollowSubscription {
-  id         Int      @default(autoincrement()) @id
-  createdAt  DateTime @default(now())
-  follower   User     @relation(fields: [followerId], references: [id], name: "follower2Author")
-  followerId Int
-  author     User     @relation(fields: [authorId], references: [id], name: "author2Follower")
-  authorId   Int
-  @@unique([followerId, authorId])
 }
 
 model PageView {

@@ -153,6 +153,8 @@ export type Mutation = {
   requestResetPassword?: Maybe<User>
   resetPassword?: Maybe<User>
   logout?: Maybe<User>
+  followUser?: Maybe<User>
+  unfollowUser?: Maybe<User>
   addLanguageLearning?: Maybe<LanguageLearning>
   addLanguageNative?: Maybe<LanguageNative>
   removeLanguageLearning?: Maybe<LanguageLearning>
@@ -245,6 +247,14 @@ export type MutationResetPasswordArgs = {
   resetToken: Scalars['String']
   password: Scalars['String']
   confirmPassword: Scalars['String']
+}
+
+export type MutationFollowUserArgs = {
+  followedUserId: Scalars['Int']
+}
+
+export type MutationUnfollowUserArgs = {
+  followedUserId: Scalars['Int']
 }
 
 export type MutationAddLanguageLearningArgs = {
@@ -499,6 +509,8 @@ export type User = {
   createdAt: Scalars['DateTime']
   languagesNative: Array<LanguageNative>
   languagesLearning: Array<LanguageLearning>
+  following: Array<User>
+  followedBy: Array<User>
   postsWrittenCount?: Maybe<Scalars['Int']>
   thanksReceivedCount?: Maybe<Scalars['Int']>
 }
@@ -519,6 +531,22 @@ export type UserLanguagesLearningArgs = {
   last?: Maybe<Scalars['Int']>
 }
 
+export type UserFollowingArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<UserWhereUniqueInput>
+  before?: Maybe<UserWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type UserFollowedByArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<UserWhereUniqueInput>
+  before?: Maybe<UserWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
 export type UserIdLanguageIdCompoundUniqueInput = {
   userId: Scalars['Int']
   languageId: Scalars['Int']
@@ -529,6 +557,12 @@ export enum UserRole {
   Moderator = 'MODERATOR',
   FreeUser = 'FREE_USER',
   ProUser = 'PRO_USER',
+}
+
+export type UserWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+  email?: Maybe<Scalars['String']>
+  handle?: Maybe<Scalars['String']>
 }
 
 export type CreateCommentMutationVariables = {
@@ -618,8 +652,10 @@ export type UserFragmentFragment = { __typename?: 'User' } & Pick<
 export type UserWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
   User,
   'postsWrittenCount' | 'thanksReceivedCount'
-> &
-  UserFragmentFragment
+> & {
+    following: Array<{ __typename?: 'User' } & Pick<User, 'id'>>
+    followedBy: Array<{ __typename?: 'User' } & Pick<User, 'id'>>
+  } & UserFragmentFragment
 
 export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
   languagesLearning: Array<
@@ -632,6 +668,8 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
         language: { __typename?: 'Language' } & LanguageFragmentFragment
       }
   >
+  following: Array<{ __typename?: 'User' } & Pick<User, 'id'>>
+  followedBy: Array<{ __typename?: 'User' } & Pick<User, 'id'>>
 } & UserFragmentFragment
 
 export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
@@ -926,6 +964,14 @@ export type CurrentUserQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
+export type FollowUserMutationVariables = {
+  followedUserId: Scalars['Int']
+}
+
+export type FollowUserMutation = { __typename?: 'Mutation' } & {
+  followUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
+}
+
 export type LoginUserMutationVariables = {
   identifier: Scalars['String']
   password: Scalars['String']
@@ -979,6 +1025,14 @@ export type SettingsFormDataQuery = { __typename?: 'Query' } & {
   >
 }
 
+export type UnfollowUserMutationVariables = {
+  followedUserId: Scalars['Int']
+}
+
+export type UnfollowUserMutation = { __typename?: 'Mutation' } & {
+  unfollowUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
+}
+
 export type UpdateUserMutationVariables = {
   email?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
@@ -1026,6 +1080,12 @@ export const UserWithStatsFragmentFragmentDoc = gql`
     ...UserFragment
     postsWrittenCount
     thanksReceivedCount
+    following {
+      id
+    }
+    followedBy {
+      id
+    }
   }
   ${UserFragmentFragmentDoc}
 `
@@ -1050,6 +1110,12 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
       language {
         ...LanguageFragment
       }
+    }
+    following {
+      id
+    }
+    followedBy {
+      id
     }
   }
   ${UserFragmentFragmentDoc}
@@ -2568,6 +2634,53 @@ export type CurrentUserQueryResult = ApolloReactCommon.QueryResult<
   CurrentUserQuery,
   CurrentUserQueryVariables
 >
+export const FollowUserDocument = gql`
+  mutation followUser($followedUserId: Int!) {
+    followUser(followedUserId: $followedUserId) {
+      ...UserFragment
+    }
+  }
+  ${UserFragmentFragmentDoc}
+`
+export type FollowUserMutationFn = ApolloReactCommon.MutationFunction<
+  FollowUserMutation,
+  FollowUserMutationVariables
+>
+
+/**
+ * __useFollowUserMutation__
+ *
+ * To run a mutation, you first call `useFollowUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFollowUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [followUserMutation, { data, loading, error }] = useFollowUserMutation({
+ *   variables: {
+ *      followedUserId: // value for 'followedUserId'
+ *   },
+ * });
+ */
+export function useFollowUserMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    FollowUserMutation,
+    FollowUserMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<FollowUserMutation, FollowUserMutationVariables>(
+    FollowUserDocument,
+    baseOptions,
+  )
+}
+export type FollowUserMutationHookResult = ReturnType<typeof useFollowUserMutation>
+export type FollowUserMutationResult = ApolloReactCommon.MutationResult<FollowUserMutation>
+export type FollowUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  FollowUserMutation,
+  FollowUserMutationVariables
+>
 export const LoginUserDocument = gql`
   mutation loginUser($identifier: String!, $password: String!) {
     loginUser(identifier: $identifier, password: $password) {
@@ -2819,6 +2932,52 @@ export type SettingsFormDataLazyQueryHookResult = ReturnType<typeof useSettingsF
 export type SettingsFormDataQueryResult = ApolloReactCommon.QueryResult<
   SettingsFormDataQuery,
   SettingsFormDataQueryVariables
+>
+export const UnfollowUserDocument = gql`
+  mutation unfollowUser($followedUserId: Int!) {
+    unfollowUser(followedUserId: $followedUserId) {
+      id
+    }
+  }
+`
+export type UnfollowUserMutationFn = ApolloReactCommon.MutationFunction<
+  UnfollowUserMutation,
+  UnfollowUserMutationVariables
+>
+
+/**
+ * __useUnfollowUserMutation__
+ *
+ * To run a mutation, you first call `useUnfollowUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnfollowUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unfollowUserMutation, { data, loading, error }] = useUnfollowUserMutation({
+ *   variables: {
+ *      followedUserId: // value for 'followedUserId'
+ *   },
+ * });
+ */
+export function useUnfollowUserMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UnfollowUserMutation,
+    UnfollowUserMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<UnfollowUserMutation, UnfollowUserMutationVariables>(
+    UnfollowUserDocument,
+    baseOptions,
+  )
+}
+export type UnfollowUserMutationHookResult = ReturnType<typeof useUnfollowUserMutation>
+export type UnfollowUserMutationResult = ApolloReactCommon.MutationResult<UnfollowUserMutation>
+export type UnfollowUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UnfollowUserMutation,
+  UnfollowUserMutationVariables
 >
 export const UpdateUserDocument = gql`
   mutation updateUser($email: String, $name: String, $profileImage: String, $bio: String) {

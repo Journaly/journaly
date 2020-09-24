@@ -21,7 +21,7 @@ const PostPage: NextPage = () => {
   const id = parseInt(idStr, 10)
   const uiLanguage = useUILanguage()
   const { refetch, loading: postLoading, error: postError, data: postData } = usePostByIdQuery({
-    variables: { id, uiLanguage, },
+    variables: { id, uiLanguage },
   })
   const { loading: userLoading, error: userError, data: userData } = useCurrentUserQuery()
 
@@ -43,7 +43,11 @@ const PostPage: NextPage = () => {
                   onUpdateComment={refetch}
                   onDeleteComment={refetch}
                 />
-                <PostAuthorCard author={postData?.postById?.author} />
+                <PostAuthorCard
+                  author={postData?.postById?.author}
+                  currentUser={userData?.currentUser}
+                  refetch={refetch}
+                />
               </div>
             </>
           )}

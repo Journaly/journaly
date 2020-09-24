@@ -1,0 +1,5 @@
+mutation followUser($followedUserId: Int!) {
+  followUser(followedUserId: $followedUserId) {
+    ...UserFragment
+  }
+}

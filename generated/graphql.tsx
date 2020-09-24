@@ -969,7 +969,7 @@ export type FollowUserMutationVariables = {
 }
 
 export type FollowUserMutation = { __typename?: 'Mutation' } & {
-  followUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
+  followUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
 }
 
 export type LoginUserMutationVariables = {
@@ -2637,10 +2637,9 @@ export type CurrentUserQueryResult = ApolloReactCommon.QueryResult<
 export const FollowUserDocument = gql`
   mutation followUser($followedUserId: Int!) {
     followUser(followedUserId: $followedUserId) {
-      ...UserFragment
+      id
     }
   }
-  ${UserFragmentFragmentDoc}
 `
 export type FollowUserMutationFn = ApolloReactCommon.MutationFunction<
   FollowUserMutation,

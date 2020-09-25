@@ -13,6 +13,7 @@ import LoadingWrapper from '../../LoadingWrapper'
 import MultiSelect from '../../../elements/MultiSelect'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import { greetings } from './greetings'
+import useToggle from '../../../hooks/useToggle'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -60,6 +61,8 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
     ...userLanguages.values(),
   ])
 
+  const [followedAuthorsFilter, toggleFollowedAuthorsFilter] = useToggle()
+
   /**
    * Pagination handling
    */
@@ -73,6 +76,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
       first: NUM_POSTS_PER_PAGE,
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
       languages: selectedLanguageFilters.length ? selectedLanguageFilters : null,
+      followedAuthors: followedAuthorsFilter,
     },
   })
 
@@ -160,6 +164,9 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
               }}
             >
               {t('myLanguages')}
+            </Button>
+            <Button variant={ButtonVariant.Link} onClick={toggleFollowedAuthorsFilter}>
+              {t('followedUsers')}
             </Button>
           </div>
         </div>

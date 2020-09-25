@@ -433,6 +433,7 @@ export type QueryFeedArgs = {
   topic?: Maybe<Scalars['Int']>
   skip?: Maybe<Scalars['Int']>
   first?: Maybe<Scalars['Int']>
+  followedAuthors?: Maybe<Scalars['Boolean']>
 }
 
 export type QueryUserByIdArgs = {
@@ -872,6 +873,7 @@ export type FeedQueryVariables = {
   search?: Maybe<Scalars['String']>
   languages?: Maybe<Array<Scalars['Int']>>
   topic?: Maybe<Scalars['Int']>
+  followedAuthors?: Maybe<Scalars['Boolean']>
 }
 
 export type FeedQuery = { __typename?: 'Query' } & {
@@ -2141,8 +2143,22 @@ export type EditPostQueryResult = ApolloReactCommon.QueryResult<
   EditPostQueryVariables
 >
 export const FeedDocument = gql`
-  query feed($first: Int!, $skip: Int!, $search: String, $languages: [Int!], $topic: Int) {
-    feed(first: $first, skip: $skip, search: $search, languages: $languages, topic: $topic) {
+  query feed(
+    $first: Int!
+    $skip: Int!
+    $search: String
+    $languages: [Int!]
+    $topic: Int
+    $followedAuthors: Boolean
+  ) {
+    feed(
+      first: $first
+      skip: $skip
+      search: $search
+      languages: $languages
+      topic: $topic
+      followedAuthors: $followedAuthors
+    ) {
       posts {
         ...PostCardFragment
       }
@@ -2169,6 +2185,7 @@ export const FeedDocument = gql`
  *      search: // value for 'search'
  *      languages: // value for 'languages'
  *      topic: // value for 'topic'
+ *      followedAuthors: // value for 'followedAuthors'
  *   },
  * });
  */

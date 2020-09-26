@@ -78,7 +78,7 @@ const SignupForm: React.FC = () => {
             ref={register({
               required: `${t('emailRequiredErrorMessage')}`,
               pattern: {
-                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Z]{2,}$/,
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: `${t('emailValidationErrorMessage')}`,
               },
             })}

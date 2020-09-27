@@ -43,11 +43,7 @@ const PostPage: NextPage = () => {
                   onUpdateComment={refetch}
                   onDeleteComment={refetch}
                 />
-                <PostAuthorCard
-                  author={postData?.postById?.author}
-                  currentUser={userData?.currentUser}
-                  refetch={refetch}
-                />
+                <PostAuthorCard author={post.author} />
               </div>
             </>
           )}

@@ -12,12 +12,6 @@ fragment UserWithStatsFragment on User {
   ...UserFragment
   postsWrittenCount
   thanksReceivedCount
-  following {
-    id
-  }
-  followedBy {
-    id
-  }
 }
 
 fragment UserWithLanguagesFragment on User {
@@ -33,12 +27,6 @@ fragment UserWithLanguagesFragment on User {
     language {
       ...LanguageFragment
     }
-  }
-  following {
-    id
-  }
-  followedBy {
-    id
   }
 }
 

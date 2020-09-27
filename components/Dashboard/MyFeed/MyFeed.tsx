@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
+import _ from 'lodash'
+
 import { useTranslation } from '../../../config/i18n'
 
 import PostCard from '../PostCard'
@@ -60,6 +62,11 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>([
     ...userLanguages.values(),
   ])
+
+  const isUserLanguagesFilterActive = _.isEqual(
+    Array.from(userLanguages.values()),
+    selectedLanguageFilters,
+  )
 
   const [followedAuthorsFilter, toggleFollowedAuthorsFilter] = useToggle()
 
@@ -160,12 +167,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
             </Button>
             <Button
               variant={ButtonVariant.Link}
-              className={`filter-action-btn ${
-                JSON.stringify(selectedLanguageFilters) ===
-                JSON.stringify(Array.from(userLanguages.values()))
-                  ? 'active'
-                  : ''
-              }`}
+              className={`filter-action-btn ${isUserLanguagesFilterActive ? 'active' : ''}`}
               onClick={() => {
                 setSelectedLanguageFilters([...userLanguages.values()])
               }}

@@ -72,7 +72,7 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
             onClick={hasFollowedAuthor ? handleUnfollowUser : handleFollowUser}
             loading={followLoading || unfollowLoading}
           >
-            {hasFollowedAuthor ? 'Unfollow' : 'Follow'}
+            {hasFollowedAuthor ? t('unfollow') : t('follow')}
           </Button>
         )}
       </div>

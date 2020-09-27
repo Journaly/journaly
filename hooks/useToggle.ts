@@ -6,7 +6,9 @@ import { useCallback, useState } from 'react'
  * @param initialValue
  */
 
-export default function useToggle(initialValue = false) {
+type toggleType = (initialValue?: boolean) => [boolean, () => void]
+
+const useToggle: toggleType = (initialValue = false) => {
   const [value, setValue] = useState(initialValue)
 
   const toggle = useCallback(() => {
@@ -15,3 +17,5 @@ export default function useToggle(initialValue = false) {
 
   return [value, toggle]
 }
+
+export default useToggle

@@ -151,6 +151,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
           <div className="filter-actions">
             <Button
               variant={ButtonVariant.Link}
+              className="filter-action-btn"
               onClick={() => {
                 setSelectedLanguageFilters([])
               }}
@@ -159,13 +160,18 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
             </Button>
             <Button
               variant={ButtonVariant.Link}
+              className="filter-action-btn"
               onClick={() => {
                 setSelectedLanguageFilters([...userLanguages.values()])
               }}
             >
               {t('myLanguages')}
             </Button>
-            <Button variant={ButtonVariant.Link} onClick={toggleFollowedAuthorsFilter}>
+            <Button
+              variant={ButtonVariant.Link}
+              className={`filter-action-btn ${followedAuthorsFilter ? 'active' : ''}`}
+              onClick={toggleFollowedAuthorsFilter}
+            >
               {t('followedUsers')}
             </Button>
           </div>
@@ -259,6 +265,14 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
         }
         .filter-actions > :global(button) {
           margin-right: 10px;
+        }
+
+        .filter-actions > :global(.filter-action-btn):hover {
+          font-weight: 600;
+        }
+        .filter-actions > :global(.filter-action-btn.active) {
+          font-weight: 600;
+          text-decoration: underline;
         }
       `}</style>
     </div>

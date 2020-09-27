@@ -332,47 +332,38 @@ schema.extendType({
       resolve: async (_parent, args, ctx, _info) => {
         const { userId: followerId } = ctx.request
 
-        try {
-          return ctx.db.user.update({
-            where: {
-              id: followerId,
+        return ctx.db.user.update({
+          where: {
+            id: followerId,
+          },
+          data: {
+            following: {
+              connect: [{ id: args.followedUserId }],
             },
-            data: {
-              following: {
-                connect: [{ id: args.followedUserId }],
-              },
-            },
-          })
-        } catch (error) {
-          console.error('There was a problem creating the follower subscription', error)
-          throw new Error(error)
-        }
+          },
+        })
       },
-    }),
-      t.field('unfollowUser', {
-        type: 'User',
-        args: {
-          followedUserId: intArg({ required: true }),
-        },
-        resolve: async (_parent, args, ctx, _info) => {
-          const { userId: followerId } = ctx.request
+    })
 
-          try {
-            return ctx.db.user.update({
-              where: {
-                id: followerId,
-              },
-              data: {
-                following: {
-                  disconnect: [{ id: args.followedUserId }],
-                },
-              },
-            })
-          } catch (error) {
-            console.error('There was a problem removing the follower subscription', error)
-            throw new Error(error)
-          }
-        },
-      })
+    t.field('unfollowUser', {
+      type: 'User',
+      args: {
+        followedUserId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx, _info) => {
+        const { userId: followerId } = ctx.request
+
+        return ctx.db.user.update({
+          where: {
+            id: followerId,
+          },
+          data: {
+            following: {
+              disconnect: [{ id: args.followedUserId }],
+            },
+          },
+        })
+      },
+    })
   },
 })

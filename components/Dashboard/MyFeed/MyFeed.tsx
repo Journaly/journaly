@@ -160,7 +160,12 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
             </Button>
             <Button
               variant={ButtonVariant.Link}
-              className="filter-action-btn"
+              className={`filter-action-btn ${
+                JSON.stringify(selectedLanguageFilters) ===
+                JSON.stringify(Array.from(userLanguages.values()))
+                  ? 'active'
+                  : ''
+              }`}
               onClick={() => {
                 setSelectedLanguageFilters([...userLanguages.values()])
               }}

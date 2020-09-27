@@ -171,13 +171,13 @@ schema.extendType({
         }
 
         if (currentUser && args.followedAuthors) {
-          for (let author of currentUser.following) {
-            filterClauses.push({
-              authorId: {
-                equals: author.id,
+          filterClauses.push({
+            author: {
+              followedBy: {
+                some: { id: currentUser.id },
               },
-            })
-          }
+            },
+          })
         }
 
         const countQuery = ctx.db.post.count({

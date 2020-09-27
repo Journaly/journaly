@@ -7,6 +7,7 @@ import { promisify } from 'util'
 
 import { NotAuthorizedError } from './errors'
 import { sendPasswordResetTokenEmail } from './utils'
+import { intArg } from 'nexus/components/schema'
 
 schema.objectType({
   name: 'User',
@@ -25,6 +26,8 @@ schema.objectType({
     t.model.createdAt()
     t.model.languagesNative()
     t.model.languagesLearning()
+    t.model.following()
+    t.model.followedBy()
     t.int('postsWrittenCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.post.count({
@@ -318,6 +321,48 @@ schema.extendType({
         )
 
         return user
+      },
+    })
+
+    t.field('followUser', {
+      type: 'User',
+      args: {
+        followedUserId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx, _info) => {
+        const { userId: followerId } = ctx.request
+
+        return ctx.db.user.update({
+          where: {
+            id: followerId,
+          },
+          data: {
+            following: {
+              connect: [{ id: args.followedUserId }],
+            },
+          },
+        })
+      },
+    })
+
+    t.field('unfollowUser', {
+      type: 'User',
+      args: {
+        followedUserId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx, _info) => {
+        const { userId: followerId } = ctx.request
+
+        return ctx.db.user.update({
+          where: {
+            id: followerId,
+          },
+          data: {
+            following: {
+              disconnect: [{ id: args.followedUserId }],
+            },
+          },
+        })
       },
     })
   },

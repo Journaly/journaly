@@ -119,8 +119,20 @@ schema.extendType({
         topic: schema.intArg({ required: false }),
         skip: schema.intArg(),
         first: schema.intArg(),
+        followedAuthors: schema.booleanArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        const currentUser = await ctx.db.user.findOne({
+          where: {
+            id: userId,
+          },
+          include: {
+            following: true,
+          },
+        })
+
         const filterClauses = []
         if (!args.first) args.first = 10
         if (args.first > 50) args.first = 50
@@ -155,6 +167,16 @@ schema.extendType({
                 },
               },
             ],
+          })
+        }
+
+        if (currentUser && args.followedAuthors) {
+          filterClauses.push({
+            author: {
+              followedBy: {
+                some: { id: currentUser.id },
+              },
+            },
           })
         }
 

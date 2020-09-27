@@ -1,5 +1,19 @@
-query feed($first: Int!, $skip: Int!, $search: String, $languages: [Int!], $topic: Int) {
-  feed(first: $first, skip: $skip, search: $search, languages: $languages, topic: $topic) {
+query feed(
+  $first: Int!
+  $skip: Int!
+  $search: String
+  $languages: [Int!]
+  $topic: Int
+  $followedAuthors: Boolean
+) {
+  feed(
+    first: $first
+    skip: $skip
+    search: $search
+    languages: $languages
+    topic: $topic
+    followedAuthors: $followedAuthors
+  ) {
     posts {
       ...PostCardFragment
     }

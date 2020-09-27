@@ -5,5 +5,7 @@
   "postsWrittenCountSingular": "post",
   "postsWrittenCountPlural": "posts",
   "hasReceived": "Has received",
-  "thanksReceivedCount": "thanks"
+  "thanksReceivedCount": "thanks",
+  "follow": "Follow",
+  "unfollow": "Unfollow"
 }

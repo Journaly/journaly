@@ -25,7 +25,7 @@
     "svgr": "node scripts/svgr.js",
     "type-check": "tsc",
     "prisma": "prisma",
-    "seed": "ts-node scripts/seed.ts",
+    "seed": "ts-node -O '{\"module\": \"commonjs\"}' scripts/seed.ts",
     "empty-db": "source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
     "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed",
     "migrate:up": "prisma migrate up --experimental",

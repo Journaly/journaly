@@ -75,7 +75,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
    */
   // Pull query params off the router instance
   const { query } = useRouter()
-  const currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
+  let currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
 
   // fetch posts for the feed!
   const { loading, error, data } = useFeedQuery({
@@ -148,12 +148,16 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
             options={languageOptions}
             selectedOptionValues={selectedLanguageFilters}
             placeholder="Languages"
-            onAdd={(id) => setSelectedLanguageFilters([...selectedLanguageFilters, id])}
-            onRemove={(id) =>
+            onAdd={(id) => {
+              setSelectedLanguageFilters([...selectedLanguageFilters, id])
+              currentPage = 1
+            }}
+            onRemove={(id) => {
               setSelectedLanguageFilters(
                 selectedLanguageFilters.filter((languageId) => languageId !== id),
               )
-            }
+              currentPage = 1
+            }}
           />
           <div className="filter-actions">
             <Button
@@ -170,6 +174,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
               className={`filter-action-btn ${isUserLanguagesFilterActive ? 'active' : ''}`}
               onClick={() => {
                 setSelectedLanguageFilters([...userLanguages.values()])
+                currentPage = 1
               }}
             >
               {t('myLanguages')}
@@ -177,7 +182,10 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
             <Button
               variant={ButtonVariant.Link}
               className={`filter-action-btn ${followedAuthorsFilter ? 'active' : ''}`}
-              onClick={toggleFollowedAuthorsFilter}
+              onClick={() => {
+                toggleFollowedAuthorsFilter()
+                currentPage = 1
+              }}
             >
               {t('followedUsers')}
             </Button>

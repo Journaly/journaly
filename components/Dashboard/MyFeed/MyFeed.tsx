@@ -17,7 +17,7 @@ import Button, { ButtonVariant } from '../../../elements/Button'
 import { greetings } from './greetings'
 import useToggle from '../../../hooks/useToggle'
 
-const NUM_POSTS_PER_PAGE = 9
+const NUM_POSTS_PER_PAGE = 2
 
 type Props = {
   currentUser: UserType
@@ -75,13 +75,15 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
    */
   // Pull query params off the router instance
   const { query } = useRouter()
-  let currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
+  const [currentPageValue, setCurrentPageValue] = useState(
+    query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1,
+  )
 
   // fetch posts for the feed!
   const { loading, error, data } = useFeedQuery({
     variables: {
       first: NUM_POSTS_PER_PAGE,
-      skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
+      skip: (currentPageValue - 1) * NUM_POSTS_PER_PAGE,
       languages: selectedLanguageFilters.length ? selectedLanguageFilters : null,
       followedAuthors: followedAuthorsFilter,
     },
@@ -149,14 +151,14 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
             selectedOptionValues={selectedLanguageFilters}
             placeholder="Languages"
             onAdd={(id) => {
+              setCurrentPageValue(1)
               setSelectedLanguageFilters([...selectedLanguageFilters, id])
-              currentPage = 1
             }}
             onRemove={(id) => {
+              setCurrentPageValue(1)
               setSelectedLanguageFilters(
                 selectedLanguageFilters.filter((languageId) => languageId !== id),
               )
-              currentPage = 1
             }}
           />
           <div className="filter-actions">
@@ -164,6 +166,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
               variant={ButtonVariant.Link}
               className="filter-action-btn"
               onClick={() => {
+                setCurrentPageValue(1)
                 setSelectedLanguageFilters([])
               }}
             >
@@ -173,8 +176,8 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
               variant={ButtonVariant.Link}
               className={`filter-action-btn ${isUserLanguagesFilterActive ? 'active' : ''}`}
               onClick={() => {
+                setCurrentPageValue(1)
                 setSelectedLanguageFilters([...userLanguages.values()])
-                currentPage = 1
               }}
             >
               {t('myLanguages')}
@@ -183,8 +186,8 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
               variant={ButtonVariant.Link}
               className={`filter-action-btn ${followedAuthorsFilter ? 'active' : ''}`}
               onClick={() => {
+                setCurrentPageValue(1)
                 toggleFollowedAuthorsFilter()
-                currentPage = 1
               }}
             >
               {t('followedUsers')}
@@ -203,7 +206,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
         {showPagination && (
           <Pagination
-            currentPage={currentPage}
+            currentPage={currentPageValue}
             total={count}
             numPerPage={NUM_POSTS_PER_PAGE}
             title={pageTitle}

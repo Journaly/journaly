@@ -1,9 +1,10 @@
 import AWS from 'aws-sdk'
+import { diffChars } from 'diff'
 import escapeHTML from 'escape-html'
 import { User, Thread, Comment, Post, PostComment } from '.prisma/client'
 import { makeEmail } from '../lib/mail'
 
-type NodeType = {
+export type NodeType = {
   text?: string | null
   italic?: boolean | null
   bold?: boolean | null
@@ -35,7 +36,8 @@ const textNodeFormatEls: { [T in textNodeFormatType]: string } = {
   underline: 'u',
 }
 
-const nonBodyTypes = new Set(['heading-one', 'heading-two', 'block-quote'])
+const emptySet = new Set<string>([])
+const nonBodyTypes = new Set<string>(['heading-one', 'heading-two', 'block-quote'])
 
 const breakCharacters = new Set([
   ' ', // Good ole ASCII space
@@ -94,29 +96,33 @@ export const htmlifyEditorNodes = (value: NodeType[]): string => {
   return value.map(htmlifyEditorNode).join('\n')
 }
 
-const extractBodyTextFromNode = (node: NodeType) => {
+const extractTextFromNode = (node: NodeType, ignoreNodeTypes=emptySet) => {
   if (!node.type && typeof node.text === 'string') {
     return node.text
   }
 
-  if (!node.type || nonBodyTypes.has(node.type)) {
+  if (!node.type || ignoreNodeTypes.has(node.type)) {
     return ''
   }
 
-  const content: string = (node.children || []).map(extractBodyTextFromNode).join(' ')
+  const content: string = (node.children || [])
+    .map(node => extractTextFromNode(node, ignoreNodeTypes))
+    .join('')
 
   return content
 }
 
-const extractBodyText = (document: NodeType[]) => {
-  return document.map(extractBodyTextFromNode).join(' ')
+export const extractText = (document: NodeType[], ignoreNodeTypes=emptySet) => {
+  return document
+    .map(node => extractTextFromNode(node, ignoreNodeTypes))
+    .join('\n')
 }
 
 export const generateExcerpt = (document: NodeType[], length = 200, tolerance = 20) => {
   // `length` is the max number of characters (codepoints) in the excerpt,
   // tolerance is the number of characters we'll back-track looking for a word
   // or sentence break to cut off at
-  const bodyText = extractBodyText(document)
+  const bodyText = extractText(document, nonBodyTypes)
 
   let end = Math.min(length, bodyText.length - 1)
   let breakFound = false
@@ -145,8 +151,62 @@ export const readTime = (text: string): number => {
   return Math.round(numWords / 200)
 }
 
+export const updatedThreadPositions = (
+  oldDoc: NodeType[],
+  newDoc: NodeType[],
+  threads: any[]
+) => {
+  const oldStr = extractText(oldDoc)
+  const newStr = extractText(newDoc)
+  const changes = diffChars(oldStr, newStr)
+  const threadsRepr = threads.map((t: any) => ([t.startIndex, t.endIndex, t.id] as [number, number, number]))
+
+  let idx = 0
+
+  for (let ci = 0; ci<changes.length; ci++) {
+    const { count = 0, added, removed } = changes[ci]
+    const changeEnd = idx + count - 1
+
+    if (added) {
+      for (let ti = 0; ti<threadsRepr.length; ti++) {
+        const t = threadsRepr[ti]
+        if (t[0] > idx) t[0] += count
+        if (t[1] > idx) t[1] += count
+      }
+
+      idx += count
+    } else if (removed) {
+      for (let ti = 0; ti<threadsRepr.length; ti++) {
+        const t = threadsRepr[ti]
+
+        if (t[0] > idx && t[0] < changeEnd) {
+          t[0] = 0
+          t[1] = 0
+        } else if (t[1] > idx && t[1] < changeEnd) {
+          t[0] = 0
+          t[1] = 0
+        } else {
+          if (t[0] > idx) t[0] -= count
+          if (t[1] > idx) t[1] -= count
+        }
+      }
+    } else {
+      idx += count
+    }
+  }
+
+  return threads.map(thread => {
+    const [startIndex, endIndex] = threadsRepr.find(([_, __, id]) => id === thread.id) || [0, 0, 0]
+    return {
+      ...thread,
+      startIndex,
+      endIndex
+    }
+  })
+}
+
 export const processEditorDocument = (document: NodeType[]) => {
-  const bodyText = extractBodyText(document)
+  const bodyText = extractText(document)
 
   return {
     body: htmlifyEditorNodes(document),

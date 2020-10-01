@@ -36,6 +36,8 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
   const hasThankedComment =
     comment.thanks.find((thanks) => thanks.author.id === currentUserId) !== undefined
 
+  const numThanks = comment.thanks.length
+
   const [updateComment, { loading }] = useUpdateCommentMutation({
     onCompleted: () => {
       onUpdateComment()
@@ -189,6 +191,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
           >
             <LikeIcon filled={hasThankedComment} />
           </span>
+          <span className="thanks-count">{numThanks}</span>
         </div>
       )}
       <style jsx>{`
@@ -276,6 +279,10 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
         }
         .like-btn :global(svg:hover) {
           cursor: pointer;
+        }
+
+        .thanks-count {
+          color: ${theme.colors.gray600};
         }
 
         textarea {

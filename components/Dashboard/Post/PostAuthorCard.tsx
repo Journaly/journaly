@@ -3,27 +3,54 @@ import Link from 'next/link'
 import theme from '../../../theme'
 import {
   AuthorWithLanguagesFragmentFragment as Author,
-  LanguageNative as LanguageNativeType,
-  LanguageLearning as LanguageLearningType,
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+  useFollowingUsersQuery,
 } from '../../../generated/graphql'
 import { useTranslation } from '../../../config/i18n'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 import { languageNameWithDialect } from '../../../utils/languages'
+import Button, { ButtonVariant } from '../../../elements/Button'
 
 type PostAuthorCardProps = {
-  author: Author | any
+  author: Author
 }
 
 const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
   const { t } = useTranslation('post-author-card')
-  let languagesNative: LanguageNativeType[] = []
-  let languagesLearning: LanguageLearningType[] = []
+  const { languagesNative, languagesLearning } = author
 
-  for (let language of author.languagesLearning) {
-    languagesLearning.push(language)
+  const { data: { currentUser } = {}, refetch } = useFollowingUsersQuery()
+
+  const hasFollowedAuthor =
+    currentUser && currentUser.following.find((user) => user.id === author.id) !== undefined
+
+  const [followUserMutation, { loading: followLoading }] = useFollowUserMutation({
+    onCompleted: () => {
+      refetch()
+    },
+  })
+
+  const handleFollowUser = () => {
+    followUserMutation({
+      variables: {
+        followedUserId: author.id,
+      },
+    })
   }
-  for (let language of author.languagesNative) {
-    languagesNative.push(language)
+
+  const [unfollowUserMutation, { loading: unfollowLoading }] = useUnfollowUserMutation({
+    onCompleted: () => {
+      refetch()
+    },
+  })
+
+  const handleUnfollowUser = () => {
+    unfollowUserMutation({
+      variables: {
+        followedUserId: author.id,
+      },
+    })
   }
 
   return (
@@ -39,6 +66,15 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
           </a>
         </Link>
         <p className="author-name">{author.name || author.handle}</p>
+        {currentUser && currentUser.id !== author.id && (
+          <Button
+            variant={ButtonVariant.Link}
+            onClick={hasFollowedAuthor ? handleUnfollowUser : handleFollowUser}
+            loading={followLoading || unfollowLoading}
+          >
+            {hasFollowedAuthor ? t('unfollow') : t('follow')}
+          </Button>
+        )}
       </div>
       <div className="language-info">
         <p className="author-info-heading">{t('nativeHeader')}</p>

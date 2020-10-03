@@ -1,0 +1,8 @@
+query followingUsers {
+  currentUser {
+    id
+    following {
+      id
+    }
+  }
+}

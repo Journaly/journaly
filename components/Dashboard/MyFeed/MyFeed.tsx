@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
+import _ from 'lodash'
+
 import { useTranslation } from '../../../config/i18n'
 
 import PostCard from '../PostCard'
@@ -13,6 +15,7 @@ import LoadingWrapper from '../../LoadingWrapper'
 import MultiSelect from '../../../elements/MultiSelect'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import { greetings } from './greetings'
+import useToggle from '../../../hooks/useToggle'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -60,6 +63,13 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
     ...userLanguages.values(),
   ])
 
+  const isUserLanguagesFilterActive = _.isEqual(
+    Array.from(userLanguages.values()),
+    selectedLanguageFilters,
+  )
+
+  const [followedAuthorsFilter, toggleFollowedAuthorsFilter] = useToggle()
+
   /**
    * Pagination handling
    */
@@ -73,6 +83,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
       first: NUM_POSTS_PER_PAGE,
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
       languages: selectedLanguageFilters.length ? selectedLanguageFilters : null,
+      followedAuthors: followedAuthorsFilter,
     },
   })
 
@@ -147,6 +158,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
           <div className="filter-actions">
             <Button
               variant={ButtonVariant.Link}
+              className="filter-action-btn"
               onClick={() => {
                 setSelectedLanguageFilters([])
               }}
@@ -155,11 +167,19 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
             </Button>
             <Button
               variant={ButtonVariant.Link}
+              className={`filter-action-btn ${isUserLanguagesFilterActive ? 'active' : ''}`}
               onClick={() => {
                 setSelectedLanguageFilters([...userLanguages.values()])
               }}
             >
               {t('myLanguages')}
+            </Button>
+            <Button
+              variant={ButtonVariant.Link}
+              className={`filter-action-btn ${followedAuthorsFilter ? 'active' : ''}`}
+              onClick={toggleFollowedAuthorsFilter}
+            >
+              {t('followedUsers')}
             </Button>
           </div>
         </div>
@@ -252,6 +272,14 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
         }
         .filter-actions > :global(button) {
           margin-right: 10px;
+        }
+
+        .filter-actions > :global(.filter-action-btn):hover {
+          font-weight: 600;
+        }
+        .filter-actions > :global(.filter-action-btn.active) {
+          font-weight: 600;
+          text-decoration: underline;
         }
       `}</style>
     </div>

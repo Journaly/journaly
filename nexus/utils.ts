@@ -154,7 +154,7 @@ export const readTime = (text: string): number => {
 export const updatedThreadPositions = (
   oldDoc: NodeType[],
   newDoc: NodeType[],
-  threads: any[]
+  threads: Thread[]
 ) => {
   const oldStr = extractText(oldDoc)
   const newStr = extractText(newDoc)
@@ -180,11 +180,11 @@ export const updatedThreadPositions = (
         const t = threadsRepr[ti]
 
         if (t[0] > idx && t[0] < changeEnd) {
-          t[0] = 0
-          t[1] = 0
+          t[0] = -1
+          t[1] = -1
         } else if (t[1] > idx && t[1] < changeEnd) {
-          t[0] = 0
-          t[1] = 0
+          t[0] = -1
+          t[1] = -1
         } else {
           if (t[0] > idx) t[0] -= count
           if (t[1] > idx) t[1] -= count

@@ -440,6 +440,7 @@ export type QueryTopicsArgs = {
 export type Thread = {
   __typename?: 'Thread'
   id: Scalars['Int']
+  archived: Scalars['Boolean']
   startIndex: Scalars['Int']
   endIndex: Scalars['Int']
   highlightedContent: Scalars['String']
@@ -682,7 +683,7 @@ export type PostCommentFragmentFragment = { __typename?: 'PostComment' } & Pick<
 
 export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
   Thread,
-  'id' | 'startIndex' | 'endIndex' | 'highlightedContent'
+  'id' | 'startIndex' | 'endIndex' | 'highlightedContent' | 'archived'
 > & { comments: Array<{ __typename?: 'Comment' } & CommentFragmentFragment> }
 
 export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
@@ -1122,6 +1123,7 @@ export const ThreadFragmentFragmentDoc = gql`
     startIndex
     endIndex
     highlightedContent
+    archived
     comments(orderBy: { createdAt: asc }) {
       ...CommentFragment
     }

@@ -8,6 +8,7 @@ schema.objectType({
   name: 'Thread',
   definition(t) {
     t.model.id()
+    t.model.archived()
     t.model.startIndex()
     t.model.endIndex()
     t.model.highlightedContent()

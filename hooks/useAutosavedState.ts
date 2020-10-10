@@ -2,19 +2,26 @@ import React from 'react'
 
 export default function useAutosavedState<T>(
   initialValue: T,
-  opts = { key: 'default', debounceTime: 1000 },
+  opts = {
+    key: 'default',
+    debounceTime: 1000,
+    initialTimestamp: 0,
+  },
 ): [T, (value: T) => void, () => void] {
   const storage: any = (typeof window !== 'undefined' && window.localStorage) || {}
-  const storageKey = `autsave[${opts.key || 'default'}]`
+  const storageKey = `autosave[${opts.key || 'default'}]`
 
   const [value, setValue] = React.useState<T>(initialValue)
   const valueRef = React.useRef({ savePending: false, value })
 
   React.useEffect(() => {
     if (storageKey in storage) {
-      console.info('Restoring value from storage')
-      const restoredInitialValue = JSON.parse(storage[storageKey])
-      setValue(restoredInitialValue)
+      const { value, timestamp } = JSON.parse(storage[storageKey])
+
+      if (timestamp > opts.initialTimestamp) {
+        console.info('Restoring value from storage')
+        setValue(value)
+      }
     }
   }, [])
 
@@ -25,7 +32,10 @@ export default function useAutosavedState<T>(
       valueRef.current.savePending = true
 
       setTimeout(() => {
-        storage[storageKey] = JSON.stringify(valueRef.current.value)
+        storage[storageKey] = JSON.stringify({
+          value: valueRef.current.value,
+          timestamp: Date.now(),
+        })
         valueRef.current.savePending = false
         console.info(`Saved value on key ${storageKey}`)
       }, opts.debounceTime)

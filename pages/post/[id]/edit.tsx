@@ -6,14 +6,14 @@ import { withApollo } from '../../../lib/apollo'
 import { useTranslation } from '../../../config/i18n'
 
 import DashboardLayout from '../../../components/Layouts/DashboardLayout'
-import PostEditor, { validatePostData, PostData } from '../../../components/PostEditor'
+import PostEditor, {
+  validatePostData,
+  InputPostData,
+  OutputPostData,
+} from '../../../components/PostEditor'
 import theme from '../../../theme'
 import Button, { ButtonVariant } from '../../../elements/Button'
-import {
-  ImageRole,
-  useEditPostQuery,
-  useUpdatePostMutation,
-} from '../../../generated/graphql'
+import { ImageRole, useEditPostQuery, useUpdatePostMutation } from '../../../generated/graphql'
 import AuthGate from '../../../components/AuthGate'
 import useUILanguage from '../../../hooks/useUILanguage'
 
@@ -26,10 +26,10 @@ const EditPostPage: NextPage = () => {
   const uiLanguage = useUILanguage()
 
   const { data: { currentUser, topics, postById } = {} } = useEditPostQuery({
-    variables: { uiLanguage, id }
+    variables: { uiLanguage, id },
   })
-  const dataRef = React.useRef<PostData>()
-  const [initialData, setInitialData] = React.useState<PostData | null>(null)
+  const dataRef = React.useRef<OutputPostData>()
+  const [initialData, setInitialData] = React.useState<InputPostData | null>(null)
   const [updatePost] = useUpdatePostMutation()
 
   React.useEffect(() => {
@@ -40,19 +40,18 @@ const EditPostPage: NextPage = () => {
         language: { id: languageId },
         images,
         postTopics,
+        updatedAt,
       } = postById
 
-      const image = images.find(
-        ({ imageRole }) => imageRole === ImageRole.Headline
-      ) || null
+      const image = images.find(({ imageRole }) => imageRole === ImageRole.Headline) || null
 
       setInitialData({
         body: JSON.parse(bodySrc) as Node[],
-        topicIds: postTopics.map(x => x.topic.id),
-        clear: () => null,
+        topicIds: postTopics.map((x) => x.topic.id),
         title,
         languageId,
         image,
+        timestamp: Date.parse(updatedAt),
       })
     }
   }, [postById])
@@ -96,7 +95,7 @@ const EditPostPage: NextPage = () => {
         <form id="edit-post">
           <h1>{t('editPost')}</h1>
 
-          { initialData && currentUser && (
+          {initialData && currentUser && (
             <PostEditor
               currentUser={currentUser}
               topics={topics || []}
@@ -119,11 +118,7 @@ const EditPostPage: NextPage = () => {
               {t('save')}
             </Button>
           </div>
-          { errorMessage && (
-            <span className="error-message">
-              {errorMessage}
-            </span>
-          )}
+          {errorMessage && <span className="error-message">{errorMessage}</span>}
           <style jsx>{`
             #edit-post {
               display: flex;

@@ -20,24 +20,34 @@ import {
 } from '../../generated/graphql'
 import { languageNameWithDialect } from '../../utils/languages'
 
-type PostData = {
+type BasePostData = {
   title: string
   languageId: number
   topicIds: number[]
   image?: ImageInput | null
   body: Node[]
+}
+
+type OutputPostData = BasePostData & {
   clear: () => void
+}
+
+type InputPostData = BasePostData & {
+  timestamp: number
 }
 
 type PostEditorProps = {
   currentUser: UserWithLanguagesType
   autosaveKey: string
-  dataRef: React.MutableRefObject<PostData | undefined>
-  initialData: PostData
+  dataRef: React.MutableRefObject<OutputPostData | undefined>
+  initialData: InputPostData
   topics: TopicType[]
 }
 
-type validatePostDataSignature = (data: PostData, t: (arg0: string) => string) => [boolean, string]
+type validatePostDataSignature = (
+  data: OutputPostData,
+  t: (arg0: string) => string,
+) => [boolean, string]
 
 const validatePostData: validatePostDataSignature = (data, t) => {
   if (!data.title.length) {
@@ -63,14 +73,17 @@ const PostEditor: React.FC<PostEditorProps> = ({
   const slateRef = React.useRef<Editor>(null)
 
   const [langId, setLangId, resetLangId] = useAutosavedState<number>(initialData.languageId, {
+    initialTimestamp: initialData.timestamp,
     key: `${autosaveKey}:langId`,
     debounceTime: 1000,
   })
   const [title, setTitle, resetTitle] = useAutosavedState<string>(initialData.title, {
+    initialTimestamp: initialData.timestamp,
     key: `${autosaveKey}:title`,
     debounceTime: 1000,
   })
   const [body, setBody, resetBody] = useAutosavedState<Node[]>(initialData.body, {
+    initialTimestamp: initialData.timestamp,
     key: `${autosaveKey}:body`,
     debounceTime: 1000,
   })
@@ -92,7 +105,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
     displayName: name || '',
   }))
   const addTopic = (id: number) => setSelectedTopics([...selectedTopics, id])
-  const removeTopic = (id: number) => setSelectedTopics(selectedTopics.filter(tid => tid !== id))
+  const removeTopic = (id: number) => setSelectedTopics(selectedTopics.filter((tid) => tid !== id))
 
   React.useEffect(() => {
     const clear = () => {
@@ -253,6 +266,6 @@ const PostEditor: React.FC<PostEditorProps> = ({
   )
 }
 
-export type { PostData }
+export type { InputPostData, OutputPostData }
 export { validatePostData }
 export default PostEditor

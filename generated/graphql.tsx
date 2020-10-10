@@ -301,6 +301,7 @@ export type Post = {
   postComments: Array<PostComment>
   language: Language
   createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
   bodySrc: Scalars['String']
   images: Array<Image>
   publishedAt?: Maybe<Scalars['DateTime']>
@@ -849,7 +850,7 @@ export type EditPostQueryVariables = {
 
 export type EditPostQuery = { __typename?: 'Query' } & {
   postById?: Maybe<
-    { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc'> & {
+    { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc' | 'updatedAt'> & {
         language: { __typename?: 'Language' } & Pick<Language, 'id'>
         images: Array<
           { __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'smallSize' | 'imageRole'>
@@ -2071,6 +2072,7 @@ export const EditPostDocument = gql`
     postById(id: $id) {
       title
       bodySrc
+      updatedAt
       language {
         id
       }

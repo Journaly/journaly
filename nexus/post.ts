@@ -34,6 +34,7 @@ schema.objectType({
     })
     t.model.language()
     t.model.createdAt()
+    t.model.updatedAt()
     t.model.bodySrc()
     t.model.images()
     t.model.publishedAt()

@@ -4,7 +4,11 @@ import { useRouter } from 'next/router'
 import { withApollo } from '../../lib/apollo'
 
 import DashboardLayout from '../../components/Layouts/DashboardLayout'
-import PostEditor, { PostData, validatePostData } from '../../components/PostEditor'
+import PostEditor, {
+  InputPostData,
+  OutputPostData,
+  validatePostData,
+} from '../../components/PostEditor'
 import theme from '../../theme'
 import Button, { ButtonVariant } from '../../elements/Button'
 import {
@@ -16,7 +20,7 @@ import AuthGate from '../../components/AuthGate'
 import { useTranslation } from '../../config/i18n'
 import useUILanguage from '../../hooks/useUILanguage'
 
-const initialData = {
+const initialData: InputPostData = {
   title: '',
   languageId: -1,
   topicIds: [],
@@ -27,7 +31,7 @@ const initialData = {
       children: [{ text: '' }],
     },
   ],
-  clear: () => null,
+  timestamp: 0,
 }
 
 const NewPostPage: NextPage = () => {
@@ -35,7 +39,7 @@ const NewPostPage: NextPage = () => {
   const { data: { currentUser, topics } = {} } = useNewPostQuery({
     variables: { uiLanguage },
   })
-  const dataRef = React.useRef<PostData>()
+  const dataRef = React.useRef<OutputPostData>()
   const router = useRouter()
   const { t } = useTranslation('post')
   const [createPost] = useCreatePostMutation()

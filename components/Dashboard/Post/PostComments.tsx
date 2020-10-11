@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   useCreatePostCommentMutation,
@@ -10,6 +10,7 @@ import { useTranslation } from '../../../config/i18n'
 import theme from '../../../theme'
 import PostComment from './PostComment'
 import Button, { ButtonVariant } from '../../../elements/Button'
+import TabToggle, { Tab } from '../../../elements/TabToggle'
 
 type PostCommentsProps = {
   postId: number
@@ -29,6 +30,17 @@ const PostComments: React.FC<PostCommentsProps> = ({
   currentUser,
 }) => {
   const { t } = useTranslation('comment')
+
+  const tabs: Tab[] = [
+    { key: 'hello', text: 'General' },
+    { key: 'goodbye', text: 'Outdated' },
+  ]
+
+  const [activeKey, setActiveKey] = useState<Tab>(tabs[0].key)
+
+  const handleToggle = (key: string): void => {
+    setActiveKey(key as Tab)
+  }
 
   const [postCommentBody, setPostCommentBody] = React.useState<string>('')
   const [createPostComment, { loading }] = useCreatePostCommentMutation({
@@ -52,6 +64,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
   return (
     <div className="container">
       <h1>{t('postCommentsTitle')}</h1>
+      <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
       <div className="post-comments">
         {!comments.length && <div>{t('noCommentsYetMessage')}</div>}
         {comments.map((comment, idx) => {

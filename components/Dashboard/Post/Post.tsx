@@ -397,7 +397,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           </span>
         ) : null}
 
-        {currentUser && post.author.id === currentUser.id && post.status === 'DRAFT' && (
+        {currentUser && post.author.id === currentUser.id && (
           <div className="post-controls">
             <>
               <Button
@@ -409,13 +409,17 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
               >
                 {t('editPostAction')}
               </Button>
-              <Button
-                type="button"
-                variant={ButtonVariant.Secondary}
-                onClick={setPostStatus(PostStatus.Published)}
-              >
-                {t('publishDraft')}
-              </Button>
+              {
+                post.status === 'DRAFT' && (
+                  <Button
+                    type="button"
+                    variant={ButtonVariant.Secondary}
+                    onClick={setPostStatus(PostStatus.Published)}
+                  >
+                    {t('publishDraft')}
+                  </Button>
+                )
+              }
             </>
           </div>
         )}

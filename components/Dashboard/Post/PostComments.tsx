@@ -4,17 +4,20 @@ import {
   useCreatePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
   UserWithLanguagesFragmentFragment as UserType,
+  ThreadFragmentFragment as ThreadType,
 } from '../../../generated/graphql'
 import { useTranslation } from '../../../config/i18n'
 
 import theme from '../../../theme'
 import PostComment from './PostComment'
+import Thread from '../../InlineFeedbackPopover/Thread'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import TabToggle, { Tab } from '../../../elements/TabToggle'
 
 type PostCommentsProps = {
   postId: number
   comments: PostCommentType[]
+  outdatedThreads: ThreadType[]
   currentUser: UserType | null
   onNewComment: () => void
   onUpdateComment: () => void
@@ -24,6 +27,7 @@ type PostCommentsProps = {
 const PostComments: React.FC<PostCommentsProps> = ({
   postId,
   comments,
+  outdatedThreads,
   onNewComment,
   onUpdateComment,
   onDeleteComment,
@@ -32,8 +36,8 @@ const PostComments: React.FC<PostCommentsProps> = ({
   const { t } = useTranslation('comment')
 
   const tabs: Tab[] = [
-    { key: 'hello', text: 'General' },
-    { key: 'goodbye', text: 'Outdated' },
+    { key: 'general', text: 'General' },
+    { key: 'outdated', text: 'Outdated' },
   ]
 
   const [activeKey, setActiveKey] = useState<Tab>(tabs[0].key)
@@ -67,42 +71,58 @@ const PostComments: React.FC<PostCommentsProps> = ({
       <div className="toggle-wrapper">
         <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
       </div>
-      <div className="post-comments">
-        {!comments.length && <div>{t('noCommentsYetMessage')}</div>}
-        {comments.map((comment, idx) => {
-          const canEdit = currentUser?.id === comment.author.id
-          return (
-            <PostComment
-              comment={comment}
-              canEdit={canEdit}
-              onUpdateComment={onUpdateComment}
-              onDeleteComment={onDeleteComment}
-              key={idx}
-            />
-          )
-        })}
-      </div>
-      {currentUser && (
-        <form onSubmit={createNewPostComment}>
-          <div className="new-comment-block">
-            <textarea
-              placeholder={t('addCommentPlaceholder')}
-              value={postCommentBody}
-              onChange={(e) => setPostCommentBody(e.target.value)}
-              disabled={loading}
-              rows={4}
-            />
-            <Button
-              type="submit"
-              loading={loading}
-              className="submit-btn"
-              variant={ButtonVariant.PrimaryDark}
-            >
-              {t('submit')}
-            </Button>
+      <div>
+        {activeKey === 'general' ? (
+          <>
+            <div className="post-comments">
+              {!comments.length && <div>{t('noCommentsYetMessage')}</div>}
+              {comments.map((comment, idx) => {
+                const canEdit = currentUser?.id === comment.author.id
+                return (
+                  <PostComment
+                    comment={comment}
+                    canEdit={canEdit}
+                    onUpdateComment={onUpdateComment}
+                    onDeleteComment={onDeleteComment}
+                    key={idx}
+                  />
+                )
+              })}
+            </div>
+            {currentUser && (
+              <form onSubmit={createNewPostComment}>
+                <div className="new-comment-block">
+                  <textarea
+                    placeholder={t('addCommentPlaceholder')}
+                    value={postCommentBody}
+                    onChange={(e) => setPostCommentBody(e.target.value)}
+                    disabled={loading}
+                    rows={4}
+                  />
+                  <Button
+                    type="submit"
+                    loading={loading}
+                    className="submit-btn"
+                    variant={ButtonVariant.PrimaryDark}
+                  >
+                    {t('submit')}
+                  </Button>
+                </div>
+              </form>
+            )}
+          </>
+        ) : (
+          <div className="outdated-comments-container">
+            {!outdatedThreads.length && <div>No outdated threads to see</div>}
+            {outdatedThreads.map((thread, idx) => (
+              <Thread
+                thread={thread}
+                currentUser={currentUser}
+              />
+            ))}
           </div>
-        </form>
-      )}
+        )}
+      </div>
       <style jsx>{`
         .container {
           background-color: ${theme.colors.white};
@@ -162,7 +182,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
 
         .toggle-wrapper {
           max-width: 400px;
-          margin: 0 auto;
+          margin: 0 auto 10px;
         }
       `}</style>
     </div>

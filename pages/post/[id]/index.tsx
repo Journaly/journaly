@@ -27,6 +27,8 @@ const PostPage: NextPage = () => {
 
   const post: PostType | undefined | null = postData?.postById
 
+  const outdatedThreads = post?.threads.filter(post => post.archived)
+
   return (
     <LoadingWrapper loading={postLoading || userLoading} error={postError || userError}>
       <DashboardLayout>
@@ -38,6 +40,7 @@ const PostPage: NextPage = () => {
                 <PostComments
                   postId={post.id}
                   comments={post.postComments}
+                  outdatedThreads={outdatedThreads}
                   currentUser={userData?.currentUser || null}
                   onNewComment={refetch}
                   onUpdateComment={refetch}

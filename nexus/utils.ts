@@ -87,13 +87,13 @@ const htmlifyEditorNode = (node: NodeType): string => {
   }
 
   const tagName = getNodeTagName(node)
-  const content = (node.children || []).map(htmlifyEditorNode).join('\n')
+  const content = (node.children || []).map(htmlifyEditorNode).join('')
 
   return `<${tagName}>${content}</${tagName}>`
 }
 
 export const htmlifyEditorNodes = (value: NodeType[]): string => {
-  return value.map(htmlifyEditorNode).join('\n')
+  return value.map(htmlifyEditorNode).join('')
 }
 
 const extractTextFromNode = (node: NodeType, ignoreNodeTypes=emptySet) => {
@@ -161,8 +161,9 @@ export const updatedThreadPositions = (
   const changes = diffChars(oldStr, newStr)
   const threadsRepr = threads.map((t: any) => ([t.startIndex, t.endIndex, t.id] as [number, number, number]))
 
+  // Move thread fenceposts according to inserts and deletes. Mark threads that
+  // experienced a delete op over either of their fence posts as archived.
   let idx = 0
-
   for (let ci = 0; ci<changes.length; ci++) {
     const { count = 0, added, removed } = changes[ci]
     const changeEnd = idx + count - 1

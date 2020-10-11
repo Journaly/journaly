@@ -64,7 +64,9 @@ const PostComments: React.FC<PostCommentsProps> = ({
   return (
     <div className="container">
       <h1>{t('postCommentsTitle')}</h1>
-      <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
+      <div className="toggle-wrapper">
+        <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
+      </div>
       <div className="post-comments">
         {!comments.length && <div>{t('noCommentsYetMessage')}</div>}
         {comments.map((comment, idx) => {
@@ -156,6 +158,11 @@ const PostComments: React.FC<PostCommentsProps> = ({
 
         .new-comment-block textarea:focus {
           outline: none;
+        }
+
+        .toggle-wrapper {
+          max-width: 400px;
+          margin: 0 auto;
         }
       `}</style>
     </div>

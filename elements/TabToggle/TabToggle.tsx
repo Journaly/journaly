@@ -2,7 +2,7 @@ import React from 'react'
 import theme from '../../theme'
 import classNames from 'classnames'
 
-export type Tab = {
+type Tab = {
   key: string
   text: string
 }

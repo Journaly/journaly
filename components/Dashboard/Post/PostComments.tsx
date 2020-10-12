@@ -12,7 +12,7 @@ import theme from '../../../theme'
 import PostComment from './PostComment'
 import Thread from '../../InlineFeedbackPopover/Thread'
 import Button, { ButtonVariant } from '../../../elements/Button'
-import TabToggle, { Tab } from '../../../elements/TabToggle'
+import TabToggle from '../../../elements/TabToggle'
 
 type PostCommentsProps = {
   postId: number
@@ -35,15 +35,15 @@ const PostComments: React.FC<PostCommentsProps> = ({
 }) => {
   const { t } = useTranslation('comment')
 
-  const tabs: Tab[] = [
+  const tabs = [
     { key: 'general', text: 'General' },
     { key: 'outdated', text: 'Outdated' },
   ]
 
-  const [activeKey, setActiveKey] = useState<Tab>(tabs[0].key)
+  const [activeKey, setActiveKey] = useState<string>(tabs[0].key)
 
   const handleToggle = (key: string): void => {
-    setActiveKey(key as Tab)
+    setActiveKey(key)
   }
 
   const [postCommentBody, setPostCommentBody] = React.useState<string>('')
@@ -118,6 +118,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
               <Thread
                 thread={thread}
                 currentUser={currentUser}
+                key={idx}
               />
             ))}
           </div>

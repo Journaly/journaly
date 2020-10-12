@@ -115,7 +115,7 @@ const extractTextFromNode = (node: NodeType, ignoreNodeTypes=emptySet) => {
 export const extractText = (document: NodeType[], ignoreNodeTypes=emptySet) => {
   return document
     .map(node => extractTextFromNode(node, ignoreNodeTypes))
-    .join('\n')
+    .join('')
 }
 
 export const generateExcerpt = (document: NodeType[], length = 200, tolerance = 20) => {
@@ -193,6 +193,39 @@ export const updatedThreadPositions = (
       }
     } else {
       idx += count
+    }
+  }
+
+  // Now look for threads which, after having been moved, are over illegal
+  // thread positions.
+
+  // List of indicies a valid comment may not cross in the new doc
+  const breakPoints = new Set<number>()
+
+  idx = 0
+  const recur = (tree: NodeType) => {
+    if (tree.type !== undefined) {
+      breakPoints.add(idx)
+    }
+
+    idx += tree.text?.length || 0
+
+    if (tree.type !== undefined) {
+      breakPoints.add(idx)
+    }
+
+    (tree.children || []).map(recur)
+  }
+
+  newDoc.map(recur)
+
+  for (let breakPoint of breakPoints) {
+    for (let ti = 0; ti<threadsRepr.length; ti++) {
+      const t = threadsRepr[ti]
+      if (t[0] < breakPoint && t[1] > breakPoint) {
+          t[0] = -1
+          t[1] = -1
+      }
     }
   }
 

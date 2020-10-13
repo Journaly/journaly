@@ -7,17 +7,23 @@ type Tab = {
   text: string
 }
 
+export enum ToggleVariant {
+  Standard = 'standard',
+  Thin = 'thin',
+}
+
 type Props = {
   activeKey: string
   tabs: Tab[]
   onToggle: (key: string) => void
   className?: string
+  variant?: ToggleVariant
 }
 
 const spaceUnit = 5
 
 const TabToggle: React.FC<Props> = (props) => {
-  const { activeKey, onToggle, tabs, className } = props
+  const { activeKey, onToggle, tabs, className, variant = ToggleVariant.Standard } = props
   const tabToggleClasses = classNames('tab-toggle', className)
 
   if (tabs.length !== 2) {
@@ -25,7 +31,7 @@ const TabToggle: React.FC<Props> = (props) => {
   }
 
   return (
-    <div className="tab-toggle-wrapper">
+    <div className={`tab-toggle-wrapper ${variant}`}>
       <div className={tabToggleClasses} role="group">
         {tabs.map(({ key, text }) => (
           <div
@@ -48,6 +54,7 @@ const TabToggle: React.FC<Props> = (props) => {
       </div>
 
       <style jsx>{`
+
         .tab-toggle-wrapper {
           padding: ${spaceUnit}px;
           background: #d5d9dc;
@@ -83,6 +90,10 @@ const TabToggle: React.FC<Props> = (props) => {
           border-radius: ${6 * spaceUnit}px;
           outline: 0;
           z-index: 1;
+        }
+
+        .${ToggleVariant.Standard} .tab {
+          padding: 4px 12px;
         }
 
         .tab.active,

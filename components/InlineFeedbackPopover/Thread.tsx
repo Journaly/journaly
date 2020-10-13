@@ -88,7 +88,7 @@ const Thread: React.FC<ThreadProps> = ({
 
           {!thread.comments.length && <div className="empty-notice">No comments... yet!</div>}
         </div>
-        {currentUser && (
+        {currentUser && !thread.archived && (
           <form onSubmit={createNewComment}>
             <fieldset>
               <div className="new-comment-block">

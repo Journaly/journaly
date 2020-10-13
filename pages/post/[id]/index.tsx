@@ -27,7 +27,7 @@ const PostPage: NextPage = () => {
 
   const post: PostType | undefined | null = postData?.postById
 
-  const outdatedThreads = post?.threads.filter(post => post.archived)
+  const outdatedThreads = post ? post.threads.filter(post => post.archived) : []
 
   return (
     <LoadingWrapper loading={postLoading || userLoading} error={postError || userError}>

@@ -404,7 +404,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
                 type="button"
                 variant={ButtonVariant.Secondary}
                 onClick={() => {
-                  Router.push(`/post/${post.id}/edit`)
+                  Router.push('/post/[id]/edit', `/post/${post.id}/edit`)
                 }}
               >
                 {t('editPostAction')}

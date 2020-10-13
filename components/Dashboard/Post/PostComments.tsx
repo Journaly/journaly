@@ -115,11 +115,16 @@ const PostComments: React.FC<PostCommentsProps> = ({
           <div className="outdated-comments-container">
             {!outdatedThreads.length && <div>No outdated threads to see</div>}
             {outdatedThreads.map((thread, idx) => (
-              <Thread
-                thread={thread}
-                currentUser={currentUser}
-                key={idx}
-              />
+              <div className="archived-thread-container">
+                <Thread
+                  thread={thread}
+                  currentUser={currentUser}
+                  key={idx}
+                  onNewComment={() => {}}
+                  onDeleteThread={() => {}}
+                  onUpdateComment={onUpdateComment}
+                />
+              </div>
             ))}
           </div>
         )}
@@ -182,8 +187,12 @@ const PostComments: React.FC<PostCommentsProps> = ({
         }
 
         .toggle-wrapper {
-          max-width: 400px;
-          margin: 0 auto 10px;
+          margin: 0 auto 20px;
+        }
+
+        .archived-thread-container {
+          margin-bottom: 20px;
+          box-shadow: 0px 3px 4px #00000029;
         }
       `}</style>
     </div>

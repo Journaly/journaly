@@ -192,7 +192,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
 
         .archived-thread-container {
           margin-bottom: 20px;
-          box-shadow: 0px 3px 4px #00000029;
+          box-shadow: 0px 0px 12px #00000029;
         }
       `}</style>
     </div>

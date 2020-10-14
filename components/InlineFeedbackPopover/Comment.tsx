@@ -247,6 +247,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
         .comment-date {
           font-weight: 400;
           color: ${theme.colors.gray600};
+          text-align: left;
         }
 
         .body-block {

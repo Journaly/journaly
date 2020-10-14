@@ -167,6 +167,10 @@ const PostComment: React.FC<PostCommentProps> = ({
           justify-content: center;
         }
 
+        .author-identifier {
+          text-align: left;
+        }
+
         .profile-image {
           border-radius: 50%;
           width: 30px;

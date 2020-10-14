@@ -95,6 +95,7 @@ fragment ThreadFragment on Thread {
   startIndex
   endIndex
   highlightedContent
+  archived
   comments(orderBy: { createdAt: asc }) {
     ...CommentFragment
   }

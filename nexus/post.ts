@@ -1,6 +1,11 @@
 import { schema } from 'nexus'
 
-import { processEditorDocument, hasAuthorPermissions } from './utils'
+import {
+  processEditorDocument,
+  updatedThreadPositions,
+  hasAuthorPermissions,
+  NodeType,
+} from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import { PostUpdateInput } from '.prisma/client/index'
 import { EditorNode, ImageInput } from './inputTypes'
@@ -312,6 +317,9 @@ schema.extendType({
             where: {
               id: args.postId,
             },
+            include: {
+              threads: true,
+            },
           }),
         ])
 
@@ -336,6 +344,33 @@ schema.extendType({
 
         if (args.body) {
           data = { ...data, ...processEditorDocument(args.body) }
+
+          const newThreadPositions = updatedThreadPositions(
+            JSON.parse(originalPost.bodySrc) as NodeType[],
+            args.body,
+            originalPost.threads
+          )
+
+          await Promise.all(newThreadPositions.map(({
+            id,
+            startIndex,
+            endIndex,
+            archived
+          }) => {
+            if (archived) {
+              return new Promise(res => res())
+            } else if (startIndex === -1) {
+              return ctx.db.thread.update({
+                where: { id },
+                data: { archived: true },
+              })
+            } else {
+              return ctx.db.thread.update({
+                where: { id },
+                data: { startIndex, endIndex },
+              })
+            }
+          }))
         }
 
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {

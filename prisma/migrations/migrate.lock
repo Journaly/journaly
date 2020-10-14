@@ -13,3 +13,4 @@
 20200910205210-add-topic-translation-table
 20200919143307-update-reset-token-expiry-type
 20200923094139-add-user-follows-m2m
+20201002152245-add-archived-field-to-threads

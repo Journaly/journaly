@@ -233,7 +233,12 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
 
     // Re-construct all comments from DB
     post.threads.forEach((thread: ThreadType) => {
-      const { startIndex, endIndex, id } = thread
+      const { startIndex, endIndex, archived, id } = thread
+
+      if (archived) {
+        return
+      }
+
       // Rebuild list on every iteration b/c the DOM & the POL change with every new comment
       // Done for simplicity of logic, but can be refactored to update original list if performance becomes an issues
       // Would complicate logic quite a lot.
@@ -392,25 +397,29 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           </span>
         ) : null}
 
-        {currentUser && post.author.id === currentUser.id && post.status === 'DRAFT' && (
+        {currentUser && post.author.id === currentUser.id && (
           <div className="post-controls">
             <>
               <Button
                 type="button"
                 variant={ButtonVariant.Secondary}
                 onClick={() => {
-                  Router.push(`/post/${post.id}/edit`)
+                  Router.push('/post/[id]/edit', `/post/${post.id}/edit`)
                 }}
               >
                 {t('editPostAction')}
               </Button>
-              <Button
-                type="button"
-                variant={ButtonVariant.Secondary}
-                onClick={setPostStatus(PostStatus.Published)}
-              >
-                {t('publishDraft')}
-              </Button>
+              {
+                post.status === 'DRAFT' && (
+                  <Button
+                    type="button"
+                    variant={ButtonVariant.Secondary}
+                    onClick={setPostStatus(PostStatus.Published)}
+                  >
+                    {t('publishDraft')}
+                  </Button>
+                )
+              }
             </>
           </div>
         )}

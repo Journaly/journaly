@@ -1,9 +1,9 @@
 {
   "postCommentsTitle": "Comments",
   "relativeTimeWord": "ago",
-  "save": "save",
-  "cancel": "cancel",
-  "submit": "submit",
+  "save": "Save",
+  "cancel": "Cancel",
+  "submit": "Submit",
   "addCommentPlaceholder": "Add a comment...",
   "noCommentsYetMessage": "No comments... yet!"
 }

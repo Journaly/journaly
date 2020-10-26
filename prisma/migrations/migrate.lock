@@ -14,3 +14,4 @@
 20200919143307-update-reset-token-expiry-type
 20200923094139-add-user-follows-m2m
 20201002152245-add-archived-field-to-threads
+20201026144537-new-language-relation-model

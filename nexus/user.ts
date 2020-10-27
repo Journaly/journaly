@@ -24,8 +24,7 @@ schema.objectType({
     })
     t.model.profileImage()
     t.model.createdAt()
-    t.model.languagesNative()
-    t.model.languagesLearning()
+    t.model.languages()
     t.model.following()
     t.model.followedBy()
     t.int('postsWrittenCount', {

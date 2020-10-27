@@ -1,0 +1,7 @@
+mutation addLanguageRelation($languageId: Int!) {
+  addLanguageRelation(languageId: $languageId, level: BEGINNER) {
+    language {
+      id
+    }
+  }
+}

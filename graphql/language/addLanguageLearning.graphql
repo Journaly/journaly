@@ -1,7 +1,0 @@
-mutation addLanguageLearning($languageId: Int!) {
-  addLanguageLearning(languageId: $languageId) {
-    language {
-      id
-    }
-  }
-}

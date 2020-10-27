@@ -1,7 +1,0 @@
-mutation addLanguageNative($languageId: Int!) {
-  addLanguageNative(languageId: $languageId) {
-    language {
-      id
-    }
-  }
-}

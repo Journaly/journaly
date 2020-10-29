@@ -9,7 +9,12 @@ import { useTranslation } from '../../../config/i18n'
 import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
 import theme from '../../../theme'
-import { User as UserType, useFeedQuery, useLanguagesQuery } from '../../../generated/graphql'
+import {
+  User as UserType,
+  useFeedQuery,
+  useLanguagesQuery,
+  LanguageLevel
+} from '../../../generated/graphql'
 // import Select from '../../../elements/Select'
 import LoadingWrapper from '../../LoadingWrapper'
 import MultiSelect from '../../../elements/MultiSelect'
@@ -130,7 +135,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
         </h1>
       )}
       <div className="my-feed-search">
-        <input type="text" placeholder="Search..." className="search-box" />
+        <input type="text" placeholder="Search coming soon..." className="search-box" disabled />
 
         <div className="my-feed-select">
           {/* <Select

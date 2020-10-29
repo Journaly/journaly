@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Modal from '../../../components/Modal'
 import WelcomeModalBody from './WelcomeModalBody'
 import Button from '../../../elements/Button'
-import { LanguagesFormDataQuery, useLanguagesFormDataQuery } from '../../../generated/graphql'
+import { LanguagesFormDataQuery, useLanguagesFormDataQuery, LanguageLevel} from '../../../generated/graphql'
 
 const welcomeModalKey = 'welcome-modal-july-2020'
 
@@ -20,7 +20,7 @@ const WelcomeModal: React.FC = () => {
 
   useEffect(() => {
     const hasChosenLanguages =
-      (data?.currentUser?.languages.length || [])
+      (data?.currentUser?.languages || [])
         .reduce((acc, { level }) => acc | (level === LanguageLevel.Native ? 1 : 2), 0) === 3
 
     // If the user has native and learning languages already, don't show the modal. This also

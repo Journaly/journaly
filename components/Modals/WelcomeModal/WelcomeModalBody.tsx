@@ -28,7 +28,7 @@ const WelcomeModalBody: React.FC<Props> = ({ languageFormData, refetch }) => {
 
       <div className="languages-form-field">
         <label className="language-label" htmlFor="learning-languages">
-          {t('profile.languages.learningLanguagesLabel')}
+          {t('profile.languages.welcomeModalFormLabel')}
         </label>
 
         <LanguageFormField

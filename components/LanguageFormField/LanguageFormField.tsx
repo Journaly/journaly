@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
-import { ApolloQueryResult } from '@apollo/client'
 import {
-  LanguagesFormDataQuery,
-  Language as LanguageType,
+  LanguageFragmentFragment as LanguageType,
   LanguageRelation as LanguageRelationType,
   useAddLanguageRelationMutation,
   useRemoveLanguageRelationMutation,
@@ -15,7 +13,7 @@ type LanguageMutationType = (arg: { variables: { languageId: number } }) => Prom
 type Props = {
   languages: LanguageType[]
   languageRelations: LanguageRelationType[]
-  refetch?: () => Promise<ApolloQueryResult<LanguagesFormDataQuery>>
+  refetch?: () => void 
 }
 
 const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refetch }) => {

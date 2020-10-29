@@ -1,9 +1,7 @@
 import React from 'react'
-import { ApolloQueryResult } from '@apollo/client'
 import { useTranslation } from '../../../config/i18n'
 import {
-  LanguagesFormDataQuery,
-  Language as LanguageType,
+  LanguageFragmentFragment as LanguageType,
   LanguageRelation as LanguageRelationType,
 } from '../../../generated/graphql'
 
@@ -14,7 +12,7 @@ import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFie
 type Props = {
   languages: LanguageType[]
   languageRelations: LanguageRelationType[]
-  refetch: () => Promise<ApolloQueryResult<LanguagesFormDataQuery>>
+  refetch: () => void
 }
 
 const LanguagesForm: React.FC<Props> = ({

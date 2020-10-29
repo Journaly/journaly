@@ -24,7 +24,7 @@ import { useCurrentUserQuery, User as UserType } from '../../generated/graphql'
  * </AuthGate>
  */
 
-type RenderCallback = (currentUser: UserType) => React.ReactElement
+type RenderCallback = (currentUser: UserType) => React.ReactNode
 
 type Props = {
   children: RenderCallback | React.ReactElement

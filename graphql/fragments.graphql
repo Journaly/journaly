@@ -43,6 +43,7 @@ fragment AuthorWithLanguagesFragment on User {
     language {
       ...LanguageFragment
     }
+    level
   }
  }
 

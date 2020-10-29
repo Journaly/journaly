@@ -12,8 +12,7 @@ import AuthGate from '../../../components/AuthGate'
 import {
   useSettingsFormDataQuery,
   Language as LanguageType,
-  LanguageNative as LanguageNativeType,
-  LanguageLearning as LanguageLearningType,
+  LanguageRelation as LanguageRelationType,
 } from '../../../generated/graphql'
 
 const ProfileInfo: NextPage = () => {
@@ -31,8 +30,7 @@ const ProfileInfo: NextPage = () => {
                 <DetailsForm currentUser={currentUser} />
                 <LanguagesForm
                   languages={data?.languages as LanguageType[]}
-                  nativeLanguages={data?.currentUser?.languagesNative as LanguageNativeType[]}
-                  learningLanguages={data?.currentUser?.languagesLearning as LanguageLearningType[]}
+                  languageRelations={data?.currentUser?.languages as LanguageRelationType[]}
                   refetch={refetch}
                 />
                 <BioForm bio={data?.currentUser?.bio || ''} />

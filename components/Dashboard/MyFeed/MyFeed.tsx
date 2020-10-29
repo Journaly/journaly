@@ -50,13 +50,9 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
   let userLanguages: Set<number> = new Set([])
 
-  for (let languageLearning of currentUser.languagesLearning) {
-    if (languageOptionIds.has(languageLearning.language.id))
-      userLanguages.add(languageLearning.language.id)
-  }
-  for (let languageNative of currentUser.languagesNative) {
-    if (languageOptionIds.has(languageNative.language.id))
-      userLanguages.add(languageNative.language.id)
+  for (let language of currentUser.languages) {
+    if (languageOptionIds.has(language.language.id))
+      userLanguages.add(language.language.id)
   }
 
   const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>([
@@ -94,13 +90,13 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
   let greetingLanguage = 'English'
 
-  if (currentUser.languagesLearning.length === 1) {
-    greetingLanguage = currentUser.languagesLearning[0].language.name
+  if (currentUser.languages.length === 1) {
+    greetingLanguage = currentUser.languages[0].language.name
   }
 
-  if (currentUser.languagesLearning.length > 1) {
-    const index = Math.floor(Math.random() * currentUser.languagesLearning.length)
-    const greetingLanguageKey = currentUser.languagesLearning[index].language.name
+  if (currentUser.languages.length > 1) {
+    const index = Math.floor(Math.random() * currentUser.languages.length)
+    const greetingLanguageKey = currentUser.languages[index].language.name
     greetingLanguage = greetings[greetingLanguageKey] ? greetingLanguageKey : 'English'
   }
 

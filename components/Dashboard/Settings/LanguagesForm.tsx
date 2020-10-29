@@ -4,26 +4,22 @@ import { useTranslation } from '../../../config/i18n'
 import {
   LanguagesFormDataQuery,
   Language as LanguageType,
-  LanguageNative as LanguageNativeType,
-  LanguageLearning as LanguageLearningType,
+  LanguageRelation as LanguageRelationType,
 } from '../../../generated/graphql'
 
-import NativeLanguageFormField from '../../../components/NativeLanguageFormField'
-import LearningLanguageFormField from '../../../components/LearningLanguageFormField'
+import LanguageFormField from '../../../components/LanguageFormField'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
 
 type Props = {
   languages: LanguageType[]
-  nativeLanguages: LanguageNativeType[]
-  learningLanguages: LanguageLearningType[]
+  languageRelations: LanguageRelationType[]
   refetch: () => Promise<ApolloQueryResult<LanguagesFormDataQuery>>
 }
 
 const LanguagesForm: React.FC<Props> = ({
   languages,
-  nativeLanguages,
-  learningLanguages,
+  languageRelations,
   refetch,
 }) => {
   const { t } = useTranslation('settings')
@@ -34,24 +30,13 @@ const LanguagesForm: React.FC<Props> = ({
         <div className="languages-wrapper">
           <div className="languages-form-fields">
             <div className="languages-form-field">
-              <label className="settings-label" htmlFor="native-languages">
-                {t('profile.languages.nativeLanguagesLabel')}
-              </label>
-
-              <NativeLanguageFormField
-                languages={languages}
-                nativeLanguages={nativeLanguages}
-                refetch={refetch}
-              />
-            </div>
-            <div className="languages-form-field">
               <label className="settings-label" htmlFor="learning-languages">
                 {t('profile.languages.learningLanguagesLabel')}
               </label>
 
-              <LearningLanguageFormField
+              <LanguageFormField
                 languages={languages}
-                learningLanguages={learningLanguages}
+                languageRelations={languageRelations}
                 refetch={refetch}
               />
             </div>

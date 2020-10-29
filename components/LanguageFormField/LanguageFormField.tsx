@@ -3,9 +3,9 @@ import { ApolloQueryResult } from '@apollo/client'
 import {
   LanguagesFormDataQuery,
   Language as LanguageType,
-  LanguageLearning as LanguageLearningType,
-  useAddLanguageLearningMutation,
-  useRemoveLanguageLearningMutation,
+  LanguageRelation as LanguageRelationType,
+  useAddLanguageRelationMutation,
+  useRemoveLanguageRelationMutation,
 } from '../../generated/graphql'
 import MultiSelect from '../../elements/MultiSelect/MultiSelect'
 import { languageNameWithDialect } from '../../utils/languages'
@@ -14,15 +14,15 @@ type LanguageMutationType = (arg: { variables: { languageId: number } }) => Prom
 
 type Props = {
   languages: LanguageType[]
-  learningLanguages: LanguageLearningType[]
+  languageRelations: LanguageRelationType[]
   refetch?: () => Promise<ApolloQueryResult<LanguagesFormDataQuery>>
 }
 
-const LearningLanguageFormField: React.FC<Props> = ({ languages, learningLanguages, refetch }) => {
+const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refetch }) => {
   const [addedLanguageId, setAddedLanguageId] = useState(-1)
   const [removedLanguageId, setRemovedLanguageId] = useState(-1)
-  const [selectedLearningLanguages, setSelectedLearningLanguages] = useState(
-    learningLanguages.map(({ language }) => language.id.toString()),
+  const [selectedLanguageRelations, setSelectedLanguageRelations] = useState(
+   languageRelations.map(({ language }) => language.id.toString()),
   )
   const formattedLanguageOptions = languages.map((language) => {
     const value = language.id.toString()
@@ -31,21 +31,21 @@ const LearningLanguageFormField: React.FC<Props> = ({ languages, learningLanguag
     return { value, displayName }
   })
 
-  const [addLearningLanguage, { loading: addingLearningLanguage }] = useAddLanguageLearningMutation(
+  const [addLanguageRelation, { loading: addingLanguageRelation }] = useAddLanguageRelationMutation(
     {
       onCompleted: () => {
-        setSelectedLearningLanguages([...selectedLearningLanguages, addedLanguageId.toString()])
+        setSelectedLanguageRelations([...selectedLanguageRelations, addedLanguageId.toString()])
         setAddedLanguageId(-1)
       },
     },
   )
   const [
-    removeLearningLanguage,
-    { loading: removingLearningLanguage },
-  ] = useRemoveLanguageLearningMutation({
+    removeLanguageRelation,
+    { loading: removingLanguageRelation },
+  ] = useRemoveLanguageRelationMutation({
     onCompleted: () => {
-      setSelectedLearningLanguages(
-        selectedLearningLanguages.filter((value) => value !== removedLanguageId.toString()),
+      setSelectedLanguageRelations(
+        selectedLanguageRelations.filter((value) => value !== removedLanguageId.toString()),
       )
       setRemovedLanguageId(-1)
     },
@@ -56,28 +56,28 @@ const LearningLanguageFormField: React.FC<Props> = ({ languages, learningLanguag
     refetch && refetch()
   }
 
-  const onLearningAdd = mutateLanguageM2M(addLearningLanguage)
-  const onLearningRemove = mutateLanguageM2M(removeLearningLanguage)
+  const onLanguageAdd = mutateLanguageM2M(addLanguageRelation)
+  const onLanguageRemove = mutateLanguageM2M(removeLanguageRelation)
 
-  const handleAddLearningLanguage = (value: string) => {
+  const handleAddLanguageRelation = (value: string) => {
     const languageId = parseInt(value, 10)
     setAddedLanguageId(languageId)
-    onLearningAdd(languageId)
+    onLanguageAdd(languageId)
   }
 
-  const handleRemoveLearningLanguage = (value: string) => {
+  const handleRemoveLanguageRelation = (value: string) => {
     const languageId = parseInt(value, 10)
     setRemovedLanguageId(languageId)
-    onLearningRemove(languageId)
+    onLanguageRemove(languageId)
   }
 
   return (
     <MultiSelect
-      loading={addingLearningLanguage || removingLearningLanguage}
+      loading={addingLanguageRelation || removingLanguageRelation}
       options={formattedLanguageOptions}
-      selectedOptionValues={selectedLearningLanguages}
-      onAdd={handleAddLearningLanguage}
-      onRemove={handleRemoveLearningLanguage}
+      selectedOptionValues={selectedLanguageRelations}
+      onAdd={handleAddLanguageRelation}
+      onRemove={handleRemoveLanguageRelation}
       placeholder="Select a language"
       id="learning-languages"
       name="learning-languages"
@@ -85,4 +85,4 @@ const LearningLanguageFormField: React.FC<Props> = ({ languages, learningLanguag
   )
 }
 
-export default LearningLanguageFormField
+export default LanguageFormField

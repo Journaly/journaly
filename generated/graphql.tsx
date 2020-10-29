@@ -658,9 +658,9 @@ export type AuthorWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
 
 export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
   languages: Array<
-    { __typename?: 'LanguageRelation' } & {
-      language: { __typename?: 'Language' } & LanguageFragmentFragment
-    }
+    { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'level'> & {
+        language: { __typename?: 'Language' } & LanguageFragmentFragment
+      }
   >
 } & AuthorWithStatsFragmentFragment
 
@@ -1084,6 +1084,7 @@ export const AuthorWithLanguagesFragmentFragmentDoc = gql`
       language {
         ...LanguageFragment
       }
+      level
     }
   }
   ${AuthorWithStatsFragmentFragmentDoc}

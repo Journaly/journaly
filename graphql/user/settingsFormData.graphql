@@ -6,6 +6,7 @@ query settingsFormData {
     bio
     languages {
       id
+      level
       language {
         ...LanguageFragment
       }

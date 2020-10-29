@@ -20,7 +20,8 @@ const WelcomeModal: React.FC = () => {
 
   useEffect(() => {
     const hasChosenLanguages =
-      data?.currentUser?.languages.length 
+      (data?.currentUser?.languages.length || [])
+        .reduce((acc, { level }) => acc | (level === LanguageLevel.Native ? 1 : 2), 0) === 3
 
     // If the user has native and learning languages already, don't show the modal. This also
     // prevents the modal from showing on new devices and browsers which don't have a stored

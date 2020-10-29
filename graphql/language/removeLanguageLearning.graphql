@@ -1,5 +1,0 @@
-mutation removeLanguageLearning($languageId: Int!) {
-  removeLanguageLearning(languageId: $languageId) {
-    id
-  }
-}

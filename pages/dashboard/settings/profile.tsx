@@ -11,9 +11,6 @@ import SocialForm from '../../../components/Dashboard/Settings/SocialForm'
 import AuthGate from '../../../components/AuthGate'
 import {
   useSettingsFormDataQuery,
-  Language as LanguageType,
-  LanguageNative as LanguageNativeType,
-  LanguageLearning as LanguageLearningType,
 } from '../../../generated/graphql'
 
 const ProfileInfo: NextPage = () => {
@@ -21,43 +18,45 @@ const ProfileInfo: NextPage = () => {
 
   return (
     <AuthGate>
-      {(currentUser) => (
-        <SettingsPageLayout>
-          <div className="forms-container">
-            {loading || !currentUser ? (
-              <LoadingSpinner />
-            ) : (
-              <>
-                <DetailsForm currentUser={currentUser} />
-                <LanguagesForm
-                  languages={data?.languages as LanguageType[]}
-                  nativeLanguages={data?.currentUser?.languagesNative as LanguageNativeType[]}
-                  learningLanguages={data?.currentUser?.languagesLearning as LanguageLearningType[]}
-                  refetch={refetch}
-                />
-                <BioForm bio={data?.currentUser?.bio || ''} />
-                <InterestsForm />
-                <SocialForm />
-              </>
-            )}
-          </div>
+      {(currentUser) => {
+        if (!data?.languages) return null
+        return (
+          <SettingsPageLayout>
+            <div className="forms-container">
+              {loading || !currentUser ? (
+                <LoadingSpinner />
+              ) : (
+                <>
+                  <DetailsForm currentUser={currentUser} />
+                  <LanguagesForm
+                    languages={data.languages}
+                    languageRelations={currentUser.languages}
+                    refetch={refetch}
+                  />
+                  <BioForm bio={data?.currentUser?.bio || ''} />
+                  <InterestsForm />
+                  <SocialForm />
+                </>
+              )}
+            </div>
 
-          <style jsx>{`
-            .forms-container {
-              width: 100%;
-              max-width: 1008px;
-            }
+            <style jsx>{`
+              .forms-container {
+                width: 100%;
+                max-width: 1008px;
+              }
 
-            .forms-container :global(form) {
-              margin-bottom: 40px;
-            }
+              .forms-container :global(form) {
+                margin-bottom: 40px;
+              }
 
-            .forms-container :global(form):last-child {
-              margin-bottom: 0;
-            }
-          `}</style>
-        </SettingsPageLayout>
-      )}
+              .forms-container :global(form):last-child {
+                margin-bottom: 0;
+              }
+            `}</style>
+          </SettingsPageLayout>
+        )
+      }}
     </AuthGate>
   )
 }

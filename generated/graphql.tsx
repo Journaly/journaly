@@ -94,7 +94,6 @@ export type Language = {
   name: Scalars['String']
   posts: Array<Post>
   dialect?: Maybe<Scalars['String']>
-  learningUsers?: Maybe<Array<User>>
   postCount?: Maybe<Scalars['Int']>
 }
 
@@ -106,24 +105,21 @@ export type LanguagePostsArgs = {
   last?: Maybe<Scalars['Int']>
 }
 
-export type LanguageLearning = {
-  __typename?: 'LanguageLearning'
+export enum LanguageLevel {
+  Beginner = 'BEGINNER',
+  Intermediate = 'INTERMEDIATE',
+  Advanced = 'ADVANCED',
+  Native = 'NATIVE',
+}
+
+export type LanguageRelation = {
+  __typename?: 'LanguageRelation'
   id: Scalars['Int']
   language: Language
+  level: LanguageLevel
 }
 
-export type LanguageLearningWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-  userId_languageId?: Maybe<UserIdLanguageIdCompoundUniqueInput>
-}
-
-export type LanguageNative = {
-  __typename?: 'LanguageNative'
-  id: Scalars['Int']
-  language: Language
-}
-
-export type LanguageNativeWhereUniqueInput = {
+export type LanguageRelationWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>
   userId_languageId?: Maybe<UserIdLanguageIdCompoundUniqueInput>
 }
@@ -155,10 +151,8 @@ export type Mutation = {
   logout?: Maybe<User>
   followUser?: Maybe<User>
   unfollowUser?: Maybe<User>
-  addLanguageLearning?: Maybe<LanguageLearning>
-  addLanguageNative?: Maybe<LanguageNative>
-  removeLanguageLearning?: Maybe<LanguageLearning>
-  removeLanguageNative?: Maybe<LanguageNative>
+  addLanguageRelation?: Maybe<LanguageRelation>
+  removeLanguageRelation?: Maybe<LanguageRelation>
   createCommentThanks?: Maybe<CommentThanks>
   deleteCommentThanks?: Maybe<CommentThanks>
 }
@@ -257,19 +251,12 @@ export type MutationUnfollowUserArgs = {
   followedUserId: Scalars['Int']
 }
 
-export type MutationAddLanguageLearningArgs = {
+export type MutationAddLanguageRelationArgs = {
   languageId: Scalars['Int']
+  level: LanguageLevel
 }
 
-export type MutationAddLanguageNativeArgs = {
-  languageId: Scalars['Int']
-}
-
-export type MutationRemoveLanguageLearningArgs = {
-  languageId: Scalars['Int']
-}
-
-export type MutationRemoveLanguageNativeArgs = {
+export type MutationRemoveLanguageRelationArgs = {
   languageId: Scalars['Int']
 }
 
@@ -510,26 +497,17 @@ export type User = {
   posts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
-  languagesNative: Array<LanguageNative>
-  languagesLearning: Array<LanguageLearning>
+  languages: Array<LanguageRelation>
   following: Array<User>
   followedBy: Array<User>
   postsWrittenCount?: Maybe<Scalars['Int']>
   thanksReceivedCount?: Maybe<Scalars['Int']>
 }
 
-export type UserLanguagesNativeArgs = {
+export type UserLanguagesArgs = {
   skip?: Maybe<Scalars['Int']>
-  after?: Maybe<LanguageNativeWhereUniqueInput>
-  before?: Maybe<LanguageNativeWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type UserLanguagesLearningArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<LanguageLearningWhereUniqueInput>
-  before?: Maybe<LanguageLearningWhereUniqueInput>
+  after?: Maybe<LanguageRelationWhereUniqueInput>
+  before?: Maybe<LanguageRelationWhereUniqueInput>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
 }
@@ -659,13 +637,8 @@ export type UserWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
   UserFragmentFragment
 
 export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
-  languagesLearning: Array<
-    { __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'> & {
-        language: { __typename?: 'Language' } & LanguageFragmentFragment
-      }
-  >
-  languagesNative: Array<
-    { __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'> & {
+  languages: Array<
+    { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id' | 'level'> & {
         language: { __typename?: 'Language' } & LanguageFragmentFragment
       }
   >
@@ -683,15 +656,10 @@ export type AuthorWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
   AuthorFragmentFragment
 
 export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
-  languagesLearning: Array<
-    { __typename?: 'LanguageLearning' } & {
-      language: { __typename?: 'Language' } & LanguageFragmentFragment
-    }
-  >
-  languagesNative: Array<
-    { __typename?: 'LanguageNative' } & {
-      language: { __typename?: 'Language' } & LanguageFragmentFragment
-    }
+  languages: Array<
+    { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'level'> & {
+        language: { __typename?: 'Language' } & LanguageFragmentFragment
+      }
   >
 } & AuthorWithStatsFragmentFragment
 
@@ -763,25 +731,13 @@ export type LanguageWithPostCountFragmentFragment = { __typename?: 'Language' } 
 
 export type TopicFragmentFragment = { __typename?: 'Topic' } & Pick<Topic, 'id' | 'name'>
 
-export type AddLanguageLearningMutationVariables = {
+export type AddLanguageRelationMutationVariables = {
   languageId: Scalars['Int']
 }
 
-export type AddLanguageLearningMutation = { __typename?: 'Mutation' } & {
-  addLanguageLearning?: Maybe<
-    { __typename?: 'LanguageLearning' } & {
-      language: { __typename?: 'Language' } & Pick<Language, 'id'>
-    }
-  >
-}
-
-export type AddLanguageNativeMutationVariables = {
-  languageId: Scalars['Int']
-}
-
-export type AddLanguageNativeMutation = { __typename?: 'Mutation' } & {
-  addLanguageNative?: Maybe<
-    { __typename?: 'LanguageNative' } & {
+export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
+  addLanguageRelation?: Maybe<
+    { __typename?: 'LanguageRelation' } & {
       language: { __typename?: 'Language' } & Pick<Language, 'id'>
     }
   >
@@ -801,13 +757,8 @@ export type LanguagesFormDataQuery = { __typename?: 'Query' } & {
   languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
   currentUser?: Maybe<
     { __typename?: 'User' } & {
-      languagesLearning: Array<
-        { __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'> & {
-            language: { __typename?: 'Language' } & LanguageFragmentFragment
-          }
-      >
-      languagesNative: Array<
-        { __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'> & {
+      languages: Array<
+        { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id' | 'level'> & {
             language: { __typename?: 'Language' } & LanguageFragmentFragment
           }
       >
@@ -815,20 +766,12 @@ export type LanguagesFormDataQuery = { __typename?: 'Query' } & {
   >
 }
 
-export type RemoveLanguageLearningMutationVariables = {
+export type RemoveLanguageRelationMutationVariables = {
   languageId: Scalars['Int']
 }
 
-export type RemoveLanguageLearningMutation = { __typename?: 'Mutation' } & {
-  removeLanguageLearning?: Maybe<{ __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'>>
-}
-
-export type RemoveLanguageNativeMutationVariables = {
-  languageId: Scalars['Int']
-}
-
-export type RemoveLanguageNativeMutation = { __typename?: 'Mutation' } & {
-  removeLanguageNative?: Maybe<{ __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'>>
+export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
+  removeLanguageRelation?: Maybe<{ __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>>
 }
 
 export type CreatePostMutationVariables = {
@@ -1021,13 +964,8 @@ export type SettingsFormDataQuery = { __typename?: 'Query' } & {
   languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
   currentUser?: Maybe<
     { __typename?: 'User' } & Pick<User, 'bio'> & {
-        languagesLearning: Array<
-          { __typename?: 'LanguageLearning' } & Pick<LanguageLearning, 'id'> & {
-              language: { __typename?: 'Language' } & LanguageFragmentFragment
-            }
-        >
-        languagesNative: Array<
-          { __typename?: 'LanguageNative' } & Pick<LanguageNative, 'id'> & {
+        languages: Array<
+          { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'> & {
               language: { __typename?: 'Language' } & LanguageFragmentFragment
             }
         >
@@ -1103,14 +1041,9 @@ export const LanguageFragmentFragmentDoc = gql`
 export const UserWithLanguagesFragmentFragmentDoc = gql`
   fragment UserWithLanguagesFragment on User {
     ...UserFragment
-    languagesLearning {
+    languages {
       id
-      language {
-        ...LanguageFragment
-      }
-    }
-    languagesNative {
-      id
+      level
       language {
         ...LanguageFragment
       }
@@ -1147,15 +1080,11 @@ export const AuthorWithStatsFragmentFragmentDoc = gql`
 export const AuthorWithLanguagesFragmentFragmentDoc = gql`
   fragment AuthorWithLanguagesFragment on User {
     ...AuthorWithStatsFragment
-    languagesLearning {
+    languages {
       language {
         ...LanguageFragment
       }
-    }
-    languagesNative {
-      language {
-        ...LanguageFragment
-      }
+      level
     }
   }
   ${AuthorWithStatsFragmentFragmentDoc}
@@ -1689,107 +1618,57 @@ export type UpdatePostCommentMutationOptions = ApolloReactCommon.BaseMutationOpt
   UpdatePostCommentMutation,
   UpdatePostCommentMutationVariables
 >
-export const AddLanguageLearningDocument = gql`
-  mutation addLanguageLearning($languageId: Int!) {
-    addLanguageLearning(languageId: $languageId) {
+export const AddLanguageRelationDocument = gql`
+  mutation addLanguageRelation($languageId: Int!) {
+    addLanguageRelation(languageId: $languageId, level: BEGINNER) {
       language {
         id
       }
     }
   }
 `
-export type AddLanguageLearningMutationFn = ApolloReactCommon.MutationFunction<
-  AddLanguageLearningMutation,
-  AddLanguageLearningMutationVariables
+export type AddLanguageRelationMutationFn = ApolloReactCommon.MutationFunction<
+  AddLanguageRelationMutation,
+  AddLanguageRelationMutationVariables
 >
 
 /**
- * __useAddLanguageLearningMutation__
+ * __useAddLanguageRelationMutation__
  *
- * To run a mutation, you first call `useAddLanguageLearningMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddLanguageLearningMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useAddLanguageRelationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddLanguageRelationMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [addLanguageLearningMutation, { data, loading, error }] = useAddLanguageLearningMutation({
+ * const [addLanguageRelationMutation, { data, loading, error }] = useAddLanguageRelationMutation({
  *   variables: {
  *      languageId: // value for 'languageId'
  *   },
  * });
  */
-export function useAddLanguageLearningMutation(
+export function useAddLanguageRelationMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AddLanguageLearningMutation,
-    AddLanguageLearningMutationVariables
+    AddLanguageRelationMutation,
+    AddLanguageRelationMutationVariables
   >,
 ) {
   return ApolloReactHooks.useMutation<
-    AddLanguageLearningMutation,
-    AddLanguageLearningMutationVariables
-  >(AddLanguageLearningDocument, baseOptions)
+    AddLanguageRelationMutation,
+    AddLanguageRelationMutationVariables
+  >(AddLanguageRelationDocument, baseOptions)
 }
-export type AddLanguageLearningMutationHookResult = ReturnType<
-  typeof useAddLanguageLearningMutation
+export type AddLanguageRelationMutationHookResult = ReturnType<
+  typeof useAddLanguageRelationMutation
 >
-export type AddLanguageLearningMutationResult = ApolloReactCommon.MutationResult<
-  AddLanguageLearningMutation
+export type AddLanguageRelationMutationResult = ApolloReactCommon.MutationResult<
+  AddLanguageRelationMutation
 >
-export type AddLanguageLearningMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AddLanguageLearningMutation,
-  AddLanguageLearningMutationVariables
->
-export const AddLanguageNativeDocument = gql`
-  mutation addLanguageNative($languageId: Int!) {
-    addLanguageNative(languageId: $languageId) {
-      language {
-        id
-      }
-    }
-  }
-`
-export type AddLanguageNativeMutationFn = ApolloReactCommon.MutationFunction<
-  AddLanguageNativeMutation,
-  AddLanguageNativeMutationVariables
->
-
-/**
- * __useAddLanguageNativeMutation__
- *
- * To run a mutation, you first call `useAddLanguageNativeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddLanguageNativeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addLanguageNativeMutation, { data, loading, error }] = useAddLanguageNativeMutation({
- *   variables: {
- *      languageId: // value for 'languageId'
- *   },
- * });
- */
-export function useAddLanguageNativeMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    AddLanguageNativeMutation,
-    AddLanguageNativeMutationVariables
-  >,
-) {
-  return ApolloReactHooks.useMutation<
-    AddLanguageNativeMutation,
-    AddLanguageNativeMutationVariables
-  >(AddLanguageNativeDocument, baseOptions)
-}
-export type AddLanguageNativeMutationHookResult = ReturnType<typeof useAddLanguageNativeMutation>
-export type AddLanguageNativeMutationResult = ApolloReactCommon.MutationResult<
-  AddLanguageNativeMutation
->
-export type AddLanguageNativeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AddLanguageNativeMutation,
-  AddLanguageNativeMutationVariables
+export type AddLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddLanguageRelationMutation,
+  AddLanguageRelationMutationVariables
 >
 export const LanguagesDocument = gql`
   query languages($hasPosts: Boolean) {
@@ -1844,14 +1723,9 @@ export const LanguagesFormDataDocument = gql`
       ...LanguageFragment
     }
     currentUser {
-      languagesLearning {
+      languages {
         id
-        language {
-          ...LanguageFragment
-        }
-      }
-      languagesNative {
-        id
+        level
         language {
           ...LanguageFragment
         }
@@ -1904,105 +1778,55 @@ export type LanguagesFormDataQueryResult = ApolloReactCommon.QueryResult<
   LanguagesFormDataQuery,
   LanguagesFormDataQueryVariables
 >
-export const RemoveLanguageLearningDocument = gql`
-  mutation removeLanguageLearning($languageId: Int!) {
-    removeLanguageLearning(languageId: $languageId) {
+export const RemoveLanguageRelationDocument = gql`
+  mutation removeLanguageRelation($languageId: Int!) {
+    removeLanguageRelation(languageId: $languageId) {
       id
     }
   }
 `
-export type RemoveLanguageLearningMutationFn = ApolloReactCommon.MutationFunction<
-  RemoveLanguageLearningMutation,
-  RemoveLanguageLearningMutationVariables
+export type RemoveLanguageRelationMutationFn = ApolloReactCommon.MutationFunction<
+  RemoveLanguageRelationMutation,
+  RemoveLanguageRelationMutationVariables
 >
 
 /**
- * __useRemoveLanguageLearningMutation__
+ * __useRemoveLanguageRelationMutation__
  *
- * To run a mutation, you first call `useRemoveLanguageLearningMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRemoveLanguageLearningMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useRemoveLanguageRelationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveLanguageRelationMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [removeLanguageLearningMutation, { data, loading, error }] = useRemoveLanguageLearningMutation({
+ * const [removeLanguageRelationMutation, { data, loading, error }] = useRemoveLanguageRelationMutation({
  *   variables: {
  *      languageId: // value for 'languageId'
  *   },
  * });
  */
-export function useRemoveLanguageLearningMutation(
+export function useRemoveLanguageRelationMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    RemoveLanguageLearningMutation,
-    RemoveLanguageLearningMutationVariables
+    RemoveLanguageRelationMutation,
+    RemoveLanguageRelationMutationVariables
   >,
 ) {
   return ApolloReactHooks.useMutation<
-    RemoveLanguageLearningMutation,
-    RemoveLanguageLearningMutationVariables
-  >(RemoveLanguageLearningDocument, baseOptions)
+    RemoveLanguageRelationMutation,
+    RemoveLanguageRelationMutationVariables
+  >(RemoveLanguageRelationDocument, baseOptions)
 }
-export type RemoveLanguageLearningMutationHookResult = ReturnType<
-  typeof useRemoveLanguageLearningMutation
+export type RemoveLanguageRelationMutationHookResult = ReturnType<
+  typeof useRemoveLanguageRelationMutation
 >
-export type RemoveLanguageLearningMutationResult = ApolloReactCommon.MutationResult<
-  RemoveLanguageLearningMutation
+export type RemoveLanguageRelationMutationResult = ApolloReactCommon.MutationResult<
+  RemoveLanguageRelationMutation
 >
-export type RemoveLanguageLearningMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RemoveLanguageLearningMutation,
-  RemoveLanguageLearningMutationVariables
->
-export const RemoveLanguageNativeDocument = gql`
-  mutation removeLanguageNative($languageId: Int!) {
-    removeLanguageNative(languageId: $languageId) {
-      id
-    }
-  }
-`
-export type RemoveLanguageNativeMutationFn = ApolloReactCommon.MutationFunction<
-  RemoveLanguageNativeMutation,
-  RemoveLanguageNativeMutationVariables
->
-
-/**
- * __useRemoveLanguageNativeMutation__
- *
- * To run a mutation, you first call `useRemoveLanguageNativeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRemoveLanguageNativeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [removeLanguageNativeMutation, { data, loading, error }] = useRemoveLanguageNativeMutation({
- *   variables: {
- *      languageId: // value for 'languageId'
- *   },
- * });
- */
-export function useRemoveLanguageNativeMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    RemoveLanguageNativeMutation,
-    RemoveLanguageNativeMutationVariables
-  >,
-) {
-  return ApolloReactHooks.useMutation<
-    RemoveLanguageNativeMutation,
-    RemoveLanguageNativeMutationVariables
-  >(RemoveLanguageNativeDocument, baseOptions)
-}
-export type RemoveLanguageNativeMutationHookResult = ReturnType<
-  typeof useRemoveLanguageNativeMutation
->
-export type RemoveLanguageNativeMutationResult = ApolloReactCommon.MutationResult<
-  RemoveLanguageNativeMutation
->
-export type RemoveLanguageNativeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RemoveLanguageNativeMutation,
-  RemoveLanguageNativeMutationVariables
+export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RemoveLanguageRelationMutation,
+  RemoveLanguageRelationMutationVariables
 >
 export const CreatePostDocument = gql`
   mutation createPost(
@@ -2941,13 +2765,7 @@ export const SettingsFormDataDocument = gql`
     }
     currentUser {
       bio
-      languagesLearning {
-        id
-        language {
-          ...LanguageFragment
-        }
-      }
-      languagesNative {
+      languages {
         id
         language {
           ...LanguageFragment

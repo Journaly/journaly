@@ -1,5 +1,0 @@
-mutation removeLanguageNative($languageId: Int!) {
-  removeLanguageNative(languageId: $languageId) {
-    id
-  }
-}

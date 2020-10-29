@@ -23,7 +23,8 @@
     "languages": {
       "legend": "Languages",
       "nativeLanguagesLabel": "What language(s) do you speak at a native level?",
-      "learningLanguagesLabel": "What language(s) are you learning?"
+      "learningLanguagesLabel": "What language(s) are you learning?",
+      "welcomeModalFormLabel": "Tell us your native language(s) and which language(s) you're learning"
     },
     "bio": {
       "legend": "Bio",

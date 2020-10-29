@@ -6,6 +6,7 @@ import {
   useFollowUserMutation,
   useUnfollowUserMutation,
   useFollowingUsersQuery,
+  LanguageLevel,
 } from '../../../generated/graphql'
 import { useTranslation } from '../../../config/i18n'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
@@ -18,7 +19,11 @@ type PostAuthorCardProps = {
 
 const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
   const { t } = useTranslation('post-author-card')
-  const { languagesNative, languagesLearning } = author
+  const { languages } = author
+
+  
+  const speaksList = languages.filter((language) => language.level === LanguageLevel.Native)
+  const learnsList = languages.filter((language) => language.level !== LanguageLevel.Native)
 
   const { data: { currentUser } = {}, refetch } = useFollowingUsersQuery()
 
@@ -79,13 +84,13 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
       <div className="language-info">
         <p className="author-info-heading">{t('nativeHeader')}</p>
         <ul className="language-list">
-          {languagesNative.map(({ language }) => {
+          {speaksList.map(({ language }) => {
             return <li key={language.id}>{languageNameWithDialect(language)}</li>
           })}
         </ul>
         <p className="author-info-heading">{t('learningHeader')}</p>
         <ul className="language-list">
-          {languagesLearning.map(({ language }) => {
+          {learnsList.map(({ language }) => {
             return <li key={language.id}>{languageNameWithDialect(language)}</li>
           })}
         </ul>

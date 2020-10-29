@@ -9,7 +9,12 @@ import { useTranslation } from '../../../config/i18n'
 import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
 import theme from '../../../theme'
-import { User as UserType, useFeedQuery, useLanguagesQuery } from '../../../generated/graphql'
+import {
+  User as UserType,
+  useFeedQuery,
+  useLanguagesQuery,
+  LanguageLevel
+} from '../../../generated/graphql'
 // import Select from '../../../elements/Select'
 import LoadingWrapper from '../../LoadingWrapper'
 import MultiSelect from '../../../elements/MultiSelect'
@@ -50,13 +55,9 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
   let userLanguages: Set<number> = new Set([])
 
-  for (let languageLearning of currentUser.languagesLearning) {
-    if (languageOptionIds.has(languageLearning.language.id))
-      userLanguages.add(languageLearning.language.id)
-  }
-  for (let languageNative of currentUser.languagesNative) {
-    if (languageOptionIds.has(languageNative.language.id))
-      userLanguages.add(languageNative.language.id)
+  for (let languageRelation of currentUser.languages) {
+    if (languageOptionIds.has(languageRelation.language.id))
+      userLanguages.add(languageRelation.language.id)
   }
 
   const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>([
@@ -94,13 +95,14 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
   let greetingLanguage = 'English'
 
-  if (currentUser.languagesLearning.length === 1) {
-    greetingLanguage = currentUser.languagesLearning[0].language.name
+  if (currentUser.languages.length === 1) {
+    greetingLanguage = currentUser.languages[0].language.name
   }
 
-  if (currentUser.languagesLearning.length > 1) {
-    const index = Math.floor(Math.random() * currentUser.languagesLearning.length)
-    const greetingLanguageKey = currentUser.languagesLearning[index].language.name
+  const learningLanguages = currentUser.languages.filter(({ level }) => level !== LanguageLevel.Native)
+  if (learningLanguages.length > 0) {
+    const index = Math.floor(Math.random() * currentUser.languages.length)
+    const greetingLanguageKey = currentUser.languages[index].language.name
     greetingLanguage = greetings[greetingLanguageKey] ? greetingLanguageKey : 'English'
   }
 
@@ -133,7 +135,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
         </h1>
       )}
       <div className="my-feed-search">
-        <input type="text" placeholder="Search..." className="search-box" />
+        <input type="text" placeholder="Search coming soon..." className="search-box" disabled />
 
         <div className="my-feed-select">
           {/* <Select

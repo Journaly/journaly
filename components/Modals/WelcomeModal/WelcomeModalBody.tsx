@@ -4,11 +4,9 @@ import { ApolloQueryResult } from '@apollo/client'
 import {
   LanguagesFormDataQuery,
   Language as LanguageType,
-  LanguageNative as LanguageNativeType,
-  LanguageLearning as LanguageLearningType,
+  LanguageRelation as LanguageRelationType,
 } from '../../../generated/graphql'
-import NativeLanguageFormField from '../../../components/NativeLanguageFormField'
-import LearningLanguageFormField from '../../../components/LearningLanguageFormField'
+import LanguageFormField from '../../../components/LanguageFormField'
 
 type Props = {
   languageFormData: LanguagesFormDataQuery
@@ -18,9 +16,7 @@ type Props = {
 const WelcomeModalBody: React.FC<Props> = ({ languageFormData, refetch }) => {
   const { t } = useTranslation('settings')
   const languages = languageFormData.languages as LanguageType[]
-  const nativeLanguages = languageFormData.currentUser?.languagesNative as LanguageNativeType[]
-  const learningLanguages = languageFormData.currentUser
-    ?.languagesLearning as LanguageLearningType[]
+  const languageRelations = languageFormData.currentUser?.languages as LanguageRelationType[]
 
   return (
     <div>
@@ -31,24 +27,13 @@ const WelcomeModalBody: React.FC<Props> = ({ languageFormData, refetch }) => {
       </p>
 
       <div className="languages-form-field">
-        <label className="language-label" htmlFor="native-languages">
-          {t('profile.languages.nativeLanguagesLabel')}
-        </label>
-
-        <NativeLanguageFormField
-          languages={languages}
-          nativeLanguages={nativeLanguages}
-          refetch={refetch}
-        />
-      </div>
-      <div className="languages-form-field">
         <label className="language-label" htmlFor="learning-languages">
-          {t('profile.languages.learningLanguagesLabel')}
+          {t('profile.languages.welcomeModalFormLabel')}
         </label>
 
-        <LearningLanguageFormField
+        <LanguageFormField
           languages={languages}
-          learningLanguages={learningLanguages}
+          languageRelations={languageRelations}
           refetch={refetch}
         />
       </div>

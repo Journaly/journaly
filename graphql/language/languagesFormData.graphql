@@ -3,14 +3,9 @@ query languagesFormData {
     ...LanguageFragment
   }
   currentUser {
-    languagesLearning {
+    languages {
       id
-      language {
-        ...LanguageFragment
-      }
-    }
-    languagesNative {
-      id
+      level
       language {
         ...LanguageFragment
       }

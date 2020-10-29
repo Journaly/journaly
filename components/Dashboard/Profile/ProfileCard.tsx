@@ -8,7 +8,7 @@ import ExternalLink from '../../../elements/ExternalLink'
 import { sanitize } from '../../../utils'
 import { languageNameWithDialect } from '../../../utils/languages'
 import theme from '../../../theme'
-import { User as UserType } from '../../../generated/graphql'
+import { User as UserType, LanguageLevel } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type Props = {
@@ -31,8 +31,12 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
   const showSeparator =
     sampleUser.facebook || sampleUser.instagram || sampleUser.youtube || sampleUser.website
   const profileImage = user.profileImage
-  const speaks = user.languagesNative.map(({ language }) => languageNameWithDialect(language))
-  const learns = user.languagesLearning.map(({ language }) => languageNameWithDialect(language))
+  
+  const speaksList = user.languages.filter((language) => language.level === LanguageLevel.Native)
+  const learnsList = user.languages.filter((language) => language.level !== LanguageLevel.Native)
+
+  const speaks = speaksList.map(({ language }) => languageNameWithDialect(language))
+  const learns = learnsList.map(({ language }) => languageNameWithDialect(language))
 
   return (
     <div className="profile-card">

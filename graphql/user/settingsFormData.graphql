@@ -4,14 +4,9 @@ query settingsFormData {
   }
   currentUser {
     bio
-    languagesLearning {
+    languages {
       id
-      language {
-        ...LanguageFragment
-      }
-    }
-    languagesNative {
-      id
+      level
       language {
         ...LanguageFragment
       }

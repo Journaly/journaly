@@ -1,0 +1,5 @@
+mutation removeLanguageRelation($languageId: Int!) {
+  removeLanguageRelation(languageId: $languageId) {
+    id
+  }
+}

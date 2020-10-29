@@ -89,7 +89,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
   })
 
   const { languages = [] } = currentUser || {}
-  const userLanguages = [...languages].map(({ language }) => {
+  const userLanguages = languages.map(({ language }) => {
     const value = language.id.toString()
     const displayName = languageNameWithDialect(language)
 

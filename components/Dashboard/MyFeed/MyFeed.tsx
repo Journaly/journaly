@@ -94,7 +94,8 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
     greetingLanguage = currentUser.languages[0].language.name
   }
 
-  if (currentUser.languages.length > 1) {
+  const learningLanguages = currentUser.languages.filter(({ level }) => level !== LanguageLevel.Native)
+  if (learningLanguages.length > 0) {
     const index = Math.floor(Math.random() * currentUser.languages.length)
     const greetingLanguageKey = currentUser.languages[index].language.name
     greetingLanguage = greetings[greetingLanguageKey] ? greetingLanguageKey : 'English'

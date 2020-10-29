@@ -5,6 +5,7 @@ query languagesFormData {
   currentUser {
     languages {
       id
+      level
       language {
         ...LanguageFragment
       }

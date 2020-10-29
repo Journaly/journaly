@@ -94,7 +94,6 @@ export type Language = {
   name: Scalars['String']
   posts: Array<Post>
   dialect?: Maybe<Scalars['String']>
-  learningUsers?: Maybe<Array<User>>
   postCount?: Maybe<Scalars['Int']>
 }
 
@@ -759,7 +758,7 @@ export type LanguagesFormDataQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<
     { __typename?: 'User' } & {
       languages: Array<
-        { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'> & {
+        { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id' | 'level'> & {
             language: { __typename?: 'Language' } & LanguageFragmentFragment
           }
       >
@@ -1726,6 +1725,7 @@ export const LanguagesFormDataDocument = gql`
     currentUser {
       languages {
         id
+        level
         language {
           ...LanguageFragment
         }

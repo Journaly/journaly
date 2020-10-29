@@ -86,3 +86,20 @@ migration 20201002152245-add-archived-field-to-threads..20201026144537-new-langu
 ```
 
 
+## Data Migration
+
+Data migrations detail how to bring the database into an application-level consistent state after the structural changes have been applied through `npm run migrate:up`. They currently need to be applied manually, and should be applied promptly after the structural migration is applied.
+
+```sql
+-- Set level to 'BEGINNER' for all languagesLearning 
+INSERT INTO "LanguageRelation" ("languageId", "userId", "level") (
+  SELECT "languageId", "userId", 'BEGINNER' AS "level"
+  FROM "LanguageLearning"
+) ON CONFLICT DO NOTHING;
+
+-- Set level to 'NATIVE' for all languagesNative 
+INSERT INTO "LanguageRelation" ("languageId", "userId", "level") (
+  SELECT "languageId", "userId", 'NATIVE' AS "level"
+  FROM "LanguageNative"
+) ON CONFLICT DO NOTHING;
+```

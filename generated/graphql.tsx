@@ -639,7 +639,7 @@ export type UserWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
 
 export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
   languages: Array<
-    { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'> & {
+    { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id' | 'level'> & {
         language: { __typename?: 'Language' } & LanguageFragmentFragment
       }
   >
@@ -1044,6 +1044,7 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
     ...UserFragment
     languages {
       id
+      level
       language {
         ...LanguageFragment
       }

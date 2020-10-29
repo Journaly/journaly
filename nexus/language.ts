@@ -17,16 +17,6 @@ schema.objectType({
     t.model.name()
     t.model.posts()
     t.model.dialect()
-    t.field('learningUsers', {
-      list: true,
-      type: 'User',
-      resolve: async (language, _args, ctx) => {
-        const result = await ctx.db.language
-          .findOne({ where: { id: language.id } })
-          .learningUsers({ include: { user: true } })
-        return result.map((r) => r.user)
-      },
-    })
     t.int('postCount', {
       resolve(parent, _args, ctx) {
         return ctx.db.post.count({
@@ -127,14 +117,7 @@ schema.extendType({
           },
         }
 
-        const relation = await ctx.db.languageRelation.findOne({
-          where: {
-            userId_languageId: {
-              languageId: args.languageId,
-              userId,
-            },
-          },
-        })
+        const relation = await ctx.db.languageRelation.findOne(relFilter)
 
         if (!relation) {
           throw new Error(`Unable to find language relation.`)

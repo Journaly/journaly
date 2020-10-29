@@ -18,6 +18,7 @@ fragment UserWithLanguagesFragment on User {
   ...UserFragment
   languages {
     id
+    level
     language {
       ...LanguageFragment
     }

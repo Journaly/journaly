@@ -14,7 +14,7 @@ type Props<T extends OptionValue> = {
   loading?: boolean
   onAdd?: (value: T) => void
   onRemove?: (value: T) => void
-  disabled: boolean
+  disabled?: boolean
 }
 
 /*

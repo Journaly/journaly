@@ -714,7 +714,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
 > & {
     images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
-    author: { __typename?: 'User' } & AuthorFragmentFragment
+    author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
     language: { __typename?: 'Language' } & LanguageFragmentFragment
   }
 
@@ -965,7 +965,7 @@ export type SettingsFormDataQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<
     { __typename?: 'User' } & Pick<User, 'bio'> & {
         languages: Array<
-          { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'> & {
+          { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id' | 'level'> & {
               language: { __typename?: 'Language' } & LanguageFragmentFragment
             }
         >
@@ -1198,13 +1198,13 @@ export const PostCardFragmentFragmentDoc = gql`
       id
     }
     author {
-      ...AuthorFragment
+      ...AuthorWithLanguagesFragment
     }
     language {
       ...LanguageFragment
     }
   }
-  ${AuthorFragmentFragmentDoc}
+  ${AuthorWithLanguagesFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
 `
 export const LanguageWithPostCountFragmentFragmentDoc = gql`
@@ -2767,6 +2767,7 @@ export const SettingsFormDataDocument = gql`
       bio
       languages {
         id
+        level
         language {
           ...LanguageFragment
         }

@@ -6,6 +6,7 @@ import { formatShortDate } from '../../../utils/date'
 import {
   PostStatus as PostStatusType,
   PostCardFragmentFragment as PostCardType,
+  LanguageLevel,
 } from '../../../generated/graphql'
 import LineClamp from '../../../elements/LineClamp'
 import LikeIcon from '../../Icons/LikeIcon'
@@ -37,17 +38,18 @@ const PostCard: React.FC<Props> = ({
     images,
     likes,
     commentCount,
-    author: { handle, name, profileImage },
+    author: { handle, name, profileImage, languages: authorLanguages },
     createdAt,
     publishedAt,
-    language: { name: languageName },
+    language: { id: postLanguageId, name: languageName },
   } = post
   const isDraft = status === PostStatusType.Draft
   const isPublished = status === PostStatusType.Published
   const displayImage = images.length ? images[0].smallSize : '/images/samples/sample-post-img.jpg'
   const imageAlt = images.length === 0 ? 'Typewriter on an old wooden desk' : ''
   const postCardStyles = classNames('post-card-container', { stacked })
-
+  const authorLanguageLevel = authorLanguages.filter(({ language }) => language.id === postLanguageId)[0]?.level || LanguageLevel.Beginner
+  
   return (
     <>
       <Link href={'/post/[id]'} as={`/post/${id}`}>
@@ -76,7 +78,10 @@ const PostCard: React.FC<Props> = ({
 
                     <p className="author">{handle || name}</p>
                   </div>
-                  <p className="post-language">{languageName}</p>
+                  <div className="language-level-container">
+                    <p className="post-language">{languageName}</p>
+                    <p className="post-language">{authorLanguageLevel}</p>
+                  </div>
                 </div>
               )}
 
@@ -266,6 +271,10 @@ const PostCard: React.FC<Props> = ({
             color: ${theme.colors.blue};
             text-transform: uppercase;
           }
+        }
+
+        .language-level-container p:first-child {
+          margin-right: 5px;
         }
       `}</style>
     </>

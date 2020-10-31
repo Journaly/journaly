@@ -177,7 +177,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
         selectedOptionValues={selectedTopics}
         onAdd={addTopic}
         onRemove={removeTopic}
-        placeholder="Select a topic"
+        placeholder="Select up to five topics"
+        disabled={selectedTopics.length >= 5}
       />
 
       <div className="header-preview-container">

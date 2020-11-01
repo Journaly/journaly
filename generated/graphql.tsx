@@ -876,6 +876,7 @@ export type ProfileQueryVariables = {
 export type ProfileQuery = { __typename?: 'Query' } & {
   userById?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
   posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type CreateCommentThanksMutationVariables = {
@@ -2249,6 +2250,9 @@ export const ProfileDocument = gql`
     }
     posts(authorId: $userId, status: PUBLISHED) {
       ...PostCardFragment
+    }
+    currentUser {
+      ...UserWithLanguagesFragment
     }
   }
   ${UserWithLanguagesFragmentFragmentDoc}

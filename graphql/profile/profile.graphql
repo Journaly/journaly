@@ -5,4 +5,7 @@ query profile($userId: Int!) {
   posts(authorId: $userId, status: PUBLISHED) {
     ...PostCardFragment
   }
+  currentUser {
+    ...UserWithLanguagesFragment
+  }
 }

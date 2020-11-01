@@ -120,7 +120,7 @@ const IntroducingJournalyBlogPost: NextPage = () => (
       </p>
 
       <p>
-        My co-founder, Nick, and I want to make the writing experience easy and enjoyable, so that
+        I want to make the writing experience easy and enjoyable, so that
         you <em>want</em> to write. That's why we spent months and months engaging in a robust
         design process, crafting and revising the designs to make sure it's lightning fast and
         intuitive to use.

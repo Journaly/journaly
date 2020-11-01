@@ -6,7 +6,6 @@ import { formatShortDate } from '../../../utils/date'
 import {
   PostStatus as PostStatusType,
   PostCardFragmentFragment as PostCardType,
-  LanguageLevel,
 } from '../../../generated/graphql'
 import LineClamp from '../../../elements/LineClamp'
 import LikeIcon from '../../Icons/LikeIcon'
@@ -38,17 +37,16 @@ const PostCard: React.FC<Props> = ({
     images,
     likes,
     commentCount,
-    author: { handle, name, profileImage, languages: authorLanguages },
+    author: { handle, name, profileImage },
     createdAt,
     publishedAt,
-    language: { id: postLanguageId, name: languageName },
+    language: { name: languageName },
   } = post
   const isDraft = status === PostStatusType.Draft
   const isPublished = status === PostStatusType.Published
   const displayImage = images.length ? images[0].smallSize : '/images/samples/sample-post-img.jpg'
   const imageAlt = images.length === 0 ? 'Typewriter on an old wooden desk' : ''
   const postCardStyles = classNames('post-card-container', { stacked })
-  const authorLanguageLevel = authorLanguages.filter(({ language }) => language.id === postLanguageId)[0]?.level || LanguageLevel.Beginner
   
   return (
     <>
@@ -80,7 +78,6 @@ const PostCard: React.FC<Props> = ({
                   </div>
                   <div className="language-level-container">
                     <p className="post-language">{languageName}</p>
-                    <p className="post-language">{authorLanguageLevel}</p>
                   </div>
                 </div>
               )}

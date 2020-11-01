@@ -146,7 +146,7 @@ fragment PostCardFragment on Post {
     id
   }
   author {
-    ...AuthorWithLanguagesFragment
+    ...AuthorFragment
   }
   language {
     ...LanguageFragment

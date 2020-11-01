@@ -10,6 +10,7 @@ import Select from '../../elements/Select'
 import Button, { ButtonVariant } from '../../elements/Button'
 import { OptionPills } from '../../elements/MultiSelect'
 import { languageNameWithDialect } from '../../utils/languages'
+import theme from '../../theme'
 
 type Props = {
   languages: LanguageType[]
@@ -98,25 +99,37 @@ const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refe
           value={selectedLevel}
           onChange={setSelectedLevel}
         />
-        <Button
-          onClick={handleAddLanguageRelation}
-          disabled={selectedLangId === -1 || !selectedLevel}
-          loading={removingLanguageRelation || addingLanguageRelation}
-          variant={ButtonVariant.Secondary}
-        >
-          Add
-        </Button>
       </div>
+      <Button
+        onClick={handleAddLanguageRelation}
+        disabled={selectedLangId === -1 || !selectedLevel}
+        loading={removingLanguageRelation || addingLanguageRelation}
+        variant={ButtonVariant.Secondary}
+      >
+        Add
+      </Button>
 
       <style jsx>{`
         .lang-level-select {
           display: flex;
           padding-top: 15px;
+          margin-bottom: 15px;
         }
 
         .lang-level-select > :global(*:not(:last-child)) {
           margin-right: 10px;
         }
+
+        @media (max-width: ${theme.breakpoints.XS}) {
+          .lang-level-select {
+            flex-direction: column;
+          }
+
+          .lang-level-select > :global(*:not(:last-child)) {
+            margin-bottom: 15px;
+          }
+        }
+
       `}</style>
     </div>
   )

@@ -21,6 +21,7 @@ import MultiSelect from '../../../elements/MultiSelect'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import { greetings } from './greetings'
 import useToggle from '../../../hooks/useToggle'
+import Select from '../../../elements/Select'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -34,7 +35,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   /**
    * Topic filter selection state
    */
-  // const [topic, setTopic] = useState('')
+  const [topic, setTopic] = useState('')
 
   /**
    * Language filter selection state
@@ -108,7 +109,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
   const rightToLeftLanguages = ['Arabic', 'Persian']
 
-  /* TEMPORARY until topics built
+  // TEMPORARY until topics built
     const topicOptions = [
       { value: 'rock_climbing', displayName: 'Rock climbing' },
       { value: 'cooking', displayName: 'Cooking' },
@@ -119,7 +120,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
     const handleTopicChange = (value: string): void => {
       setTopic(value)
     }
-  */
+
   return (
     <div className="my-feed-wrapper">
       <Head>
@@ -138,13 +139,14 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
         <input type="text" placeholder="Search coming soon..." className="search-box" disabled />
 
         <div className="my-feed-select">
-          {/* <Select
+          <Select
             options={topicOptions}
             value={topic}
-            placeholder="Topic"
+            placeholder="Topic filtering coming soon..."
             name="topic"
             onChange={handleTopicChange}
-          /> */}
+            disabled={true}
+          />
 
           <MultiSelect
             options={languageOptions}

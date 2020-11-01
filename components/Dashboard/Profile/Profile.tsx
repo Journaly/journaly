@@ -1,8 +1,9 @@
 import React from 'react'
 import ProfileCard from './ProfileCard'
 import PostList from './PostList'
+import { layoutPadding } from '../../Dashboard/dashboardConstants'
 import {
-  UserWithLanguagesFragmentFragment as UserType,
+  User as UserType,
   PostCardFragmentFragment as PostCardType,
 } from '../../../generated/graphql'
 import theme from '../../../theme'
@@ -23,12 +24,12 @@ const Profile: React.FC<Props> = ({ isLoggedInUser, user, posts }) => {
         .profile-wrapper {
           display: flex;
           flex-direction: column;
-          height: 100vh;
+          height: 100%;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-wrapper {
             flex-direction: row;
-            padding: 25px;
+            padding: ${layoutPadding};
           }
 
           .profile-wrapper > :global(div) {

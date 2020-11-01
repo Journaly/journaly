@@ -27,8 +27,6 @@ const InterestsForm: React.FC = () => {
               name="interests"
               className="j-field"
               ref={register()}
-              placeholder="Coming soon..."
-              disabled={true}
             />
           </div>
 
@@ -36,7 +34,6 @@ const InterestsForm: React.FC = () => {
             type="submit"
             className="settings-submit-button"
             variant={ButtonVariant.Secondary}
-            disabled={true}
           >
             {t('updateButton')}
           </Button>

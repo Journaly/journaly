@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation, Trans } from '../../../config/i18n'
-import { PostCardFragmentFragment as PostType, UserWithLanguagesFragmentFragment as UserType } from '../../../generated/graphql'
+import { PostCardFragmentFragment as PostType, User as UserType } from '../../../generated/graphql'
 import { layoutTopBottomPadding, layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
 import TranslationLink from '../../TranslationLink'
 import PostCard from '../PostCard'

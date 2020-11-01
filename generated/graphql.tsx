@@ -703,8 +703,9 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   }
 
 export type PostWithTopicsFragmentFragment = { __typename?: 'Post' } & {
-  postTopics: Array<{ __typename?: 'PostTopic' } & PostTopicFragmentFragment>
-  language: { __typename?: 'Language' } & Pick<Language, 'id' | 'name' | 'dialect'>
+  postTopics: Array<
+    { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
+  >
 } & PostFragmentFragment
 
 export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
@@ -713,7 +714,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
 > & {
     images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
-    author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
+    author: { __typename?: 'User' } & AuthorFragmentFragment
     language: { __typename?: 'Language' } & LanguageFragmentFragment
   }
 
@@ -729,10 +730,6 @@ export type LanguageWithPostCountFragmentFragment = { __typename?: 'Language' } 
   LanguageFragmentFragment
 
 export type TopicFragmentFragment = { __typename?: 'Topic' } & Pick<Topic, 'id' | 'name'>
-
-export type PostTopicFragmentFragment = { __typename?: 'PostTopic' } & {
-  topic: { __typename?: 'Topic' } & TopicFragmentFragment
-}
 
 export type AddLanguageRelationMutationVariables = {
   languageId: Scalars['Int']
@@ -968,7 +965,7 @@ export type SettingsFormDataQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<
     { __typename?: 'User' } & Pick<User, 'bio'> & {
         languages: Array<
-          { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id' | 'level'> & {
+          { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'> & {
               language: { __typename?: 'Language' } & LanguageFragmentFragment
             }
         >
@@ -1172,28 +1169,17 @@ export const TopicFragmentFragmentDoc = gql`
     name(uiLanguage: $uiLanguage)
   }
 `
-export const PostTopicFragmentFragmentDoc = gql`
-  fragment PostTopicFragment on PostTopic {
-    topic {
-      ...TopicFragment
-    }
-  }
-  ${TopicFragmentFragmentDoc}
-`
 export const PostWithTopicsFragmentFragmentDoc = gql`
   fragment PostWithTopicsFragment on Post {
     ...PostFragment
     postTopics {
-      ...PostTopicFragment
-    }
-    language {
-      id
-      name
-      dialect
+      topic {
+        ...TopicFragment
+      }
     }
   }
   ${PostFragmentFragmentDoc}
-  ${PostTopicFragmentFragmentDoc}
+  ${TopicFragmentFragmentDoc}
 `
 export const PostCardFragmentFragmentDoc = gql`
   fragment PostCardFragment on Post {
@@ -1212,13 +1198,13 @@ export const PostCardFragmentFragmentDoc = gql`
       id
     }
     author {
-      ...AuthorWithLanguagesFragment
+      ...AuthorFragment
     }
     language {
       ...LanguageFragment
     }
   }
-  ${AuthorWithLanguagesFragmentFragmentDoc}
+  ${AuthorFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
 `
 export const LanguageWithPostCountFragmentFragmentDoc = gql`
@@ -2781,7 +2767,6 @@ export const SettingsFormDataDocument = gql`
       bio
       languages {
         id
-        level
         language {
           ...LanguageFragment
         }

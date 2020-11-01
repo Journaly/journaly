@@ -8,7 +8,7 @@ import ExternalLink from '../../../elements/ExternalLink'
 import { sanitize } from '../../../utils'
 import { languageNameWithDialect } from '../../../utils/languages'
 import theme from '../../../theme'
-import { UserWithLanguagesFragmentFragment as UserType, LanguageLevel } from '../../../generated/graphql'
+import { User as UserType, LanguageLevel } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
 
 const ProfileCard: React.FC<Props> = ({ user }) => {
   const { t } = useTranslation('profile')
-  
+
   const sampleUser = {
     likes: ['cooking, reading, movies, design'],
     location: 'San Francisco, United States',
@@ -56,14 +56,9 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           <p>
             <span>{t('card.learns')}:</span> {learns.join(', ')}
           </p>
-          {/* {sampleUser.likes.length && (
-            <p>
-              <span>{t('card.likes')}:</span> {sampleUser.likes.join(', ')}
-            </p>
-          )} */}
           {sampleUser.likes.length && (
             <p>
-              <span>{t('card.likes')}:</span> languages, journaling
+              <span>{t('card.likes')}:</span> {sampleUser.likes.join(', ')}
             </p>
           )}
         </div>

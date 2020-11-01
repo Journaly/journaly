@@ -386,12 +386,16 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
             (post.images || []).find((i: ImageType) => i.imageRole === ImageRole.Headline)
               ?.largeSize || '/images/samples/sample-post-img.jpg'
           }
-          postTopics={post.postTopics}
-          postLanguage={post.language}
         />
         <div className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
         </div>
+
+        { post.postTopics.length ? (
+          <span className="topics-list">
+            Topics: {post.postTopics.map(({ topic }) => topic.name).join(', ')}
+          </span>
+        ) : null}
 
         {currentUser && post.author.id === currentUser.id && (
           <div className="post-controls">

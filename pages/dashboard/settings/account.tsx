@@ -45,8 +45,6 @@ const Account: NextPage = () => {
                     name="old-password"
                     className="j-field"
                     ref={register({ required: t('accountForm.oldPasswordError') as string })}
-                    placeholder="Coming soon..."
-                    disabled={true}
                   />
                 </div>
 
@@ -58,8 +56,6 @@ const Account: NextPage = () => {
                     type="text"
                     id="new-password"
                     name="new-password"
-                    placeholder="Coming soon..."
-                    disabled={true}
                     className="j-field"
                     ref={register({ required: t('accountForm.newPasswordError') as string })}
                   />
@@ -74,8 +70,6 @@ const Account: NextPage = () => {
                     id="confirm-new-password"
                     name="confirm-new-password"
                     className="j-field"
-                    placeholder="Coming soon..."
-                    disabled={true}
                     ref={register({
                       required: t('accountForm.confirmNewPasswordError') as string,
                       validate: (value) =>

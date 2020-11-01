@@ -713,7 +713,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
 > & {
     images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
-    author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
+    author: { __typename?: 'User' } & AuthorFragmentFragment
     language: { __typename?: 'Language' } & LanguageFragmentFragment
   }
 
@@ -1214,13 +1214,13 @@ export const PostCardFragmentFragmentDoc = gql`
       id
     }
     author {
-      ...AuthorWithLanguagesFragment
+      ...AuthorFragment
     }
     language {
       ...LanguageFragment
     }
   }
-  ${AuthorWithLanguagesFragmentFragmentDoc}
+  ${AuthorFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
 `
 export const LanguageWithPostCountFragmentFragmentDoc = gql`

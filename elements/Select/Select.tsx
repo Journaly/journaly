@@ -67,7 +67,7 @@ const SelectBase = <T extends OptionValue>(
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { selectedIndex } = event.target
     const selectedOption = options[selectedIndex - 1]
-    onChange(selectedOption.value, event)
+    onChange(selectedOption?.value, event)
   }
 
   return (

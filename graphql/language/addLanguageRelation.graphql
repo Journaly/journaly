@@ -1,5 +1,5 @@
-mutation addLanguageRelation($languageId: Int!) {
-  addLanguageRelation(languageId: $languageId, level: BEGINNER) {
+mutation addLanguageRelation($languageId: Int!, $level: LanguageLevel!) {
+  addLanguageRelation(languageId: $languageId, level: $level) {
     language {
       id
     }

@@ -733,6 +733,7 @@ export type TopicFragmentFragment = { __typename?: 'Topic' } & Pick<Topic, 'id' 
 
 export type AddLanguageRelationMutationVariables = {
   languageId: Scalars['Int']
+  level: LanguageLevel
 }
 
 export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
@@ -965,7 +966,7 @@ export type SettingsFormDataQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<
     { __typename?: 'User' } & Pick<User, 'bio'> & {
         languages: Array<
-          { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'> & {
+          { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id' | 'level'> & {
               language: { __typename?: 'Language' } & LanguageFragmentFragment
             }
         >
@@ -1619,8 +1620,8 @@ export type UpdatePostCommentMutationOptions = ApolloReactCommon.BaseMutationOpt
   UpdatePostCommentMutationVariables
 >
 export const AddLanguageRelationDocument = gql`
-  mutation addLanguageRelation($languageId: Int!) {
-    addLanguageRelation(languageId: $languageId, level: BEGINNER) {
+  mutation addLanguageRelation($languageId: Int!, $level: LanguageLevel!) {
+    addLanguageRelation(languageId: $languageId, level: $level) {
       language {
         id
       }
@@ -1646,6 +1647,7 @@ export type AddLanguageRelationMutationFn = ApolloReactCommon.MutationFunction<
  * const [addLanguageRelationMutation, { data, loading, error }] = useAddLanguageRelationMutation({
  *   variables: {
  *      languageId: // value for 'languageId'
+ *      level: // value for 'level'
  *   },
  * });
  */
@@ -2767,6 +2769,7 @@ export const SettingsFormDataDocument = gql`
       bio
       languages {
         id
+        level
         language {
           ...LanguageFragment
         }

@@ -159,6 +159,11 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
           border-bottom: 1px solid ${theme.colors.gray400};
         }
 
+        .language-list {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
         .language-list li {
           display: inline-block;
           margin-right: 8px;

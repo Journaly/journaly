@@ -736,6 +736,7 @@ export type PostTopicFragmentFragment = { __typename?: 'PostTopic' } & {
 
 export type AddLanguageRelationMutationVariables = {
   languageId: Scalars['Int']
+  level: LanguageLevel
 }
 
 export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
@@ -1634,8 +1635,8 @@ export type UpdatePostCommentMutationOptions = ApolloReactCommon.BaseMutationOpt
   UpdatePostCommentMutationVariables
 >
 export const AddLanguageRelationDocument = gql`
-  mutation addLanguageRelation($languageId: Int!) {
-    addLanguageRelation(languageId: $languageId, level: BEGINNER) {
+  mutation addLanguageRelation($languageId: Int!, $level: LanguageLevel!) {
+    addLanguageRelation(languageId: $languageId, level: $level) {
       language {
         id
       }
@@ -1661,6 +1662,7 @@ export type AddLanguageRelationMutationFn = ApolloReactCommon.MutationFunction<
  * const [addLanguageRelationMutation, { data, loading, error }] = useAddLanguageRelationMutation({
  *   variables: {
  *      languageId: // value for 'languageId'
+ *      level: // value for 'level'
  *   },
  * });
  */

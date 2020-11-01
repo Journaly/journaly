@@ -5,9 +5,9 @@ import {
   LanguageRelation as LanguageRelationType,
 } from '../../../generated/graphql'
 
-import LanguageFormField from '../../../components/LanguageFormField'
-import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
-import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
+import LanguageFormField from '../../LanguageFormField'
+import SettingsForm from '../../Dashboard/Settings/SettingsForm'
+import SettingsFieldset from '../../Dashboard/Settings/SettingsFieldset'
 
 type Props = {
   languages: LanguageType[]

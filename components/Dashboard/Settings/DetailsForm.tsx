@@ -149,6 +149,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   id="location"
                   name="location"
                   className="j-field"
+                  placeholder="Coming soon..."
                   ref={register()}
                   disabled={true}
                 />

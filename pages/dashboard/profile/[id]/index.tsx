@@ -8,8 +8,6 @@ import DashboardLayout from '../../../../components/Layouts/DashboardLayout'
 import {
   useProfileQuery,
   useCurrentUserQuery,
-  User as UserType,
-  Post as PostType,
 } from '../../../../generated/graphql'
 import Profile from '../../../../components/Dashboard/Profile'
 
@@ -32,15 +30,17 @@ const ProfilePage: NextPage<InitialProps> = () => {
 
   const isLoading = loadingCurrentUser || loadingProfile
   const hasError = currentUserError || profileError
-
+  console.log(profileData)
   return (
     <LoadingWrapper loading={isLoading} error={hasError}>
       <DashboardLayout withPadding={false}>
-        <Profile
-          isLoggedInUser={userData?.currentUser?.id === userId}
-          user={profileData?.userById as UserType}
-          posts={profileData?.posts as PostType[]}
-        />
+        {profileData?.userById && profileData?.posts && (
+          <Profile
+            isLoggedInUser={userData?.currentUser?.id === userId}
+            user={profileData.userById}
+            posts={profileData.posts}
+          />
+        )}
       </DashboardLayout>
     </LoadingWrapper>
   )

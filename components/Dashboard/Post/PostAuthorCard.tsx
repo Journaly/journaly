@@ -6,12 +6,12 @@ import {
   useFollowUserMutation,
   useUnfollowUserMutation,
   useFollowingUsersQuery,
-  LanguageLevel,
 } from '../../../generated/graphql'
 import { useTranslation } from '../../../config/i18n'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 import { languageNameWithDialect } from '../../../utils/languages'
 import Button, { ButtonVariant } from '../../../elements/Button'
+import LevelGauge from '../../../elements/LevelGauge'
 
 type PostAuthorCardProps = {
   author: Author
@@ -20,10 +20,6 @@ type PostAuthorCardProps = {
 const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
   const { t } = useTranslation('post-author-card')
   const { languages } = author
-
-  
-  const speaksList = languages.filter((language) => language.level === LanguageLevel.Native)
-  const learnsList = languages.filter((language) => language.level !== LanguageLevel.Native)
 
   const { data: { currentUser } = {}, refetch } = useFollowingUsersQuery()
 
@@ -82,16 +78,15 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
         )}
       </div>
       <div className="language-info">
-        <p className="author-info-heading">{t('nativeHeader')}</p>
+        <p className="author-info-heading">{t('languagesHeader')}</p>
         <ul className="language-list">
-          {speaksList.map(({ language }) => {
-            return <li key={language.id}>{languageNameWithDialect(language)}</li>
-          })}
-        </ul>
-        <p className="author-info-heading">{t('learningHeader')}</p>
-        <ul className="language-list">
-          {learnsList.map(({ language }) => {
-            return <li key={language.id}>{languageNameWithDialect(language)}</li>
+          {languages.map((language) => {
+            return (
+              <div>
+                <li key={language.language.id}>{languageNameWithDialect(language.language)}</li>
+                <LevelGauge level={language.level} />
+              </div>
+            )
           })}
         </ul>
       </div>
@@ -162,6 +157,11 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
         .language-info {
           padding-bottom: 8px;
           border-bottom: 1px solid ${theme.colors.gray400};
+        }
+
+        .language-list {
+          display: flex;
+          flex-wrap: wrap;
         }
 
         .language-list li {

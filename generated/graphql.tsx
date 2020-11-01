@@ -703,9 +703,8 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   }
 
 export type PostWithTopicsFragmentFragment = { __typename?: 'Post' } & {
-  postTopics: Array<
-    { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
-  >
+  postTopics: Array<{ __typename?: 'PostTopic' } & PostTopicFragmentFragment>
+  language: { __typename?: 'Language' } & Pick<Language, 'id' | 'name' | 'dialect'>
 } & PostFragmentFragment
 
 export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
@@ -730,6 +729,10 @@ export type LanguageWithPostCountFragmentFragment = { __typename?: 'Language' } 
   LanguageFragmentFragment
 
 export type TopicFragmentFragment = { __typename?: 'Topic' } & Pick<Topic, 'id' | 'name'>
+
+export type PostTopicFragmentFragment = { __typename?: 'PostTopic' } & {
+  topic: { __typename?: 'Topic' } & TopicFragmentFragment
+}
 
 export type AddLanguageRelationMutationVariables = {
   languageId: Scalars['Int']
@@ -1169,17 +1172,28 @@ export const TopicFragmentFragmentDoc = gql`
     name(uiLanguage: $uiLanguage)
   }
 `
+export const PostTopicFragmentFragmentDoc = gql`
+  fragment PostTopicFragment on PostTopic {
+    topic {
+      ...TopicFragment
+    }
+  }
+  ${TopicFragmentFragmentDoc}
+`
 export const PostWithTopicsFragmentFragmentDoc = gql`
   fragment PostWithTopicsFragment on Post {
     ...PostFragment
     postTopics {
-      topic {
-        ...TopicFragment
-      }
+      ...PostTopicFragment
+    }
+    language {
+      id
+      name
+      dialect
     }
   }
   ${PostFragmentFragmentDoc}
-  ${TopicFragmentFragmentDoc}
+  ${PostTopicFragmentFragmentDoc}
 `
 export const PostCardFragmentFragmentDoc = gql`
   fragment PostCardFragment on Post {

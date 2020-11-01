@@ -121,9 +121,12 @@ fragment PostFragment on Post {
 fragment PostWithTopicsFragment on Post {
   ...PostFragment
   postTopics {
-    topic {
-      ...TopicFragment
-    }
+    ...PostTopicFragment
+  }
+  language {
+    id
+    name
+    dialect
   }
 }
 
@@ -164,4 +167,10 @@ fragment LanguageWithPostCountFragment on Language {
 fragment TopicFragment on Topic {
   id
   name(uiLanguage: $uiLanguage)
+}
+
+fragment PostTopicFragment on PostTopic {
+  topic {
+    ...TopicFragment
+  }
 }

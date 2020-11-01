@@ -30,7 +30,7 @@ const ProfilePage: NextPage<InitialProps> = () => {
 
   const isLoading = loadingCurrentUser || loadingProfile
   const hasError = currentUserError || profileError
-
+  console.log(profileData)
   return (
     <LoadingWrapper loading={isLoading} error={hasError}>
       <DashboardLayout withPadding={false}>

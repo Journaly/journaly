@@ -56,9 +56,14 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           <p>
             <span>{t('card.learns')}:</span> {learns.join(', ')}
           </p>
-          {sampleUser.likes.length && (
+          {/* {sampleUser.likes.length && (
             <p>
               <span>{t('card.likes')}:</span> {sampleUser.likes.join(', ')}
+            </p>
+          )} */}
+          {sampleUser.likes.length && (
+            <p>
+              <span>{t('card.likes')}:</span> languages, journaling
             </p>
           )}
         </div>

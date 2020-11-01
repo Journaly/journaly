@@ -28,7 +28,9 @@ const SocialForm: React.FC = () => {
               <input
                 type="text"
                 name="facebook"
-                placeholder={t('profile.social.facebookPlaceholder')}
+                // placeholder={t('profile.social.facebookPlaceholder')}
+                placeholder="Coming soon..."
+                disabled={true}
                 className="j-field"
                 ref={register()}
               />
@@ -38,7 +40,9 @@ const SocialForm: React.FC = () => {
               <input
                 type="text"
                 name="instagram"
-                placeholder={t('profile.social.instagramPlaceholder')}
+                // placeholder={t('profile.social.instagramPlaceholder')}
+                placeholder="Coming soon..."
+                disabled={true}
                 className="j-field"
                 ref={register()}
               />
@@ -48,7 +52,9 @@ const SocialForm: React.FC = () => {
               <input
                 type="text"
                 name="youtube"
-                placeholder={t('profile.social.youtubePlaceholder')}
+                // placeholder={t('profile.social.youtubePlaceholder')}
+                placeholder="Coming soon..."
+                disabled={true}
                 className="j-field"
                 ref={register()}
               />
@@ -58,7 +64,9 @@ const SocialForm: React.FC = () => {
               <input
                 type="text"
                 name="personal-website"
-                placeholder={t('profile.social.personalWebsitePlaceholder')}
+                // placeholder={t('profile.social.personalWebsitePlaceholder')}
+                placeholder="Coming soon..."
+                disabled={true}
                 className="j-field"
                 ref={register()}
               />
@@ -69,6 +77,7 @@ const SocialForm: React.FC = () => {
             type="submit"
             className="settings-submit-button"
             variant={ButtonVariant.Secondary}
+            disabled={true}
           >
             {t('updateButton')}
           </Button>

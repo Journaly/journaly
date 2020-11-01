@@ -174,5 +174,6 @@ function createApolloClient(initialState: ApolloClientCache = {}, headers = {}) 
       fetch,
     }),
     cache: new InMemoryCache().restore(initialState),
+    connectToDevTools: true,
   })
 }

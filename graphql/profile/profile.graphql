@@ -1,11 +1,19 @@
 query profile($userId: Int!) {
   userById(id: $userId) {
-    ...UserWithLanguagesFragment
+    ...ProfileUserFragment
   }
   posts(authorId: $userId, status: PUBLISHED) {
     ...PostCardFragment
   }
   currentUser {
     ...UserWithLanguagesFragment
+  }
+}
+
+fragment ProfileUserFragment on User {
+  ...UserWithLanguagesFragment
+  badges {
+    id
+    type
   }
 }

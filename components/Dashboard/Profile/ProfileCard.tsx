@@ -8,7 +8,7 @@ import ExternalLink from '../../../elements/ExternalLink'
 import { sanitize } from '../../../utils'
 import { languageNameWithDialect } from '../../../utils/languages'
 import theme from '../../../theme'
-import { UserWithLanguagesFragmentFragment as UserType, LanguageLevel } from '../../../generated/graphql'
+import { ProfileUserFragmentFragment as UserType, LanguageLevel } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type Props = {
@@ -37,6 +37,8 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
 
   const speaks = speaksList.map(({ language }) => languageNameWithDialect(language))
   const learns = learnsList.map(({ language }) => languageNameWithDialect(language))
+
+  console.log(user.badges)
 
   return (
     <div className="profile-card">

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 import { randomBytes } from 'crypto'
 import { promisify } from 'util'
+import { BadgeType } from '@prisma/client'
 
 import { NotAuthorizedError } from './errors'
 import { sendPasswordResetTokenEmail } from './utils'
@@ -19,6 +20,7 @@ schema.objectType({
     t.model.bio()
     t.model.userRole()
     t.model.location()
+    t.model.badges()
     t.model.posts({
       pagination: false,
     })
@@ -48,6 +50,16 @@ schema.objectType({
       },
     })
   },
+})
+
+
+schema.objectType({
+  name: 'UserBadge',
+  definition(t) {
+    t.model.id()
+    t.model.type()
+    t.model.createdAt()
+  }
 })
 
 schema.extendType({
@@ -123,8 +135,14 @@ schema.extendType({
             auth: {
               create: { password },
             },
+            badges: {
+              create: [
+                { type: BadgeType.BETA_USER },
+              ],
+            },
           },
         })
+
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
         ctx.response.setHeader(
           'Set-Cookie',

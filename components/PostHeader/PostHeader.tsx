@@ -32,19 +32,25 @@ const PostHeader: React.FC<PostHeaderProps> = ({
     <div className="post-header">
       <img src={postImage} alt={postTitle} />
       <div className="post-header-info" dir="auto">
-        <h1>{postTitle}</h1>
-        <p> &mdash; </p>
-        <p>
-          {t('postBy')} <em>{authorName}</em>
-        </p>
-        <p>{formatLongDate(publishDate)}</p>
-      </div>
-      { language && <div className="language badge">{language.name}</div> }
-      {postStatus === 'DRAFT' && <div className="draft badge">{t('draft')}</div>}
-      <div className="topics-container">
-        {(topics || []).map(({ id, name }) => (
-          <div className="topic-badge" key={id}>{name}</div>
-        ))}
+        <div className="top-badges">
+          { language && <div className="language badge">{language.name}</div> }
+          {postStatus === 'DRAFT' && <div className="draft badge">{t('draft')}</div>}
+        </div>
+
+        <div className="title-and-info">
+          <h1>{postTitle}</h1>
+          <p> &mdash; </p>
+          <p>
+            {t('postBy')} <em>{authorName}</em>
+          </p>
+          <p>{formatLongDate(publishDate)}</p>
+        </div>
+
+        <div className="topics-container">
+          {(topics || []).map(({ id, name }) => (
+            <div className="topic-badge" key={id}>{name}</div>
+          ))}
+        </div>
       </div>
       {children}
       <style jsx>{`
@@ -80,16 +86,17 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           left: 10px;
         }
 
+        .top-badges {
+          display: block;
+          height: 40px;
+        }
+
         .topics-container {
-          position: absolute;
-          bottom: 10px;
-          left: 50%;
-          transform: translate(-50%);
           display: flex;
-          flex: 1;
           width: 100%;
           justify-content: center;
           flex-wrap: wrap;
+          padding: 10px;
         }
 
         .topic-badge {
@@ -107,6 +114,9 @@ const PostHeader: React.FC<PostHeaderProps> = ({
         }
 
         img {
+          position: absolute;
+          left: 0;
+          top: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
@@ -115,11 +125,18 @@ const PostHeader: React.FC<PostHeaderProps> = ({
         }
 
         .post-header-info {
-          position: absolute;
-          width: 90%;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
+          position: relative;
+          min-height: 310px;
+          display: flex;
+          flex-direction: column
+        }
+
+        .title-and-info {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          margin: 0 10%;
+          flex: 1;
         }
 
         h1 {

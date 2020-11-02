@@ -459,7 +459,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           display: grid;
           grid-column-gap: 10px;
           grid-template-columns: 10px 1fr 10px;
-          grid-auto-rows: 350px 1fr 40px;
+          grid-auto-rows: max-content 1fr 40px;
           background-color: ${theme.colors.white};
         }
 

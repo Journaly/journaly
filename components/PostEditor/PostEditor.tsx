@@ -231,8 +231,6 @@ const PostEditor: React.FC<PostEditorProps> = ({
         }
 
         .header-preview-container {
-          display: grid;
-          grid-auto-rows: 350px 1fr;
           margin-top: 24px;
         }
 

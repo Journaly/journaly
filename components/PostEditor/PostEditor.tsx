@@ -107,6 +107,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
   const addTopic = (id: number) => setSelectedTopics([...selectedTopics, id])
   const removeTopic = (id: number) => setSelectedTopics(selectedTopics.filter((tid) => tid !== id))
 
+  const postLanguage = languages.find(({ language }) => language.id === langId)?.language
+
   React.useEffect(() => {
     const clear = () => {
       if (!slateRef.current) {
@@ -188,6 +190,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
           publishDate={new Date().toISOString()}
           authorName={currentUser?.name || 'anonymous'}
           postImage={postImage}
+          postLanguage={postLanguage}
         >
           <div className="header-preview-options">
             <FileInput

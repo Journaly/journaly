@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { PostStatus, PostTopicFragmentFragment as PostTopicType, LanguageFragmentFragment as LanguageType } from '../../generated/graphql'
+import { PostStatus, TopicFragmentFragment as TopicType, LanguageFragmentFragment as LanguageType } from '../../generated/graphql'
 import { useTranslation } from '../../config/i18n'
 import { formatLongDate } from '../../utils'
 
@@ -12,8 +12,8 @@ type PostHeaderProps = {
   publishDate: string
   authorName: string
   postImage: string
-  postTopics?: PostTopicType[]
-  postLanguage?: LanguageType
+  topics?: TopicType[]
+  language?: LanguageType
   children?: React.ReactNode
 }
 
@@ -24,8 +24,8 @@ const PostHeader: React.FC<PostHeaderProps> = ({
   authorName,
   publishDate,
   postImage,
-  postTopics,
-  postLanguage,
+  topics,
+  language,
 }) => {
   const { t } = useTranslation('post')
   return (
@@ -39,11 +39,11 @@ const PostHeader: React.FC<PostHeaderProps> = ({
         </p>
         <p>{formatLongDate(publishDate)}</p>
       </div>
-      { postLanguage && <div className="language badge">{postLanguage.name}</div> }
+      { language && <div className="language badge">{language.name}</div> }
       {postStatus === 'DRAFT' && <div className="draft badge">{t('draft')}</div>}
       <div className="topics-container">
-        {postTopics?.map(({ topic }) => (
-          <div className="topic-badge" key={topic.id}>{topic.name}</div>
+        {(topics || []).map(({ id, name }) => (
+          <div className="topic-badge" key={id}>{name}</div>
         ))}
       </div>
       {children}

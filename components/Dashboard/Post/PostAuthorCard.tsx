@@ -82,10 +82,10 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
         <ul className="language-list">
           {languages.map((language) => {
             return (
-              <div>
-                <li key={language.language.id}>{languageNameWithDialect(language.language)}</li>
+              <li key={language.language.id}>
+                <span>{languageNameWithDialect(language.language)}</span>
                 <LevelGauge level={language.level} />
-              </div>
+              </li>
             )
           })}
         </ul>

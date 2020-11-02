@@ -39,7 +39,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
         </p>
         <p>{formatLongDate(publishDate)}</p>
       </div>
-      <div className="language badge">{postLanguage?.name}</div>
+      { postLanguage && <div className="language badge">{postLanguage.name}</div> }
       {postStatus === 'DRAFT' && <div className="draft badge">{t('draft')}</div>}
       <div className="topics-container">
         {postTopics?.map(({ topic }) => (

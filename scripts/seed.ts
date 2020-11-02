@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
+import { UILanguage } from '.prisma/client/index'
 
 const db = new PrismaClient()
 
@@ -347,6 +348,37 @@ async function main() {
       },
     },
   })
+
+  await Promise.all([
+    {
+      devName: 'Language Learning',
+      topicTranslations: {
+        create: [
+          { uiLanguage: UILanguage.ENGLISH, name: 'Language Learning' },
+          { uiLanguage: UILanguage.GERMAN, name: 'Language Learning (in german)' }
+        ]
+      }
+    },
+    {
+      devName: 'Heraldry',
+      topicTranslations: {
+        create: [
+          { uiLanguage: UILanguage.ENGLISH, name: 'Heraldry' },
+          { uiLanguage: UILanguage.GERMAN, name: 'Heraldry (in german)' }
+        ]
+      }
+    },
+    {
+      devName: 'Westerosi History',
+      topicTranslations: {
+        create: [
+          { uiLanguage: UILanguage.ENGLISH, name: 'Westerosi History' },
+          { uiLanguage: UILanguage.GERMAN, name: 'Westerosi History (in german)' }
+        ]
+      }
+    },
+  ].map(data => db.topic.create({ data })))
+
 
   console.log('Seeding successful')
 

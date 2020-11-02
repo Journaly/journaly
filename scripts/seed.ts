@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
-import { UILanguage } from '.prisma/client/index'
+import { LanguageLevel, UILanguage } from '.prisma/client/index'
 
 const db = new PrismaClient()
 
@@ -50,23 +50,25 @@ async function main() {
       handle: 'jsno',
       name: 'Jon Snow',
       email: 'j@n.com',
-      languagesNative: {
-        create: {
-          language: {
-            connect: {
-              id: Andalish.id,
-            },
+      languages: {
+        create: [
+          {
+            level: LanguageLevel.NATIVE,
+            language: {
+              connect: {
+                id: Andalish.id,
+              },
+            }
+          }, 
+          {
+            level: LanguageLevel.INTERMEDIATE,
+            language: {
+              connect: {
+                id: French.id,
+              },
+            }
           },
-        },
-      },
-      languagesLearning: {
-        create: {
-          language: {
-            connect: {
-              id: French.id,
-            },
-          },
-        },
+        ]
       },
       auth: {
         create: {

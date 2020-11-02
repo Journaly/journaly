@@ -14,8 +14,8 @@
       "legend": "Your Details",
       "submitImage": "Upload Image",
       "nameLabel": "Your Name (optional)",
-      "displayNameLabel": "Display Name",
-      "displayNameError": "You must have a display name",
+      "displayNameLabel": "Handle",
+      "displayNameError": "You must have a handle",
       "emailLabel": "Email",
       "emailError": "Email is required",
       "locationLabel": "Location (optional)"

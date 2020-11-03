@@ -18,7 +18,7 @@ import theme from '../../../theme'
 import PostBodyStyles from '../../PostBodyStyles'
 import PencilIcon from '../../Icons/PencilIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
-import { Router, useTranslation, Link } from '../../../config/i18n'
+import { useTranslation, Link } from '../../../config/i18n'
 import PostHeader from '../../PostHeader'
 
 interface IPostProps {

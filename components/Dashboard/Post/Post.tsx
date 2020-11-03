@@ -18,7 +18,7 @@ import theme from '../../../theme'
 import PostBodyStyles from '../../PostBodyStyles'
 import PencilIcon from '../../Icons/PencilIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
-import { Router, useTranslation } from '../../../config/i18n'
+import { Router, useTranslation, Link } from '../../../config/i18n'
 import PostHeader from '../../PostHeader'
 
 interface IPostProps {
@@ -395,28 +395,26 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
 
         {currentUser && post.author.id === currentUser.id && (
           <div className="post-controls">
-            <>
+            <Link href={`/post/${post.id}/edit`}>
               <Button
                 type="button"
                 variant={ButtonVariant.Secondary}
-                onClick={() => {
-                  Router.push('/post/[id]/edit', `/post/${post.id}/edit`)
-                }}
+                onClick={() => {}}
               >
                 {t('editPostAction')}
               </Button>
-              {
-                post.status === 'DRAFT' && (
-                  <Button
-                    type="button"
-                    variant={ButtonVariant.Secondary}
-                    onClick={setPostStatus(PostStatus.Published)}
-                  >
-                    {t('publishDraft')}
-                  </Button>
-                )
-              }
-            </>
+            </Link>
+            {
+              post.status === 'DRAFT' && (
+                <Button
+                  type="button"
+                  variant={ButtonVariant.Secondary}
+                  onClick={setPostStatus(PostStatus.Published)}
+                >
+                  {t('publishDraft')}
+                </Button>
+              )
+            }
           </div>
         )}
       </div>

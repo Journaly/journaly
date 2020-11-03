@@ -50,7 +50,7 @@ const PostCard: React.FC<Props> = ({
   
   return (
     <>
-      <Link href={'/post/[id]'} as={`/post/${id}`}>
+      <Link href='/post/[id]' as={`/post/${id}`}>
         <a className={postCardStyles}>
           <img className="post-image" src={displayImage} alt={imageAlt} />
 

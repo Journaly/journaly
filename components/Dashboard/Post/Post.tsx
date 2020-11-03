@@ -395,11 +395,10 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
 
         {currentUser && post.author.id === currentUser.id && (
           <div className="post-controls">
-            <Link href={`/post/${post.id}/edit`}>
+            <Link href='/post/[id]/edit' as={`/post/${post.id}/edit`}>
               <Button
                 type="button"
                 variant={ButtonVariant.Secondary}
-                onClick={() => {}}
               >
                 {t('editPostAction')}
               </Button>

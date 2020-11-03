@@ -32,13 +32,16 @@ The data model/DB schema lives in `prisma/schema`, server side code and some uti
 
 #### Setting Up Your Local DB Instance
 
-1. Install Postgres with Homebrew
+1. Install Postgres
+- Mac/Linux users should use Homebrew
    _Note that this set your Postgres DB to run when your computer starts up and will stay running in the background_.
 
    ```bash
    $ brew install postgres
    $ brew services start postgresql
    ```
+
+- Windows users should download and install Postgres from [postgresql.org](https://www.postgresql.org/download/windows/).
 
 1. Start up your Postgres shell and create your user
 
@@ -54,9 +57,9 @@ The data model/DB schema lives in `prisma/schema`, server side code and some uti
    $ alter user <your_username> with superuser;
    ```
 
-1. If you haven't created a `prisma/.env` file yet, copy and paste `prisma/.env.example` into the new `.env` file. Then, replace the placeholders with your new postgres username & password.
+1. If you haven't created a `prisma/.env` file yet, copy and paste `prisma/.env.example` into `prisma/.env`. Then, replace the placeholders in both `prisma/.env` and the `.env` file in the root of the project with your new postgres username & password.
 
-1. Finally, from the `backend` directory, apply database migrations to your new database instance:
+1. Finally, from the `prisma` directory, apply database migrations to your new database instance:
 
    ```bash
    $ npm run migrate:up

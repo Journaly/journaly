@@ -9,6 +9,7 @@ import BioForm from '../../../components/Dashboard/Settings/BioForm'
 import InterestsForm from '../../../components/Dashboard/Settings/InterestsForm'
 import SocialForm from '../../../components/Dashboard/Settings/SocialForm'
 import AuthGate from '../../../components/AuthGate'
+import UILanguageSelect from '../../../components/UILanguageSelect'
 import {
   useSettingsFormDataQuery,
 } from '../../../generated/graphql'
@@ -36,6 +37,7 @@ const ProfileInfo: NextPage = () => {
                   <BioForm bio={data?.currentUser?.bio || ''} />
                   <InterestsForm />
                   <SocialForm />
+                  <UILanguageSelect />
                 </>
               )}
             </div>

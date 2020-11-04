@@ -23,7 +23,7 @@ import { greetings } from './greetings'
 import useToggle from '../../../hooks/useToggle'
 import Select from '../../../elements/Select'
 
-const NUM_POSTS_PER_PAGE = 2
+const NUM_POSTS_PER_PAGE = 9
 
 type Props = {
   currentUser: UserType

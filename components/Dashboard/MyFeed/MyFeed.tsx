@@ -76,8 +76,8 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
    * Pagination handling
    */
   // Pull query params off the router instance
-  const { query } = useRouter()
-  const currentPage = query.page ? Math.max(1, parseInt(query.page as string, 10)) : 1
+  const router = useRouter()
+  const currentPage = router.query.page ? Math.max(1, parseInt(router.query.page as string, 10)) : 1
 
   // fetch posts for the feed!
   const { loading, error, data } = useFeedQuery({
@@ -99,6 +99,14 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   if (currentUser.languages.length === 1) {
     greetingLanguage = currentUser.languages[0].language.name
   }
+
+  const resetPagination = () => {
+    // filter out page key to reset the url
+    const newQuery = {...router.query}
+    delete newQuery.page
+    router.push({...router, query: newQuery })
+  }
+
 
   const learningLanguages = currentUser.languages.filter(({ level }) => level !== LanguageLevel.Native)
   if (learningLanguages.length > 0) {
@@ -152,12 +160,16 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
             options={languageOptions}
             selectedOptionValues={selectedLanguageFilters}
             placeholder="Languages"
-            onAdd={(id) => setSelectedLanguageFilters([...selectedLanguageFilters, id])}
-            onRemove={(id) =>
+            onAdd={(id) => {
+              setSelectedLanguageFilters([...selectedLanguageFilters, id])
+              resetPagination()
+            }}
+            onRemove={(id) => {
               setSelectedLanguageFilters(
-                selectedLanguageFilters.filter((languageId) => languageId !== id),
+                selectedLanguageFilters.filter((languageId) => languageId !== id)
               )
-            }
+              resetPagination()
+            }}
           />
           <div className="filter-actions">
             <Button

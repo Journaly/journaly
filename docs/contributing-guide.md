@@ -35,4 +35,6 @@ We use _Milestones_ to keep track of our progress at a high level. These are sim
 This repo uses `prettier` for formatting and `typescript-eslint` for linting TypeScript. Until precommit hooks are set up to auto format, we recommend using `prettier` on your code before submitting a PR.
 You can do this by running `npm run format`
 
+It's recommended that you also run `npm run build` before submitting your PR to ensure that the build will be clean.
+
 If you use VS Code, install the [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension.

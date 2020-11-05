@@ -102,7 +102,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
   const resetPagination = () => {
     // filter out page key to reset the url
-    const newQuery = {...query}
+    const newQuery = {...router.query}
     delete newQuery.page
     router.push({...router, query: newQuery })
   }

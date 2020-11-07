@@ -162,6 +162,49 @@ schema.extendType({
       },
     })
 
+    t.field('updatePassword', {
+      type: 'User',
+      args: {
+        oldPassword: schema.stringArg({ required: true }),
+        newPassword: schema.stringArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx: any) => {
+        const { userId } = ctx.request
+
+        const user = await ctx.db.user.findOne({
+          where: {
+            id: userId,
+          },
+          include: {
+            auth: true,
+          },
+        })
+        if (!user) {
+          throw new Error('User not found')
+        }
+
+        const isValid = await bcrypt.compare(args.oldPassword, user.auth.password)
+
+        if (!isValid) {
+          throw new Error('Invalid old password')
+        }
+
+        const newPassword = await bcrypt.hash(args.newPassword, 10)
+        const updatedAuth = await ctx.db.auth.update({
+          where: {
+            userId: userId,
+          },
+          data: {
+            password: newPassword,
+          },
+          include: {
+            user: true,
+          },
+        })
+        return updatedAuth.user
+      },
+    })
+
     t.field('loginUser', {
       type: 'User',
       args: {

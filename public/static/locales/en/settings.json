@@ -49,15 +49,21 @@
       "updateError": "There was an error updating your profile."
     }
   },
-  "accountForm": {
-    "legend": "Change Password",
-    "submitButton": "Update",
-    "oldPasswordLabel": "Enter old password",
-    "oldPasswordError": "Enter your old password",
-    "newPasswordLabel": "Choose new password",
-    "newPasswordError": "Enter your new password",
-    "confirmNewPasswordLabel": "Re-enter new password",
-    "confirmNewPasswordError": "Confirm your new password",
-    "confirmNewPasswordMatchError": "Passwords do not match"
+  "account":{
+    "updatePasswordForm": {
+      "legend": "Change Password",
+      "submitButton": "Update",
+      "oldPasswordLabel": "Enter old password",
+      "oldPasswordError": "Enter your old password",
+      "newPasswordLabel": "Choose new password",
+      "newPasswordError": "Enter your new password",
+      "confirmNewPasswordLabel": "Re-enter new password",
+      "confirmNewPasswordError": "Confirm your new password",
+      "confirmNewPasswordMatchError": "Passwords do not match",
+      "newPasswordMinimumErrorMessage": "Password must be at least 6 characters",
+      "passwordChangeSuccess": "Password changed successfully.",
+      "updateError": "There was an error updating your password.",
+      "newPasswordCannotBeTheSameError": "new password cannot be the same as old"
+    }
   }
 }

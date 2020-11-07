@@ -34,7 +34,7 @@ const UpdatePasswordForm: React.FC<Props> = () => {
     },
   })
 
-  const handleResetPasswordSubmit = (data: any): void => {
+  const handleResetPasswordSubmit = (data: FormValues): void => {
     if (!loading && Object.keys(errors).length === 0) {
       updatePassword({
         variables: {

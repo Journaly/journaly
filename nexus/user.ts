@@ -190,7 +190,7 @@ schema.extendType({
         }
 
         const newPassword = await bcrypt.hash(args.newPassword, 10)
-        return ctx.db.auth.update({
+        const updatedAuth = await ctx.db.auth.update({
           where: {
             userId: userId,
           },
@@ -201,6 +201,7 @@ schema.extendType({
             user: true,
           },
         })
+        return updatedAuth.user
       },
     })
 

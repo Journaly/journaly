@@ -8,16 +8,19 @@ import UpdatePasswordForm from '../../../components/Dashboard/Settings/UpdatePas
 const Account: NextPage = () => {
   return (
     <AuthGate>
-      <SettingsPageLayout>
-        <div className="forms-container">
-          <UpdatePasswordForm />
-        </div>
-      </SettingsPageLayout>
-      <style jsx>{`
-        .forms-container {
-          width: 100%;
-        }
-      `}</style>
+      <>
+        <SettingsPageLayout>
+          <div className="forms-container">
+            <UpdatePasswordForm />
+          </div>
+        </SettingsPageLayout>
+        <style jsx>{`
+          .forms-container {
+            width: 100%;
+            max-width: 1008px;
+          }
+        `}</style>
+      </>
     </AuthGate>
   )
 }

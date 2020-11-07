@@ -13,6 +13,11 @@ const Account: NextPage = () => {
           <UpdatePasswordForm />
         </div>
       </SettingsPageLayout>
+      <style jsx>{`
+        .forms-container {
+          width: 100%;
+        }
+      `}</style>
     </AuthGate>
   )
 }

@@ -12,6 +12,20 @@
     "settings": "Settings",
     "logOut": "Log Out"
   },
+  "badge": {
+    "ALPHA_USER": {
+      "title": "Alpha User",
+      "description": "Participated in the Journaly Alpha test. We've come a long way since then, but this user was on the front lines helping catch early bugs and shape Journally since the beginning!"
+    },
+    "BETA_USER": {
+      "title": "Beta User",
+      "description": "Participated in the Journaly Beta test."
+    },
+    "ONEHUNDRED_POSTS": {
+      "title": "100 Posts",
+      "description": "Published 100 posts. Talk about sticking with it!"
+    }
+  },
   "emptyMessage": "Empty...",
   "e404": "Resource not found",
   "e403": "Not Authorized"

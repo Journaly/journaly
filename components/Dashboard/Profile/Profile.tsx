@@ -2,7 +2,7 @@ import React from 'react'
 import ProfileCard from './ProfileCard'
 import PostList from './PostList'
 import {
-  UserWithLanguagesFragmentFragment as UserType,
+  ProfileUserFragmentFragment as UserType,
   PostCardFragmentFragment as PostCardType,
 } from '../../../generated/graphql'
 import theme from '../../../theme'

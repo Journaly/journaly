@@ -4,6 +4,7 @@ import FacebookIcon from '../../../components/Icons/FacebookIcon'
 import InstagramIcon from '../../../components/Icons/InstagramIcon'
 import YoutubeIcon from '../../../components/Icons/YoutubeIcon'
 import GlobeIcon from '../../../components/Icons/GlobeIcon'
+import Badge from '../../Badge'
 import ExternalLink from '../../../elements/ExternalLink'
 import { sanitize } from '../../../utils'
 import { languageNameWithDialect } from '../../../utils/languages'
@@ -79,6 +80,14 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         )}
 
         {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
+
+        <ul className="badge-list">
+          {user.badges.map(badge => (
+            <li key={badge.type} >
+              <Badge badge={badge} />
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="profile-footer">
@@ -256,6 +265,17 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           max-width: 660px;
           margin-left: auto;
           margin-right: auto;
+        }
+
+        .badge-list {
+          display: flex;
+          flex-wrap: wrap;
+          margin-top: 10px;
+          justify-content: center;
+        }
+
+        .badge-list > li {
+          margin-right: 5px;
         }
 
         .location {

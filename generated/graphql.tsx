@@ -766,6 +766,11 @@ export type PostTopicFragmentFragment = { __typename?: 'PostTopic' } & {
   topic: { __typename?: 'Topic' } & TopicFragmentFragment
 }
 
+export type UserBadgeFragmentFragment = { __typename?: 'UserBadge' } & Pick<
+  UserBadge,
+  'type' | 'createdAt'
+>
+
 export type AddLanguageRelationMutationVariables = {
   languageId: Scalars['Int']
   level: LanguageLevel
@@ -913,7 +918,7 @@ export type ProfileQuery = { __typename?: 'Query' } & {
 }
 
 export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
-  badges: Array<{ __typename?: 'UserBadge' } & Pick<UserBadge, 'id' | 'type'>>
+  badges: Array<{ __typename?: 'UserBadge' } & UserBadgeFragmentFragment>
 } & UserWithLanguagesFragmentFragment
 
 export type CreateCommentThanksMutationVariables = {
@@ -1266,15 +1271,21 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
   ${UserFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
 `
+export const UserBadgeFragmentFragmentDoc = gql`
+  fragment UserBadgeFragment on UserBadge {
+    type
+    createdAt
+  }
+`
 export const ProfileUserFragmentFragmentDoc = gql`
   fragment ProfileUserFragment on User {
     ...UserWithLanguagesFragment
     badges {
-      id
-      type
+      ...UserBadgeFragment
     }
   }
   ${UserWithLanguagesFragmentFragmentDoc}
+  ${UserBadgeFragmentFragmentDoc}
 `
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {

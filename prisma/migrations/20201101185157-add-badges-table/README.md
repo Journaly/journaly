@@ -22,7 +22,23 @@ ALTER TABLE "public"."UserBadge" ADD FOREIGN KEY ("userId")REFERENCES "public"."
 # Data Migration
 
 ```
-INSERT INTO "UserBadge" ("userId", "type") (SELECT id AS "userId", 'ALPHA_USER' as "type" FROM "User");
+INSERT INTO "UserBadge" ("userId", "type") (
+  SELECT "User".id AS "userId", 'ALPHA_USER' as "type" FROM "User"
+  JOIN "Post" ON "Post"."authorId" = "User"."id"
+  WHERE "User"."id" < 143
+  GROUP BY "userId"
+  HAVING COUNT(*) > 0
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO "UserBadge" ("userId", "type") (
+  SELECT "User".id AS "userId", 'BETA_USER' as "type" FROM "User"
+  FULL OUTER JOIN "UserBadge" ON
+    "UserBadge"."userId" = "User"."id"
+    AND "UserBadge".type = 'ALPHA_USER'
+  WHERE
+    "UserBadge".type IS NULL
+    AND "User"."id" > 143
+) ON CONFLICT DO NOTHING;
 ```
 
 ## Changes

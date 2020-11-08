@@ -13,7 +13,6 @@ query profile($userId: Int!) {
 fragment ProfileUserFragment on User {
   ...UserWithLanguagesFragment
   badges {
-    id
-    type
+    ...UserBadgeFragment
   }
 }

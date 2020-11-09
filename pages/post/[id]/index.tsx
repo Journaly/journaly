@@ -7,6 +7,7 @@ import Post from '../../../components/Dashboard/Post'
 import LoadingWrapper from '../../../components/LoadingWrapper'
 import DashboardLayout from '../../../components/Layouts/DashboardLayout'
 import {
+  usePostPageQuery,
   useCurrentUserQuery,
   usePostByIdQuery,
   PostWithTopicsFragmentFragment as PostType,
@@ -20,28 +21,26 @@ const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
   const id = parseInt(idStr, 10)
   const uiLanguage = useUILanguage()
-  const { refetch, loading: postLoading, error: postError, data: postData } = usePostByIdQuery({
+  const { refetch, loading, error, data } = usePostPageQuery({
     variables: { id, uiLanguage },
   })
-  const { loading: userLoading, error: userError, data: userData } = useCurrentUserQuery()
 
-  const post: PostType | undefined | null = postData?.postById
-
+  const { postById: post, currentUser } = data || {}
   const outdatedThreads = post ? post.threads.filter(post => post.archived) : []
 
   return (
-    <LoadingWrapper loading={postLoading || userLoading} error={postError || userError}>
-      <DashboardLayout>
+    <DashboardLayout>
+      <LoadingWrapper loading={loading} error={error}>
         <div className="post-page-wrapper">
           {post && post.postComments && (
             <>
-              <Post post={post} currentUser={userData?.currentUser} refetch={refetch} />
+              <Post post={post} currentUser={currentUser} refetch={refetch} />
               <div className="post-lower-section">
                 <PostComments
                   postId={post.id}
                   comments={post.postComments}
                   outdatedThreads={outdatedThreads}
-                  currentUser={userData?.currentUser || null}
+                  currentUser={currentUser || null}
                   onNewComment={refetch}
                   onUpdateComment={refetch}
                   onDeleteComment={refetch}
@@ -68,13 +67,13 @@ const PostPage: NextPage = () => {
             }
           `}</style>
         </div>
-      </DashboardLayout>
-    </LoadingWrapper>
+      </LoadingWrapper>
+    </DashboardLayout>
   )
 }
 
 PostPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'post'],
+  namespacesRequired: ['common', 'post', 'comment', 'post-author-card'],
 })
 
 export default withApollo(PostPage)

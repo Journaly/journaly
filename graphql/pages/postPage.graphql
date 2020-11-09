@@ -1,0 +1,8 @@
+query postPage($id: Int!, $uiLanguage: UILanguage!) {
+  postById(id: $id) {
+    ...PostWithTopicsFragment 
+  }
+  currentUser {
+    ...UserWithLanguagesFragment
+  }
+}

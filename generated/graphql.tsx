@@ -784,6 +784,16 @@ export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
   removeLanguageRelation?: Maybe<{ __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>>
 }
 
+export type PostPageQueryVariables = {
+  id: Scalars['Int']
+  uiLanguage: UiLanguage
+}
+
+export type PostPageQuery = { __typename?: 'Query' } & {
+  postById?: Maybe<{ __typename?: 'Post' } & PostWithTopicsFragmentFragment>
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+}
+
 export type CreatePostMutationVariables = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
@@ -1859,6 +1869,58 @@ export type RemoveLanguageRelationMutationResult = ApolloReactCommon.MutationRes
 export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RemoveLanguageRelationMutation,
   RemoveLanguageRelationMutationVariables
+>
+export const PostPageDocument = gql`
+  query postPage($id: Int!, $uiLanguage: UILanguage!) {
+    postById(id: $id) {
+      ...PostWithTopicsFragment
+    }
+    currentUser {
+      ...UserWithLanguagesFragment
+    }
+  }
+  ${PostWithTopicsFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
+`
+
+/**
+ * __usePostPageQuery__
+ *
+ * To run a query within a React component, call `usePostPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostPageQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      uiLanguage: // value for 'uiLanguage'
+ *   },
+ * });
+ */
+export function usePostPageQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<PostPageQuery, PostPageQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<PostPageQuery, PostPageQueryVariables>(
+    PostPageDocument,
+    baseOptions,
+  )
+}
+export function usePostPageLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PostPageQuery, PostPageQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<PostPageQuery, PostPageQueryVariables>(
+    PostPageDocument,
+    baseOptions,
+  )
+}
+export type PostPageQueryHookResult = ReturnType<typeof usePostPageQuery>
+export type PostPageLazyQueryHookResult = ReturnType<typeof usePostPageLazyQuery>
+export type PostPageQueryResult = ApolloReactCommon.QueryResult<
+  PostPageQuery,
+  PostPageQueryVariables
 >
 export const CreatePostDocument = gql`
   mutation createPost(

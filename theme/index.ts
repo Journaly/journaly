@@ -21,6 +21,7 @@ type Colors =
   | 'gray600'
   | 'gray700'
   | 'gray800'
+  | 'copper'
   | 'blue'
   | 'blueLight'
   | 'red'
@@ -64,6 +65,7 @@ const theme: Theme = {
     gray600: '#757575',
     gray700: '',
     gray800: '#444444',
+    copper: '#AD8001',
     blue: '#32567E',
     blueLight: '#4391C9',
     highlightColor: '#4391C940',

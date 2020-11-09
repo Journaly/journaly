@@ -22,6 +22,14 @@ export type AuthorIdPostIdCompoundUniqueInput = {
   postId: Scalars['Int']
 }
 
+export enum BadgeType {
+  AlphaUser = 'ALPHA_USER',
+  BetaUser = 'BETA_USER',
+  TenPosts = 'TEN_POSTS',
+  OnehundredPosts = 'ONEHUNDRED_POSTS',
+  CodeContributor = 'CODE_CONTRIBUTOR',
+}
+
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['Int']
@@ -500,6 +508,7 @@ export type User = {
   bio?: Maybe<Scalars['String']>
   userRole: UserRole
   location?: Maybe<Location>
+  badges: Array<UserBadge>
   posts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
@@ -508,6 +517,14 @@ export type User = {
   followedBy: Array<User>
   postsWrittenCount?: Maybe<Scalars['Int']>
   thanksReceivedCount?: Maybe<Scalars['Int']>
+}
+
+export type UserBadgesArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<UserBadgeWhereUniqueInput>
+  before?: Maybe<UserBadgeWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
 }
 
 export type UserLanguagesArgs = {
@@ -534,9 +551,26 @@ export type UserFollowedByArgs = {
   last?: Maybe<Scalars['Int']>
 }
 
+export type UserBadge = {
+  __typename?: 'UserBadge'
+  id: Scalars['Int']
+  type: BadgeType
+  createdAt: Scalars['DateTime']
+}
+
+export type UserBadgeWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+  userId_type?: Maybe<UserIdTypeCompoundUniqueInput>
+}
+
 export type UserIdLanguageIdCompoundUniqueInput = {
   userId: Scalars['Int']
   languageId: Scalars['Int']
+}
+
+export type UserIdTypeCompoundUniqueInput = {
+  userId: Scalars['Int']
+  type: BadgeType
 }
 
 export enum UserRole {
@@ -740,6 +774,11 @@ export type PostTopicFragmentFragment = { __typename?: 'PostTopic' } & {
   topic: { __typename?: 'Topic' } & TopicFragmentFragment
 }
 
+export type UserBadgeFragmentFragment = { __typename?: 'UserBadge' } & Pick<
+  UserBadge,
+  'type' | 'createdAt'
+>
+
 export type AddLanguageRelationMutationVariables = {
   languageId: Scalars['Int']
   level: LanguageLevel
@@ -881,10 +920,14 @@ export type ProfileQueryVariables = {
 }
 
 export type ProfileQuery = { __typename?: 'Query' } & {
-  userById?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  userById?: Maybe<{ __typename?: 'User' } & ProfileUserFragmentFragment>
   posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
+
+export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
+  badges: Array<{ __typename?: 'UserBadge' } & UserBadgeFragmentFragment>
+} & UserWithLanguagesFragmentFragment
 
 export type CreateCommentThanksMutationVariables = {
   commentId: Scalars['Int']
@@ -1051,27 +1094,6 @@ export const UserWithStatsFragmentFragmentDoc = gql`
   }
   ${UserFragmentFragmentDoc}
 `
-export const LanguageFragmentFragmentDoc = gql`
-  fragment LanguageFragment on Language {
-    id
-    name
-    dialect
-  }
-`
-export const UserWithLanguagesFragmentFragmentDoc = gql`
-  fragment UserWithLanguagesFragment on User {
-    ...UserFragment
-    languages {
-      id
-      level
-      language {
-        ...LanguageFragment
-      }
-    }
-  }
-  ${UserFragmentFragmentDoc}
-  ${LanguageFragmentFragmentDoc}
-`
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {
     id
@@ -1096,6 +1118,13 @@ export const AuthorWithStatsFragmentFragmentDoc = gql`
     thanksReceivedCount
   }
   ${AuthorFragmentFragmentDoc}
+`
+export const LanguageFragmentFragmentDoc = gql`
+  fragment LanguageFragment on Language {
+    id
+    name
+    dialect
+  }
 `
 export const AuthorWithLanguagesFragmentFragmentDoc = gql`
   fragment AuthorWithLanguagesFragment on User {
@@ -1244,6 +1273,36 @@ export const LanguageWithPostCountFragmentFragmentDoc = gql`
     postCount
   }
   ${LanguageFragmentFragmentDoc}
+`
+export const UserWithLanguagesFragmentFragmentDoc = gql`
+  fragment UserWithLanguagesFragment on User {
+    ...UserFragment
+    languages {
+      id
+      level
+      language {
+        ...LanguageFragment
+      }
+    }
+  }
+  ${UserFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
+`
+export const UserBadgeFragmentFragmentDoc = gql`
+  fragment UserBadgeFragment on UserBadge {
+    type
+    createdAt
+  }
+`
+export const ProfileUserFragmentFragmentDoc = gql`
+  fragment ProfileUserFragment on User {
+    ...UserWithLanguagesFragment
+    badges {
+      ...UserBadgeFragment
+    }
+  }
+  ${UserWithLanguagesFragmentFragmentDoc}
+  ${UserBadgeFragmentFragmentDoc}
 `
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
@@ -2263,7 +2322,7 @@ export type UpdatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const ProfileDocument = gql`
   query profile($userId: Int!) {
     userById(id: $userId) {
-      ...UserWithLanguagesFragment
+      ...ProfileUserFragment
     }
     posts(authorId: $userId, status: PUBLISHED) {
       ...PostCardFragment
@@ -2272,8 +2331,9 @@ export const ProfileDocument = gql`
       ...UserWithLanguagesFragment
     }
   }
-  ${UserWithLanguagesFragmentFragmentDoc}
+  ${ProfileUserFragmentFragmentDoc}
   ${PostCardFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
 `
 
 /**

@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator prisma_client {
@@ -334,7 +334,5 @@ enum UILanguage {
 enum BadgeType {
   ALPHA_USER
   BETA_USER
-  TEN_POSTS
   ONEHUNDRED_POSTS
-  CODE_CONTRIBUTOR
 }

@@ -151,6 +151,7 @@ export type Mutation = {
   updatePost?: Maybe<Post>
   createUser?: Maybe<User>
   updateUser?: Maybe<User>
+  updatePassword?: Maybe<User>
   loginUser?: Maybe<User>
   requestResetPassword?: Maybe<User>
   resetPassword?: Maybe<User>
@@ -232,6 +233,11 @@ export type MutationUpdateUserArgs = {
   name?: Maybe<Scalars['String']>
   profileImage?: Maybe<Scalars['String']>
   bio?: Maybe<Scalars['String']>
+}
+
+export type MutationUpdatePasswordArgs = {
+  oldPassword: Scalars['String']
+  newPassword: Scalars['String']
 }
 
 export type MutationLoginUserArgs = {
@@ -1025,6 +1031,15 @@ export type UnfollowUserMutationVariables = {
 
 export type UnfollowUserMutation = { __typename?: 'Mutation' } & {
   unfollowUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
+}
+
+export type UpdatePasswordMutationVariables = {
+  oldPassword: Scalars['String']
+  newPassword: Scalars['String']
+}
+
+export type UpdatePasswordMutation = { __typename?: 'Mutation' } & {
+  updatePassword?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
 }
 
 export type UpdateUserMutationVariables = {
@@ -2943,6 +2958,53 @@ export type UnfollowUserMutationResult = ApolloReactCommon.MutationResult<Unfoll
 export type UnfollowUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UnfollowUserMutation,
   UnfollowUserMutationVariables
+>
+export const UpdatePasswordDocument = gql`
+  mutation updatePassword($oldPassword: String!, $newPassword: String!) {
+    updatePassword(oldPassword: $oldPassword, newPassword: $newPassword) {
+      id
+    }
+  }
+`
+export type UpdatePasswordMutationFn = ApolloReactCommon.MutationFunction<
+  UpdatePasswordMutation,
+  UpdatePasswordMutationVariables
+>
+
+/**
+ * __useUpdatePasswordMutation__
+ *
+ * To run a mutation, you first call `useUpdatePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePasswordMutation, { data, loading, error }] = useUpdatePasswordMutation({
+ *   variables: {
+ *      oldPassword: // value for 'oldPassword'
+ *      newPassword: // value for 'newPassword'
+ *   },
+ * });
+ */
+export function useUpdatePasswordMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdatePasswordMutation,
+    UpdatePasswordMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(
+    UpdatePasswordDocument,
+    baseOptions,
+  )
+}
+export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>
+export type UpdatePasswordMutationResult = ApolloReactCommon.MutationResult<UpdatePasswordMutation>
+export type UpdatePasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdatePasswordMutation,
+  UpdatePasswordMutationVariables
 >
 export const UpdateUserDocument = gql`
   mutation updateUser($email: String, $name: String, $profileImage: String, $bio: String) {

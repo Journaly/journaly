@@ -386,8 +386,8 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
             (post.images || []).find((i: ImageType) => i.imageRole === ImageRole.Headline)
               ?.largeSize || '/images/samples/sample-post-img.jpg'
           }
-          postTopics={post.postTopics}
-          postLanguage={post.language}
+          language={post.language}
+          topics={post.postTopics.map(({ topic }) => topic)}
         />
         <div className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
@@ -459,7 +459,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           display: grid;
           grid-column-gap: 10px;
           grid-template-columns: 10px 1fr 10px;
-          grid-auto-rows: 350px 1fr 40px;
+          grid-auto-rows: max-content 1fr 40px;
           background-color: ${theme.colors.white};
         }
 

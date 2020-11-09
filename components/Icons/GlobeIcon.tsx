@@ -2,7 +2,7 @@ import * as React from 'react'
 interface SVGRProps {
   title?: string
   titleId?: string
-  size?: number
+  size?: number | null
 }
 
 function GlobeIcon({
@@ -11,8 +11,18 @@ function GlobeIcon({
   size = 60,
   ...props
 }: React.SVGProps<SVGSVGElement> & SVGRProps) {
+  const svgProps = {
+    viewBox: "0 0 60 60",
+    'aria-labelledby': titleId,
+    ...props
+  }
+
+  if (size) {
+    svgProps.width = size
+    svgProps.height = size
+  }
   return (
-    <svg width={size} height={size} viewBox="0 0 60 60" aria-labelledby={titleId} {...props}>
+    <svg {...svgProps}>
       {title ? <title id={titleId}>{title}</title> : null}
       <g data-name="Group 438">
         <g data-name="Ellipse 5" fill="none" stroke="#fff" strokeWidth={2}>

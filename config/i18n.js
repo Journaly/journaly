@@ -9,9 +9,6 @@ module.exports = new NextI18Next({
   fallbackLng: process.env.NODE_ENV === 'production' ? 'en' : 'dev',
   // Help nexti18next figure out how to load in a serverless env
   localePath: path.resolve('./public/static/locales'),
-  localeSubpaths: {
-    de: 'de',
-  },
   ns: [
     'common',
     'post',

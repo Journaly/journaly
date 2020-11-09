@@ -99,22 +99,22 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         <div className="social-links">
           {sampleUser.facebook && (
             <ExternalLink href={sampleUser.facebook} className="social-link">
-              <FacebookIcon />
+              <FacebookIcon size={null} style={{ width: "100%", maxWidth: "60px" }} />
             </ExternalLink>
           )}
           {sampleUser.instagram && (
             <ExternalLink href={sampleUser.instagram} className="social-link">
-              <InstagramIcon />
+              <InstagramIcon size={null} style={{ width: "100%", maxWidth: "60px" }} />
             </ExternalLink>
           )}
           {sampleUser.youtube && (
             <ExternalLink href={sampleUser.youtube} className="social-link">
-              <YoutubeIcon />
+              <YoutubeIcon size={null} style={{ width: "100%", maxWidth: "60px" }} />
             </ExternalLink>
           )}
           {sampleUser.website && (
             <ExternalLink href={sampleUser.website} className="social-link">
-              <GlobeIcon />
+              <GlobeIcon size={null} style={{ width: "100%", maxWidth: "60px" }} />
             </ExternalLink>
           )}
         </div>
@@ -123,17 +123,9 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
       <style jsx>{`
         .profile-card {
           position: relative;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
           padding: 30px 25px;
           color: ${theme.colors.white};
           box-shadow: 0px 8px 10px #00000029;
-        }
-        @media (min-width: ${theme.breakpoints.MD}) {
-          .profile-card {
-            justify-content: space-between;
-          }
         }
 
         .profile-card::before {
@@ -286,6 +278,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         }
 
         .social-links {
+          margin: 0 auto;
           display: flex;
           justify-content: space-between;
           max-width: 320px;
@@ -293,6 +286,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
 
         :global(.social-link) {
           margin-right: 20px;
+          flex-shrink: 1;
         }
         :global(.social-link:last-child) {
           margin-right: 0;

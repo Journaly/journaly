@@ -424,5 +424,119 @@ schema.extendType({
         })
       },
     })
+
+    t.field('deletePost', {
+      type: 'Post',
+      args: {
+        postId: schema.intArg({ required: true })
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { postId } = args
+        const { userId } = ctx.request
+        if (!userId) throw new NotAuthorizedError()
+
+        const post = await ctx.db.post.findOne({
+          where: {
+            id: postId,
+          },
+          select: {
+            id: true,
+            authorId: true,
+          },
+        })
+
+        if (!post) throw new Error('Post not found.');
+
+        const currentUser = await ctx.db.user.findOne({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (!currentUser) {
+          throw new Error('User not found.')
+        }
+
+        hasAuthorPermissions(post, currentUser)
+
+        const deleteFirstPhasePromises = [
+          ctx.db.comment.deleteMany({
+            where: {
+              thread: {
+                post: {
+                  id: postId,
+                },
+              },
+            },
+          }),
+          ctx.db.threadSubscription.deleteMany({
+            where: {
+              thread: {
+                post: {
+                  id: postId,
+                },
+              },
+            },
+          }),
+          ctx.db.postCommentThanks.deleteMany({
+            where: {
+              PostComment: {
+                post: {
+                  id: postId,
+                },
+              },
+            },
+          }),
+          ctx.db.postTopic.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
+          ctx.db.postLike.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
+          ctx.db.image.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
+        ]
+
+        await Promise.all(deleteFirstPhasePromises)
+
+        const deleteSecondPhasePromises = [
+          ctx.db.postComment.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
+          ctx.db.thread.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
+        ]
+
+        await Promise.all(deleteSecondPhasePromises)
+
+        return ctx.db.post.delete({
+          where: {
+            id: postId,
+          },
+        })
+      },
+    })
   },
 })

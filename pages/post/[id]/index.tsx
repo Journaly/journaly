@@ -6,12 +6,7 @@ import { withApollo } from '../../../lib/apollo'
 import Post from '../../../components/Dashboard/Post'
 import LoadingWrapper from '../../../components/LoadingWrapper'
 import DashboardLayout from '../../../components/Layouts/DashboardLayout'
-import {
-  usePostPageQuery,
-  useCurrentUserQuery,
-  usePostByIdQuery,
-  PostWithTopicsFragmentFragment as PostType,
-} from '../../../generated/graphql'
+import { usePostPageQuery } from '../../../generated/graphql'
 import PostAuthorCard from '../../../components/Dashboard/Post/PostAuthorCard'
 import PostComments from '../../../components/Dashboard/Post/PostComments'
 import useUILanguage from '../../../hooks/useUILanguage'

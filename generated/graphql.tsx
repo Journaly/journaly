@@ -794,6 +794,16 @@ export type PostPageQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
+export type ProfilePageQueryVariables = {
+  userId: Scalars['Int']
+}
+
+export type ProfilePageQuery = { __typename?: 'Query' } & {
+  userById?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+}
+
 export type CreatePostMutationVariables = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
@@ -884,16 +894,6 @@ export type UpdatePostMutationVariables = {
 
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
   updatePost?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
-}
-
-export type ProfileQueryVariables = {
-  userId: Scalars['Int']
-}
-
-export type ProfileQuery = { __typename?: 'Query' } & {
-  userById?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
-  posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
-  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type CreateCommentThanksMutationVariables = {
@@ -1922,6 +1922,60 @@ export type PostPageQueryResult = ApolloReactCommon.QueryResult<
   PostPageQuery,
   PostPageQueryVariables
 >
+export const ProfilePageDocument = gql`
+  query profilePage($userId: Int!) {
+    userById(id: $userId) {
+      ...UserWithLanguagesFragment
+    }
+    posts(authorId: $userId, status: PUBLISHED) {
+      ...PostCardFragment
+    }
+    currentUser {
+      ...UserWithLanguagesFragment
+    }
+  }
+  ${UserWithLanguagesFragmentFragmentDoc}
+  ${PostCardFragmentFragmentDoc}
+`
+
+/**
+ * __useProfilePageQuery__
+ *
+ * To run a query within a React component, call `useProfilePageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfilePageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfilePageQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useProfilePageQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<ProfilePageQuery, ProfilePageQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<ProfilePageQuery, ProfilePageQueryVariables>(
+    ProfilePageDocument,
+    baseOptions,
+  )
+}
+export function useProfilePageLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ProfilePageQuery, ProfilePageQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<ProfilePageQuery, ProfilePageQueryVariables>(
+    ProfilePageDocument,
+    baseOptions,
+  )
+}
+export type ProfilePageQueryHookResult = ReturnType<typeof useProfilePageQuery>
+export type ProfilePageLazyQueryHookResult = ReturnType<typeof useProfilePageLazyQuery>
+export type ProfilePageQueryResult = ApolloReactCommon.QueryResult<
+  ProfilePageQuery,
+  ProfilePageQueryVariables
+>
 export const CreatePostDocument = gql`
   mutation createPost(
     $title: String!
@@ -2322,57 +2376,6 @@ export type UpdatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdatePostMutation,
   UpdatePostMutationVariables
 >
-export const ProfileDocument = gql`
-  query profile($userId: Int!) {
-    userById(id: $userId) {
-      ...UserWithLanguagesFragment
-    }
-    posts(authorId: $userId, status: PUBLISHED) {
-      ...PostCardFragment
-    }
-    currentUser {
-      ...UserWithLanguagesFragment
-    }
-  }
-  ${UserWithLanguagesFragmentFragmentDoc}
-  ${PostCardFragmentFragmentDoc}
-`
-
-/**
- * __useProfileQuery__
- *
- * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
- * When your component renders, `useProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useProfileQuery({
- *   variables: {
- *      userId: // value for 'userId'
- *   },
- * });
- */
-export function useProfileQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<ProfileQuery, ProfileQueryVariables>,
-) {
-  return ApolloReactHooks.useQuery<ProfileQuery, ProfileQueryVariables>(
-    ProfileDocument,
-    baseOptions,
-  )
-}
-export function useProfileLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>,
-) {
-  return ApolloReactHooks.useLazyQuery<ProfileQuery, ProfileQueryVariables>(
-    ProfileDocument,
-    baseOptions,
-  )
-}
-export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>
-export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>
-export type ProfileQueryResult = ApolloReactCommon.QueryResult<ProfileQuery, ProfileQueryVariables>
 export const CreateCommentThanksDocument = gql`
   mutation createCommentThanks($commentId: Int!) {
     createCommentThanks(commentId: $commentId) {

@@ -153,11 +153,12 @@ const Button: React.FC<Props> = (props) => {
         .${ButtonVariant.DestructiveSecondary} {
           color: ${theme.colors.red};
           background-color: ${theme.colors.white};
-          border: 1px solid ${theme.colors.white};
+          border: 1px solid ${theme.colors.red};
         }
         .${ButtonVariant.DestructiveSecondary}:hover:not(:disabled) {
-          background-color: gray;
-          border: 1px solid gray;
+          color: ${theme.colors.white};
+          background-color: ${theme.colors.red};
+          border: 1px solid ${theme.colors.white};
         }
 
         .${ButtonVariant.Link} {

@@ -10,6 +10,7 @@ import {
   PostStatus,
   useCreateThreadMutation,
   useUpdatePostMutation,
+  useDeletePostMutation,
   Image as ImageType,
   ImageRole,
 } from '../../../generated/graphql'
@@ -204,6 +205,15 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
   const [activeThreadId, setActiveThreadId] = React.useState<number>(-1)
   const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
   const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
+  const [deletePost] = useDeletePostMutation({
+    onCompleted: () => {
+      toast.success(t('deletePostSuccess'))
+      Router.push('/dashboard/my-posts', `/dashboard/my-posts`)
+    },
+    onError: () => {
+      toast.error(t('deletePostError'))
+    },
+  })
   const [createThread] = useCreateThreadMutation({
     onCompleted: ({ createThread }) => {
       if (!createThread) {
@@ -405,17 +415,24 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
               >
                 {t('editPostAction')}
               </Button>
-              {
-                post.status === 'DRAFT' && (
-                  <Button
-                    type="button"
-                    variant={ButtonVariant.Secondary}
-                    onClick={setPostStatus(PostStatus.Published)}
-                  >
-                    {t('publishDraft')}
-                  </Button>
-                )
-              }
+              {post.status === 'DRAFT' && (
+                <Button
+                  type="button"
+                  variant={ButtonVariant.Secondary}
+                  onClick={setPostStatus(PostStatus.Published)}
+                >
+                  {t('publishDraft')}
+                </Button>
+              )}
+              <Button
+                type="button"
+                variant={ButtonVariant.DestructiveSecondary}
+                onClick={(): void => {
+                  deletePost({ variables: { postId: post.id } })
+                }}
+              >
+                {t('deletePostAction')}
+              </Button>
             </>
           </div>
         )}

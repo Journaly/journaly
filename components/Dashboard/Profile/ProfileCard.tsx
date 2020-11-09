@@ -266,6 +266,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
 
         .badge-list > li {
           margin-right: 5px;
+          margin-bottom: 5px;
         }
 
         .location {

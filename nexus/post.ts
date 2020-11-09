@@ -31,8 +31,8 @@ const assignPostCountBadges = (db: PrismaClient, userId: number) => {
     INSERT INTO "UserBadge" ("type", "userId") (
       (
         SELECT
-          ${BadgeType.TEN_POSTS} AS "type",
-          ${userId} AS "userId"
+          ${BadgeType.TEN_POSTS}::"BadgeType" AS "type",
+          ${userId}::integer AS "userId"
         FROM posts WHERE posts.count >= 10
       ) UNION (
         SELECT

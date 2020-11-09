@@ -5,6 +5,7 @@ import {
   updatedThreadPositions,
   hasAuthorPermissions,
   NodeType,
+  sendNewBadgeEmail,
 } from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
@@ -15,12 +16,14 @@ import {
 } from '.prisma/client/index'
 import { EditorNode, ImageInput } from './inputTypes'
 
-const assignPostCountBadges = (db: PrismaClient, userId: number) => {
+const assignPostCountBadges = async (
+  db: PrismaClient,
+  userId: number,
+): Promise<void> => {
   // Use a raw query here because we'll soon have a number of post count
   // badges and we could end up with quite a bit of back and fourth
-  // querying, whereas here we can just make one roundtrip. I'll defend
-  // the break with type safety here because we don't use the result.
-  return db.raw`
+  // querying, whereas here we can just make one roundtrip.
+  const newBadgeCount = await db.raw`
     WITH posts AS (
         SELECT COUNT(*) AS count
         FROM "Post"
@@ -40,8 +43,30 @@ const assignPostCountBadges = (db: PrismaClient, userId: number) => {
           ${userId} AS "userId"
         FROM posts WHERE posts.count >= 100
       )
-    ) ON CONFLICT DO NOTHING;
+    )
+    ON CONFLICT DO NOTHING
+    RETURNING *
   `
+  // This is a horrible hack because of this bug in prisma where `RETURNING`
+  // is basically ignored and we get a row count instead. See:
+  // https://github.com/prisma/prisma/issues/2208 . This is fixed in newer
+  // prisma versions by replacing `db.raw` with `db.queryRaw` but we don't have
+  // new prisma versions because nexus is dead. Woo!
+  if (newBadgeCount) {
+    const newBadges = await db.userBadge.findMany({
+      where: { user: { id: userId } },
+      include: { user: true },
+      orderBy: { createdAt: 'desc', },
+      first: newBadgeCount
+    })
+
+    await Promise.all(newBadges.map(badge => {
+      return sendNewBadgeEmail({
+        badgeType: badge.type,
+        user: badge.user
+      })
+    }))
+  }
 }
 
 schema.objectType({

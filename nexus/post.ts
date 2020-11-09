@@ -15,7 +15,7 @@ import {
 } from '.prisma/client/index'
 import { EditorNode, ImageInput } from './inputTypes'
 
-const assignPostCountBadges = (db: PrismaClient, userId) => {
+const assignPostCountBadges = (db: PrismaClient, userId: number) => {
   // Use a raw query here because we'll soon have a number of post count
   // badges and we could end up with quite a bit of back and fourth
   // querying, whereas here we can just make one roundtrip. I'll defend
@@ -29,10 +29,17 @@ const assignPostCountBadges = (db: PrismaClient, userId) => {
           AND "status" = ${PostStatus.PUBLISHED}
     )
     INSERT INTO "UserBadge" ("type", "userId") (
-      SELECT
-        ${BadgeType.ONEHUNDRED_POSTS} AS "type",
-        ${userId} AS "userId"
-      FROM posts WHERE posts.count >= 100
+      (
+        SELECT
+          ${BadgeType.TEN_POSTS} AS "type",
+          ${userId} AS "userId"
+        FROM posts WHERE posts.count >= 10
+      ) UNION (
+        SELECT
+          ${BadgeType.ONEHUNDRED_POSTS} AS "type",
+          ${userId} AS "userId"
+        FROM posts WHERE posts.count >= 100
+      )
     ) ON CONFLICT DO NOTHING;
   `
 }

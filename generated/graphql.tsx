@@ -25,7 +25,9 @@ export type AuthorIdPostIdCompoundUniqueInput = {
 export enum BadgeType {
   AlphaUser = 'ALPHA_USER',
   BetaUser = 'BETA_USER',
+  TenPosts = 'TEN_POSTS',
   OnehundredPosts = 'ONEHUNDRED_POSTS',
+  CodeContributor = 'CODE_CONTRIBUTOR',
 }
 
 export type Comment = {

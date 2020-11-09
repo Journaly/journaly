@@ -11,15 +11,25 @@ type Props = {
   badge: Badge
 }
 
+const assertUnreachable = (x: never): never => {
+  throw new Error(`Didn't expect to get here ${x}`)
+}
+
 const getBadgeCopySubpath = (badgeType: BadgeType): string => {
   switch (badgeType) {
     case BadgeType.AlphaUser:
       return 'badge.ALPHA_USER'
     case BadgeType.BetaUser:
       return 'badge.BETA_USER'
+    case BadgeType.TenPosts:
+      return 'badge.TEN_POSTS'
     case BadgeType.OnehundredPosts:
       return 'badge.ONEHUNDRED_POSTS'
+    case BadgeType.CodeContributor:
+      return 'badge.CODE_CONTRIBUTOR'
   }
+
+  return assertUnreachable(badgeType)
 }
 
 const getBadgeTitle = (badgeType: BadgeType): string => `${getBadgeCopySubpath(badgeType)}.title`

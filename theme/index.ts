@@ -21,6 +21,7 @@ type Colors =
   | 'gray600'
   | 'gray700'
   | 'gray800'
+  | 'copper'
   | 'blue'
   | 'blueLight'
   | 'red'

@@ -39,8 +39,6 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
   const speaks = speaksList.map(({ language }) => languageNameWithDialect(language))
   const learns = learnsList.map(({ language }) => languageNameWithDialect(language))
 
-  console.log(user.badges)
-
   return (
     <div className="profile-card">
       <div className="profile-header">

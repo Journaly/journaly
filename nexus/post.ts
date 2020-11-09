@@ -7,8 +7,35 @@ import {
   NodeType,
 } from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
-import { PostUpdateInput } from '.prisma/client/index'
+import {
+  PostStatus,
+  BadgeType,
+  PostUpdateInput,
+  PrismaClient,
+} from '.prisma/client/index'
 import { EditorNode, ImageInput } from './inputTypes'
+
+const assignPostCountBadges = (db: PrismaClient, userId) => {
+  // Use a raw query here because we'll soon have a number of post count
+  // badges and we could end up with quite a bit of back and fourth
+  // querying, whereas here we can just make one roundtrip. I'll defend
+  // the break with type safety here because we don't use the result.
+  return db.raw`
+    WITH posts AS (
+        SELECT COUNT(*) AS count
+        FROM "Post"
+        WHERE
+          "authorId" = ${userId}
+          AND "status" = ${PostStatus.PUBLISHED}
+    )
+    INSERT INTO "UserBadge" ("type", "userId") (
+      SELECT
+        ${BadgeType.ONEHUNDRED_POSTS} AS "type",
+        ${userId} AS "userId"
+      FROM posts WHERE posts.count >= 6
+    ) ON CONFLICT DO NOTHING;
+  `
+}
 
 schema.objectType({
   name: 'PostTopic',
@@ -287,6 +314,8 @@ schema.extendType({
           await Promise.all(insertPromises)
         }
 
+        if (isPublished) await assignPostCountBadges(ctx.db, userId)
+
         return post
       },
     })
@@ -418,10 +447,16 @@ schema.extendType({
           await Promise.all(insertPromises)
         }
 
-        return ctx.db.post.update({
+
+        const post = await ctx.db.post.update({
           where: { id: args.postId },
           data,
         })
+
+        if (post.status === PostStatus.PUBLISHED)
+          await assignPostCountBadges(ctx.db, userId)
+
+        return post
       },
     })
   },

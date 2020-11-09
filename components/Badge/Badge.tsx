@@ -12,7 +12,6 @@ type Props = {
 }
 
 const getBadgeCopySubpath = (badgeType: BadgeType): string => {
-  console.log(badgeType, BadgeType)
   switch (badgeType) {
     case BadgeType.AlphaUser:
       return 'badge.ALPHA_USER'

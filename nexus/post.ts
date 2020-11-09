@@ -32,7 +32,7 @@ const assignPostCountBadges = (db: PrismaClient, userId) => {
       SELECT
         ${BadgeType.ONEHUNDRED_POSTS} AS "type",
         ${userId} AS "userId"
-      FROM posts WHERE posts.count >= 6
+      FROM posts WHERE posts.count >= 100
     ) ON CONFLICT DO NOTHING;
   `
 }

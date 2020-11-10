@@ -20,8 +20,6 @@
   "postBy": "by",
   "deleteModal": {
     "title": "Delete Post",
-    "body": "Are you sure you want to delete this post?",
-    "delete": "Delete",
-    "cancel": "Cancel"
+    "body": "Are you sure you want to delete this post?"
   }
 }

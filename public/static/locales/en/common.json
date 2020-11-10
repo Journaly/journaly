@@ -14,5 +14,9 @@
   },
   "emptyMessage": "Empty...",
   "e404": "Resource not found",
-  "e403": "Not Authorized"
+  "e403": "Not Authorized",
+  "modal": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  }
 }

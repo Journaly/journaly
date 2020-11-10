@@ -21,7 +21,7 @@ import PencilIcon from '../../Icons/PencilIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 import { Router, useTranslation } from '../../../config/i18n'
 import PostHeader from '../../PostHeader'
-import PostDeleteConfirmationModal from '../../Modals/DeletePostModal'
+import ConfirmationModal from '../../Modals/ConfirmationModal'
 
 interface IPostProps {
   post: PostType
@@ -455,14 +455,16 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           ref={popoverRef}
         />
       )}
-      <PostDeleteConfirmationModal
-        onDelete={(): void => {
+      <ConfirmationModal
+        onConfirm={(): void => {
           deletePost({ variables: { postId: post.id } })
           setDisplayDeleteModal(false)
         }}
         onCancel={(): void => {
           setDisplayDeleteModal(false)
         }}
+        title={t('deleteModal.title')}
+        body={t('deleteModal.body')}
         show={displayDeleteModal}
       />
       <PostBodyStyles parentClassName="post-body" />

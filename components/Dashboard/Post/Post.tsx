@@ -21,6 +21,7 @@ import PencilIcon from '../../Icons/PencilIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 import { Router, useTranslation } from '../../../config/i18n'
 import PostHeader from '../../PostHeader'
+import PostDeleteConfirmationModal from '../../Modals/DeletePostModal'
 
 interface IPostProps {
   post: PostType
@@ -205,10 +206,11 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
   const [activeThreadId, setActiveThreadId] = React.useState<number>(-1)
   const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
   const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
+  const [displayDeleteModal, setDisplayDeleteModal] = React.useState(false)
   const [deletePost] = useDeletePostMutation({
     onCompleted: () => {
       toast.success(t('deletePostSuccess'))
-      Router.push('/dashboard/my-posts', `/dashboard/my-posts`)
+      Router.push('/dashboard/my-posts')
     },
     onError: () => {
       toast.error(t('deletePostError'))
@@ -428,7 +430,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
                 type="button"
                 variant={ButtonVariant.DestructiveSecondary}
                 onClick={(): void => {
-                  deletePost({ variables: { postId: post.id } })
+                  setDisplayDeleteModal(true)
                 }}
               >
                 {t('deletePostAction')}
@@ -453,6 +455,16 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           ref={popoverRef}
         />
       )}
+      <PostDeleteConfirmationModal
+        onDelete={(): void => {
+          deletePost({ variables: { postId: post.id } })
+          setDisplayDeleteModal(false)
+        }}
+        onCancel={(): void => {
+          setDisplayDeleteModal(false)
+        }}
+        show={displayDeleteModal}
+      />
       <PostBodyStyles parentClassName="post-body" />
       <style>{`
         .thread-highlight {

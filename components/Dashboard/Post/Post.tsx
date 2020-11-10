@@ -13,6 +13,7 @@ import {
   useDeletePostMutation,
   Image as ImageType,
   ImageRole,
+  Post as PostModel,
 } from '../../../generated/graphql'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
@@ -214,6 +215,18 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     },
     onError: () => {
       toast.error(t('deletePostError'))
+    },
+    update: (cache, { data }) => {
+      const dp = data?.deletePost
+      if (dp?.id && dp?.__typename) {
+        cache.modify({
+          fields: {
+            posts(existingPosts = []): PostModel[] {
+              return existingPosts.filter((p: any) => p.__ref !== `${dp.__typename}:${dp.id}`)
+            },
+          },
+        })
+      }
     },
   })
   const [createThread] = useCreateThreadMutation({

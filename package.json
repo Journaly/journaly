@@ -24,18 +24,9 @@
     "start": "NODE_ENV=production node server/index.js",
     "svgr": "node scripts/svgr.js",
     "type-check": "tsc",
-    "prisma": "prisma",
     "seed": "ts-node -O '{\"module\": \"commonjs\"}' scripts/seed.ts",
     "diff-test": "ts-node -O '{\"module\": \"commonjs\"}' scripts/diff-test.ts",
-    "db:snapshot": "pg_dump $DATABASE_URL > snapshot.sql",
-    "db:restore": "npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
-    "empty-db": "source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
-    "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed",
-    "migrate:up": "prisma migrate up --experimental",
-    "migrate:save": "prisma migrate save --experimental",
-    "debug": "ndb -r ts-node/register node_modules/.bin/nexus dev",
-    "prisma:generate": "prisma generate",
-    "prisma:studio": "prisma studio --experimental"
+    "debug": "ndb -r ts-node/register node_modules/.bin/nexus dev"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.41",

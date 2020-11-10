@@ -460,11 +460,13 @@ schema.extendType({
         hasAuthorPermissions(post, currentUser)
 
         const deleteFirstPhasePromises = [
-          ctx.db.comment.deleteMany({
+          ctx.db.commentThanks.deleteMany({
             where: {
-              thread: {
-                post: {
-                  id: postId,
+              comment: {
+                thread: {
+                  post: {
+                    id: postId,
+                  },
                 },
               },
             },
@@ -511,6 +513,16 @@ schema.extendType({
         ]
 
         await Promise.all(deleteFirstPhasePromises)
+
+        await ctx.db.comment.deleteMany({
+          where: {
+            thread: {
+              post: {
+                id: postId,
+              },
+            },
+          },
+        })
 
         const deleteSecondPhasePromises = [
           ctx.db.postComment.deleteMany({

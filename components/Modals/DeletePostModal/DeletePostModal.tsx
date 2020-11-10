@@ -33,7 +33,7 @@ const DeletePostModal: React.FC<Props> = ({ onDelete, onCancel, show }: Props) =
           </Button>
         </>
       }
-      body={null}
+      body={t('deleteModal.body')}
       onClose={handleClose}
     />
   ) : null

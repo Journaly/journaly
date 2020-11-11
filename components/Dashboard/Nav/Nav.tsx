@@ -124,12 +124,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
             width: ${navConstants.skinnyNavWidth}px;
           }
         }
-        @media (${navConstants.aboveDesktopNav}) {
-          /* Allow certain pages, like settings, to have the skinny nav for the desktop breakpoint */
-          :not(.expanded) nav {
-            width: ${navConstants.skinnyNavWidth}px;
-          }
-        }
 
         .nav-logo {
           /* The auto top margin allows the logo to take up enough space, but push itself down */
@@ -161,18 +155,18 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
           }
         }
 
-        .expanded .nav-logo a {
-          font-size: 24px;
-          animation: fadeIn ${navConstants.transitionDuration}ms linear;
+
+        @media (${navConstants.aboveDesktopNav}) {
+          .nav-logo span {
+            display: inline;
+          }
+
+          .nav-logo a {
+            font-size: 24px;
+            animation: fadeIn ${navConstants.transitionDuration}ms linear;
+          }
         }
 
-        .expanded .nav-logo span {
-          display: inline;
-        }
-        /*
-          See comment in NavLinks for why these styles must be duplicated
-          for both .expanded and the mobile nav media query
-        */
         @media (${navConstants.mobileNavOnly}) {
           .nav-logo a {
             font-size: 24px;
@@ -181,6 +175,11 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
 
           .nav-logo span {
             display: inline;
+          }
+
+          .nav-logo a {
+            font-size: 24px;
+            animation: fadeIn ${navConstants.transitionDuration}ms linear;
           }
         }
       `}</style>

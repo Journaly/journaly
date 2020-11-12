@@ -1,6 +1,6 @@
 import { InvalidInput, UserInputError } from './errors'
 
-export const validateUpdateUserMutation = async (args: any, ctx: any): Promise<void> => {
+export const validateUpdateUserMutationData = async (args: any, ctx: any): Promise<void> => {
   const { email, handle } = args
   const { userId } = ctx.request
 
@@ -8,10 +8,16 @@ export const validateUpdateUserMutation = async (args: any, ctx: any): Promise<v
     const invalidFields: InvalidInput[] = []
 
     if (email && !email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i))
-      invalidFields.push({ name: 'email', message: 'profile.error.emailValidationErrorMessage' })
+      invalidFields.push({
+        name: 'email',
+        message: 'profile.error.emailValidationErrorMessage',
+      })
 
     if (handle && !handle.match(/^[a-zA-Z0-9_-]{3,}$/i))
-      invalidFields.push({ name: 'handle', message: 'profile.error.handleValidationErrorMessage' })
+      invalidFields.push({
+        name: 'handle',
+        message: 'profile.error.handleValidationErrorMessage',
+      })
 
     if (invalidFields.length > 0) throw new UserInputError('User', invalidFields)
 
@@ -36,7 +42,10 @@ export const validateUpdateUserMutation = async (args: any, ctx: any): Promise<v
       invalidFields.push({ name: 'email', message: 'profile.error.emailAlreadyinUseError' })
 
     if (handle && users.some((u: any) => u.handle === handle))
-      invalidFields.push({ name: 'handle', message: 'profile.error.handleAlreadyinUseError' })
+      invalidFields.push({
+        name: 'handle',
+        message: 'profile.error.handleAlreadyinUseError',
+      })
 
     if (invalidFields.length > 0) throw new UserInputError('User', invalidFields)
   }

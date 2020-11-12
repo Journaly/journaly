@@ -5,10 +5,69 @@ import {
   updatedThreadPositions,
   hasAuthorPermissions,
   NodeType,
+  sendNewBadgeEmail,
 } from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
-import { PostUpdateInput } from '.prisma/client/index'
+import {
+  PostStatus,
+  BadgeType,
+  PostUpdateInput,
+  PrismaClient,
+} from '.prisma/client/index'
 import { EditorNode, ImageInput } from './inputTypes'
+
+const assignPostCountBadges = async (
+  db: PrismaClient,
+  userId: number,
+): Promise<void> => {
+  // Use a raw query here because we'll soon have a number of post count
+  // badges and we could end up with quite a bit of back and fourth
+  // querying, whereas here we can just make one roundtrip.
+  const newBadgeCount = await db.raw`
+    WITH posts AS (
+        SELECT COUNT(*) AS count
+        FROM "Post"
+        WHERE
+          "authorId" = ${userId}
+          AND "status" = ${PostStatus.PUBLISHED}
+    )
+    INSERT INTO "UserBadge" ("type", "userId") (
+      (
+        SELECT
+          ${BadgeType.TEN_POSTS}::"BadgeType" AS "type",
+          ${userId}::integer AS "userId"
+        FROM posts WHERE posts.count >= 10
+      ) UNION (
+        SELECT
+          ${BadgeType.ONEHUNDRED_POSTS} AS "type",
+          ${userId} AS "userId"
+        FROM posts WHERE posts.count >= 100
+      )
+    )
+    ON CONFLICT DO NOTHING
+    RETURNING *
+  `
+  // This is a horrible hack because of this bug in prisma where `RETURNING`
+  // is basically ignored and we get a row count instead. See:
+  // https://github.com/prisma/prisma/issues/2208 . This is fixed in newer
+  // prisma versions by replacing `db.raw` with `db.queryRaw` but we don't have
+  // new prisma versions because nexus is dead. Woo!
+  if (newBadgeCount) {
+    const newBadges = await db.userBadge.findMany({
+      where: { user: { id: userId } },
+      include: { user: true },
+      orderBy: { createdAt: 'desc', },
+      first: newBadgeCount
+    })
+
+    await Promise.all(newBadges.map(badge => {
+      return sendNewBadgeEmail({
+        badgeType: badge.type,
+        user: badge.user
+      })
+    }))
+  }
+}
 
 schema.objectType({
   name: 'PostTopic',
@@ -287,6 +346,8 @@ schema.extendType({
           await Promise.all(insertPromises)
         }
 
+        if (isPublished) await assignPostCountBadges(ctx.db, userId)
+
         return post
       },
     })
@@ -418,9 +479,141 @@ schema.extendType({
           await Promise.all(insertPromises)
         }
 
-        return ctx.db.post.update({
+
+        const post = await ctx.db.post.update({
           where: { id: args.postId },
           data,
+        })
+
+        if (post.status === PostStatus.PUBLISHED)
+          await assignPostCountBadges(ctx.db, userId)
+
+        return post
+      },
+    })
+
+    t.field('deletePost', {
+      type: 'Post',
+      args: {
+        postId: schema.intArg({ required: true })
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { postId } = args
+        const { userId } = ctx.request
+        if (!userId) throw new NotAuthorizedError()
+
+        const post = await ctx.db.post.findOne({
+          where: {
+            id: postId,
+          },
+          select: {
+            id: true,
+            authorId: true,
+          },
+        })
+
+        if (!post) throw new Error('Post not found.');
+
+        const currentUser = await ctx.db.user.findOne({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (!currentUser) {
+          throw new Error('User not found.')
+        }
+
+        hasAuthorPermissions(post, currentUser)
+
+        const deleteFirstPhasePromises = [
+          ctx.db.commentThanks.deleteMany({
+            where: {
+              comment: {
+                thread: {
+                  post: {
+                    id: postId,
+                  },
+                },
+              },
+            },
+          }),
+          ctx.db.threadSubscription.deleteMany({
+            where: {
+              thread: {
+                post: {
+                  id: postId,
+                },
+              },
+            },
+          }),
+          ctx.db.postCommentThanks.deleteMany({
+            where: {
+              PostComment: {
+                post: {
+                  id: postId,
+                },
+              },
+            },
+          }),
+          ctx.db.postTopic.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
+          ctx.db.postLike.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
+          ctx.db.image.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
+        ]
+
+        await Promise.all(deleteFirstPhasePromises)
+
+        await ctx.db.comment.deleteMany({
+          where: {
+            thread: {
+              post: {
+                id: postId,
+              },
+            },
+          },
+        })
+
+        const deleteSecondPhasePromises = [
+          ctx.db.postComment.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
+          ctx.db.thread.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
+        ]
+
+        await Promise.all(deleteSecondPhasePromises)
+
+        return ctx.db.post.delete({
+          where: {
+            id: postId,
+          },
         })
       },
     })

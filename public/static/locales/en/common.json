@@ -12,7 +12,33 @@
     "settings": "Settings",
     "logOut": "Log Out"
   },
+  "badge": {
+    "ALPHA_USER": {
+      "title": "Alpha User",
+      "description": "Participated in the Journaly Alpha test. We've come a long way since then, but this user was on the front lines helping catch early bugs and shape Journally since the beginning!"
+    },
+    "BETA_USER": {
+      "title": "Beta User",
+      "description": "Participated in the Journaly Beta test. The hero Journaly needs."
+    },
+    "CODE_CONTRIBUTOR": {
+      "title": "Code Contributor",
+      "description": "Has contributed code to the Journaly codebase. You can find the Journaly source code, and contribute yourself, at https://github.com/Journaly/journaly"
+    },
+    "TEN_POSTS": {
+      "title": "10 Posts",
+      "description": "Published 10 posts. Really starting to get going now!"
+    },
+    "ONEHUNDRED_POSTS": {
+      "title": "100 Posts",
+      "description": "Published 100 posts. Talk about sticking with it!"
+    }
+  },
   "emptyMessage": "Empty...",
   "e404": "Resource not found",
-  "e403": "Not Authorized"
+  "e403": "Not Authorized",
+  "modal": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  }
 }

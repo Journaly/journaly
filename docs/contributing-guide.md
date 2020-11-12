@@ -25,6 +25,7 @@ When an issue created, it will automatically get added to the "To Do" column of 
 
 - PRs are automatically tagged based on which code you edit.
 - When you create a PR, please make sure to link it to an issue and it will automatically be moved to the "In Progress" column in the _Journaly Kanban_.
+- If you'd like to earn the "Code Contributor" badge on journaly.com, just include a link to your profile in your PR. We'll assign you the badge once your PR merges. Feel free to reach out if this doesn't happen within a day or so.
 
 ## Milestones
 

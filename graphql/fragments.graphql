@@ -174,3 +174,8 @@ fragment PostTopicFragment on PostTopic {
     ...TopicFragment
   }
 }
+
+fragment UserBadgeFragment on UserBadge {
+  type
+  createdAt
+}

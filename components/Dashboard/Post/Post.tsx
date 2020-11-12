@@ -10,8 +10,10 @@ import {
   PostStatus,
   useCreateThreadMutation,
   useUpdatePostMutation,
+  useDeletePostMutation,
   Image as ImageType,
   ImageRole,
+  Post as PostModel,
 } from '../../../generated/graphql'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
@@ -20,6 +22,7 @@ import PencilIcon from '../../Icons/PencilIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 import { Router, useTranslation } from '../../../config/i18n'
 import PostHeader from '../../PostHeader'
+import ConfirmationModal from '../../Modals/ConfirmationModal'
 
 interface IPostProps {
   post: PostType
@@ -204,6 +207,28 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
   const [activeThreadId, setActiveThreadId] = React.useState<number>(-1)
   const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
   const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
+  const [displayDeleteModal, setDisplayDeleteModal] = React.useState(false)
+  const [deletePost] = useDeletePostMutation({
+    onCompleted: () => {
+      toast.success(t('deletePostSuccess'))
+      Router.push('/dashboard/my-posts')
+    },
+    onError: () => {
+      toast.error(t('deletePostError'))
+    },
+    update: (cache, { data }) => {
+      const dp = data?.deletePost
+      if (dp?.id && dp?.__typename) {
+        cache.modify({
+          fields: {
+            posts(existingPosts = []): PostModel[] {
+              return existingPosts.filter((p: any) => p.__ref !== `${dp.__typename}:${dp.id}`)
+            },
+          },
+        })
+      }
+    },
+  })
   const [createThread] = useCreateThreadMutation({
     onCompleted: ({ createThread }) => {
       if (!createThread) {
@@ -405,17 +430,24 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
               >
                 {t('editPostAction')}
               </Button>
-              {
-                post.status === 'DRAFT' && (
-                  <Button
-                    type="button"
-                    variant={ButtonVariant.Secondary}
-                    onClick={setPostStatus(PostStatus.Published)}
-                  >
-                    {t('publishDraft')}
-                  </Button>
-                )
-              }
+              {post.status === 'DRAFT' && (
+                <Button
+                  type="button"
+                  variant={ButtonVariant.Secondary}
+                  onClick={setPostStatus(PostStatus.Published)}
+                >
+                  {t('publishDraft')}
+                </Button>
+              )}
+              <Button
+                type="button"
+                variant={ButtonVariant.DestructiveSecondary}
+                onClick={(): void => {
+                  setDisplayDeleteModal(true)
+                }}
+              >
+                {t('deletePostAction')}
+              </Button>
             </>
           </div>
         )}
@@ -436,6 +468,18 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           ref={popoverRef}
         />
       )}
+      <ConfirmationModal
+        onConfirm={(): void => {
+          deletePost({ variables: { postId: post.id } })
+          setDisplayDeleteModal(false)
+        }}
+        onCancel={(): void => {
+          setDisplayDeleteModal(false)
+        }}
+        title={t('deleteModal.title')}
+        body={t('deleteModal.body')}
+        show={displayDeleteModal}
+      />
       <PostBodyStyles parentClassName="post-body" />
       <style>{`
         .thread-highlight {

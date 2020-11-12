@@ -22,6 +22,14 @@ export type AuthorIdPostIdCompoundUniqueInput = {
   postId: Scalars['Int']
 }
 
+export enum BadgeType {
+  AlphaUser = 'ALPHA_USER',
+  BetaUser = 'BETA_USER',
+  TenPosts = 'TEN_POSTS',
+  OnehundredPosts = 'ONEHUNDRED_POSTS',
+  CodeContributor = 'CODE_CONTRIBUTOR',
+}
+
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['Int']
@@ -143,6 +151,7 @@ export type Mutation = {
   deletePostComment?: Maybe<PostComment>
   createPost?: Maybe<Post>
   updatePost?: Maybe<Post>
+  deletePost?: Maybe<Post>
   createUser?: Maybe<User>
   updateUser?: Maybe<User>
   updatePassword?: Maybe<User>
@@ -214,6 +223,10 @@ export type MutationUpdatePostArgs = {
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
   images?: Maybe<Array<ImageInput>>
+}
+
+export type MutationDeletePostArgs = {
+  postId: Scalars['Int']
 }
 
 export type MutationCreateUserArgs = {
@@ -500,6 +513,7 @@ export type User = {
   bio?: Maybe<Scalars['String']>
   userRole: UserRole
   location?: Maybe<Location>
+  badges: Array<UserBadge>
   posts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
@@ -508,6 +522,14 @@ export type User = {
   followedBy: Array<User>
   postsWrittenCount?: Maybe<Scalars['Int']>
   thanksReceivedCount?: Maybe<Scalars['Int']>
+}
+
+export type UserBadgesArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<UserBadgeWhereUniqueInput>
+  before?: Maybe<UserBadgeWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
 }
 
 export type UserLanguagesArgs = {
@@ -534,9 +556,26 @@ export type UserFollowedByArgs = {
   last?: Maybe<Scalars['Int']>
 }
 
+export type UserBadge = {
+  __typename?: 'UserBadge'
+  id: Scalars['Int']
+  type: BadgeType
+  createdAt: Scalars['DateTime']
+}
+
+export type UserBadgeWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
+  userId_type?: Maybe<UserIdTypeCompoundUniqueInput>
+}
+
 export type UserIdLanguageIdCompoundUniqueInput = {
   userId: Scalars['Int']
   languageId: Scalars['Int']
+}
+
+export type UserIdTypeCompoundUniqueInput = {
+  userId: Scalars['Int']
+  type: BadgeType
 }
 
 export enum UserRole {
@@ -740,6 +779,11 @@ export type PostTopicFragmentFragment = { __typename?: 'PostTopic' } & {
   topic: { __typename?: 'Topic' } & TopicFragmentFragment
 }
 
+export type UserBadgeFragmentFragment = { __typename?: 'UserBadge' } & Pick<
+  UserBadge,
+  'type' | 'createdAt'
+>
+
 export type AddLanguageRelationMutationVariables = {
   languageId: Scalars['Int']
   level: LanguageLevel
@@ -799,10 +843,14 @@ export type ProfilePageQueryVariables = {
 }
 
 export type ProfilePageQuery = { __typename?: 'Query' } & {
-  userById?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  userById?: Maybe<{ __typename?: 'User' } & ProfileUserFragmentFragment>
   posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
+
+export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
+  badges: Array<{ __typename?: 'UserBadge' } & UserBadgeFragmentFragment>
+} & UserWithLanguagesFragmentFragment
 
 export type CreatePostMutationVariables = {
   title: Scalars['String']
@@ -815,6 +863,14 @@ export type CreatePostMutationVariables = {
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
   createPost?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'id'>>
+}
+
+export type DeletePostMutationVariables = {
+  postId: Scalars['Int']
+}
+
+export type DeletePostMutation = { __typename?: 'Mutation' } & {
+  deletePost?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'id'>>
 }
 
 export type EditPostQueryVariables = {
@@ -1061,27 +1117,6 @@ export const UserWithStatsFragmentFragmentDoc = gql`
   }
   ${UserFragmentFragmentDoc}
 `
-export const LanguageFragmentFragmentDoc = gql`
-  fragment LanguageFragment on Language {
-    id
-    name
-    dialect
-  }
-`
-export const UserWithLanguagesFragmentFragmentDoc = gql`
-  fragment UserWithLanguagesFragment on User {
-    ...UserFragment
-    languages {
-      id
-      level
-      language {
-        ...LanguageFragment
-      }
-    }
-  }
-  ${UserFragmentFragmentDoc}
-  ${LanguageFragmentFragmentDoc}
-`
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {
     id
@@ -1106,6 +1141,13 @@ export const AuthorWithStatsFragmentFragmentDoc = gql`
     thanksReceivedCount
   }
   ${AuthorFragmentFragmentDoc}
+`
+export const LanguageFragmentFragmentDoc = gql`
+  fragment LanguageFragment on Language {
+    id
+    name
+    dialect
+  }
 `
 export const AuthorWithLanguagesFragmentFragmentDoc = gql`
   fragment AuthorWithLanguagesFragment on User {
@@ -1254,6 +1296,36 @@ export const LanguageWithPostCountFragmentFragmentDoc = gql`
     postCount
   }
   ${LanguageFragmentFragmentDoc}
+`
+export const UserWithLanguagesFragmentFragmentDoc = gql`
+  fragment UserWithLanguagesFragment on User {
+    ...UserFragment
+    languages {
+      id
+      level
+      language {
+        ...LanguageFragment
+      }
+    }
+  }
+  ${UserFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
+`
+export const UserBadgeFragmentFragmentDoc = gql`
+  fragment UserBadgeFragment on UserBadge {
+    type
+    createdAt
+  }
+`
+export const ProfileUserFragmentFragmentDoc = gql`
+  fragment ProfileUserFragment on User {
+    ...UserWithLanguagesFragment
+    badges {
+      ...UserBadgeFragment
+    }
+  }
+  ${UserWithLanguagesFragmentFragmentDoc}
+  ${UserBadgeFragmentFragmentDoc}
 `
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
@@ -1925,7 +1997,7 @@ export type PostPageQueryResult = ApolloReactCommon.QueryResult<
 export const ProfilePageDocument = gql`
   query profilePage($userId: Int!) {
     userById(id: $userId) {
-      ...UserWithLanguagesFragment
+      ...ProfileUserFragment
     }
     posts(authorId: $userId, status: PUBLISHED) {
       ...PostCardFragment
@@ -1934,8 +2006,9 @@ export const ProfilePageDocument = gql`
       ...UserWithLanguagesFragment
     }
   }
-  ${UserWithLanguagesFragmentFragmentDoc}
+  ${ProfileUserFragmentFragmentDoc}
   ${PostCardFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
 `
 
 /**
@@ -2040,6 +2113,52 @@ export type CreatePostMutationResult = ApolloReactCommon.MutationResult<CreatePo
 export type CreatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreatePostMutation,
   CreatePostMutationVariables
+>
+export const DeletePostDocument = gql`
+  mutation deletePost($postId: Int!) {
+    deletePost(postId: $postId) {
+      id
+    }
+  }
+`
+export type DeletePostMutationFn = ApolloReactCommon.MutationFunction<
+  DeletePostMutation,
+  DeletePostMutationVariables
+>
+
+/**
+ * __useDeletePostMutation__
+ *
+ * To run a mutation, you first call `useDeletePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePostMutation, { data, loading, error }] = useDeletePostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useDeletePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeletePostMutation,
+    DeletePostMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<DeletePostMutation, DeletePostMutationVariables>(
+    DeletePostDocument,
+    baseOptions,
+  )
+}
+export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>
+export type DeletePostMutationResult = ApolloReactCommon.MutationResult<DeletePostMutation>
+export type DeletePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeletePostMutation,
+  DeletePostMutationVariables
 >
 export const EditPostDocument = gql`
   query editPost($id: Int!, $uiLanguage: UILanguage!) {

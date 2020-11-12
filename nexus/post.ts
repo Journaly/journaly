@@ -103,14 +103,20 @@ schema.objectType({
     t.model.images()
     t.model.publishedAt()
     t.int('commentCount', {
-      resolve(parent, _args, ctx, _info) {
-        return ctx.db.comment.count({
+      resolve: async (parent, _args, ctx, _info) => {
+        const threadCommentCount = await ctx.db.comment.count({
           where: {
             thread: {
               postId: parent.id,
             },
           },
         })
+        const postCommentCount = await ctx.db.postComment.count({
+          where: {
+            postId: parent.id
+          }
+        })
+        return threadCommentCount + postCommentCount
       },
     })
   },

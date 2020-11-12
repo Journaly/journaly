@@ -31,6 +31,10 @@ const SettingsForm: React.FC<Props> = ({ className, children, onSubmit, errorInp
         :global(input[name="${errorInputName}"]) {
           border-color: ${theme.colors.red};
         }
+
+        :global(input.is-invalid) {
+          border-color: ${theme.colors.red};
+        }
       `}</style>
     </form>
   )

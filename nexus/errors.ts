@@ -12,6 +12,17 @@ export class NotFoundError extends ResolverError {
   }
 }
 
+export type InvalidInput = {
+  name: string
+  message: string
+}
+
+export class UserInputError extends ResolverError {
+  constructor(resourceName = 'Resource', validationErrors: InvalidInput[] = []) {
+    super(`${resourceName} bad request`, { code: 'BAD_REQUEST', statusCode: 400, validationErrors })
+  }
+}
+
 export class NotAuthorizedError extends ResolverError {
   constructor() {
     super('Not authorized to access resource', {

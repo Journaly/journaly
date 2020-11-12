@@ -1,5 +1,11 @@
-mutation updateUser($email: String, $name: String, $profileImage: String, $bio: String) {
-  updateUser(email: $email, name: $name, profileImage: $profileImage, bio: $bio) {
+mutation updateUser(
+  $email: String
+  $name: String
+  $profileImage: String
+  $bio: String
+  $handle: String
+) {
+  updateUser(email: $email, name: $name, profileImage: $profileImage, bio: $bio, handle: $handle) {
     ...UserFragment
   }
 }

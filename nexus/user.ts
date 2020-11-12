@@ -9,6 +9,7 @@ import { BadgeType } from '@prisma/client'
 import { NotAuthorizedError } from './errors'
 import { sendPasswordResetTokenEmail } from './utils'
 import { intArg } from 'nexus/components/schema'
+import { validateUpdateUserMutation as validateUpdateUserMutationData } from './validation'
 
 schema.objectType({
   name: 'User',
@@ -163,9 +164,13 @@ schema.extendType({
         name: schema.stringArg({ required: false }),
         profileImage: schema.stringArg({ required: false }),
         bio: schema.stringArg({ required: false }),
+        handle: schema.stringArg({ required: false }),
       },
       resolve: async (_parent, args, ctx: any) => {
         const { userId } = ctx.request
+
+        await validateUpdateUserMutationData(args, ctx)
+
         const updates = {
           ...args,
           email: args.email?.toLowerCase(),

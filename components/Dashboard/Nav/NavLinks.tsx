@@ -140,14 +140,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           display: none;
         }
 
-        :global(.expanded) .current-user-name {
-          display: block;
-          width: 100%;
-          margin-top: 15px;
-          font-size: 16px;
-          text-align: center;
-          color: ${theme.colors.white};
-        }
 
         @media (${navConstants.mobileNavOnly}) {
           .current-user-name {
@@ -175,10 +167,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           transition: width ${navConstants.transitionDuration}ms linear;
         }
 
-        :global(.expanded) .nav-bottom hr {
-          width: 180px;
-          margin: 20px auto;
-        }
 
         @media (${navConstants.mobileNavOnly}) {
           .nav-bottom hr {
@@ -199,12 +187,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
             padding-right ${navConstants.transitionDuration}ms linear;
         }
 
-        :global(.expanded) .nav-link {
-          flex-direction: row;
-          justify-content: normal;
-          height: auto;
-          padding: 25px;
-        }
 
         @media (${navConstants.mobileNavOnly}) {
           .nav-link {
@@ -230,11 +212,32 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           transition: margin-left ${navConstants.transitionDuration}ms linear;
         }
 
-        :global(.expanded) .nav-link-text {
-          margin-left: 15px;
-          font-size: 16px;
-        }
         @media (${navConstants.mobileNavOnly}) {
+          .nav-link-text {
+            margin-left: 15px;
+            font-size: 16px;
+          }
+        }
+
+        @media (${navConstants.aboveDesktopNav}) {
+          .current-user-name {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 16px;
+            text-align: center;
+            color: ${theme.colors.white};
+          }
+          .nav-bottom hr {
+            width: 180px;
+            margin: 20px auto;
+          }
+          .nav-link {
+            flex-direction: row;
+            justify-content: normal;
+            height: auto;
+            padding: 25px;
+          }
           .nav-link-text {
             margin-left: 15px;
             font-size: 16px;

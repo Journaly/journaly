@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import Nav, { navConstants } from '../Dashboard/Nav'
 import { layoutPadding, headerHeight } from '../Dashboard/dashboardConstants'
 import Header from '../Dashboard/Header'
-import useWindowSize from '../../hooks/useWindowSize'
 
 interface Props {
   children: React.ReactNode
@@ -12,26 +11,8 @@ interface Props {
 }
 
 const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
-  const { width } = useWindowSize()
   const router = useRouter()
-  const shouldNavBeExpanded = () => {
-    // Going from tablet to desktop expands the nav
-    if (width >= navConstants.desktopBreakpoint) {
-      if (router.pathname.includes('/settings/')) {
-        return false
-      }
-
-      return true
-    }
-
-    // Going from mobile to tablet collapses the nav
-    if (width >= navConstants.mobileBreakpoint) {
-      return false
-    }
-
-    return false
-  }
-  const [navExpanded, setNavExpanded] = useState(shouldNavBeExpanded())
+  const [navExpanded, setNavExpanded] = useState(false)
 
   const dashboardContainerStyles = classNames('dashboard-container', {
     'settings-page': router.pathname.includes('/settings/'),
@@ -39,12 +20,8 @@ const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
   })
 
   const toggleNav = (): void => {
-    setNavExpanded(!navExpanded)
+    setNavExpanded(navExpanded => !navExpanded)
   }
-
-  useEffect((): void => {
-    setNavExpanded(shouldNavBeExpanded())
-  }, [width, router.pathname])
 
   return (
     <div className="dashboard">

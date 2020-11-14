@@ -46,18 +46,31 @@ type CommentSelectionButtonProps = {
   onClick: React.MouseEventHandler
 }
 
-const selectionState = {
+type SelectionState = {
+  bouncing: boolean
+  lastTimeout: number | null
+}
+
+const selectionState: SelectionState = {
   bouncing: false,
   lastTimeout: null,
 }
+
 const queueSelectionBounce = () => {
   selectionState.bouncing = true
-  clearTimeout(selectionState.lastTimeout)
-  selectionState.lastTimeout = setTimeout(bounceSelection, 500)
+
+  if (selectionState.lastTimeout) {
+    window.clearTimeout(selectionState.lastTimeout)
+  }
+
+  selectionState.lastTimeout = window.setTimeout(bounceSelection, 500)
 }
 
 const bounceSelection = async () => {
   const selection = window.getSelection()
+
+  if (!selection || !selection.rangeCount) return
+
   const range = selection.getRangeAt(0)
 
   await wait(1)

@@ -29,5 +29,7 @@ export const iOS = () => {
   || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
 }
 
-export const wait = (timeout) => new Promise(res => setTimeout(res, timeout))
+export const wait = (timeout: number) => {
+  return new Promise(res => setTimeout(res, timeout))
+}
 

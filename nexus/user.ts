@@ -15,7 +15,18 @@ schema.objectType({
   definition(t) {
     t.model.id()
     t.model.name()
-    t.model.email()
+    t.string('email', {
+      nullable: true,
+      resolve(parent, _args, ctx, _info) {
+        const { userId } = ctx.request
+
+        if (userId && userId === parent.id) {
+          return parent.email
+        }
+
+        return null
+      },
+    })
     t.model.handle()
     t.model.bio()
     t.model.userRole()

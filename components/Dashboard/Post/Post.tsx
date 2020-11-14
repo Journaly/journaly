@@ -2,7 +2,11 @@ import React from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 
-import { sanitize } from '../../../utils'
+import {
+  sanitize,
+  iOS,
+  wait,
+} from '../../../utils'
 import {
   PostWithTopicsFragmentFragment as PostType,
   UserFragmentFragment as UserType,
@@ -40,6 +44,43 @@ type CommentSelectionButtonProps = {
   }
   display: boolean
   onClick: React.MouseEventHandler
+}
+
+type SelectionState = {
+  bouncing: boolean
+  lastTimeout: number | null
+}
+
+const selectionState: SelectionState = {
+  bouncing: false,
+  lastTimeout: null,
+}
+
+const queueSelectionBounce = () => {
+  selectionState.bouncing = true
+
+  if (selectionState.lastTimeout) {
+    window.clearTimeout(selectionState.lastTimeout)
+  }
+
+  selectionState.lastTimeout = window.setTimeout(bounceSelection, 500)
+}
+
+const bounceSelection = async () => {
+  const selection = window.getSelection()
+
+  if (!selection || !selection.rangeCount) return
+
+  const range = selection.getRangeAt(0)
+
+  await wait(1)
+  selection.empty()
+
+  await wait(1)
+  selection.addRange(range)
+
+  await wait(10)
+  selectionState.bouncing = false
 }
 
 const CommentSelectionButton = ({ position, display, onClick }: CommentSelectionButtonProps) => {
@@ -290,6 +331,10 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     const onSelectionChange = () => {
       const selection = window.getSelection()
 
+      if (selectionState.bouncing) {
+        return
+      }
+
       if (
         !selection ||
         !selection.rangeCount ||
@@ -298,6 +343,10 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       ) {
         setDisplayCommentButton(false)
         return
+      }
+
+      if (iOS()) {
+        queueSelectionBounce()
       }
 
       const selectionDims = selection.getRangeAt(0).getBoundingClientRect()

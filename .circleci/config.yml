@@ -12,7 +12,7 @@ jobs:
       - run:
           command: npm run build:nexus
           name: Build Nexus
-      - run: npm run build:next
+      - run:
           command: npm run build:next
           name: Build Next
 

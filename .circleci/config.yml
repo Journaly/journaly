@@ -8,7 +8,17 @@ jobs:
     executor: node/default
     steps:
       - checkout
-      - node/install-packages
+      - restore_cache:
+          keys:
+            - node-deps-{{ checksum "package-lock.json" }}
+        - run:
+            command: npm ci
+            name: Installing NPM packages
+        - save_cache:
+            key: node-deps-{{ checksum "package-lock.json" }}
+            paths:
+                - ~/.npm
+                - ./.next/cache
       - run:
           command: npm run build:nexus
           name: Build Nexus

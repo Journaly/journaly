@@ -1,4 +1,6 @@
+import React from 'react'
 import { ApolloError } from '@apollo/client'
+import { FieldError } from 'react-hook-form'
 import theme from '../../theme'
 
 type ErrorProps = {
@@ -34,7 +36,7 @@ const ErrorMessage: React.FC<ErrorProps> = ({ error }) => (
 )
 
 type Props = {
-  error: ApolloError | string
+  error: ApolloError | string | (FieldError | undefined)[]
 }
 
 // Type must be augmented because of https://github.com/apollographql/apollo-link/issues/536
@@ -44,6 +46,20 @@ const FormError: React.FC<Props> = ({ error }) => {
   if (typeof error === 'string') {
     return <ErrorMessage error={error} />
   }
+  if (Array.isArray(error)) {
+    const fieldErrors = error.filter((field) => field !== undefined) as FieldError[]
+
+    return (
+      <>
+        {fieldErrors
+          .filter((fieldError) => fieldError !== undefined)
+          .map((fieldError, i) => (
+            <ErrorMessage key={i} error={fieldError.message} />
+          ))}
+      </>
+    )
+  }
+
   if (!error || !error.message) return null
 
   const result = (error.networkError as NetworkError)?.result

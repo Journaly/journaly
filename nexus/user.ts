@@ -9,7 +9,7 @@ import { BadgeType } from '@prisma/client'
 import { NotAuthorizedError } from './errors'
 import { sendPasswordResetTokenEmail } from './utils'
 import { intArg } from 'nexus/components/schema'
-import { validateUpdateUserMutationData } from './validation'
+import { validateUpdateUserMutationData } from './utils/userValidation'
 
 schema.objectType({
   name: 'User',

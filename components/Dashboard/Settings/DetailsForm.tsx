@@ -40,7 +40,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
   const [image, uploadingImage, onFileInputChange] = useImageUpload()
   const profileImage = image?.secure_url || currentUser.profileImage
 
-  const updateUserProfileImage = async (e: HTMLInputEvent) => {
+  const updateUserProfileImage = async (e: HTMLInputEvent): Promise<void> => {
     const image = await onFileInputChange(e)
     if (image) {
       updateUser({
@@ -84,7 +84,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
     }
   }
 
-  const errorInput = Object.values(errors)
+  const invalidFields = Object.values(errors)
 
   return (
     <SettingsForm onSubmit={handleSubmit(handleDetailsSubmit)}>
@@ -114,9 +114,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
           </div>
 
           <div className="details-form-fields-wrapper">
-            {errorInput.map((err) => (
-              <FormError key={err?.message as string} error={err?.message as string} />
-            ))}
+            <FormError error={invalidFields} />
 
             <div className="details-form-fields">
               <input

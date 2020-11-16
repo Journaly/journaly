@@ -1,14 +1,20 @@
 version: 2.1
+
 orbs:
   node: circleci/node@4.1.0
-workflows:
+
+jobs:
   build:
+    - checkout
+    - node/install-packages
+    - run:
+        command: npm run build:nexus
+        name: Build Nexus
+    - run: npm run build:next
+        command: npm run build:next
+        name: Build Next
+
+workflows:
+  main:
     jobs:
-      - checkout
-      - node/install-packages
-      - run:
-          command: npm run build:nexus
-          name: Build Nexus
-      - run: npm run build:next
-          command: npm run build:next
-          name: Build Next
+      - build

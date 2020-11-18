@@ -50,6 +50,7 @@
     "escape-html": "^1.0.3",
     "is-hotkey": "^0.1.6",
     "isomorphic-unfetch": "^3.0.0",
+    "@journaly/j-db-client": "./j-db-client",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
     "next": "9.3.2",

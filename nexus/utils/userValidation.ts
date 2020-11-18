@@ -1,5 +1,6 @@
 import { integer } from 'aws-sdk/clients/cloudfront'
 import { InvalidInput, UserInputError } from '../errors'
+import { PrismaClient, User } from '@prisma/client'
 
 const CheckIfMatchPattern = (email?: string, handle?: string): InvalidInput[] => {
   const handleRegex = /^[a-zA-Z0-9_-]{3,}$/i
@@ -23,7 +24,7 @@ const CheckIfMatchPattern = (email?: string, handle?: string): InvalidInput[] =>
 }
 
 const CheckIfUnique = async (
-  db: any,
+  db: PrismaClient,
   userId: integer,
   email?: string,
   handle?: string,
@@ -47,10 +48,10 @@ const CheckIfUnique = async (
     },
   })
 
-  if (email && users.some((u: any) => u.email === email))
+  if (email && users.some((u: User) => u.email === email))
     invalidFields.push({ name: 'email', message: 'profile.error.emailAlreadyinUseError' })
 
-  if (handle && users.some((u: any) => u.handle === handle))
+  if (handle && users.some((u: User) => u.handle === handle))
     invalidFields.push({
       name: 'handle',
       message: 'profile.error.handleAlreadyinUseError',
@@ -59,7 +60,10 @@ const CheckIfUnique = async (
   return invalidFields
 }
 
-export const validateUpdateUserMutationData = async (args: any, ctx: any): Promise<void> => {
+export const validateUpdateUserMutationData = async (
+  args: { email?: string; handle?: string },
+  ctx: { db: PrismaClient; request: { userId: number } },
+): Promise<void> => {
   const { email, handle } = args
   const { userId } = ctx.request
 

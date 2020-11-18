@@ -134,7 +134,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   className={`j-field ${errors.handle ? 'is-invalid' : ''}`}
                   defaultValue={currentUser.handle}
                   ref={register({
-                    required: t('profile.details.displayNameError') as string,
+                    required: `${t('profile.details.displayNameError')}`,
                     pattern: {
                       value: /^[a-zA-Z0-9_-]+$/,
                       message: `${t('profile.error.handleValidationErrorMessage')}`,
@@ -144,11 +144,11 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                       message: `${t('profile.error.handleMinimumErrorMessage')}`,
                     },
                     validate: {
-                      server: (val) => {
+                      server: (val): string | true => {
                         return (
                           errors?.handle?.type !== 'server' ||
                           val !== previousState?.handle ||
-                          (t('profile.error.handleAlreadyinUseError') as string)
+                          `${t('profile.error.handleAlreadyinUseError')}`
                         )
                       },
                     },
@@ -165,16 +165,16 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   className={`j-field ${errors.email ? 'is-invalid' : ''}`}
                   defaultValue={currentUser.email}
                   ref={register({
-                    required: t('profile.details.emailError') as string,
+                    required: `${t('profile.details.emailError')}`,
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: `${t('profile.error.emailValidationErrorMessage')}`,
                     },
                     validate: {
-                      server: (val) =>
+                      server: (val): string | true =>
                         errors?.email?.type !== 'server' ||
                         val !== previousState?.email ||
-                        (t('profile.error.emailAlreadyinUseError') as string),
+                        `${t('profile.error.emailAlreadyinUseError')}`,
                     },
                   })}
                 />

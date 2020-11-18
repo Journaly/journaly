@@ -2,7 +2,10 @@ import { integer } from 'aws-sdk/clients/cloudfront'
 import { InvalidInput, UserInputError } from '../errors'
 import { PrismaClient, User } from '@prisma/client'
 
-const CheckIfMatchPattern = (email?: string, handle?: string): InvalidInput[] => {
+// Nexus non-required args can be null or undefined. We treat them the same.
+type ArgString = string | null | undefined
+
+const CheckIfMatchPattern = (email: ArgString, handle: ArgString): InvalidInput[] => {
   const handleRegex = /^[a-zA-Z0-9_-]{3,}$/i
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
 
@@ -26,8 +29,8 @@ const CheckIfMatchPattern = (email?: string, handle?: string): InvalidInput[] =>
 const CheckIfUnique = async (
   db: PrismaClient,
   userId: integer,
-  email?: string,
-  handle?: string,
+  email: ArgString,
+  handle: ArgString,
 ): Promise<InvalidInput[]> => {
   const invalidFields: InvalidInput[] = []
 
@@ -61,7 +64,7 @@ const CheckIfUnique = async (
 }
 
 export const validateUpdateUserMutationData = async (
-  args: { email?: string; handle?: string },
+  args: { email?: ArgString; handle?: ArgString },
   ctx: { db: PrismaClient; request: { userId: number } },
 ): Promise<void> => {
   const { email, handle } = args

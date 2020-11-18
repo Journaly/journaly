@@ -18,7 +18,8 @@
       "displayNameError": "You must have a handle",
       "emailLabel": "Email",
       "emailError": "Email is required",
-      "locationLabel": "Location (optional)"
+      "locationLabel": "Location (optional)",
+      "updateSuccess": "Profile details successfully updated."
     },
     "languages": {
       "legend": "Languages",
@@ -46,7 +47,12 @@
       "personalWebsitePlaceholder": "Do you have a website?"
     },
     "error": {
-      "updateError": "There was an error updating your profile."
+      "updateError": "There was an error updating your profile.",
+      "handleValidationErrorMessage": "Handle may only contain letters, numbers, _, -, with no spaces",
+      "handleAlreadyinUseError": "This handle is already in use",
+      "handleMinimumErrorMessage": "Your handle must be at least 3 characters",
+      "emailValidationErrorMessage": "Invalid email address",
+      "emailAlreadyinUseError": "This email address is already in use"
     }
   },
   "account":{

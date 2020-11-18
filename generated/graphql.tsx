@@ -151,6 +151,7 @@ export type Mutation = {
   deletePostComment?: Maybe<PostComment>
   createPost?: Maybe<Post>
   updatePost?: Maybe<Post>
+  deletePost?: Maybe<Post>
   createUser?: Maybe<User>
   updateUser?: Maybe<User>
   updatePassword?: Maybe<User>
@@ -224,6 +225,10 @@ export type MutationUpdatePostArgs = {
   images?: Maybe<Array<ImageInput>>
 }
 
+export type MutationDeletePostArgs = {
+  postId: Scalars['Int']
+}
+
 export type MutationCreateUserArgs = {
   handle: Scalars['String']
   email: Scalars['String']
@@ -235,6 +240,7 @@ export type MutationUpdateUserArgs = {
   name?: Maybe<Scalars['String']>
   profileImage?: Maybe<Scalars['String']>
   bio?: Maybe<Scalars['String']>
+  handle?: Maybe<Scalars['String']>
 }
 
 export type MutationUpdatePasswordArgs = {
@@ -823,6 +829,30 @@ export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
   removeLanguageRelation?: Maybe<{ __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>>
 }
 
+export type PostPageQueryVariables = {
+  id: Scalars['Int']
+  uiLanguage: UiLanguage
+}
+
+export type PostPageQuery = { __typename?: 'Query' } & {
+  postById?: Maybe<{ __typename?: 'Post' } & PostWithTopicsFragmentFragment>
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+}
+
+export type ProfilePageQueryVariables = {
+  userId: Scalars['Int']
+}
+
+export type ProfilePageQuery = { __typename?: 'Query' } & {
+  userById?: Maybe<{ __typename?: 'User' } & ProfileUserFragmentFragment>
+  posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+}
+
+export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
+  badges: Array<{ __typename?: 'UserBadge' } & UserBadgeFragmentFragment>
+} & UserWithLanguagesFragmentFragment
+
 export type CreatePostMutationVariables = {
   title: Scalars['String']
   body?: Maybe<Array<EditorNode>>
@@ -834,6 +864,14 @@ export type CreatePostMutationVariables = {
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
   createPost?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'id'>>
+}
+
+export type DeletePostMutationVariables = {
+  postId: Scalars['Int']
+}
+
+export type DeletePostMutation = { __typename?: 'Mutation' } & {
+  deletePost?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'id'>>
 }
 
 export type EditPostQueryVariables = {
@@ -914,20 +952,6 @@ export type UpdatePostMutationVariables = {
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
   updatePost?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
 }
-
-export type ProfileQueryVariables = {
-  userId: Scalars['Int']
-}
-
-export type ProfileQuery = { __typename?: 'Query' } & {
-  userById?: Maybe<{ __typename?: 'User' } & ProfileUserFragmentFragment>
-  posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
-  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
-}
-
-export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
-  badges: Array<{ __typename?: 'UserBadge' } & UserBadgeFragmentFragment>
-} & UserWithLanguagesFragmentFragment
 
 export type CreateCommentThanksMutationVariables = {
   commentId: Scalars['Int']
@@ -1049,6 +1073,7 @@ export type UpdateUserMutationVariables = {
   name?: Maybe<Scalars['String']>
   profileImage?: Maybe<Scalars['String']>
   bio?: Maybe<Scalars['String']>
+  handle?: Maybe<Scalars['String']>
 }
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
@@ -1919,6 +1944,113 @@ export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutati
   RemoveLanguageRelationMutation,
   RemoveLanguageRelationMutationVariables
 >
+export const PostPageDocument = gql`
+  query postPage($id: Int!, $uiLanguage: UILanguage!) {
+    postById(id: $id) {
+      ...PostWithTopicsFragment
+    }
+    currentUser {
+      ...UserWithLanguagesFragment
+    }
+  }
+  ${PostWithTopicsFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
+`
+
+/**
+ * __usePostPageQuery__
+ *
+ * To run a query within a React component, call `usePostPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostPageQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      uiLanguage: // value for 'uiLanguage'
+ *   },
+ * });
+ */
+export function usePostPageQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<PostPageQuery, PostPageQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<PostPageQuery, PostPageQueryVariables>(
+    PostPageDocument,
+    baseOptions,
+  )
+}
+export function usePostPageLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PostPageQuery, PostPageQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<PostPageQuery, PostPageQueryVariables>(
+    PostPageDocument,
+    baseOptions,
+  )
+}
+export type PostPageQueryHookResult = ReturnType<typeof usePostPageQuery>
+export type PostPageLazyQueryHookResult = ReturnType<typeof usePostPageLazyQuery>
+export type PostPageQueryResult = ApolloReactCommon.QueryResult<
+  PostPageQuery,
+  PostPageQueryVariables
+>
+export const ProfilePageDocument = gql`
+  query profilePage($userId: Int!) {
+    userById(id: $userId) {
+      ...ProfileUserFragment
+    }
+    posts(authorId: $userId, status: PUBLISHED) {
+      ...PostCardFragment
+    }
+    currentUser {
+      ...UserWithLanguagesFragment
+    }
+  }
+  ${ProfileUserFragmentFragmentDoc}
+  ${PostCardFragmentFragmentDoc}
+  ${UserWithLanguagesFragmentFragmentDoc}
+`
+
+/**
+ * __useProfilePageQuery__
+ *
+ * To run a query within a React component, call `useProfilePageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfilePageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfilePageQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useProfilePageQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<ProfilePageQuery, ProfilePageQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<ProfilePageQuery, ProfilePageQueryVariables>(
+    ProfilePageDocument,
+    baseOptions,
+  )
+}
+export function useProfilePageLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ProfilePageQuery, ProfilePageQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<ProfilePageQuery, ProfilePageQueryVariables>(
+    ProfilePageDocument,
+    baseOptions,
+  )
+}
+export type ProfilePageQueryHookResult = ReturnType<typeof useProfilePageQuery>
+export type ProfilePageLazyQueryHookResult = ReturnType<typeof useProfilePageLazyQuery>
+export type ProfilePageQueryResult = ApolloReactCommon.QueryResult<
+  ProfilePageQuery,
+  ProfilePageQueryVariables
+>
 export const CreatePostDocument = gql`
   mutation createPost(
     $title: String!
@@ -1983,6 +2115,52 @@ export type CreatePostMutationResult = ApolloReactCommon.MutationResult<CreatePo
 export type CreatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreatePostMutation,
   CreatePostMutationVariables
+>
+export const DeletePostDocument = gql`
+  mutation deletePost($postId: Int!) {
+    deletePost(postId: $postId) {
+      id
+    }
+  }
+`
+export type DeletePostMutationFn = ApolloReactCommon.MutationFunction<
+  DeletePostMutation,
+  DeletePostMutationVariables
+>
+
+/**
+ * __useDeletePostMutation__
+ *
+ * To run a mutation, you first call `useDeletePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePostMutation, { data, loading, error }] = useDeletePostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useDeletePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeletePostMutation,
+    DeletePostMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<DeletePostMutation, DeletePostMutationVariables>(
+    DeletePostDocument,
+    baseOptions,
+  )
+}
+export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>
+export type DeletePostMutationResult = ApolloReactCommon.MutationResult<DeletePostMutation>
+export type DeletePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeletePostMutation,
+  DeletePostMutationVariables
 >
 export const EditPostDocument = gql`
   query editPost($id: Int!, $uiLanguage: UILanguage!) {
@@ -2319,58 +2497,6 @@ export type UpdatePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdatePostMutation,
   UpdatePostMutationVariables
 >
-export const ProfileDocument = gql`
-  query profile($userId: Int!) {
-    userById(id: $userId) {
-      ...ProfileUserFragment
-    }
-    posts(authorId: $userId, status: PUBLISHED) {
-      ...PostCardFragment
-    }
-    currentUser {
-      ...UserWithLanguagesFragment
-    }
-  }
-  ${ProfileUserFragmentFragmentDoc}
-  ${PostCardFragmentFragmentDoc}
-  ${UserWithLanguagesFragmentFragmentDoc}
-`
-
-/**
- * __useProfileQuery__
- *
- * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
- * When your component renders, `useProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useProfileQuery({
- *   variables: {
- *      userId: // value for 'userId'
- *   },
- * });
- */
-export function useProfileQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<ProfileQuery, ProfileQueryVariables>,
-) {
-  return ApolloReactHooks.useQuery<ProfileQuery, ProfileQueryVariables>(
-    ProfileDocument,
-    baseOptions,
-  )
-}
-export function useProfileLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>,
-) {
-  return ApolloReactHooks.useLazyQuery<ProfileQuery, ProfileQueryVariables>(
-    ProfileDocument,
-    baseOptions,
-  )
-}
-export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>
-export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>
-export type ProfileQueryResult = ApolloReactCommon.QueryResult<ProfileQuery, ProfileQueryVariables>
 export const CreateCommentThanksDocument = gql`
   mutation createCommentThanks($commentId: Int!) {
     createCommentThanks(commentId: $commentId) {
@@ -3009,8 +3135,20 @@ export type UpdatePasswordMutationOptions = ApolloReactCommon.BaseMutationOption
   UpdatePasswordMutationVariables
 >
 export const UpdateUserDocument = gql`
-  mutation updateUser($email: String, $name: String, $profileImage: String, $bio: String) {
-    updateUser(email: $email, name: $name, profileImage: $profileImage, bio: $bio) {
+  mutation updateUser(
+    $email: String
+    $name: String
+    $profileImage: String
+    $bio: String
+    $handle: String
+  ) {
+    updateUser(
+      email: $email
+      name: $name
+      profileImage: $profileImage
+      bio: $bio
+      handle: $handle
+    ) {
       ...UserFragment
     }
   }
@@ -3038,6 +3176,7 @@ export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
  *      name: // value for 'name'
  *      profileImage: // value for 'profileImage'
  *      bio: // value for 'bio'
+ *      handle: // value for 'handle'
  *   },
  * });
  */

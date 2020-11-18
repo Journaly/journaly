@@ -1,4 +1,4 @@
-query profile($userId: Int!) {
+query profilePage($userId: Int!) {
   userById(id: $userId) {
     ...ProfileUserFragment
   }

@@ -2,7 +2,11 @@ import React from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 
-import { sanitize } from '../../../utils'
+import {
+  sanitize,
+  iOS,
+  wait,
+} from '../../../utils'
 import {
   PostWithTopicsFragmentFragment as PostType,
   UserFragmentFragment as UserType,
@@ -10,8 +14,10 @@ import {
   PostStatus,
   useCreateThreadMutation,
   useUpdatePostMutation,
+  useDeletePostMutation,
   Image as ImageType,
   ImageRole,
+  Post as PostModel,
 } from '../../../generated/graphql'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
@@ -20,6 +26,7 @@ import PencilIcon from '../../Icons/PencilIcon'
 import InlineFeedbackPopover from '../../InlineFeedbackPopover'
 import { Router, useTranslation } from '../../../config/i18n'
 import PostHeader from '../../PostHeader'
+import ConfirmationModal from '../../Modals/ConfirmationModal'
 
 interface IPostProps {
   post: PostType
@@ -37,6 +44,43 @@ type CommentSelectionButtonProps = {
   }
   display: boolean
   onClick: React.MouseEventHandler
+}
+
+type SelectionState = {
+  bouncing: boolean
+  lastTimeout: number | null
+}
+
+const selectionState: SelectionState = {
+  bouncing: false,
+  lastTimeout: null,
+}
+
+const queueSelectionBounce = () => {
+  selectionState.bouncing = true
+
+  if (selectionState.lastTimeout) {
+    window.clearTimeout(selectionState.lastTimeout)
+  }
+
+  selectionState.lastTimeout = window.setTimeout(bounceSelection, 500)
+}
+
+const bounceSelection = async () => {
+  const selection = window.getSelection()
+
+  if (!selection || !selection.rangeCount) return
+
+  const range = selection.getRangeAt(0)
+
+  await wait(1)
+  selection.empty()
+
+  await wait(1)
+  selection.addRange(range)
+
+  await wait(10)
+  selectionState.bouncing = false
 }
 
 const CommentSelectionButton = ({ position, display, onClick }: CommentSelectionButtonProps) => {
@@ -204,6 +248,28 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
   const [activeThreadId, setActiveThreadId] = React.useState<number>(-1)
   const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
   const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
+  const [displayDeleteModal, setDisplayDeleteModal] = React.useState(false)
+  const [deletePost] = useDeletePostMutation({
+    onCompleted: () => {
+      toast.success(t('deletePostSuccess'))
+      Router.push('/dashboard/my-posts')
+    },
+    onError: () => {
+      toast.error(t('deletePostError'))
+    },
+    update: (cache, { data }) => {
+      const dp = data?.deletePost
+      if (dp?.id && dp?.__typename) {
+        cache.modify({
+          fields: {
+            posts(existingPosts = []): PostModel[] {
+              return existingPosts.filter((p: any) => p.__ref !== `${dp.__typename}:${dp.id}`)
+            },
+          },
+        })
+      }
+    },
+  })
   const [createThread] = useCreateThreadMutation({
     onCompleted: ({ createThread }) => {
       if (!createThread) {
@@ -265,6 +331,10 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     const onSelectionChange = () => {
       const selection = window.getSelection()
 
+      if (selectionState.bouncing) {
+        return
+      }
+
       if (
         !selection ||
         !selection.rangeCount ||
@@ -273,6 +343,10 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       ) {
         setDisplayCommentButton(false)
         return
+      }
+
+      if (iOS()) {
+        queueSelectionBounce()
       }
 
       const selectionDims = selection.getRangeAt(0).getBoundingClientRect()
@@ -405,17 +479,24 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
               >
                 {t('editPostAction')}
               </Button>
-              {
-                post.status === 'DRAFT' && (
-                  <Button
-                    type="button"
-                    variant={ButtonVariant.Secondary}
-                    onClick={setPostStatus(PostStatus.Published)}
-                  >
-                    {t('publishDraft')}
-                  </Button>
-                )
-              }
+              {post.status === 'DRAFT' && (
+                <Button
+                  type="button"
+                  variant={ButtonVariant.Secondary}
+                  onClick={setPostStatus(PostStatus.Published)}
+                >
+                  {t('publishDraft')}
+                </Button>
+              )}
+              <Button
+                type="button"
+                variant={ButtonVariant.DestructiveSecondary}
+                onClick={(): void => {
+                  setDisplayDeleteModal(true)
+                }}
+              >
+                {t('deletePostAction')}
+              </Button>
             </>
           </div>
         )}
@@ -436,6 +517,18 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           ref={popoverRef}
         />
       )}
+      <ConfirmationModal
+        onConfirm={(): void => {
+          deletePost({ variables: { postId: post.id } })
+          setDisplayDeleteModal(false)
+        }}
+        onCancel={(): void => {
+          setDisplayDeleteModal(false)
+        }}
+        title={t('deleteModal.title')}
+        body={t('deleteModal.body')}
+        show={displayDeleteModal}
+      />
       <PostBodyStyles parentClassName="post-body" />
       <style>{`
         .thread-highlight {

@@ -9,6 +9,8 @@ import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
 import { User as UserType, useUpdateUserMutation } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
+import { ApolloError } from '@apollo/client'
+import { toast } from 'react-toastify'
 
 type DetailsFormProps = {
   currentUser: UserType
@@ -18,18 +20,27 @@ interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
 }
 
+type FormData = {
+  name: string
+  email: string
+  handle: string
+}
+
 const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
-  const [handle, setHandle] = useState(currentUser.handle)
-  const [email, setEmail] = useState(currentUser.email)
-  const [name, setName] = useState(currentUser.name || '')
+  const { t } = useTranslation('settings')
+  const [previousState, setPreviousFormData] = useState<FormData>()
   const fileInput = useRef<HTMLInputElement>(null)
 
-  const [updateUser, { loading: loadingUpdateUser }] = useUpdateUserMutation()
+  const [updateUser, { loading: loadingUpdateUser }] = useUpdateUserMutation({
+    onCompleted: () => {
+      toast.success(t('profile.details.updateSuccess'))
+    },
+  })
 
   const [image, uploadingImage, onFileInputChange] = useImageUpload()
   const profileImage = image?.secure_url || currentUser.profileImage
 
-  const updateUserProfileImage = async (e: HTMLInputEvent) => {
+  const updateUserProfileImage = async (e: HTMLInputEvent): Promise<void> => {
     const image = await onFileInputChange(e)
     if (image) {
       updateUser({
@@ -40,29 +51,43 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
     }
   }
 
-  const { t } = useTranslation('settings')
-  const { handleSubmit, register, errors } = useForm({
+  const { handleSubmit, register, errors, setError } = useForm<FormData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
   })
 
-  const fieldErrorName = Object.keys(errors)[0] || ''
-  const fieldError = errors[fieldErrorName]
+  const addServerErrors = (apolloError: ApolloError): void => {
+    const badRequest = (apolloError.networkError as any).result.errors[0].extensions
+    if (!badRequest || badRequest.statusCode !== 400) {
+      toast.error(t('profile.error.updateError'))
+      return
+    }
 
-  const handleDetailsSubmit = (): void => {
+    badRequest.validationErrors.forEach((err: any): void => {
+      setError(err.name, 'server', t(err.message))
+    })
+  }
+
+  const handleDetailsSubmit = async (formData: FormData): Promise<void> => {
     if (!loadingUpdateUser && Object.keys(errors).length === 0) {
-      updateUser({
+      setPreviousFormData(formData)
+      await updateUser({
         variables: {
-          name,
-          email,
-          profileImage,
+          name: formData.name,
+          email: formData.email,
+          handle: formData.handle,
+          profileImage: profileImage,
         },
+      }).catch((err) => {
+        addServerErrors(err)
       })
     }
   }
 
+  const invalidFields = Object.values(errors)
+
   return (
-    <SettingsForm onSubmit={handleSubmit(handleDetailsSubmit)} errorInputName={fieldErrorName}>
+    <SettingsForm onSubmit={handleSubmit(handleDetailsSubmit)}>
       <SettingsFieldset legend={t('profile.details.legend')}>
         <div className="details-wrapper">
           <div className="profile-image-wrapper">
@@ -89,7 +114,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
           </div>
 
           <div className="details-form-fields-wrapper">
-            {fieldError && <FormError error={fieldError.message as string} />}
+            <FormError error={invalidFields} />
 
             <div className="details-form-fields">
               <input
@@ -106,11 +131,28 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                 <input
                   type="text"
                   name="handle"
-                  value={handle}
-                  className="j-field"
-                  onChange={(e) => setHandle(e.target.value)}
-                  ref={register({ required: t('profile.details.displayNameError') as string })}
-                  disabled={true}
+                  className={`j-field ${errors.handle ? 'is-invalid' : ''}`}
+                  defaultValue={currentUser.handle}
+                  ref={register({
+                    required: `${t('profile.details.displayNameError')}`,
+                    pattern: {
+                      value: /^[a-zA-Z0-9_-]+$/,
+                      message: `${t('profile.error.handleValidationErrorMessage')}`,
+                    },
+                    minLength: {
+                      value: 6,
+                      message: `${t('profile.error.handleMinimumErrorMessage')}`,
+                    },
+                    validate: {
+                      server: (val): string | true => {
+                        return (
+                          errors?.handle?.type !== 'server' ||
+                          val !== previousState?.handle ||
+                          `${t('profile.error.handleAlreadyinUseError')}`
+                        )
+                      },
+                    },
+                  })}
                 />
               </div>
               <div className="details-form-field">
@@ -120,10 +162,21 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                 <input
                   type="text"
                   name="email"
-                  value={email}
-                  className="j-field"
-                  onChange={(e) => setEmail(e.target.value)}
-                  ref={register({ required: t('profile.details.emailError') as string })}
+                  className={`j-field ${errors.email ? 'is-invalid' : ''}`}
+                  defaultValue={currentUser.email}
+                  ref={register({
+                    required: `${t('profile.details.emailError')}`,
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: `${t('profile.error.emailValidationErrorMessage')}`,
+                    },
+                    validate: {
+                      server: (val): string | true =>
+                        errors?.email?.type !== 'server' ||
+                        val !== previousState?.email ||
+                        `${t('profile.error.emailAlreadyinUseError')}`,
+                    },
+                  })}
                 />
               </div>
               <div className="details-form-field">
@@ -134,9 +187,8 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   type="text"
                   id="name"
                   name="name"
-                  value={name}
-                  className="j-field"
-                  onChange={(e) => setName(e.target.value)}
+                  className={`j-field ${errors.name ? 'is-invalid' : ''}`}
+                  defaultValue={currentUser.name || ''}
                   ref={register()}
                 />
               </div>

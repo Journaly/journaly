@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { withApollo } from '../../../../lib/apollo'
 import LoadingWrapper from '../../../../components/LoadingWrapper'
 import DashboardLayout from '../../../../components/Layouts/DashboardLayout'
-import { useProfileQuery } from '../../../../generated/graphql'
+import { useProfilePageQuery } from '../../../../generated/graphql'
 import Profile from '../../../../components/Dashboard/Profile'
 
 interface InitialProps {
@@ -16,7 +16,7 @@ const ProfilePage: NextPage<InitialProps> = () => {
   const idStr = useRouter().query.id as string
   const userId = parseInt(idStr, 10)
 
-  const { data, loading, error } = useProfileQuery({ variables: { userId } })
+  const { data, loading, error } = useProfilePageQuery({ variables: { userId } })
 
   const {
     userById,

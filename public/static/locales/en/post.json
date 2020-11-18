@@ -7,6 +7,9 @@
   "readAction": "Read post",
   "editPost": "Edit Post",
   "editPostAction": "Edit Post",
+  "deletePostAction": "Delete Post",
+  "deletePostSuccess": "Post successfully deleted!",
+  "deletePostError": "There was an error while deleting post.",
   "titleLabel": "Title",
   "languageLabel": "Language",
   "save": "Save",
@@ -14,5 +17,9 @@
   "noLanguageError": "Please select a language.",
   "emptyTitleError": "Please specify a non-empty title.",
   "draftPublishedSuccess": "Post successfully published!",
-  "postBy": "by"
+  "postBy": "by",
+  "deleteModal": {
+    "title": "Delete Post",
+    "body": "Are you sure you want to delete this post?"
+  }
 }

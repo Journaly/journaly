@@ -26,7 +26,8 @@
     "type-check": "tsc",
     "seed": "ts-node -O '{\"module\": \"commonjs\"}' scripts/seed.ts",
     "diff-test": "ts-node -O '{\"module\": \"commonjs\"}' scripts/diff-test.ts",
-    "debug": "ndb -r ts-node/register node_modules/.bin/nexus dev"
+    "debug": "ndb -r ts-node/register node_modules/.bin/nexus dev",
+    "foo": "ts-node -O '{\"module\": \"commonjs\"}' example.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.2.5",

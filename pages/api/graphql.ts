@@ -14,18 +14,6 @@ schema.addToContext((request: any) => ({
   request,
   response: request.response,
 }))
-
-app.assemble()
-
-function handler(req: any, res: any) {
-  const { token } = req.cookies
-  req.response = res
-  if (token) {
-    const { userId } = jwt.verify(token, process.env.APP_SECRET!) as any
-    req.userId = userId
-  }
-  return app.server.handlers.graphql(req, res)
-}
 */
 
 const db = new PrismaClient()
@@ -43,10 +31,14 @@ export const config = {
   }
 };
 
-const hz = (...args) => {
-  console.log('hey!');
-  return graphqlHandler(...args);
+const handler = (req: any, res: any) => {
+  const { token } = req.cookies
+  req.response = res
+  if (token) {
+    const { userId } = jwt.verify(token, process.env.APP_SECRET!) as any
+    req.userId = userId
+  }
+  return graphqlHandler(req, res)
 }
 
-export default hz;
-//export default handler
+export default handler

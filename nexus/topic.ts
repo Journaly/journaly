@@ -1,6 +1,7 @@
-import { schema } from 'nexus'
+import { arg, booleanArg, objectType, queryType } from '@nexus/schema'
 
-schema.objectType({
+
+const TopicTranslation = objectType({
   name: 'TopicTranslation',
   definition(t) {
     t.model.id()
@@ -9,14 +10,14 @@ schema.objectType({
   },
 })
 
-schema.objectType({
+const Topic = objectType({
   name: 'Topic',
   definition(t) {
     t.model.id()
     t.string('name', {
       nullable: true,
       args: {
-        uiLanguage: schema.arg({ type: 'UILanguage', required: true }),
+        uiLanguage: arg({ type: 'UILanguage', required: true }),
       },
       async resolve(parent, args, ctx, _info) {
         const translation = await ctx.db.topicTranslation.findOne({
@@ -34,13 +35,12 @@ schema.objectType({
   },
 })
 
-schema.extendType({
-  type: 'Query',
+const TopicQueries = queryType({
   definition(t) {
     t.list.field('topics', {
       type: 'Topic',
       args: {
-        hasPosts: schema.booleanArg({ required: false }),
+        hasPosts: booleanArg({ required: false }),
       },
       resolve: async (_parent, _args, ctx) => {
         let filter = undefined
@@ -56,6 +56,7 @@ schema.extendType({
         }
         */
 
+        console.log(ctx)
         return ctx.db.topic.findMany({
           where: filter,
           orderBy: {
@@ -66,3 +67,9 @@ schema.extendType({
     })
   },
 })
+
+export default [
+  TopicTranslation,
+  Topic,
+  TopicQueries,
+]

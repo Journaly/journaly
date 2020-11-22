@@ -1,13 +1,12 @@
 require('dotenv').config()
 import jwt from 'jsonwebtoken'
-import { schema } from 'nexus'
+import { ApolloServer, gql } from 'apollo-server-micro'
+import { PrismaClient } from '@prisma/client'
 
-if (process.env.NODE_ENV === 'development') require('nexus').default.reset()
+import { schema } from '../../nexus'
 
-const app = require('nexus').default
 
-require('../../nexus')
-
+/*
 // Watch https://github.com/graphql-nexus/nexus/issues/524
 // and https://github.com/graphql-nexus/nexus/issues/523 for future
 // changes to this function
@@ -27,5 +26,27 @@ function handler(req: any, res: any) {
   }
   return app.server.handlers.graphql(req, res)
 }
+*/
 
-export default handler
+const db = new PrismaClient()
+
+const server = new ApolloServer({
+  schema,
+  context: () => ({ db })
+})
+
+const graphqlHandler = server.createHandler({ path: '/api/graphql' })
+
+export const config = {
+  api: {
+    bodyParser: false
+  }
+};
+
+const hz = (...args) => {
+  console.log('hey!');
+  return graphqlHandler(...args);
+}
+
+export default hz;
+//export default handler

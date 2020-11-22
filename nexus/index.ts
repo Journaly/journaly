@@ -1,22 +1,16 @@
 import { makeSchema } from '@nexus/schema'
 import { nexusPrisma } from 'nexus-plugin-prisma'
 
-
-/*
-import './graphql'
-import './post'
-import './user'
-import './language'
-import './image'
-import './comment'
-import './like'
-import './topic'
-import './thanks'
-*/
-
+import CommentTypes from './comment'
 import TopicTypes from './topic'
 import ImageTypes from './image'
 import InputTypes from './inputTypes'
+import PostTypes from './post'
+import UserTypes from './user'
+import LanguageTypes from './language'
+import LikeTypes from './like'
+import ThanksTypes from './thanks'
+import MiscTypes from './graphql'
 
 const schema = makeSchema({
   typegenAutoConfig: {
@@ -38,6 +32,13 @@ const schema = makeSchema({
     ...ImageTypes,
     ...TopicTypes,
     ...InputTypes,
+    ...CommentTypes,
+    ...PostTypes,
+    ...UserTypes,
+    ...LanguageTypes,
+    ...LikeTypes,
+    ...ThanksTypes,
+    ...MiscTypes,
   ],
   plugins: [nexusPrisma()]
 })

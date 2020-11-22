@@ -1,10 +1,14 @@
-import { schema } from 'nexus'
+import {
+  intArg,
+  stringArg,
+  objectType,
+  mutationType
+} from '@nexus/schema'
 
 import { hasAuthorPermissions, sendCommentNotification, sendPostCommentNotification } from './utils'
 import { NotFoundError } from './errors'
-const { intArg, stringArg } = schema
 
-schema.objectType({
+const Thread = objectType({
   name: 'Thread',
   definition(t) {
     t.model.id()
@@ -20,7 +24,7 @@ schema.objectType({
   },
 })
 
-schema.objectType({
+const Comment = objectType({
   name: 'Comment',
   definition(t) {
     t.model.id()
@@ -31,7 +35,7 @@ schema.objectType({
   },
 })
 
-schema.objectType({
+const PostComment = objectType({
   name: 'PostComment',
   definition(t) {
     t.model.id()
@@ -41,7 +45,7 @@ schema.objectType({
   },
 })
 
-schema.mutationType({
+const CommentMutations = mutationType({
   definition(t) {
     t.field('createThread', {
       type: 'Thread',
@@ -422,3 +426,10 @@ schema.mutationType({
     })
   },
 })
+
+export default [
+  Thread,
+  Comment,
+  PostComment,
+  CommentMutations,
+]

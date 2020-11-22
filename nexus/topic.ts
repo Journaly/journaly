@@ -1,4 +1,9 @@
-import { arg, booleanArg, objectType, queryType } from '@nexus/schema'
+import {
+  arg,
+  booleanArg,
+  objectType,
+  queryType
+} from '@nexus/schema'
 
 
 const TopicTranslation = objectType({
@@ -44,19 +49,7 @@ const TopicQueries = queryType({
       },
       resolve: async (_parent, _args, ctx) => {
         let filter = undefined
-        /*
-        if (args.hasPosts) {
-          filter = {
-            postTopics: {
-              some: {
-                post: { status: PostStatus.PUBLISHED },
-              },
-            },
-          }
-        }
-        */
 
-        console.log(ctx)
         return ctx.db.topic.findMany({
           where: filter,
           orderBy: {

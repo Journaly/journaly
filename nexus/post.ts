@@ -1,4 +1,12 @@
-import { schema } from 'nexus'
+import {
+  arg,
+  intArg,
+  stringArg,
+  booleanArg,
+  objectType,
+  queryType,
+  mutationType
+} from '@nexus/schema'
 
 import {
   processEditorDocument,
@@ -69,7 +77,7 @@ const assignPostCountBadges = async (
   }
 }
 
-schema.objectType({
+const PostTopics = objectType({
   name: 'PostTopic',
   definition(t) {
     t.model.id()
@@ -78,7 +86,7 @@ schema.objectType({
   },
 })
 
-schema.objectType({
+const Post = objectType({
   name: 'Post',
   definition(t) {
     t.model.id()
@@ -128,7 +136,7 @@ schema.objectType({
 // Includes 1 page and the total number of posts.
 // posts: the returned page after filtering.
 // count: the total posts matching the filter.
-schema.objectType({
+const PostPage = objectType({
   name: 'PostPage',
   definition(t) {
     t.list.field('posts', {
@@ -138,14 +146,13 @@ schema.objectType({
   },
 })
 
-schema.extendType({
-  type: 'Query',
+const PostQueries = queryType({
   definition(t) {
     t.list.field('posts', {
       type: 'Post',
       args: {
-        status: schema.arg({ type: 'PostStatus', required: true }),
-        authorId: schema.intArg({ required: true }),
+        status: arg({ type: 'PostStatus', required: true }),
+        authorId: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         return ctx.db.post.findMany({
@@ -163,7 +170,7 @@ schema.extendType({
     t.field('postById', {
       type: 'Post',
       args: {
-        id: schema.intArg(),
+        id: intArg(),
       },
       resolve: async (_parent, args, ctx) => {
         const post = await ctx.db.post.findOne({
@@ -187,12 +194,12 @@ schema.extendType({
     t.field('feed', {
       type: 'PostPage',
       args: {
-        search: schema.stringArg({ required: false }),
-        languages: schema.intArg({ required: false, list: true }),
-        topic: schema.intArg({ required: false }),
-        skip: schema.intArg(),
-        first: schema.intArg(),
-        followedAuthors: schema.booleanArg({ required: false }),
+        search: stringArg({ required: false }),
+        languages: intArg({ required: false, list: true }),
+        topic: intArg({ required: false }),
+        skip: intArg(),
+        first: intArg(),
+        followedAuthors: booleanArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -286,17 +293,16 @@ schema.extendType({
   },
 })
 
-schema.extendType({
-  type: 'Mutation',
+const PostMutations = mutationType({
   definition(t) {
     t.field('createPost', {
       type: 'Post',
       args: {
-        title: schema.stringArg({ required: true }),
+        title: stringArg({ required: true }),
         body: EditorNode.asArg({ list: true }),
-        languageId: schema.intArg({ required: true }),
-        topicIds: schema.intArg({ list: true, required: false }),
-        status: schema.arg({ type: 'PostStatus' }),
+        languageId: intArg({ required: true }),
+        topicIds: intArg({ list: true, required: false }),
+        status: arg({ type: 'PostStatus' }),
         images: ImageInput.asArg({ list: true }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -363,12 +369,12 @@ schema.extendType({
     t.field('updatePost', {
       type: 'Post',
       args: {
-        postId: schema.intArg({ required: true }),
-        title: schema.stringArg({ required: false }),
-        languageId: schema.intArg({ required: false }),
-        topicIds: schema.intArg({ list: true, required: false }),
+        postId: intArg({ required: true }),
+        title: stringArg({ required: false }),
+        languageId: intArg({ required: false }),
+        topicIds: intArg({ list: true, required: false }),
         body: EditorNode.asArg({ list: true, required: false }),
-        status: schema.arg({ type: 'PostStatus', required: false }),
+        status: arg({ type: 'PostStatus', required: false }),
         images: ImageInput.asArg({ list: true }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -503,7 +509,7 @@ schema.extendType({
     t.field('deletePost', {
       type: 'Post',
       args: {
-        postId: schema.intArg({ required: true })
+        postId: intArg({ required: true })
       },
       resolve: async (_parent, args, ctx) => {
         const { postId } = args
@@ -627,3 +633,11 @@ schema.extendType({
     })
   },
 })
+
+export default [
+  PostTopic,
+  Post,
+  PostPage,
+  PostQueries,
+  PostMutations,
+]

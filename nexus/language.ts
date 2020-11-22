@@ -1,7 +1,14 @@
-import { schema } from 'nexus'
+import {
+  arg,
+  booleanArg,
+  intArg,
+  objectType,
+  queryType,
+  mutationType,
+} from '@nexus/schema'
 import { PostStatus } from '@prisma/client'
 
-schema.objectType({
+const LanguageRelation = objectType({
   name: 'LanguageRelation',
   definition(t) {
     t.model.id()
@@ -10,7 +17,7 @@ schema.objectType({
   }
 })
 
-schema.objectType({
+const Language = objectType({
   name: 'Language',
   definition(t) {
     t.model.id()
@@ -32,13 +39,12 @@ schema.objectType({
   },
 })
 
-schema.extendType({
-  type: 'Query',
+const LanguageQueries = queryType({
   definition(t) {
     t.list.field('languages', {
       type: 'Language',
       args: {
-        hasPosts: schema.booleanArg({ required: false }),
+        hasPosts: booleanArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
         let filter
@@ -63,14 +69,13 @@ schema.extendType({
   },
 })
 
-schema.extendType({
-  type: 'Mutation',
+const LanguageMutations = mutationType({
   definition(t) {
     t.field('addLanguageRelation', {
       type: 'LanguageRelation',
       args: {
-        languageId: schema.intArg({ required: true }),
-        level: schema.arg({ type: 'LanguageLevel', required: true }),
+        languageId: intArg({ required: true }),
+        level: arg({ type: 'LanguageLevel', required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -99,7 +104,7 @@ schema.extendType({
     t.field('removeLanguageRelation', {
       type: 'LanguageRelation',
       args: {
-        languageId: schema.intArg({ required: true }),
+        languageId: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -128,3 +133,10 @@ schema.extendType({
     })
   },
 })
+
+export default [
+  LanguageRelation,
+  Language,
+  LanguageQueries,
+  LanguageMutations,
+]

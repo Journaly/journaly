@@ -1,9 +1,11 @@
-import { schema } from 'nexus'
+import {
+  intArg,
+  objectType,
+  mutationType,
+} from '@nexus/schema'
 import { sendCommentThanksNotification, hasAuthorPermissions } from './utils'
 
-const { intArg } = schema
-
-schema.objectType({
+const CommentThanks = objectType({
   name: 'CommentThanks',
   definition(t) {
     t.model.id()
@@ -13,8 +15,7 @@ schema.objectType({
   },
 })
 
-schema.extendType({
-  type: 'Mutation',
+const ThanksMutations = mutationType({
   definition(t) {
     t.field('createCommentThanks', {
       type: 'CommentThanks',
@@ -111,3 +112,8 @@ schema.extendType({
       })
   },
 })
+
+export default [
+  CommentThanks,
+  ThanksMutations,
+]

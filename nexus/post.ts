@@ -64,7 +64,7 @@ const assignPostCountBadges = async (
       where: { user: { id: userId } },
       include: { user: true },
       orderBy: { createdAt: 'desc', },
-      first: newBadgeCount
+      take: newBadgeCount
     })
 
     await Promise.all(newBadges.map(badge => {
@@ -277,7 +277,7 @@ const PostQueries = extendType({
             },
           },
           skip: args.skip,
-          first: args.first,
+          first: args.take,
           orderBy: {
             publishedAt: 'desc',
           },

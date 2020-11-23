@@ -3,81 +3,118 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from '../../../config/i18n'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
-import XIcon from '../../../components/Icons/XIcon'
 import Button, { ButtonVariant } from '../../../elements/Button'
 import theme from '../../../theme'
+import { SocialPlatform, SocialFormField } from './SocialFormField'
+import { toLower, upperCase } from 'lodash'
+import FormError from '../../FormError'
+import { SocialMedia, useUpdateSocialMediaMutation } from '../../../generated/graphql'
+import { toast } from 'react-toastify'
+import { ApolloError } from '@apollo/client'
 
-const SocialForm: React.FC = () => {
+type FormData = {
+  facebook: string
+  instagram: string
+  youtube: string
+  website: string
+  [key: string]: string
+}
+
+const getPlatformValue = (platform: string, data: SocialMedia[]): string => {
+  const socialMedia = data?.find(
+    (socialMedia) => upperCase(socialMedia.platform) === upperCase(platform),
+  )
+  return socialMedia?.url || ''
+}
+
+type SocialFormProps = {
+  socialMedia: SocialMedia[]
+  refetch: () => void
+}
+
+const SocialForm: React.FC<SocialFormProps> = ({ socialMedia, refetch }) => {
   const { t } = useTranslation('settings')
-  const { handleSubmit, register } = useForm({
+  const { handleSubmit, register, errors, setError } = useForm<FormData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
   })
 
-  const handleSocialSubmit = (): void => {}
+  const [updateSocialMedia, { loading: updateInProgress }] = useUpdateSocialMediaMutation({
+    onCompleted: () => {
+      toast.success(t('profile.social.success'))
+    },
+  })
+
+  const addServerErrors = (apolloError: ApolloError): void => {
+    const badRequest = (apolloError.networkError as any)?.result?.errors[0].extensions
+    if (!badRequest || badRequest.statusCode !== 400) {
+      toast.error(t('profile.error.updateError'))
+      return
+    }
+
+    badRequest.validationErrors.forEach((err: any): void => {
+      setError(err.name, 'server', t(err.message))
+    })
+  }
+
+  const handleSocialSubmit = async (formData: FormData): Promise<void> => {
+    if (formData) {
+      await updateSocialMedia({
+        variables: {
+          facebook: formData.facebook,
+          instagram: formData.instagram,
+          youtube: formData.youtube,
+          website: formData.website,
+        },
+      })
+        .then(() => {
+          refetch()
+        })
+        .catch((err) => {
+          addServerErrors(err)
+        })
+    }
+  }
 
   return (
     <SettingsForm onSubmit={handleSubmit(handleSocialSubmit)}>
       <SettingsFieldset legend={t('profile.social.legend')}>
         <h3 className="social-description">{t('profile.social.socialLabel')}</h3>
+        <FormError error={Object.values(errors)} />
 
         <div className="social-wrapper">
           <div className="social-form-fields">
-            <div className="social-form-field">
-              <XIcon />
-              <input
-                type="text"
-                name="facebook"
-                // placeholder={t('profile.social.facebookPlaceholder')}
-                placeholder="Coming soon..."
-                disabled={true}
-                className="j-field"
-                ref={register()}
-              />
-            </div>
-            <div className="social-form-field">
-              <XIcon />
-              <input
-                type="text"
-                name="instagram"
-                // placeholder={t('profile.social.instagramPlaceholder')}
-                placeholder="Coming soon..."
-                disabled={true}
-                className="j-field"
-                ref={register()}
-              />
-            </div>
-            <div className="social-form-field">
-              <XIcon />
-              <input
-                type="text"
-                name="youtube"
-                // placeholder={t('profile.social.youtubePlaceholder')}
-                placeholder="Coming soon..."
-                disabled={true}
-                className="j-field"
-                ref={register()}
-              />
-            </div>
-            <div className="social-form-field">
-              <XIcon />
-              <input
-                type="text"
-                name="personal-website"
-                // placeholder={t('profile.social.personalWebsitePlaceholder')}
-                placeholder="Coming soon..."
-                disabled={true}
-                className="j-field"
-                ref={register()}
-              />
-            </div>
+            <SocialFormField
+              name={toLower(SocialPlatform.FACEBOOK)}
+              defaultValue={getPlatformValue(SocialPlatform.FACEBOOK, socialMedia)}
+              error={errors?.facebook}
+              register={register}
+            />
+            <SocialFormField
+              name={toLower(SocialPlatform.INSTAGRAM)}
+              defaultValue={getPlatformValue(SocialPlatform.INSTAGRAM, socialMedia)}
+              error={errors?.instagram}
+              register={register}
+            />
+            <SocialFormField
+              name={toLower(SocialPlatform.YOUTUBE)}
+              defaultValue={getPlatformValue(SocialPlatform.YOUTUBE, socialMedia)}
+              error={errors?.youtube}
+              register={register}
+            />
+            <SocialFormField
+              name={toLower(SocialPlatform.WEBSITE)}
+              defaultValue={getPlatformValue(SocialPlatform.WEBSITE, socialMedia)}
+              error={errors?.website}
+              register={register}
+            />
           </div>
 
           <Button
             type="submit"
             className="settings-submit-button"
             variant={ButtonVariant.Secondary}
-            disabled={true}
+            loading={updateInProgress}
           >
             {t('updateButton')}
           </Button>

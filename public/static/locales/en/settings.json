@@ -44,7 +44,8 @@
       "facebookPlaceholder": "facebook.com/YourPage",
       "youtubePlaceholder": "youtube.com/c/YourChannel",
       "instagramPlaceholder": "instagram.com/YourPage",
-      "personalWebsitePlaceholder": "Do you have a website?"
+      "websitePlaceholder": "Do you have a website?",
+      "success": "Social media successfully updated."
     },
     "error": {
       "updateError": "There was an error updating your profile.",
@@ -52,7 +53,11 @@
       "handleAlreadyinUseError": "This handle is already in use",
       "handleMinimumErrorMessage": "Your handle must be at least 3 characters",
       "emailValidationErrorMessage": "Invalid email address",
-      "emailAlreadyinUseError": "This email address is already in use"
+      "emailAlreadyinUseError": "This email address is already in use",
+      "websitePatternError": "Invalid website url. e.g. yourdomain.com or yoursub.domain.com",
+      "youtubePatternError": "Invalid youtube url. e.g. youtube.com/channel/YourChannel or youtube.com/user/YourUserName",
+      "facebookPatternError": "Invalid facebook url. e.g. facebook.com/YourPage or fb.com/YourPage",
+      "instagramPatternError": "Invalid instagram url. e.g. instagram.com/YourPage"
     }
   },
   "account":{

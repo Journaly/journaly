@@ -1,3 +1,4 @@
+import { toUpper } from 'lodash'
 import React from 'react'
 import { FieldError, ValidationOptions } from 'react-hook-form'
 import { useTranslation } from '../../../config/i18n'
@@ -19,7 +20,7 @@ export const SocialPlatform = {
 const socialMediaPatterns = [
   {
     platform: SocialPlatform.FACEBOOK,
-    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/([A-Za-z0-9-_\.]+)$/im,
+    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/([A-Za-z0-9-_\.]+)\/?$/im,
   },
   {
     platform: SocialPlatform.INSTAGRAM,
@@ -27,7 +28,7 @@ const socialMediaPatterns = [
   },
   {
     platform: SocialPlatform.LINKEDIN,
-    pattern: /^(?:(?:http|https):\/\/)(?:www\.)?linkedin.com\/((in\/[^\/]+\/?)|(pub\/[^\/]+\/((\\w|\\d)+\/?){3}))$/im,
+    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?linkedin.com\/((in\/[^\/]+\/?)|(pub\/[^\/]+\/((\\w|\\d)+\/?){3}))$/im,
   },
   {
     platform: SocialPlatform.YOUTUBE,
@@ -35,7 +36,7 @@ const socialMediaPatterns = [
   },
   {
     platform: SocialPlatform.WEBSITE,
-    pattern: /^(?:(?:http|https):\/\/)(?:www\.)?(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]\/?$/im,
+    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]\/?$/im,
   },
 ]
 
@@ -74,7 +75,7 @@ export const SocialFormField: React.FC<Props> = ({ register, name, error, defaul
   return (
     <>
       <div className="social-form-field">
-        <PlatformIcon name={name} />
+        <PlatformIcon name={toUpper(name)} />
         <input
           type="text"
           name={name}

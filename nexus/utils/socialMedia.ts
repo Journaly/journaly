@@ -5,7 +5,7 @@ import { InvalidInput } from '../errors'
 const socialMediaPatterns = [
   {
     platform: SocialMediaPlatform.FACEBOOK,
-    pattern: /^(?:(?:http|https):\/\/)(?:www\.)?(?:facebook\.com|fb\.com)\/([A-Za-z0-9-_\.]+)\/?$/im,
+    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/([A-Za-z0-9-_\.]+)\/?$/im,
   },
   {
     platform: SocialMediaPlatform.INSTAGRAM,
@@ -13,7 +13,7 @@ const socialMediaPatterns = [
   },
   {
     platform: SocialMediaPlatform.LINKEDIN,
-    pattern: /^(?:(?:http|https):\/\/)(?:www\.)?linkedin.com\/((in\/[^\/]+\/?)|(pub\/[^\/]+\/((\\w|\\d)+\/?){3}))$/im,
+    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?linkedin.com\/((in\/[^\/]+\/?)|(pub\/[^\/]+\/((\\w|\\d)+\/?){3}))$/im,
   },
   {
     platform: SocialMediaPlatform.YOUTUBE,
@@ -21,7 +21,7 @@ const socialMediaPatterns = [
   },
   {
     platform: SocialMediaPlatform.WEBSITE,
-    pattern: /^(?:(?:http|https):\/\/)(?:www\.)?(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]\/?$/im,
+    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]\/?$/im,
   },
 ]
 

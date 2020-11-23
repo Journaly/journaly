@@ -4,8 +4,7 @@ import {
   stringArg,
   booleanArg,
   objectType,
-  queryType,
-  mutationType
+  extendType,
 } from '@nexus/schema'
 
 import {
@@ -77,7 +76,7 @@ const assignPostCountBadges = async (
   }
 }
 
-const PostTopics = objectType({
+const PostTopic = objectType({
   name: 'PostTopic',
   definition(t) {
     t.model.id()
@@ -146,7 +145,8 @@ const PostPage = objectType({
   },
 })
 
-const PostQueries = queryType({
+const PostQueries = extendType({
+  type: 'Query',
   definition(t) {
     t.list.field('posts', {
       type: 'Post',
@@ -293,7 +293,8 @@ const PostQueries = queryType({
   },
 })
 
-const PostMutations = mutationType({
+const PostMutations = extendType({
+  type: 'Mutation',
   definition(t) {
     t.field('createPost', {
       type: 'Post',

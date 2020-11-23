@@ -2,7 +2,7 @@ import {
   intArg,
   stringArg,
   objectType,
-  mutationType
+  extendType,
 } from '@nexus/schema'
 
 import { hasAuthorPermissions, sendCommentNotification, sendPostCommentNotification } from './utils'
@@ -45,7 +45,8 @@ const PostComment = objectType({
   },
 })
 
-const CommentMutations = mutationType({
+const PostMutations = extendType({
+  type: 'Mutation',
   definition(t) {
     t.field('createThread', {
       type: 'Thread',
@@ -431,5 +432,5 @@ export default [
   Thread,
   Comment,
   PostComment,
-  CommentMutations,
+  PostMutations,
 ]

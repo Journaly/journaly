@@ -3,8 +3,7 @@ import {
   booleanArg,
   intArg,
   objectType,
-  queryType,
-  mutationType,
+  extendType,
 } from '@nexus/schema'
 import { PostStatus } from '@prisma/client'
 
@@ -39,7 +38,8 @@ const Language = objectType({
   },
 })
 
-const LanguageQueries = queryType({
+const LanguageQueries = extendType({
+  type: 'Query',
   definition(t) {
     t.list.field('languages', {
       type: 'Language',
@@ -69,7 +69,8 @@ const LanguageQueries = queryType({
   },
 })
 
-const LanguageMutations = mutationType({
+const LanguageMutations = extendType({
+  type: 'Mutation',
   definition(t) {
     t.field('addLanguageRelation', {
       type: 'LanguageRelation',

@@ -20,7 +20,14 @@ const db = new PrismaClient()
 
 const server = new ApolloServer({
   schema,
-  context: () => ({ db })
+  context: ({ req, res }) => { 
+    return {
+      db,
+      prisma: db,
+      request: req,
+      response: res,
+    }
+  }
 })
 
 const graphqlHandler = server.createHandler({ path: '/api/graphql' })

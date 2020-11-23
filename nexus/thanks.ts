@@ -1,7 +1,7 @@
 import {
   intArg,
   objectType,
-  mutationType,
+  extendType,
 } from '@nexus/schema'
 import { sendCommentThanksNotification, hasAuthorPermissions } from './utils'
 
@@ -15,7 +15,8 @@ const CommentThanks = objectType({
   },
 })
 
-const ThanksMutations = mutationType({
+const ThanksMutations = extendType({
+  type: 'Mutation',
   definition(t) {
     t.field('createCommentThanks', {
       type: 'CommentThanks',

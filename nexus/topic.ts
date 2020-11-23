@@ -2,7 +2,7 @@ import {
   arg,
   booleanArg,
   objectType,
-  queryType
+  extendType
 } from '@nexus/schema'
 
 
@@ -40,7 +40,8 @@ const Topic = objectType({
   },
 })
 
-const TopicQueries = queryType({
+const TopicQueries = extendType({
+  type: 'Query',
   definition(t) {
     t.list.field('topics', {
       type: 'Topic',

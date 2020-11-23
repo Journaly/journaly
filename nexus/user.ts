@@ -2,7 +2,7 @@ import {
   intArg,
   stringArg,
   objectType,
-  queryType
+  extendType,
 } from '@nexus/schema'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
@@ -78,7 +78,8 @@ const UserBadge = objectType({
   }
 })
 
-const UserQueries = queryType({
+const UserQueries = extendType({
+  type: 'Query',
   definition(t) {
     t.list.field('users', {
       type: 'User',
@@ -127,7 +128,8 @@ const UserQueries = queryType({
   },
 })
 
-const UserMutations = mutationType({
+const UserMutations = extendType({
+  type: 'Mutation',
   definition(t) {
     t.field('createUser', {
       type: 'User',

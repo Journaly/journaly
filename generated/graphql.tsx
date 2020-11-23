@@ -165,6 +165,7 @@ export type Mutation = {
   removeLanguageRelation?: Maybe<LanguageRelation>
   createCommentThanks?: Maybe<CommentThanks>
   deleteCommentThanks?: Maybe<CommentThanks>
+  updateSocialMedia?: Maybe<Array<SocialMedia>>
 }
 
 export type MutationCreateThreadArgs = {
@@ -286,6 +287,14 @@ export type MutationCreateCommentThanksArgs = {
 
 export type MutationDeleteCommentThanksArgs = {
   commentThanksId: Scalars['Int']
+}
+
+export type MutationUpdateSocialMediaArgs = {
+  facebook?: Maybe<Scalars['String']>
+  instagram?: Maybe<Scalars['String']>
+  youtube?: Maybe<Scalars['String']>
+  website?: Maybe<Scalars['String']>
+  linkedin?: Maybe<Scalars['String']>
 }
 
 export enum OrderByArg {
@@ -424,6 +433,7 @@ export type Query = {
   userById?: Maybe<User>
   languages?: Maybe<Array<Language>>
   topics?: Maybe<Array<Topic>>
+  socialMedia?: Maybe<Array<SocialMedia>>
 }
 
 export type QueryPostsArgs = {
@@ -454,6 +464,24 @@ export type QueryLanguagesArgs = {
 
 export type QueryTopicsArgs = {
   hasPosts?: Maybe<Scalars['Boolean']>
+}
+
+export type SocialMedia = {
+  __typename?: 'SocialMedia'
+  id: Scalars['Int']
+  platform: SocialMediaPlatform
+  url: Scalars['String']
+}
+
+export enum SocialMediaPlatform {
+  Facebook = 'FACEBOOK',
+  Youtube = 'YOUTUBE',
+  Instagram = 'INSTAGRAM',
+  Linkedin = 'LINKEDIN',
+}
+
+export type SocialMediaWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>
 }
 
 export type Thread = {
@@ -509,7 +537,7 @@ export type User = {
   __typename?: 'User'
   id: Scalars['Int']
   name?: Maybe<Scalars['String']>
-  email: Scalars['String']
+  email?: Maybe<Scalars['String']>
   handle: Scalars['String']
   bio?: Maybe<Scalars['String']>
   userRole: UserRole
@@ -519,6 +547,7 @@ export type User = {
   profileImage?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
   languages: Array<LanguageRelation>
+  socialMedia: Array<SocialMedia>
   following: Array<User>
   followedBy: Array<User>
   postsWrittenCount?: Maybe<Scalars['Int']>
@@ -537,6 +566,14 @@ export type UserLanguagesArgs = {
   skip?: Maybe<Scalars['Int']>
   after?: Maybe<LanguageRelationWhereUniqueInput>
   before?: Maybe<LanguageRelationWhereUniqueInput>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}
+
+export type UserSocialMediaArgs = {
+  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<SocialMediaWhereUniqueInput>
+  before?: Maybe<SocialMediaWhereUniqueInput>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
 }
@@ -689,6 +726,10 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
       }
   >
 } & UserFragmentFragment
+
+export type SocialMediaFragmentFragment = { __typename?: 'User' } & {
+  socialMedia: Array<{ __typename?: 'SocialMedia' } & Pick<SocialMedia, 'id' | 'platform' | 'url'>>
+}
 
 export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
   User,
@@ -851,7 +892,8 @@ export type ProfilePageQuery = { __typename?: 'Query' } & {
 
 export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
   badges: Array<{ __typename?: 'UserBadge' } & UserBadgeFragmentFragment>
-} & UserWithLanguagesFragmentFragment
+} & UserWithLanguagesFragmentFragment &
+  SocialMediaFragmentFragment
 
 export type CreatePostMutationVariables = {
   title: Scalars['String']
@@ -1047,7 +1089,7 @@ export type SettingsFormDataQuery = { __typename?: 'Query' } & {
               language: { __typename?: 'Language' } & LanguageFragmentFragment
             }
         >
-      }
+      } & SocialMediaFragmentFragment
   >
 }
 
@@ -1066,6 +1108,18 @@ export type UpdatePasswordMutationVariables = {
 
 export type UpdatePasswordMutation = { __typename?: 'Mutation' } & {
   updatePassword?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
+}
+
+export type UpdateSocialMediaMutationVariables = {
+  facebook?: Maybe<Scalars['String']>
+  instagram?: Maybe<Scalars['String']>
+  youtube?: Maybe<Scalars['String']>
+  website?: Maybe<Scalars['String']>
+  linkedin?: Maybe<Scalars['String']>
+}
+
+export type UpdateSocialMediaMutation = { __typename?: 'Mutation' } & {
+  updateSocialMedia?: Maybe<Array<{ __typename?: 'SocialMedia' } & Pick<SocialMedia, 'url'>>>
 }
 
 export type UpdateUserMutationVariables = {
@@ -1319,15 +1373,26 @@ export const UserBadgeFragmentFragmentDoc = gql`
     createdAt
   }
 `
+export const SocialMediaFragmentFragmentDoc = gql`
+  fragment SocialMediaFragment on User {
+    socialMedia {
+      id
+      platform
+      url
+    }
+  }
+`
 export const ProfileUserFragmentFragmentDoc = gql`
   fragment ProfileUserFragment on User {
     ...UserWithLanguagesFragment
     badges {
       ...UserBadgeFragment
     }
+    ...SocialMediaFragment
   }
   ${UserWithLanguagesFragmentFragmentDoc}
   ${UserBadgeFragmentFragmentDoc}
+  ${SocialMediaFragmentFragmentDoc}
 `
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
@@ -2993,9 +3058,11 @@ export const SettingsFormDataDocument = gql`
           ...LanguageFragment
         }
       }
+      ...SocialMediaFragment
     }
   }
   ${LanguageFragmentFragmentDoc}
+  ${SocialMediaFragmentFragmentDoc}
 `
 
 /**
@@ -3133,6 +3200,70 @@ export type UpdatePasswordMutationResult = ApolloReactCommon.MutationResult<Upda
 export type UpdatePasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdatePasswordMutation,
   UpdatePasswordMutationVariables
+>
+export const UpdateSocialMediaDocument = gql`
+  mutation updateSocialMedia(
+    $facebook: String
+    $instagram: String
+    $youtube: String
+    $website: String
+    $linkedin: String
+  ) {
+    updateSocialMedia(
+      facebook: $facebook
+      instagram: $instagram
+      youtube: $youtube
+      website: $website
+      linkedin: $linkedin
+    ) {
+      url
+    }
+  }
+`
+export type UpdateSocialMediaMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateSocialMediaMutation,
+  UpdateSocialMediaMutationVariables
+>
+
+/**
+ * __useUpdateSocialMediaMutation__
+ *
+ * To run a mutation, you first call `useUpdateSocialMediaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSocialMediaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSocialMediaMutation, { data, loading, error }] = useUpdateSocialMediaMutation({
+ *   variables: {
+ *      facebook: // value for 'facebook'
+ *      instagram: // value for 'instagram'
+ *      youtube: // value for 'youtube'
+ *      website: // value for 'website'
+ *      linkedin: // value for 'linkedin'
+ *   },
+ * });
+ */
+export function useUpdateSocialMediaMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateSocialMediaMutation,
+    UpdateSocialMediaMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateSocialMediaMutation,
+    UpdateSocialMediaMutationVariables
+  >(UpdateSocialMediaDocument, baseOptions)
+}
+export type UpdateSocialMediaMutationHookResult = ReturnType<typeof useUpdateSocialMediaMutation>
+export type UpdateSocialMediaMutationResult = ApolloReactCommon.MutationResult<
+  UpdateSocialMediaMutation
+>
+export type UpdateSocialMediaMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateSocialMediaMutation,
+  UpdateSocialMediaMutationVariables
 >
 export const UpdateUserDocument = gql`
   mutation updateUser(

@@ -47,11 +47,14 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
       hasPosts: true,
     },
   })
-  const languageOptions = (languagesData?.languages || []).map(({ id, name, postCount }) => ({
-    value: id,
-    displayName: `${name} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
-    selectedDisplayName: `${name}`,
-  }))
+  const languageOptions = (languagesData?.languages || []).map(({ dialect, id, name, postCount }) => {
+    const languageName = typeof dialect === 'string' && dialect.length > 0 ? `${name} - ${dialect}` : `${name}`
+    return {
+      value: id,
+      displayName: `${languageName} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
+      selectedDisplayName: languageName,
+    };
+  })
   const languageOptionIds = new Set((languagesData?.languages || []).map(({ id }) => id))
 
   let userLanguages: Set<number> = new Set([])

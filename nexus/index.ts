@@ -14,21 +14,11 @@ import LikeTypes from './like'
 import ThanksTypes from './thanks'
 import MiscTypes from './graphql'
 
-const schema = makeSchema({
-  /*
-  outputs: {
-    typegen: path.join(__dirname, 'node_modules/@types/typegen-nexus/index.d.ts'),
-    schema: path.join(__dirname, './api.graphql'),
-  },
-  */
+const reflectionRun = !!parseInt(process.env.NEXUS_REFLECTION || '0')
+
+const schemaOpts: any = {
   typegenAutoConfig: {
     sources: [
-      /*
-      {
-        source: require.resolve('.prisma/client/index.d.ts'),
-        alias: "prisma",
-      },
-      */
       {
         source: require.resolve('./context'),
         alias: 'ContextModule'
@@ -49,6 +39,16 @@ const schema = makeSchema({
     ...MiscTypes,
   ],
   plugins: [nexusPrisma()]
-})
+}
+
+if (reflectionRun) {
+  schemaOpts.shouldExitAfterGenerateArtifacts = true
+  schemaOpts.outputs = {
+    typegen: path.join(__dirname, '../node_modules/@types/typegen-nexus/index.d.ts'),
+    schema: path.join(__dirname, './api.graphql'),
+  }
+}
+
+const schema = makeSchema(schemaOpts)
 
 export { schema }

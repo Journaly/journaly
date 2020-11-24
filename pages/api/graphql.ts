@@ -1,20 +1,9 @@
 require('dotenv').config()
 import jwt from 'jsonwebtoken'
-import { ApolloServer, gql } from 'apollo-server-micro'
+import { ApolloServer } from 'apollo-server-micro'
 import { PrismaClient } from '@prisma/client'
 
 import { schema } from '../../nexus'
-
-
-/*
-// Watch https://github.com/graphql-nexus/nexus/issues/524
-// and https://github.com/graphql-nexus/nexus/issues/523 for future
-// changes to this function
-schema.addToContext((request: any) => ({
-  request,
-  response: request.response,
-}))
-*/
 
 const db = new PrismaClient()
 

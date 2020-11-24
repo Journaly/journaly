@@ -26,6 +26,10 @@ const schemaOpts: any = {
     ],
     contextType: 'ContextModule.Context'
   },
+  nonNullDefaults: {
+    output: true,
+    input: true,
+  },
   types: [
     ...ImageTypes,
     ...TopicTypes,

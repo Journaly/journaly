@@ -30,7 +30,7 @@ const assignPostCountBadges = async (
   // Use a raw query here because we'll soon have a number of post count
   // badges and we could end up with quite a bit of back and fourth
   // querying, whereas here we can just make one roundtrip.
-  const newBadgeCount = await db.raw`
+  const newBadgeCount = await db.$executeRaw`
     WITH posts AS (
         SELECT COUNT(*) AS count
         FROM "Post"
@@ -52,7 +52,6 @@ const assignPostCountBadges = async (
       )
     )
     ON CONFLICT DO NOTHING
-    RETURNING *
   `
   // This is a horrible hack because of this bug in prisma where `RETURNING`
   // is basically ignored and we get a row count instead. See:
@@ -170,7 +169,10 @@ const PostQueries = extendType({
     t.field('postById', {
       type: 'Post',
       args: {
-        id: intArg(),
+        id: intArg({
+          description: 'ID of the post to be retreived',
+          required: true
+        }),
       },
       resolve: async (_parent, args, ctx) => {
         const post = await ctx.db.post.findOne({
@@ -194,12 +196,31 @@ const PostQueries = extendType({
     t.field('feed', {
       type: 'PostPage',
       args: {
-        search: stringArg({ required: false }),
-        languages: intArg({ required: false, list: true }),
-        topic: intArg({ required: false }),
-        skip: intArg(),
-        first: intArg(),
-        followedAuthors: booleanArg({ required: false }),
+        search: stringArg({
+          description: 'Not used.',
+          required: false
+        }),
+        languages: intArg({
+          description: 'Language IDs to filter posts by. No value means all languages.',
+          required: false,
+          list: true,
+        }),
+        topic: intArg({
+          description: 'Not used.',
+          required: false
+        }),
+        skip: intArg({
+          description: 'Offset into the feed post list to return',
+          required: true,
+        }),
+        first: intArg({
+          description: 'Number of posts to return',
+          required: true
+        }),
+        followedAuthors: booleanArg({
+          description: 'Author IDs to filter posts by. No value means all languages.',
+          required: false
+        }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -277,7 +298,7 @@ const PostQueries = extendType({
             },
           },
           skip: args.skip,
-          first: args.take,
+          take: args.first,
           orderBy: {
             publishedAt: 'desc',
           },
@@ -300,10 +321,10 @@ const PostMutations = extendType({
       type: 'Post',
       args: {
         title: stringArg({ required: true }),
-        body: EditorNode.asArg({ list: true }),
+        body: EditorNode.asArg({ list: true, required: true }),
         languageId: intArg({ required: true }),
         topicIds: intArg({ list: true, required: false }),
-        status: arg({ type: 'PostStatus' }),
+        status: arg({ type: 'PostStatus', required: true }),
         images: ImageInput.asArg({ list: true }),
       },
       resolve: async (_parent, args, ctx) => {

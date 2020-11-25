@@ -1,3 +1,3 @@
-export const main = (name: string): string => {
-  return `Hello ${name}!`
-}
+import { PrismaClient } from '@prisma/client'
+
+export const dbClient = new PrismaClient()

@@ -4,7 +4,6 @@
   "description": "Journaly's internal database client.",
   "main": "src/index",
   "scripts": {
-    "build": "tsc",
     "prisma": "prisma",
     "migrate:up": "prisma migrate up --experimental",
     "migrate:save": "prisma migrate save --experimental",
@@ -21,10 +20,15 @@
   "author": "Journaly",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^2.0.0-beta.2"
+    "nexus-plugin-prisma": "0.9.0"
   },
   "devDependencies": {
-    "@prisma/cli": "^2.0.0-beta.2",
+    "@prisma/cli": "0.1.31",
+    "@prisma/client": "2.0.0-preview021",
+    "@prisma/fetch-engine": "0.3.52",
+    "@prisma/lift": "0.3.384",
+    "@prisma/sdk": "0.0.180",
+    "prisma2": "2.0.0-preview021",
     "typescript": "3.8.3"
   }
 }

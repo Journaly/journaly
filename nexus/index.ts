@@ -1,7 +1,7 @@
 import { use } from 'nexus'
-import { prisma } from 'nexus-plugin-prisma'
+import { dbClient } from '@journaly/j-db-client'
 
-use(prisma())
+use(dbClient())
 
 import './graphql'
 import './post'

@@ -26,7 +26,7 @@ const Topic = objectType({
         uiLanguage: arg({ type: 'UILanguage', required: true }),
       },
       async resolve(parent, args, ctx, _info) {
-        const translation = await ctx.db.topicTranslation.findOne({
+        const translation = await ctx.db.topicTranslation.findUnique({
           where: {
             uiLanguage_topicId: {
               topicId: parent.id,

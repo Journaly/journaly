@@ -176,7 +176,7 @@ const PostQueries = extendType({
         }),
       },
       resolve: async (_parent, args, ctx) => {
-        const post = await ctx.db.post.findOne({
+        const post = await ctx.db.post.findUnique({
           where: {
             id: args.id,
           },
@@ -226,7 +226,7 @@ const PostQueries = extendType({
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
-        const currentUser = await ctx.db.user.findOne({
+        const currentUser = await ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -406,12 +406,12 @@ const PostMutations = extendType({
         if (!userId) throw new NotAuthorizedError()
 
         const [currentUser, originalPost] = await Promise.all([
-          ctx.db.user.findOne({
+          ctx.db.user.findUnique({
             where: {
               id: userId,
             },
           }),
-          ctx.db.post.findOne({
+          ctx.db.post.findUnique({
             where: {
               id: args.postId,
             },
@@ -539,7 +539,7 @@ const PostMutations = extendType({
         const { userId } = ctx.request
         if (!userId) throw new NotAuthorizedError()
 
-        const post = await ctx.db.post.findOne({
+        const post = await ctx.db.post.findUnique({
           where: {
             id: postId,
           },
@@ -551,7 +551,7 @@ const PostMutations = extendType({
 
         if (!post) throw new Error('Post not found.');
 
-        const currentUser = await ctx.db.user.findOne({
+        const currentUser = await ctx.db.user.findUnique({
           where: {
             id: userId,
           },

@@ -65,7 +65,7 @@ const PostMutations = extendType({
         }
 
         const { postId, startIndex, endIndex, highlightedContent } = args
-        const post = await ctx.db.post.findOne({ where: { id: postId } })
+        const post = await ctx.db.post.findUnique({ where: { id: postId } })
 
         if (!post) {
           throw new Error(`Unable to find post with id ${postId}`)
@@ -106,7 +106,7 @@ const PostMutations = extendType({
         threadId: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
-        const thread = await ctx.db.thread.findOne({
+        const thread = await ctx.db.thread.findUnique({
           where: {
             id: args.threadId,
           },
@@ -146,7 +146,7 @@ const PostMutations = extendType({
           throw new Error('You must be logged in to post comments.')
         }
 
-        const thread = await ctx.db.thread.findOne({
+        const thread = await ctx.db.thread.findUnique({
           where: { id: args.threadId },
           include: {
             subscriptions: {
@@ -230,12 +230,12 @@ const PostMutations = extendType({
         if (!userId) throw new Error('You must be logged in to do that.')
 
         const [currentUser, originalComment] = await Promise.all([
-          ctx.db.user.findOne({
+          ctx.db.user.findUnique({
             where: {
               id: userId,
             },
           }),
-          ctx.db.comment.findOne({
+          ctx.db.comment.findUnique({
             where: {
               id: args.commentId,
             },
@@ -268,7 +268,7 @@ const PostMutations = extendType({
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
-        const currentUser = await ctx.db.user.findOne({
+        const currentUser = await ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -276,7 +276,7 @@ const PostMutations = extendType({
 
         if (!currentUser) throw new Error('User not found.')
 
-        const originalComment = await ctx.db.comment.findOne({
+        const originalComment = await ctx.db.comment.findUnique({
           where: {
             id: args.commentId,
           },
@@ -308,7 +308,7 @@ const PostMutations = extendType({
           throw new Error('You must be logged in to post comments.')
         }
 
-        const post = await ctx.db.post.findOne({
+        const post = await ctx.db.post.findUnique({
           where: {
             id: args.postId,
           },
@@ -361,12 +361,12 @@ const PostMutations = extendType({
         if (!userId) throw new Error('You must be logged in to do that.')
 
         const [currentUser, originalPostComment] = await Promise.all([
-          ctx.db.user.findOne({
+          ctx.db.user.findUnique({
             where: {
               id: userId,
             },
           }),
-          ctx.db.postComment.findOne({
+          ctx.db.postComment.findUnique({
             where: {
               id: args.postCommentId,
             },
@@ -399,7 +399,7 @@ const PostMutations = extendType({
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
-        const currentUser = await ctx.db.user.findOne({
+        const currentUser = await ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -407,7 +407,7 @@ const PostMutations = extendType({
 
         if (!currentUser) throw new Error('User not found.')
 
-        const originalPostComment = await ctx.db.postComment.findOne({
+        const originalPostComment = await ctx.db.postComment.findUnique({
           where: {
             id: args.postCommentId,
           },

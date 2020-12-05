@@ -96,7 +96,7 @@ const UserQueries = extendType({
         if (!userId) {
           return null
         }
-        return ctx.db.user.findOne({
+        return ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -112,7 +112,7 @@ const UserQueries = extendType({
       resolve: async (_parent, args, ctx) => {
         if (!args.id) throw new Error('ID is required')
 
-        const user = await ctx.db.user.findOne({
+        const user = await ctx.db.user.findUnique({
           where: {
             id: args.id,
           },
@@ -209,7 +209,7 @@ const UserMutations = extendType({
       resolve: async (_parent, args, ctx: any) => {
         const { userId } = ctx.request
 
-        const user = await ctx.db.user.findOne({
+        const user = await ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -250,7 +250,7 @@ const UserMutations = extendType({
         password: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx: any) => {
-        const user = await ctx.db.user.findOne({
+        const user = await ctx.db.user.findUnique({
           where: {
             email: args.identifier.toLowerCase(),
           },
@@ -286,7 +286,7 @@ const UserMutations = extendType({
         identifier: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx, _info) => {
-        const user = await ctx.db.user.findOne({
+        const user = await ctx.db.user.findUnique({
           where: {
             email: args.identifier.toLowerCase(),
           },
@@ -383,7 +383,7 @@ const UserMutations = extendType({
           throw new NotAuthorizedError()
         }
 
-        const user = await ctx.db.user.findOne({
+        const user = await ctx.db.user.findUnique({
           where: { id: ctx.request.userId },
         })
 

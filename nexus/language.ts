@@ -85,7 +85,7 @@ const LanguageMutations = extendType({
           throw new Error('You must be logged in add language relations.')
         }
 
-        const language = await ctx.db.language.findOne({
+        const language = await ctx.db.language.findUnique({
           where: { id: args.languageId },
         })
 
@@ -123,7 +123,7 @@ const LanguageMutations = extendType({
           },
         }
 
-        const relation = await ctx.db.languageRelation.findOne(relFilter)
+        const relation = await ctx.db.languageRelation.findUnique(relFilter)
 
         if (!relation) {
           throw new Error(`Unable to find language relation.`)

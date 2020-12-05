@@ -30,7 +30,7 @@ const ThanksMutations = extendType({
         }
 
         const { commentId } = args
-        const comment = await ctx.db.comment.findOne({
+        const comment = await ctx.db.comment.findUnique({
           where: {
             id: commentId,
           },
@@ -87,12 +87,12 @@ const ThanksMutations = extendType({
           const { commentThanksId } = args
 
           const [currentUser, originalCommentThanks] = await Promise.all([
-            ctx.db.user.findOne({
+            ctx.db.user.findUnique({
               where: {
                 id: userId,
               },
             }),
-            ctx.db.commentThanks.findOne({
+            ctx.db.commentThanks.findUnique({
               where: {
                 id: commentThanksId,
               },

@@ -37,7 +37,7 @@ const User = objectType({
     t.model.bio()
     t.model.userRole()
     t.model.location()
-    t.model.badges()
+    t.model.badges({ pagination: false })
     t.model.posts({ pagination: false })
     t.model.profileImage()
     t.model.createdAt()

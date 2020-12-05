@@ -1,6 +1,6 @@
 import * as path from 'path'
 
-import { makeSchema } from '@nexus/schema'
+import { makeSchema, declarativeWrappingPlugin } from '@nexus/schema'
 import { nexusPrisma } from 'nexus-plugin-prisma'
 
 import CommentTypes from './comment'
@@ -42,7 +42,7 @@ const schemaOpts: any = {
     ...ThanksTypes,
     ...MiscTypes,
   ],
-  plugins: [nexusPrisma()]
+  plugins: [nexusPrisma(), declarativeWrappingPlugin()]
 }
 
 if (reflectionRun) {

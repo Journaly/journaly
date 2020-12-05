@@ -323,7 +323,7 @@ const PostMutations = extendType({
         title: stringArg({ required: true }),
         body: EditorNode.asArg({ list: true, required: true }),
         languageId: intArg({ required: true }),
-        topicIds: intArg({ list: true, required: false }),
+        topicIds: intArg({ list: true, required: false, nullable: false }),
         status: arg({ type: 'PostStatus', required: true }),
         images: ImageInput.asArg({ list: true }),
       },

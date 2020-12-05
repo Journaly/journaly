@@ -384,5 +384,5 @@ async function main() {
 
   console.log('Seeding successful')
 
-  db.disconnect()
+  db.$disconnect()
 }

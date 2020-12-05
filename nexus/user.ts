@@ -17,6 +17,7 @@ import { validateUpdateUserMutationData } from './utils/userValidation'
 
 const User = objectType({
   name: 'User',
+  rootTyping: 'prisma.User',
   definition(t) {
     t.model.id()
     t.model.name()
@@ -90,6 +91,7 @@ const UserQueries = extendType({
 
     t.field('currentUser', {
       type: 'User',
+      nullable: true,
       resolve: async (_parent, _args, ctx) => {
         const userId = ctx.request.userId
         // check for current userId

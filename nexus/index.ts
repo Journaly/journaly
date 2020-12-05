@@ -20,6 +20,10 @@ const schemaOpts: any = {
   typegenAutoConfig: {
     sources: [
       {
+        source: '@prisma/client',
+        alias: 'prisma',
+      },
+      {
         source: require.resolve('./context'),
         alias: 'ContextModule'
       }
@@ -42,7 +46,12 @@ const schemaOpts: any = {
     ...ThanksTypes,
     ...MiscTypes,
   ],
-  plugins: [nexusPrisma(), declarativeWrappingPlugin()]
+  plugins: [
+    nexusPrisma({
+      shouldGenerateArtifacts: reflectionRun,
+    }),
+    declarativeWrappingPlugin()
+  ]
 }
 
 if (reflectionRun) {

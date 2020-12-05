@@ -17,6 +17,7 @@ const TopicTranslation = objectType({
 
 const Topic = objectType({
   name: 'Topic',
+  rootTyping: 'prisma.Topic',
   definition(t) {
     t.model.id()
     t.string('name', {

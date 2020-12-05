@@ -43,7 +43,7 @@ export type EditorNode = {
   italic?: Maybe<Scalars['Boolean']>
   bold?: Maybe<Scalars['Boolean']>
   underline?: Maybe<Scalars['Boolean']>
-  children: Array<EditorNode>
+  children?: Maybe<Array<EditorNode>>
 }
 
 export type ImageInput = {

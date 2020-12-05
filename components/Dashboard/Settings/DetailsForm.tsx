@@ -163,7 +163,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   type="text"
                   name="email"
                   className={`j-field ${errors.email ? 'is-invalid' : ''}`}
-                  defaultValue={currentUser.email}
+                  defaultValue={currentUser.email || ''}
                   ref={register({
                     required: `${t('profile.details.emailError')}`,
                     pattern: {

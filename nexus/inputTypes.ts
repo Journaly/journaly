@@ -15,7 +15,7 @@ export const EditorNode = inputObjectType({
     t.field('children', {
       type: EditorNode,
       list: true,
-      nullable: false,
+      nullable: true,
     })
   },
 })

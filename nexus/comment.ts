@@ -17,6 +17,7 @@ const Thread = objectType({
     t.model.endIndex()
     t.model.highlightedContent()
     t.model.comments({
+      pagination: false,
       ordering: {
         createdAt: true,
       },
@@ -31,7 +32,7 @@ const Comment = objectType({
     t.model.author()
     t.model.body()
     t.model.createdAt()
-    t.model.thanks()
+    t.model.thanks({ pagination: false })
   },
 })
 

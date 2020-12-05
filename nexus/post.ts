@@ -94,10 +94,11 @@ const Post = objectType({
     t.model.readTime()
     t.model.author()
     t.model.status()
-    t.model.likes()
-    t.model.threads()
-    t.model.postTopics({ type: 'PostTopic' })
+    t.model.likes({ pagination: false })
+    t.model.threads({ pagination: false })
+    t.model.postTopics({ type: 'PostTopic', pagination: false })
     t.model.postComments({
+      pagination: false,
       ordering: {
         createdAt: true,
       },
@@ -106,7 +107,7 @@ const Post = objectType({
     t.model.createdAt()
     t.model.updatedAt()
     t.model.bodySrc()
-    t.model.images()
+    t.model.images({ pagination: false })
     t.model.publishedAt()
     t.int('commentCount', {
       resolve: async (parent, _args, ctx, _info) => {

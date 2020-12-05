@@ -38,14 +38,12 @@ const User = objectType({
     t.model.userRole()
     t.model.location()
     t.model.badges()
-    t.model.posts({
-      pagination: false,
-    })
+    t.model.posts({ pagination: false })
     t.model.profileImage()
     t.model.createdAt()
-    t.model.languages()
-    t.model.following()
-    t.model.followedBy()
+    t.model.languages({ pagination: false })
+    t.model.following({ pagination: false })
+    t.model.followedBy({ pagination: false })
     t.int('postsWrittenCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.post.count({

@@ -261,3 +261,4 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
 }
 
 export * from './email'
+

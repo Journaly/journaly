@@ -1,10 +1,14 @@
-import { schema } from 'nexus'
+import {
+  intArg,
+  stringArg,
+  objectType,
+  extendType,
+} from '@nexus/schema'
 
 import { hasAuthorPermissions, sendCommentNotification, sendPostCommentNotification } from './utils'
 import { NotFoundError } from './errors'
-const { intArg, stringArg } = schema
 
-schema.objectType({
+const Thread = objectType({
   name: 'Thread',
   definition(t) {
     t.model.id()
@@ -13,6 +17,7 @@ schema.objectType({
     t.model.endIndex()
     t.model.highlightedContent()
     t.model.comments({
+      pagination: false,
       ordering: {
         createdAt: true,
       },
@@ -20,18 +25,18 @@ schema.objectType({
   },
 })
 
-schema.objectType({
+const Comment = objectType({
   name: 'Comment',
   definition(t) {
     t.model.id()
     t.model.author()
     t.model.body()
     t.model.createdAt()
-    t.model.thanks()
+    t.model.thanks({ pagination: false })
   },
 })
 
-schema.objectType({
+const PostComment = objectType({
   name: 'PostComment',
   definition(t) {
     t.model.id()
@@ -41,7 +46,8 @@ schema.objectType({
   },
 })
 
-schema.mutationType({
+const PostMutations = extendType({
+  type: 'Mutation',
   definition(t) {
     t.field('createThread', {
       type: 'Thread',
@@ -59,7 +65,7 @@ schema.mutationType({
         }
 
         const { postId, startIndex, endIndex, highlightedContent } = args
-        const post = await ctx.db.post.findOne({ where: { id: postId } })
+        const post = await ctx.db.post.findUnique({ where: { id: postId } })
 
         if (!post) {
           throw new Error(`Unable to find post with id ${postId}`)
@@ -100,7 +106,7 @@ schema.mutationType({
         threadId: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
-        const thread = await ctx.db.thread.findOne({
+        const thread = await ctx.db.thread.findUnique({
           where: {
             id: args.threadId,
           },
@@ -140,7 +146,7 @@ schema.mutationType({
           throw new Error('You must be logged in to post comments.')
         }
 
-        const thread = await ctx.db.thread.findOne({
+        const thread = await ctx.db.thread.findUnique({
           where: { id: args.threadId },
           include: {
             subscriptions: {
@@ -224,12 +230,12 @@ schema.mutationType({
         if (!userId) throw new Error('You must be logged in to do that.')
 
         const [currentUser, originalComment] = await Promise.all([
-          ctx.db.user.findOne({
+          ctx.db.user.findUnique({
             where: {
               id: userId,
             },
           }),
-          ctx.db.comment.findOne({
+          ctx.db.comment.findUnique({
             where: {
               id: args.commentId,
             },
@@ -262,7 +268,7 @@ schema.mutationType({
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
-        const currentUser = await ctx.db.user.findOne({
+        const currentUser = await ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -270,7 +276,7 @@ schema.mutationType({
 
         if (!currentUser) throw new Error('User not found.')
 
-        const originalComment = await ctx.db.comment.findOne({
+        const originalComment = await ctx.db.comment.findUnique({
           where: {
             id: args.commentId,
           },
@@ -302,7 +308,7 @@ schema.mutationType({
           throw new Error('You must be logged in to post comments.')
         }
 
-        const post = await ctx.db.post.findOne({
+        const post = await ctx.db.post.findUnique({
           where: {
             id: args.postId,
           },
@@ -355,12 +361,12 @@ schema.mutationType({
         if (!userId) throw new Error('You must be logged in to do that.')
 
         const [currentUser, originalPostComment] = await Promise.all([
-          ctx.db.user.findOne({
+          ctx.db.user.findUnique({
             where: {
               id: userId,
             },
           }),
-          ctx.db.postComment.findOne({
+          ctx.db.postComment.findUnique({
             where: {
               id: args.postCommentId,
             },
@@ -393,7 +399,7 @@ schema.mutationType({
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
-        const currentUser = await ctx.db.user.findOne({
+        const currentUser = await ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -401,7 +407,7 @@ schema.mutationType({
 
         if (!currentUser) throw new Error('User not found.')
 
-        const originalPostComment = await ctx.db.postComment.findOne({
+        const originalPostComment = await ctx.db.postComment.findUnique({
           where: {
             id: args.postCommentId,
           },
@@ -422,3 +428,10 @@ schema.mutationType({
     })
   },
 })
+
+export default [
+  Thread,
+  Comment,
+  PostComment,
+  PostMutations,
+]

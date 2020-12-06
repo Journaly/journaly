@@ -1,4 +1,11 @@
-import { schema } from 'nexus'
+import {
+  arg,
+  intArg,
+  stringArg,
+  booleanArg,
+  objectType,
+  extendType,
+} from '@nexus/schema'
 
 import {
   processEditorDocument,
@@ -23,7 +30,7 @@ const assignPostCountBadges = async (
   // Use a raw query here because we'll soon have a number of post count
   // badges and we could end up with quite a bit of back and fourth
   // querying, whereas here we can just make one roundtrip.
-  const newBadgeCount = await db.raw`
+  const newBadgeCount = await db.$executeRaw`
     WITH posts AS (
         SELECT COUNT(*) AS count
         FROM "Post"
@@ -45,7 +52,6 @@ const assignPostCountBadges = async (
       )
     )
     ON CONFLICT DO NOTHING
-    RETURNING *
   `
   // This is a horrible hack because of this bug in prisma where `RETURNING`
   // is basically ignored and we get a row count instead. See:
@@ -57,7 +63,7 @@ const assignPostCountBadges = async (
       where: { user: { id: userId } },
       include: { user: true },
       orderBy: { createdAt: 'desc', },
-      first: newBadgeCount
+      take: newBadgeCount
     })
 
     await Promise.all(newBadges.map(badge => {
@@ -69,7 +75,7 @@ const assignPostCountBadges = async (
   }
 }
 
-schema.objectType({
+const PostTopic = objectType({
   name: 'PostTopic',
   definition(t) {
     t.model.id()
@@ -78,7 +84,7 @@ schema.objectType({
   },
 })
 
-schema.objectType({
+const Post = objectType({
   name: 'Post',
   definition(t) {
     t.model.id()
@@ -88,10 +94,11 @@ schema.objectType({
     t.model.readTime()
     t.model.author()
     t.model.status()
-    t.model.likes()
-    t.model.threads()
-    t.model.postTopics({ type: 'PostTopic' })
+    t.model.likes({ pagination: false })
+    t.model.threads({ pagination: false })
+    t.model.postTopics({ type: 'PostTopic', pagination: false })
     t.model.postComments({
+      pagination: false,
       ordering: {
         createdAt: true,
       },
@@ -100,7 +107,7 @@ schema.objectType({
     t.model.createdAt()
     t.model.updatedAt()
     t.model.bodySrc()
-    t.model.images()
+    t.model.images({ pagination: false })
     t.model.publishedAt()
     t.int('commentCount', {
       resolve: async (parent, _args, ctx, _info) => {
@@ -128,7 +135,7 @@ schema.objectType({
 // Includes 1 page and the total number of posts.
 // posts: the returned page after filtering.
 // count: the total posts matching the filter.
-schema.objectType({
+const PostPage = objectType({
   name: 'PostPage',
   definition(t) {
     t.list.field('posts', {
@@ -138,14 +145,14 @@ schema.objectType({
   },
 })
 
-schema.extendType({
+const PostQueries = extendType({
   type: 'Query',
   definition(t) {
     t.list.field('posts', {
       type: 'Post',
       args: {
-        status: schema.arg({ type: 'PostStatus', required: true }),
-        authorId: schema.intArg({ required: true }),
+        status: arg({ type: 'PostStatus', required: true }),
+        authorId: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         return ctx.db.post.findMany({
@@ -163,10 +170,13 @@ schema.extendType({
     t.field('postById', {
       type: 'Post',
       args: {
-        id: schema.intArg(),
+        id: intArg({
+          description: 'ID of the post to be retreived',
+          required: true
+        }),
       },
       resolve: async (_parent, args, ctx) => {
-        const post = await ctx.db.post.findOne({
+        const post = await ctx.db.post.findUnique({
           where: {
             id: args.id,
           },
@@ -187,17 +197,36 @@ schema.extendType({
     t.field('feed', {
       type: 'PostPage',
       args: {
-        search: schema.stringArg({ required: false }),
-        languages: schema.intArg({ required: false, list: true }),
-        topic: schema.intArg({ required: false }),
-        skip: schema.intArg(),
-        first: schema.intArg(),
-        followedAuthors: schema.booleanArg({ required: false }),
+        search: stringArg({
+          description: 'Not used.',
+          required: false
+        }),
+        languages: intArg({
+          description: 'Language IDs to filter posts by. No value means all languages.',
+          required: false,
+          list: true,
+        }),
+        topic: intArg({
+          description: 'Not used.',
+          required: false
+        }),
+        skip: intArg({
+          description: 'Offset into the feed post list to return',
+          required: true,
+        }),
+        first: intArg({
+          description: 'Number of posts to return',
+          required: true
+        }),
+        followedAuthors: booleanArg({
+          description: 'Author IDs to filter posts by. No value means all languages.',
+          required: false
+        }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
-        const currentUser = await ctx.db.user.findOne({
+        const currentUser = await ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -270,7 +299,7 @@ schema.extendType({
             },
           },
           skip: args.skip,
-          first: args.first,
+          take: args.first,
           orderBy: {
             publishedAt: 'desc',
           },
@@ -286,18 +315,18 @@ schema.extendType({
   },
 })
 
-schema.extendType({
+const PostMutations = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('createPost', {
       type: 'Post',
       args: {
-        title: schema.stringArg({ required: true }),
-        body: EditorNode.asArg({ list: true }),
-        languageId: schema.intArg({ required: true }),
-        topicIds: schema.intArg({ list: true, required: false }),
-        status: schema.arg({ type: 'PostStatus' }),
-        images: ImageInput.asArg({ list: true }),
+        title: stringArg({ required: true }),
+        body: EditorNode.asArg({ list: true, required: true }),
+        languageId: intArg({ required: true }),
+        topicIds: intArg({ list: true, required: false }),
+        status: arg({ type: 'PostStatus', required: true }),
+        images: ImageInput.asArg({ list: true, nullable: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { title, body, languageId, status, images } = args
@@ -363,13 +392,13 @@ schema.extendType({
     t.field('updatePost', {
       type: 'Post',
       args: {
-        postId: schema.intArg({ required: true }),
-        title: schema.stringArg({ required: false }),
-        languageId: schema.intArg({ required: false }),
-        topicIds: schema.intArg({ list: true, required: false }),
+        postId: intArg({ required: true }),
+        title: stringArg({ required: false }),
+        languageId: intArg({ required: false }),
+        topicIds: intArg({ list: true, required: false }),
         body: EditorNode.asArg({ list: true, required: false }),
-        status: schema.arg({ type: 'PostStatus', required: false }),
-        images: ImageInput.asArg({ list: true }),
+        status: arg({ type: 'PostStatus', required: false }),
+        images: ImageInput.asArg({ list: true, nullable: true }),
       },
       resolve: async (_parent, args, ctx) => {
         // Check user can actually do this
@@ -377,12 +406,12 @@ schema.extendType({
         if (!userId) throw new NotAuthorizedError()
 
         const [currentUser, originalPost] = await Promise.all([
-          ctx.db.user.findOne({
+          ctx.db.user.findUnique({
             where: {
               id: userId,
             },
           }),
-          ctx.db.post.findOne({
+          ctx.db.post.findUnique({
             where: {
               id: args.postId,
             },
@@ -503,14 +532,14 @@ schema.extendType({
     t.field('deletePost', {
       type: 'Post',
       args: {
-        postId: schema.intArg({ required: true })
+        postId: intArg({ required: true })
       },
       resolve: async (_parent, args, ctx) => {
         const { postId } = args
         const { userId } = ctx.request
         if (!userId) throw new NotAuthorizedError()
 
-        const post = await ctx.db.post.findOne({
+        const post = await ctx.db.post.findUnique({
           where: {
             id: postId,
           },
@@ -522,7 +551,7 @@ schema.extendType({
 
         if (!post) throw new Error('Post not found.');
 
-        const currentUser = await ctx.db.user.findOne({
+        const currentUser = await ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -627,3 +656,11 @@ schema.extendType({
     })
   },
 })
+
+export default [
+  PostTopic,
+  Post,
+  PostPage,
+  PostQueries,
+  PostMutations,
+]

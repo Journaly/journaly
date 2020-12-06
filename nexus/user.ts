@@ -1,4 +1,9 @@
-import { schema } from 'nexus'
+import {
+  intArg,
+  stringArg,
+  objectType,
+  extendType,
+} from '@nexus/schema'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
@@ -8,11 +13,11 @@ import { BadgeType } from '@prisma/client'
 
 import { NotAuthorizedError } from './errors'
 import { sendPasswordResetTokenEmail } from './utils'
-import { intArg } from 'nexus/components/schema'
 import { validateUpdateUserMutationData } from './utils/userValidation'
 
-schema.objectType({
+const User = objectType({
   name: 'User',
+  rootTyping: 'prisma.User',
   definition(t) {
     t.model.id()
     t.model.name()
@@ -32,15 +37,13 @@ schema.objectType({
     t.model.bio()
     t.model.userRole()
     t.model.location()
-    t.model.badges()
-    t.model.posts({
-      pagination: false,
-    })
+    t.model.badges({ pagination: false })
+    t.model.posts({ pagination: false })
     t.model.profileImage()
     t.model.createdAt()
-    t.model.languages()
-    t.model.following()
-    t.model.followedBy()
+    t.model.languages({ pagination: false })
+    t.model.following({ pagination: false })
+    t.model.followedBy({ pagination: false })
     t.int('postsWrittenCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.post.count({
@@ -65,7 +68,7 @@ schema.objectType({
 })
 
 
-schema.objectType({
+const UserBadge = objectType({
   name: 'UserBadge',
   definition(t) {
     t.model.id()
@@ -74,7 +77,7 @@ schema.objectType({
   }
 })
 
-schema.extendType({
+const UserQueries = extendType({
   type: 'Query',
   definition(t) {
     t.list.field('users', {
@@ -86,13 +89,14 @@ schema.extendType({
 
     t.field('currentUser', {
       type: 'User',
+      nullable: true,
       resolve: async (_parent, _args, ctx) => {
         const userId = ctx.request.userId
         // check for current userId
         if (!userId) {
           return null
         }
-        return ctx.db.user.findOne({
+        return ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -103,12 +107,12 @@ schema.extendType({
     t.field('userById', {
       type: 'User',
       args: {
-        id: schema.intArg({ required: true }),
+        id: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         if (!args.id) throw new Error('ID is required')
 
-        const user = await ctx.db.user.findOne({
+        const user = await ctx.db.user.findUnique({
           where: {
             id: args.id,
           },
@@ -124,15 +128,15 @@ schema.extendType({
   },
 })
 
-schema.extendType({
+const UserMutations = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('createUser', {
       type: 'User',
       args: {
-        handle: schema.stringArg({ required: true }),
-        email: schema.stringArg({ required: true }),
-        password: schema.stringArg({ required: true }),
+        handle: stringArg({ required: true }),
+        email: stringArg({ required: true }),
+        password: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx: any) => {
         if (!args.handle.match(/^[a-zA-Z0-9_-]+$/)) {
@@ -171,11 +175,11 @@ schema.extendType({
     t.field('updateUser', {
       type: 'User',
       args: {
-        email: schema.stringArg({ required: false }),
-        name: schema.stringArg({ required: false }),
-        profileImage: schema.stringArg({ required: false }),
-        bio: schema.stringArg({ required: false }),
-        handle: schema.stringArg({ required: false }),
+        email: stringArg({ required: false }),
+        name: stringArg({ required: false }),
+        profileImage: stringArg({ required: false }),
+        bio: stringArg({ required: false }),
+        handle: stringArg({ required: false }),
       },
       resolve: async (_parent, args, ctx: any) => {
         const { userId } = ctx.request
@@ -199,13 +203,13 @@ schema.extendType({
     t.field('updatePassword', {
       type: 'User',
       args: {
-        oldPassword: schema.stringArg({ required: true }),
-        newPassword: schema.stringArg({ required: true }),
+        oldPassword: stringArg({ required: true }),
+        newPassword: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx: any) => {
         const { userId } = ctx.request
 
-        const user = await ctx.db.user.findOne({
+        const user = await ctx.db.user.findUnique({
           where: {
             id: userId,
           },
@@ -242,11 +246,11 @@ schema.extendType({
     t.field('loginUser', {
       type: 'User',
       args: {
-        identifier: schema.stringArg({ required: true }),
-        password: schema.stringArg({ required: true }),
+        identifier: stringArg({ required: true }),
+        password: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx: any) => {
-        const user = await ctx.db.user.findOne({
+        const user = await ctx.db.user.findUnique({
           where: {
             email: args.identifier.toLowerCase(),
           },
@@ -279,10 +283,10 @@ schema.extendType({
     t.field('requestResetPassword', {
       type: 'User',
       args: {
-        identifier: schema.stringArg({ required: true }),
+        identifier: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx, _info) => {
-        const user = await ctx.db.user.findOne({
+        const user = await ctx.db.user.findUnique({
           where: {
             email: args.identifier.toLowerCase(),
           },
@@ -320,9 +324,9 @@ schema.extendType({
     t.field('resetPassword', {
       type: 'User',
       args: {
-        resetToken: schema.stringArg({ required: true }),
-        password: schema.stringArg({ required: true }),
-        confirmPassword: schema.stringArg({ required: true }),
+        resetToken: stringArg({ required: true }),
+        password: stringArg({ required: true }),
+        confirmPassword: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx, _info) => {
         const { password, confirmPassword, resetToken } = args
@@ -379,7 +383,7 @@ schema.extendType({
           throw new NotAuthorizedError()
         }
 
-        const user = await ctx.db.user.findOne({
+        const user = await ctx.db.user.findUnique({
           where: { id: ctx.request.userId },
         })
 
@@ -443,3 +447,10 @@ schema.extendType({
     })
   },
 })
+
+export default [
+  User,
+  UserBadge,
+  UserQueries,
+  UserMutations,
+]

@@ -1,10 +1,10 @@
-import { schema } from 'nexus'
+import { inputObjectType } from '@nexus/schema'
 
 // Input type modeling the FE editor data structure. Not the best typing as this
 // is concepturally the untion of two types, internal nodes and leaf nodes, but
 // AFAIK GQL does not have a native union type, so we simply unify all the fields
 // and make them all nullable.
-export const EditorNode = schema.inputObjectType({
+export const EditorNode = inputObjectType({
   name: 'EditorNode',
   definition(t) {
     t.string('type', { nullable: true })
@@ -20,7 +20,7 @@ export const EditorNode = schema.inputObjectType({
   },
 })
 
-export const ImageInput = schema.inputObjectType({
+export const ImageInput = inputObjectType({
   name: 'ImageInput',
   definition(t) {
     t.string('smallSize', { nullable: false })
@@ -28,3 +28,8 @@ export const ImageInput = schema.inputObjectType({
     t.field('imageRole', { type: 'ImageRole', nullable: false })
   },
 })
+
+export default [
+  EditorNode,
+  ImageInput,
+]

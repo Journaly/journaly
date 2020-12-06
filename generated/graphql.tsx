@@ -12,56 +12,29 @@ export type Scalars = {
   DateTime: any
 }
 
-export type AuthorIdCommentIdCompoundUniqueInput = {
-  authorId: Scalars['Int']
-  commentId: Scalars['Int']
-}
-
-export type AuthorIdPostIdCompoundUniqueInput = {
-  authorId: Scalars['Int']
-  postId: Scalars['Int']
-}
-
-export enum BadgeType {
-  AlphaUser = 'ALPHA_USER',
-  BetaUser = 'BETA_USER',
-  TenPosts = 'TEN_POSTS',
-  OnehundredPosts = 'ONEHUNDRED_POSTS',
-  CodeContributor = 'CODE_CONTRIBUTOR',
-}
-
-export type Comment = {
-  __typename?: 'Comment'
+export type Image = {
+  __typename?: 'Image'
   id: Scalars['Int']
-  author: User
-  body: Scalars['String']
-  createdAt: Scalars['DateTime']
-  thanks: Array<CommentThanks>
+  imageRole: ImageRole
+  smallSize: Scalars['String']
+  largeSize: Scalars['String']
 }
 
-export type CommentThanksArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<CommentThanksWhereUniqueInput>
-  before?: Maybe<CommentThanksWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type CommentThanks = {
-  __typename?: 'CommentThanks'
+export type TopicTranslation = {
+  __typename?: 'TopicTranslation'
   id: Scalars['Int']
-  commentId: Scalars['Int']
-  author: User
-  comment: Comment
+  name: Scalars['String']
+  uiLanguage: UiLanguage
 }
 
-export type CommentThanksWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-  authorId_commentId?: Maybe<AuthorIdCommentIdCompoundUniqueInput>
+export type Topic = {
+  __typename?: 'Topic'
+  id: Scalars['Int']
+  name?: Maybe<Scalars['String']>
 }
 
-export type CommentWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
+export type TopicNameArgs = {
+  uiLanguage: UiLanguage
 }
 
 export type EditorNode = {
@@ -73,51 +46,107 @@ export type EditorNode = {
   children?: Maybe<Array<EditorNode>>
 }
 
-export type Image = {
-  __typename?: 'Image'
-  id: Scalars['Int']
-  imageRole: ImageRole
-  smallSize: Scalars['String']
-  largeSize: Scalars['String']
-}
-
 export type ImageInput = {
   smallSize: Scalars['String']
   largeSize: Scalars['String']
   imageRole: ImageRole
 }
 
-export enum ImageRole {
-  Headline = 'HEADLINE',
-  Inline = 'INLINE',
-}
-
-export type ImageWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-}
-
-export type Language = {
-  __typename?: 'Language'
+export type Thread = {
+  __typename?: 'Thread'
   id: Scalars['Int']
-  name: Scalars['String']
+  archived: Scalars['Boolean']
+  startIndex: Scalars['Int']
+  endIndex: Scalars['Int']
+  highlightedContent: Scalars['String']
+  comments: Array<Comment>
+}
+
+export type ThreadCommentsArgs = {
+  orderBy: Array<ThreadCommentsOrderByInput>
+}
+
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['Int']
+  author: User
+  body: Scalars['String']
+  createdAt: Scalars['DateTime']
+  thanks: Array<CommentThanks>
+}
+
+export type PostComment = {
+  __typename?: 'PostComment'
+  id: Scalars['Int']
+  author: User
+  body: Scalars['String']
+  createdAt: Scalars['DateTime']
+}
+
+export type PostTopic = {
+  __typename?: 'PostTopic'
+  id: Scalars['Int']
+  post: Post
+  topic: Topic
+}
+
+export type Post = {
+  __typename?: 'Post'
+  id: Scalars['Int']
+  title: Scalars['String']
+  body: Scalars['String']
+  excerpt: Scalars['String']
+  readTime: Scalars['Int']
+  author: User
+  status: PostStatus
+  likes: Array<PostLike>
+  threads: Array<Thread>
+  postTopics: Array<PostTopic>
+  postComments: Array<PostComment>
+  language: Language
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  bodySrc: Scalars['String']
+  images: Array<Image>
+  publishedAt?: Maybe<Scalars['DateTime']>
+  commentCount: Scalars['Int']
+}
+
+export type PostPostCommentsArgs = {
+  orderBy: Array<PostPostCommentsOrderByInput>
+}
+
+export type PostPage = {
+  __typename?: 'PostPage'
   posts: Array<Post>
-  dialect?: Maybe<Scalars['String']>
-  postCount?: Maybe<Scalars['Int']>
+  count: Scalars['Int']
 }
 
-export type LanguagePostsArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<PostWhereUniqueInput>
-  before?: Maybe<PostWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
+export type User = {
+  __typename?: 'User'
+  id: Scalars['Int']
+  name?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
+  handle: Scalars['String']
+  bio?: Maybe<Scalars['String']>
+  userRole: UserRole
+  location?: Maybe<Location>
+  badges: Array<UserBadge>
+  posts: Array<Post>
+  profileImage?: Maybe<Scalars['String']>
+  createdAt: Scalars['DateTime']
+  languages: Array<LanguageRelation>
+  following: Array<User>
+  followedBy: Array<User>
+  postsWrittenCount: Scalars['Int']
+  thanksReceivedCount: Scalars['Int']
 }
 
-export enum LanguageLevel {
-  Beginner = 'BEGINNER',
-  Intermediate = 'INTERMEDIATE',
-  Advanced = 'ADVANCED',
-  Native = 'NATIVE',
+export type UserBadge = {
+  __typename?: 'UserBadge'
+  id: Scalars['Int']
+  type: BadgeType
+  createdAt: Scalars['DateTime']
 }
 
 export type LanguageRelation = {
@@ -127,9 +156,26 @@ export type LanguageRelation = {
   level: LanguageLevel
 }
 
-export type LanguageRelationWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-  userId_languageId?: Maybe<UserIdLanguageIdCompoundUniqueInput>
+export type Language = {
+  __typename?: 'Language'
+  id: Scalars['Int']
+  name: Scalars['String']
+  posts: Array<Post>
+  dialect?: Maybe<Scalars['String']>
+  postCount: Scalars['Int']
+}
+
+export type PostLike = {
+  __typename?: 'PostLike'
+  id: Scalars['Int']
+}
+
+export type CommentThanks = {
+  __typename?: 'CommentThanks'
+  id: Scalars['Int']
+  commentId: Scalars['Int']
+  author: User
+  comment: Comment
 }
 
 export type Location = {
@@ -139,33 +185,124 @@ export type Location = {
   city: Scalars['String']
 }
 
+export enum ImageRole {
+  Headline = 'HEADLINE',
+  Inline = 'INLINE',
+}
+
+export enum UiLanguage {
+  English = 'ENGLISH',
+  German = 'GERMAN',
+}
+
+export type ThreadCommentsOrderByInput = {
+  createdAt?: Maybe<SortOrder>
+}
+
+export enum PostStatus {
+  Draft = 'DRAFT',
+  Published = 'PUBLISHED',
+}
+
+export type PostPostCommentsOrderByInput = {
+  createdAt?: Maybe<SortOrder>
+}
+
+export enum UserRole {
+  Admin = 'ADMIN',
+  Moderator = 'MODERATOR',
+  FreeUser = 'FREE_USER',
+  ProUser = 'PRO_USER',
+}
+
+export enum BadgeType {
+  AlphaUser = 'ALPHA_USER',
+  BetaUser = 'BETA_USER',
+  TenPosts = 'TEN_POSTS',
+  OnehundredPosts = 'ONEHUNDRED_POSTS',
+  CodeContributor = 'CODE_CONTRIBUTOR',
+}
+
+export enum LanguageLevel {
+  Beginner = 'BEGINNER',
+  Intermediate = 'INTERMEDIATE',
+  Advanced = 'ADVANCED',
+  Native = 'NATIVE',
+}
+
+export enum SortOrder {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export type Query = {
+  __typename?: 'Query'
+  topics: Array<Topic>
+  posts: Array<Post>
+  postById: Post
+  feed: PostPage
+  users: Array<User>
+  currentUser?: Maybe<User>
+  userById: User
+  languages: Array<Language>
+}
+
+export type QueryTopicsArgs = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+}
+
+export type QueryPostsArgs = {
+  status: PostStatus
+  authorId: Scalars['Int']
+}
+
+export type QueryPostByIdArgs = {
+  id: Scalars['Int']
+}
+
+export type QueryFeedArgs = {
+  search?: Maybe<Scalars['String']>
+  languages?: Maybe<Array<Scalars['Int']>>
+  topic?: Maybe<Scalars['Int']>
+  skip: Scalars['Int']
+  first: Scalars['Int']
+  followedAuthors?: Maybe<Scalars['Boolean']>
+}
+
+export type QueryUserByIdArgs = {
+  id: Scalars['Int']
+}
+
+export type QueryLanguagesArgs = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
-  createThread?: Maybe<Thread>
-  deleteThread?: Maybe<Thread>
-  createComment?: Maybe<Comment>
-  updateComment?: Maybe<Comment>
-  deleteComment?: Maybe<Comment>
-  createPostComment?: Maybe<PostComment>
-  updatePostComment?: Maybe<PostComment>
-  deletePostComment?: Maybe<PostComment>
-  createPost?: Maybe<Post>
-  updatePost?: Maybe<Post>
-  deletePost?: Maybe<Post>
-  createUser?: Maybe<User>
-  updateUser?: Maybe<User>
-  updatePassword?: Maybe<User>
-  loginUser?: Maybe<User>
-  requestResetPassword?: Maybe<User>
-  resetPassword?: Maybe<User>
-  logout?: Maybe<User>
-  followUser?: Maybe<User>
-  unfollowUser?: Maybe<User>
-  addLanguageRelation?: Maybe<LanguageRelation>
-  removeLanguageRelation?: Maybe<LanguageRelation>
-  createCommentThanks?: Maybe<CommentThanks>
-  deleteCommentThanks?: Maybe<CommentThanks>
-  updateSocialMedia?: Maybe<Array<SocialMedia>>
+  createThread: Thread
+  deleteThread: Thread
+  createComment: Comment
+  updateComment: Comment
+  deleteComment: Comment
+  createPostComment: PostComment
+  updatePostComment: PostComment
+  deletePostComment: PostComment
+  createPost: Post
+  updatePost: Post
+  deletePost: Post
+  createUser: User
+  updateUser: User
+  updatePassword: User
+  loginUser: User
+  requestResetPassword: User
+  resetPassword: User
+  logout: User
+  followUser: User
+  unfollowUser: User
+  addLanguageRelation: LanguageRelation
+  removeLanguageRelation: LanguageRelation
+  createCommentThanks: CommentThanks
+  deleteCommentThanks: CommentThanks
 }
 
 export type MutationCreateThreadArgs = {
@@ -209,10 +346,10 @@ export type MutationDeletePostCommentArgs = {
 
 export type MutationCreatePostArgs = {
   title: Scalars['String']
-  body?: Maybe<Array<EditorNode>>
+  body: Array<EditorNode>
   languageId: Scalars['Int']
   topicIds?: Maybe<Array<Scalars['Int']>>
-  status?: Maybe<PostStatus>
+  status: PostStatus
   images?: Maybe<Array<ImageInput>>
 }
 
@@ -289,357 +426,15 @@ export type MutationDeleteCommentThanksArgs = {
   commentThanksId: Scalars['Int']
 }
 
-export type MutationUpdateSocialMediaArgs = {
-  facebook?: Maybe<Scalars['String']>
-  instagram?: Maybe<Scalars['String']>
-  youtube?: Maybe<Scalars['String']>
-  website?: Maybe<Scalars['String']>
-  linkedin?: Maybe<Scalars['String']>
-}
-
-export enum OrderByArg {
-  Asc = 'asc',
-  Desc = 'desc',
-}
-
-export type Post = {
-  __typename?: 'Post'
-  id: Scalars['Int']
-  title: Scalars['String']
-  body: Scalars['String']
-  excerpt: Scalars['String']
-  readTime: Scalars['Int']
-  author: User
-  status: PostStatus
-  likes: Array<PostLike>
-  threads: Array<Thread>
-  postTopics: Array<PostTopic>
-  postComments: Array<PostComment>
-  language: Language
-  createdAt: Scalars['DateTime']
-  updatedAt: Scalars['DateTime']
-  bodySrc: Scalars['String']
-  images: Array<Image>
-  publishedAt?: Maybe<Scalars['DateTime']>
-  commentCount?: Maybe<Scalars['Int']>
-}
-
-export type PostLikesArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<PostLikeWhereUniqueInput>
-  before?: Maybe<PostLikeWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type PostThreadsArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<ThreadWhereUniqueInput>
-  before?: Maybe<ThreadWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type PostPostTopicsArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<PostTopicWhereUniqueInput>
-  before?: Maybe<PostTopicWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type PostPostCommentsArgs = {
-  orderBy?: Maybe<PostPostCommentsOrderByInput>
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<PostCommentWhereUniqueInput>
-  before?: Maybe<PostCommentWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type PostImagesArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<ImageWhereUniqueInput>
-  before?: Maybe<ImageWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type PostComment = {
-  __typename?: 'PostComment'
-  id: Scalars['Int']
-  author: User
-  body: Scalars['String']
-  createdAt: Scalars['DateTime']
-}
-
-export type PostCommentWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-}
-
-export type PostIdTopicIdCompoundUniqueInput = {
-  postId: Scalars['Int']
-  topicId: Scalars['Int']
-}
-
-export type PostLike = {
-  __typename?: 'PostLike'
-  id: Scalars['Int']
-}
-
-export type PostLikeWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-  authorId_postId?: Maybe<AuthorIdPostIdCompoundUniqueInput>
-}
-
-export type PostPage = {
-  __typename?: 'PostPage'
-  posts?: Maybe<Array<Post>>
-  count?: Maybe<Scalars['Int']>
-}
-
-export type PostPostCommentsOrderByInput = {
-  createdAt?: Maybe<OrderByArg>
-}
-
-export enum PostStatus {
-  Draft = 'DRAFT',
-  Published = 'PUBLISHED',
-}
-
-export type PostTopic = {
-  __typename?: 'PostTopic'
-  id: Scalars['Int']
-  post: Post
-  topic: Topic
-}
-
-export type PostTopicWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-  postId_topicId?: Maybe<PostIdTopicIdCompoundUniqueInput>
-}
-
-export type PostWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-}
-
-export type Query = {
-  __typename?: 'Query'
-  posts?: Maybe<Array<Post>>
-  postById?: Maybe<Post>
-  feed?: Maybe<PostPage>
-  users?: Maybe<Array<User>>
-  currentUser?: Maybe<User>
-  userById?: Maybe<User>
-  languages?: Maybe<Array<Language>>
-  topics?: Maybe<Array<Topic>>
-  socialMedia?: Maybe<Array<SocialMedia>>
-}
-
-export type QueryPostsArgs = {
-  status: PostStatus
-  authorId: Scalars['Int']
-}
-
-export type QueryPostByIdArgs = {
-  id?: Maybe<Scalars['Int']>
-}
-
-export type QueryFeedArgs = {
-  search?: Maybe<Scalars['String']>
-  languages?: Maybe<Array<Scalars['Int']>>
-  topic?: Maybe<Scalars['Int']>
-  skip?: Maybe<Scalars['Int']>
-  first?: Maybe<Scalars['Int']>
-  followedAuthors?: Maybe<Scalars['Boolean']>
-}
-
-export type QueryUserByIdArgs = {
-  id: Scalars['Int']
-}
-
-export type QueryLanguagesArgs = {
-  hasPosts?: Maybe<Scalars['Boolean']>
-}
-
-export type QueryTopicsArgs = {
-  hasPosts?: Maybe<Scalars['Boolean']>
-}
-
-export type SocialMedia = {
-  __typename?: 'SocialMedia'
-  id: Scalars['Int']
-  platform: SocialMediaPlatform
-  url: Scalars['String']
-}
-
-export enum SocialMediaPlatform {
-  Facebook = 'FACEBOOK',
-  Youtube = 'YOUTUBE',
-  Instagram = 'INSTAGRAM',
-  Linkedin = 'LINKEDIN',
-}
-
-export type SocialMediaWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-}
-
-export type Thread = {
-  __typename?: 'Thread'
-  id: Scalars['Int']
-  archived: Scalars['Boolean']
-  startIndex: Scalars['Int']
-  endIndex: Scalars['Int']
-  highlightedContent: Scalars['String']
-  comments: Array<Comment>
-}
-
-export type ThreadCommentsArgs = {
-  orderBy?: Maybe<ThreadCommentsOrderByInput>
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<CommentWhereUniqueInput>
-  before?: Maybe<CommentWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type ThreadCommentsOrderByInput = {
-  createdAt?: Maybe<OrderByArg>
-}
-
-export type ThreadWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-}
-
-export type Topic = {
-  __typename?: 'Topic'
-  id: Scalars['Int']
-  name?: Maybe<Scalars['String']>
-}
-
-export type TopicNameArgs = {
-  uiLanguage: UiLanguage
-}
-
-export type TopicTranslation = {
-  __typename?: 'TopicTranslation'
-  id: Scalars['Int']
-  name: Scalars['String']
-  uiLanguage: UiLanguage
-}
-
-export enum UiLanguage {
-  English = 'ENGLISH',
-  German = 'GERMAN',
-}
-
-export type User = {
-  __typename?: 'User'
-  id: Scalars['Int']
-  name?: Maybe<Scalars['String']>
-  email?: Maybe<Scalars['String']>
-  handle: Scalars['String']
-  bio?: Maybe<Scalars['String']>
-  userRole: UserRole
-  location?: Maybe<Location>
-  badges: Array<UserBadge>
-  posts: Array<Post>
-  profileImage?: Maybe<Scalars['String']>
-  createdAt: Scalars['DateTime']
-  languages: Array<LanguageRelation>
-  socialMedia: Array<SocialMedia>
-  following: Array<User>
-  followedBy: Array<User>
-  postsWrittenCount?: Maybe<Scalars['Int']>
-  thanksReceivedCount?: Maybe<Scalars['Int']>
-}
-
-export type UserBadgesArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<UserBadgeWhereUniqueInput>
-  before?: Maybe<UserBadgeWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type UserLanguagesArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<LanguageRelationWhereUniqueInput>
-  before?: Maybe<LanguageRelationWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type UserSocialMediaArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<SocialMediaWhereUniqueInput>
-  before?: Maybe<SocialMediaWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type UserFollowingArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<UserWhereUniqueInput>
-  before?: Maybe<UserWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type UserFollowedByArgs = {
-  skip?: Maybe<Scalars['Int']>
-  after?: Maybe<UserWhereUniqueInput>
-  before?: Maybe<UserWhereUniqueInput>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}
-
-export type UserBadge = {
-  __typename?: 'UserBadge'
-  id: Scalars['Int']
-  type: BadgeType
-  createdAt: Scalars['DateTime']
-}
-
-export type UserBadgeWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-  userId_type?: Maybe<UserIdTypeCompoundUniqueInput>
-}
-
-export type UserIdLanguageIdCompoundUniqueInput = {
-  userId: Scalars['Int']
-  languageId: Scalars['Int']
-}
-
-export type UserIdTypeCompoundUniqueInput = {
-  userId: Scalars['Int']
-  type: BadgeType
-}
-
-export enum UserRole {
-  Admin = 'ADMIN',
-  Moderator = 'MODERATOR',
-  FreeUser = 'FREE_USER',
-  ProUser = 'PRO_USER',
-}
-
-export type UserWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>
-  email?: Maybe<Scalars['String']>
-  handle?: Maybe<Scalars['String']>
-}
-
 export type CreateCommentMutationVariables = {
   body: Scalars['String']
   threadId: Scalars['Int']
 }
 
 export type CreateCommentMutation = { __typename?: 'Mutation' } & {
-  createComment?: Maybe<
-    { __typename?: 'Comment' } & Pick<Comment, 'body'> & {
-        author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
-      }
-  >
+  createComment: { __typename?: 'Comment' } & Pick<Comment, 'body'> & {
+      author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+    }
 }
 
 export type CreatePostCommentMutationVariables = {
@@ -648,11 +443,9 @@ export type CreatePostCommentMutationVariables = {
 }
 
 export type CreatePostCommentMutation = { __typename?: 'Mutation' } & {
-  createPostComment?: Maybe<
-    { __typename?: 'PostComment' } & Pick<PostComment, 'body'> & {
-        author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
-      }
-  >
+  createPostComment: { __typename?: 'PostComment' } & Pick<PostComment, 'body'> & {
+      author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+    }
 }
 
 export type CreateThreadMutationVariables = {
@@ -663,7 +456,7 @@ export type CreateThreadMutationVariables = {
 }
 
 export type CreateThreadMutation = { __typename?: 'Mutation' } & {
-  createThread?: Maybe<{ __typename?: 'Thread' } & ThreadFragmentFragment>
+  createThread: { __typename?: 'Thread' } & ThreadFragmentFragment
 }
 
 export type DeleteCommentMutationVariables = {
@@ -671,7 +464,7 @@ export type DeleteCommentMutationVariables = {
 }
 
 export type DeleteCommentMutation = { __typename?: 'Mutation' } & {
-  deleteComment?: Maybe<{ __typename?: 'Comment' } & Pick<Comment, 'id'>>
+  deleteComment: { __typename?: 'Comment' } & Pick<Comment, 'id'>
 }
 
 export type DeletePostCommentMutationVariables = {
@@ -679,7 +472,7 @@ export type DeletePostCommentMutationVariables = {
 }
 
 export type DeletePostCommentMutation = { __typename?: 'Mutation' } & {
-  deletePostComment?: Maybe<{ __typename?: 'PostComment' } & Pick<PostComment, 'id'>>
+  deletePostComment: { __typename?: 'PostComment' } & Pick<PostComment, 'id'>
 }
 
 export type DeleteThreadMutationVariables = {
@@ -687,7 +480,7 @@ export type DeleteThreadMutationVariables = {
 }
 
 export type DeleteThreadMutation = { __typename?: 'Mutation' } & {
-  deleteThread?: Maybe<{ __typename?: 'Thread' } & Pick<Thread, 'id'>>
+  deleteThread: { __typename?: 'Thread' } & Pick<Thread, 'id'>
 }
 
 export type UpdateCommentMutationVariables = {
@@ -696,7 +489,7 @@ export type UpdateCommentMutationVariables = {
 }
 
 export type UpdateCommentMutation = { __typename?: 'Mutation' } & {
-  updateComment?: Maybe<{ __typename?: 'Comment' } & CommentFragmentFragment>
+  updateComment: { __typename?: 'Comment' } & CommentFragmentFragment
 }
 
 export type UpdatePostCommentMutationVariables = {
@@ -705,7 +498,7 @@ export type UpdatePostCommentMutationVariables = {
 }
 
 export type UpdatePostCommentMutation = { __typename?: 'Mutation' } & {
-  updatePostComment?: Maybe<{ __typename?: 'PostComment' } & PostCommentFragmentFragment>
+  updatePostComment: { __typename?: 'PostComment' } & PostCommentFragmentFragment
 }
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
@@ -832,11 +625,9 @@ export type AddLanguageRelationMutationVariables = {
 }
 
 export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
-  addLanguageRelation?: Maybe<
-    { __typename?: 'LanguageRelation' } & {
-      language: { __typename?: 'Language' } & Pick<Language, 'id'>
-    }
-  >
+  addLanguageRelation: { __typename?: 'LanguageRelation' } & {
+    language: { __typename?: 'Language' } & Pick<Language, 'id'>
+  }
 }
 
 export type LanguagesQueryVariables = {
@@ -844,13 +635,13 @@ export type LanguagesQueryVariables = {
 }
 
 export type LanguagesQuery = { __typename?: 'Query' } & {
-  languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageWithPostCountFragmentFragment>>
+  languages: Array<{ __typename?: 'Language' } & LanguageWithPostCountFragmentFragment>
 }
 
 export type LanguagesFormDataQueryVariables = {}
 
 export type LanguagesFormDataQuery = { __typename?: 'Query' } & {
-  languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
+  languages: Array<{ __typename?: 'Language' } & LanguageFragmentFragment>
   currentUser?: Maybe<
     { __typename?: 'User' } & {
       languages: Array<
@@ -867,7 +658,7 @@ export type RemoveLanguageRelationMutationVariables = {
 }
 
 export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
-  removeLanguageRelation?: Maybe<{ __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>>
+  removeLanguageRelation: { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>
 }
 
 export type PostPageQueryVariables = {
@@ -876,7 +667,7 @@ export type PostPageQueryVariables = {
 }
 
 export type PostPageQuery = { __typename?: 'Query' } & {
-  postById?: Maybe<{ __typename?: 'Post' } & PostWithTopicsFragmentFragment>
+  postById: { __typename?: 'Post' } & PostWithTopicsFragmentFragment
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
@@ -885,8 +676,8 @@ export type ProfilePageQueryVariables = {
 }
 
 export type ProfilePageQuery = { __typename?: 'Query' } & {
-  userById?: Maybe<{ __typename?: 'User' } & ProfileUserFragmentFragment>
-  posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+  userById: { __typename?: 'User' } & ProfileUserFragmentFragment
+  posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
@@ -897,7 +688,7 @@ export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
 
 export type CreatePostMutationVariables = {
   title: Scalars['String']
-  body?: Maybe<Array<EditorNode>>
+  body: Array<EditorNode>
   languageId: Scalars['Int']
   topicIds?: Maybe<Array<Scalars['Int']>>
   status: PostStatus
@@ -905,7 +696,7 @@ export type CreatePostMutationVariables = {
 }
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
-  createPost?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'id'>>
+  createPost: { __typename?: 'Post' } & Pick<Post, 'id'>
 }
 
 export type DeletePostMutationVariables = {
@@ -913,7 +704,7 @@ export type DeletePostMutationVariables = {
 }
 
 export type DeletePostMutation = { __typename?: 'Mutation' } & {
-  deletePost?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'id'>>
+  deletePost: { __typename?: 'Post' } & Pick<Post, 'id'>
 }
 
 export type EditPostQueryVariables = {
@@ -922,18 +713,16 @@ export type EditPostQueryVariables = {
 }
 
 export type EditPostQuery = { __typename?: 'Query' } & {
-  postById?: Maybe<
-    { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc' | 'updatedAt'> & {
-        language: { __typename?: 'Language' } & Pick<Language, 'id'>
-        images: Array<
-          { __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'smallSize' | 'imageRole'>
-        >
-        postTopics: Array<
-          { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
-        >
-      }
-  >
-  topics?: Maybe<Array<{ __typename?: 'Topic' } & TopicFragmentFragment>>
+  postById: { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc' | 'updatedAt'> & {
+      language: { __typename?: 'Language' } & Pick<Language, 'id'>
+      images: Array<
+        { __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'smallSize' | 'imageRole'>
+      >
+      postTopics: Array<
+        { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
+      >
+    }
+  topics: Array<{ __typename?: 'Topic' } & TopicFragmentFragment>
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
@@ -947,11 +736,9 @@ export type FeedQueryVariables = {
 }
 
 export type FeedQuery = { __typename?: 'Query' } & {
-  feed?: Maybe<
-    { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
-        posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
-      }
-  >
+  feed: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
+      posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+    }
 }
 
 export type NewPostQueryVariables = {
@@ -959,7 +746,7 @@ export type NewPostQueryVariables = {
 }
 
 export type NewPostQuery = { __typename?: 'Query' } & {
-  topics?: Maybe<Array<{ __typename?: 'Topic' } & TopicFragmentFragment>>
+  topics: Array<{ __typename?: 'Topic' } & TopicFragmentFragment>
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
@@ -969,7 +756,7 @@ export type PostByIdQueryVariables = {
 }
 
 export type PostByIdQuery = { __typename?: 'Query' } & {
-  postById?: Maybe<{ __typename?: 'Post' } & PostWithTopicsFragmentFragment>
+  postById: { __typename?: 'Post' } & PostWithTopicsFragmentFragment
 }
 
 export type PostsQueryVariables = {
@@ -978,7 +765,7 @@ export type PostsQueryVariables = {
 }
 
 export type PostsQuery = { __typename?: 'Query' } & {
-  posts?: Maybe<Array<{ __typename?: 'Post' } & PostCardFragmentFragment>>
+  posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
 }
 
 export type UpdatePostMutationVariables = {
@@ -992,7 +779,7 @@ export type UpdatePostMutationVariables = {
 }
 
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
-  updatePost?: Maybe<{ __typename?: 'Post' } & PostFragmentFragment>
+  updatePost: { __typename?: 'Post' } & PostFragmentFragment
 }
 
 export type CreateCommentThanksMutationVariables = {
@@ -1000,7 +787,7 @@ export type CreateCommentThanksMutationVariables = {
 }
 
 export type CreateCommentThanksMutation = { __typename?: 'Mutation' } & {
-  createCommentThanks?: Maybe<{ __typename?: 'CommentThanks' } & CommentThanksFragmentFragment>
+  createCommentThanks: { __typename?: 'CommentThanks' } & CommentThanksFragmentFragment
 }
 
 export type DeleteCommentThanksMutationVariables = {
@@ -1008,7 +795,7 @@ export type DeleteCommentThanksMutationVariables = {
 }
 
 export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
-  deleteCommentThanks?: Maybe<{ __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'>>
+  deleteCommentThanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'>
 }
 
 export type CreateUserMutationVariables = {
@@ -1018,7 +805,7 @@ export type CreateUserMutationVariables = {
 }
 
 export type CreateUserMutation = { __typename?: 'Mutation' } & {
-  createUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'email'>>
+  createUser: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'email'>
 }
 
 export type CurrentUserQueryVariables = {}
@@ -1032,7 +819,7 @@ export type FollowUserMutationVariables = {
 }
 
 export type FollowUserMutation = { __typename?: 'Mutation' } & {
-  followUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
+  followUser: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type FollowingUsersQueryVariables = {}
@@ -1051,13 +838,13 @@ export type LoginUserMutationVariables = {
 }
 
 export type LoginUserMutation = { __typename?: 'Mutation' } & {
-  loginUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
+  loginUser: { __typename?: 'User' } & UserFragmentFragment
 }
 
 export type LogoutMutationVariables = {}
 
 export type LogoutMutation = { __typename?: 'Mutation' } & {
-  logout?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
+  logout: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type RequestResetPasswordMutationVariables = {
@@ -1065,7 +852,7 @@ export type RequestResetPasswordMutationVariables = {
 }
 
 export type RequestResetPasswordMutation = { __typename?: 'Mutation' } & {
-  requestResetPassword?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
+  requestResetPassword: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type ResetPasswordMutationVariables = {
@@ -1075,13 +862,13 @@ export type ResetPasswordMutationVariables = {
 }
 
 export type ResetPasswordMutation = { __typename?: 'Mutation' } & {
-  resetPassword?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
+  resetPassword: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type SettingsFormDataQueryVariables = {}
 
 export type SettingsFormDataQuery = { __typename?: 'Query' } & {
-  languages?: Maybe<Array<{ __typename?: 'Language' } & LanguageFragmentFragment>>
+  languages: Array<{ __typename?: 'Language' } & LanguageFragmentFragment>
   currentUser?: Maybe<
     { __typename?: 'User' } & Pick<User, 'bio'> & {
         languages: Array<
@@ -1098,7 +885,7 @@ export type UnfollowUserMutationVariables = {
 }
 
 export type UnfollowUserMutation = { __typename?: 'Mutation' } & {
-  unfollowUser?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
+  unfollowUser: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type UpdatePasswordMutationVariables = {
@@ -1107,7 +894,7 @@ export type UpdatePasswordMutationVariables = {
 }
 
 export type UpdatePasswordMutation = { __typename?: 'Mutation' } & {
-  updatePassword?: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>
+  updatePassword: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type UpdateSocialMediaMutationVariables = {
@@ -1131,7 +918,7 @@ export type UpdateUserMutationVariables = {
 }
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
-  updateUser?: Maybe<{ __typename?: 'User' } & UserFragmentFragment>
+  updateUser: { __typename?: 'User' } & UserFragmentFragment
 }
 
 export type UserByIdQueryVariables = {
@@ -1139,18 +926,16 @@ export type UserByIdQueryVariables = {
 }
 
 export type UserByIdQuery = { __typename?: 'Query' } & {
-  userById?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  userById: { __typename?: 'User' } & UserWithLanguagesFragmentFragment
 }
 
 export type UsersQueryVariables = {}
 
 export type UsersQuery = { __typename?: 'Query' } & {
-  users?: Maybe<
-    Array<
-      { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'email'> & {
-          posts: Array<{ __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body'>>
-        }
-    >
+  users: Array<
+    { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'email'> & {
+        posts: Array<{ __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body'>>
+      }
   >
 }
 
@@ -2119,7 +1904,7 @@ export type ProfilePageQueryResult = ApolloReactCommon.QueryResult<
 export const CreatePostDocument = gql`
   mutation createPost(
     $title: String!
-    $body: [EditorNode!]
+    $body: [EditorNode!]!
     $languageId: Int!
     $topicIds: [Int!]
     $status: PostStatus!

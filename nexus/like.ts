@@ -1,8 +1,14 @@
-import { schema } from 'nexus'
+import {
+  objectType,
+} from '@nexus/schema'
 
-schema.objectType({
+const PostLike = objectType({
   name: 'PostLike',
   definition(t) {
     t.model.id()
   },
 })
+
+export default [
+  PostLike
+]

@@ -1,6 +1,6 @@
 mutation createPost(
   $title: String!
-  $body: [EditorNode!]
+  $body: [EditorNode!]!
   $languageId: Int!
   $topicIds: [Int!]
   $status: PostStatus!

@@ -1,6 +1,6 @@
-import { schema } from 'nexus'
+import { objectType } from '@nexus/schema'
 
-schema.objectType({
+const Image = objectType({
   name: 'Image',
   definition(t) {
     t.model.id()
@@ -9,3 +9,5 @@ schema.objectType({
     t.model.largeSize()
   },
 })
+
+export default [Image]

@@ -1,31 +1,40 @@
 require('dotenv').config()
 import jwt from 'jsonwebtoken'
-import { schema } from 'nexus'
+import { ApolloServer } from 'apollo-server-micro'
+import { PrismaClient } from '@prisma/client'
 
-if (process.env.NODE_ENV === 'development') require('nexus').default.reset()
+import { schema } from '../../nexus'
 
-const app = require('nexus').default
+const db = new PrismaClient()
 
-require('../../nexus')
+const server = new ApolloServer({
+  schema,
+  context: ({ req, res }) => { 
+    return {
+      db,
+      prisma: db,
+      request: req,
+      response: res,
+    }
+  }
+})
 
-// Watch https://github.com/graphql-nexus/nexus/issues/524
-// and https://github.com/graphql-nexus/nexus/issues/523 for future
-// changes to this function
-schema.addToContext((request: any) => ({
-  request,
-  response: request.response,
-}))
+const graphqlHandler = server.createHandler({ path: '/api/graphql' })
 
-app.assemble()
+export const config = {
+  api: {
+    bodyParser: false
+  }
+};
 
-function handler(req: any, res: any) {
+const handler = (req: any, res: any) => {
   const { token } = req.cookies
   req.response = res
   if (token) {
     const { userId } = jwt.verify(token, process.env.APP_SECRET!) as any
     req.userId = userId
   }
-  return app.server.handlers.graphql(req, res)
+  return graphqlHandler(req, res)
 }
 
 export default handler

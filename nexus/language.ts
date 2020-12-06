@@ -1,7 +1,13 @@
-import { schema } from 'nexus'
+import {
+  arg,
+  booleanArg,
+  intArg,
+  objectType,
+  extendType,
+} from '@nexus/schema'
 import { PostStatus } from '@prisma/client'
 
-schema.objectType({
+const LanguageRelation = objectType({
   name: 'LanguageRelation',
   definition(t) {
     t.model.id()
@@ -10,12 +16,12 @@ schema.objectType({
   }
 })
 
-schema.objectType({
+const Language = objectType({
   name: 'Language',
   definition(t) {
     t.model.id()
     t.model.name()
-    t.model.posts()
+    t.model.posts({ pagination: false })
     t.model.dialect()
     t.int('postCount', {
       resolve(parent, _args, ctx) {
@@ -32,13 +38,13 @@ schema.objectType({
   },
 })
 
-schema.extendType({
+const LanguageQueries = extendType({
   type: 'Query',
   definition(t) {
     t.list.field('languages', {
       type: 'Language',
       args: {
-        hasPosts: schema.booleanArg({ required: false }),
+        hasPosts: booleanArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
         let filter
@@ -63,14 +69,14 @@ schema.extendType({
   },
 })
 
-schema.extendType({
+const LanguageMutations = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('addLanguageRelation', {
       type: 'LanguageRelation',
       args: {
-        languageId: schema.intArg({ required: true }),
-        level: schema.arg({ type: 'LanguageLevel', required: true }),
+        languageId: intArg({ required: true }),
+        level: arg({ type: 'LanguageLevel', required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -79,7 +85,7 @@ schema.extendType({
           throw new Error('You must be logged in add language relations.')
         }
 
-        const language = await ctx.db.language.findOne({
+        const language = await ctx.db.language.findUnique({
           where: { id: args.languageId },
         })
 
@@ -99,7 +105,7 @@ schema.extendType({
     t.field('removeLanguageRelation', {
       type: 'LanguageRelation',
       args: {
-        languageId: schema.intArg({ required: true }),
+        languageId: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -117,7 +123,7 @@ schema.extendType({
           },
         }
 
-        const relation = await ctx.db.languageRelation.findOne(relFilter)
+        const relation = await ctx.db.languageRelation.findUnique(relFilter)
 
         if (!relation) {
           throw new Error(`Unable to find language relation.`)
@@ -128,3 +134,10 @@ schema.extendType({
     })
   },
 })
+
+export default [
+  LanguageRelation,
+  Language,
+  LanguageQueries,
+  LanguageMutations,
+]

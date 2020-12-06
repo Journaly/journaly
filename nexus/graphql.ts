@@ -1,6 +1,8 @@
-import { schema } from 'nexus'
+import {
+  objectType,
+} from '@nexus/schema'
 
-schema.objectType({
+const Location = objectType({
   name: 'Location',
   definition(t) {
     t.model.id()
@@ -8,3 +10,5 @@ schema.objectType({
     t.model.city()
   },
 })
+
+export default [Location]

@@ -13,22 +13,6 @@ const SocialMedia = objectType({
   },
 })
 
-const SocialMediaQuery = extendType({
-  type: 'Query',
-  definition(t) {
-    t.list.field('socialMedia', {
-      type: 'SocialMedia',
-      resolve: async (parent, _args, ctx) => {
-        return ctx.db.socialMedia.find({
-          where: {
-            userId: parent.id,
-          },
-        })
-      },
-    })
-  },
-})
-
 const SocialMediaMutations = extendType({
   type: 'Mutation',
   definition(t) {
@@ -51,14 +35,32 @@ const SocialMediaMutations = extendType({
 
         const dataToUpdate = { ...args }
 
-        for (const key in dataToUpdate) {
-          if (dataToUpdate[key] && !dataToUpdate[key].match(/^https?:\/\//))
-            dataToUpdate[key] = `https://${dataToUpdate[key]}`
-        }
+        if (dataToUpdate.facebook && !dataToUpdate.facebook.match(/^https?:\/\//))
+          dataToUpdate.facebook = `https://${dataToUpdate.facebook}`
+
+        if (dataToUpdate.instagram && !dataToUpdate.instagram.match(/^https?:\/\//))
+          dataToUpdate.instagram = `https://${dataToUpdate.instagram}`
+
+        if (dataToUpdate.youtube && !dataToUpdate.youtube.match(/^https?:\/\//))
+          dataToUpdate.youtube = `https://${dataToUpdate.youtube}`
+
+        if (dataToUpdate.website && !dataToUpdate.website.match(/^https?:\/\//))
+          dataToUpdate.website = `https://${dataToUpdate.website}`
 
         return ctx.db.socialMedia.upsert({
-          update: { ...dataToUpdate },
-          create: { ...dataToUpdate, user: { connect: { id: userId } } },
+          update: {
+            facebook: dataToUpdate.facebook ?? '',
+            instagram: dataToUpdate.instagram ?? '',
+            youtube: dataToUpdate.youtube ?? '',
+            website: dataToUpdate.website ?? '',
+          },
+          create: {
+            facebook: dataToUpdate.facebook ?? '',
+            instagram: dataToUpdate.instagram ?? '',
+            youtube: dataToUpdate.youtube ?? '',
+            website: dataToUpdate.website ?? '',
+            user: { connect: { id: userId } },
+          },
           where: { userId: userId },
         })
       },
@@ -66,4 +68,4 @@ const SocialMediaMutations = extendType({
   },
 })
 
-export default [SocialMedia, SocialMediaQuery, SocialMediaMutations]
+export default [SocialMedia, SocialMediaMutations]

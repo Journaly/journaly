@@ -21,7 +21,7 @@ type FormData = {
 }
 
 type SocialFormProps = {
-  socialMedia: SocialMedia | undefined
+  socialMedia?: SocialMedia | undefined | null
   refetch: () => void
 }
 

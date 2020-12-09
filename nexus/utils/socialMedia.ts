@@ -30,7 +30,12 @@ const validatePlatform = (platform: string, socialMediaUrl: string): InvalidInpu
   }
 }
 
-export const validateSocialMediaInput = (args): InvalidInput[] => {
+export const validateSocialMediaInput = (args: {
+  facebook?: string | undefined | null
+  youtube?: string | undefined | null
+  instagram?: string | undefined | null
+  website?: string | undefined | null
+}): InvalidInput[] => {
   const errors: InvalidInput[] = []
 
   if (args.facebook) {

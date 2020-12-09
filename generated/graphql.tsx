@@ -312,7 +312,7 @@ export type Mutation = {
   unfollowUser: User
   addLanguageRelation: LanguageRelation
   removeLanguageRelation: LanguageRelation
-  updateSocialMedia: Array<SocialMedia>
+  updateSocialMedia: SocialMedia
   createCommentThanks: CommentThanks
   deleteCommentThanks: CommentThanks
 }
@@ -702,7 +702,9 @@ export type ProfilePageQueryVariables = {
 export type ProfilePageQuery = { __typename?: 'Query' } & {
   userById: { __typename?: 'User' } & ProfileUserFragmentFragment
   posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
-  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  currentUser?: Maybe<
+    { __typename?: 'User' } & UserWithLanguagesFragmentFragment & SocialMediaFragmentFragment
+  >
 }
 
 export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
@@ -929,7 +931,7 @@ export type UpdateSocialMediaMutationVariables = {
 }
 
 export type UpdateSocialMediaMutation = { __typename?: 'Mutation' } & {
-  updateSocialMedia: Array<{ __typename?: 'SocialMedia' } & Pick<SocialMedia, 'id'>>
+  updateSocialMedia: { __typename?: 'SocialMedia' } & Pick<SocialMedia, 'id'>
 }
 
 export type UpdateUserMutationVariables = {
@@ -1881,11 +1883,13 @@ export const ProfilePageDocument = gql`
     }
     currentUser {
       ...UserWithLanguagesFragment
+      ...SocialMediaFragment
     }
   }
   ${ProfileUserFragmentFragmentDoc}
   ${PostCardFragmentFragmentDoc}
   ${UserWithLanguagesFragmentFragmentDoc}
+  ${SocialMediaFragmentFragmentDoc}
 `
 
 /**

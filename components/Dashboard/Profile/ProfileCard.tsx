@@ -9,11 +9,11 @@ import ExternalLink from '../../../elements/ExternalLink'
 import { sanitize } from '../../../utils'
 import { languageNameWithDialect } from '../../../utils/languages'
 import theme from '../../../theme'
-import { User, LanguageLevel } from '../../../generated/graphql'
+import { LanguageLevel, ProfileUserFragmentFragment } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type Props = {
-  user: User
+  user: ProfileUserFragmentFragment
 }
 
 const ProfileCard: React.FC<Props> = ({ user }) => {

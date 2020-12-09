@@ -19,9 +19,9 @@ const SocialMediaQuery = extendType({
     t.list.field('socialMedia', {
       type: 'SocialMedia',
       resolve: async (parent, _args, ctx) => {
-        return ctx.db.socialMedia.findMany({
+        return ctx.db.socialMedia.find({
           where: {
-            authorId: parent.id,
+            userId: parent.id,
           },
         })
       },

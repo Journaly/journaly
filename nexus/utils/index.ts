@@ -1,12 +1,6 @@
 import { diffChars } from 'diff'
 import escapeHTML from 'escape-html'
 import { User, Thread } from '.prisma/client'
-import { PrismaClient } from '@prisma/client'
-
-export type Context = {
-  db: PrismaClient
-  request: { userId?: number }
-}
 
 export type NodeType = {
   text?: string | null

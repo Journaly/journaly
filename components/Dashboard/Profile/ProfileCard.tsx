@@ -9,24 +9,11 @@ import ExternalLink from '../../../elements/ExternalLink'
 import { sanitize } from '../../../utils'
 import { languageNameWithDialect } from '../../../utils/languages'
 import theme from '../../../theme'
-import {
-  ProfileUserFragmentFragment as UserType,
-  LanguageLevel,
-  SocialMedia,
-} from '../../../generated/graphql'
+import { User, LanguageLevel } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
-import { lowerCase } from 'lodash'
-import { SocialPlatform } from '../Settings/SocialFormField'
 
 type Props = {
-  user: UserType
-}
-
-const getPlatform = (platform: string, data: SocialMedia[]): string => {
-  const socialMedia = data?.find(
-    (socialMedia) => lowerCase(socialMedia.platform) === lowerCase(platform),
-  )
-  return socialMedia?.url || ''
+  user: User
 }
 
 const ProfileCard: React.FC<Props> = ({ user }) => {
@@ -37,16 +24,12 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
     location: 'San Francisco, United States',
   }
 
-  const socialMedia = {
-    instagram: getPlatform(SocialPlatform.INSTAGRAM, user.socialMedia),
-    facebook: getPlatform(SocialPlatform.FACEBOOK, user.socialMedia),
-    youtube: getPlatform(SocialPlatform.YOUTUBE, user.socialMedia),
-    website: getPlatform(SocialPlatform.WEBSITE, user.socialMedia)
-  }
-
   const name = user.name || user.handle
   const showSeparator =
-    socialMedia.facebook || socialMedia.instagram || socialMedia.youtube || socialMedia.website
+    user.socialMedia?.facebook ||
+    user.socialMedia?.instagram ||
+    user.socialMedia?.youtube ||
+    user.socialMedia?.website
   const profileImage = user.profileImage
 
   const speaksList = user.languages.filter((language) => language.level === LanguageLevel.Native)
@@ -113,23 +96,23 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         )}
 
         <div className="social-links">
-          {socialMedia.facebook && (
-            <ExternalLink href={socialMedia.facebook} className="social-link">
+          {user.socialMedia?.facebook && (
+            <ExternalLink href={user.socialMedia?.facebook} className="social-link">
               <FacebookIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
             </ExternalLink>
           )}
-          {socialMedia.instagram && (
-            <ExternalLink href={socialMedia.instagram} className="social-link">
+          {user.socialMedia?.instagram && (
+            <ExternalLink href={user.socialMedia?.instagram} className="social-link">
               <InstagramIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
             </ExternalLink>
           )}
-          {socialMedia.youtube && (
-            <ExternalLink href={socialMedia.youtube} className="social-link">
+          {user.socialMedia?.youtube && (
+            <ExternalLink href={user.socialMedia?.youtube} className="social-link">
               <YoutubeIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
             </ExternalLink>
           )}
-          {socialMedia.website && (
-            <ExternalLink href={socialMedia.website} className="social-link">
+          {user.socialMedia?.website && (
+            <ExternalLink href={user.socialMedia?.website} className="social-link">
               <GlobeIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
             </ExternalLink>
           )}

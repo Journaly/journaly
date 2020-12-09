@@ -3,15 +3,13 @@ mutation updateSocialMedia(
   $instagram: String
   $youtube: String
   $website: String
-  $linkedin: String
 ) {
   updateSocialMedia(
     facebook: $facebook
     instagram: $instagram
     youtube: $youtube
     website: $website
-    linkedin: $linkedin
   ) {
-    url
+    id
   }
 }

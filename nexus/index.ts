@@ -10,6 +10,7 @@ import InputTypes from './inputTypes'
 import PostTypes from './post'
 import UserTypes from './user'
 import LanguageTypes from './language'
+import SocialMediaTypes from './socialMedia'
 import LikeTypes from './like'
 import ThanksTypes from './thanks'
 import MiscTypes from './graphql'
@@ -42,6 +43,7 @@ const schemaOpts: any = {
     ...PostTypes,
     ...UserTypes,
     ...LanguageTypes,
+    ...SocialMediaTypes,
     ...LikeTypes,
     ...ThanksTypes,
     ...MiscTypes,

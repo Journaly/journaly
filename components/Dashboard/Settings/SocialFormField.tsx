@@ -12,9 +12,7 @@ export const SocialPlatform = {
   FACEBOOK: 'FACEBOOK',
   YOUTUBE: 'YOUTUBE',
   INSTAGRAM: 'INSTAGRAM',
-  LINKEDIN: 'LINKEDIN',
   WEBSITE: 'WEBSITE',
-  TWITTER: 'TWITTER',
 }
 
 const socialMediaPatterns = [
@@ -25,10 +23,6 @@ const socialMediaPatterns = [
   {
     platform: SocialPlatform.INSTAGRAM,
     pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([A-Za-z0-9-_\.]+)\/?$/im,
-  },
-  {
-    platform: SocialPlatform.LINKEDIN,
-    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?linkedin.com\/((in\/[^\/]+\/?)|(pub\/[^\/]+\/((\\w|\\d)+\/?){3}))$/im,
   },
   {
     platform: SocialPlatform.YOUTUBE,

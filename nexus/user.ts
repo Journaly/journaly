@@ -41,6 +41,7 @@ const User = objectType({
     t.model.posts({ pagination: false })
     t.model.profileImage()
     t.model.createdAt()
+    t.model.socialMedia()
     t.model.languages({ pagination: false })
     t.model.following({ pagination: false })
     t.model.followedBy({ pagination: false })

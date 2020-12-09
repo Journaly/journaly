@@ -28,8 +28,10 @@ fragment UserWithLanguagesFragment on User {
 fragment SocialMediaFragment on User {
   socialMedia {
     id
-    platform
-    url
+    facebook
+    youtube
+    instagram
+    website
   }
 }
 

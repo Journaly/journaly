@@ -1,16 +1,16 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import { ApolloError } from '@apollo/client'
+import { toLower } from 'lodash'
 import { useTranslation } from '../../../config/i18n'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
 import Button, { ButtonVariant } from '../../../elements/Button'
-import theme from '../../../theme'
 import { SocialPlatform, SocialFormField } from './SocialFormField'
-import { toLower, upperCase } from 'lodash'
-import FormError from '../../FormError'
 import { SocialMedia, useUpdateSocialMediaMutation } from '../../../generated/graphql'
-import { toast } from 'react-toastify'
-import { ApolloError } from '@apollo/client'
+import theme from '../../../theme'
+import FormError from '../../FormError'
 
 type FormData = {
   facebook: string
@@ -20,15 +20,8 @@ type FormData = {
   [key: string]: string
 }
 
-const getPlatformValue = (platform: string, data: SocialMedia[]): string => {
-  const socialMedia = data?.find(
-    (socialMedia) => upperCase(socialMedia.platform) === upperCase(platform),
-  )
-  return socialMedia?.url || ''
-}
-
 type SocialFormProps = {
-  socialMedia: SocialMedia[]
+  socialMedia: SocialMedia | undefined
   refetch: () => void
 }
 
@@ -46,7 +39,14 @@ const SocialForm: React.FC<SocialFormProps> = ({ socialMedia, refetch }) => {
   })
 
   const addServerErrors = (apolloError: ApolloError): void => {
-    const badRequest = (apolloError.networkError as any)?.result?.errors[0].extensions
+    const graphQLErrors = apolloError.graphQLErrors
+    if (!graphQLErrors) {
+      toast.error(t('profile.error.updateError'))
+      return
+    }
+
+    const badRequest = graphQLErrors[0].extensions;
+
     if (!badRequest || badRequest.statusCode !== 400) {
       toast.error(t('profile.error.updateError'))
       return
@@ -59,20 +59,19 @@ const SocialForm: React.FC<SocialFormProps> = ({ socialMedia, refetch }) => {
 
   const handleSocialSubmit = async (formData: FormData): Promise<void> => {
     if (formData) {
-      await updateSocialMedia({
-        variables: {
-          facebook: formData.facebook,
-          instagram: formData.instagram,
-          youtube: formData.youtube,
-          website: formData.website,
-        },
-      })
-        .then(() => {
-          refetch()
+      try {
+        await updateSocialMedia({
+          variables: {
+            facebook: formData.facebook,
+            instagram: formData.instagram,
+            youtube: formData.youtube,
+            website: formData.website,
+          },
         })
-        .catch((err) => {
-          addServerErrors(err)
-        })
+        refetch()
+      } catch (err) {
+        addServerErrors(err)
+      }
     }
   }
 
@@ -86,25 +85,25 @@ const SocialForm: React.FC<SocialFormProps> = ({ socialMedia, refetch }) => {
           <div className="social-form-fields">
             <SocialFormField
               name={toLower(SocialPlatform.FACEBOOK)}
-              defaultValue={getPlatformValue(SocialPlatform.FACEBOOK, socialMedia)}
+              defaultValue={socialMedia?.facebook}
               error={errors?.facebook}
               register={register}
             />
             <SocialFormField
               name={toLower(SocialPlatform.INSTAGRAM)}
-              defaultValue={getPlatformValue(SocialPlatform.INSTAGRAM, socialMedia)}
+              defaultValue={socialMedia?.instagram}
               error={errors?.instagram}
               register={register}
             />
             <SocialFormField
               name={toLower(SocialPlatform.YOUTUBE)}
-              defaultValue={getPlatformValue(SocialPlatform.YOUTUBE, socialMedia)}
+              defaultValue={socialMedia?.youtube}
               error={errors?.youtube}
               register={register}
             />
             <SocialFormField
               name={toLower(SocialPlatform.WEBSITE)}
-              defaultValue={getPlatformValue(SocialPlatform.WEBSITE, socialMedia)}
+              defaultValue={socialMedia?.website}
               error={errors?.website}
               register={register}
             />

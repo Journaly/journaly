@@ -34,7 +34,7 @@ const ProfileInfo: NextPage = () => {
                   />
                   <BioForm bio={data?.currentUser?.bio || ''} />
                   <InterestsForm />
-                  <SocialForm socialMedia={data.currentUser?.socialMedia || []} refetch={refetch} />
+                  <SocialForm socialMedia={data.currentUser?.socialMedia} refetch={refetch} />
                   <UILanguageSelect />
                 </>
               )}

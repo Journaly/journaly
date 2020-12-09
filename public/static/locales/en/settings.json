@@ -42,7 +42,7 @@
       "legend": "Social",
       "socialLabel": "Want to connect with other Journalers via social media? Or promote your own work? Tell everyone where they can find you.",
       "facebookPlaceholder": "facebook.com/YourPage",
-      "youtubePlaceholder": "youtube.com/c/YourChannel",
+      "youtubePlaceholder": "youtube.com/channel/YourChannel",
       "instagramPlaceholder": "instagram.com/YourPage",
       "websitePlaceholder": "Do you have a website?",
       "success": "Social media successfully updated."

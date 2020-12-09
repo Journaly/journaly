@@ -17,7 +17,7 @@ model User {
   bio                 String?
   posts               Post[]
   subscription        UserSubscription?
-  socialMedia         SocialMedia[]
+  socialMedia         SocialMedia?
   location            Location?            @relation(fields: [locationId], references: [id])
   locationId          Int?
   languagesNative     LanguageNative[]
@@ -89,11 +89,13 @@ model LanguageNative {
 }
 
 model SocialMedia {
-  id       Int                 @default(autoincrement()) @id
-  platform SocialMediaPlatform
-  url      String
-  author   User                @relation(fields: [authorId], references: [id])
-  authorId Int
+  id         Int      @default(autoincrement()) @id
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int      @unique
+  website    String
+  youtube    String
+  instagram  String
+  facebook   String
 }
 
 model Post {
@@ -317,15 +319,6 @@ enum PostStatus {
 enum ImageRole {
   HEADLINE
   INLINE
-}
-
-enum SocialMediaPlatform {
-  FACEBOOK
-  YOUTUBE
-  INSTAGRAM
-  LINKEDIN
-  WEBSITE
-  TWITTER
 }
 
 enum UILanguage {

@@ -135,6 +135,7 @@ export type User = {
   posts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
+  socialMedia?: Maybe<SocialMedia>
   languages: Array<LanguageRelation>
   following: Array<User>
   followedBy: Array<User>
@@ -163,6 +164,15 @@ export type Language = {
   posts: Array<Post>
   dialect?: Maybe<Scalars['String']>
   postCount: Scalars['Int']
+}
+
+export type SocialMedia = {
+  __typename?: 'SocialMedia'
+  id: Scalars['Int']
+  facebook: Scalars['String']
+  youtube: Scalars['String']
+  instagram: Scalars['String']
+  website: Scalars['String']
 }
 
 export type PostLike = {
@@ -245,6 +255,7 @@ export type Query = {
   currentUser?: Maybe<User>
   userById: User
   languages: Array<Language>
+  socialMedia: Array<SocialMedia>
 }
 
 export type QueryTopicsArgs = {
@@ -301,6 +312,7 @@ export type Mutation = {
   unfollowUser: User
   addLanguageRelation: LanguageRelation
   removeLanguageRelation: LanguageRelation
+  updateSocialMedia: Array<SocialMedia>
   createCommentThanks: CommentThanks
   deleteCommentThanks: CommentThanks
 }
@@ -418,6 +430,13 @@ export type MutationRemoveLanguageRelationArgs = {
   languageId: Scalars['Int']
 }
 
+export type MutationUpdateSocialMediaArgs = {
+  facebook?: Maybe<Scalars['String']>
+  instagram?: Maybe<Scalars['String']>
+  youtube?: Maybe<Scalars['String']>
+  website?: Maybe<Scalars['String']>
+}
+
 export type MutationCreateCommentThanksArgs = {
   commentId: Scalars['Int']
 }
@@ -521,7 +540,12 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 } & UserFragmentFragment
 
 export type SocialMediaFragmentFragment = { __typename?: 'User' } & {
-  socialMedia: Array<{ __typename?: 'SocialMedia' } & Pick<SocialMedia, 'id' | 'platform' | 'url'>>
+  socialMedia?: Maybe<
+    { __typename?: 'SocialMedia' } & Pick<
+      SocialMedia,
+      'id' | 'facebook' | 'youtube' | 'instagram' | 'website'
+    >
+  >
 }
 
 export type AuthorFragmentFragment = { __typename?: 'User' } & Pick<
@@ -902,11 +926,10 @@ export type UpdateSocialMediaMutationVariables = {
   instagram?: Maybe<Scalars['String']>
   youtube?: Maybe<Scalars['String']>
   website?: Maybe<Scalars['String']>
-  linkedin?: Maybe<Scalars['String']>
 }
 
 export type UpdateSocialMediaMutation = { __typename?: 'Mutation' } & {
-  updateSocialMedia?: Maybe<Array<{ __typename?: 'SocialMedia' } & Pick<SocialMedia, 'url'>>>
+  updateSocialMedia: Array<{ __typename?: 'SocialMedia' } & Pick<SocialMedia, 'id'>>
 }
 
 export type UpdateUserMutationVariables = {
@@ -1162,8 +1185,10 @@ export const SocialMediaFragmentFragmentDoc = gql`
   fragment SocialMediaFragment on User {
     socialMedia {
       id
-      platform
-      url
+      facebook
+      youtube
+      instagram
+      website
     }
   }
 `
@@ -2992,16 +3017,14 @@ export const UpdateSocialMediaDocument = gql`
     $instagram: String
     $youtube: String
     $website: String
-    $linkedin: String
   ) {
     updateSocialMedia(
       facebook: $facebook
       instagram: $instagram
       youtube: $youtube
       website: $website
-      linkedin: $linkedin
     ) {
-      url
+      id
     }
   }
 `
@@ -3027,7 +3050,6 @@ export type UpdateSocialMediaMutationFn = ApolloReactCommon.MutationFunction<
  *      instagram: // value for 'instagram'
  *      youtube: // value for 'youtube'
  *      website: // value for 'website'
- *      linkedin: // value for 'linkedin'
  *   },
  * });
  */

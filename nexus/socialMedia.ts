@@ -1,27 +1,27 @@
-import { schema } from 'nexus'
-import { SocialMedia } from '@prisma/client'
+import { stringArg, objectType, extendType } from '@nexus/schema'
 import { NotAuthorizedError, UserInputError } from './errors'
-import { Context } from './utils'
-import { getSocialMediaUpdate, prepareNewSocialMedia } from './utils/socialMedia'
+import { validateSocialMediaInput } from './utils/socialMedia'
 
-schema.objectType({
+const SocialMedia = objectType({
   name: 'SocialMedia',
   definition(t) {
     t.model.id()
-    t.model.platform()
-    t.model.url()
+    t.model.facebook()
+    t.model.youtube()
+    t.model.instagram()
+    t.model.website()
   },
 })
 
-schema.extendType({
+const SocialMediaQuery = extendType({
   type: 'Query',
   definition(t) {
     t.list.field('socialMedia', {
       type: 'SocialMedia',
-      resolve: async (_parent, args, ctx: Context): Promise<SocialMedia[]> => {
+      resolve: async (parent, _args, ctx) => {
         return ctx.db.socialMedia.findMany({
           where: {
-            authorId: _parent.id,
+            authorId: parent.id,
           },
         })
       },
@@ -29,54 +29,41 @@ schema.extendType({
   },
 })
 
-schema.extendType({
+const SocialMediaMutations = extendType({
   type: 'Mutation',
   definition(t) {
-    t.list.field('updateSocialMedia', {
+    t.field('updateSocialMedia', {
       type: 'SocialMedia',
       args: {
-        facebook: schema.stringArg({ required: false }),
-        instagram: schema.stringArg({ required: false }),
-        youtube: schema.stringArg({ required: false }),
-        website: schema.stringArg({ required: false }),
-        linkedin: schema.stringArg({ required: false }),
+        facebook: stringArg({ required: false }),
+        instagram: stringArg({ required: false }),
+        youtube: stringArg({ required: false }),
+        website: stringArg({ required: false }),
       },
-      resolve: async (_parent, args, ctx: Context): Promise<SocialMedia[]> => {
+      resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
         if (!userId) throw new NotAuthorizedError()
 
-        const { socialMediaUpdate, errors } = getSocialMediaUpdate(args)
+        const errors = validateSocialMediaInput(args)
 
         if (errors.length > 0) throw new UserInputError('User', errors)
 
-        const userSocialMedia = await ctx.db.socialMedia.findMany({
-          where: {
-            authorId: userId,
-          },
+        const dataToUpdate = { ...args }
+
+        for (const key in dataToUpdate) {
+          if (dataToUpdate[key] && !dataToUpdate[key].match(/^https?:\/\//))
+            dataToUpdate[key] = `https://${dataToUpdate[key]}`
+        }
+
+        return ctx.db.socialMedia.upsert({
+          update: { ...dataToUpdate },
+          create: { ...dataToUpdate, user: { connect: { id: userId } } },
+          where: { userId: userId },
         })
-
-        const newSocialMedia = prepareNewSocialMedia(userSocialMedia, socialMediaUpdate)
-
-        const updatePromises = newSocialMedia.map((s) => {
-          if (s.id > 0) {
-            return ctx.db.socialMedia.update({
-              data: { platform: s.platform, url: s.url },
-              where: { id: s.id },
-            })
-          } else {
-            return ctx.db.socialMedia.create({
-              data: {
-                platform: s.platform,
-                url: s.url,
-                author: { connect: { id: userId } },
-              },
-            })
-          }
-        })
-
-        return Promise.all(updatePromises)
       },
     })
   },
 })
+
+export default [SocialMedia, SocialMediaQuery, SocialMediaMutations]

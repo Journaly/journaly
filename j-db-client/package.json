@@ -20,11 +20,10 @@
   "author": "Journaly",
   "license": "ISC",
   "dependencies": {
-    "nexus-plugin-prisma": "0.25.0"
+    "@prisma/client": "2.12.1",
+    "@prisma/cli": "2.11.0"
   },
   "devDependencies": {
-    "@prisma/cli": "2.11.0",
-    "@prisma/client": "2.12.1",
     "typescript": "3.8.3"
   }
 }

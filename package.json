@@ -15,7 +15,7 @@
   "scripts": {
     "build:nexus": "NEXUS_REFLECTION=1 ts-node -O '{\"module\": \"commonjs\"}' --transpile-only nexus/index.ts",
     "build:next": "next build",
-    "build": "npm run build:nexus && npm run build:next",
+    "build": "npm run prisma:generate && npm run build:nexus && npm run build:next",
     "codegen": "graphql-codegen --config codegen.yml",
     "cypress:open": "npx cypress open",
     "dev": "node server/index.js",

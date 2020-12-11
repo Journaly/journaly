@@ -6,7 +6,7 @@ import {
   Post,
   PostComment,
   BadgeType,
-} from '.prisma/client'
+} from '@journaly/j-db-client'
 import { makeEmail } from '../../lib/mail'
 
 AWS.config.credentials = new AWS.Credentials(

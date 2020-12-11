@@ -1,0 +1,29 @@
+{
+  "name": "@journaly/j-db-client",
+  "version": "1.0.0",
+  "description": "Journaly's internal database client.",
+  "main": "src/index",
+  "scripts": {
+    "prisma": "prisma",
+    "migrate:up": "prisma migrate up --experimental",
+    "migrate:save": "prisma migrate save --experimental",
+    "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed",
+    "db:snapshot": "pg_dump $DATABASE_URL > snapshot.sql",
+    "db:restore": "npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
+    "empty-db": "source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio --experimental"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "author": "Journaly",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "2.12.1",
+    "@prisma/cli": "2.11.0"
+  },
+  "devDependencies": {
+    "typescript": "3.8.3"
+  }
+}

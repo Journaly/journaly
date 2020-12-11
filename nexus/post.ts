@@ -20,7 +20,7 @@ import {
   BadgeType,
   PostUpdateInput,
   PrismaClient,
-} from '.prisma/client/index'
+} from '@journaly/j-db-client'
 import { EditorNode, ImageInput } from './inputTypes'
 
 const assignPostCountBadges = async (

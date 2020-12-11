@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
-import { PrismaClient } from '@prisma/client'
-import { LanguageLevel, UILanguage } from '.prisma/client/index'
+import { PrismaClient } from '@journaly/j-db-client'
+import { LanguageLevel, UILanguage } from '@journaly/j-db-client'
 
 const db = new PrismaClient()
 

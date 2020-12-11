@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@journaly/j-db-client'
 import { IncomingMessage, ServerResponse } from 'http';
 
 interface Request extends IncomingMessage {

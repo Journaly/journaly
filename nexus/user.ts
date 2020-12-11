@@ -9,7 +9,7 @@ import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 import { randomBytes } from 'crypto'
 import { promisify } from 'util'
-import { BadgeType } from '@prisma/client'
+import { BadgeType } from '@journaly/j-db-client'
 
 import { NotAuthorizedError } from './errors'
 import { sendPasswordResetTokenEmail } from './utils'

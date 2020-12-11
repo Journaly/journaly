@@ -5,7 +5,7 @@ import {
   objectType,
   extendType,
 } from '@nexus/schema'
-import { PostStatus } from '@prisma/client'
+import { PostStatus } from '@journaly/j-db-client'
 
 const LanguageRelation = objectType({
   name: 'LanguageRelation',

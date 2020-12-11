@@ -1,7 +1,7 @@
 require('dotenv').config()
 import jwt from 'jsonwebtoken'
 import { ApolloServer } from 'apollo-server-micro'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@journaly/j-db-client'
 
 import { schema } from '../../nexus'
 

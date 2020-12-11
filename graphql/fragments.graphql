@@ -25,6 +25,16 @@ fragment UserWithLanguagesFragment on User {
   }
  }
 
+fragment SocialMediaFragment on User {
+  socialMedia {
+    id
+    facebook
+    youtube
+    instagram
+    website
+  }
+}
+
 fragment AuthorFragment on User {
   id
   name

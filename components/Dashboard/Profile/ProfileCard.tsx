@@ -9,30 +9,29 @@ import ExternalLink from '../../../elements/ExternalLink'
 import { sanitize } from '../../../utils'
 import { languageNameWithDialect } from '../../../utils/languages'
 import theme from '../../../theme'
-import { ProfileUserFragmentFragment as UserType, LanguageLevel } from '../../../generated/graphql'
+import { LanguageLevel, ProfileUserFragmentFragment } from '../../../generated/graphql'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
 
 type Props = {
-  user: UserType
+  user: ProfileUserFragmentFragment
 }
 
 const ProfileCard: React.FC<Props> = ({ user }) => {
   const { t } = useTranslation('profile')
-  
+
   const sampleUser = {
     likes: ['cooking, reading, movies, design'],
     location: 'San Francisco, United States',
-    facebook: 'https://www.facebook.com/robinmacpherson.co',
-    instagram: 'https://instagram.com/my-link',
-    youtube: 'https://www.youtube.com/user/TheLifeOfRob/',
-    website: 'https://robinmacpherson.com',
   }
 
   const name = user.name || user.handle
   const showSeparator =
-    sampleUser.facebook || sampleUser.instagram || sampleUser.youtube || sampleUser.website
+    user.socialMedia?.facebook ||
+    user.socialMedia?.instagram ||
+    user.socialMedia?.youtube ||
+    user.socialMedia?.website
   const profileImage = user.profileImage
-  
+
   const speaksList = user.languages.filter((language) => language.level === LanguageLevel.Native)
   const learnsList = user.languages.filter((language) => language.level !== LanguageLevel.Native)
 
@@ -80,8 +79,8 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
 
         <ul className="badge-list">
-          {user.badges.map(badge => (
-            <li key={badge.type} >
+          {user.badges.map((badge) => (
+            <li key={badge.type}>
               <Badge badge={badge} />
             </li>
           ))}
@@ -97,24 +96,24 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         )}
 
         <div className="social-links">
-          {sampleUser.facebook && (
-            <ExternalLink href={sampleUser.facebook} className="social-link">
-              <FacebookIcon size={null} style={{ width: "100%", maxWidth: "60px" }} />
+          {user.socialMedia?.facebook && (
+            <ExternalLink href={user.socialMedia?.facebook} className="social-link">
+              <FacebookIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
             </ExternalLink>
           )}
-          {sampleUser.instagram && (
-            <ExternalLink href={sampleUser.instagram} className="social-link">
-              <InstagramIcon size={null} style={{ width: "100%", maxWidth: "60px" }} />
+          {user.socialMedia?.instagram && (
+            <ExternalLink href={user.socialMedia?.instagram} className="social-link">
+              <InstagramIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
             </ExternalLink>
           )}
-          {sampleUser.youtube && (
-            <ExternalLink href={sampleUser.youtube} className="social-link">
-              <YoutubeIcon size={null} style={{ width: "100%", maxWidth: "60px" }} />
+          {user.socialMedia?.youtube && (
+            <ExternalLink href={user.socialMedia?.youtube} className="social-link">
+              <YoutubeIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
             </ExternalLink>
           )}
-          {sampleUser.website && (
-            <ExternalLink href={sampleUser.website} className="social-link">
-              <GlobeIcon size={null} style={{ width: "100%", maxWidth: "60px" }} />
+          {user.socialMedia?.website && (
+            <ExternalLink href={user.socialMedia?.website} className="social-link">
+              <GlobeIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
             </ExternalLink>
           )}
         </div>
@@ -281,7 +280,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         .social-links {
           margin: 0 auto;
           display: flex;
-          justify-content: space-between;
+          justify-content: center;
           max-width: 320px;
         }
 

@@ -1,6 +1,6 @@
 import { diffChars } from 'diff'
 import escapeHTML from 'escape-html'
-import { User, Thread } from '.prisma/client'
+import { User, Thread } from '@journaly/j-db-client'
 
 export type NodeType = {
   text?: string | null
@@ -261,4 +261,3 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
 }
 
 export * from './email'
-

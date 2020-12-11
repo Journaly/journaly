@@ -20,7 +20,7 @@ const schemaOpts: any = {
   typegenAutoConfig: {
     sources: [
       {
-        source: '@prisma/client',
+        source: '@journaly/j-db-client',
         alias: 'prisma',
       },
       {

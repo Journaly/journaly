@@ -57,7 +57,14 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
   })
 
   const addServerErrors = (apolloError: ApolloError): void => {
-    const badRequest = (apolloError.networkError as any).result.errors[0].extensions
+    const graphQLErrors = apolloError.graphQLErrors
+    if (!graphQLErrors) {
+      toast.error(t('profile.error.updateError'))
+      return
+    }
+
+    const badRequest = graphQLErrors[0].extensions
+
     if (!badRequest || badRequest.statusCode !== 400) {
       toast.error(t('profile.error.updateError'))
       return
@@ -71,16 +78,18 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
   const handleDetailsSubmit = async (formData: FormData): Promise<void> => {
     if (!loadingUpdateUser && Object.keys(errors).length === 0) {
       setPreviousFormData(formData)
-      await updateUser({
-        variables: {
-          name: formData.name,
-          email: formData.email,
-          handle: formData.handle,
-          profileImage: profileImage,
-        },
-      }).catch((err) => {
+      try {
+        await updateUser({
+          variables: {
+            name: formData.name,
+            email: formData.email,
+            handle: formData.handle,
+            profileImage: profileImage,
+          },
+        })
+      } catch (err) {
         addServerErrors(err)
-      })
+      }
     }
   }
 

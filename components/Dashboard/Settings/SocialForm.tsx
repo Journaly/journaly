@@ -2,7 +2,6 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { ApolloError } from '@apollo/client'
-import { toLower } from 'lodash'
 import { useTranslation } from '../../../config/i18n'
 import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
@@ -17,7 +16,6 @@ type FormData = {
   instagram: string
   youtube: string
   website: string
-  [key: string]: string
 }
 
 type SocialFormProps = {
@@ -84,25 +82,25 @@ const SocialForm: React.FC<SocialFormProps> = ({ socialMedia, refetch }) => {
         <div className="social-wrapper">
           <div className="social-form-fields">
             <SocialFormField
-              name={toLower(SocialPlatform.FACEBOOK)}
+              name={SocialPlatform.FACEBOOK}
               defaultValue={socialMedia?.facebook}
               error={errors?.facebook}
               register={register}
             />
             <SocialFormField
-              name={toLower(SocialPlatform.INSTAGRAM)}
+              name={SocialPlatform.INSTAGRAM}
               defaultValue={socialMedia?.instagram}
               error={errors?.instagram}
               register={register}
             />
             <SocialFormField
-              name={toLower(SocialPlatform.YOUTUBE)}
+              name={SocialPlatform.YOUTUBE}
               defaultValue={socialMedia?.youtube}
               error={errors?.youtube}
               register={register}
             />
             <SocialFormField
-              name={toLower(SocialPlatform.WEBSITE)}
+              name={SocialPlatform.WEBSITE}
               defaultValue={socialMedia?.website}
               error={errors?.website}
               register={register}

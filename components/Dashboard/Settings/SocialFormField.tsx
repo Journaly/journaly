@@ -1,4 +1,3 @@
-import { toUpper } from 'lodash'
 import React from 'react'
 import { FieldError, ValidationOptions } from 'react-hook-form'
 import { useTranslation } from '../../../config/i18n'
@@ -8,11 +7,11 @@ import InstagramIcon from '../../Icons/InstagramIcon'
 import XIcon from '../../Icons/XIcon'
 import YoutubeIcon from '../../Icons/YoutubeIcon'
 
-export const SocialPlatform = {
-  FACEBOOK: 'FACEBOOK',
-  YOUTUBE: 'YOUTUBE',
-  INSTAGRAM: 'INSTAGRAM',
-  WEBSITE: 'WEBSITE',
+export enum SocialPlatform {
+  FACEBOOK = 'facebook',
+  YOUTUBE = 'youtube',
+  INSTAGRAM = 'instagram',
+  WEBSITE = 'website',
 }
 
 const socialMediaPatterns = [
@@ -34,7 +33,7 @@ const socialMediaPatterns = [
   },
 ]
 
-const PlatformIcon: React.FC<{ name: string }> = ({ name }) => {
+const PlatformIcon: React.FC<{ name: SocialPlatform }> = ({ name }) => {
   const defaultIconProps = {
     color: '#000',
     circleBorder: false,
@@ -56,7 +55,7 @@ const PlatformIcon: React.FC<{ name: string }> = ({ name }) => {
 }
 
 type Props = {
-  name: string
+  name: SocialPlatform
   defaultValue?: string
   register: (validationOptions: ValidationOptions) => (ref: Element | null) => void
   error: FieldError | undefined
@@ -69,7 +68,7 @@ export const SocialFormField: React.FC<Props> = ({ register, name, error, defaul
   return (
     <>
       <div className="social-form-field">
-        <PlatformIcon name={toUpper(name)} />
+        <PlatformIcon name={name} />
         <input
           type="text"
           name={name}
@@ -81,7 +80,7 @@ export const SocialFormField: React.FC<Props> = ({ register, name, error, defaul
               ? {
                   pattern: {
                     value: pattern,
-                    message: `${t(`profile.social.${name}PatternError`)}`,
+                    message: `${t(`profile.error.${name}PatternError`)}`,
                   },
                 }
               : {},

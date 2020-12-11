@@ -27,6 +27,8 @@
     "diff-test": "ts-node -O '{\"module\": \"commonjs\"}' scripts/diff-test.ts",
     "db:snapshot": "pg_dump $DATABASE_URL > snapshot.sql",
     "db:restore": "npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
+    "migrate:up": "npm explore '@journaly/j-db-client' -- npm run migrate:up",
+    "migrate:save": "npm explore '@journaly/j-db-client' -- npm run migrate:save",
     "empty-db": "source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
     "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed"
   },
@@ -77,6 +79,7 @@
     "xss": "^1.0.7"
   },
   "devDependencies": {
+    "@prisma/cli": "^2.11.0",
     "@graphql-codegen/cli": "^1.13.1",
     "@graphql-codegen/typescript": "1.13.1",
     "@graphql-codegen/typescript-operations": "1.13.1",

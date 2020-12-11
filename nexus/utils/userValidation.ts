@@ -1,6 +1,6 @@
 import { integer } from 'aws-sdk/clients/cloudfront'
 import { InvalidInput, UserInputError } from '../errors'
-import { PrismaClient, User } from '@prisma/client'
+import { PrismaClient, User } from '@journaly/j-db-client'
 
 // Nexus non-required args can be null or undefined. We treat them the same.
 type ArgString = string | null | undefined

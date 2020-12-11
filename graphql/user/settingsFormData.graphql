@@ -11,5 +11,6 @@ query settingsFormData {
         ...LanguageFragment
       }
     }
+    ...SocialMediaFragment
   }
 }

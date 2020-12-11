@@ -15,4 +15,5 @@ fragment ProfileUserFragment on User {
   badges {
     ...UserBadgeFragment
   }
+  ...SocialMediaFragment
 }

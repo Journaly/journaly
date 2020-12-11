@@ -41,6 +41,16 @@ const User = objectType({
     t.model.posts({ pagination: false })
     t.model.profileImage()
     t.model.createdAt()
+    t.model.socialMedia({
+      type: 'SocialMedia',
+      resolve: async (parent, _args, ctx) => {
+        return ctx.db.socialMedia.findFirst({
+          where: {
+            userId: parent.id,
+          },
+        })
+      },
+    })
     t.model.languages({ pagination: false })
     t.model.following({ pagination: false })
     t.model.followedBy({ pagination: false })

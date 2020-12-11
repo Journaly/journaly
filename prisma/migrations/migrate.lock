@@ -1,7 +1,4 @@
-# IF THERE'S A GIT CONFLICT IN THIS FILE, DON'T SOLVE IT MANUALLY!
-# INSTEAD EXECUTE `prisma migrate fix`
 # Prisma Migrate lockfile v1
-# Read more about conflict resolution here: TODO
 
 20200624211600-initial
 20200625141833-remove-language-learning-unique-constraint-on-user-id
@@ -17,3 +14,4 @@
 20201026144537-new-language-relation-model
 20201101185157-add-badges-table
 20201108184902-add-code-contributor-and-10-post-badges
+20201209170034-change-social-media-model

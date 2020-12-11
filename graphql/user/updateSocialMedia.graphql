@@ -1,0 +1,15 @@
+mutation updateSocialMedia(
+  $facebook: String
+  $instagram: String
+  $youtube: String
+  $website: String
+) {
+  updateSocialMedia(
+    facebook: $facebook
+    instagram: $instagram
+    youtube: $youtube
+    website: $website
+  ) {
+    id
+  }
+}

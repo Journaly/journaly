@@ -214,25 +214,8 @@ const IntroducingJournalyBlogPost: NextPage = () => (
         <li>Much, much more.</li>
       </ul>
 
-      <h2>Count me interested! So, what now?</h2>
+      <p>I hope this gives you an exciting introduction to Journaly!</p>
 
-      <p>I hope this gives you an exciting introduction to Journaly.</p>
-
-      <p>
-        Please sign up for our mailing list below to be notified as soon as we launch, and check out{' '}
-        <ExternalLink href="https://youtube.com/user/TheLifeOfRob">my YouTube channel</ExternalLink>{' '}
-        where I'll be posting updates along with my other language content.
-      </p>
-
-      <p>
-        Got questions? We'd love to talk. Email us at{' '}
-        <em>
-          <ExternalLink href="mailto:robin@journaly.com">robin@journaly.com</ExternalLink>
-        </em>
-        . Don't be shy!
-      </p>
-      <p>I can't wait to see you on the other side (in your future dashboard!).</p>
-      <p>Robin</p>
       <style jsx>{`
         h2 {
           margin-top: 35px;

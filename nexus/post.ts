@@ -198,17 +198,18 @@ const PostQueries = extendType({
       type: 'PostPage',
       args: {
         search: stringArg({
-          description: 'Not used.',
-          required: false
+          description: 'Search phrase to filter posts by.',
+          required: false,
         }),
         languages: intArg({
           description: 'Language IDs to filter posts by. No value means all languages.',
           required: false,
           list: true,
         }),
-        topic: intArg({
-          description: 'Not used.',
-          required: false
+        topics: intArg({
+          description: 'topics IDs to filter posts by. No value means all topics.',
+          required: false,
+          list: true,
         }),
         skip: intArg({
           description: 'Offset into the feed post list to return',
@@ -216,11 +217,11 @@ const PostQueries = extendType({
         }),
         first: intArg({
           description: 'Number of posts to return',
-          required: true
+          required: true,
         }),
         followedAuthors: booleanArg({
           description: 'Author IDs to filter posts by. No value means all languages.',
-          required: false
+          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -240,32 +241,52 @@ const PostQueries = extendType({
         if (args.first > 50) args.first = 50
 
         if (args.languages) {
-          const languageFilters = []
-
-          for (let language of args.languages) {
-            languageFilters.push({
+          const languageFilters = args.languages.map((language) => {
+            return {
               language: {
                 id: {
                   equals: language,
                 },
               },
-            })
-          }
+            }
+          })
+
           filterClauses.push({
             OR: languageFilters,
           })
         }
+
+        if (args.topics) {
+          const topicFilters = args.topics.map((topic) => {
+            return {
+              postTopics: {
+                some: {
+                  topicId: {
+                    equals: topic,
+                  },
+                },
+              },
+            }
+          })
+
+          filterClauses.push({
+            OR: topicFilters,
+          })
+        }
+
         if (args.search) {
           filterClauses.push({
             OR: [
               {
                 title: {
                   contains: args.search,
+                  mode: 'insensitive',
                 },
               },
               {
                 body: {
                   contains: args.search,
+                  mode: 'insensitive',
                 },
               },
             ],

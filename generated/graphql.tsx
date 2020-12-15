@@ -255,7 +255,6 @@ export type Query = {
   currentUser?: Maybe<User>
   userById: User
   languages: Array<Language>
-  socialMedia: Array<SocialMedia>
 }
 
 export type QueryTopicsArgs = {
@@ -274,7 +273,7 @@ export type QueryPostByIdArgs = {
 export type QueryFeedArgs = {
   search?: Maybe<Scalars['String']>
   languages?: Maybe<Array<Scalars['Int']>>
-  topic?: Maybe<Scalars['Int']>
+  topics?: Maybe<Array<Scalars['Int']>>
   skip: Scalars['Int']
   first: Scalars['Int']
   followedAuthors?: Maybe<Scalars['Boolean']>
@@ -702,9 +701,7 @@ export type ProfilePageQueryVariables = {
 export type ProfilePageQuery = { __typename?: 'Query' } & {
   userById: { __typename?: 'User' } & ProfileUserFragmentFragment
   posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
-  currentUser?: Maybe<
-    { __typename?: 'User' } & UserWithLanguagesFragmentFragment & SocialMediaFragmentFragment
-  >
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
@@ -757,7 +754,7 @@ export type FeedQueryVariables = {
   skip: Scalars['Int']
   search?: Maybe<Scalars['String']>
   languages?: Maybe<Array<Scalars['Int']>>
-  topic?: Maybe<Scalars['Int']>
+  topics?: Maybe<Array<Scalars['Int']>>
   followedAuthors?: Maybe<Scalars['Boolean']>
 }
 
@@ -1883,13 +1880,11 @@ export const ProfilePageDocument = gql`
     }
     currentUser {
       ...UserWithLanguagesFragment
-      ...SocialMediaFragment
     }
   }
   ${ProfileUserFragmentFragmentDoc}
   ${PostCardFragmentFragmentDoc}
   ${UserWithLanguagesFragmentFragmentDoc}
-  ${SocialMediaFragmentFragmentDoc}
 `
 
 /**
@@ -2118,7 +2113,7 @@ export const FeedDocument = gql`
     $skip: Int!
     $search: String
     $languages: [Int!]
-    $topic: Int
+    $topics: [Int!]
     $followedAuthors: Boolean
   ) {
     feed(
@@ -2126,7 +2121,7 @@ export const FeedDocument = gql`
       skip: $skip
       search: $search
       languages: $languages
-      topic: $topic
+      topics: $topics
       followedAuthors: $followedAuthors
     ) {
       posts {
@@ -2154,7 +2149,7 @@ export const FeedDocument = gql`
  *      skip: // value for 'skip'
  *      search: // value for 'search'
  *      languages: // value for 'languages'
- *      topic: // value for 'topic'
+ *      topics: // value for 'topics'
  *      followedAuthors: // value for 'followedAuthors'
  *   },
  * });

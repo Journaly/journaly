@@ -12,7 +12,7 @@ import {
   User as UserType,
   useFeedQuery,
   useLanguagesQuery,
-  useNewPostQuery,
+  useTopicsQuery,
 } from '../../../generated/graphql'
 import LoadingWrapper from '../../LoadingWrapper'
 import Button, { ButtonVariant } from '../../../elements/Button'
@@ -59,8 +59,8 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   const [followedAuthorsFilter, toggleFollowedAuthorsFilter] = useToggle()
 
   const uiLanguage = useUILanguage()
-  const { data: { topics } = {} } = useNewPostQuery({
-    variables: { uiLanguage },
+  const { data: { topics } = {} } = useTopicsQuery({
+    variables: { uiLanguage, hasPosts: true },
   })
 
   /**

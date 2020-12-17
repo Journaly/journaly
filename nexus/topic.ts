@@ -1,3 +1,4 @@
+import { PostStatus } from '@journaly/j-db-client'
 import {
   arg,
   booleanArg,
@@ -38,6 +39,20 @@ const Topic = objectType({
         return translation?.name || parent.devName
       },
     })
+    t.int('postCount', {
+      resolve(parent, _args, ctx) {
+        return ctx.db.post.count({
+          where: {
+            AND: {
+              postTopics: {
+                some: { topicId: parent.id },
+              },
+              status: PostStatus.PUBLISHED,
+            },
+          },
+        })
+      },
+    })
   },
 })
 
@@ -49,8 +64,21 @@ const TopicQueries = extendType({
       args: {
         hasPosts: booleanArg({ required: false }),
       },
-      resolve: async (_parent, _args, ctx) => {
-        let filter = undefined
+      resolve: async (_parent, args, ctx) => {
+        let filter
+        if (args.hasPosts) {
+          filter = {
+            postTopics: {
+              some: {
+                post: {
+                  status: PostStatus.PUBLISHED,
+                },
+              },
+            },
+          }
+        } else {
+          filter = undefined
+        }
 
         return ctx.db.topic.findMany({
           where: filter,

@@ -179,6 +179,11 @@ fragment TopicFragment on Topic {
   name(uiLanguage: $uiLanguage)
 }
 
+fragment TopicWithPostCountFragment on Topic {
+  ...TopicFragment
+  postCount
+}
+
 fragment PostTopicFragment on PostTopic {
   topic {
     ...TopicFragment

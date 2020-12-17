@@ -31,6 +31,7 @@ export type Topic = {
   __typename?: 'Topic'
   id: Scalars['Int']
   name?: Maybe<Scalars['String']>
+  postCount: Scalars['Int']
 }
 
 export type TopicNameArgs = {
@@ -633,6 +634,12 @@ export type LanguageWithPostCountFragmentFragment = { __typename?: 'Language' } 
 
 export type TopicFragmentFragment = { __typename?: 'Topic' } & Pick<Topic, 'id' | 'name'>
 
+export type TopicWithPostCountFragmentFragment = { __typename?: 'Topic' } & Pick<
+  Topic,
+  'postCount'
+> &
+  TopicFragmentFragment
+
 export type PostTopicFragmentFragment = { __typename?: 'PostTopic' } & {
   topic: { __typename?: 'Topic' } & TopicFragmentFragment
 }
@@ -819,6 +826,15 @@ export type DeleteCommentThanksMutationVariables = {
 
 export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
   deleteCommentThanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'>
+}
+
+export type TopicsQueryVariables = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+  uiLanguage: UiLanguage
+}
+
+export type TopicsQuery = { __typename?: 'Query' } & {
+  topics: Array<{ __typename?: 'Topic' } & TopicWithPostCountFragmentFragment>
 }
 
 export type CreateUserMutationVariables = {
@@ -1159,6 +1175,13 @@ export const LanguageWithPostCountFragmentFragmentDoc = gql`
     postCount
   }
   ${LanguageFragmentFragmentDoc}
+`
+export const TopicWithPostCountFragmentFragmentDoc = gql`
+  fragment TopicWithPostCountFragment on Topic {
+    ...TopicFragment
+    postCount
+  }
+  ${TopicFragmentFragmentDoc}
 `
 export const UserWithLanguagesFragmentFragmentDoc = gql`
   fragment UserWithLanguagesFragment on User {
@@ -2472,6 +2495,48 @@ export type DeleteCommentThanksMutationOptions = ApolloReactCommon.BaseMutationO
   DeleteCommentThanksMutation,
   DeleteCommentThanksMutationVariables
 >
+export const TopicsDocument = gql`
+  query topics($hasPosts: Boolean, $uiLanguage: UILanguage!) {
+    topics(hasPosts: $hasPosts) {
+      ...TopicWithPostCountFragment
+    }
+  }
+  ${TopicWithPostCountFragmentFragmentDoc}
+`
+
+/**
+ * __useTopicsQuery__
+ *
+ * To run a query within a React component, call `useTopicsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTopicsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTopicsQuery({
+ *   variables: {
+ *      hasPosts: // value for 'hasPosts'
+ *      uiLanguage: // value for 'uiLanguage'
+ *   },
+ * });
+ */
+export function useTopicsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<TopicsQuery, TopicsQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<TopicsQuery, TopicsQueryVariables>(TopicsDocument, baseOptions)
+}
+export function useTopicsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TopicsQuery, TopicsQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<TopicsQuery, TopicsQueryVariables>(
+    TopicsDocument,
+    baseOptions,
+  )
+}
+export type TopicsQueryHookResult = ReturnType<typeof useTopicsQuery>
+export type TopicsLazyQueryHookResult = ReturnType<typeof useTopicsLazyQuery>
+export type TopicsQueryResult = ApolloReactCommon.QueryResult<TopicsQuery, TopicsQueryVariables>
 export const CreateUserDocument = gql`
   mutation createUser($handle: String!, $email: String!, $password: String!) {
     createUser(handle: $handle, email: $email, password: $password) {

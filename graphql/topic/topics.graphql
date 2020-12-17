@@ -1,0 +1,5 @@
+query topics($hasPosts: Boolean, $uiLanguage: UILanguage!) {
+  topics(hasPosts: $hasPosts) {
+    ...TopicWithPostCountFragment
+  }
+}

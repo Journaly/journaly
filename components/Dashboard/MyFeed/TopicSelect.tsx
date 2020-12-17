@@ -10,9 +10,9 @@ type Props = {
 }
 
 const TopicSelect: React.FC<Props> = ({ topics, selectedTopicsIds, onAdd, onRemove }) => {
-  const formattedTopicOptions = (topics || []).map(({ name, id }) => ({
+  const formattedTopicOptions = (topics || []).map(({ name, id, postCount }) => ({
     value: id,
-    displayName: name || '',
+    displayName: `${name} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
   }))
 
   return (

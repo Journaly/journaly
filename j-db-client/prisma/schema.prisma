@@ -120,8 +120,6 @@ model Post {
   threads      Thread[]
   postTopics   PostTopic[]
   postComments PostComment[]
-
-  @@index(fields: [title, body], name: "title_body_index")
 }
 
 model Language {

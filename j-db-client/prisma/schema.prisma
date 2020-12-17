@@ -8,39 +8,40 @@ generator prisma_client {
 }
 
 model User {
-  id                  Int                  @default(autoincrement()) @id
-  name                String?
-  email               String               @unique
-  handle              String               @unique
-  auth                Auth?
-  userRole            UserRole             @default(FREE_USER)
-  bio                 String?
-  posts               Post[]
-  subscription        UserSubscription?
-  socialMedia         SocialMedia?
-  location            Location?            @relation(fields: [locationId], references: [id])
-  locationId          Int?
-  languagesNative     LanguageNative[]
-  languagesLearning   LanguageLearning[]
-  languages           LanguageRelation[]
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  userInterests       UserInterest[]
-  pageView            PageView[]
-  profileImage        String?
-  threadSubscriptions ThreadSubscription[]
-  postLikes           PostLike[]
-  commentThanks       CommentThanks[]
-  postCommentThanks   PostCommentThanks[]
-  comments            Comment[]
-  postComments        PostComment[]
-  badges              UserBadge[]
-  followedBy          User[]               @relation("UserFollows", references: [id])
-  following           User[]               @relation("UserFollows", references: [id])
+  id                      Int                       @id @default(autoincrement())
+  name                    String?
+  email                   String                    @unique
+  handle                  String                    @unique
+  auth                    Auth?
+  userRole                UserRole                  @default(FREE_USER)
+  bio                     String?
+  posts                   Post[]
+  subscription            UserSubscription?
+  socialMedia             SocialMedia?
+  location                Location?                 @relation(fields: [locationId], references: [id])
+  locationId              Int?
+  languagesNative         LanguageNative[]
+  languagesLearning       LanguageLearning[]
+  languages               LanguageRelation[]
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  userInterests           UserInterest[]
+  pageView                PageView[]
+  profileImage            String?
+  threadSubscriptions     ThreadSubscription[]
+  postLikes               PostLike[]
+  commentThanks           CommentThanks[]
+  postCommentThanks       PostCommentThanks[]
+  comments                Comment[]
+  postComments            PostComment[]
+  badges                  UserBadge[]
+  followedBy              User[]                    @relation("UserFollows", references: [id])
+  following               User[]                    @relation("UserFollows", references: [id])
+  PostCommentSubscription PostCommentSubscription[]
 }
 
 model Auth {
-  id               Int     @default(autoincrement()) @id
+  id               Int     @id @default(autoincrement())
   user             User    @relation(fields: [userId], references: [id])
   userId           Int     @unique
   password         String
@@ -49,7 +50,7 @@ model Auth {
 }
 
 model LanguageLearning {
-  id         Int      @default(autoincrement()) @id
+  id         Int      @id @default(autoincrement())
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
   language   Language @relation(fields: [languageId], references: [id])
@@ -60,13 +61,14 @@ model LanguageLearning {
 }
 
 model LanguageRelation {
-  id         Int      @default(autoincrement()) @id
-  user       User     @relation(fields: [userId], references: [id])
+  id         Int           @id @default(autoincrement())
+  user       User          @relation(fields: [userId], references: [id])
   userId     Int
-  language   Language @relation(fields: [languageId], references: [id])
+  language   Language      @relation(fields: [languageId], references: [id])
   languageId Int
-  createdAt  DateTime @default(now())
+  createdAt  DateTime      @default(now())
   level      LanguageLevel
+
   @@unique([userId, languageId])
 }
 
@@ -78,7 +80,7 @@ enum LanguageLevel {
 }
 
 model LanguageNative {
-  id         Int      @default(autoincrement()) @id
+  id         Int      @id @default(autoincrement())
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
   language   Language @relation(fields: [languageId], references: [id])
@@ -89,59 +91,61 @@ model LanguageNative {
 }
 
 model SocialMedia {
-  id         Int      @default(autoincrement()) @id
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int      @unique
-  website    String
-  youtube    String
-  instagram  String
-  facebook   String
+  id        Int    @id @default(autoincrement())
+  user      User   @relation(fields: [userId], references: [id])
+  userId    Int    @unique
+  website   String
+  youtube   String
+  instagram String
+  facebook  String
 }
 
 model Post {
-  id           Int           @default(autoincrement()) @id
-  title        String
-  body         String
-  bodySrc      String        @default("")
-  excerpt      String
-  status       PostStatus    @default(DRAFT)
-  images       Image[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  publishedAt  DateTime?
-  author       User          @relation(fields: [authorId], references: [id])
-  authorId     Int
-  readTime     Int           @default(1)
-  likes        PostLike[]
-  language     Language      @relation(fields: [languageId], references: [id])
-  languageId   Int
-  longitude    Float?
-  latitude     Float?
-  threads      Thread[]
-  postTopics   PostTopic[]
-  postComments PostComment[]
+  id                      Int                       @id @default(autoincrement())
+  title                   String
+  body                    String
+  bodySrc                 String                    @default("")
+  excerpt                 String
+  status                  PostStatus                @default(DRAFT)
+  images                  Image[]
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  publishedAt             DateTime?
+  author                  User                      @relation(fields: [authorId], references: [id])
+  authorId                Int
+  readTime                Int                       @default(1)
+  likes                   PostLike[]
+  language                Language                  @relation(fields: [languageId], references: [id])
+  languageId              Int
+  longitude               Float?
+  latitude                Float?
+  threads                 Thread[]
+  postTopics              PostTopic[]
+  postComments            PostComment[]
+  PostCommentSubscription PostCommentSubscription[]
 }
 
 model Language {
-  id            Int                @default(autoincrement()) @id
+  id            Int                @id @default(autoincrement())
   posts         Post[]
   name          String
   dialect       String?
   nativeUsers   LanguageNative[]
   learningUsers LanguageLearning[]
 
+  LanguageRelation LanguageRelation[]
   @@unique([name, dialect])
 }
 
 model Location {
-  id      Int    @default(autoincrement()) @id
+  id      Int    @id @default(autoincrement())
   country String
   city    String
   User    User[]
 }
 
 model Topic {
-  id                Int                @default(autoincrement()) @id
+  id                Int                @id @default(autoincrement())
   devName           String
   userInterests     UserInterest[]
   postTopics        PostTopic[]
@@ -150,7 +154,7 @@ model Topic {
 }
 
 model TopicTranslation {
-  id         Int        @default(autoincrement()) @id
+  id         Int        @id @default(autoincrement())
   uiLanguage UILanguage
   name       String
   topic      Topic      @relation(fields: [topicId], references: [id])
@@ -160,7 +164,7 @@ model TopicTranslation {
 }
 
 model UserInterest {
-  id        Int      @default(autoincrement()) @id
+  id        Int      @id @default(autoincrement())
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
   topic     Topic    @relation(fields: [topicId], references: [id])
@@ -171,7 +175,7 @@ model UserInterest {
 }
 
 model PostTopic {
-  id      Int   @default(autoincrement()) @id
+  id      Int   @id @default(autoincrement())
   post    Post  @relation(fields: [postId], references: [id])
   postId  Int
   topic   Topic @relation(fields: [topicId], references: [id])
@@ -181,37 +185,40 @@ model PostTopic {
 }
 
 model PostLike {
-  id        Int      @default(autoincrement()) @id
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
+
   @@unique([authorId, postId])
 }
 
 model CommentThanks {
-  id        Int      @default(autoincrement()) @id
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
   comment   Comment  @relation(fields: [commentId], references: [id])
   commentId Int
+
   @@unique([authorId, commentId])
 }
 
 model PostCommentThanks {
-  id            Int          @default(autoincrement()) @id
+  id            Int          @id @default(autoincrement())
   createdAt     DateTime     @default(now())
   author        User         @relation(fields: [authorId], references: [id])
   authorId      Int
   PostComment   PostComment? @relation(fields: [postCommentId], references: [id])
   postCommentId Int?
+
   @@unique([authorId, postCommentId])
 }
 
 model Comment {
-  id        Int             @default(autoincrement()) @id
+  id        Int             @id @default(autoincrement())
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
   body      String
@@ -223,7 +230,7 @@ model Comment {
 }
 
 model PostComment {
-  id        Int                 @default(autoincrement()) @id
+  id        Int                 @id @default(autoincrement())
   createdAt DateTime            @default(now())
   updatedAt DateTime            @updatedAt
   body      String
@@ -235,7 +242,7 @@ model PostComment {
 }
 
 model Thread {
-  id                 Int                  @default(autoincrement()) @id
+  id                 Int                  @id @default(autoincrement())
   startIndex         Int
   endIndex           Int
   archived           Boolean              @default(false)
@@ -247,7 +254,7 @@ model Thread {
 }
 
 model Image {
-  id        Int       @default(autoincrement()) @id
+  id        Int       @id @default(autoincrement())
   smallSize String
   largeSize String
   imageRole ImageRole
@@ -256,24 +263,34 @@ model Image {
 }
 
 model Prompt {
-  id      Int    @default(autoincrement()) @id
+  id      Int    @id @default(autoincrement())
   text    String
   topic   Topic  @relation(fields: [topicId], references: [id])
   topicId Int
 }
 
 model ThreadSubscription {
-  id        Int      @default(autoincrement()) @id
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
   thread    Thread   @relation(fields: [threadId], references: [id])
   threadId  Int
+
   @@unique([userId, threadId])
 }
 
+model PostCommentSubscription {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+}
+
 model UserSubscription {
-  id        Int      @default(autoincrement()) @id
+  id        Int      @id @default(autoincrement())
   name      String
   price     Int
   user      User     @relation(fields: [userId], references: [id])
@@ -283,7 +300,7 @@ model UserSubscription {
 }
 
 model PageView {
-  id                  Int      @default(autoincrement()) @id
+  id                  Int      @id @default(autoincrement())
   user                User?    @relation(fields: [userId], references: [id])
   userId              Int?
   sessionId           String
@@ -296,11 +313,12 @@ model PageView {
 }
 
 model UserBadge {
-  id        Int       @default(autoincrement()) @id
+  id        Int       @id @default(autoincrement())
   type      BadgeType
   createdAt DateTime  @default(now())
   user      User      @relation(fields: [userId], references: [id])
   userId    Int
+
   @@unique([userId, type])
 }
 

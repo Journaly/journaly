@@ -8,36 +8,36 @@ generator prisma_client {
 }
 
 model User {
-  id                      Int                       @id @default(autoincrement())
-  name                    String?
-  email                   String                    @unique
-  handle                  String                    @unique
-  auth                    Auth?
-  userRole                UserRole                  @default(FREE_USER)
-  bio                     String?
-  posts                   Post[]
-  subscription            UserSubscription?
-  socialMedia             SocialMedia?
-  location                Location?                 @relation(fields: [locationId], references: [id])
-  locationId              Int?
-  languagesNative         LanguageNative[]
-  languagesLearning       LanguageLearning[]
-  languages               LanguageRelation[]
-  createdAt               DateTime                  @default(now())
-  updatedAt               DateTime                  @updatedAt
-  userInterests           UserInterest[]
-  pageView                PageView[]
-  profileImage            String?
-  threadSubscriptions     ThreadSubscription[]
-  postLikes               PostLike[]
-  commentThanks           CommentThanks[]
-  postCommentThanks       PostCommentThanks[]
-  comments                Comment[]
-  postComments            PostComment[]
-  badges                  UserBadge[]
-  followedBy              User[]                    @relation("UserFollows", references: [id])
-  following               User[]                    @relation("UserFollows", references: [id])
-  PostCommentSubscription PostCommentSubscription[]
+  id                       Int                       @id @default(autoincrement())
+  name                     String?
+  email                    String                    @unique
+  handle                   String                    @unique
+  auth                     Auth?
+  userRole                 UserRole                  @default(FREE_USER)
+  bio                      String?
+  posts                    Post[]
+  subscription             UserSubscription?
+  socialMedia              SocialMedia?
+  location                 Location?                 @relation(fields: [locationId], references: [id])
+  locationId               Int?
+  languagesNative          LanguageNative[]
+  languagesLearning        LanguageLearning[]
+  languages                LanguageRelation[]
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  userInterests            UserInterest[]
+  pageView                 PageView[]
+  profileImage             String?
+  threadSubscriptions      ThreadSubscription[]
+  postLikes                PostLike[]
+  commentThanks            CommentThanks[]
+  postCommentThanks        PostCommentThanks[]
+  comments                 Comment[]
+  postComments             PostComment[]
+  badges                   UserBadge[]
+  followedBy               User[]                    @relation("UserFollows", references: [id])
+  following                User[]                    @relation("UserFollows", references: [id])
+  PostCommentSubscriptions PostCommentSubscription[]
 }
 
 model Auth {
@@ -101,28 +101,28 @@ model SocialMedia {
 }
 
 model Post {
-  id                      Int                       @id @default(autoincrement())
-  title                   String
-  body                    String
-  bodySrc                 String                    @default("")
-  excerpt                 String
-  status                  PostStatus                @default(DRAFT)
-  images                  Image[]
-  createdAt               DateTime                  @default(now())
-  updatedAt               DateTime                  @updatedAt
-  publishedAt             DateTime?
-  author                  User                      @relation(fields: [authorId], references: [id])
-  authorId                Int
-  readTime                Int                       @default(1)
-  likes                   PostLike[]
-  language                Language                  @relation(fields: [languageId], references: [id])
-  languageId              Int
-  longitude               Float?
-  latitude                Float?
-  threads                 Thread[]
-  postTopics              PostTopic[]
-  postComments            PostComment[]
-  PostCommentSubscription PostCommentSubscription[]
+  id                       Int                       @id @default(autoincrement())
+  title                    String
+  body                     String
+  bodySrc                  String                    @default("")
+  excerpt                  String
+  status                   PostStatus                @default(DRAFT)
+  images                   Image[]
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  publishedAt              DateTime?
+  author                   User                      @relation(fields: [authorId], references: [id])
+  authorId                 Int
+  readTime                 Int                       @default(1)
+  likes                    PostLike[]
+  language                 Language                  @relation(fields: [languageId], references: [id])
+  languageId               Int
+  longitude                Float?
+  latitude                 Float?
+  threads                  Thread[]
+  postTopics               PostTopic[]
+  postComments             PostComment[]
+  PostCommentSubscriptions PostCommentSubscription[]
 }
 
 model Language {
@@ -287,6 +287,8 @@ model PostCommentSubscription {
   userId    Int
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
+
+  @@unique([userId, postId])
 }
 
 model UserSubscription {

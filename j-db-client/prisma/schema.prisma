@@ -37,7 +37,7 @@ model User {
   badges                   UserBadge[]
   followedBy               User[]                    @relation("UserFollows", references: [id])
   following                User[]                    @relation("UserFollows", references: [id])
-  PostCommentSubscriptions PostCommentSubscription[]
+  postCommentSubscriptions PostCommentSubscription[]
 }
 
 model Auth {
@@ -122,7 +122,7 @@ model Post {
   threads                  Thread[]
   postTopics               PostTopic[]
   postComments             PostComment[]
-  PostCommentSubscriptions PostCommentSubscription[]
+  postCommentSubscriptions PostCommentSubscription[]
 }
 
 model Language {

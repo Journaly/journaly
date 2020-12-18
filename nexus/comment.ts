@@ -358,7 +358,7 @@ const PostMutations = extendType({
         })
 
         const mailPromises: Promise<any>[] = []
-        post.PostCommentSubscriptions.forEach(({ user }) => {
+        post.postCommentSubscriptions.forEach(({ user }) => {
           if (user.id === userId) {
             // This is the user creating the comment, do not notify them.
             return

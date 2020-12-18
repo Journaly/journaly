@@ -22,6 +22,26 @@ ALTER TABLE "PostCommentSubscription" ADD FOREIGN KEY("userId")REFERENCES "User"
 ALTER TABLE "PostCommentSubscription" ADD FOREIGN KEY("postId")REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE
 ```
 
+## Data Migration
+
+Data migrations detail how to bring the database into an application-level consistent state after the structural changes have been applied through `npm run migrate:up`. They currently need to be applied manually, and should be applied promptly after the structural migration is applied.
+
+```sql
+-- Subscribe participants in PostComments of a Post to that post for future comments
+INSERT INTO "PostCommentSubscription" ("userId", "postId", "createdAt") (
+  SELECT "authorId" AS "userId", "postId", NOW() AS "createdAt"
+  FROM "PostComment"
+  GROUP BY "userId", "postId"
+) ON CONFLICT DO NOTHING;
+
+-- Subscribe post authors to all PostComments on their Posts
+INSERT INTO "PostCommentSubscription" ("userId", "postId", "createdAt") (
+  SELECT "Post"."authorId", "PostComment"."id", NOW()
+  FROM "PostComment"
+  JOIN "Post" ON "PostComment"."postId" = "Post"."id"
+) ON CONFLICT DO NOTHING;
+```
+
 ## Changes
 
 ```diff
@@ -398,5 +418,3 @@ migration 20201209170034-change-social-media-model..20201218045952-add-post-comm
  }
  enum UserRole {
 ```
-
-

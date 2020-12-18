@@ -33,7 +33,7 @@ type SendCommentThanksNotificationArgs = {
 
 type SendPostCommentNotificationArgs = {
   post: Post
-  postAuthor: User
+  user: User
   postComment: PostComment
   postCommentAuthor: User
 }
@@ -135,16 +135,16 @@ export const sendCommentThanksNotification = ({
 
 export const sendPostCommentNotification = ({
   post,
-  postAuthor,
+  user,
   postComment,
   postCommentAuthor,
 }: SendPostCommentNotificationArgs) => {
   return sendJmail({
     from: 'robin@journaly.com',
-    to: postAuthor.email,
-    subject: "You've got feedback!",
+    to: user.email,
+    subject: `New activity on post: ${post.title}`,
     html: makeEmail(`
-      <p>Great news! <strong>@${postCommentAuthor.handle}</strong> left you some feedback!</p>
+      <p>Great news! <strong>@${postCommentAuthor.handle}</strong> left a comment on your post!</p>
       <p><strong>Journal entry:</strong> ${post.title}</p>
       <p><strong>Comment:</strong> "${postComment.body}"</p>
       <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>

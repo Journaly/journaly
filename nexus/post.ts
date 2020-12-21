@@ -344,27 +344,17 @@ const PostMutations = extendType({
             title,
             status,
             publishedAt: isPublished ? new Date().toISOString() : null,
+            postCommentSubscriptions: {
+              create: [
+                {
+                  user: { connect: { id: userId } },
+                }
+              ]
+            },
             ...processEditorDocument(body),
           },
         })
 
-        // automatically subscribe the post author to all PostComments made on their post
-        const subData = {
-          user: { connect: { id: post.authorId } },
-          post: { connect: { id: post.id } },
-        }
-
-        await ctx.db.postCommentSubscription.upsert({
-          create: subData,
-          update: subData,
-          where: {
-            userId_postId: {
-              userId: post.authorId,
-              postId: post.id,
-            }
-          }
-        })
-        
         if (images) {
           const insertPromises = []
 

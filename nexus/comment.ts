@@ -314,6 +314,11 @@ const PostMutations = extendType({
           },
           include: {
             author: true,
+            postCommentSubscriptions: {
+              include: {
+                user: true,
+              },
+            },
           },
         })
 
@@ -336,14 +341,40 @@ const PostMutations = extendType({
           },
         })
 
-        if (postComment.author.id !== post.author.id) {
-          await sendPostCommentNotification({
+        const subData = {
+          user: { connect: { id: userId } },
+          post: { connect: { id: post.id } },
+        }
+
+        await ctx.db.postCommentSubscription.upsert({
+          create: subData,
+          update: subData,
+          where: {
+            userId_postId: {
+              userId,
+              postId: post.id,
+            }
+          }
+        })
+
+        const mailPromises: Promise<any>[] = []
+        post.postCommentSubscriptions.forEach(({ user }) => {
+          if (user.id === userId) {
+            // This is the user creating the comment, do not notify them.
+            return
+          }
+
+          const promise = sendPostCommentNotification({
             post,
-            postAuthor: post.author,
+            user: postComment.author,
             postComment,
             postCommentAuthor: postComment.author,
           })
-        }
+
+          mailPromises.push(promise)
+        })
+
+        await Promise.all(mailPromises)
 
         // TODO: Set up logging and check for successful `mailResponse`
         return postComment

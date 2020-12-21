@@ -118,3 +118,5 @@ out_publish
 config.prod.json
 config.stage.json
 api.graphql
+
+snapshot.sql

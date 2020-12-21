@@ -344,6 +344,13 @@ const PostMutations = extendType({
             title,
             status,
             publishedAt: isPublished ? new Date().toISOString() : null,
+            postCommentSubscriptions: {
+              create: [
+                {
+                  user: { connect: { id: userId } },
+                }
+              ]
+            },
             ...processEditorDocument(body),
           },
         })

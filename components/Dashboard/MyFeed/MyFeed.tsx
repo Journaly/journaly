@@ -44,7 +44,9 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
   const languageOptionIds = new Set((languagesData?.languages || []).map(({ id }) => id))
   const userLanguages: Set<number> = new Set(
-    currentUser.languages?.filter((lr) => languageOptionIds.has(lr.id)).map((lr) => lr.id) || [],
+    currentUser.languages
+      ?.filter((lr) => languageOptionIds.has(lr.language.id))
+      .map((lr) => lr.language.id) || [],
   )
 
   const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>([

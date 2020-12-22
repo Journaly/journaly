@@ -38,6 +38,10 @@ export type TopicNameArgs = {
   uiLanguage: UiLanguage
 }
 
+export type TopicPostCountArgs = {
+  languages?: Maybe<Array<Scalars['Int']>>
+}
+
 export type EditorNode = {
   type?: Maybe<Scalars['String']>
   text?: Maybe<Scalars['String']>
@@ -165,6 +169,10 @@ export type Language = {
   posts: Array<Post>
   dialect?: Maybe<Scalars['String']>
   postCount: Scalars['Int']
+}
+
+export type LanguagePostCountArgs = {
+  topics?: Maybe<Array<Scalars['Int']>>
 }
 
 export type SocialMedia = {
@@ -662,6 +670,7 @@ export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
 
 export type LanguagesQueryVariables = {
   hasPosts?: Maybe<Scalars['Boolean']>
+  topics?: Maybe<Array<Scalars['Int']>>
 }
 
 export type LanguagesQuery = { __typename?: 'Query' } & {
@@ -831,6 +840,7 @@ export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
 export type TopicsQueryVariables = {
   hasPosts?: Maybe<Scalars['Boolean']>
   uiLanguage: UiLanguage
+  languages?: Maybe<Array<Scalars['Int']>>
 }
 
 export type TopicsQuery = { __typename?: 'Query' } & {
@@ -1172,14 +1182,14 @@ export const PostCardFragmentFragmentDoc = gql`
 export const LanguageWithPostCountFragmentFragmentDoc = gql`
   fragment LanguageWithPostCountFragment on Language {
     ...LanguageFragment
-    postCount
+    postCount(topics: $topics)
   }
   ${LanguageFragmentFragmentDoc}
 `
 export const TopicWithPostCountFragmentFragmentDoc = gql`
   fragment TopicWithPostCountFragment on Topic {
     ...TopicFragment
-    postCount
+    postCount(languages: $languages)
   }
   ${TopicFragmentFragmentDoc}
 `
@@ -1684,7 +1694,7 @@ export type AddLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationO
   AddLanguageRelationMutationVariables
 >
 export const LanguagesDocument = gql`
-  query languages($hasPosts: Boolean) {
+  query languages($hasPosts: Boolean, $topics: [Int!]) {
     languages(hasPosts: $hasPosts) {
       ...LanguageWithPostCountFragment
     }
@@ -1705,6 +1715,7 @@ export const LanguagesDocument = gql`
  * const { data, loading, error } = useLanguagesQuery({
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
+ *      topics: // value for 'topics'
  *   },
  * });
  */
@@ -2496,7 +2507,7 @@ export type DeleteCommentThanksMutationOptions = ApolloReactCommon.BaseMutationO
   DeleteCommentThanksMutationVariables
 >
 export const TopicsDocument = gql`
-  query topics($hasPosts: Boolean, $uiLanguage: UILanguage!) {
+  query topics($hasPosts: Boolean, $uiLanguage: UILanguage!, $languages: [Int!]) {
     topics(hasPosts: $hasPosts) {
       ...TopicWithPostCountFragment
     }
@@ -2518,6 +2529,7 @@ export const TopicsDocument = gql`
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
  *      uiLanguage: // value for 'uiLanguage'
+ *      languages: // value for 'languages'
  *   },
  * });
  */

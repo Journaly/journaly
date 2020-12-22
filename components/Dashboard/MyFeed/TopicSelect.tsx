@@ -13,6 +13,7 @@ const TopicSelect: React.FC<Props> = ({ topics, selectedTopicsIds, onAdd, onRemo
   const formattedTopicOptions = (topics || []).map(({ name, id, postCount }) => ({
     value: id,
     displayName: `${name} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
+    selectedDisplayName: `${name}`,
   }))
 
   return (

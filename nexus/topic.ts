@@ -1,11 +1,5 @@
 import { PostStatus } from '@journaly/j-db-client'
-import {
-  arg,
-  booleanArg,
-  objectType,
-  extendType
-} from '@nexus/schema'
-
+import { arg, booleanArg, objectType, extendType, intArg } from '@nexus/schema'
 
 const TopicTranslation = objectType({
   name: 'TopicTranslation',
@@ -40,10 +34,22 @@ const Topic = objectType({
       },
     })
     t.int('postCount', {
-      resolve(parent, _args, ctx) {
+      args: {
+        languages: intArg({
+          description: 'Language IDs to filter topics. No value means all languages.',
+          required: false,
+          list: true,
+        }),
+      },
+      resolve(parent, args, ctx) {
+        let filter = {}
+        if (args.languages && args.languages.length > 0)
+          filter = { languageId: { in: args.languages } }
+
         return ctx.db.post.count({
           where: {
             AND: {
+              ...filter,
               postTopics: {
                 some: { topicId: parent.id },
               },
@@ -91,8 +97,4 @@ const TopicQueries = extendType({
   },
 })
 
-export default [
-  TopicTranslation,
-  Topic,
-  TopicQueries,
-]
+export default [TopicTranslation, Topic, TopicQueries]

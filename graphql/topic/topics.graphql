@@ -1,4 +1,4 @@
-query topics($hasPosts: Boolean, $uiLanguage: UILanguage!) {
+query topics($hasPosts: Boolean, $uiLanguage: UILanguage!, $languages: [Int!]) {
   topics(hasPosts: $hasPosts) {
     ...TopicWithPostCountFragment
   }

@@ -171,7 +171,7 @@ fragment LanguageFragment on Language {
 
 fragment LanguageWithPostCountFragment on Language {
   ...LanguageFragment
-  postCount
+  postCount(topics: $topics)
 }
 
 fragment TopicFragment on Topic {
@@ -181,7 +181,7 @@ fragment TopicFragment on Topic {
 
 fragment TopicWithPostCountFragment on Topic {
   ...TopicFragment
-  postCount
+  postCount(languages: $languages)
 }
 
 fragment PostTopicFragment on PostTopic {

@@ -39,6 +39,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   const { data: languagesData } = useLanguagesQuery({
     variables: {
       hasPosts: true,
+      topics: selectedTopicsFilters,
     },
   })
 
@@ -62,7 +63,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
 
   const uiLanguage = useUILanguage()
   const { data: { topics } = {} } = useTopicsQuery({
-    variables: { uiLanguage, hasPosts: true },
+    variables: { uiLanguage, hasPosts: true, languages: selectedLanguageFilters },
   })
 
   /**

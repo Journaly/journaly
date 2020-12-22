@@ -1,10 +1,4 @@
-import {
-  arg,
-  booleanArg,
-  intArg,
-  objectType,
-  extendType,
-} from '@nexus/schema'
+import { arg, booleanArg, intArg, objectType, extendType } from '@nexus/schema'
 import { PostStatus } from '@journaly/j-db-client'
 
 const LanguageRelation = objectType({
@@ -13,7 +7,7 @@ const LanguageRelation = objectType({
     t.model.id()
     t.model.language()
     t.model.level()
-  }
+  },
 })
 
 const Language = objectType({
@@ -24,10 +18,28 @@ const Language = objectType({
     t.model.posts({ pagination: false })
     t.model.dialect()
     t.int('postCount', {
-      resolve(parent, _args, ctx) {
+      args: {
+        topics: intArg({
+          description: 'Topics IDs to filter languages. No value means all languages.',
+          required: false,
+          list: true,
+        }),
+      },
+      resolve(parent, args, ctx) {
+        let filter = {}
+        if (args.topics && args.topics.length > 0)
+          filter = {
+            postTopics: {
+              some: {
+                topicId: { in: args.topics },
+              },
+            },
+          }
+
         return ctx.db.post.count({
           where: {
             AND: {
+              ...filter,
               languageId: parent.id,
               status: PostStatus.PUBLISHED,
             },
@@ -100,7 +112,7 @@ const LanguageMutations = extendType({
             level: args.level,
           },
         })
-      }
+      },
     })
     t.field('removeLanguageRelation', {
       type: 'LanguageRelation',
@@ -135,9 +147,4 @@ const LanguageMutations = extendType({
   },
 })
 
-export default [
-  LanguageRelation,
-  Language,
-  LanguageQueries,
-  LanguageMutations,
-]
+export default [LanguageRelation, Language, LanguageQueries, LanguageMutations]

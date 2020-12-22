@@ -11,6 +11,7 @@ export type Option<T extends OptionValue> = {
   value: T
   displayName: string
   selectedDisplayName?: string
+  disabled?: boolean
 }
 
 type Props<T extends OptionValue> = {
@@ -85,8 +86,8 @@ const SelectBase = <T extends OptionValue>(
           {placeholder}
         </option>
 
-        {options.map(({ value, displayName }) => (
-          <option value={value} key={value}>
+        {options.map(({ value, displayName, disabled }) => (
+          <option value={value} key={value} disabled={disabled}>
             {displayName}
           </option>
         ))}

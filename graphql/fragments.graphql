@@ -171,12 +171,17 @@ fragment LanguageFragment on Language {
 
 fragment LanguageWithPostCountFragment on Language {
   ...LanguageFragment
-  postCount
+  postCount(topics: $topics)
 }
 
 fragment TopicFragment on Topic {
   id
   name(uiLanguage: $uiLanguage)
+}
+
+fragment TopicWithPostCountFragment on Topic {
+  ...TopicFragment
+  postCount(languages: $languages)
 }
 
 fragment PostTopicFragment on PostTopic {

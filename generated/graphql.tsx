@@ -31,10 +31,15 @@ export type Topic = {
   __typename?: 'Topic'
   id: Scalars['Int']
   name?: Maybe<Scalars['String']>
+  postCount: Scalars['Int']
 }
 
 export type TopicNameArgs = {
   uiLanguage: UiLanguage
+}
+
+export type TopicPostCountArgs = {
+  languages?: Maybe<Array<Scalars['Int']>>
 }
 
 export type EditorNode = {
@@ -166,6 +171,10 @@ export type Language = {
   postCount: Scalars['Int']
 }
 
+export type LanguagePostCountArgs = {
+  topics?: Maybe<Array<Scalars['Int']>>
+}
+
 export type SocialMedia = {
   __typename?: 'SocialMedia'
   id: Scalars['Int']
@@ -255,7 +264,6 @@ export type Query = {
   currentUser?: Maybe<User>
   userById: User
   languages: Array<Language>
-  socialMedia: Array<SocialMedia>
 }
 
 export type QueryTopicsArgs = {
@@ -274,7 +282,7 @@ export type QueryPostByIdArgs = {
 export type QueryFeedArgs = {
   search?: Maybe<Scalars['String']>
   languages?: Maybe<Array<Scalars['Int']>>
-  topic?: Maybe<Scalars['Int']>
+  topics?: Maybe<Array<Scalars['Int']>>
   skip: Scalars['Int']
   first: Scalars['Int']
   followedAuthors?: Maybe<Scalars['Boolean']>
@@ -634,6 +642,12 @@ export type LanguageWithPostCountFragmentFragment = { __typename?: 'Language' } 
 
 export type TopicFragmentFragment = { __typename?: 'Topic' } & Pick<Topic, 'id' | 'name'>
 
+export type TopicWithPostCountFragmentFragment = { __typename?: 'Topic' } & Pick<
+  Topic,
+  'postCount'
+> &
+  TopicFragmentFragment
+
 export type PostTopicFragmentFragment = { __typename?: 'PostTopic' } & {
   topic: { __typename?: 'Topic' } & TopicFragmentFragment
 }
@@ -656,6 +670,7 @@ export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
 
 export type LanguagesQueryVariables = {
   hasPosts?: Maybe<Scalars['Boolean']>
+  topics?: Maybe<Array<Scalars['Int']>>
 }
 
 export type LanguagesQuery = { __typename?: 'Query' } & {
@@ -702,9 +717,7 @@ export type ProfilePageQueryVariables = {
 export type ProfilePageQuery = { __typename?: 'Query' } & {
   userById: { __typename?: 'User' } & ProfileUserFragmentFragment
   posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
-  currentUser?: Maybe<
-    { __typename?: 'User' } & UserWithLanguagesFragmentFragment & SocialMediaFragmentFragment
-  >
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
@@ -757,7 +770,7 @@ export type FeedQueryVariables = {
   skip: Scalars['Int']
   search?: Maybe<Scalars['String']>
   languages?: Maybe<Array<Scalars['Int']>>
-  topic?: Maybe<Scalars['Int']>
+  topics?: Maybe<Array<Scalars['Int']>>
   followedAuthors?: Maybe<Scalars['Boolean']>
 }
 
@@ -822,6 +835,16 @@ export type DeleteCommentThanksMutationVariables = {
 
 export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
   deleteCommentThanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'>
+}
+
+export type TopicsQueryVariables = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+  uiLanguage: UiLanguage
+  languages?: Maybe<Array<Scalars['Int']>>
+}
+
+export type TopicsQuery = { __typename?: 'Query' } & {
+  topics: Array<{ __typename?: 'Topic' } & TopicWithPostCountFragmentFragment>
 }
 
 export type CreateUserMutationVariables = {
@@ -1159,9 +1182,16 @@ export const PostCardFragmentFragmentDoc = gql`
 export const LanguageWithPostCountFragmentFragmentDoc = gql`
   fragment LanguageWithPostCountFragment on Language {
     ...LanguageFragment
-    postCount
+    postCount(topics: $topics)
   }
   ${LanguageFragmentFragmentDoc}
+`
+export const TopicWithPostCountFragmentFragmentDoc = gql`
+  fragment TopicWithPostCountFragment on Topic {
+    ...TopicFragment
+    postCount(languages: $languages)
+  }
+  ${TopicFragmentFragmentDoc}
 `
 export const UserWithLanguagesFragmentFragmentDoc = gql`
   fragment UserWithLanguagesFragment on User {
@@ -1664,7 +1694,7 @@ export type AddLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationO
   AddLanguageRelationMutationVariables
 >
 export const LanguagesDocument = gql`
-  query languages($hasPosts: Boolean) {
+  query languages($hasPosts: Boolean, $topics: [Int!]) {
     languages(hasPosts: $hasPosts) {
       ...LanguageWithPostCountFragment
     }
@@ -1685,6 +1715,7 @@ export const LanguagesDocument = gql`
  * const { data, loading, error } = useLanguagesQuery({
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
+ *      topics: // value for 'topics'
  *   },
  * });
  */
@@ -1883,13 +1914,11 @@ export const ProfilePageDocument = gql`
     }
     currentUser {
       ...UserWithLanguagesFragment
-      ...SocialMediaFragment
     }
   }
   ${ProfileUserFragmentFragmentDoc}
   ${PostCardFragmentFragmentDoc}
   ${UserWithLanguagesFragmentFragmentDoc}
-  ${SocialMediaFragmentFragmentDoc}
 `
 
 /**
@@ -2118,7 +2147,7 @@ export const FeedDocument = gql`
     $skip: Int!
     $search: String
     $languages: [Int!]
-    $topic: Int
+    $topics: [Int!]
     $followedAuthors: Boolean
   ) {
     feed(
@@ -2126,7 +2155,7 @@ export const FeedDocument = gql`
       skip: $skip
       search: $search
       languages: $languages
-      topic: $topic
+      topics: $topics
       followedAuthors: $followedAuthors
     ) {
       posts {
@@ -2154,7 +2183,7 @@ export const FeedDocument = gql`
  *      skip: // value for 'skip'
  *      search: // value for 'search'
  *      languages: // value for 'languages'
- *      topic: // value for 'topic'
+ *      topics: // value for 'topics'
  *      followedAuthors: // value for 'followedAuthors'
  *   },
  * });
@@ -2477,6 +2506,49 @@ export type DeleteCommentThanksMutationOptions = ApolloReactCommon.BaseMutationO
   DeleteCommentThanksMutation,
   DeleteCommentThanksMutationVariables
 >
+export const TopicsDocument = gql`
+  query topics($hasPosts: Boolean, $uiLanguage: UILanguage!, $languages: [Int!]) {
+    topics(hasPosts: $hasPosts) {
+      ...TopicWithPostCountFragment
+    }
+  }
+  ${TopicWithPostCountFragmentFragmentDoc}
+`
+
+/**
+ * __useTopicsQuery__
+ *
+ * To run a query within a React component, call `useTopicsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTopicsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTopicsQuery({
+ *   variables: {
+ *      hasPosts: // value for 'hasPosts'
+ *      uiLanguage: // value for 'uiLanguage'
+ *      languages: // value for 'languages'
+ *   },
+ * });
+ */
+export function useTopicsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<TopicsQuery, TopicsQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<TopicsQuery, TopicsQueryVariables>(TopicsDocument, baseOptions)
+}
+export function useTopicsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TopicsQuery, TopicsQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<TopicsQuery, TopicsQueryVariables>(
+    TopicsDocument,
+    baseOptions,
+  )
+}
+export type TopicsQueryHookResult = ReturnType<typeof useTopicsQuery>
+export type TopicsLazyQueryHookResult = ReturnType<typeof useTopicsLazyQuery>
+export type TopicsQueryResult = ApolloReactCommon.QueryResult<TopicsQuery, TopicsQueryVariables>
 export const CreateUserDocument = gql`
   mutation createUser($handle: String!, $email: String!, $password: String!) {
     createUser(handle: $handle, email: $email, password: $password) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
@@ -8,20 +8,20 @@ import { useTranslation } from '../../../config/i18n'
 
 import PostCard from '../PostCard'
 import Pagination from '../../Pagination'
-import theme from '../../../theme'
 import {
   User as UserType,
   useFeedQuery,
   useLanguagesQuery,
-  LanguageLevel
+  useTopicsQuery,
 } from '../../../generated/graphql'
-// import Select from '../../../elements/Select'
 import LoadingWrapper from '../../LoadingWrapper'
-import MultiSelect from '../../../elements/MultiSelect'
 import Button, { ButtonVariant } from '../../../elements/Button'
-import { greetings } from './greetings'
 import useToggle from '../../../hooks/useToggle'
-import Select from '../../../elements/Select'
+import SearchInput from './SearchInput'
+import LanguageSelect from './LanguageSelect'
+import useUILanguage from '../../../hooks/useUILanguage'
+import TopicSelect from './TopicSelect'
+import FeedHeader from './FeedHeader'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -32,37 +32,23 @@ type Props = {
 const MyFeed: React.FC<Props> = ({ currentUser }) => {
   const { t } = useTranslation('my-feed')
 
-  /**
-   * Topic filter selection state
-   */
-  const [topic, setTopic] = useState('')
-
-  /**
-   * Language filter selection state
-   */
+  const [search, setSearchState] = useState('')
+  const [selectedTopicsFilters, setSelectedTopicsFilters] = useState<number[]>([])
 
   // Fetch languages that have at least 1 post
   const { data: languagesData } = useLanguagesQuery({
     variables: {
       hasPosts: true,
+      topics: selectedTopicsFilters,
     },
   })
-  const languageOptions = (languagesData?.languages || []).map(({ dialect, id, name, postCount }) => {
-    const languageName = typeof dialect === 'string' && dialect.length > 0 ? `${name} - ${dialect}` : `${name}`
-    return {
-      value: id,
-      displayName: `${languageName} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
-      selectedDisplayName: languageName,
-    };
-  })
+
   const languageOptionIds = new Set((languagesData?.languages || []).map(({ id }) => id))
-
-  let userLanguages: Set<number> = new Set([])
-
-  for (let languageRelation of currentUser.languages) {
-    if (languageOptionIds.has(languageRelation.language.id))
-      userLanguages.add(languageRelation.language.id)
-  }
+  const userLanguages: Set<number> = new Set(
+    currentUser.languages
+      ?.filter((lr) => languageOptionIds.has(lr.language.id))
+      .map((lr) => lr.language.id) || [],
+  )
 
   const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>([
     ...userLanguages.values(),
@@ -74,6 +60,11 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   )
 
   const [followedAuthorsFilter, toggleFollowedAuthorsFilter] = useToggle()
+
+  const uiLanguage = useUILanguage()
+  const { data: { topics } = {} } = useTopicsQuery({
+    variables: { uiLanguage, hasPosts: true, languages: selectedLanguageFilters },
+  })
 
   /**
    * Pagination handling
@@ -89,6 +80,8 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
       languages: selectedLanguageFilters.length ? selectedLanguageFilters : null,
       followedAuthors: followedAuthorsFilter,
+      search: search,
+      topics: selectedTopicsFilters,
     },
   })
 
@@ -97,89 +90,79 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   const showPagination = count > NUM_POSTS_PER_PAGE
   const pageTitle = t('pageTitle')
 
-  let greetingLanguage = 'English'
-
-  if (currentUser.languages.length === 1) {
-    greetingLanguage = currentUser.languages[0].language.name
-  }
-
-  const resetPagination = () => {
+  const resetPagination = (): void => {
     // filter out page key to reset the url
-    const newQuery = {...router.query}
+    const newQuery = { ...router.query }
     delete newQuery.page
-    router.push({...router, query: newQuery })
+    router.push({ ...router, query: newQuery })
   }
 
+  const onSearchChange = useCallback((val): void => setSearchState(val), [])
 
-  const learningLanguages = currentUser.languages.filter(({ level }) => level !== LanguageLevel.Native)
-  if (learningLanguages.length > 0) {
-    const index = Math.floor(Math.random() * currentUser.languages.length)
-    const greetingLanguageKey = currentUser.languages[index].language.name
-    greetingLanguage = greetings[greetingLanguageKey] ? greetingLanguageKey : 'English'
-  }
+  const onTopicAdd = useCallback(
+    (id: number): void => {
+      setSelectedTopicsFilters([...selectedTopicsFilters, id])
+      resetPagination()
+    },
+    [selectedTopicsFilters],
+  )
 
-  const rightToLeftLanguages = ['Arabic', 'Persian']
+  const onTopicRemove = useCallback(
+    (id: number): void => {
+      setSelectedTopicsFilters(selectedTopicsFilters.filter((topicId) => topicId !== id))
+      resetPagination()
+    },
+    [selectedTopicsFilters],
+  )
 
-  // TEMPORARY until topics built
-    const topicOptions = [
-      { value: 'rock_climbing', displayName: 'Rock climbing' },
-      { value: 'cooking', displayName: 'Cooking' },
-      { value: 'drawing', displayName: 'Drawing' },
-      { value: 'history', displayName: 'History' },
-    ]
+  const onLanguageAdd = useCallback(
+    (id: number): void => {
+      setSelectedLanguageFilters([...selectedLanguageFilters, id])
+      resetPagination()
+    },
+    [selectedLanguageFilters],
+  )
 
-    const handleTopicChange = (value: string): void => {
-      setTopic(value)
-    }
+  const onLanguageRemove = useCallback(
+    (id: number): void => {
+      setSelectedLanguageFilters(selectedLanguageFilters.filter((languageId) => languageId !== id))
+      resetPagination()
+    },
+    [selectedLanguageFilters],
+  )
 
   return (
     <div className="my-feed-wrapper">
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      {rightToLeftLanguages.includes(greetingLanguage) ? (
-        <h1>
-          !{currentUser.name || currentUser.handle} {greetings[greetingLanguage]}
-        </h1>
-      ) : (
-        <h1>
-          {greetings[greetingLanguage]} {currentUser.name || currentUser.handle}!
-        </h1>
-      )}
+      <FeedHeader currentUser={currentUser} />
       <div className="my-feed-search">
-        <input type="text" placeholder="Search coming soon..." className="search-box" disabled />
+        <SearchInput debounceTime={500} defaultValue={search} onChange={onSearchChange} />
 
         <div className="my-feed-select">
-          <Select
-            options={topicOptions}
-            value={topic}
-            placeholder="Topic filtering coming soon..."
-            name="topic"
-            onChange={handleTopicChange}
-            disabled={true}
+          <TopicSelect
+            topics={topics}
+            selectedTopicsIds={selectedTopicsFilters}
+            onAdd={onTopicAdd}
+            onRemove={onTopicRemove}
           />
 
-          <MultiSelect
-            options={languageOptions}
-            selectedOptionValues={selectedLanguageFilters}
-            placeholder="Languages"
-            onAdd={(id) => {
-              setSelectedLanguageFilters([...selectedLanguageFilters, id])
-              resetPagination()
-            }}
-            onRemove={(id) => {
-              setSelectedLanguageFilters(
-                selectedLanguageFilters.filter((languageId) => languageId !== id)
-              )
-              resetPagination()
-            }}
+          <LanguageSelect
+            languagesData={languagesData}
+            selectedLanguagesIds={selectedLanguageFilters}
+            onAdd={onLanguageAdd}
+            onRemove={onLanguageRemove}
           />
+
           <div className="filter-actions">
             <Button
               variant={ButtonVariant.Link}
               className="filter-action-btn"
               onClick={() => {
                 setSelectedLanguageFilters([])
+                setSelectedTopicsFilters([])
+                setSearchState('')
               }}
             >
               {t('clearFilters')}
@@ -230,12 +213,6 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
           width: 100%;
         }
 
-        h1 {
-          margin: 0 auto 40px;
-          text-align: center;
-          ${theme.typography.headingXL};
-        }
-
         .my-feed-search {
           width: 100%;
           max-width: 700px;
@@ -248,11 +225,6 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
           font-size: 16px;
           background: white;
           padding: 10px;
-          width: 100%;
-        }
-
-        .search-box {
-          margin-bottom: 20px;
           width: 100%;
         }
 

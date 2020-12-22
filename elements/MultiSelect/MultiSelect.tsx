@@ -61,6 +61,7 @@ const MultiSelect = <T extends OptionValue>({
 }: Props<T>) => {
   const availableOptions: Option<T>[] = []
   const selectedOptions: Option<T>[] = []
+  const disabledOptions: Option<T>[] = []
 
   options.forEach((option) => {
     const selectedOption = selectedOptionValues.find(
@@ -69,6 +70,8 @@ const MultiSelect = <T extends OptionValue>({
 
     if (selectedOption) {
       selectedOptions.push(option)
+    } else if (option.disabled) {
+      disabledOptions.push(option)
     } else {
       availableOptions.push(option)
     }
@@ -76,12 +79,9 @@ const MultiSelect = <T extends OptionValue>({
 
   return (
     <div className="multiselect-container">
-      <OptionPills
-        selectedOptions={selectedOptions}
-        onRemove={onRemove}
-      />
+      <OptionPills selectedOptions={selectedOptions} onRemove={onRemove} />
       <Select
-        options={availableOptions}
+        options={[...availableOptions, ...disabledOptions]}
         placeholder={placeholder}
         loading={loading}
         name={name}

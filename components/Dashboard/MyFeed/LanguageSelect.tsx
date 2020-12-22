@@ -23,6 +23,7 @@ const LanguageSelect: React.FC<Props> = ({
         value: id,
         displayName: `${languageName} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
         selectedDisplayName: languageName,
+        disabled: postCount < 1,
       }
     },
   )

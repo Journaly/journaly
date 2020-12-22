@@ -14,6 +14,7 @@ const TopicSelect: React.FC<Props> = ({ topics, selectedTopicsIds, onAdd, onRemo
     value: id,
     displayName: `${name} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
     selectedDisplayName: `${name}`,
+    disabled: postCount < 1,
   }))
 
   return (

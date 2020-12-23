@@ -15,11 +15,11 @@ model User {
   auth                     Auth?
   userRole                 UserRole                  @default(FREE_USER)
   bio                      String?
+  city                     String?
+  country                  String?
   posts                    Post[]
   subscription             UserSubscription?
   socialMedia              SocialMedia?
-  location                 Location?                 @relation(fields: [locationId], references: [id])
-  locationId               Int?
   languagesNative          LanguageNative[]
   languagesLearning        LanguageLearning[]
   languages                LanguageRelation[]
@@ -129,19 +129,13 @@ model Language {
   id            Int                @id @default(autoincrement())
   posts         Post[]
   name          String
+  devName       String?
   dialect       String?
   nativeUsers   LanguageNative[]
   learningUsers LanguageLearning[]
 
   LanguageRelation LanguageRelation[]
   @@unique([name, dialect])
-}
-
-model Location {
-  id      Int    @id @default(autoincrement())
-  country String
-  city    String
-  User    User[]
 }
 
 model Topic {

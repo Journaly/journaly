@@ -129,6 +129,7 @@ model Language {
   id            Int                @id @default(autoincrement())
   posts         Post[]
   name          String
+  devName       String?
   dialect       String?
   nativeUsers   LanguageNative[]
   learningUsers LanguageLearning[]

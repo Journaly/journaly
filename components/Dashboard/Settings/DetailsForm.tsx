@@ -24,6 +24,8 @@ type FormData = {
   name: string
   email: string
   handle: string
+  city: string
+  country: string
 }
 
 const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
@@ -84,6 +86,8 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
             name: formData.name,
             email: formData.email,
             handle: formData.handle,
+            city: formData.city,
+            country: formData.country,
             profileImage: profileImage,
           },
         })
@@ -211,8 +215,9 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   name="city"
                   className="j-field"
                   placeholder="What city do you live in?"
+                  defaultValue={currentUser.city || ''}
                   ref={register()}
-                />
+                  />
               </div>
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="location">
@@ -224,6 +229,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   name="country"
                   className="j-field"
                   placeholder="What country do you live in?"
+                  defaultValue={currentUser.country || ''}
                   ref={register()}
                 />
               </div>

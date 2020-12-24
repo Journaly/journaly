@@ -135,7 +135,8 @@ export type User = {
   handle: Scalars['String']
   bio?: Maybe<Scalars['String']>
   userRole: UserRole
-  location?: Maybe<Location>
+  city?: Maybe<Scalars['String']>
+  country?: Maybe<Scalars['String']>
   badges: Array<UserBadge>
   posts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
@@ -195,13 +196,6 @@ export type CommentThanks = {
   commentId: Scalars['Int']
   author: User
   comment: Comment
-}
-
-export type Location = {
-  __typename?: 'Location'
-  id: Scalars['Int']
-  country: Scalars['String']
-  city: Scalars['String']
 }
 
 export enum ImageRole {

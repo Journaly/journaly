@@ -149,7 +149,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                       message: `${t('profile.error.handleValidationErrorMessage')}`,
                     },
                     minLength: {
-                      value: 6,
+                      value: 3,
                       message: `${t('profile.error.handleMinimumErrorMessage')}`,
                     },
                     validate: {
@@ -203,16 +203,28 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
               </div>
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="location">
-                  Location (optional)
+                  City (optional)
                 </label>
                 <input
                   type="text"
-                  id="location"
-                  name="location"
+                  id="city"
+                  name="city"
                   className="j-field"
-                  placeholder="Coming soon..."
+                  placeholder="What city do you live in?"
                   ref={register()}
-                  disabled={true}
+                />
+              </div>
+              <div className="details-form-field">
+                <label className="settings-label" htmlFor="location">
+                  Country (optional)
+                </label>
+                <input
+                  type="text"
+                  id="country"
+                  name="country"
+                  className="j-field"
+                  placeholder="What country do you live in?"
+                  ref={register()}
                 />
               </div>
             </div>

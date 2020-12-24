@@ -207,28 +207,28 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
               </div>
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="location">
-                  City (optional)
+                  {t('profile.details.cityLabel')}
                 </label>
                 <input
                   type="text"
                   id="city"
                   name="city"
                   className="j-field"
-                  placeholder="What city do you live in?"
+                  placeholder={t('profile.details.cityPlaceholder')}
                   defaultValue={currentUser.city || ''}
                   ref={register()}
                   />
               </div>
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="location">
-                  Country (optional)
+                {t('profile.details.countryLabel')}
                 </label>
                 <input
                   type="text"
                   id="country"
                   name="country"
                   className="j-field"
-                  placeholder="What country do you live in?"
+                  placeholder={t('profile.details.countryPlaceholder')}
                   defaultValue={currentUser.country || ''}
                   ref={register()}
                 />

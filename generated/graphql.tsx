@@ -393,6 +393,8 @@ export type MutationUpdateUserArgs = {
   profileImage?: Maybe<Scalars['String']>
   bio?: Maybe<Scalars['String']>
   handle?: Maybe<Scalars['String']>
+  country?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
 }
 
 export type MutationUpdatePasswordArgs = {
@@ -524,7 +526,7 @@ export type UpdatePostCommentMutation = { __typename?: 'Mutation' } & {
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'name' | 'handle' | 'email' | 'bio' | 'userRole' | 'profileImage'
+  'id' | 'name' | 'handle' | 'email' | 'bio' | 'userRole' | 'profileImage' | 'city' | 'country'
 >
 
 export type UserWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
@@ -957,6 +959,8 @@ export type UpdateUserMutationVariables = {
   profileImage?: Maybe<Scalars['String']>
   bio?: Maybe<Scalars['String']>
   handle?: Maybe<Scalars['String']>
+  city?: Maybe<Scalars['String']>
+  country?: Maybe<Scalars['String']>
 }
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
@@ -990,6 +994,8 @@ export const UserFragmentFragmentDoc = gql`
     bio
     userRole
     profileImage
+    city
+    country
   }
 `
 export const UserWithStatsFragmentFragmentDoc = gql`
@@ -3149,13 +3155,17 @@ export const UpdateUserDocument = gql`
     $profileImage: String
     $bio: String
     $handle: String
+    $city: String
+    $country: String
   ) {
     updateUser(
+      handle: $handle
       email: $email
       name: $name
       profileImage: $profileImage
       bio: $bio
-      handle: $handle
+      city: $city
+      country: $country
     ) {
       ...UserFragment
     }
@@ -3185,6 +3195,8 @@ export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
  *      profileImage: // value for 'profileImage'
  *      bio: // value for 'bio'
  *      handle: // value for 'handle'
+ *      city: // value for 'city'
+ *      country: // value for 'country'
  *   },
  * });
  */

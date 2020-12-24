@@ -4,8 +4,18 @@ mutation updateUser(
   $profileImage: String
   $bio: String
   $handle: String
+  $city: String
+  $country: String
 ) {
-  updateUser(email: $email, name: $name, profileImage: $profileImage, bio: $bio, handle: $handle) {
+  updateUser(
+    handle: $handle
+    email: $email
+    name: $name
+    profileImage: $profileImage
+    bio: $bio
+    city: $city
+    country: $country
+  ) {
     ...UserFragment
   }
 }

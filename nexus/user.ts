@@ -191,6 +191,8 @@ const UserMutations = extendType({
         profileImage: stringArg({ required: false }),
         bio: stringArg({ required: false }),
         handle: stringArg({ required: false }),
+        country: stringArg({ required: false }),
+        city: stringArg({ required: false }),
       },
       resolve: async (_parent, args, ctx: any) => {
         const { userId } = ctx.request

@@ -21,7 +21,6 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
 
   const sampleUser = {
     likes: ['cooking, reading, movies, design'],
-    location: 'San Francisco, United States',
   }
 
   const name = user.name || user.handle
@@ -37,6 +36,8 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
 
   const speaks = speaksList.map(({ language }) => languageNameWithDialect(language))
   const learns = learnsList.map(({ language }) => languageNameWithDialect(language))
+
+  const location = `${user.city && user.city}${user.city && user.country && ', '}${user.country && user.country}`
 
   return (
     <div className="profile-card">
@@ -88,9 +89,9 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
       </div>
 
       <div className="profile-footer">
-        {sampleUser.location && (
+        {user.city || user.country && (
           <>
-            <p className="location">{sampleUser.location}</p>
+            <p className="location">{location}</p>
             {showSeparator && <div className="separator">- -</div>}
           </>
         )}

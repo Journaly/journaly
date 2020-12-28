@@ -117,6 +117,7 @@ model Post {
   likes                    PostLike[]
   language                 Language                  @relation(fields: [languageId], references: [id])
   languageId               Int
+  publishedLanguageLevel   LanguageLevel             @default(BEGINNER)
   longitude                Float?
   latitude                 Float?
   threads                  Thread[]

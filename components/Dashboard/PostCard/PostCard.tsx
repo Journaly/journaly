@@ -40,6 +40,7 @@ const PostCard: React.FC<Props> = ({
     author: { handle, name, profileImage },
     createdAt,
     publishedAt,
+    publishedLanguageLevel,
     language: { name: languageName },
   } = post
   const isDraft = status === PostStatusType.Draft
@@ -78,6 +79,7 @@ const PostCard: React.FC<Props> = ({
                   </div>
                   <div className="language-level-container">
                     <p className="post-language">{languageName}</p>
+                    <p className="post-language">{publishedLanguageLevel}</p>
                   </div>
                 </div>
               )}

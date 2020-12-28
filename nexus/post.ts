@@ -634,6 +634,13 @@ const PostMutations = extendType({
               },
             },
           }),
+          ctx.db.postCommentSubscription.deleteMany({
+            where: {
+              post: {
+                id: postId,
+              },
+            },
+          }),
           ctx.db.postCommentThanks.deleteMany({
             where: {
               PostComment: {

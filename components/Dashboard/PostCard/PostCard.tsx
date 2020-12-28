@@ -237,7 +237,8 @@ const PostCard: React.FC<Props> = ({
           font-size: 12px;
           display: flex;
           flex: 1;
-          gap: 10px;
+          gap: 7px;
+          align-items: center;
         }
 
         .post-data {

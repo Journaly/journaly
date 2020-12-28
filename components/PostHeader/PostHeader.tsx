@@ -1,15 +1,17 @@
 import React from 'react'
 
-import { PostStatus, TopicFragmentFragment as TopicType, LanguageFragmentFragment as LanguageType } from '../../generated/graphql'
+import { PostStatus, TopicFragmentFragment as TopicType, LanguageFragmentFragment as LanguageType, LanguageLevel } from '../../generated/graphql'
 import { useTranslation } from '../../config/i18n'
 import { formatLongDate } from '../../utils'
 
 import theme from '../../theme'
+import LevelGauge from '../../elements/LevelGauge'
 
 type PostHeaderProps = {
   postTitle: string
   postStatus: PostStatus
   publishDate: string
+  publishedLanguageLevel?: LanguageLevel
   authorName: string
   postImage: string
   topics?: TopicType[]
@@ -23,6 +25,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
   postStatus,
   authorName,
   publishDate,
+  publishedLanguageLevel,
   postImage,
   topics,
   language,
@@ -33,7 +36,12 @@ const PostHeader: React.FC<PostHeaderProps> = ({
       <img src={postImage} alt={postTitle} />
       <div className="post-header-info" dir="auto">
         <div className="top-badges">
-          { language && <div className="language badge">{language.name}</div> }
+          { language && (
+            <div className="language badge">
+              {language.name}
+              {publishedLanguageLevel && <LevelGauge level={publishedLanguageLevel} />}
+            </div>
+          )}
           {postStatus === 'DRAFT' && <div className="draft badge">{t('draft')}</div>}
         </div>
 
@@ -83,6 +91,9 @@ const PostHeader: React.FC<PostHeaderProps> = ({
 
         .language {
           left: 10px;
+          display: flex;
+          gap: 7px;
+          align-items: center;
         }
 
         .top-badges {

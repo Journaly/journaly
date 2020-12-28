@@ -109,6 +109,7 @@ export type Post = {
   postTopics: Array<PostTopic>
   postComments: Array<PostComment>
   language: Language
+  publishedLanguageLevel: LanguageLevel
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
   bodySrc: Scalars['String']
@@ -221,6 +222,13 @@ export type PostPostCommentsOrderByInput = {
   createdAt?: Maybe<SortOrder>
 }
 
+export enum LanguageLevel {
+  Beginner = 'BEGINNER',
+  Intermediate = 'INTERMEDIATE',
+  Advanced = 'ADVANCED',
+  Native = 'NATIVE',
+}
+
 export enum UserRole {
   Admin = 'ADMIN',
   Moderator = 'MODERATOR',
@@ -234,13 +242,6 @@ export enum BadgeType {
   TenPosts = 'TEN_POSTS',
   OnehundredPosts = 'ONEHUNDRED_POSTS',
   CodeContributor = 'CODE_CONTRIBUTOR',
-}
-
-export enum LanguageLevel {
-  Beginner = 'BEGINNER',
-  Intermediate = 'INTERMEDIATE',
-  Advanced = 'ADVANCED',
-  Native = 'NATIVE',
 }
 
 export enum SortOrder {
@@ -600,7 +601,15 @@ export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
 
 export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
-  'id' | 'title' | 'body' | 'status' | 'excerpt' | 'readTime' | 'createdAt' | 'publishedAt'
+  | 'id'
+  | 'title'
+  | 'body'
+  | 'status'
+  | 'excerpt'
+  | 'readTime'
+  | 'createdAt'
+  | 'publishedAt'
+  | 'publishedLanguageLevel'
 > & {
     author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
@@ -617,7 +626,15 @@ export type PostWithTopicsFragmentFragment = { __typename?: 'Post' } & {
 
 export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
   Post,
-  'id' | 'title' | 'body' | 'excerpt' | 'readTime' | 'createdAt' | 'publishedAt' | 'commentCount'
+  | 'id'
+  | 'title'
+  | 'body'
+  | 'excerpt'
+  | 'readTime'
+  | 'createdAt'
+  | 'publishedAt'
+  | 'publishedLanguageLevel'
+  | 'commentCount'
 > & {
     images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
@@ -1104,6 +1121,7 @@ export const PostFragmentFragmentDoc = gql`
     readTime
     createdAt
     publishedAt
+    publishedLanguageLevel
     author {
       ...AuthorWithLanguagesFragment
     }
@@ -1162,6 +1180,7 @@ export const PostCardFragmentFragmentDoc = gql`
     readTime
     createdAt
     publishedAt
+    publishedLanguageLevel
     commentCount
     images {
       smallSize

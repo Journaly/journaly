@@ -9,6 +9,19 @@ You can check out the [state of the schema](./schema.prisma) after the migration
 ALTER TABLE "Post" ADD COLUMN     "publishedLanguageLevel" "LanguageLevel" NOT NULL DEFAULT E'BEGINNER'
 ```
 
+## Data Migration
+
+```sql
+-- Bring users' publishedLanguageLevels up-to-date with their current LanguageLevel
+UPDATE "Post"
+SET "publishedLanguageLevel"=subquery.level
+FROM (SELECT "Post"."id" AS "postId", "authorId", "LanguageRelation"."level"
+FROM "Post"
+JOIN "LanguageRelation" ON "userId" = "authorId"
+	AND "LanguageRelation"."languageId" = "Post"."languageId") AS subquery
+WHERE "Post".id = subquery."postId"
+```
+
 ## Changes
 
 ```diff

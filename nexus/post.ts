@@ -371,7 +371,7 @@ const PostMutations = extendType({
 
         if (!user) throw new Error("User not found")
 
-        const userLanguageLevel = user.languages.filter((language: LanguageRelation) => language.id === languageId)[0].level
+        const userLanguageLevel = user.languages.filter((language: LanguageRelation) => language.languageId === languageId)[0].level
 
         const post = await ctx.db.post.create({
           data: {
@@ -518,7 +518,7 @@ const PostMutations = extendType({
           }))
         }
 
-        const userLanguageLevel = currentUser.languages.filter((language: LanguageRelation) => language.id === args.languageId)[0].level
+        const userLanguageLevel = currentUser.languages.filter((language: LanguageRelation) => language.languageId === args.languageId)[0].level
 
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
           data.publishedAt = new Date().toISOString()

@@ -74,15 +74,14 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           border-radius: 4px;
           font-weight: bold;
           font-size: 12px;
+          top: 10px;
         }
 
         .draft {
-          top: 10px;
           right: 10px;
         }
 
         .language {
-          top: 10px;
           left: 10px;
         }
 

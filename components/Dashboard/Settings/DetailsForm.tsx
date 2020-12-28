@@ -220,7 +220,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   />
               </div>
               <div className="details-form-field">
-                <label className="settings-label" htmlFor="location">
+                <label className="settings-label" htmlFor="country">
                 {t('profile.details.countryLabel')}
                 </label>
                 <input

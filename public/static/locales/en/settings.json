@@ -19,7 +19,11 @@
       "emailLabel": "Email",
       "emailError": "Email is required",
       "locationLabel": "Location (optional)",
-      "updateSuccess": "Profile details successfully updated."
+      "updateSuccess": "Profile details successfully updated.",
+      "cityLabel": "City (optional)",
+      "cityPlaceholder": "What city do you live in?",
+      "countryLabel": "Country (optional)",
+      "countryPlaceholder": "What country do you live in?"
     },
     "languages": {
       "legend": "Languages",

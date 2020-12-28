@@ -24,6 +24,8 @@ type FormData = {
   name: string
   email: string
   handle: string
+  city: string
+  country: string
 }
 
 const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
@@ -84,6 +86,8 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
             name: formData.name,
             email: formData.email,
             handle: formData.handle,
+            city: formData.city,
+            country: formData.country,
             profileImage: profileImage,
           },
         })
@@ -149,7 +153,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                       message: `${t('profile.error.handleValidationErrorMessage')}`,
                     },
                     minLength: {
-                      value: 6,
+                      value: 3,
                       message: `${t('profile.error.handleMinimumErrorMessage')}`,
                     },
                     validate: {
@@ -202,17 +206,31 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                 />
               </div>
               <div className="details-form-field">
-                <label className="settings-label" htmlFor="location">
-                  Location (optional)
+                <label className="settings-label" htmlFor="city">
+                  {t('profile.details.cityLabel')}
                 </label>
                 <input
                   type="text"
-                  id="location"
-                  name="location"
+                  id="city"
+                  name="city"
                   className="j-field"
-                  placeholder="Coming soon..."
+                  placeholder={t('profile.details.cityPlaceholder')}
+                  defaultValue={currentUser.city || ''}
                   ref={register()}
-                  disabled={true}
+                  />
+              </div>
+              <div className="details-form-field">
+                <label className="settings-label" htmlFor="country">
+                {t('profile.details.countryLabel')}
+                </label>
+                <input
+                  type="text"
+                  id="country"
+                  name="country"
+                  className="j-field"
+                  placeholder={t('profile.details.countryPlaceholder')}
+                  defaultValue={currentUser.country || ''}
+                  ref={register()}
                 />
               </div>
             </div>

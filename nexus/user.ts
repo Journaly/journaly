@@ -36,7 +36,8 @@ const User = objectType({
     t.model.handle()
     t.model.bio()
     t.model.userRole()
-    t.model.location()
+    t.model.city()
+    t.model.country()
     t.model.badges({ pagination: false })
     t.model.posts({ pagination: false })
     t.model.profileImage()
@@ -190,6 +191,8 @@ const UserMutations = extendType({
         profileImage: stringArg({ required: false }),
         bio: stringArg({ required: false }),
         handle: stringArg({ required: false }),
+        country: stringArg({ required: false }),
+        city: stringArg({ required: false }),
       },
       resolve: async (_parent, args, ctx: any) => {
         const { userId } = ctx.request

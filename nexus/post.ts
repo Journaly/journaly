@@ -20,6 +20,7 @@ import {
   BadgeType,
   PostUpdateInput,
   PrismaClient,
+  LanguageRelation,
 } from '@journaly/j-db-client'
 import { EditorNode, ImageInput } from './inputTypes'
 
@@ -104,6 +105,7 @@ const Post = objectType({
       },
     })
     t.model.language()
+    t.model.publishedLanguageLevel()
     t.model.createdAt()
     t.model.updatedAt()
     t.model.bodySrc()
@@ -358,6 +360,19 @@ const PostMutations = extendType({
           throw new ResolverError('We need a body!', {})
         }
 
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: userId
+          },
+          include: {
+            languages: true,
+          }
+        })
+
+        if (!user) throw new Error("User not found")
+
+        const userLanguageLevel = user.languages.filter((language: LanguageRelation) => language.languageId === languageId)[0].level
+
         const post = await ctx.db.post.create({
           data: {
             language: { connect: { id: languageId } },
@@ -365,6 +380,7 @@ const PostMutations = extendType({
             title,
             status,
             publishedAt: isPublished ? new Date().toISOString() : null,
+            publishedLanguageLevel: userLanguageLevel,
             postCommentSubscriptions: {
               create: [
                 {
@@ -438,6 +454,9 @@ const PostMutations = extendType({
             where: {
               id: userId,
             },
+            include: {
+              languages: true,
+            }
           }),
           ctx.db.post.findUnique({
             where: {
@@ -499,6 +518,9 @@ const PostMutations = extendType({
           }))
         }
 
+        const userLanguageLevel = currentUser.languages.filter((language: LanguageRelation) => language.languageId === args.languageId)[0].level
+        data.publishedLanguageLevel = userLanguageLevel
+        
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
           data.publishedAt = new Date().toISOString()
         }
@@ -609,6 +631,13 @@ const PostMutations = extendType({
                 post: {
                   id: postId,
                 },
+              },
+            },
+          }),
+          ctx.db.postCommentSubscription.deleteMany({
+            where: {
+              post: {
+                id: postId,
               },
             },
           }),

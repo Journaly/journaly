@@ -12,6 +12,7 @@ import LikeIcon from '../../Icons/LikeIcon'
 import CommentIcon from '../../Icons/CommentIcon'
 import theme from '../../../theme'
 import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
+import LevelGauge from '../../../elements/LevelGauge'
 
 type Props = {
   post: PostCardType
@@ -40,6 +41,7 @@ const PostCard: React.FC<Props> = ({
     author: { handle, name, profileImage },
     createdAt,
     publishedAt,
+    publishedLanguageLevel,
     language: { name: languageName },
   } = post
   const isDraft = status === PostStatusType.Draft
@@ -66,7 +68,7 @@ const PostCard: React.FC<Props> = ({
 
             <div className="post-avatar-and-data">
               {avatar && (
-                <div>
+                <div className="avatar-and-language">
                   <div className="post-avatar">
                     {profileImage ? (
                       <img className="profile-image" src={profileImage} alt="" />
@@ -76,8 +78,9 @@ const PostCard: React.FC<Props> = ({
 
                     <p className="author">{handle || name}</p>
                   </div>
-                  <div className="language-level-container">
-                    <p className="post-language">{languageName}</p>
+                  <div className="post-language">
+                    {languageName}
+                    <LevelGauge level={publishedLanguageLevel} />
                   </div>
                 </div>
               )}
@@ -179,6 +182,7 @@ const PostCard: React.FC<Props> = ({
           align-items: center;
           justify-content: space-between;
           margin-top: 24px;
+          align-items: flex-end;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .post-avatar-and-data:not(.stacked) {
@@ -188,6 +192,12 @@ const PostCard: React.FC<Props> = ({
 
         .stacked .post-avatar-and-data {
           margin-top: 24px;
+        }
+
+        .avatar-and-language {
+          display: flex;
+          flex-direction: column;
+          align-items: start;
         }
 
         .post-avatar {
@@ -225,7 +235,16 @@ const PostCard: React.FC<Props> = ({
           border-radius: 4px;
           font-weight: 600;
           font-size: 12px;
-          display: inline-block;
+          display: flex;
+          flex: 1;
+          gap: 7px;
+          align-items: center;
+        }
+
+        .post-data {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
         }
 
         .post-stats {
@@ -268,10 +287,6 @@ const PostCard: React.FC<Props> = ({
             color: ${theme.colors.blue};
             text-transform: uppercase;
           }
-        }
-
-        .language-level-container p:first-child {
-          margin-right: 5px;
         }
       `}</style>
     </>

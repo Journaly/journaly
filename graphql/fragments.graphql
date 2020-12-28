@@ -113,6 +113,7 @@ fragment PostFragment on Post {
   readTime
   createdAt
   publishedAt
+  publishedLanguageLevel
   author {
     ...AuthorWithLanguagesFragment
   }
@@ -150,6 +151,7 @@ fragment PostCardFragment on Post {
   readTime
   createdAt
   publishedAt
+  publishedLanguageLevel
   commentCount
   images {
     smallSize

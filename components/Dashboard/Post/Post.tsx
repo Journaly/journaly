@@ -455,6 +455,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           postTitle={post.title}
           postStatus={post.status}
           publishDate={post.publishedAt ? post.publishedAt : post.createdAt}
+          publishedLanguageLevel={post.publishedLanguageLevel}
           authorName={post.author.handle}
           postImage={
             (post.images || []).find((i: ImageType) => i.imageRole === ImageRole.Headline)

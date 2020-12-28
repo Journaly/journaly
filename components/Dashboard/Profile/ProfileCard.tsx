@@ -89,7 +89,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
       </div>
 
       <div className="profile-footer">
-        {user.city || user.country && (
+        {(user.city || user.country) && (
           <>
             <p className="location">{location}</p>
             {showSeparator && <div className="separator">- -</div>}

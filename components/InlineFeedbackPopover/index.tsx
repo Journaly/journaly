@@ -33,7 +33,18 @@ type InlineFeedbackPopoverProps = {
 const VP_PADDING = 20
 
 const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({ target, children }, ref) => {
-  const popoverRoot = document.getElementById('popover-root') as HTMLElement
+  const [rerenderCount, setRerenderCount] = React.useState<number>(0)
+  const popoverRoot = document.getElementById('popover-root')
+
+  if (!popoverRoot) {
+    // Re-render until we can actually get a popover root to render into. Unclear
+    // what situation would cause popover root to not show up before this but
+    // hey, not a bad check to do.
+    if (rerenderCount < 10) {
+      setTimeout(() => setRerenderCount(i => i+1), 500)
+    }
+    return null
+  }
 
   const ownPosition: CSS.Properties = {}
 

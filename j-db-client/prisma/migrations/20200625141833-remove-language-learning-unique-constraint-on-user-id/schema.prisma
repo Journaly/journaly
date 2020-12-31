@@ -39,7 +39,7 @@ model Auth {
   userId           Int       @unique
   password         String
   resetToken       String?
-  resetTokenExpiry DateTime?
+  resetTokenExpiry Int?
 }
 
 model LanguageLearning {

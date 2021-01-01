@@ -366,7 +366,7 @@ const PostMutations = extendType({
 
           const promise = sendPostCommentNotification({
             post,
-            user: postComment.author,
+            user: user,
             postComment,
             postCommentAuthor: postComment.author,
           })

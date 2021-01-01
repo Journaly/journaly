@@ -439,7 +439,13 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
   }
 
   const setPostStatus = (status: PostStatus) => () => {
-    updatePost({ variables: { postId: post.id, status } })
+    updatePost({
+      variables: {
+        postId: post.id,
+        languageId: post.language.id,
+        status,
+      }
+    })
   }
 
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)

@@ -518,7 +518,7 @@ const PostMutations = extendType({
           }))
         }
 
-        const userLanguageLevel = currentUser.languages.filter((language: LanguageRelation) => language.languageId === args.languageId)[0].level
+        const userLanguageLevel = currentUser.languages.filter((language: LanguageRelation) => language.languageId === originalPost.languageId)[0].level
         data.publishedLanguageLevel = userLanguageLevel
         
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {

@@ -442,7 +442,6 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
     updatePost({
       variables: {
         postId: post.id,
-        languageId: post.language.id,
         status,
       }
     })

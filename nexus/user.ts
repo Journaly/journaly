@@ -162,11 +162,6 @@ const UserMutations = extendType({
             auth: {
               create: { password },
             },
-            badges: {
-              create: [
-                { type: BadgeType.BETA_USER },
-              ],
-            },
           },
         })
 

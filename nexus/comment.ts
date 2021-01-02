@@ -5,7 +5,12 @@ import {
   extendType,
 } from '@nexus/schema'
 
-import { hasAuthorPermissions, sendCommentNotification, sendPostCommentNotification } from './utils'
+import { NotificationType } from '@journaly/j-db-client'
+
+import {
+  hasAuthorPermissions,
+  createNotification,
+} from './utils'
 import { NotFoundError } from './errors'
 
 const Thread = objectType({
@@ -195,25 +200,24 @@ const PostMutations = extendType({
           },
         })
 
-        const mailPromises: Promise<any>[] = []
+        const promises: Promise<any>[] = []
         thread.subscriptions.forEach(({ user }) => {
           if (user.id === userId) {
             // This is the user creating the comment, do not notify them.
             return
           }
-          const promise = sendCommentNotification({
-            post: thread.post,
-            thread,
-            comment,
-            commentAuthor: comment.author,
-            user,
-          })
 
-          mailPromises.push(promise)
+          promises.push(createNotification(
+            ctx.db,
+            user,
+            {
+              type: NotificationType.THREAD_COMMENT,
+              comment
+            }
+          ))
         })
 
-        await Promise.all(mailPromises)
-        // TODO: Set up logging and check for successful `mailResponse`
+        await Promise.all(promises)
 
         return comment
       },
@@ -357,24 +361,24 @@ const PostMutations = extendType({
           }
         })
 
-        const mailPromises: Promise<any>[] = []
+        const promises: Promise<any>[] = []
         post.postCommentSubscriptions.forEach(({ user }) => {
           if (user.id === userId) {
             // This is the user creating the comment, do not notify them.
             return
           }
 
-          const promise = sendPostCommentNotification({
-            post,
-            user: user,
-            postComment,
-            postCommentAuthor: postComment.author,
-          })
-
-          mailPromises.push(promise)
+          promises.push(createNotification(
+            ctx.db,
+            user,
+            {
+              type: NotificationType.POST_COMMENT,
+              postComment
+            }
+          ))
         })
 
-        await Promise.all(mailPromises)
+        await Promise.all(promises)
 
         // TODO: Set up logging and check for successful `mailResponse`
         return postComment

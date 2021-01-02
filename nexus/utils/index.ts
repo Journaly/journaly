@@ -1,6 +1,17 @@
 import { diffChars } from 'diff'
 import escapeHTML from 'escape-html'
-import { User, Thread } from '@journaly/j-db-client'
+import {
+  PrismaClient,
+  User,
+  Thread,
+  Comment,
+  PostComment,
+  PendingNotificationCreateInput,
+} from '@journaly/j-db-client'
+
+export const assertUnreachable = (x: never): never => {
+  throw new Error(`Didn't expect to get here ${x}`)
+}
 
 export type NodeType = {
   text?: string | null
@@ -258,6 +269,47 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
 
   if (!hasPermission) throw new Error('You do not have permission to do that')
   return true
+}
+
+
+/*
+  THREAD_COMMENT
+  POST_COMMENT
+  THREAD_COMMENT_THANKS
+  POST_COMMENT_THANKS
+  NEW_POST
+*/
+
+type NotificationCreationType = 
+  | { type: 'THREAD_COMMENT', comment: Comment }
+  | { type: 'POST_COMMENT', postComment: PostComment }
+
+export const createNotification = (
+  db: PrismaClient,
+  user: User,
+  note: NotificationCreationType
+) => {
+  const data: PendingNotificationCreateInput = {
+    user: { connect: { id: user.id } },
+    type: note.type,
+  }
+
+  switch (note.type) {
+    case 'THREAD_COMMENT': {
+      data.comment = { connect: { id: note.comment.id } }
+      break
+    }
+    case 'POST_COMMENT': {
+      data.postComment = { connect: { id: note.postComment.id } }
+      break
+    }
+    /*
+    default:
+      return assertUnreachable(note.type)
+    */
+  }
+
+  return db.pendingNotification.create({ data })
 }
 
 export * from './email'

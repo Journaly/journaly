@@ -271,15 +271,6 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
   return true
 }
 
-
-/*
-  THREAD_COMMENT
-  POST_COMMENT
-  THREAD_COMMENT_THANKS
-  POST_COMMENT_THANKS
-  NEW_POST
-*/
-
 type NotificationCreationType = 
   | { type: 'THREAD_COMMENT', comment: Comment }
   | { type: 'POST_COMMENT', postComment: PostComment }

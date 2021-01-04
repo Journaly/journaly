@@ -46,6 +46,7 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
         <body className="block-transitions-on-page-load">
           <Main />
           <div id="modal-root" />
+          <div id="popover-root" />
           <NextScript />
         </body>
       </Html>

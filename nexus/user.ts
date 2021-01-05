@@ -148,10 +148,24 @@ const UserMutations = extendType({
         email: stringArg({ required: true }),
         password: stringArg({ required: true }),
       },
-      resolve: async (_parent, args, ctx: any) => {
+      resolve: async (_parent, args, ctx) => {
         if (!args.handle.match(/^[a-zA-Z0-9_-]+$/)) {
           throw new Error('Invalid handle')
         }
+
+        let existingUser = await ctx.db.user.findUnique({
+          where: {
+            handle: args.handle,
+          },
+        })
+        if (existingUser) throw new Error("Handle is already in use")
+
+        existingUser = await ctx.db.user.findUnique({
+          where: {
+            email: args.email,
+          },
+        })
+        if (existingUser) throw new Error("Email address is already in use. Please try logging in")
 
         const password = await bcrypt.hash(args.password, 10)
         const user = await ctx.db.user.create({

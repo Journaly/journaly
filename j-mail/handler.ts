@@ -42,41 +42,50 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
     case ('POST_COMMENT'): {
       return `
         <div style="
-          border: 1px solid black;
           padding: 5px 20px;
           font-family: sans-serif;
           line-height: 2;
           font-size: 20px;
+          margin-top: 20px;
           margin-bottom: 10px;
+          width: 80%;
+          background: white;
         ">
           <h3>
-            New post comment on
+            New post comment on post:
             <a href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}">
               ${note.post.title}
             </a>
           </h3>
-          <p>Comment body: ${note.postComment.body}</p>
+          <p><span style="font-weight: 600;">Comment:</span> ${note.postComment.body}</p>
         </div>
       `
     }
     case ('THREAD_COMMENT'): {
       return `
         <div style="
-          border: 1px solid black;
           padding: 5px 20px;
           font-family: sans-serif;
           line-height: 2;
           font-size: 20px;
+          margin-top: 20px;
           margin-bottom: 10px;
+          width: 80%;
+          background: white;
         ">
           <h3>
-            New thread comment on
-            <a href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}">
-              ${note.post.title}
+            New feedback comment on post:
+            <a
+              href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
+              style="
+                color: #4391C9;
+                text-decoration: none;
+            ">
+                ${note.post.title}
             </a>
           </h3>
-          <p>Comment in response to: ${note.thread.highlightedContent}</p>
-          <p>Comment body: ${note.comment.body}</p>
+          <p><span style="font-weight: 600;">In response to:</span> ${note.thread.highlightedContent}</p>
+          <p><span style="font-weight: 600;">Comment:</span> ${note.comment.body}</p>
         </div>
       `
     }
@@ -86,28 +95,52 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
 const createUpdateEmailBody = (data: DataForUpdateEmail) => {
   return `
     <div style="
-      border: 1px solid black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
       font-family: sans-serif;
       line-height: 2;
       font-size: 20px;
+      background: #ebeae7;
     ">
-      <h1>Howdy, Journaler!</h1>
-
-      <p>
-        New activity has happened on Journaly!
-      </p>
+      <div style="
+        border-top: 8px solid black;
+        width: 80%;
+        background: white;
+        text-align: center;
+        padding: 20px;
+      ">
+        <img src="./logo.svg" />
+        <h1 style="
+          margin-top: 0;
+        ">Howdy, Journaler!</h1>
+        <p>
+          There's been some new activity on Journaly that we thought you'd like to know about. Here's a summary!
+        </p>
+      </div>
 
       ${ (data.own.length && `
-        <h2>Activity on your posts:</h2>
+        <h2 style="
+          text-transform: uppercase;
+        ">Your posts:</h2>
         ${mapCat(data.own, formatNotificationBlock)}
         `) || '' }
 
       ${ (data.other.length && `
-        <h2>Activity on posts you've participated in:</h2>
+        <h2 style="
+          text-transform: uppercase;
+        ">Posts you've participated in:</h2>
         ${mapCat(data.other, formatNotificationBlock)}
         `) || '' }
-      <p>Robin @ Journaly</p>
+
+      <div style="
+        background: white;
+        width: 80%;
+      ">
+        <p>Keep up all the great work and thank you for contributing to the community!</p>
+        <p>Robin @ Journaly</p>
+      </div>
     </div>
   `
 }

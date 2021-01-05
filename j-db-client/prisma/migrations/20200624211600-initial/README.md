@@ -19,7 +19,7 @@ CREATE TABLE "public"."User" (
     PRIMARY KEY ("id"))
 
 CREATE TABLE "public"."Auth" (
-"id" SERIAL,"password" text  NOT NULL ,"resetToken" text   ,"resetTokenExpiry" timestamp(3)   ,"userId" integer  NOT NULL ,
+"id" SERIAL,"password" text  NOT NULL ,"resetToken" text   ,"resetTokenExpiry" integer   ,"userId" integer  NOT NULL ,
     PRIMARY KEY ("id"))
 
 CREATE TABLE "public"."LanguageLearning" (
@@ -221,7 +221,7 @@ migration ..20200624211600-initial
 +  userId           Int       @unique
 +  password         String
 +  resetToken       String?
-+  resetTokenExpiry DateTime?
++  resetTokenExpiry Int?
 +}
 +
 +model LanguageLearning {

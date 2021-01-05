@@ -495,7 +495,7 @@
       "tag": "CreateField",
       "model": "Auth",
       "field": "resetTokenExpiry",
-      "type": "DateTime",
+      "type": "Int",
       "arity": "Optional"
     },
     {

@@ -42,8 +42,8 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
             rel="stylesheet"
           />
           {/* Favicons */}
-          <link rel='icon' type='image/svg+xml' href='/favicon2.svg' />
-          <link rel='alternate icon' href='/favicon2.png' />
+          <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+          <link rel='alternate icon' href='/favicon.png' />
         </Head>
         <body className="block-transitions-on-page-load">
           <Main />

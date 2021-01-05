@@ -41,7 +41,9 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
             href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=swap"
             rel="stylesheet"
           />
-          <link rel="shortcut icon" href="/favicon.png" />
+          {/* Favicons */}
+          <link rel='icon' type='image/svg+xml' href='/favicon2.svg' />
+          <link rel='alternate icon' href='/favicon2.png' />
         </Head>
         <body className="block-transitions-on-page-load">
           <Main />

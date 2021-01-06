@@ -111,7 +111,7 @@ const createUpdateEmailBody = (data: DataForUpdateEmail) => {
         text-align: center;
         padding: 20px;
       ">
-        <img src="./logo.svg" />
+        <img src="https://journaly-email-assets.s3.us-east-2.amazonaws.com/j-logo-52.png">
         <h1 style="
           margin-top: 0;
         ">Howdy, Journaler!</h1>

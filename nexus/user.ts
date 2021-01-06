@@ -10,7 +10,7 @@ import { serialize } from 'cookie'
 import { randomBytes } from 'crypto'
 import { promisify } from 'util'
 
-import { NotAuthorizedError } from './errors'
+import { NotAuthorizedError, UserInputError } from './errors'
 import { sendPasswordResetTokenEmail } from './utils'
 import { validateUpdateUserMutationData } from './utils/userValidation'
 
@@ -148,21 +148,37 @@ const UserMutations = extendType({
         email: stringArg({ required: true }),
         password: stringArg({ required: true }),
       },
-      resolve: async (_parent, args, ctx: any) => {
+      resolve: async (_parent, args, ctx) => {
         if (!args.handle.match(/^[a-zA-Z0-9_-]+$/)) {
           throw new Error('Invalid handle')
         }
 
         const password = await bcrypt.hash(args.password, 10)
-        const user = await ctx.db.user.create({
-          data: {
-            handle: args.handle,
-            email: args.email.toLowerCase(),
-            auth: {
-              create: { password },
+        let user
+        try {
+          user = await ctx.db.user.create({
+            data: {
+              handle: args.handle,
+              email: args.email.toLowerCase(),
+              auth: {
+                create: { password },
+              },
             },
-          },
-        })
+          })
+        } catch (ex) {
+          // Prisma's error code for unique constraint violation
+          if (ex.code === 'P2002') {
+            if (ex.meta.target.find((x: string) => x === 'email')) {
+              throw new UserInputError("Email address is already in use. Please try logging in")
+            } else if (ex.meta.target.find((x: string) => x === 'handle')) {
+              throw new UserInputError("Handle is already in use")
+            } else {
+              throw ex
+            }
+          } else {
+            throw ex
+          }
+        }
 
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
         ctx.response.setHeader(

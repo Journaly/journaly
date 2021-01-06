@@ -41,38 +41,26 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
   switch (note.type) {
     case ('POST_COMMENT'): {
       return `
-        <div style="
-          padding: 5px 20px;
-          font-family: sans-serif;
-          line-height: 2;
-          font-size: 20px;
-          margin-top: 20px;
-          margin-bottom: 10px;
-          width: 80%;
-          background: white;
-        ">
+        <div>
           <h3>
             New post comment on post:
-            <a href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}">
+            <a
+              href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
+              style="
+                color: #4391C9;
+                text-decoration: none;
+                font-size: 16px;
+            ">
               ${note.post.title}
             </a>
           </h3>
-          <p><span style="font-weight: 600;">Comment:</span> ${note.postComment.body}</p>
+          <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.postComment.body}</p>
         </div>
       `
     }
     case ('THREAD_COMMENT'): {
       return `
-        <div style="
-          padding: 5px 20px;
-          font-family: sans-serif;
-          line-height: 2;
-          font-size: 20px;
-          margin-top: 20px;
-          margin-bottom: 10px;
-          width: 80%;
-          background: white;
-        ">
+        <div>
           <h3>
             New feedback comment on post:
             <a
@@ -80,12 +68,13 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
               style="
                 color: #4391C9;
                 text-decoration: none;
+                font-size: 16px;
             ">
                 ${note.post.title}
             </a>
           </h3>
-          <p><span style="font-weight: 600;">In response to:</span> ${note.thread.highlightedContent}</p>
-          <p><span style="font-weight: 600;">Comment:</span> ${note.comment.body}</p>
+          <p style="font-size: 16px;"><span style="font-weight: 600;">In response to:</span> <span style="background: #4391C940; padding: 0 5px;">${note.thread.highlightedContent}</span></p>
+          <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.comment.body}</p>
         </div>
       `
     }
@@ -101,7 +90,6 @@ const createUpdateEmailBody = (data: DataForUpdateEmail) => {
       padding: 20px;
       font-family: sans-serif;
       line-height: 2;
-      font-size: 20px;
       background: #ebeae7;
     ">
       <div style="
@@ -111,35 +99,72 @@ const createUpdateEmailBody = (data: DataForUpdateEmail) => {
         text-align: center;
         padding: 20px;
       ">
-        <img src="https://journaly-email-assets.s3.us-east-2.amazonaws.com/j-logo-52.png">
+        <img
+          src="https://journaly-email-assets.s3.us-east-2.amazonaws.com/j-logo-100.png"
+          style="max-width: 55px;"
+        >
         <h1 style="
-          margin-top: 0;
+          margin-top: 5;
+          font-size: 24px;
         ">Howdy, Journaler!</h1>
-        <p>
+        <p style="font-size: 16px;">
           There's been some new activity on Journaly that we thought you'd like to know about. Here's a summary!
         </p>
       </div>
 
+      
       ${ (data.own.length && `
-        <h2 style="
-          text-transform: uppercase;
-        ">Your posts:</h2>
-        ${mapCat(data.own, formatNotificationBlock)}
-        `) || '' }
+        <div style="
+          padding: 5px 20px;
+          font-family: sans-serif;
+          line-height: 2;
+          font-size: 20px;
+          margin-top: 20px;
+          margin-bottom: 10px;
+          width: 80%;
+          background: white;
+        ">
+          <h2 style="
+            text-transform: uppercase;
+            text-align: center;
+            font-size: 20px;
+          ">Your posts:</h2>
+          ${mapCat(data.own, formatNotificationBlock)}
+        </div>
+      `) || '' }
 
       ${ (data.other.length && `
-        <h2 style="
-          text-transform: uppercase;
-        ">Posts you've participated in:</h2>
-        ${mapCat(data.other, formatNotificationBlock)}
-        `) || '' }
+        <div style="
+          padding: 5px 20px;
+          font-family: sans-serif;
+          line-height: 2;
+          font-size: 20px;
+          margin-top: 20px;
+          margin-bottom: 10px;
+          width: 80%;
+          background: white;
+        ">
+          <h2 style="
+            text-transform: uppercase;
+            text-align: center;
+            font-size: 20px;
+          ">Posts you've participated in:</h2>
+          ${mapCat(data.other, formatNotificationBlock)}
+        </div>
+      `) || '' }
 
       <div style="
         background: white;
         width: 80%;
+        padding: 5px 20px;
       ">
-        <p>Keep up all the great work and thank you for contributing to the community!</p>
-        <p>Robin @ Journaly</p>
+        <p style="font-size: 16px;">Keep up all the great work and thank you for contributing to the community!</p>
+        <p style="font-size: 16px;">Robin @ Journaly</p>
+      </div>
+      <div style="
+        padding: 30px; 
+      ">
+        <p style="text-transform: uppercase; font-weight: 600; font-size: 16px; color: #4391C9;">Sent with ❤️ from the journaly team</p>
       </div>
     </div>
   `

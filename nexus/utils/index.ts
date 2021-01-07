@@ -140,9 +140,6 @@ export const generateExcerpt = (document: NodeType[], length = 200, tolerance = 
 
   if (!breakFound) {
     end += tolerance
-  } else {
-    // Chop off breaking character
-    // end--
   }
 
   return bodyText.substr(0, end)

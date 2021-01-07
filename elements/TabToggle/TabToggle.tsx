@@ -1,5 +1,5 @@
 import React from 'react'
-import theme from '../../theme'
+import theme from '@/theme'
 import classNames from 'classnames'
 
 type Tab = {

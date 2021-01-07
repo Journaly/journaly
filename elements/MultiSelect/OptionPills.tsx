@@ -1,8 +1,8 @@
 import React from 'react'
 
-import theme from '../../theme'
-import XIcon from '../../components/Icons/XIcon'
-import { Option, OptionValue } from '../../elements/Select/Select'
+import theme from '@/theme'
+import XIcon from '@/components/Icons/XIcon'
+import { Option, OptionValue } from '@/elements/Select/Select'
 
 type Props<T extends OptionValue> = {
   selectedOptions: Option<T>[]
@@ -75,4 +75,3 @@ const OptionPills = <T extends OptionValue>({ selectedOptions, onRemove = () => 
 }
 
 export default OptionPills
-

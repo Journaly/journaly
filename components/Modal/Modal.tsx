@@ -4,8 +4,8 @@ import ModalHeader from './ModalHeader'
 import ModalBody from './ModalBody'
 import ModalFooter from './ModalFooter'
 import modalConstants from './modalConstants'
-import useFocusTrap from '../../hooks/useFocusTrap'
-import { white } from '../../utils'
+import useFocusTrap from '@/hooks/useFocusTrap'
+import { white } from '@/utils'
 
 type Props = {
   onClose: () => void

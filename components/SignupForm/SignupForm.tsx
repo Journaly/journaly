@@ -3,12 +3,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
 
-import { useTranslation } from '../../config/i18n'
-import { useCreateUserMutation, useCurrentUserQuery } from '../../generated/graphql'
-import FormError from '../FormError'
-import Button from '../../elements/Button'
-import { brandBlue } from '../../utils'
-import theme from '../../theme'
+import { useTranslation } from '@/config/i18n'
+import { useCreateUserMutation, useCurrentUserQuery } from '@/generated/graphql'
+import FormError from '@/components/FormError'
+import Button from '@/elements/Button'
+import { brandBlue } from '@/utils'
+import theme from '@/theme'
 
 const SignupForm: React.FC = () => {
   const { t } = useTranslation('authentication')

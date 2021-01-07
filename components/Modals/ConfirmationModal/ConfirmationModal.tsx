@@ -1,7 +1,7 @@
 import React from 'react'
-import { useTranslation } from '../../../config/i18n'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import Modal from '../../Modal'
+import { useTranslation } from '@/config/i18n'
+import Button, { ButtonVariant } from '@/elements/Button'
+import Modal from '@/components/Modal'
 
 type Props = {
   onConfirm: () => void

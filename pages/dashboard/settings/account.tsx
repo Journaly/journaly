@@ -1,9 +1,9 @@
 import React from 'react'
 import { NextPage } from 'next'
-import { withApollo } from '../../../lib/apollo'
-import SettingsPageLayout from '../../../components/Layouts/SettingsPageLayout'
-import AuthGate from '../../../components/AuthGate'
-import UpdatePasswordForm from '../../../components/Dashboard/Settings/UpdatePasswordForm'
+import { withApollo } from '@/lib/apollo'
+import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
+import AuthGate from '@/components/AuthGate'
+import UpdatePasswordForm from '@/components/Dashboard/Settings/UpdatePasswordForm'
 
 const Account: NextPage = () => {
   return (

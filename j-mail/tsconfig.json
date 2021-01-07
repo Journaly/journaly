@@ -12,5 +12,5 @@
     "lib": ["es2015"],
     "rootDir": "./"
   },
-  "include": ["handler.ts"]
+  "include": ["src/**/*.ts"]
 }

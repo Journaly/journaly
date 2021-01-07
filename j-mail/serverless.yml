@@ -23,7 +23,7 @@ provider:
 
 functions:
   processJMailQueue:
-    handler: handler.processJMailQueue
+    handler: src.handler.processJMailQueue
     events:
       - sqs:
           arn:
@@ -32,7 +32,7 @@ functions:
               - Arn
           batchSize: 10
   sendUpdateEmails:
-    handler: handler.sendUpdateEmails
+    handler: src.handler.sendUpdateEmails
     events:
       - schedule: cron(* */6 * * ? *)
 

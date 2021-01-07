@@ -94,7 +94,7 @@ export const htmlifyEditorNodes = (value: NodeType[]): string => {
   return value.map(htmlifyEditorNode).join('')
 }
 
-const extractTextFromNode = (node: NodeType, ignoreNodeTypes=emptySet) => {
+const extractTextFromNode = (node: NodeType, ignoreNodeTypes = emptySet): string => {
   if (!node.type && typeof node.text === 'string') {
     return node.text
   }
@@ -104,19 +104,24 @@ const extractTextFromNode = (node: NodeType, ignoreNodeTypes=emptySet) => {
   }
 
   const content: string = (node.children || [])
-    .map(node => extractTextFromNode(node, ignoreNodeTypes))
+    .map((node) => extractTextFromNode(node, ignoreNodeTypes))
     .join('')
 
   return content
 }
 
-export const extractText = (document: NodeType[], ignoreNodeTypes=emptySet) => {
-  return document
-    .map(node => extractTextFromNode(node, ignoreNodeTypes))
-    .join('')
+const removeDoubleSpace = (str: string): string => str.replace(/ +(?= )/g, '')
+
+export const extractText = (
+  document: NodeType[],
+  ignoreNodeTypes = emptySet,
+  separator = ' ',
+): string => {
+  const text = document.map((node) => extractTextFromNode(node, ignoreNodeTypes)).join(separator)
+  return removeDoubleSpace(text)
 }
 
-export const generateExcerpt = (document: NodeType[], length = 200, tolerance = 20) => {
+export const generateExcerpt = (document: NodeType[], length = 200, tolerance = 20): string => {
   // `length` is the max number of characters (codepoints) in the excerpt,
   // tolerance is the number of characters we'll back-track looking for a word
   // or sentence break to cut off at
@@ -137,7 +142,7 @@ export const generateExcerpt = (document: NodeType[], length = 200, tolerance = 
     end += tolerance
   } else {
     // Chop off breaking character
-    end--
+    // end--
   }
 
   return bodyText.substr(0, end)
@@ -152,22 +157,31 @@ export const readTime = (text: string): number => {
 export const updatedThreadPositions = (
   oldDoc: NodeType[],
   newDoc: NodeType[],
-  threads: Thread[]
-) => {
+  threads: Thread[],
+): {
+  startIndex: number
+  endIndex: number
+  id: number
+  archived: boolean
+  highlightedContent: string
+  postId: number
+}[] => {
   const oldStr = extractText(oldDoc)
   const newStr = extractText(newDoc)
   const changes = diffChars(oldStr, newStr)
-  const threadsRepr = threads.map((t: any) => ([t.startIndex, t.endIndex, t.id] as [number, number, number]))
+  const threadsRepr = threads.map(
+    (t) => [t.startIndex, t.endIndex, t.id] as [number, number, number],
+  )
 
   // Move thread fenceposts according to inserts and deletes. Mark threads that
   // experienced a delete op over either of their fence posts as archived.
   let idx = 0
-  for (let ci = 0; ci<changes.length; ci++) {
+  for (let ci = 0; ci < changes.length; ci++) {
     const { count = 0, added, removed } = changes[ci]
     const changeEnd = idx + count - 1
 
     if (added) {
-      for (let ti = 0; ti<threadsRepr.length; ti++) {
+      for (let ti = 0; ti < threadsRepr.length; ti++) {
         const t = threadsRepr[ti]
         if (t[0] > idx) t[0] += count
         if (t[1] > idx) t[1] += count
@@ -175,7 +189,7 @@ export const updatedThreadPositions = (
 
       idx += count
     } else if (removed) {
-      for (let ti = 0; ti<threadsRepr.length; ti++) {
+      for (let ti = 0; ti < threadsRepr.length; ti++) {
         const t = threadsRepr[ti]
 
         if (t[0] > idx && t[0] < changeEnd) {
@@ -201,7 +215,7 @@ export const updatedThreadPositions = (
   const breakPoints = new Set<number>()
 
   idx = 0
-  const recur = (tree: NodeType) => {
+  const recur = (tree: NodeType): void => {
     if (tree.type !== undefined) {
       breakPoints.add(idx)
     }
@@ -212,32 +226,39 @@ export const updatedThreadPositions = (
       breakPoints.add(idx)
     }
 
-    (tree.children || []).map(recur)
+    ;(tree.children || []).map(recur)
   }
 
   newDoc.map(recur)
 
-  for (let breakPoint of breakPoints) {
-    for (let ti = 0; ti<threadsRepr.length; ti++) {
+  for (const breakPoint of breakPoints) {
+    for (let ti = 0; ti < threadsRepr.length; ti++) {
       const t = threadsRepr[ti]
       if (t[0] < breakPoint && t[1] > breakPoint) {
-          t[0] = -1
-          t[1] = -1
+        t[0] = -1
+        t[1] = -1
       }
     }
   }
 
-  return threads.map(thread => {
+  return threads.map((thread) => {
     const [startIndex, endIndex] = threadsRepr.find(([_, __, id]) => id === thread.id) || [0, 0, 0]
     return {
       ...thread,
       startIndex,
-      endIndex
+      endIndex,
     }
   })
 }
 
-export const processEditorDocument = (document: NodeType[]) => {
+export const processEditorDocument = (
+  document: NodeType[],
+): {
+  body: string
+  bodySrc: string
+  excerpt: string
+  readTime: number
+} => {
   const bodyText = extractText(document)
 
   return {
@@ -250,7 +271,7 @@ export const processEditorDocument = (document: NodeType[]) => {
 
 // Takes in an original Post or Comment and a currently logged in User and checks that
 // the currentUser has permission to update or delete that Post/Comment
-export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User) => {
+export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User): boolean => {
   const hasPermission =
     original.authorId == currentUser.id ||
     currentUser.userRole === 'MODERATOR' ||

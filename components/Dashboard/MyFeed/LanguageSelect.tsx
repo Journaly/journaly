@@ -1,6 +1,6 @@
 import React from 'react'
-import MultiSelect from '../../../elements/MultiSelect'
-import { LanguagesQuery } from '../../../generated/graphql'
+import MultiSelect from '@/elements/MultiSelect'
+import { LanguagesQuery } from '@/generated/graphql'
 
 type Props = {
   languagesData: LanguagesQuery | undefined

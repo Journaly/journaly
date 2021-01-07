@@ -2,11 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 
-import {
-  sanitize,
-  iOS,
-  wait,
-} from '../../../utils'
+import { sanitize, iOS, wait } from '@/utils'
 import {
   PostWithTopicsFragmentFragment as PostType,
   UserFragmentFragment as UserType,
@@ -18,15 +14,15 @@ import {
   Image as ImageType,
   ImageRole,
   Post as PostModel,
-} from '../../../generated/graphql'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import theme from '../../../theme'
-import PostBodyStyles from '../../PostBodyStyles'
-import PencilIcon from '../../Icons/PencilIcon'
-import InlineFeedbackPopover from '../../InlineFeedbackPopover'
-import { Router, useTranslation } from '../../../config/i18n'
-import PostHeader from '../../PostHeader'
-import ConfirmationModal from '../../Modals/ConfirmationModal'
+} from '@/generated/graphql'
+import Button, { ButtonVariant } from '@/elements/Button'
+import theme from '@/theme'
+import PostBodyStyles from '@/components/PostBodyStyles'
+import PencilIcon from '@/components/Icons/PencilIcon'
+import InlineFeedbackPopover from '@/components/InlineFeedbackPopover'
+import { Router, useTranslation } from '@/config/i18n'
+import PostHeader from '@/components/PostHeader'
+import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 
 interface IPostProps {
   post: PostType
@@ -443,7 +439,7 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
       variables: {
         postId: post.id,
         status,
-      }
+      },
     })
   }
 

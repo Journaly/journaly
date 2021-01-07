@@ -1,17 +1,17 @@
 import React from 'react'
 
-import { useTranslation } from '../../config/i18n'
-import { sanitize } from '../../utils'
+import { useTranslation } from '@/config/i18n'
+import { sanitize } from '@/utils'
 import {
   useCreateCommentMutation,
   UserFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
   useDeleteThreadMutation,
-} from '../../generated/graphql'
+} from '@/generated/graphql'
 
-import theme from '../../theme'
+import theme from '@/theme'
 import Comment from './Comment'
-import Button, { ButtonVariant } from '../../elements/Button'
+import Button, { ButtonVariant } from '@/elements/Button'
 
 type ThreadProps = {
   thread: ThreadType

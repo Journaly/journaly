@@ -1,11 +1,8 @@
 import React from 'react'
 
-import {
-  UserBadgeFragmentFragment as Badge,
-  BadgeType
-} from '../../generated/graphql'
-import { useTranslation } from '../../config/i18n'
-import theme from '../../theme'
+import { UserBadgeFragmentFragment as Badge, BadgeType } from '@/generated/graphql'
+import { useTranslation } from '@/config/i18n'
+import theme from '@/theme'
 
 type Props = {
   badge: Badge
@@ -33,7 +30,8 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
 }
 
 const getBadgeTitle = (badgeType: BadgeType): string => `${getBadgeCopySubpath(badgeType)}.title`
-const getBadgeDescription = (badgeType: BadgeType): string => `${getBadgeCopySubpath(badgeType)}.description`
+const getBadgeDescription = (badgeType: BadgeType): string =>
+  `${getBadgeCopySubpath(badgeType)}.description`
 
 const BadgeComponent: React.FC<Props> = ({ badge }) => {
   const { t } = useTranslation('common')
@@ -42,7 +40,7 @@ const BadgeComponent: React.FC<Props> = ({ badge }) => {
     <>
       <div className="badge" title={t(getBadgeDescription(badge.type))}>
         <div className="badge-icon" />
-        <span className="title">{ t(getBadgeTitle(badge.type)) }</span>
+        <span className="title">{t(getBadgeTitle(badge.type))}</span>
       </div>
 
       <style jsx>{`

@@ -1,10 +1,16 @@
 import React from 'react'
-import { useTranslation, Trans } from '../../../config/i18n'
-import { PostCardFragmentFragment as PostType, UserWithLanguagesFragmentFragment as UserType } from '../../../generated/graphql'
-import { layoutTopBottomPadding, layoutLeftRightPadding } from '../../Dashboard/dashboardConstants'
-import TranslationLink from '../../TranslationLink'
+import { useTranslation, Trans } from '@/config/i18n'
+import {
+  PostCardFragmentFragment as PostType,
+  UserWithLanguagesFragmentFragment as UserType,
+} from '@/generated/graphql'
+import {
+  layoutTopBottomPadding,
+  layoutLeftRightPadding,
+} from '@/components/Dashboard/dashboardConstants'
+import TranslationLink from '@/components/TranslationLink'
 import PostCard from '../PostCard'
-import theme from '../../../theme'
+import theme from '@/theme'
 
 type Props = {
   isLoggedInUser: boolean

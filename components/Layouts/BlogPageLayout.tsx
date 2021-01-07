@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
-import { getUTCDate } from '../../utils'
-import theme from '../../theme'
+import { getUTCDate } from '@/utils'
+import theme from '@/theme'
 
 interface Props {
   date: string

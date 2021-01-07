@@ -2,14 +2,14 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { ApolloError } from '@apollo/client'
-import { useTranslation } from '../../../config/i18n'
-import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
-import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
-import Button, { ButtonVariant } from '../../../elements/Button'
+import { useTranslation } from '@/config/i18n'
+import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
+import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
+import Button, { ButtonVariant } from '@/elements/Button'
 import { SocialPlatform, SocialFormField } from './SocialFormField'
-import { SocialMedia, useUpdateSocialMediaMutation } from '../../../generated/graphql'
-import theme from '../../../theme'
-import FormError from '../../FormError'
+import { SocialMedia, useUpdateSocialMediaMutation } from '@/generated/graphql'
+import theme from '@/theme'
+import FormError from '@/components/FormError'
 
 type FormData = {
   facebook: string
@@ -43,7 +43,7 @@ const SocialForm: React.FC<SocialFormProps> = ({ socialMedia, refetch }) => {
       return
     }
 
-    const badRequest = graphQLErrors[0].extensions;
+    const badRequest = graphQLErrors[0].extensions
 
     if (!badRequest || badRequest.statusCode !== 400) {
       toast.error(t('profile.error.updateError'))

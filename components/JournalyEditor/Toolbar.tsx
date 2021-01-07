@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import classNames from 'classnames'
-import theme from '../../theme'
-import { headerHeight } from '../Dashboard/dashboardConstants'
-import { navConstants } from '../Dashboard/Nav'
+import theme from '@/theme'
+import { headerHeight } from '@/components/Dashboard/dashboardConstants'
+import { navConstants } from '@/components/Dashboard/Nav'
 
 const Toolbar: React.FC = ({ children }) => {
   const toolbarRef = useRef<HTMLDivElement>(null)

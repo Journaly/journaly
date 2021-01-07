@@ -1,8 +1,8 @@
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { withApollo } from '../../lib/apollo'
-import ResetPasswordForm from '../../components/ResetPasswordForm'
-import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
+import { withApollo } from '@/lib/apollo'
+import ResetPasswordForm from '@/components/ResetPasswordForm'
+import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 
 const ResetPasswordPage: NextPage = () => {
   const { query } = useRouter()

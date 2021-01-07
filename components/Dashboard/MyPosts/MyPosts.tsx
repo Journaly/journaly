@@ -4,12 +4,12 @@ import {
   Post as PostType,
   User as UserType,
   usePostsQuery,
-} from '../../../generated/graphql'
-import { useTranslation, Trans } from '../../../config/i18n'
-import TranslationLink from '../../TranslationLink'
-import LoadingSpinner from '../../Icons/LoadingSpinner'
+} from '@/generated/graphql'
+import { useTranslation, Trans } from '@/config/i18n'
+import TranslationLink from '@/components/TranslationLink'
+import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import PostCard from '../PostCard'
-import theme from '../../../theme'
+import theme from '@/theme'
 
 type Props = {
   currentUser: UserType
@@ -25,7 +25,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
     },
   })
 
-  let posts = (data?.posts as PostType[]) || []
+  const posts = (data?.posts as PostType[]) || []
   const showPosts = !loading && posts.length > 0
   const showEmptyState = !loading && posts.length === 0
 

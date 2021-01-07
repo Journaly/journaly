@@ -1,16 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
-import NavLink from '../../NavLink'
-import FeedIcon from '../../Icons/FeedIcon'
-import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
+import NavLink from '@/components/NavLink'
+import FeedIcon from '@/components/Icons/FeedIcon'
+import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import { navConstants } from './nav-constants'
-import { Router, useTranslation } from '../../../config/i18n'
-import {
-  useLogoutMutation,
-  useCurrentUserQuery,
-  User as UserType,
-} from '../../../generated/graphql'
-import theme from '../../../theme'
+import { Router, useTranslation } from '@/config/i18n'
+import { useLogoutMutation, useCurrentUserQuery, User as UserType } from '@/generated/graphql'
+import theme from '@/theme'
 
 interface Props {
   onClick: () => void
@@ -140,7 +136,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           display: none;
         }
 
-
         @media (${navConstants.mobileNavOnly}) {
           .current-user-name {
             display: block;
@@ -167,7 +162,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           transition: width ${navConstants.transitionDuration}ms linear;
         }
 
-
         @media (${navConstants.mobileNavOnly}) {
           .nav-bottom hr {
             width: 180px;
@@ -186,7 +180,6 @@ const NavLinks: React.FC<Props> = ({ onClick, currentUser }) => {
           transition: padding-left ${navConstants.transitionDuration}ms linear,
             padding-right ${navConstants.transitionDuration}ms linear;
         }
-
 
         @media (${navConstants.mobileNavOnly}) {
           .nav-link {

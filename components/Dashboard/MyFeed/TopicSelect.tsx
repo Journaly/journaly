@@ -1,6 +1,6 @@
 import React from 'react'
-import MultiSelect from '../../../elements/MultiSelect'
-import { Topic } from '../../../generated/graphql'
+import MultiSelect from '@/elements/MultiSelect'
+import { Topic } from '@/generated/graphql'
 
 type Props = {
   topics: Topic[] | undefined

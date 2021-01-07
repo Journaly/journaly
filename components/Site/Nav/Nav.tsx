@@ -1,7 +1,7 @@
-import { width, darkGrey } from '../../../utils'
-import NavLink from '../../NavLink'
-import Logo from '../../Logo'
-import { useCurrentUserQuery, User as UserType } from '../../../generated/graphql'
+import { width, darkGrey } from '@/utils'
+import NavLink from '@/components/NavLink'
+import Logo from '@/components/Logo'
+import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
 
 const Nav = () => {
   const { data } = useCurrentUserQuery()

@@ -1,7 +1,7 @@
 import React from 'react'
 import { I18nContext } from 'react-i18next'
 
-import { UiLanguage as UILanguage } from '../generated/graphql'
+import { UiLanguage as UILanguage } from '@/generated/graphql'
 
 const langCodeToUILangMap: { [key: string]: UILanguage } = {
   en: UILanguage.English,

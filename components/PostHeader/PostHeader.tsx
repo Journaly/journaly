@@ -1,11 +1,16 @@
 import React from 'react'
 
-import { PostStatus, TopicFragmentFragment as TopicType, LanguageFragmentFragment as LanguageType, LanguageLevel } from '../../generated/graphql'
-import { useTranslation } from '../../config/i18n'
-import { formatLongDate } from '../../utils'
+import {
+  PostStatus,
+  TopicFragmentFragment as TopicType,
+  LanguageFragmentFragment as LanguageType,
+  LanguageLevel,
+} from '@/generated/graphql'
+import { useTranslation } from '@/config/i18n'
+import { formatLongDate } from '@/utils'
 
-import theme from '../../theme'
-import LevelGauge from '../../elements/LevelGauge'
+import theme from '@/theme'
+import LevelGauge from '@/elements/LevelGauge'
 
 type PostHeaderProps = {
   postTitle: string
@@ -36,7 +41,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
       <img src={postImage} alt={postTitle} />
       <div className="post-header-info" dir="auto">
         <div className="top-badges">
-          { language && (
+          {language && (
             <div className="language badge">
               {language.name}
               {publishedLanguageLevel && <LevelGauge level={publishedLanguageLevel} />}
@@ -56,7 +61,9 @@ const PostHeader: React.FC<PostHeaderProps> = ({
 
         <div className="topics-container">
           {(topics || []).map(({ id, name }) => (
-            <div className="topic-badge" key={id}>{name}</div>
+            <div className="topic-badge" key={id}>
+              {name}
+            </div>
           ))}
         </div>
       </div>
@@ -138,7 +145,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           position: relative;
           min-height: 310px;
           display: flex;
-          flex-direction: column
+          flex-direction: column;
         }
 
         .title-and-info {

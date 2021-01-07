@@ -1,5 +1,5 @@
 import React from 'react'
-import theme from '../../../theme'
+import theme from '@/theme'
 import { navConstants } from '../Nav'
 import { headerHeight } from '../dashboardConstants'
 import HamburgerIcon from './HamburgerIcon'

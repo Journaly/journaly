@@ -2,15 +2,15 @@ import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
-import { withApollo } from '../../../lib/apollo'
-import Post from '../../../components/Dashboard/Post'
-import LoadingWrapper from '../../../components/LoadingWrapper'
-import DashboardLayout from '../../../components/Layouts/DashboardLayout'
-import { usePostPageQuery } from '../../../generated/graphql'
-import PostAuthorCard from '../../../components/Dashboard/Post/PostAuthorCard'
-import PostComments from '../../../components/Dashboard/Post/PostComments'
-import useUILanguage from '../../../hooks/useUILanguage'
-import theme from '../../../theme'
+import { withApollo } from '@/lib/apollo'
+import Post from '@/components/Dashboard/Post'
+import LoadingWrapper from '@/components/LoadingWrapper'
+import DashboardLayout from '@/components/Layouts/DashboardLayout'
+import { usePostPageQuery } from '@/generated/graphql'
+import PostAuthorCard from '@/components/Dashboard/Post/PostAuthorCard'
+import PostComments from '@/components/Dashboard/Post/PostComments'
+import useUILanguage from '@/hooks/useUILanguage'
+import theme from '@/theme'
 
 const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
@@ -21,7 +21,7 @@ const PostPage: NextPage = () => {
   })
 
   const { postById: post, currentUser } = data || {}
-  const outdatedThreads = post ? post.threads.filter(post => post.archived) : []
+  const outdatedThreads = post ? post.threads.filter((post) => post.archived) : []
 
   return (
     <DashboardLayout>

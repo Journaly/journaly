@@ -1,4 +1,6 @@
+import AWS from 'aws-sdk'
 import nodemailer from 'nodemailer'
+
 import {
   PrismaClient,
   PendingNotification,
@@ -10,8 +12,37 @@ import {
   Comment,
 } from '@journaly/j-db-client'
 
-let _client
-const getDBClient = () => _client || (_client = new PrismaClient())
+const cacheFn = <T>(create: () => T): () => T => {
+  let value: T | null = null
+
+  return () => {
+    if (value === null) {
+      value = create()
+    }
+
+    return value
+  }
+}
+
+const getDBClient = cacheFn(() => new PrismaClient())
+const getSQS = cacheFn(() => new AWS.SQS({ region: 'us-east-2' })
+
+const enqueueEmail = (params: EmailParams) => {
+  const params: SqsParams = {
+    MessageBody: JSON.stringify(params),
+    QueueUrl: process.env.JMAIL_QUEUE_URL!,
+  }
+
+  return new Promise((res, rej) => {
+    getSQS().sendMessage(params, (err, data) => {
+      if (err) {
+        rej(err)
+      } else {
+        res(data)
+      }
+    })
+  })
+}
 
 const getUsersToNotify = async () => {
   const prisma = getDBClient()
@@ -21,6 +52,13 @@ const getUsersToNotify = async () => {
   })
 
   return users
+}
+
+type EmailParams = {
+  from: string
+  to: string
+  subject: string
+  html: string
 }
 
 type ValidatedNotification = 
@@ -169,6 +207,24 @@ const getDataForUpdateEmail = async (userId: number) => {
     own: validated.filter(({ post }) => post.authorId === userId),
     other: validated.filter(({ post }) => post.authorId !== userId),
   }
+}
+
+module.exports.sendUpdateEmails = async () => {
+  const sqs = getSQS()
+  const usersToUpdate = await getUsersToNotify()
+
+  const emailPromises = usersToUpdate.map(async ({ userId }) => {
+    const data = await getDataForUpdateEmail(userId)
+    const body = createUpdateEmailBody(data)
+    return enqueueEmail({
+      from: 'robin@journaly.com',
+      to: user.email,
+      subject: 'New Activity on Journaly 📖',
+      html: body,
+    })
+  })
+
+  await Promise.all(emailPromises)
 }
 
 module.exports.testFunc = async () => {

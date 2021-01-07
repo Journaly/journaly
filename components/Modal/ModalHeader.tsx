@@ -1,8 +1,8 @@
 import React from 'react'
-import Button, { ButtonVariant } from '../../elements/Button'
-import XIcon from '../Icons/XIcon'
+import Button, { ButtonVariant } from '@/elements/Button'
+import XIcon from '@/components/Icons/XIcon'
 import modalConstants from './modalConstants'
-import { truncate, lightGrey } from '../../utils'
+import { truncate, lightGrey } from '@/utils'
 
 interface Props {
   onClose: () => void

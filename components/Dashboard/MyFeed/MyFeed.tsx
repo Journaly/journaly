@@ -4,22 +4,22 @@ import { useRouter } from 'next/router'
 
 import _ from 'lodash'
 
-import { useTranslation } from '../../../config/i18n'
+import { useTranslation } from '@/config/i18n'
 
 import PostCard from '../PostCard'
-import Pagination from '../../Pagination'
+import Pagination from '@/components/Pagination'
 import {
   User as UserType,
   useFeedQuery,
   useLanguagesQuery,
   useTopicsQuery,
-} from '../../../generated/graphql'
-import LoadingWrapper from '../../LoadingWrapper'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import useToggle from '../../../hooks/useToggle'
+} from '@/generated/graphql'
+import LoadingWrapper from '@/components/LoadingWrapper'
+import Button, { ButtonVariant } from '@/elements/Button'
+import useToggle from '@/hooks/useToggle'
 import SearchInput from './SearchInput'
 import LanguageSelect from './LanguageSelect'
-import useUILanguage from '../../../hooks/useUILanguage'
+import useUILanguage from '@/hooks/useUILanguage'
 import TopicSelect from './TopicSelect'
 import FeedHeader from './FeedHeader'
 

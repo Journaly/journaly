@@ -1,24 +1,24 @@
 import React from 'react'
 import { Editor, Node } from 'slate'
 
-import FileInput from '../FileInput'
-import PostHeader from '../PostHeader'
-import JournalyEditor from '../JournalyEditor'
-import XIcon from '../Icons/XIcon'
-import Select from '../../elements/Select'
-import MultiSelect from '../../elements/MultiSelect'
-import { ButtonVariant } from '../../elements/Button'
-import theme from '../../theme'
-import useImageUpload from '../../hooks/useImageUpload'
-import useAutosavedState from '../../hooks/useAutosavedState'
+import FileInput from '@/components/FileInput'
+import PostHeader from '@/components/PostHeader'
+import JournalyEditor from '@/components/JournalyEditor'
+import XIcon from '@/components/Icons/XIcon'
+import Select from '@/elements/Select'
+import MultiSelect from '@/elements/MultiSelect'
+import { ButtonVariant } from '@/elements/Button'
+import theme from '@/theme'
+import useImageUpload from '@/hooks/useImageUpload'
+import useAutosavedState from '@/hooks/useAutosavedState'
 import {
   UserWithLanguagesFragmentFragment as UserWithLanguagesType,
   TopicFragmentFragment as TopicType,
   PostStatus as PostStatusType,
   ImageInput,
   ImageRole,
-} from '../../generated/graphql'
-import { languageNameWithDialect } from '../../utils/languages'
+} from '@/generated/graphql'
+import { languageNameWithDialect } from '@/utils/languages'
 
 type BasePostData = {
   title: string

@@ -1,9 +1,9 @@
 import { NextPage } from 'next'
-import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
-import BlogPageLayout from '../../components/Layouts/BlogPageLayout'
-import ExternalLink from '../../elements/ExternalLink'
-import { brandBlue } from '../../utils'
-import { withApollo } from '../../lib/apollo'
+import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
+import BlogPageLayout from '@/components/Layouts/BlogPageLayout'
+import ExternalLink from '@/elements/ExternalLink'
+import { brandBlue } from '@/utils'
+import { withApollo } from '@/lib/apollo'
 
 const IntroducingJournalyBlogPost: NextPage = () => (
   <LandingPageLayout>
@@ -120,10 +120,9 @@ const IntroducingJournalyBlogPost: NextPage = () => (
       </p>
 
       <p>
-        I want to make the writing experience easy and enjoyable, so that
-        you <em>want</em> to write. That's why we spent months and months engaging in a robust
-        design process, crafting and revising the designs to make sure it's lightning fast and
-        intuitive to use.
+        I want to make the writing experience easy and enjoyable, so that you <em>want</em> to
+        write. That's why we spent months and months engaging in a robust design process, crafting
+        and revising the designs to make sure it's lightning fast and intuitive to use.
       </p>
 
       <p>

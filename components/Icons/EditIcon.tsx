@@ -1,5 +1,5 @@
 import * as React from 'react'
-import theme from '../../theme'
+import theme from '@/theme'
 interface SVGRProps {
   title?: string
   titleId?: string

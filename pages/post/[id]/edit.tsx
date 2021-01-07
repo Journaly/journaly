@@ -2,20 +2,20 @@ import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Node } from 'slate'
-import { withApollo } from '../../../lib/apollo'
-import { useTranslation } from '../../../config/i18n'
+import { withApollo } from '@/lib/apollo'
+import { useTranslation } from '@/config/i18n'
 
-import DashboardLayout from '../../../components/Layouts/DashboardLayout'
+import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import PostEditor, {
   validatePostData,
   InputPostData,
   OutputPostData,
-} from '../../../components/PostEditor'
-import theme from '../../../theme'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import { ImageRole, useEditPostQuery, useUpdatePostMutation } from '../../../generated/graphql'
-import AuthGate from '../../../components/AuthGate'
-import useUILanguage from '../../../hooks/useUILanguage'
+} from '@/components/PostEditor'
+import theme from '@/theme'
+import Button, { ButtonVariant } from '@/elements/Button'
+import { ImageRole, useEditPostQuery, useUpdatePostMutation } from '@/generated/graphql'
+import AuthGate from '@/components/AuthGate'
+import useUILanguage from '@/hooks/useUILanguage'
 
 const EditPostPage: NextPage = () => {
   const router = useRouter()

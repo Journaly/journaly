@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
-import LoadingWrapper from '../LoadingWrapper'
-import { useCurrentUserQuery, User as UserType } from '../../generated/graphql'
-import Nav from '../Site/Nav'
+import LoadingWrapper from '@/components/LoadingWrapper'
+import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
+import Nav from '@/components/Site/Nav'
 
 const LandingPageLayout: React.FC = ({ children }) => {
   const router = useRouter()

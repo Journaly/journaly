@@ -1,12 +1,12 @@
 import React from 'react'
-import { useTranslation } from '../../../config/i18n'
+import { useTranslation } from '@/config/i18n'
 import { ApolloQueryResult } from '@apollo/client'
 import {
   LanguagesFormDataQuery,
   Language as LanguageType,
   LanguageRelation as LanguageRelationType,
-} from '../../../generated/graphql'
-import LanguageFormField from '../../../components/LanguageFormField'
+} from '@/generated/graphql'
+import LanguageFormField from '@/components/LanguageFormField'
 
 type Props = {
   languageFormData: LanguagesFormDataQuery

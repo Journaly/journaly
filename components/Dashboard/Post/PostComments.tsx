@@ -5,14 +5,14 @@ import {
   PostCommentFragmentFragment as PostCommentType,
   UserWithLanguagesFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
-} from '../../../generated/graphql'
-import { useTranslation } from '../../../config/i18n'
+} from '@/generated/graphql'
+import { useTranslation } from '@/config/i18n'
 
-import theme from '../../../theme'
+import theme from '@/theme'
 import PostComment from './PostComment'
-import Thread from '../../InlineFeedbackPopover/Thread'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import TabToggle from '../../../elements/TabToggle'
+import Thread from '@/components/InlineFeedbackPopover/Thread'
+import Button, { ButtonVariant } from '@/elements/Button'
+import TabToggle from '@/elements/TabToggle'
 
 type PostCommentsProps = {
   postId: number

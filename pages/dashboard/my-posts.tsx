@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { NextPage } from 'next'
-import { withApollo } from '../../lib/apollo'
-import DashboardLayout from '../../components/Layouts/DashboardLayout'
-import TabToggle from '../../elements/TabToggle'
-import AuthGate from '../../components/AuthGate'
-import MyPosts from '../../components/Dashboard/MyPosts'
-import { PostStatus as PostStatusType } from '../../generated/graphql'
-import theme from '../../theme'
+import { withApollo } from '@/lib/apollo'
+import DashboardLayout from '@/components/Layouts/DashboardLayout'
+import TabToggle from '@/elements/TabToggle'
+import AuthGate from '@/components/AuthGate'
+import MyPosts from '@/components/Dashboard/MyPosts'
+import { PostStatus as PostStatusType } from '@/generated/graphql'
+import theme from '@/theme'
 
 type Tab = {
   key: PostStatusType

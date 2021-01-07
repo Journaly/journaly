@@ -1,11 +1,11 @@
 import React from 'react'
 import { FieldError, ValidationOptions } from 'react-hook-form'
-import { useTranslation } from '../../../config/i18n'
-import FacebookIcon from '../../Icons/FacebookIcon'
-import GlobeIcon from '../../Icons/GlobeIcon'
-import InstagramIcon from '../../Icons/InstagramIcon'
-import XIcon from '../../Icons/XIcon'
-import YoutubeIcon from '../../Icons/YoutubeIcon'
+import { useTranslation } from '@/config/i18n'
+import FacebookIcon from '@/components/Icons/FacebookIcon'
+import GlobeIcon from '@/components/Icons/GlobeIcon'
+import InstagramIcon from '@/components/Icons/InstagramIcon'
+import XIcon from '@/components/Icons/XIcon'
+import YoutubeIcon from '@/components/Icons/YoutubeIcon'
 
 export enum SocialPlatform {
   FACEBOOK = 'facebook',

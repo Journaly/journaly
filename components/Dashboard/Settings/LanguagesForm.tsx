@@ -1,13 +1,13 @@
 import React from 'react'
-import { useTranslation } from '../../../config/i18n'
+import { useTranslation } from '@/config/i18n'
 import {
   LanguageFragmentFragment as LanguageType,
   LanguageRelation as LanguageRelationType,
-} from '../../../generated/graphql'
+} from '@/generated/graphql'
 
-import LanguageFormField from '../../LanguageFormField'
-import SettingsForm from '../../Dashboard/Settings/SettingsForm'
-import SettingsFieldset from '../../Dashboard/Settings/SettingsFieldset'
+import LanguageFormField from '@/components/LanguageFormField'
+import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
+import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
 
 type Props = {
   languages: LanguageType[]
@@ -15,11 +15,7 @@ type Props = {
   refetch: () => void
 }
 
-const LanguagesForm: React.FC<Props> = ({
-  languages,
-  languageRelations,
-  refetch,
-}) => {
+const LanguagesForm: React.FC<Props> = ({ languages, languageRelations, refetch }) => {
   const { t } = useTranslation('settings')
 
   return (

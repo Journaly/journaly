@@ -1,5 +1,5 @@
 import React from 'react'
-import { User as UserType } from '../../../generated/graphql'
+import { User as UserType } from '@/generated/graphql'
 
 interface Props {
   users: UserType[]

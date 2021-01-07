@@ -1,24 +1,24 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { withApollo } from '../../lib/apollo'
+import { withApollo } from '@/lib/apollo'
 
-import DashboardLayout from '../../components/Layouts/DashboardLayout'
+import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import PostEditor, {
   InputPostData,
   OutputPostData,
   validatePostData,
-} from '../../components/PostEditor'
-import theme from '../../theme'
-import Button, { ButtonVariant } from '../../elements/Button'
+} from '@/components/PostEditor'
+import theme from '@/theme'
+import Button, { ButtonVariant } from '@/elements/Button'
 import {
   useNewPostQuery,
   useCreatePostMutation,
   PostStatus as PostStatusType,
-} from '../../generated/graphql'
-import AuthGate from '../../components/AuthGate'
-import { useTranslation } from '../../config/i18n'
-import useUILanguage from '../../hooks/useUILanguage'
+} from '@/generated/graphql'
+import AuthGate from '@/components/AuthGate'
+import { useTranslation } from '@/config/i18n'
+import useUILanguage from '@/hooks/useUILanguage'
 
 const initialData: InputPostData = {
   title: '',

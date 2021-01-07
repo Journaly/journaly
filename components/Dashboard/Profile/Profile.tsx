@@ -4,8 +4,8 @@ import PostList from './PostList'
 import {
   ProfileUserFragmentFragment as UserType,
   PostCardFragmentFragment as PostCardType,
-} from '../../../generated/graphql'
-import theme from '../../../theme'
+} from '@/generated/graphql'
+import theme from '@/theme'
 
 type Props = {
   isLoggedInUser: boolean

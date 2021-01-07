@@ -5,15 +5,15 @@ import {
   useUpdatePostCommentMutation,
   useDeletePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
-} from '../../../generated/graphql'
-import { useTranslation } from '../../../config/i18n'
+} from '@/generated/graphql'
+import { useTranslation } from '@/config/i18n'
 
-import Button, { ButtonSize, ButtonVariant } from '../../../elements/Button'
-import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
-import theme from '../../../theme'
-import EditIcon from '../../Icons/EditIcon'
-import DeleteIcon from '../../Icons/DeleteIcon'
-import { formatDateRelativeToNow } from '../../../utils'
+import Button, { ButtonSize, ButtonVariant } from '@/elements/Button'
+import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
+import theme from '@/theme'
+import EditIcon from '@/components/Icons/EditIcon'
+import DeleteIcon from '@/components/Icons/DeleteIcon'
+import { formatDateRelativeToNow } from '@/utils'
 
 type PostCommentProps = {
   comment: PostCommentType

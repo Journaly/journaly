@@ -1,14 +1,14 @@
 import React, { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { useTranslation } from '../../../config/i18n'
-import FormError from '../../../components/FormError'
-import SettingsForm from '../../../components/Dashboard/Settings/SettingsForm'
-import SettingsFieldset from '../../../components/Dashboard/Settings/SettingsFieldset'
-import useImageUpload from '../../../hooks/useImageUpload'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import theme from '../../../theme'
-import { User as UserType, useUpdateUserMutation } from '../../../generated/graphql'
-import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
+import { useTranslation } from '@/config/i18n'
+import FormError from '@/components/FormError'
+import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
+import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
+import useImageUpload from '@/hooks/useImageUpload'
+import Button, { ButtonVariant } from '@/elements/Button'
+import theme from '@/theme'
+import { User as UserType, useUpdateUserMutation } from '@/generated/graphql'
+import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import { ApolloError } from '@apollo/client'
 import { toast } from 'react-toastify'
 
@@ -217,11 +217,11 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   placeholder={t('profile.details.cityPlaceholder')}
                   defaultValue={currentUser.city || ''}
                   ref={register()}
-                  />
+                />
               </div>
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="country">
-                {t('profile.details.countryLabel')}
+                  {t('profile.details.countryLabel')}
                 </label>
                 <input
                   type="text"

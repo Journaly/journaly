@@ -5,7 +5,7 @@ import CSS from 'csstype'
 import {
   ThreadFragmentFragment as ThreadType,
   UserFragmentFragment as UserType,
-} from '../../generated/graphql'
+} from '@/generated/graphql'
 
 import Thread from './Thread'
 
@@ -41,7 +41,7 @@ const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({ target, childr
     // what situation would cause popover root to not show up before this but
     // hey, not a bad check to do.
     if (rerenderCount < 10) {
-      setTimeout(() => setRerenderCount(i => i+1), 500)
+      setTimeout(() => setRerenderCount((i) => i + 1), 500)
     }
     return null
   }

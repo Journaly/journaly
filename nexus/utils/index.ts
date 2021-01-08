@@ -1,6 +1,6 @@
 import { diffChars } from 'diff'
 import escapeHTML from 'escape-html'
-import { User, Thread } from '@journaly/j-db-client'
+import { User, Thread, Post } from '@journaly/j-db-client'
 
 export type NodeType = {
   text?: string | null
@@ -155,14 +155,7 @@ export const updatedThreadPositions = (
   oldDoc: NodeType[],
   newDoc: NodeType[],
   threads: Thread[],
-): {
-  startIndex: number
-  endIndex: number
-  id: number
-  archived: boolean
-  highlightedContent: string
-  postId: number
-}[] => {
+): Thread[] => {
   const oldStr = extractText(oldDoc)
   const newStr = extractText(newDoc)
   const changes = diffChars(oldStr, newStr)
@@ -239,7 +232,7 @@ export const updatedThreadPositions = (
   }
 
   return threads.map((thread) => {
-    const [startIndex, endIndex] = threadsRepr.find(([_, __, id]) => id === thread.id) || [0, 0, 0]
+    const [startIndex, endIndex] = threadsRepr.find(([, , id]) => id === thread.id) || [0, 0, 0]
     return {
       ...thread,
       startIndex,
@@ -250,12 +243,7 @@ export const updatedThreadPositions = (
 
 export const processEditorDocument = (
   document: NodeType[],
-): {
-  body: string
-  bodySrc: string
-  excerpt: string
-  readTime: number
-} => {
+): Pick<Post, 'body' | 'bodySrc' | 'excerpt' | 'readTime'> => {
   const bodyText = extractText(document)
 
   return {

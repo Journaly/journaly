@@ -1,6 +1,6 @@
 import React from 'react'
-import { LanguageLevel, User } from '../../../generated/graphql'
-import theme from '../../../theme'
+import { LanguageLevel, User } from '@/generated/graphql'
+import theme from '@/theme'
 import { greetings } from './greetings'
 
 type Props = {

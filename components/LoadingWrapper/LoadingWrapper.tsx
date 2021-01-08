@@ -1,8 +1,8 @@
 import React from 'react'
 import { ApolloError } from '@apollo/client'
 
-import { useTranslation } from '../../config/i18n'
-import LoadingSpinner from '../Icons/LoadingSpinner'
+import { useTranslation } from '@/config/i18n'
+import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 
 type Props = {
   loading: boolean

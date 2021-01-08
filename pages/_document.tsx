@@ -8,7 +8,7 @@ import Document, {
   DocumentProps,
 } from 'next/document'
 
-import { i18n } from '../config/i18n'
+import { i18n } from '@/config/i18n'
 
 interface CustomProps {
   language: string
@@ -41,11 +41,14 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
             href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=swap"
             rel="stylesheet"
           />
-          <link rel="shortcut icon" href="/favicon.png" />
+          {/* Favicons */}
+          <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+          <link rel='alternate icon' href='/favicon.png' />
         </Head>
         <body className="block-transitions-on-page-load">
           <Main />
           <div id="modal-root" />
+          <div id="popover-root" />
           <NextScript />
         </body>
       </Html>

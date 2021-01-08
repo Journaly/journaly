@@ -1,16 +1,16 @@
 import React from 'react'
-import { useTranslation } from '../../../config/i18n'
-import FacebookIcon from '../../../components/Icons/FacebookIcon'
-import InstagramIcon from '../../../components/Icons/InstagramIcon'
-import YoutubeIcon from '../../../components/Icons/YoutubeIcon'
-import GlobeIcon from '../../../components/Icons/GlobeIcon'
-import Badge from '../../Badge'
-import ExternalLink from '../../../elements/ExternalLink'
-import { sanitize } from '../../../utils'
-import { languageNameWithDialect } from '../../../utils/languages'
-import theme from '../../../theme'
-import { LanguageLevel, ProfileUserFragmentFragment } from '../../../generated/graphql'
-import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
+import { useTranslation } from '@/config/i18n'
+import FacebookIcon from '@/components/Icons/FacebookIcon'
+import InstagramIcon from '@/components/Icons/InstagramIcon'
+import YoutubeIcon from '@/components/Icons/YoutubeIcon'
+import GlobeIcon from '@/components/Icons/GlobeIcon'
+import Badge from '@/components/Badge'
+import ExternalLink from '@/elements/ExternalLink'
+import { sanitize } from '@/utils'
+import { languageNameWithDialect } from '@/utils/languages'
+import theme from '@/theme'
+import { LanguageLevel, ProfileUserFragmentFragment } from '@/generated/graphql'
+import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 
 type Props = {
   user: ProfileUserFragmentFragment
@@ -37,7 +37,9 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
   const speaks = speaksList.map(({ language }) => languageNameWithDialect(language))
   const learns = learnsList.map(({ language }) => languageNameWithDialect(language))
 
-  const location = `${user.city && user.city}${user.city && user.country && ', '}${user.country && user.country}`
+  const location = `${user.city && user.city}${user.city && user.country && ', '}${
+    user.country && user.country
+  }`
 
   return (
     <div className="profile-card">

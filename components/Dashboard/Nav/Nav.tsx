@@ -4,8 +4,8 @@ import classNames from 'classnames'
 import { navConstants } from './nav-constants'
 import HamburgerIcon from '../Header/HamburgerIcon'
 import NavLinks from './NavLinks'
-import { useCurrentUserQuery, User as UserType } from '../../../generated/graphql'
-import theme from '../../../theme'
+import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
+import theme from '@/theme'
 
 interface Props {
   expanded: boolean
@@ -154,7 +154,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
             opacity: 1;
           }
         }
-
 
         @media (${navConstants.aboveDesktopNav}) {
           .nav-logo span {

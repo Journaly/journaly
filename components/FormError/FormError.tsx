@@ -1,7 +1,7 @@
 import React from 'react'
 import { ApolloError } from '@apollo/client'
 import { FieldError } from 'react-hook-form'
-import theme from '../../theme'
+import theme from '@/theme'
 
 type ErrorProps = {
   error: React.ReactNode

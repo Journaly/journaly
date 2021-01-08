@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
-import { withApollo } from '../../lib/apollo'
-import RequestResetPasswordForm from '../../components/RequestResetPasswordForm'
-import LandingPageLayout from '../../components/Layouts/LandingPageLayout'
+import { withApollo } from '@/lib/apollo'
+import RequestResetPasswordForm from '@/components/RequestResetPasswordForm'
+import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 
 const RequestResetPasswordPage: NextPage = () => (
   <LandingPageLayout>

@@ -1,5 +1,5 @@
 import React from 'react'
-import Select, { Option, OptionValue } from '../../elements/Select/Select'
+import Select, { Option, OptionValue } from '@/elements/Select/Select'
 import OptionPills from './OptionPills'
 
 export type { Option }

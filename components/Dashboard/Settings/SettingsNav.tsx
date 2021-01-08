@@ -1,7 +1,7 @@
 import React from 'react'
-import { useTranslation } from '../../../config/i18n'
-import NavLink from '../../NavLink'
-import theme from '../../../theme'
+import { useTranslation } from '@/config/i18n'
+import NavLink from '@/components/NavLink'
+import theme from '@/theme'
 
 const SettingsNav: React.FC = () => {
   const { t } = useTranslation('settings')

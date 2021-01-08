@@ -1,5 +1,5 @@
 import React from 'react'
-import { lightBlue } from '../../../utils'
+import { lightBlue } from '@/utils'
 
 const createListOfLanguages = (languages: string[]) => {
   if (languages.length === 1) return languages[0]

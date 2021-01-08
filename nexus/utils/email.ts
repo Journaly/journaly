@@ -1,13 +1,6 @@
-import AWS from 'aws-sdk'
-import {
-  User,
-  Thread,
-  Comment,
-  Post,
-  PostComment,
-  BadgeType,
-} from '@journaly/j-db-client'
-import { makeEmail } from '../../lib/mail'
+import * as AWS from 'aws-sdk'
+import { User, Thread, Comment, Post, PostComment, BadgeType } from '@journaly/j-db-client'
+import { makeEmail } from '@/lib/mail'
 
 AWS.config.credentials = new AWS.Credentials(
   process.env.JAWS_ACCESS_KEY_ID!,
@@ -63,14 +56,18 @@ type SqsParams = {
 export const sendJmail = (emailParams: EmailParams) => {
   if (!process.env.JMAIL_QUEUE_URL) {
     if (process.env.NODE_ENV === 'production') {
-      throw new Error('NODE_ENV is prod, but no JMAIL_QUEUE_URL is specified. Something is probably very wrong.')
+      throw new Error(
+        'NODE_ENV is prod, but no JMAIL_QUEUE_URL is specified. Something is probably very wrong.',
+      )
     }
 
     // We don't have a jmail queue url, so let's just spit this out to the
     // console for debugging
-    console.info('Would have sent the follwing email data to the jmail queue if I had a JMAIL_QUEUE_URL:')
+    console.info(
+      'Would have sent the follwing email data to the jmail queue if I had a JMAIL_QUEUE_URL:',
+    )
     console.info(emailParams)
-    return new Promise(res => res())
+    return new Promise((res) => res())
   }
 
   const params: SqsParams = {
@@ -190,17 +187,16 @@ const getBadgeName = (badgeType: BadgeType): string => {
   return assertUnreachable(badgeType)
 }
 
-export const sendNewBadgeEmail = ({
-  user,
-  badgeType,
-}: sendNewBadgeEmailArgs) => {
+export const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {
   return sendJmail({
     from: 'robin@journaly.com',
     to: user.email,
     subject: 'You earned a new badge!',
     html: makeEmail(`
       <p>Congratulations! You just earned the "${getBadgeName(badgeType)}" badge on Journaly.</p>
-      <p>This badge will now be displayed on your <a href="https://${process.env.SITE_DOMAIN}/dashboard/profile/${user.id}">profile page</a>.</p>
+      <p>This badge will now be displayed on your <a href="https://${
+        process.env.SITE_DOMAIN
+      }/dashboard/profile/${user.id}">profile page</a>.</p>
     `),
   })
 }

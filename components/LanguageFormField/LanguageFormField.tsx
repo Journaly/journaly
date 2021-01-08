@@ -5,42 +5,54 @@ import {
   LanguageLevel,
   useAddLanguageRelationMutation,
   useRemoveLanguageRelationMutation,
-} from '../../generated/graphql'
-import Select from '../../elements/Select'
-import Button, { ButtonVariant } from '../../elements/Button'
-import { OptionPills } from '../../elements/MultiSelect'
-import { languageNameWithDialect } from '../../utils/languages'
-import theme from '../../theme'
+} from '@/generated/graphql'
+import Select from '@/elements/Select'
+import Button, { ButtonVariant } from '@/elements/Button'
+import { OptionPills } from '@/elements/MultiSelect'
+import { languageNameWithDialect } from '@/utils/languages'
+import theme from '@/theme'
 
 type Props = {
   languages: LanguageType[]
   languageRelations: LanguageRelationType[]
-  refetch: () => void 
+  refetch: () => void
 }
 
 const fullLevelName = (level: LanguageLevel) => {
   switch (level) {
-    case LanguageLevel.Beginner: return 'Beginner'
-    case LanguageLevel.Intermediate: return 'Intermediate'
-    case LanguageLevel.Advanced: return 'Advanced'
-    case LanguageLevel.Native: return 'Native'
+    case LanguageLevel.Beginner:
+      return 'Beginner'
+    case LanguageLevel.Intermediate:
+      return 'Intermediate'
+    case LanguageLevel.Advanced:
+      return 'Advanced'
+    case LanguageLevel.Native:
+      return 'Native'
   }
 }
 
 const abbrLevelName = (level: LanguageLevel) => {
   switch (level) {
-    case LanguageLevel.Beginner: return 'BEG'
-    case LanguageLevel.Intermediate: return 'INT'
-    case LanguageLevel.Advanced: return 'ADV'
-    case LanguageLevel.Native: return 'NAT'
+    case LanguageLevel.Beginner:
+      return 'BEG'
+    case LanguageLevel.Intermediate:
+      return 'INT'
+    case LanguageLevel.Advanced:
+      return 'ADV'
+    case LanguageLevel.Native:
+      return 'NAT'
   }
 }
 
 const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refetch }) => {
-  const [addLanguageRelation, { loading: addingLanguageRelation }] =
-    useAddLanguageRelationMutation()
-  const [removeLanguageRelation, { loading: removingLanguageRelation }] =
-    useRemoveLanguageRelationMutation()
+  const [
+    addLanguageRelation,
+    { loading: addingLanguageRelation },
+  ] = useAddLanguageRelationMutation()
+  const [
+    removeLanguageRelation,
+    { loading: removingLanguageRelation },
+  ] = useRemoveLanguageRelationMutation()
 
   const userLanguageOptions = languageRelations.map(({ level, language }) => ({
     value: language.id,
@@ -51,8 +63,8 @@ const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refe
   const [selectedLevel, setSelectedLevel] = React.useState<LanguageLevel>(LanguageLevel.Beginner)
 
   const langOptions = languages
-    .filter(({ id }) => !languageRelations.find(({ language }) => language.id === id ))
-    .map(lang => ({
+    .filter(({ id }) => !languageRelations.find(({ language }) => language.id === id))
+    .map((lang) => ({
       value: lang.id,
       displayName: languageNameWithDialect(lang),
     }))
@@ -62,14 +74,14 @@ const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refe
     LanguageLevel.Intermediate,
     LanguageLevel.Advanced,
     LanguageLevel.Native,
-  ].map(value => ({ value, displayName: fullLevelName(value) }))
+  ].map((value) => ({ value, displayName: fullLevelName(value) }))
 
   const handleAddLanguageRelation = async () => {
     await addLanguageRelation({
       variables: {
         languageId: selectedLangId,
-        level: selectedLevel
-      }
+        level: selectedLevel,
+      },
     })
     refetch()
   }
@@ -81,10 +93,7 @@ const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refe
 
   return (
     <div>
-      <OptionPills
-        selectedOptions={userLanguageOptions}
-        onRemove={handleRemoveLanguageRelation}
-      />
+      <OptionPills selectedOptions={userLanguageOptions} onRemove={handleRemoveLanguageRelation} />
 
       <div className="lang-level-select">
         <Select
@@ -129,7 +138,6 @@ const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refe
             margin-bottom: 15px;
           }
         }
-
       `}</style>
     </div>
   )

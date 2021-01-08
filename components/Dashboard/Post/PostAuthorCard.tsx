@@ -1,17 +1,17 @@
 import React from 'react'
 import Link from 'next/link'
-import theme from '../../../theme'
+import theme from '@/theme'
 import {
   AuthorWithLanguagesFragmentFragment as Author,
   useFollowUserMutation,
   useUnfollowUserMutation,
   useFollowingUsersQuery,
-} from '../../../generated/graphql'
-import { useTranslation } from '../../../config/i18n'
-import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
-import { languageNameWithDialect } from '../../../utils/languages'
-import Button, { ButtonVariant } from '../../../elements/Button'
-import LevelGauge from '../../../elements/LevelGauge'
+} from '@/generated/graphql'
+import { useTranslation } from '@/config/i18n'
+import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
+import { languageNameWithDialect } from '@/utils/languages'
+import Button, { ButtonVariant } from '@/elements/Button'
+import LevelGauge from '@/elements/LevelGauge'
 
 type PostAuthorCardProps = {
   author: Author

@@ -1,8 +1,8 @@
 import React from 'react'
 import DashboardLayout from './DashboardLayout'
-import Breadcrumbs from '../Dashboard/Settings/Breadcrumbs'
-import SettingsNav from '../Dashboard/Settings/SettingsNav'
-import theme from '../../theme'
+import Breadcrumbs from '@/components/Dashboard/Settings/Breadcrumbs'
+import SettingsNav from '@/components/Dashboard/Settings/SettingsNav'
+import theme from '@/theme'
 
 interface Props {
   children: React.ReactNode

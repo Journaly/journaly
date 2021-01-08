@@ -1,18 +1,18 @@
 import React from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
-import { useTranslation } from '../../../config/i18n'
-import { formatShortDate } from '../../../utils/date'
+import { useTranslation } from '@/config/i18n'
+import { formatShortDate } from '@/utils/date'
 import {
   PostStatus as PostStatusType,
   PostCardFragmentFragment as PostCardType,
-} from '../../../generated/graphql'
-import LineClamp from '../../../elements/LineClamp'
-import LikeIcon from '../../Icons/LikeIcon'
-import CommentIcon from '../../Icons/CommentIcon'
-import theme from '../../../theme'
-import BlankAvatarIcon from '../../Icons/BlankAvatarIcon'
-import LevelGauge from '../../../elements/LevelGauge'
+} from '@/generated/graphql'
+import LineClamp from '@/elements/LineClamp'
+import LikeIcon from '@/components/Icons/LikeIcon'
+import CommentIcon from '@/components/Icons/CommentIcon'
+import theme from '@/theme'
+import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
+import LevelGauge from '@/elements/LevelGauge'
 
 type Props = {
   post: PostCardType
@@ -49,7 +49,7 @@ const PostCard: React.FC<Props> = ({
   const displayImage = images.length ? images[0].smallSize : '/images/samples/sample-post-img.jpg'
   const imageAlt = images.length === 0 ? 'Typewriter on an old wooden desk' : ''
   const postCardStyles = classNames('post-card-container', { stacked })
-  
+
   return (
     <>
       <Link href={'/post/[id]'} as={`/post/${id}`}>

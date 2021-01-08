@@ -59,7 +59,7 @@ The data model/DB schema lives in `j-db-client/prisma/schema`, server side code 
 
 2. Update your `.env` file with your new postgres username & password. Copy and paste your root `.env` into `j-db-client/prisma/.env`. You should end up with two of the same file, one in root and the other in `j-db-client`.
 
-3. Finally, from the `j-db-client` directory, apply database migrations to your new database instance:
+3. Finally, from the root of the project, apply database migrations to your new database instance:
 
    ```bash
    $ npm run migrate:up
@@ -76,14 +76,17 @@ The data model/DB schema lives in `j-db-client/prisma/schema`, server side code 
 
 #### Database Migrations
 
-Database migrations are how changes to the data model(`schema.prisma`) get applied to a database. Changes that you make to the data model in your local environment also need to be applied to databases in other environments, e.g. production, and migrations are how that change is reproduced elsewhere. If you edit the data model, you'll want to run the following two commands:
+Database migrations are how changes to the data model(`schema.prisma`) get applied to a database. Changes that you make to the data model in your local environment also need to be applied to databases in other environments, e.g. production, and migrations are how that change is reproduced elsewhere. If you edit the data model, you'll want to run the following commands from the root of the project:
 
 ```sh
 $ npm run migrate:save
 $ npm run migrate:up
+$ npm i @journaly/j-db-client
 ```
 
-The first command creates a migration, resulting in a new file in the `j-db-client/prisma/migrations` directory. The second applies that migration to the local database. You'll want to commit any new migration artifacts that you create. Previous migrations should never be edited.
+The first command creates a migration, resulting in a new file in the `j-db-client/prisma/migrations` directory. The second applies that migration to the local database. Finally, re-installing the `@journaly/j-db-client` package results in an updated `PrismaClient`. You'll want to commit any new migration artifacts that you create. 
+
+_Previous migrations should never be edited._
 
 ### Running Journaly
 

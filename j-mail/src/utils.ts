@@ -24,11 +24,12 @@ export type EmailParams = {
 }
 
 export type ValidatedNotification = 
-  | { type: 'POST_COMMENT', postComment: PostComment, post: Post}
-  | { type: 'THREAD_COMMENT', comment: Comment, thread: Thread, post: Post}
+  | { type: 'POST_COMMENT', notificationDate: Date, postComment: PostComment, post: Post}
+  | { type: 'THREAD_COMMENT', notificationDate: Date, comment: Comment, thread: Thread, post: Post}
 
 export type DataForUpdateEmail = {
   user: User,
+  lastNotificationDate: Date,
   own: ValidatedNotification[],
   other: ValidatedNotification[],
 }

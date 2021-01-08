@@ -6,7 +6,8 @@
   "scripts": {
     "deploy:stage": "sls deploy --stage stage",
     "deploy:prod": "sls deploy --stage prod",
-    "scenarios": "ts-node email-scenarios/index.ts"
+    "scenarios": "ts-node email-scenarios/index.ts",
+    "type-check": "tsc"
   },
   "repository": {
     "type": "git",
@@ -19,9 +20,11 @@
   },
   "homepage": "https://github.com/Journaly/journaly#readme",
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.70",
+    "@types/node": "^14.14.20",
     "serverless-plugin-typescript": "^1.1.9",
     "ts-node": "^9.1.1",
-    "typescript": "^3.9.7"
+    "typescript": "3.8.3"
   },
   "dependencies": {
     "aws-sdk": "^2.737.0",

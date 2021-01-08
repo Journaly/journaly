@@ -1,16 +1,18 @@
 import nodemailer from 'nodemailer'
+import { Handler, SQSHandler } from 'aws-lambda'
+
 import {
   NotificationType,
   User,
 } from '@journaly/j-db-client'
 
+import updateEmail from './emails/updateEmail' 
 import {
   getDBClient,
   ValidatedNotification,
+  DataForUpdateEmail,
   enqueueEmail,
 } from './utils'
-
-import updateEmail from './emails/updateEmail' 
 
 
 const getUsersToNotify = async () => {
@@ -23,9 +25,12 @@ const getUsersToNotify = async () => {
   return users
 }
 
-const getDataForUpdateEmail = async (userId: number) => {
+const getDataForUpdateEmail = async (
+  userId: number
+): Promise<DataForUpdateEmail> => {
   const prisma = getDBClient()
   const validated: ValidatedNotification[] = []
+  let lastNotificationDate = new Date(0)
 
   const user = (await prisma.user.findUnique({ where: { id: userId } })) as User
   const notes = await prisma.pendingNotification.findMany({
@@ -52,10 +57,15 @@ const getDataForUpdateEmail = async (userId: number) => {
   })
 
   notes.forEach(note => {
+    lastNotificationDate = (lastNotificationDate < note.createdAt)
+      ? note.createdAt
+      : lastNotificationDate
+
     if (note.type === NotificationType.POST_COMMENT) {
       if (note.postComment) {
         validated.push({
           type: note.type,
+          notificationDate: note.createdAt,
           postComment: note.postComment,
           post: note.postComment.post,
         })
@@ -64,6 +74,7 @@ const getDataForUpdateEmail = async (userId: number) => {
       if (note.comment) {
         validated.push({
           type: note.type,
+          notificationDate: note.createdAt,
           comment: note.comment,
           thread: note.comment.thread,
           post: note.comment.thread.post,
@@ -74,39 +85,42 @@ const getDataForUpdateEmail = async (userId: number) => {
 
   return {
     user,
+    lastNotificationDate,
     own: validated.filter(({ post }) => post.authorId === userId),
     other: validated.filter(({ post }) => post.authorId !== userId),
   }
 }
 
-module.exports.sendUpdateEmails = async () => {
+export const sendUpdateEmails: Handler = async (event, context) => {
+  const prisma = getDBClient()
   const usersToUpdate = await getUsersToNotify()
-
   const emailPromises = usersToUpdate.map(async ({ userId }) => {
     const data = await getDataForUpdateEmail(userId)
     const body = updateEmail(data)
-    return enqueueEmail({
+
+    await enqueueEmail({
       from: 'robin@journaly.com',
       to: data.user.email,
       subject: 'New Activity on Journaly 📖',
       html: body,
     })
+
+    return prisma.pendingNotification.deleteMany({
+      where: {
+        userId,
+        createdAt: {
+          lte: data.lastNotificationDate
+        }
+      }
+    })
   })
 
   await Promise.all(emailPromises)
+
+  return { message: `${emailPromises.length} emails sent` }
 }
 
-module.exports.testFunc = async () => {
-  const users = await getUsersToNotify()
-  users.map(async ({ userId }) => {
-    console.log(JSON.stringify(await getDataForUpdateEmail(userId)))
-    //console.log(updateEmail(await getDataForUpdateEmail(userId)))
-    //console.log('================================================')
-  })
-  return null
-}
-
-module.exports.processJMailQueue = async (event: any, context: any) => {
+export const processJMailQueue: SQSHandler = async (event, context) => {
   const transport = nodemailer.createTransport({
     host: process.env.MAIL_HOST as string,
     port: parseInt(process.env.MAIL_PORT || '25', 10),
@@ -130,5 +144,5 @@ module.exports.processJMailQueue = async (event: any, context: any) => {
 
   console.log('Success!')
 
-  context.done(null, '')
+  context.done(undefined, 'Woot')
 }

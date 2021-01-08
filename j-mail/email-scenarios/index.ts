@@ -21,6 +21,7 @@ const scenarios = {
       "other": [
         {
           "type": "POST_COMMENT",
+          "notificationDate": "2021-01-02T22:21:27.236Z",
           "postComment": {
             "id": 6,
             "createdAt": "2021-01-02T22:21:27.236Z",
@@ -86,6 +87,7 @@ const scenarios = {
       "own": [
         {
           "type": "POST_COMMENT",
+          "notificationDate": "2021-01-02T22:21:27.236Z",
           "postComment": {
             "id": 6,
             "createdAt": "2021-01-02T22:21:27.236Z",
@@ -131,6 +133,7 @@ const scenarios = {
         },
         {
           "type": "THREAD_COMMENT",
+          "notificationDate": "2021-01-02T22:21:27.236Z",
           "comment": {
             "id": 14,
             "createdAt": "2021-01-02T22:21:55.429Z",
@@ -209,6 +212,7 @@ const scenarios = {
         },
         {
           "type": "THREAD_COMMENT",
+          "notificationDate": "2021-01-02T22:21:27.236Z",
           "comment": {
             "id": 15,
             "createdAt": "2021-01-02T22:22:16.332Z",
@@ -308,6 +312,7 @@ const scenarios = {
       "own": [
         {
           "type": "POST_COMMENT",
+          "notificationDate": "2021-01-02T22:21:27.236Z",
           "postComment": {
             "id": 6,
             "createdAt": "2021-01-02T22:21:27.236Z",
@@ -353,6 +358,7 @@ const scenarios = {
         },
         {
           "type": "THREAD_COMMENT",
+          "notificationDate": "2021-01-02T22:21:27.236Z",
           "comment": {
             "id": 14,
             "createdAt": "2021-01-02T22:21:55.429Z",
@@ -431,6 +437,7 @@ const scenarios = {
         },
         {
           "type": "THREAD_COMMENT",
+          "notificationDate": "2021-01-02T22:21:27.236Z",
           "comment": {
             "id": 15,
             "createdAt": "2021-01-02T22:22:16.332Z",
@@ -511,6 +518,7 @@ const scenarios = {
       "other": [
         {
           "type": "POST_COMMENT",
+          "notificationDate": "2021-01-02T22:21:27.236Z",
           "postComment": {
             "id": 6,
             "createdAt": "2021-01-02T22:21:27.236Z",

@@ -1,9 +1,10 @@
 {
   "name": "@journaly/j-db-client",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Journaly's internal database client.",
-  "main": "src/index",
+  "main": "dist/index",
   "scripts": {
+    "build": "tsc",
     "prisma": "prisma",
     "migrate:up": "prisma migrate up --experimental",
     "migrate:save": "prisma migrate save --experimental",
@@ -15,7 +16,8 @@
     "prisma:studio": "prisma studio --experimental"
   },
   "files": [
-    "lib/**/*"
+    "dist/**/*",
+    "prisma/**/*"
   ],
   "author": "Journaly",
   "license": "ISC",

@@ -21,3 +21,4 @@ The existing types are:
 
 - `system-` for a `system` or set of conventions
 - `feature-` for creating a new or enhancing an existing `feature`
+- `platform-` for infrastructure or process level improvements

@@ -4,7 +4,7 @@ datasource db {
 }
 
 generator prisma_client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -39,6 +39,7 @@ model User {
   followedBy               User[]                    @relation("UserFollows", references: [id])
   following                User[]                    @relation("UserFollows", references: [id])
   postCommentSubscriptions PostCommentSubscription[]
+  PendingNotification      PendingNotification[]
 }
 
 model Auth {
@@ -125,6 +126,7 @@ model Post {
   postTopics               PostTopic[]
   postComments             PostComment[]
   postCommentSubscriptions PostCommentSubscription[]
+  PendingNotification      PendingNotification[]
 }
 
 model Language {
@@ -200,6 +202,7 @@ model CommentThanks {
   commentId Int
 
   @@unique([authorId, commentId])
+  PendingNotification PendingNotification[]
 }
 
 model PostCommentThanks {
@@ -211,30 +214,33 @@ model PostCommentThanks {
   postCommentId Int?
 
   @@unique([authorId, postCommentId])
+  PendingNotification PendingNotification[]
 }
 
 model Comment {
-  id        Int             @id @default(autoincrement())
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-  body      String
-  author    User            @relation(fields: [authorId], references: [id])
-  authorId  Int
-  thread    Thread          @relation(fields: [threadId], references: [id])
-  threadId  Int
-  thanks    CommentThanks[]
+  id                  Int                   @id @default(autoincrement())
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  body                String
+  author              User                  @relation(fields: [authorId], references: [id])
+  authorId            Int
+  thread              Thread                @relation(fields: [threadId], references: [id])
+  threadId            Int
+  thanks              CommentThanks[]
+  PendingNotification PendingNotification[]
 }
 
 model PostComment {
-  id        Int                 @id @default(autoincrement())
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
-  body      String
-  author    User                @relation(fields: [authorId], references: [id])
-  authorId  Int
-  post      Post                @relation(fields: [postId], references: [id])
-  postId    Int
-  thanks    PostCommentThanks[]
+  id                  Int                   @id @default(autoincrement())
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  body                String
+  author              User                  @relation(fields: [authorId], references: [id])
+  authorId            Int
+  post                Post                  @relation(fields: [postId], references: [id])
+  postId              Int
+  thanks              PostCommentThanks[]
+  PendingNotification PendingNotification[]
 }
 
 model Thread {
@@ -321,11 +327,11 @@ model UserBadge {
 }
 
 model PendingNotification {
-  id                  Int                @id @default(autoincrement())
-  type                NotificationType
-  createdAt           DateTime           @default(now())
-  user                User               @relation(fields: [userId], references: [id])
-  userId              Int
+  id        Int              @id @default(autoincrement())
+  type      NotificationType
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id])
+  userId    Int
 
   post                Post?              @relation(fields: [postId], references: [id])
   postId              Int?

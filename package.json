@@ -39,7 +39,7 @@
   "dependencies": {
     "@apollo/client": "^3.2.5",
     "@apollo/react-ssr": "^4.0.0",
-    "@journaly/j-db-client": "file:j-db-client",
+    "@journaly/j-db-client": "1.0.4",
     "@nexus/schema": "^0.19.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.2",

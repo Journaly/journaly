@@ -4,6 +4,14 @@ import {
   mapCat,
 } from '../utils'
 
+const divider = `
+  <hr style="
+    width: 25%;
+    margin: 35px auto;
+    border: 1px solid #313131;
+  "/>
+`
+
 const formatNotificationBlock = (note: ValidatedNotification): string => {
   switch (note.type) {
     case ('POST_COMMENT'): {
@@ -102,7 +110,7 @@ const updateEmail = (data: DataForUpdateEmail) => {
             font-family: Verdana, Geneva, Tahoma, sans-serif;
             font-weight: 400;
           ">Your posts:</h2>
-          ${mapCat(data.own, formatNotificationBlock)}
+          ${mapCat(data.own, formatNotificationBlock, divider)}
         </div>
       `) || '' }
 
@@ -111,7 +119,7 @@ const updateEmail = (data: DataForUpdateEmail) => {
           padding: 5px 20px;
           font-family: 'Courier New', Courier, monospace;
           line-height: 1.2;
-          font-size: 20px;
+          font-size: 14px;
           margin-bottom: 25px;
           width: 80%;
           background: white;
@@ -123,7 +131,7 @@ const updateEmail = (data: DataForUpdateEmail) => {
             font-family: Verdana, Geneva, Tahoma, sans-serif;
             font-weight: 400;
           ">Posts you've participated in:</h2>
-          ${mapCat(data.other, formatNotificationBlock)}
+          ${mapCat(data.other, formatNotificationBlock, divider)}
         </div>
       `) || '' }
 

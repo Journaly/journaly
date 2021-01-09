@@ -66,6 +66,6 @@ export const enqueueEmail = (emailParams: EmailParams) => {
   })
 }
 
-export const mapCat = <T>(data: T[], cb: (arg: T) => string) => {
-  return data.map(cb).join('\n')
+export const mapCat = <T>(data: T[], cb: (arg: T) => string, sep: string = '\n') => {
+  return data.map(cb).join(sep)
 }

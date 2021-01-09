@@ -13,6 +13,7 @@ provider:
     JAWS_ACCOUNT_ID: ${file(./config.${opt:stage, ''}.json):JAWS_ACCOUNT_ID}
     JMAIL_QUEUE_URL: { Ref: JMailQueue }
   runtime: nodejs12.x
+  profile: serverless-admin
   region: us-east-2
 
   iamRoleStatements:
@@ -42,8 +43,8 @@ functions:
           batchSize: 10
   sendUpdateEmails:
     handler: src/handler.sendUpdateEmails
-    #events:
-    #  - schedule: cron(* */6 * * ? *)
+    events:
+      - schedule: cron(* */6 * * ? *)
 
 resources:
   Resources:

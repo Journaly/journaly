@@ -28,7 +28,7 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
-    "@journaly/j-db-client": "file:../j-db-client/journaly-j-db-client-1.0.4.tgz",
+    "@journaly/j-db-client": "1.0.4",
     "aws-sdk": "^2.737.0",
     "nodemailer": "^6.4.11"
   }

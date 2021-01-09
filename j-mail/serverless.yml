@@ -9,10 +9,10 @@ provider:
     MAIL_USER: ${file(./config.${opt:stage, ''}.json):MAIL_USER}
     MAIL_PASSWORD: ${file(./config.${opt:stage, ''}.json):MAIL_PASSWORD}
     MAIL_SECURE: ${file(./config.${opt:stage, ''}.json):MAIL_SECURE}
+    DATABASE_URL: ${file(./config.${opt:stage, ''}.json):DATABASE_URL}
     JAWS_ACCOUNT_ID: ${file(./config.${opt:stage, ''}.json):JAWS_ACCOUNT_ID}
     JMAIL_QUEUE_URL: { Ref: JMailQueue }
   runtime: nodejs12.x
-  profile: serverless-admin
   region: us-east-2
 
   iamRoleStatements:
@@ -21,9 +21,18 @@ provider:
         - 'sqs:SendMessage'
       Resource: 'arn:aws:sqs:${self:provider.region}:*:JMailQueue-${opt:stage}'
 
+package:
+  exclude:
+    # Prisma needs some binaries. We don't care about the OSX binaries on AWS
+    # and we end up with dupes, so we ignore all the query-engine bins except
+    # one. If we don't do this, the package size ends up too large to deploy.
+    - 'node_modules/**/query-engine-darwin'
+    - 'node_modules/**/query-engine-rhel-openssl-1.0.x'
+    - '!node_modules/.prisma/client/query-engine-rhel-openssl-1.0.x'
+
 functions:
   processJMailQueue:
-    handler: src.handler.processJMailQueue
+    handler: src/handler.processJMailQueue
     events:
       - sqs:
           arn:
@@ -32,9 +41,9 @@ functions:
               - Arn
           batchSize: 10
   sendUpdateEmails:
-    handler: src.handler.sendUpdateEmails
-    events:
-      - schedule: cron(* */6 * * ? *)
+    handler: src/handler.sendUpdateEmails
+    #events:
+    #  - schedule: cron(* */6 * * ? *)
 
 resources:
   Resources:

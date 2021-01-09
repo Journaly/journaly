@@ -7,7 +7,8 @@
     "deploy:stage": "sls deploy --stage stage",
     "deploy:prod": "sls deploy --stage prod",
     "scenarios": "ts-node email-scenarios/index.ts",
-    "type-check": "tsc"
+    "type-check": "tsc",
+    "prisma:generate": "npm explore '@journaly/j-db-client' -- npm run prisma:generate"
   },
   "repository": {
     "type": "git",
@@ -27,8 +28,8 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
+    "@journaly/j-db-client": "file:../j-db-client/journaly-j-db-client-1.0.4.tgz",
     "aws-sdk": "^2.737.0",
-    "nodemailer": "^6.4.11",
-    "@journaly/j-db-client": "file:../j-db-client"
+    "nodemailer": "^6.4.11"
   }
 }

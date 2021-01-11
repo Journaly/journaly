@@ -59,9 +59,6 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
 const updateEmail = (data: DataForUpdateEmail) => {
   return `
     <div style="
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       padding: 40px 20px;
       font-family: 'Courier New', Courier, monospace;
       line-height: 1.2;
@@ -74,7 +71,7 @@ const updateEmail = (data: DataForUpdateEmail) => {
         background: white;
         padding: 30px 20px;
         text-align: center;
-        margin-bottom: 25px;
+        margin: 0 auto 25px;
       ">
         <img
           src="https://journaly-email-assets.s3.us-east-2.amazonaws.com/j-logo-100.png"
@@ -99,7 +96,7 @@ const updateEmail = (data: DataForUpdateEmail) => {
           font-family: 'Courier New', Courier, monospace;
           line-height: 1.2;
           font-size: 14px;
-          margin-bottom: 25px;
+          margin: 0 auto 25px;
           width: 80%;
           background: white;
         ">
@@ -120,7 +117,7 @@ const updateEmail = (data: DataForUpdateEmail) => {
           font-family: 'Courier New', Courier, monospace;
           line-height: 1.2;
           font-size: 14px;
-          margin-bottom: 25px;
+          margin: 0 auto 25px;
           width: 80%;
           background: white;
         ">
@@ -139,14 +136,14 @@ const updateEmail = (data: DataForUpdateEmail) => {
         background: white;
         width: 80%;
         padding: 5px 20px;
-        margin-bottom: 25px;
+        margin: 0 auto 25px;
       ">
         <p style="font-size: 14px;">Keep up all the great work and thank you for contributing to the community!</p>
         <p style="font-size: 14px; font-weight: 600;">Robin @ Journaly</p>
       </div>
       <div style="
         padding: 40px 20px;
-        margin-bottom: 25px;
+        margin: 0 auto 25px;
         background-color: #313131;
         width: 80%;
         text-align: center; 
@@ -154,12 +151,12 @@ const updateEmail = (data: DataForUpdateEmail) => {
         font-weight: 400;
         font-size: 10px;
       ">
-      <p style="
-        text-transform: uppercase;
-        color: white;
-      ">
-        Sent with ❤️ from the <a href="https://www.journaly.com" style="color: #4391C9; text-decoration: none;">journaly</a> team
-      </p>
+        <p style="
+          text-transform: uppercase;
+          color: white;
+        ">
+          Sent with ❤️ from the <a href="https://www.journaly.com" style="color: #4391C9; text-decoration: none;">journaly</a> team
+        </p>
       </div>
     </div>
   `

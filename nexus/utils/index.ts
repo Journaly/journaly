@@ -127,10 +127,14 @@ export const generateExcerpt = (document: NodeType[], length = 200, tolerance = 
   // or sentence break to cut off at
   const bodyText = extractText(document, nonBodyTypes)
 
-  let end = Math.min(length, bodyText.length - 1)
+  if (bodyText.length <= length) {
+    return bodyText
+  }
+
+  let end = Math.min(length, bodyText.length) - 1
   let breakFound = false
 
-  while (bodyText.length - end < tolerance) {
+  while (length - end < tolerance) {
     if (breakCharacters.has(bodyText[end])) {
       breakFound = true
       break // heh!

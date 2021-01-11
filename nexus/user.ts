@@ -10,6 +10,8 @@ import { serialize } from 'cookie'
 import { randomBytes } from 'crypto'
 import { promisify } from 'util'
 
+import { PostStatus } from '@journaly/j-db-client'
+
 import { NotAuthorizedError, UserInputError } from './errors'
 import { sendPasswordResetTokenEmail } from './utils'
 import { validateUpdateUserMutationData } from './utils/userValidation'
@@ -59,6 +61,7 @@ const User = objectType({
         return ctx.db.post.count({
           where: {
             authorId: parent.id,
+            status: PostStatus.PUBLISHED,
           },
         })
       },

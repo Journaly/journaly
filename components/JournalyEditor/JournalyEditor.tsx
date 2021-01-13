@@ -7,6 +7,7 @@ import {
   useSlate,
   RenderElementProps,
   RenderLeafProps,
+  ReactEditor,
 } from 'slate-react'
 import { withHistory } from 'slate-history'
 import isHotkey from 'is-hotkey'
@@ -18,9 +19,11 @@ import FormatBoldIcon from '@/components/Icons/FormatBoldIcon'
 import FormatItalicIcon from '@/components/Icons/FormatItalicIcon'
 import FormatUnderlinedIcon from '@/components/Icons/FormatUnderlinedIcon'
 import FormatTitleIcon from '@/components/Icons/FormatTitleIcon'
+import FormatLinkIcon from '@/components/Icons/FormatLinkIcon'
 import FormatQuoteIcon from '@/components/Icons/FormatQuoteIcon'
 import FormatListNumberedIcon from '@/components/Icons/FormatListNumberedIcon'
 import FormatListBulletedIcon from '@/components/Icons/FormatListBulletedIcon'
+import { isLinkActive, toggleLink, withLinks } from './helpers'
 
 /**
  * The Journaly Rich Text Editor
@@ -37,8 +40,10 @@ const HOTKEYS: { [key in HotKey]: string } = {
   'mod+u': 'underline',
 }
 
+type Type = 'mark' | 'block' | 'link'
+
 type ButtonProps = {
-  type: 'mark' | 'block'
+  type: Type
   format: string
   children: React.ReactNode
 }
@@ -51,6 +56,18 @@ type JournalyEditorProps = {
   slateRef: React.RefObject<Editor>
 }
 
+type CheckIfTypeIsActiveArgs = {
+  type: Type
+  editor: Editor
+  format: string
+}
+
+type ToggleByTypeArgs = {
+  type: Type
+  editor: Editor
+  format: string
+}
+
 const JournalyEditor: React.FC<JournalyEditorProps> = ({
   value,
   setValue,
@@ -58,7 +75,8 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
 }: JournalyEditorProps) => {
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
-  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+  const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []) as Editor &
+    ReactEditor
 
   useEffect(() => {
     ;(slateRef as React.MutableRefObject<Editor>).current = editor
@@ -78,6 +96,9 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
             <ToolbarButton type="mark" format="underline">
               <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
             </ToolbarButton>
+            <ToolbarButton type="link" format="link">
+              <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
+            </ToolbarButton>
             <ToolbarButton type="block" format="heading-two">
               <FormatTitleIcon title="Apply heading" titleId="toolbar-title-icon" />
             </ToolbarButton>
@@ -91,6 +112,7 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
               <FormatListBulletedIcon title="Bulleted list" titleId="toolbar-list-bulleted-icon" />
             </ToolbarButton>
           </Toolbar>
+
           <Editable
             renderElement={renderElement}
             renderLeaf={renderLeaf}
@@ -172,6 +194,12 @@ const Element: React.FC<RenderElementProps> = ({ attributes, children, element }
       return <ul {...attributes}>{children}</ul>
     case 'heading-two':
       return <h2 {...attributes}>{children}</h2>
+    case 'link':
+      return (
+        <a {...attributes} href={element.url}>
+          {children}
+        </a>
+      )
     case 'list-item':
       return <li {...attributes}>{children}</li>
     case 'numbered-list':
@@ -197,18 +225,34 @@ const Leaf: React.FC<RenderLeafProps> = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>
 }
 
+const isTypeActive = ({ type, editor, format }: CheckIfTypeIsActiveArgs) => {
+  const fn = {
+    mark: isMarkActive,
+    block: isBlockActive,
+    link: isLinkActive,
+  }[type]
+
+  return fn(editor, format)
+}
+
+const toogleByType = ({ type, editor, format }: ToggleByTypeArgs) => {
+  const toggles = {
+    mark: toggleMark,
+    block: toggleBlock,
+    link: toggleLink,
+  }
+
+  toggles[type](editor, format)
+}
+
 const ToolbarButton: React.FC<ButtonProps> = ({ type, format, children }) => {
   const editor = useSlate()
-  const active = type === 'mark' ? isMarkActive(editor, format) : isBlockActive(editor, format)
+  const active = isTypeActive({ type, format, editor })
   const buttonClasses = classNames('toolbar-button', { active })
 
   const handleMouseDown = (event: React.MouseEvent) => {
     event.preventDefault()
-    if (type === 'mark') {
-      toggleMark(editor, format)
-    } else if (type === 'block') {
-      toggleBlock(editor, format)
-    }
+    toogleByType({ type, format, editor })
   }
 
   return (

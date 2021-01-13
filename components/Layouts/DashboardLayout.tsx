@@ -27,7 +27,11 @@ const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
     <div className="dashboard">
       <Header onMenuClick={toggleNav} />
 
-      <Nav expanded={navExpanded} collapse={() => setNavExpanded(false)} />
+      <Nav
+        expanded={navExpanded}
+        collapse={() => setNavExpanded(false)}
+        disableLargeNav={router.pathname.includes('/settings/')}
+      />
 
       <div className={dashboardContainerStyles}>{children}</div>
 

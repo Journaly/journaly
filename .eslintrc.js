@@ -14,7 +14,7 @@ module.exports = {
     },
   },
   rules: {
-    // e.g. "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
   },
   settings: {
     react: {

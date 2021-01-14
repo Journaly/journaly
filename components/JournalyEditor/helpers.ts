@@ -1,6 +1,18 @@
 import isUrl from 'is-url'
 import { Editor, Transforms, Element as SlateElement, Range } from 'slate'
 
+const validateProtocol = (href: string) => {
+  const httpStr = 'http://'
+  const httpsStr = 'https://'
+  if (
+    href.substr(0, httpStr.length).toLowerCase() !== httpStr &&
+    href.substr(0, httpsStr.length).toLowerCase() !== httpsStr
+  )
+    return `${httpsStr}${href}`
+
+  return href
+}
+
 export const isLinkActive = (editor: Editor) => {
   const [link] = Editor.nodes(editor, {
     match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'link',
@@ -64,8 +76,11 @@ export const withLinks = (editor: Editor) => {
 }
 
 export const toggleLink = (editor: Editor) => {
-  const url = window.prompt('Enter the URL of the link:')
+  let url: string | undefined | null = window.prompt('Enter the URL of the link:')
   if (!url) return
+
+  url = validateProtocol(url)
+  if (!isUrl(url)) return
 
   if (editor.selection) {
     wrapLink(editor, url)

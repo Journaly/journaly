@@ -17,7 +17,7 @@ type ToggleByTypeArgs = {
   type: ButtonType
   editor: Editor
   format: string
-  t: TFunction
+  t?: TFunction
 }
 
 type ToggleArgs = Omit<ToggleByTypeArgs, 'type'>
@@ -126,7 +126,7 @@ const toggleLink = ({ editor, t }: ToggleArgs) => {
 
   url = validateProtocol(url)
   if (!isUrl(url)) {
-    toast.error(t('websitePatternError'))
+    t && toast.error(t('websitePatternError'))
     return
   }
 

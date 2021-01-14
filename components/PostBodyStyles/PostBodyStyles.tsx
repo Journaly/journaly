@@ -34,6 +34,12 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
         line-height: 24px;
       }
 
+      .${parentClassName} a {
+        font-size: inherit;
+        text-decoration: underline;
+        color: ${theme.colors.blueLight};
+      }
+
       @media (min-width: ${theme.breakpoints.SM}) {
         .${parentClassName} p {
           font-size: 20px;

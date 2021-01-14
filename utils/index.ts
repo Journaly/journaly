@@ -13,23 +13,24 @@ export function fromEntries<V>(iterable: Iterable<[string, V]>) {
 }
 
 export const sanitize = (html: string): string => {
-  return xss.filterXSS(html)
+  return xss.filterXSS(html, {
+    whiteList: {
+      ...xss.whiteList,
+      a: ['href', 'target', 'rel'],
+    },
+  })
 }
 
 export const iOS = () => {
-  return [
-    'iPad Simulator',
-    'iPhone Simulator',
-    'iPod Simulator',
-    'iPad',
-    'iPhone',
-    'iPod'
-  ].includes(navigator.platform)
-  // iPad on iOS 13 detection
-  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+  return (
+    ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(
+      navigator.platform,
+    ) ||
+    // iPad on iOS 13 detection
+    (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+  )
 }
 
 export const wait = (timeout: number) => {
-  return new Promise(res => setTimeout(res, timeout))
+  return new Promise((res) => setTimeout(res, timeout))
 }
-

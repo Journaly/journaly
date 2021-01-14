@@ -20,6 +20,7 @@ export type NodeType = {
   bold?: boolean | null
   underline?: boolean | null
   type?: string | null
+  url?: string | null
   children?: NodeType[] | undefined | null
 }
 
@@ -32,6 +33,7 @@ const typeToElStrMap: { [key: string]: string } = {
   'bulleted-list': 'ul',
   'numbered-list': 'ol',
   'list-item': 'li',
+  link: 'a',
   paragraph: 'p',
 }
 
@@ -98,8 +100,13 @@ const htmlifyEditorNode = (node: NodeType): string => {
 
   const tagName = getNodeTagName(node)
   const content = (node.children || []).map(htmlifyEditorNode).join('')
+  const attributes: string[] = []
 
-  return `<${tagName}>${content}</${tagName}>`
+  if (node.type === 'link' && node.url) {
+    attributes.push(`href="${node.url}" target="_blank" rel="noopener noreferrer"`)
+  }
+
+  return `<${tagName} ${attributes.join(' ')}>${content}</${tagName}>`
 }
 
 export const htmlifyEditorNodes = (value: NodeType[]): string => {
@@ -282,14 +289,14 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
   return true
 }
 
-type NotificationCreationType = 
-  | { type: 'THREAD_COMMENT', comment: Comment }
-  | { type: 'POST_COMMENT', postComment: PostComment }
+type NotificationCreationType =
+  | { type: 'THREAD_COMMENT'; comment: Comment }
+  | { type: 'POST_COMMENT'; postComment: PostComment }
 
 export const createNotification = (
   db: PrismaClient,
   user: User,
-  note: NotificationCreationType
+  note: NotificationCreationType,
 ) => {
   const data: PendingNotificationCreateInput = {
     user: { connect: { id: user.id } },

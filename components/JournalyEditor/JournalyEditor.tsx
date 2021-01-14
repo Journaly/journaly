@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
-import { createEditor, Editor, Transforms, Node } from 'slate'
+import { createEditor, Editor, Node } from 'slate'
 import {
   Slate,
   Editable,
@@ -7,6 +7,7 @@ import {
   useSlate,
   RenderElementProps,
   RenderLeafProps,
+  ReactEditor,
 } from 'slate-react'
 import { withHistory } from 'slate-history'
 import isHotkey from 'is-hotkey'
@@ -18,9 +19,12 @@ import FormatBoldIcon from '@/components/Icons/FormatBoldIcon'
 import FormatItalicIcon from '@/components/Icons/FormatItalicIcon'
 import FormatUnderlinedIcon from '@/components/Icons/FormatUnderlinedIcon'
 import FormatTitleIcon from '@/components/Icons/FormatTitleIcon'
+import FormatLinkIcon from '@/components/Icons/FormatLinkIcon'
 import FormatQuoteIcon from '@/components/Icons/FormatQuoteIcon'
 import FormatListNumberedIcon from '@/components/Icons/FormatListNumberedIcon'
 import FormatListBulletedIcon from '@/components/Icons/FormatListBulletedIcon'
+import { ButtonType, withLinks, toggleMark, toogleByType, isTypeActive } from './helpers'
+import { useTranslation } from '@/config/i18n'
 
 /**
  * The Journaly Rich Text Editor
@@ -38,12 +42,10 @@ const HOTKEYS: { [key in HotKey]: string } = {
 }
 
 type ButtonProps = {
-  type: 'mark' | 'block'
+  type: ButtonType
   format: string
   children: React.ReactNode
 }
-
-const LIST_TYPES = ['numbered-list', 'bulleted-list']
 
 type JournalyEditorProps = {
   value: Node[]
@@ -58,7 +60,8 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
 }: JournalyEditorProps) => {
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
-  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+  const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []) as Editor &
+    ReactEditor
 
   useEffect(() => {
     ;(slateRef as React.MutableRefObject<Editor>).current = editor
@@ -78,6 +81,9 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
             <ToolbarButton type="mark" format="underline">
               <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
             </ToolbarButton>
+            <ToolbarButton type="link" format="link">
+              <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
+            </ToolbarButton>
             <ToolbarButton type="block" format="heading-two">
               <FormatTitleIcon title="Apply heading" titleId="toolbar-title-icon" />
             </ToolbarButton>
@@ -91,6 +97,7 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
               <FormatListBulletedIcon title="Bulleted list" titleId="toolbar-list-bulleted-icon" />
             </ToolbarButton>
           </Toolbar>
+
           <Editable
             renderElement={renderElement}
             renderLeaf={renderLeaf}
@@ -101,7 +108,7 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
                 // Convert React keyboard event to native keyboard event
                 if (isHotkey(hotkey, (event as unknown) as KeyboardEvent)) {
                   event.preventDefault()
-                  toggleMark(editor, mark)
+                  toggleMark({ editor, format: mark })
                 }
               })
             }}
@@ -122,48 +129,6 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
   )
 }
 
-const toggleBlock = (editor: Editor, format: string) => {
-  const isActive = isBlockActive(editor, format)
-  const isList = LIST_TYPES.includes(format)
-
-  Transforms.unwrapNodes(editor, {
-    match: (n) => LIST_TYPES.includes(n.type),
-    split: true,
-  })
-
-  Transforms.setNodes(editor, {
-    type: isActive ? 'paragraph' : isList ? 'list-item' : format,
-  })
-
-  if (!isActive && isList) {
-    const block = { type: format, children: [] }
-    Transforms.wrapNodes(editor, block)
-  }
-}
-
-const toggleMark = (editor: Editor, format: string) => {
-  const isActive = isMarkActive(editor, format)
-
-  if (isActive) {
-    Editor.removeMark(editor, format)
-  } else {
-    Editor.addMark(editor, format, true)
-  }
-}
-
-const isBlockActive = (editor: Editor, format: string) => {
-  const [match] = Editor.nodes(editor, {
-    match: (n) => n.type === format,
-  })
-
-  return !!match
-}
-
-const isMarkActive = (editor: Editor, format: string) => {
-  const marks = Editor.marks(editor)
-  return marks ? marks[format] === true : false
-}
-
 const Element: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
   switch (element.type) {
     case 'block-quote':
@@ -172,6 +137,12 @@ const Element: React.FC<RenderElementProps> = ({ attributes, children, element }
       return <ul {...attributes}>{children}</ul>
     case 'heading-two':
       return <h2 {...attributes}>{children}</h2>
+    case 'link':
+      return (
+        <a {...attributes} href={element.url}>
+          {children}
+        </a>
+      )
     case 'list-item':
       return <li {...attributes}>{children}</li>
     case 'numbered-list':
@@ -181,7 +152,7 @@ const Element: React.FC<RenderElementProps> = ({ attributes, children, element }
   }
 }
 
-const Leaf: React.FC<RenderLeafProps> = ({ attributes, children, leaf }) => {
+const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   if (leaf.bold) {
     children = <strong>{children}</strong>
   }
@@ -198,17 +169,14 @@ const Leaf: React.FC<RenderLeafProps> = ({ attributes, children, leaf }) => {
 }
 
 const ToolbarButton: React.FC<ButtonProps> = ({ type, format, children }) => {
+  const { t } = useTranslation('post')
   const editor = useSlate()
-  const active = type === 'mark' ? isMarkActive(editor, format) : isBlockActive(editor, format)
+  const active = isTypeActive({ type, format, editor })
   const buttonClasses = classNames('toolbar-button', { active })
 
   const handleMouseDown = (event: React.MouseEvent) => {
     event.preventDefault()
-    if (type === 'mark') {
-      toggleMark(editor, format)
-    } else if (type === 'block') {
-      toggleBlock(editor, format)
-    }
+    toogleByType({ type, format, editor, t })
   }
 
   return (

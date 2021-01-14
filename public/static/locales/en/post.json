@@ -21,5 +21,6 @@
   "deleteModal": {
     "title": "Delete Post",
     "body": "Are you sure you want to delete this post?"
-  }
+  },
+  "websitePatternError": "Invalid website url. e.g. domain.com or sub.domain.com"
 }

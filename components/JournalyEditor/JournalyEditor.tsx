@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
-import { createEditor, Editor, Transforms, Node } from 'slate'
+import { createEditor, Editor, Node } from 'slate'
 import {
   Slate,
   Editable,
@@ -23,7 +23,8 @@ import FormatLinkIcon from '@/components/Icons/FormatLinkIcon'
 import FormatQuoteIcon from '@/components/Icons/FormatQuoteIcon'
 import FormatListNumberedIcon from '@/components/Icons/FormatListNumberedIcon'
 import FormatListBulletedIcon from '@/components/Icons/FormatListBulletedIcon'
-import { isLinkActive, toggleLink, withLinks } from './helpers'
+import { ButtonType, withLinks, toggleMark, toogleByType, isTypeActive } from './helpers'
+import { useTranslation } from '@/config/i18n'
 
 /**
  * The Journaly Rich Text Editor
@@ -40,32 +41,16 @@ const HOTKEYS: { [key in HotKey]: string } = {
   'mod+u': 'underline',
 }
 
-type Type = 'mark' | 'block' | 'link'
-
 type ButtonProps = {
-  type: Type
+  type: ButtonType
   format: string
   children: React.ReactNode
 }
-
-const LIST_TYPES = ['numbered-list', 'bulleted-list']
 
 type JournalyEditorProps = {
   value: Node[]
   setValue: (value: Node[]) => void
   slateRef: React.RefObject<Editor>
-}
-
-type CheckIfTypeIsActiveArgs = {
-  type: Type
-  editor: Editor
-  format: string
-}
-
-type ToggleByTypeArgs = {
-  type: Type
-  editor: Editor
-  format: string
 }
 
 const JournalyEditor: React.FC<JournalyEditorProps> = ({
@@ -144,48 +129,6 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
   )
 }
 
-const toggleBlock = (editor: Editor, format: string) => {
-  const isActive = isBlockActive(editor, format)
-  const isList = LIST_TYPES.includes(format)
-
-  Transforms.unwrapNodes(editor, {
-    match: (n) => LIST_TYPES.includes(n.type),
-    split: true,
-  })
-
-  Transforms.setNodes(editor, {
-    type: isActive ? 'paragraph' : isList ? 'list-item' : format,
-  })
-
-  if (!isActive && isList) {
-    const block = { type: format, children: [] }
-    Transforms.wrapNodes(editor, block)
-  }
-}
-
-const toggleMark = (editor: Editor, format: string) => {
-  const isActive = isMarkActive(editor, format)
-
-  if (isActive) {
-    Editor.removeMark(editor, format)
-  } else {
-    Editor.addMark(editor, format, true)
-  }
-}
-
-const isBlockActive = (editor: Editor, format: string) => {
-  const [match] = Editor.nodes(editor, {
-    match: (n) => n.type === format,
-  })
-
-  return !!match
-}
-
-const isMarkActive = (editor: Editor, format: string) => {
-  const marks = Editor.marks(editor)
-  return marks ? marks[format] === true : false
-}
-
 const Element: React.FC<RenderElementProps> = ({ attributes, children, element }) => {
   switch (element.type) {
     case 'block-quote':
@@ -209,7 +152,7 @@ const Element: React.FC<RenderElementProps> = ({ attributes, children, element }
   }
 }
 
-const Leaf: React.FC<RenderLeafProps> = ({ attributes, children, leaf }) => {
+const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   if (leaf.bold) {
     children = <strong>{children}</strong>
   }
@@ -225,34 +168,15 @@ const Leaf: React.FC<RenderLeafProps> = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>
 }
 
-const isTypeActive = ({ type, editor, format }: CheckIfTypeIsActiveArgs) => {
-  const fn = {
-    mark: isMarkActive,
-    block: isBlockActive,
-    link: isLinkActive,
-  }[type]
-
-  return fn(editor, format)
-}
-
-const toogleByType = ({ type, editor, format }: ToggleByTypeArgs) => {
-  const toggles = {
-    mark: toggleMark,
-    block: toggleBlock,
-    link: toggleLink,
-  }
-
-  toggles[type](editor, format)
-}
-
 const ToolbarButton: React.FC<ButtonProps> = ({ type, format, children }) => {
+  const { t } = useTranslation('post')
   const editor = useSlate()
   const active = isTypeActive({ type, format, editor })
   const buttonClasses = classNames('toolbar-button', { active })
 
   const handleMouseDown = (event: React.MouseEvent) => {
     event.preventDefault()
-    toogleByType({ type, format, editor })
+    toogleByType({ type, format, editor, t })
   }
 
   return (

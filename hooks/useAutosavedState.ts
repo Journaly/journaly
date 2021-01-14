@@ -9,7 +9,7 @@ export default function useAutosavedState<T>(
   },
 ): [T, (value: T) => void, () => void] {
   const storage: any = (typeof window !== 'undefined' && window.localStorage) || {}
-  const storageKey = `autosave[${opts.key || 'default'}]`
+  const storageKey = `autosave-v1[${opts.key || 'default'}]`
 
   const [value, setValue] = React.useState<T>(initialValue)
   const valueRef = React.useRef({ savePending: false, value })

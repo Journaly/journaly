@@ -1,23 +1,40 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
+
+import { Router, useTranslation } from '@/config/i18n'
 import { navConstants } from './nav-constants'
-import HamburgerIcon from '../Header/HamburgerIcon'
-import NavLinks from './NavLinks'
-import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
 import theme from '@/theme'
+import {
+  useLogoutMutation,
+  useCurrentUserQuery,
+  User as UserType
+} from '@/generated/graphql'
+
+import HamburgerIcon from '../Header/HamburgerIcon'
+import NavLink from '@/components/NavLink'
+import FeedIcon from '@/components/Icons/FeedIcon'
+import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 
 interface Props {
   expanded: boolean
+  disableLargeNav: boolean
   collapse: () => void
 }
 
-const Nav: React.FC<Props> = ({ expanded, collapse }) => {
-  const { data, error } = useCurrentUserQuery()
+const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
+  const { t } = useTranslation()
+  const { data, refetch, error } = useCurrentUserQuery()
+  const [logout] = useLogoutMutation()
+
   let currentUser: UserType | null = data?.currentUser as UserType
   if (error) currentUser = null
 
-  const navStyles = classNames('nav-wrapper', { expanded, 'logged-in': Boolean(currentUser) })
+  const navStyles = classNames('nav-wrapper', {
+    expanded,
+    'disable-large-nav': disableLargeNav,
+    'logged-in': Boolean(currentUser)
+  })
 
   useEffect(() => {
     setTimeout(() => {
@@ -32,6 +49,17 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
     }
   }
 
+  const handleLogOut = (): void => {
+    handleCollapse()
+    logout()
+
+    // Clear the currentUser cache
+    refetch()
+
+    // Redirect to home page
+    Router.push('/')
+  }
+
   return (
     <div className={navStyles}>
       <div className="nav-background" onClick={handleCollapse} />
@@ -39,7 +67,59 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
       <nav>
         <HamburgerIcon onClick={handleCollapse} className="mobile-hamburger-icon" />
 
-        {currentUser && <NavLinks onClick={handleCollapse} currentUser={currentUser} />}
+        {currentUser && (
+          <>
+            <div className="nav-top">
+              <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${currentUser.id}`}>
+                <a onClick={handleCollapse} className="profile-image">
+                  {currentUser.profileImage ? (
+                    <img src={currentUser.profileImage} alt="" />
+                  ) : (
+                    <BlankAvatarIcon size={60} />
+                  )}
+
+                  <p className="current-user-name">{currentUser.handle}</p>
+                </a>
+              </Link>
+            </div>
+            <div className="nav-bottom">
+              <NavLink href="/dashboard/my-feed">
+                <a className="nav-link" onClick={handleCollapse}>
+                  <FeedIcon aria-hidden="true" />
+                  <span className="nav-link-text">{t('nav.myFeed')}</span>
+                </a>
+              </NavLink>
+              <NavLink href="/dashboard/my-posts">
+                <a className="nav-link" onClick={handleCollapse}>
+                  <FeedIcon aria-hidden="true" />
+                  <span className="nav-link-text">{t('nav.myPosts')}</span>
+                </a>
+              </NavLink>
+              <NavLink href="/dashboard/new-post">
+                <a className="nav-link" onClick={handleCollapse}>
+                  <img src="/images/icons/new-post-icon.svg" alt="" />
+                  <span className="nav-link-text">{t('nav.newPost')}</span>
+                </a>
+              </NavLink>
+
+              <hr />
+
+              <NavLink href="/dashboard/settings/profile">
+                <a className="nav-link" onClick={handleCollapse}>
+                  <img src="/images/icons/settings-icon.svg" alt="" />
+                  <span className="nav-link-text">{t('nav.settings')}</span>
+                </a>
+              </NavLink>
+
+              <Link href="/">
+                <a className="log-out nav-link" onClick={handleLogOut}>
+                  <img src="/images/icons/logout-icon.svg" alt="Log out" />
+                  <span className="nav-link-text">{t('nav.logOut')}</span>
+                </a>
+              </Link>
+            </div>
+          </>
+        )}
 
         <h1 className="nav-logo">
           <Link href="/">
@@ -68,23 +148,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
           right: 0;
         }
 
-        @media (${navConstants.aboveMobileNav}) {
-          .nav-background {
-            display: none;
-          }
-        }
-
         :global(.mobile-hamburger-icon) {
           display: none;
-        }
-
-        @media (${navConstants.mobileNavOnly}) {
-          :global(.mobile-hamburger-icon) {
-            position: absolute;
-            top: 20px;
-            left: 10px;
-            display: block;
-          }
         }
 
         nav {
@@ -103,26 +168,9 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
             width ${navConstants.transitionDuration}ms linear;
         }
 
-        @media (min-width: ${theme.breakpoints.XS}) {
-          nav {
-            grid-gap: 30px;
-          }
-        }
-
         .expanded nav {
           /* Move the nav from off the screen to on the screen */
           transform: translateX(0%);
-        }
-
-        @media (${navConstants.aboveMobileNav}) {
-          nav {
-            transform: translateX(0%);
-          }
-        }
-        @media (${navConstants.skinnyNavToDesktop}) {
-          nav {
-            width: ${navConstants.skinnyNavWidth}px;
-          }
         }
 
         .nav-logo {
@@ -155,7 +203,97 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
           }
         }
 
-        @media (${navConstants.aboveDesktopNav}) {
+        .nav-top {
+          margin-top: 30px;
+        }
+
+        .nav-top a {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+        }
+
+        .profile-image img {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .profile-image :global(svg) {
+          border-radius: 50%;
+          background-color: ${theme.colors.blueLight};
+        }
+
+        .current-user-name,
+        .nav-link {
+          /* Prevent words from wrapping during transition */
+          white-space: nowrap;
+        }
+
+        .current-user-name {
+          display: none;
+        }
+
+        .nav-bottom {
+          display: flex;
+          flex-direction: column;
+          /* centers itself in the grid container */
+          align-self: center;
+        }
+
+        .nav-bottom hr {
+          width: 40px;
+          margin-top: 10px;
+          margin-bottom: 10px;
+          border: 1px solid white;
+          transition: width ${navConstants.transitionDuration}ms linear;
+        }
+
+        .nav-link {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 70px;
+          font-size: 16px;
+          color: ${theme.colors.white};
+          transition: padding-left ${navConstants.transitionDuration}ms linear,
+            padding-right ${navConstants.transitionDuration}ms linear;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+          background-color: #5a5a5a;
+        }
+
+        .nav-link img {
+          width: 25px;
+        }
+
+        .nav-link-text {
+          margin-left: 0;
+          font-size: 10px;
+          transition: margin-left ${navConstants.transitionDuration}ms linear;
+        }
+
+
+
+        @media (${navConstants.mobileNavOnly}) {
+          :global(.mobile-hamburger-icon) {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            display: block;
+          }
+
+          .nav-logo a {
+            font-size: 24px;
+            animation: fadeIn ${navConstants.transitionDuration}ms linear;
+          }
+
           .nav-logo span {
             display: inline;
           }
@@ -163,22 +301,101 @@ const Nav: React.FC<Props> = ({ expanded, collapse }) => {
           .nav-logo a {
             font-size: 24px;
             animation: fadeIn ${navConstants.transitionDuration}ms linear;
+          }
+
+          .current-user-name {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 16px;
+            text-align: center;
+            color: ${theme.colors.white};
+          }
+
+          .nav-bottom hr {
+            width: 180px;
+            margin: 20px auto;
+          }
+
+          .nav-link {
+            flex-direction: row;
+            justify-content: normal;
+            height: auto;
+            padding: 25px;
+          }
+
+          .nav-link-text {
+            margin-left: 15px;
+            font-size: 16px;
           }
         }
 
-        @media (${navConstants.mobileNavOnly}) {
-          .nav-logo a {
-            font-size: 24px;
-            animation: fadeIn ${navConstants.transitionDuration}ms linear;
+
+        @media (${navConstants.skinnyNavToDesktop}) {
+          .nav-background {
+            display: none;
           }
 
-          .nav-logo span {
+          nav {
+            grid-gap: 30px;
+            transform: translateX(0%);
+            width: ${navConstants.skinnyNavWidth}px;
+          }
+
+          .nav-top {
+            margin-top: 50px;
+          }
+        }
+
+        @media (${navConstants.aboveDesktopNav}) {
+          .disable-large-nav .nav-background {
+            display: none;
+          }
+          .disable-large-nav nav {
+            grid-gap: 30px;
+            transform: translateX(0%);
+            width: ${navConstants.skinnyNavWidth}px;
+          }
+          .disable-large-nave .nav-top {
+            margin-top: 50px;
+          }
+
+
+          .nav-wrapper:not(.disable-large-nav) .nav-background {
+            display: none;
+          }
+          .nav-wrapper:not(.disable-large-nav) nav {
+            grid-gap: 30px;
+            transform: translateX(0%);
+          }
+          .nav-wrapper:not(.disable-large-nav) .nav-logo span {
             display: inline;
           }
-
-          .nav-logo a {
+          .nav-wrapper:not(.disable-large-nav) .nav-logo a {
             font-size: 24px;
             animation: fadeIn ${navConstants.transitionDuration}ms linear;
+          }
+          .nav-wrapper:not(.disable-large-nav) .current-user-name {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 16px;
+            text-align: center;
+            color: ${theme.colors.white};
+          }
+          .nav-wrapper:not(.disable-large-nav) .nav-bottom hr {
+            width: 180px;
+            margin: 20px auto;
+          }
+          .nav-wrapper:not(.disable-large-nav) .nav-link {
+            flex-direction: row;
+            justify-content: normal;
+            height: auto;
+            padding: 25px;
+          }
+          .nav-wrapper:not(.disable-large-nav) .nav-link-text {
+            margin-left: 15px;
+            font-size: 16px;
           }
         }
       `}</style>

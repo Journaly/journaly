@@ -44,7 +44,6 @@ export default function useAutosavedState<T>(
 
   const reset = () => {
     delete storage[storageKey]
-    setValue(initialValue)
   }
 
   return [value, setValue, reset]

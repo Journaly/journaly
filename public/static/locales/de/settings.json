@@ -1,1 +1,84 @@
-{}
+{
+  "breadcrumbs": {
+    "settings": "Einstellungen",
+    "profile": "Dein Profil bearbeiten",
+    "account": "Benutzerkonto"
+  },
+  "nav": {
+    "profile": "Profil-Informationen",
+    "account": "Benutzerkonto"
+  },
+  "updateButton": "Aktualisieren",
+  "profile": {
+    "details": {
+      "legend": "Deine Daten",
+      "submitImage": "Lade ein Bild hoch",
+      "nameLabel": "Dein Name (optional)",
+      "displayNameLabel": "Benutzername",
+      "displayNameError": "Du musst einen Benutzernamen haben",
+      "emailLabel": "E-Mail",
+      "emailError": "Die E-Mail-Adresse ist erforderlich",
+      "locationLabel": "Standort (optional)",
+      "updateSuccess": "Die Profildaten wurden erfolgreich aktualisiert.",
+      "cityLabel": "Stadt (optional)",
+      "cityPlaceholder": "In welcher Stadt lebst du?",
+      "countryLabel": "Land (optional)",
+      "countryPlaceholder": "In welchem Land lebst du?"
+    },
+    "languages": {
+      "legend": "Sprachen",
+      "nativeLanguagesLabel": "Welche Sprache(n) sprichst du auf Muttersprachler-Niveau?",
+      "learningLanguagesLabel": "Welche Sprache(n) lernst du?",
+      "welcomeModalFormLabel": "Teile uns deine Muttersprache(n) mit und welche Sprache(n) du lernst"
+    },
+    "bio": {
+      "legend": "Über mich",
+      "bioLabel": "Erzähl uns etwas über dich!",
+      "bioError": "Dein 'Über mich' muss {{characters}} oder weniger Zeichen enthalten.",
+      "bioInputDescription": "Mindestens {{characters}} Zeichen",
+      "bioSuccess": "Über mich erfolgreich aktualisiert"
+    },
+    "interests": {
+      "legend": "Interessen",
+      "topicsLabel": "Erzähle uns welche Themen dich interessieren! Das wird uns helfen dir Beiträge zu zeigen, die dir gefallen werden, und Leute finden, die dieselben Interessen wie du haben."
+    },
+    "social": {
+      "legend": "Soziale Medien",
+      "socialLabel": "Möchtest du dich mit anderen Journalern über Soziale Medien verbinden? Oder möchtest du deine eigene Arbeit promoten? Teile uns mit wie man dich finden kann.",
+      "facebookPlaceholder": "facebook.com/DeineSeite",
+      "youtubePlaceholder": "youtube.com/channel/DeinKanal",
+      "instagramPlaceholder": "instagram.com/DeineSeite",
+      "websitePlaceholder": "Hast du eine Webseite?",
+      "success": "Soziale Medien erfolgreich aktualisiert."
+    },
+    "error": {
+      "updateError": "Es gab einen Fehler beim Aktualisieren deines Profils.",
+      "handleValidationErrorMessage": "Der Benutzername darf nur Buchstaben, Zahlen, -, _, aber keine Leerzeichen enthalten",
+      "handleAlreadyinUseError": "Dieser Benutzername ist bereits vergeben",
+      "handleMinimumErrorMessage": "Dein Benutzername muss min. 3 Zeichen lang sein",
+      "emailValidationErrorMessage": "Ungültige E-Mail-Adresse",
+      "emailAlreadyinUseError": "Diese E-Mail-Adresse wird bereits verwendet",
+      "websitePatternError": "Ungültiger Webseiten-Link, z. B. DeineDomain.com oder DeineSubdomain.domain.com",
+      "youtubePatternError": "Ungültiger YouTube-Link, z. B.: youtube.com/channel/DeinKanal oder youtube.com/user/DeinBenutzername",
+      "facebookPatternError": "Ungültiger Facebook-Link, z. B.: facebook.com/DeineSeite oder fb.com/DeineSeite",
+      "instagramPatternError": "Ungültiger Instagram-Link, z. B.: instagram.com/DeineSeite"
+    }
+  },
+  "account":{
+    "updatePasswordForm": {
+      "legend": "Passwort ändern",
+      "submitButton": "Aktualisieren",
+      "oldPasswordLabel": "Altes Passwort eingeben",
+      "oldPasswordError": "Gib dein altes Passwort ein",
+      "newPasswordLabel": "Neues Passwort auswählen",
+      "newPasswordError": "Gib ein neues Passwort ein",
+      "confirmNewPasswordLabel": "Wiederhole dein neues Passwort",
+      "confirmNewPasswordError": "Neues Passwort bestätigen",
+      "confirmNewPasswordMatchError": "Die beiden Passwörter stimmen nicht überein",
+      "newPasswordMinimumErrorMessage": "Das Passwort muss min. 6 Zeichen lang sein",
+      "passwordChangeSuccess": "Das Passwort wurde erfolgreich geändert.",
+      "updateError": "Beim Ändern des Passworts ist ein Fehler aufgetreten.",
+      "newPasswordCannotBeTheSameError": "Das neue Passwort darf nicht dasselbe wie das alte sein."
+    }
+  }
+}

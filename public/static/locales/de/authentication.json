@@ -1,0 +1,48 @@
+{
+  "login": {
+    "title": "Anmelden",
+    "submitButtonText": "Jetzt einloggen"
+  },
+  "signup": {
+    "title": "Erstelle einen neuen Account",
+    "submitButtonText": "Jetzt registrieren!",
+    "goToLoginText": "Hast du bereits einen Account?",
+    "goToLoginLink": "Login"
+  },
+  "requestReset": {
+    "title": "E-Mail zum Zurücksetzen des Passworts senden",
+    "helperText": "Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.",
+    "submitButtonText": "Rücksetz-E-Mail anfordern",
+    "successMessage": "Der Link zum Zurücksetzen deines Passworts wurde an deine E-Mail-Adresse versandt!",
+    "goToLoginText": "Erinnerst du dich an dein Passwort?",
+    "goToLoginLink": "Login"
+  },
+  "resetPassword": {
+    "title": "Setze dein Passwort zurück",
+    "submitButtonText": "Passwort zurücksetzen",
+    "successMessage": "Du hast erfolgreich dein Passwort zurückgesetzt! Bitte logge dich ein"
+  },
+  "handleInputLabel": "Handle",
+  "handleInputHelperMessage": "Darf Buchstaben, Zahlen, -, _, aber keine Leerzeichen enthalten",
+  "handleInputPlaceholder": "Dein Name oder eventuell ein lustiges Pseudonym",
+  "handleRequiredErrorMessage": "Handle is required",
+  "handleValidationErrorMessage": "Der Benutzername darf nur Buchstaben, Zahlen, -, _, aber keine Leerzeichen enthalten",
+  "handleMinimumErrorMessage": "Dein Benutzername muss min. 3 Zeichen lang sein",
+  "emailInputLabel": "E-Mail",
+  "emailInputPlaceholder": "Deine E-Mail-Adresse",
+  "emailRequiredErrorMessage": "E-Mail-Adresse wird benötigt",
+  "emailValidationErrorMessage": "Ungültige E-Mail-Adresse",
+  "passwordInputLabel": "Passwort",
+  "passwordInputPlaceholder": "Ein sicheres Passwort",
+  "passwordRequiredErrorMessage": "Ein Passwort wird benötigt",
+  "passwordValidationErrorMessage": "Ungültiges Passwort",
+  "passwordMinimumErrorMessage": "Das Passwort muss min. 6 Zeichen enthalten",
+  "confirmPasswordInputLabel": "Passwort bestätigen",
+  "confirmPasswordInputPlaceholder": "Neues Passwort erneut eingeben",
+  "confirmPasswordRequiredErrorMessage": "Das Passwort muss bestätigt werden",
+  "confirmPasswordValidationErrorMessage": "Die beiden Passwörter stimmen nicht überein",
+  "goToSignupText": "Noch nicht registriert?",
+  "goToSignupLink": "Registrieren",
+  "goToRequestResetText": "Probleme beim Einloggen?",
+  "goToRequestResetLink": "Passwort zurücksetzen"
+}

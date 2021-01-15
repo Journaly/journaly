@@ -1,0 +1,26 @@
+{
+  "draft": "Entwurf",
+  "publishDraft": "Entwurf veröffentlichen",
+  "saveDraftCTA": "Entwurf speichern",
+  "publishCTA": "Veröffentlichen!",
+  "readTime": "{{minutes}} Min. Lesezeit",
+  "readAction": "Beitrag lesen",
+  "editPost": "Beitrag bearbeiten",
+  "editPostAction": "Beitrag bearbeiten",
+  "deletePostAction": "Beitrag löschen",
+  "deletePostSuccess": "Beitrag wurde erfolgreich gelöscht",
+  "deletePostError": "Es ist ein Fehler aufgetreten beim Löschen des Beitrags.",
+  "titleLabel": "Titel",
+  "languageLabel": "Sprache",
+  "save": "Speichern",
+  "finishAction": "Beitrag vervollständigen",
+  "noLanguageError": "Bitte eine Sprache auswählen.",
+  "emptyTitleError": "Bitte einen Titel eingeben.",
+  "draftPublishedSuccess": "Beitrag wurde erfolgreich veröffentlicht",
+  "postBy": "von",
+  "deleteModal": {
+    "title": "Beitrag löschen",
+    "body": "Bist du sicher, dass du diesen Beitrag löschen möchtest?"
+  },
+  "websitePatternError": "Invalid website url. e.g. domain.com or sub.domain.com"
+}

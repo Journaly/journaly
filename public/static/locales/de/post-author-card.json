@@ -1,0 +1,12 @@
+{
+  "nativeHeader": "Native",
+  "learningHeader": "Learning",
+  "languagesHeader": "Languages",
+  "hasWritten": "Has written",
+  "postsWrittenCountSingular": "post",
+  "postsWrittenCountPlural": "posts",
+  "hasReceived": "Has received",
+  "thanksReceivedCount": "thanks",
+  "follow": "Follow",
+  "unfollow": "Unfollow"
+}

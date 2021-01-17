@@ -322,3 +322,4 @@ export const createNotification = (
 }
 
 export * from './email'
+export * from './aws'

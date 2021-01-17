@@ -1,12 +1,10 @@
 {
-  "nativeHeader": "Native",
-  "learningHeader": "Learning",
   "languagesHeader": "Languages",
-  "hasWritten": "Has written",
-  "postsWrittenCountSingular": "post",
-  "postsWrittenCountPlural": "posts",
-  "hasReceived": "Has received",
-  "thanksReceivedCount": "thanks",
+  "hasWritten": "posts written",
+  "postsWrittenCountSingular": "post written",
+  "postsWrittenCountPlural": "posts written",
+  "thanksReceivedCountSingular": "thanks received",
+  "thanksReceivedCountPlural": "thanks received",
   "follow": "Follow",
   "unfollow": "Unfollow"
 }

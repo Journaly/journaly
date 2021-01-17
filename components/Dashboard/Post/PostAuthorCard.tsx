@@ -91,19 +91,18 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
         </ul>
       </div>
       <div className="stats">
-        <p className="author-info-heading">{t('hasWritten')}</p>
         <ul>
-          <li>
+          <li className="author-info-heading">
             {author.postsWrittenCount}{' '}
             {author.postsWrittenCount === 1
               ? t('postsWrittenCountSingular')
               : t('postsWrittenCountPlural')}
           </li>
-        </ul>
-        <p className="author-info-heading">{t('hasReceived')}</p>
-        <ul>
-          <li>
-            {author.thanksReceivedCount} {t('thanksReceivedCount')}
+          <li className="author-info-heading">
+            {author.thanksReceivedCount}{' '}
+            {author.thanksReceivedCount === 1
+              ? t('thanksReceivedCountSingular')
+              : t('thanksReceivedCountPlural')}
           </li>
         </ul>
       </div>

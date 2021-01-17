@@ -22,10 +22,10 @@
     "submitButtonText": "Passwort zurücksetzen",
     "successMessage": "Du hast erfolgreich dein Passwort zurückgesetzt! Bitte logge dich ein"
   },
-  "handleInputLabel": "Handle",
+  "handleInputLabel": "Benutzername",
   "handleInputHelperMessage": "Darf Buchstaben, Zahlen, -, _, aber keine Leerzeichen enthalten",
   "handleInputPlaceholder": "Dein Name oder eventuell ein lustiges Pseudonym",
-  "handleRequiredErrorMessage": "Handle is required",
+  "handleRequiredErrorMessage": "Benutzername erfolderlich",
   "handleValidationErrorMessage": "Der Benutzername darf nur Buchstaben, Zahlen, -, _, aber keine Leerzeichen enthalten",
   "handleMinimumErrorMessage": "Dein Benutzername muss min. 3 Zeichen lang sein",
   "emailInputLabel": "E-Mail",

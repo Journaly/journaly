@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
+import fetch from 'isomorphic-unfetch'
+
+import { useInitiatePostImageUploadMutation, } from '@/generated/graphql'
 
 interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
 }
 
 type Image = {
-  secure_url: string
-  eager: [{ secure_url: string }]
+  large: string
+  small: string
 }
 
 type useImageUploadType = [
@@ -19,26 +22,38 @@ type useImageUploadType = [
 const useImageUpload = (): useImageUploadType => {
   const [image, setImage] = useState<Image | null>(null)
   const [uploadingImage, setUploadingImage] = useState(false)
+  const [initImageUpload] = useInitiatePostImageUploadMutation()
 
   const onFileInputChange = async (e: HTMLInputEvent) => {
     setUploadingImage(true)
-    const files = e.target.files
-    const data = new FormData()
 
-    if (files) {
-      data.append('file', files[0])
-      data.append('upload_preset', 'journaly')
+    const files = e.target.files
+
+    if (!files) {
+      setUploadingImage(false)
     }
 
-    const response = await fetch('https://api.cloudinary.com/v1_1/journaly/image/upload', {
-      method: 'POST',
-      body: data,
+    const {
+      data: {
+        initiatePostImageUpload: {
+          uploadUrl,
+          checkUrl,
+          finalUrlLarge,
+          finalUrlSmall,
+        }
+      }
+    } = await initImageUpload()
+
+    await fetch(uploadUrl, {
+      method: 'PUT',
+      body: files[0]
     })
 
-    const file = (await response.json()) as Image
-    setImage(file)
     setUploadingImage(false)
-    return file
+    setImage({
+      large: finalUrlLarge,
+      small: finalUrlSmall,
+    })
   }
 
   return [image, uploadingImage, onFileInputChange, () => setImage(null)]

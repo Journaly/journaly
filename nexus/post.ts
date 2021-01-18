@@ -762,7 +762,7 @@ const PostMutations = extendType({
 
         return {
           uploadUrl,
-          checkUrl: `https://${transformBucket}.s3.us-east-2.amazonaws.com/${uuid}`,
+          checkUrl: `https://${transformBucket}.s3.us-east-2.amazonaws.com/${uuid}-large`,
           finalUrlLarge: `https://${cdnDomain}/${uuid}-large`,
           finalUrlSmall: `https://${cdnDomain}/${uuid}-small`,
         }

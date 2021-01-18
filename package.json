@@ -86,6 +86,7 @@
     "@graphql-codegen/typescript": "1.13.1",
     "@graphql-codegen/typescript-operations": "1.13.1",
     "@graphql-codegen/typescript-react-apollo": "1.13.1",
+    "@next/bundle-analyzer": "^10.0.5",
     "@prisma/cli": "^2.11.0",
     "@svgr/core": "^5.4.0",
     "@svgr/plugin-jsx": "^5.4.0",

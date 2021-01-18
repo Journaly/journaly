@@ -15,7 +15,7 @@ type Image = {
 type useImageUploadType = [
   Image | null,
   boolean,
-  (e: HTMLInputEvent) => Promise<Image>,
+  (e: HTMLInputEvent) => Promise<Image | null>,
   () => void,
 ]
 
@@ -31,18 +31,24 @@ const useImageUpload = (): useImageUploadType => {
 
     if (!files) {
       setUploadingImage(false)
+      return null
+    }
+
+    const { data: uploadData } = await initImageUpload()
+
+    if (!uploadData) {
+      setUploadingImage(false)
+      return null
     }
 
     const {
-      data: {
-        initiatePostImageUpload: {
-          uploadUrl,
-          checkUrl,
-          finalUrlLarge,
-          finalUrlSmall,
-        }
+      initiatePostImageUpload: {
+        uploadUrl,
+        checkUrl,
+        finalUrlLarge,
+        finalUrlSmall,
       }
-    } = await initImageUpload()
+    } = uploadData
 
     await fetch(uploadUrl, {
       method: 'PUT',
@@ -59,10 +65,14 @@ const useImageUpload = (): useImageUploadType => {
     }
 
     setUploadingImage(false)
-    setImage({
+
+    const returnValue = {
       large: finalUrlLarge,
       small: finalUrlSmall,
-    })
+    }
+
+    setImage(returnValue)
+    return returnValue
   }
 
   return [image, uploadingImage, onFileInputChange, () => setImage(null)]

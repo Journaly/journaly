@@ -49,6 +49,15 @@ const useImageUpload = (): useImageUploadType => {
       body: files[0]
     })
 
+    for (let i = 0; i < 10; i++) {
+      const response = await fetch(checkUrl, { method: 'HEAD' })
+      if (response.status === 200) {
+        break
+      }
+
+      await (new Promise(res => setTimeout(res, 500)))
+    }
+
     setUploadingImage(false)
     setImage({
       large: finalUrlLarge,

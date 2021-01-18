@@ -161,6 +161,9 @@ const updateEmail = (data: DataForUpdateEmail) => {
         padding: 5px 20px;
         margin: 0 auto 25px;
       ">
+        ${data.thanksCount > 0 ? (
+          `<p>You also received ${data.thanksCount} thanks for feedback you gave to fellow community members!</p>`
+        ) : ''}
         <p style="font-size: 14px;">Keep up all the great work and thank you for contributing to the community!</p>
         <p style="font-size: 14px; font-weight: 600;">Robin @ Journaly</p>
       </div>

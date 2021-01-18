@@ -34,6 +34,7 @@ export type DataForUpdateEmail = {
   lastNotificationDate: Date,
   own: ValidatedNotification[],
   other: ValidatedNotification[],
+  thanksCount: number,
 }
 
 const cacheFn = <T>(create: () => T): () => T => {

@@ -69,7 +69,7 @@ const UpdatePasswordForm: React.FC<Props> = () => {
                 ref={register({
                   required: t('account.updatePasswordForm.oldPasswordError') as string,
                 })}
-                placeholder="Old password"
+                placeholder={t('account.updatePasswordForm.oldPasswordPlaceholder')}
               />
             </div>
 
@@ -81,7 +81,7 @@ const UpdatePasswordForm: React.FC<Props> = () => {
                 type="password"
                 id="newPassword"
                 name="newPassword"
-                placeholder="New password"
+                placeholder={t('account.updatePasswordForm.newPasswordPlaceholder')}
                 className="j-field"
                 ref={register({
                   required: t('account.updatePasswordForm.newPasswordError') as string,
@@ -105,7 +105,7 @@ const UpdatePasswordForm: React.FC<Props> = () => {
                 id="confirmNewPassword"
                 name="confirmNewPassword"
                 className="j-field"
-                placeholder="Confirm password"
+                placeholder={t('account.updatePasswordForm.confirmNewPasswordPlaceholder')}
                 ref={register({
                   required: t('account.updatePasswordForm.confirmNewPasswordError') as string,
                   validate: (value) =>

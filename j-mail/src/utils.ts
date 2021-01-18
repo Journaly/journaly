@@ -3,8 +3,6 @@ import { format, parseISO } from 'date-fns'
 
 import {
   PrismaClient,
-  PendingNotification,
-  NotificationType,
   User,
   Post,
   Thread,
@@ -26,8 +24,8 @@ export type EmailParams = {
 }
 
 export type ValidatedNotification = 
-  | { type: 'POST_COMMENT', notificationDate: Date, postComment: PostComment, post: Post, image: Image }
-  | { type: 'THREAD_COMMENT', notificationDate: Date, comment: Comment, thread: Thread, post: Post, image: Image }
+  | { type: 'POST_COMMENT', notificationDate: Date, postComment: PostComment, post: Post, image: Image, commentAuthor: string, }
+  | { type: 'THREAD_COMMENT', notificationDate: Date, comment: Comment, thread: Thread, post: Post, image: Image, commentAuthor: string, }
 
 export type DataForUpdateEmail = {
   user: User,

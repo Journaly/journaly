@@ -3,7 +3,7 @@ import {
   objectType,
   extendType,
 } from '@nexus/schema'
-import { sendCommentThanksNotification, hasAuthorPermissions } from './utils'
+import { hasAuthorPermissions } from './utils'
 
 const CommentThanks = objectType({
   name: 'CommentThanks',
@@ -48,7 +48,7 @@ const ThanksMutations = extendType({
           throw new Error('Comment not found.')
         }
 
-        const commentThanks = await ctx.db.commentThanks.create({
+        return ctx.db.commentThanks.create({
           data: {
             author: {
               connect: { id: userId },
@@ -63,16 +63,6 @@ const ThanksMutations = extendType({
             author: true,
           },
         })
-
-        await sendCommentThanksNotification({
-          post: comment.thread.post,
-          thread: comment.thread,
-          comment,
-          commentAuthor: comment.author,
-          commentThanksAuthor: commentThanks.author,
-        })
-
-        return commentThanks
       },
     }),
       t.field('deleteCommentThanks', {

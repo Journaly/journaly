@@ -84,7 +84,7 @@ const getDataForUpdateEmail = async (
           postComment: note.postComment,
           post: note.postComment.post,
           image: image.smallSize || './images/sample-post-img.jpg',
-          author: note.postComment.author.handle,
+          commentAuthor: note.postComment.author.handle,
         })
       }
     } else if (note.type === NotificationType.THREAD_COMMENT) {
@@ -96,7 +96,7 @@ const getDataForUpdateEmail = async (
           thread: note.comment.thread,
           post: note.comment.thread.post,
           image: image.smallSize || './images/sample-post-img.jpg',
-          author: note.comment.author.handle,
+          commentAuthor: note.comment.author.handle,
         })
       }
     } else if (note.type === NotificationType.THREAD_COMMENT_THANKS) {

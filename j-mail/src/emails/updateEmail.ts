@@ -2,7 +2,7 @@ import {
   ValidatedNotification,
   DataForUpdateEmail,
   mapCat,
-  formatLongDate,
+  formatShortDateAndTime,
 } from '../utils'
 
 const divider = `
@@ -41,7 +41,7 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
             </h3>
             <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.postComment.body}</p>
             <p style="font-size: 16px;"><span style="font-weight: 600;">From:</span> ${note.commentAuthor}</p>
-            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatLongDate(note.postComment.createdAt)}</p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatShortDateAndTime(note.postComment.createdAt)}</p>
           </div>
         </div>
       `
@@ -73,7 +73,7 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
             <p style="font-size: 16px;"><span style="font-weight: 600;">In response to:</span> <span style="background: #4391C940; padding: 0 5px;">${note.thread.highlightedContent}</span></p>
             <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.comment.body}</p>
             <p style="font-size: 16px;"><span style="font-weight: 600;">From:</span> ${note.commentAuthor}</p>
-            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatLongDate(note.comment.createdAt)}</p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatShortDateAndTime(note.comment.createdAt)}</p>
           </div>
         </div>
       `

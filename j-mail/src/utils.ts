@@ -71,6 +71,6 @@ export const mapCat = <T>(data: T[], cb: (arg: T) => string, sep: string = '\n')
   return data.map(cb).join(sep)
 }
 
-export const formatLongDate = (date): string => {
-  return format(parseISO(date), 'MMMM d, yyyy')
+export const formatShortDateAndTime = (date): string => {
+  return format(parseISO(date), 'MMMM d, HH:m')
 }

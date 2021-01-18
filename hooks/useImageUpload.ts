@@ -72,7 +72,7 @@ const useImageUpload = (): useImageUploadType => {
 
     if (!successful) {
       toast.error(t('imageUploadErrorMessage'))
-      return
+      return null
     }
 
     setUploadingImage(false)

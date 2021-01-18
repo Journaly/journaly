@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import fetch from 'isomorphic-unfetch'
+import { toast } from 'react-toastify'
 
-import { useInitiatePostImageUploadMutation, } from '@/generated/graphql'
+import { useTranslation } from '@/config/i18n'
+import { useInitiatePostImageUploadMutation } from '@/generated/graphql'
+import { wait } from '@/utils'
 
 interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
@@ -23,6 +26,7 @@ const useImageUpload = (): useImageUploadType => {
   const [image, setImage] = useState<Image | null>(null)
   const [uploadingImage, setUploadingImage] = useState(false)
   const [initImageUpload] = useInitiatePostImageUploadMutation()
+  const { t } = useTranslation('common')
 
   const onFileInputChange = async (e: HTMLInputEvent) => {
     setUploadingImage(true)
@@ -55,13 +59,20 @@ const useImageUpload = (): useImageUploadType => {
       body: files[0]
     })
 
+    let successful = false
     for (let i = 0; i < 10; i++) {
+      await wait(500)
+
       const response = await fetch(checkUrl, { method: 'HEAD' })
       if (response.status === 200) {
+        successful = true
         break
       }
+    }
 
-      await (new Promise(res => setTimeout(res, 500)))
+    if (!successful) {
+      toast.error(t('imageUploadErrorMessage'))
+      return
     }
 
     setUploadingImage(false)

@@ -2,6 +2,7 @@ import {
   ValidatedNotification,
   DataForUpdateEmail,
   mapCat,
+  formatLongDate,
 } from '../utils'
 
 const divider = `
@@ -16,40 +17,62 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
   switch (note.type) {
     case ('POST_COMMENT'): {
       return `
-        <div>
-          <h3>
-            New post comment on post:
-            <a
-              href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
-              style="
-                color: #4391C9;
-                text-decoration: none;
-                font-size: 16px;
-            ">
-              ${note.post.title}
-            </a>
-          </h3>
-          <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.postComment.body}</p>
+        <div style="
+          display: flex;
+          align-items: center;
+        ">
+          <img src="${note.image}" style="
+            width: 70px;
+            background: lightblue;
+            margin-right: 15px;
+          ">
+          <div>
+            <h3>
+              New post comment on post:
+              <a
+                href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
+                style="
+                  color: #4391C9;
+                  text-decoration: none;
+                  font-size: 16px;
+              ">
+                ${note.post.title}
+              </a>
+            </h3>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.postComment.body}</p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatLongDate(note.postComment.createdAt)}</p>
+          </div>
         </div>
       `
     }
     case ('THREAD_COMMENT'): {
       return `
-        <div>
-          <h3>
-            New feedback comment on post:
-            <a
-              href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
-              style="
-                color: #4391C9;
-                text-decoration: none;
-                font-size: 16px;
-            ">
-                ${note.post.title}
-            </a>
-          </h3>
-          <p style="font-size: 16px;"><span style="font-weight: 600;">In response to:</span> <span style="background: #4391C940; padding: 0 5px;">${note.thread.highlightedContent}</span></p>
-          <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.comment.body}</p>
+        <div style="
+          display: flex;
+          align-items: center;
+        ">
+          <img src="${note.image}" style="
+            width: 70px;
+            background: lightblue;
+            margin-right: 15px;
+          ">
+          <div>
+            <h3>
+              New feedback comment on post:
+              <a
+                href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
+                style="
+                  color: #4391C9;
+                  text-decoration: none;
+                  font-size: 16px;
+              ">
+                  ${note.post.title}
+              </a>
+            </h3>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">In response to:</span> <span style="background: #4391C940; padding: 0 5px;">${note.thread.highlightedContent}</span></p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.comment.body}</p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatLongDate(note.comment.createdAt)}</p>
+          </div>
         </div>
       `
     }

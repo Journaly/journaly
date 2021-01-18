@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk'
+import { format, parseISO } from 'date-fns'
 
 import {
   PrismaClient,
@@ -9,6 +10,7 @@ import {
   Thread,
   PostComment,
   Comment,
+  Image,
 } from '@journaly/j-db-client'
 
 export type SqsParams = {
@@ -24,8 +26,8 @@ export type EmailParams = {
 }
 
 export type ValidatedNotification = 
-  | { type: 'POST_COMMENT', notificationDate: Date, postComment: PostComment, post: Post}
-  | { type: 'THREAD_COMMENT', notificationDate: Date, comment: Comment, thread: Thread, post: Post}
+  | { type: 'POST_COMMENT', notificationDate: Date, postComment: PostComment, post: Post, image: Image }
+  | { type: 'THREAD_COMMENT', notificationDate: Date, comment: Comment, thread: Thread, post: Post, image: Image }
 
 export type DataForUpdateEmail = {
   user: User,
@@ -68,4 +70,8 @@ export const enqueueEmail = (emailParams: EmailParams) => {
 
 export const mapCat = <T>(data: T[], cb: (arg: T) => string, sep: string = '\n') => {
   return data.map(cb).join(sep)
+}
+
+export const formatLongDate = (date): string => {
+  return format(parseISO(date), 'MMMM d, yyyy')
 }

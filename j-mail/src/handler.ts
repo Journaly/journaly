@@ -2,6 +2,8 @@ import nodemailer from 'nodemailer'
 import { Handler, SQSHandler } from 'aws-lambda'
 
 import {
+  Image,
+  ImageRole,
   NotificationType,
   User,
 } from '@journaly/j-db-client'
@@ -13,7 +15,6 @@ import {
   DataForUpdateEmail,
   enqueueEmail,
 } from './utils'
-
 
 const getUsersToNotify = async () => {
   const prisma = getDBClient()
@@ -56,10 +57,20 @@ const getDataForUpdateEmail = async (
     }
   })
 
-  notes.forEach(note => {
+  notes.forEach(async (note) => {
     lastNotificationDate = (lastNotificationDate < note.createdAt)
       ? note.createdAt
       : lastNotificationDate
+
+    let image
+    if (note.postComment) {
+      const images = await prisma.image.findMany({
+        where: {
+          postId: note.postComment.postId
+        }
+      })
+      image = images.find((image) => image.imageRole === ImageRole.HEADLINE)
+    }
 
     if (note.type === NotificationType.POST_COMMENT) {
       if (note.postComment) {
@@ -68,6 +79,7 @@ const getDataForUpdateEmail = async (
           notificationDate: note.createdAt,
           postComment: note.postComment,
           post: note.postComment.post,
+          image: image.smallSize || './images/sample-post-img.jpg',
         })
       }
     } else if (note.type === NotificationType.THREAD_COMMENT) {
@@ -78,6 +90,7 @@ const getDataForUpdateEmail = async (
           comment: note.comment,
           thread: note.comment.thread,
           post: note.comment.thread.post,
+          image: image.smallSize || './images/sample-post-img.jpg',
         })
       }
     }
@@ -141,8 +154,4 @@ export const processJMailQueue: SQSHandler = async (event, context) => {
       html,
     })
   }
-
-  console.log('Success!')
-
-  context.done(undefined, 'Woot')
 }

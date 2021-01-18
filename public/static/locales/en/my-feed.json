@@ -3,5 +3,8 @@
   "noPostsMessage": "Nothing to see yet...",
   "clearFilters": "clear filters",
   "myLanguages": "my languages",
-  "followedUsers": "followed journalers"
+  "followedUsers": "followed journalers",
+  "textSearchPlaceholder": "Search posts",
+  "topicSelectPlaceholder": "Topics",
+  "languageSelectPlaceholder": "Languages"
 }

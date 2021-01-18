@@ -34,13 +34,13 @@
     "bio": {
       "legend": "Über mich",
       "bioLabel": "Erzähl uns etwas über dich!",
-      "bioError": "Dein 'Über mich' muss {{characters}} oder weniger Zeichen enthalten.",
-      "bioInputDescription": "Mindestens {{characters}} Zeichen",
+      "bioError": "Dein 'Über mich' darf bis zu {{characters}} enthalten.",
+      "bioInputDescription": "Maximal {{characters}} Zeichen",
       "bioSuccess": "Über mich erfolgreich aktualisiert"
     },
     "interests": {
       "legend": "Interessen",
-      "topicsLabel": "Erzähle uns welche Themen dich interessieren! Das wird uns helfen dir Beiträge zu zeigen, die dir gefallen werden, und Leute finden, die dieselben Interessen wie du haben."
+      "topicsLabel": "Erzähle uns, welche Themen dich interessieren! Das wird uns helfen, dir Beiträge zu zeigen, die dir gefallen werden, und Leute zu finden, die dieselben Interessen wie du haben."
     },
     "social": {
       "legend": "Soziale Medien",

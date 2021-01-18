@@ -9,7 +9,7 @@
   "editPostAction": "Beitrag bearbeiten",
   "deletePostAction": "Beitrag löschen",
   "deletePostSuccess": "Beitrag wurde erfolgreich gelöscht",
-  "deletePostError": "Es ist ein Fehler aufgetreten beim Löschen des Beitrags.",
+  "deletePostError": "Beim Löschen des Beitrags ist ein Fehler aufgetreten.",
   "titleLabel": "Titel",
   "languageLabel": "Sprache",
   "save": "Speichern",

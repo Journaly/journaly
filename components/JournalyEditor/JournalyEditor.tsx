@@ -58,6 +58,7 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
   setValue,
   slateRef,
 }: JournalyEditorProps) => {
+  const { t } = useTranslation('common')
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
   const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []) as Editor &
@@ -101,7 +102,7 @@ const JournalyEditor: React.FC<JournalyEditorProps> = ({
           <Editable
             renderElement={renderElement}
             renderLeaf={renderLeaf}
-            placeholder="It all started this morning when..."
+            placeholder={t('editor.placeholderPrompt')}
             spellCheck
             onKeyDown={(event: React.KeyboardEvent) => {
               Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {

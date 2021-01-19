@@ -127,8 +127,14 @@ const NewPostPage: NextPage = () => {
               display: flex;
               flex-direction: row;
               margin: 0 auto;
-              width: 200px;
-              justify-content: space-between;
+              width: 250px;
+              justify-content: space-around;
+            }
+
+            @media (max-width: ${theme.breakpoints.XS}) {
+              .button-container {
+                width: 100%;
+              }
             }
 
             #new-post {

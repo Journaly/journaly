@@ -3,8 +3,8 @@
   "error": "An error occurred on the server",
   "loading": "Loading...",
   "home": {
-    "elevatorPitch": "Improve your language skills and connect with others through journaling.",
     "reasonsHeader": "Three Reasons To Use Journaly",
+    "elevatorPitch": "Improve your language skills and connect with others through journaling.",
     "getStartedText": "Get started!",
     "reasonOneText": "Writing is such a powerful tool for improving your language skills, but it takes effort and is best when you can get feedback. Journaly is a home for your writing and great feedback from fellow language learners!",
     "reasonTwoText": "There are many personal benefits to keeping a journal, and it is one of the most desired positive habits for many people. Journaly supercharges your language learning while helping you get all the benefits of keeping a journal!",
@@ -47,5 +47,8 @@
   "modal": {
     "confirm": "Confirm",
     "cancel": "Cancel"
+  },
+  "editor": {
+    "placeholderPrompt": "It all started this morning when..."
   }
 }

@@ -18,6 +18,7 @@ const VideoSection = () => (
       }
 
       @media screen and (max-width: 750px) {
+        src="https://www.youtube-nocookie.com/embed/5A7gkFULxTo"
         .j-video {
           width: 320px;
           height: 180px;

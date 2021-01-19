@@ -36,8 +36,8 @@ const PostComments: React.FC<PostCommentsProps> = ({
   const { t } = useTranslation('comment')
 
   const tabs = [
-    { key: 'general', text: 'General' },
-    { key: 'outdated', text: 'Outdated' },
+    { key: 'general', text: t('tabGeneralKey') },
+    { key: 'outdated', text: t('tabOutdatedKey') },
   ]
 
   const [activeKey, setActiveKey] = useState<string>(tabs[0].key)

@@ -5,5 +5,7 @@
   "cancel": "Cancel",
   "submit": "Submit",
   "addCommentPlaceholder": "Add a comment...",
-  "noCommentsYetMessage": "No comments... yet!"
+  "noCommentsYetMessage": "No comments... yet!",
+  "tabGeneralKey": "General",
+  "tabOutdatedKey": "Outdated"
 }

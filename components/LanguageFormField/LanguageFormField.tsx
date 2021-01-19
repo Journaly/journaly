@@ -117,7 +117,7 @@ const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refe
         loading={removingLanguageRelation || addingLanguageRelation}
         variant={ButtonVariant.Secondary}
       >
-        Add
+        {t('profile.languages.addLanguageButtonText')}
       </Button>
 
       <style jsx>{`

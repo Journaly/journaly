@@ -22,13 +22,13 @@ type Props = {
 const fullLevelName = (level: LanguageLevel) => {
   switch (level) {
     case LanguageLevel.Beginner:
-      return 'Beginner'
+      return 'profile.languages.levels.beginner'
     case LanguageLevel.Intermediate:
-      return 'Intermediate'
+      return 'profile.languages.levels.intermediate'
     case LanguageLevel.Advanced:
-      return 'Advanced'
+      return 'profile.languages.levels.advanced'
     case LanguageLevel.Native:
-      return 'Native'
+      return 'profile.languages.levels.native'
   }
 }
 
@@ -76,7 +76,7 @@ const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refe
     LanguageLevel.Intermediate,
     LanguageLevel.Advanced,
     LanguageLevel.Native,
-  ].map((value) => ({ value, displayName: fullLevelName(value) }))
+  ].map((value) => ({ value, displayName: t(fullLevelName(value)) }))
 
   const handleAddLanguageRelation = async () => {
     await addLanguageRelation({

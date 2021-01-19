@@ -32,7 +32,13 @@
       "welcomeModalFormLabel": "Tell us your native language(s) and which language(s) you're learning",
       "languageSelectPlaceholder": "Select a language...",
       "levelSelectPlaceholder": "Select a level...",
-      "addLanguageButtonText": "Add"
+      "addLanguageButtonText": "Add",
+      "levels": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced",
+        "native": "Native"
+      }
     },
     "bio": {
       "legend": "Bio",

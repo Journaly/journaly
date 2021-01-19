@@ -1,3 +1,4 @@
+import { useTranslation } from '@/config/i18n'
 import React from 'react'
 import HomeSection from './HomeSection'
 import Testimonial from './Testimonial'
@@ -30,11 +31,12 @@ const data = [
 ]
 
 const TestimonialsSection = () => {
+  const { t } = useTranslation('common')
   const testimonials = data.map((testimonial, i) => {
     return <Testimonial {...testimonial} key={i} />
   })
   return (
-    <HomeSection sectionHeading="What Journalers are saying" grey>
+    <HomeSection sectionHeading={t('home.testimonialsHeader')} grey>
       <div className="testimonials">
         {testimonials}
 

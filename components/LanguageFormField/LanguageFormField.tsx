@@ -11,6 +11,7 @@ import Button, { ButtonVariant } from '@/elements/Button'
 import { OptionPills } from '@/elements/MultiSelect'
 import { languageNameWithDialect } from '@/utils/languages'
 import theme from '@/theme'
+import { useTranslation } from '@/config/i18n'
 
 type Props = {
   languages: LanguageType[]
@@ -45,6 +46,7 @@ const abbrLevelName = (level: LanguageLevel) => {
 }
 
 const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refetch }) => {
+  const { t } = useTranslation('settings')
   const [
     addLanguageRelation,
     { loading: addingLanguageRelation },
@@ -97,13 +99,13 @@ const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refe
 
       <div className="lang-level-select">
         <Select
-          placeholder={'Select a language...'}
+          placeholder={t('profile.languages.languageSelectPlaceholder')}
           options={langOptions}
           value={selectedLangId}
           onChange={setSelectedLangId}
         />
         <Select
-          placeholder={'Select a level...'}
+          placeholder={t('profile.languages.levelSelectPlaceholder')}
           options={levelOptions}
           value={selectedLevel}
           onChange={setSelectedLevel}

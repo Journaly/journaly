@@ -1,4 +1,9 @@
 {
+  "header": "Let's write a post",
+  "titlePlaceholder": "The Greatest Story Never Told...",
+  "languageSelectPlaceholder": "Select language",
+  "topicSelectPlaceholder": "Select up to five topics",
+  "uploadImageButtonText": "Upload Image",
   "draft": "draft",
   "publishDraft": "Publish Draft",
   "saveDraftCTA": "Save Draft",

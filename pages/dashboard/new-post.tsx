@@ -76,7 +76,7 @@ const NewPostPage: NextPage = () => {
     <AuthGate>
       <DashboardLayout>
         <form id="new-post">
-          <h1>Let's write a post</h1>
+          <h1>{t('header')}</h1>
 
           {currentUser && (
             <PostEditor

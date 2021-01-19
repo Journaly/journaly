@@ -19,6 +19,7 @@ import {
   ImageRole,
 } from '@/generated/graphql'
 import { languageNameWithDialect } from '@/utils/languages'
+import { useTranslation } from '@/config/i18n'
 
 type BasePostData = {
   title: string
@@ -70,6 +71,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
   dataRef,
   topics,
 }) => {
+  const { t } = useTranslation('post')
   const slateRef = React.useRef<Editor>(null)
 
   const [langId, setLangId, resetLangId] = useAutosavedState<number>(initialData.languageId, {
@@ -159,7 +161,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         onChange={(e) => setTitle(e.target.value)}
         type="text"
         name="title"
-        placeholder="The Greatest Story Never Told..."
+        placeholder={t('titlePlaceholder')}
         autoComplete="off"
         dir="auto"
       />
@@ -170,7 +172,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         options={userLanguages}
         value={langId ? langId.toString() : ''}
         onChange={(value) => setLangId(parseInt(value, 10))}
-        placeholder="Select language"
+        placeholder={t('languageSelectPlaceholder')}
       />
 
       <label htmlFor="post-topics">Topics</label>
@@ -180,7 +182,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         selectedOptionValues={selectedTopics}
         onAdd={addTopic}
         onRemove={removeTopic}
-        placeholder="Select up to five topics"
+        placeholder={t('topicSelectPlaceholder')}
         disabled={selectedTopics.length >= 5}
       />
 
@@ -201,7 +203,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
               loading={uploadingImage}
               onChange={onFileInputChange}
             >
-              Upload Image
+              {t('uploadImageButtonText')}
             </FileInput>
             <XIcon
               className="cancel-image-icon"

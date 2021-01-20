@@ -3,7 +3,13 @@ import {
   objectType,
   extendType,
 } from '@nexus/schema'
-import { hasAuthorPermissions } from './utils'
+
+import { NotificationType } from '@journaly/j-db-client'
+
+import {
+  createNotification,
+  hasAuthorPermissions,
+} from './utils'
 
 const CommentThanks = objectType({
   name: 'CommentThanks',
@@ -48,7 +54,7 @@ const ThanksMutations = extendType({
           throw new Error('Comment not found.')
         }
 
-        return ctx.db.commentThanks.create({
+        const commentThanks = await ctx.db.commentThanks.create({
           data: {
             author: {
               connect: { id: userId },
@@ -63,6 +69,17 @@ const ThanksMutations = extendType({
             author: true,
           },
         })
+
+      await createNotification(
+        ctx.db,
+        comment.author,
+        {
+          type: NotificationType.THREAD_COMMENT_THANKS,
+          commentThanks,
+        },
+      )
+      
+      return commentThanks
       },
     }),
       t.field('deleteCommentThanks', {

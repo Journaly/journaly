@@ -17,14 +17,15 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
   switch (note.type) {
     case ('POST_COMMENT'): {
       return `
-        <div style="
-          display: flex;
-          align-items: center;
-        ">
+        <div>
           <img src="${note.image}" style="
-            width: 100px;
+            display: block;
+            width: 100%;
+            height: 150px;
             background: lightblue;
-            margin-right: 15px;
+            margin: 0 auto;
+            object-fit: cover;
+            object-position: center;
           ">
           <div>
             <h3>
@@ -48,14 +49,15 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
     }
     case ('THREAD_COMMENT'): {
       return `
-        <div style="
-          display: flex;
-          align-items: center;
-        ">
+        <div>
           <img src="${note.image}" style="
-            width: 100px;
+            display: block;
+            width: 100%;
+            height: 150px;
             background: lightblue;
-            margin-right: 15px;
+            margin: 0 auto;
+            object-fit: cover;
+            object-position: center;
           ">
           <div>
             <h3>
@@ -162,9 +164,12 @@ const updateEmail = (data: DataForUpdateEmail) => {
         width: 80%;
         padding: 5px 20px;
         margin: 0 auto 25px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-weight: 400;
+        font-size: 10px;
       ">
         ${data.thanksCount > 0 ? (
-          `<p>You also received ${data.thanksCount} thanks for feedback you gave to fellow community members!</p>`
+          `<p style="font-size: 14px;">You also received <span style="font-weight: 600;">${data.thanksCount}</span> thanks for feedback you gave to fellow community members!</p>`
         ) : ''}
         <p style="font-size: 14px;">Keep up all the great work and thank you for contributing to the community!</p>
         <p style="font-size: 14px; font-weight: 600;">Robin @ Journaly</p>
@@ -175,9 +180,6 @@ const updateEmail = (data: DataForUpdateEmail) => {
         background-color: #313131;
         width: 80%;
         text-align: center; 
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-weight: 400;
-        font-size: 10px;
       ">
         <p style="
           text-transform: uppercase;

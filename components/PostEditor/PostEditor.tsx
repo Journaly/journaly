@@ -97,7 +97,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
   })
 
   const [image, uploadingImage, onFileInputChange, resetImage] = useImageUpload()
-  const postImage = image?.secure_url || initialData.image?.largeSize || DEFAULT_IMAGE_URL
+  const postImage = image?.large || initialData.image?.largeSize || DEFAULT_IMAGE_URL
 
   const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
   const formattedTopicOptions = (topics || []).map(({ name, id }) => ({
@@ -132,8 +132,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
     const returnImage = !image
       ? null
       : {
-          largeSize: image.secure_url,
-          smallSize: image.eager[0].secure_url,
+          largeSize: image.large,
+          smallSize: image.small,
           imageRole: ImageRole.Headline,
         }
 

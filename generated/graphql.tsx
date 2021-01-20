@@ -48,6 +48,9 @@ export type EditorNode = {
   italic?: Maybe<Scalars['Boolean']>
   bold?: Maybe<Scalars['Boolean']>
   underline?: Maybe<Scalars['Boolean']>
+  link?: Maybe<Scalars['String']>
+  url?: Maybe<Scalars['String']>
+  hyperlink?: Maybe<Scalars['Boolean']>
   children?: Maybe<Array<EditorNode>>
 }
 
@@ -126,6 +129,18 @@ export type PostPage = {
   __typename?: 'PostPage'
   posts: Array<Post>
   count: Scalars['Int']
+}
+
+export type InitiatePostImageUploadResponse = {
+  __typename?: 'InitiatePostImageUploadResponse'
+  /** URL for the client to PUT an image to */
+  uploadUrl: Scalars['String']
+  /** polling goes here */
+  checkUrl: Scalars['String']
+  /** final url of the large size transform */
+  finalUrlLarge: Scalars['String']
+  /** final url of the mall size transform */
+  finalUrlSmall: Scalars['String']
 }
 
 export type User = {
@@ -304,6 +319,7 @@ export type Mutation = {
   createPost: Post
   updatePost: Post
   deletePost: Post
+  initiatePostImageUpload: InitiatePostImageUploadResponse
   createUser: User
   updateUser: User
   updatePassword: User
@@ -791,6 +807,15 @@ export type FeedQuery = { __typename?: 'Query' } & {
   feed: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
       posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
     }
+}
+
+export type InitiatePostImageUploadMutationVariables = {}
+
+export type InitiatePostImageUploadMutation = { __typename?: 'Mutation' } & {
+  initiatePostImageUpload: { __typename?: 'InitiatePostImageUploadResponse' } & Pick<
+    InitiatePostImageUploadResponse,
+    'uploadUrl' | 'checkUrl' | 'finalUrlLarge' | 'finalUrlSmall'
+  >
 }
 
 export type NewPostQueryVariables = {
@@ -2220,6 +2245,58 @@ export function useFeedLazyQuery(
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
 export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
+export const InitiatePostImageUploadDocument = gql`
+  mutation initiatePostImageUpload {
+    initiatePostImageUpload {
+      uploadUrl
+      checkUrl
+      finalUrlLarge
+      finalUrlSmall
+    }
+  }
+`
+export type InitiatePostImageUploadMutationFn = ApolloReactCommon.MutationFunction<
+  InitiatePostImageUploadMutation,
+  InitiatePostImageUploadMutationVariables
+>
+
+/**
+ * __useInitiatePostImageUploadMutation__
+ *
+ * To run a mutation, you first call `useInitiatePostImageUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInitiatePostImageUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [initiatePostImageUploadMutation, { data, loading, error }] = useInitiatePostImageUploadMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useInitiatePostImageUploadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    InitiatePostImageUploadMutation,
+    InitiatePostImageUploadMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    InitiatePostImageUploadMutation,
+    InitiatePostImageUploadMutationVariables
+  >(InitiatePostImageUploadDocument, baseOptions)
+}
+export type InitiatePostImageUploadMutationHookResult = ReturnType<
+  typeof useInitiatePostImageUploadMutation
+>
+export type InitiatePostImageUploadMutationResult = ApolloReactCommon.MutationResult<
+  InitiatePostImageUploadMutation
+>
+export type InitiatePostImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  InitiatePostImageUploadMutation,
+  InitiatePostImageUploadMutationVariables
+>
 export const NewPostDocument = gql`
   query newPost($uiLanguage: UILanguage!) {
     topics {

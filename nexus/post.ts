@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import {
   arg,
   intArg,
@@ -13,6 +14,7 @@ import {
   hasAuthorPermissions,
   NodeType,
   sendNewBadgeEmail,
+  AWS,
 } from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
@@ -23,6 +25,8 @@ import {
   LanguageRelation,
 } from '@journaly/j-db-client'
 import { EditorNode, ImageInput } from './inputTypes'
+
+const s3 = new AWS.S3({ region: 'us-east-2' })
 
 const assignPostCountBadges = async (
   db: PrismaClient,
@@ -144,6 +148,16 @@ const PostPage = objectType({
       type: 'Post',
     })
     t.int('count')
+  },
+})
+
+const InitiatePostImageUploadResponse = objectType({
+  name: 'InitiatePostImageUploadResponse',
+  definition(t) {
+    t.string('uploadUrl', { description: 'URL for the client to PUT an image to' })
+    t.string('checkUrl', { description: 'polling goes here' })
+    t.string('finalUrlLarge', { description: 'final url of the large size transform' })
+    t.string('finalUrlSmall', { description: 'final url of the mall size transform' })
   },
 })
 
@@ -712,6 +726,48 @@ const PostMutations = extendType({
         })
       },
     })
+
+    t.field('initiatePostImageUpload', {
+      type: 'InitiatePostImageUploadResponse',
+      resolve: async (_parent, _args, ctx) => {
+        const upBucket = process.env.THUMBBUSTER_UPLOAD_BUCKET
+        const transformBucket = process.env.THUMBBUSTER_TRANSFORM_BUCKET
+        const cdnDomain = process.env.THUMBBUSTER_CDN_DOMAIN
+
+        if (!upBucket) {
+          throw new Error('Must specify `THUMBBUSTER_UPLOAD_BUCKET` env var')
+        } else if (!cdnDomain) {
+          throw new Error('Must specify `THUMBBUSTER_CDN_DOMAIN` env var')
+        }
+
+        const { userId } = ctx.request
+        const currentUser = await ctx.db.user.findUnique({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (!currentUser) {
+          throw new NotAuthorizedError()
+        }
+
+        const uuid = uuidv4()
+        const uploadUrl = await (new Promise<string>((res, rej) => {
+          s3.getSignedUrl(
+            'putObject',
+            { Bucket: upBucket, Key: uuid },
+            (err, url) => err ? rej(err) : res(url)
+          )
+        }))
+
+        return {
+          uploadUrl,
+          checkUrl: `https://${transformBucket}.s3.us-east-2.amazonaws.com/${uuid}-large`,
+          finalUrlLarge: `https://${cdnDomain}/${uuid}-large`,
+          finalUrlSmall: `https://${cdnDomain}/${uuid}-small`,
+        }
+      }
+    })
   },
 })
 
@@ -719,6 +775,7 @@ export default [
   PostTopic,
   Post,
   PostPage,
+  InitiatePostImageUploadResponse,
   PostQueries,
   PostMutations,
 ]

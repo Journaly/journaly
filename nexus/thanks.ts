@@ -3,7 +3,13 @@ import {
   objectType,
   extendType,
 } from '@nexus/schema'
-import { sendCommentThanksNotification, hasAuthorPermissions } from './utils'
+
+import { NotificationType } from '@journaly/j-db-client'
+
+import {
+  createNotification,
+  hasAuthorPermissions,
+} from './utils'
 
 const CommentThanks = objectType({
   name: 'CommentThanks',
@@ -64,15 +70,16 @@ const ThanksMutations = extendType({
           },
         })
 
-        await sendCommentThanksNotification({
-          post: comment.thread.post,
-          thread: comment.thread,
-          comment,
-          commentAuthor: comment.author,
-          commentThanksAuthor: commentThanks.author,
-        })
-
-        return commentThanks
+      await createNotification(
+        ctx.db,
+        comment.author,
+        {
+          type: NotificationType.THREAD_COMMENT_THANKS,
+          commentThanks,
+        },
+      )
+      
+      return commentThanks
       },
     }),
       t.field('deleteCommentThanks', {

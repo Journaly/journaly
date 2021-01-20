@@ -1,7 +1,44 @@
 {
-  "signInPrompt": "Bitte einloggen, um fortzufahren.",
+  "signInPrompt": "Bitte einloggen, um fortzufahren",
   "error": "Auf dem Server ist ein Fehler aufgetreten",
+  "loading": "Lädt...",
   "home": {
     "reasonsHeader": "Drei Gründe, Journaly zu verwenden"
+  },
+  "nav": {
+    "myFeed": "Mein Feed",
+    "myPosts": "Meine Beiträge",
+    "newPost": "Neuer Beitrag",
+    "settings": "Einstellungen",
+    "logOut": "Ausloggen"
+  },
+  "badge": {
+    "ALPHA_USER": {
+      "title": "Alpha-Nutzer",
+      "description": "Hat am Alpha-Test von Journaly teilgenommen. Wir haben seitdem einen langen Weg zurückgelegt, aber dieser Benutzer war von Anfang an an vorderster Front dabei, frühe Fehler abzufangen und Journaly zu formen!"
+    },
+    "BETA_USER": {
+      "title": "Beta-Nutzer",
+      "description": "Hat am Beta-Test von Journaly teilgenommen. Der Held, den Journaly braucht."
+    },
+    "CODE_CONTRIBUTOR": {
+      "title": "Code Contributor",
+      "description": "Hat Code zur Journaly-Codebasis beigetragen. Sie können den Journaly-Quellcode unter https://github.com/Journaly/journaly finden und selbst dazu beitragen."
+    },
+    "TEN_POSTS": {
+      "title": "10 Beiträge",
+      "description": "Hat 10 Beträge veröffentlicht. Jetzt geht es erst richtig los!"
+    },
+    "ONEHUNDRED_POSTS": {
+      "title": "100 Beiträge",
+      "description": "Hat 100 Beiträge veröffentlicht. Das nenne ich mal durchhalten!"
+    }
+  },
+  "emptyMessage": "Leer ...",
+  "e404": "Seite nicht gefunden",
+  "e403": "Nicht autorisiert",
+  "modal": {
+    "confirm": "Betätigen",
+    "cancel": "Abbrechen"
   }
 }

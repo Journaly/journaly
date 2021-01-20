@@ -1,35 +1,8 @@
-import * as AWS from 'aws-sdk'
-import { User, Thread, Comment, Post, PostComment, BadgeType } from '@journaly/j-db-client'
+import { User, BadgeType } from '@journaly/j-db-client'
+import { AWS } from './aws'
 import { makeEmail } from '@/lib/mail'
 
-AWS.config.credentials = new AWS.Credentials(
-  process.env.JAWS_ACCESS_KEY_ID!,
-  process.env.JAWS_SECRET_ACCESS_KEY!,
-)
 const sqs = new AWS.SQS({ region: 'us-east-2' })
-
-type SendCommentNotificationArgs = {
-  post: Post
-  thread: Thread
-  comment: Comment
-  commentAuthor: User
-  user: User
-}
-
-type SendCommentThanksNotificationArgs = {
-  post: Post
-  thread: Thread
-  comment: Comment
-  commentAuthor: User
-  commentThanksAuthor: User
-}
-
-type SendPostCommentNotificationArgs = {
-  post: Post
-  user: User
-  postComment: PostComment
-  postCommentAuthor: User
-}
 
 type sendPasswordResetTokenEmailArgs = {
   user: User
@@ -83,69 +56,6 @@ export const sendJmail = (emailParams: EmailParams) => {
         res(data)
       }
     })
-  })
-}
-
-export const sendCommentNotification = ({
-  post,
-  thread,
-  comment,
-  commentAuthor,
-  user,
-}: SendCommentNotificationArgs) => {
-  return sendJmail({
-    from: 'robin@journaly.com',
-    to: user.email,
-    subject: `New activity on a thread in ${post.title}`,
-    html: makeEmail(`
-      <p>Heads up! <strong>@${commentAuthor.handle}</strong> commented on a post you're subscribed to!</p>
-      <p><strong>Journal entry:</strong> ${post.title}</p>
-      <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
-      <p><strong>Comment:</strong> "${comment.body}"</p>
-      <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
-    `),
-  })
-}
-
-export const sendCommentThanksNotification = ({
-  post,
-  thread,
-  comment,
-  commentAuthor,
-  commentThanksAuthor,
-}: SendCommentThanksNotificationArgs) => {
-  const commentThanksAuthorDisplayName = commentThanksAuthor.name || commentThanksAuthor.handle
-
-  return sendJmail({
-    from: 'robin@journaly.com',
-    to: commentAuthor.email,
-    subject: `${commentThanksAuthorDisplayName} said thank you!`,
-    html: makeEmail(`
-      <p>Heads up! <strong>@${commentThanksAuthorDisplayName}</strong> said thank you for your comment on their post!</p>
-      <p><strong>Journal entry:</strong> ${post.title}</p>
-      <p><strong>Comment thread:</strong> "${thread.highlightedContent}"</p>
-      <p><strong>Comment:</strong> "${comment.body}"</p>
-      <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
-    `),
-  })
-}
-
-export const sendPostCommentNotification = ({
-  post,
-  user,
-  postComment,
-  postCommentAuthor,
-}: SendPostCommentNotificationArgs) => {
-  return sendJmail({
-    from: 'robin@journaly.com',
-    to: user.email,
-    subject: `New activity on post: ${post.title}`,
-    html: makeEmail(`
-      <p>Great news! <strong>@${postCommentAuthor.handle}</strong> left a comment on a post you're subscribed to!</p>
-      <p><strong>Journal entry:</strong> ${post.title}</p>
-      <p><strong>Comment:</strong> "${postComment.body}"</p>
-      <p>Click <a href="https://${process.env.SITE_DOMAIN}/post/${post.id}">here</a> to go to your journal entry!</p>
-    `),
   })
 }
 

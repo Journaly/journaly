@@ -8,6 +8,7 @@ import {
   Post,
   PostComment,
   PendingNotificationCreateInput,
+  CommentThanks,
 } from '@journaly/j-db-client'
 
 export const assertUnreachable = (x: never): never => {
@@ -292,6 +293,7 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
 type NotificationCreationType =
   | { type: 'THREAD_COMMENT'; comment: Comment }
   | { type: 'POST_COMMENT'; postComment: PostComment }
+  | { type: 'THREAD_COMMENT_THANKS'; commentThanks: CommentThanks }
 
 export const createNotification = (
   db: PrismaClient,
@@ -312,6 +314,10 @@ export const createNotification = (
       data.postComment = { connect: { id: note.postComment.id } }
       break
     }
+    case 'THREAD_COMMENT_THANKS': {
+      data.commentThanks = { connect: { id: note.commentThanks.id } }
+      break
+    }
     /*
     default:
       return assertUnreachable(note.type)
@@ -322,3 +328,4 @@ export const createNotification = (
 }
 
 export * from './email'
+export * from './aws'

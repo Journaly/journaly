@@ -65,7 +65,8 @@ const scenarios = {
             "latitude": null
           }
         }
-      ]
+      ],
+      "thanksCount": 21,
     }
   },
   'update:own-only': {
@@ -290,7 +291,8 @@ const scenarios = {
           }
         }
       ],
-      "other": []
+      "other": [],
+      "thanksCount": 21,
     }
   },
   'update:kitchen-sink': {
@@ -512,7 +514,8 @@ const scenarios = {
             "publishedLanguageLevel": "NATIVE",
             "longitude": null,
             "latitude": null
-          }
+          },
+          "image": "https://res.cloudinary.com/journaly/image/upload/v1611105667/journaly/g22ftiryur5hfuwpqiwy.jpg"
         }
       ],
       "other": [
@@ -542,8 +545,9 @@ const scenarios = {
               "publishedLanguageLevel": "NATIVE",
               "longitude": null,
               "latitude": null
-            }
+            },
           },
+          "commentAuthor": "jsno1991",
           "post": {
             "id": 17,
             "title": "Zoop doop and boop",
@@ -560,9 +564,11 @@ const scenarios = {
             "publishedLanguageLevel": "NATIVE",
             "longitude": null,
             "latitude": null
-          }
+          },
+          "image": "https://dlke4x4hpr6qb.cloudfront.net/sample-post-img.jpg"
         }
-      ]
+      ],
+      "thanksCount": 49,
     }
   }
 }

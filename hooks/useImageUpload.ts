@@ -70,12 +70,12 @@ const useImageUpload = (): useImageUploadType => {
       }
     }
 
+    setUploadingImage(false)
+
     if (!successful) {
       toast.error(t('imageUploadErrorMessage'))
       return null
     }
-
-    setUploadingImage(false)
 
     const returnValue = {
       large: finalUrlLarge,

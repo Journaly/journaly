@@ -1,11 +1,7 @@
-import * as AWS from 'aws-sdk'
-import { User, BadgeType } from '@journaly/j-db-client'
+import { User, Thread, Comment, Post, PostComment, BadgeType } from '@journaly/j-db-client'
+import { AWS } from './aws'
 import { makeEmail } from '@/lib/mail'
 
-AWS.config.credentials = new AWS.Credentials(
-  process.env.JAWS_ACCESS_KEY_ID!,
-  process.env.JAWS_SECRET_ACCESS_KEY!,
-)
 const sqs = new AWS.SQS({ region: 'us-east-2' })
 
 type sendPasswordResetTokenEmailArgs = {

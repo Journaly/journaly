@@ -40,14 +40,14 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
   })
 
   const [image, uploadingImage, onFileInputChange] = useImageUpload()
-  const profileImage = image?.secure_url || currentUser.profileImage
+  const profileImage = image?.large || currentUser.profileImage
 
   const updateUserProfileImage = async (e: HTMLInputEvent): Promise<void> => {
     const image = await onFileInputChange(e)
     if (image) {
       updateUser({
         variables: {
-          profileImage: image.secure_url,
+          profileImage: image.large,
         },
       })
     }

@@ -1,0 +1,8 @@
+mutation initiatePostImageUpload {
+  initiatePostImageUpload {
+    uploadUrl
+    checkUrl
+    finalUrlLarge
+    finalUrlSmall
+  }
+}

@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer'
 import { Handler, SQSHandler } from 'aws-lambda'
 
 import {
+  ImageRole,
   NotificationType,
   User,
 } from '@journaly/j-db-client'
@@ -13,7 +14,6 @@ import {
   DataForUpdateEmail,
   enqueueEmail,
 } from './utils'
-
 
 const getUsersToNotify = async () => {
   const prisma = getDBClient()
@@ -31,6 +31,7 @@ const getDataForUpdateEmail = async (
   const prisma = getDBClient()
   const validated: ValidatedNotification[] = []
   let lastNotificationDate = new Date(0)
+  let thanksCount = 0
 
   const user = (await prisma.user.findUnique({ where: { id: userId } })) as User
   const notes = await prisma.pendingNotification.findMany({
@@ -41,22 +42,33 @@ const getDataForUpdateEmail = async (
       user: true,
       postComment: {
         include: {
-          post: true,
-        }
+          post: {
+            include: {
+              images: true,
+            }
+          },
+          author: true,
+        },
       },
       comment: {
         include: {
           thread: {
             include: {
-              post: true,
+              post: {
+                include: {
+                  images: true,
+                }
+              }
             }
-          }
-        }
+          },
+          author: true,
+        },
       },
+      commentThanks: true,
     }
   })
 
-  notes.forEach(note => {
+  notes.forEach((note) => {
     lastNotificationDate = (lastNotificationDate < note.createdAt)
       ? note.createdAt
       : lastNotificationDate
@@ -68,6 +80,8 @@ const getDataForUpdateEmail = async (
           notificationDate: note.createdAt,
           postComment: note.postComment,
           post: note.postComment.post,
+          image: note.postComment.post.images.find((image) => image.imageRole === ImageRole.HEADLINE)?.smallSize || 'https://dlke4x4hpr6qb.cloudfront.net/sample-post-img.jpg',
+          commentAuthor: note.postComment.author.handle,
         })
       }
     } else if (note.type === NotificationType.THREAD_COMMENT) {
@@ -78,8 +92,12 @@ const getDataForUpdateEmail = async (
           comment: note.comment,
           thread: note.comment.thread,
           post: note.comment.thread.post,
+          image: note.comment.thread.post.images.find((image) => image.imageRole === ImageRole.HEADLINE)?.smallSize || 'https://dlke4x4hpr6qb.cloudfront.net/sample-post-img.jpg',
+          commentAuthor: note.comment.author.handle,
         })
       }
+    } else if (note.type === NotificationType.THREAD_COMMENT_THANKS) {
+      thanksCount++
     }
   })
 
@@ -88,6 +106,7 @@ const getDataForUpdateEmail = async (
     lastNotificationDate,
     own: validated.filter(({ post }) => post.authorId === userId),
     other: validated.filter(({ post }) => post.authorId !== userId),
+    thanksCount,
   }
 }
 
@@ -141,8 +160,4 @@ export const processJMailQueue: SQSHandler = async (event, context) => {
       html,
     })
   }
-
-  console.log('Success!')
-
-  context.done(undefined, 'Woot')
 }

@@ -1,4 +1,4 @@
-import { User, Thread, Comment, Post, PostComment, BadgeType } from '@journaly/j-db-client'
+import { User, BadgeType } from '@journaly/j-db-client'
 import { AWS } from './aws'
 import { makeEmail } from '@/lib/mail'
 

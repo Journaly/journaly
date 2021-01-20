@@ -2,7 +2,6 @@ import nodemailer from 'nodemailer'
 import { Handler, SQSHandler } from 'aws-lambda'
 
 import {
-  Image,
   ImageRole,
   NotificationType,
   User,
@@ -69,7 +68,7 @@ const getDataForUpdateEmail = async (
     }
   })
 
-  notes.forEach(async (note) => {
+  notes.forEach((note) => {
     lastNotificationDate = (lastNotificationDate < note.createdAt)
       ? note.createdAt
       : lastNotificationDate

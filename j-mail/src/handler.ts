@@ -81,7 +81,7 @@ const getDataForUpdateEmail = async (
           notificationDate: note.createdAt,
           postComment: note.postComment,
           post: note.postComment.post,
-          image: note.postComment.post.images.find((image) => image.imageRole === ImageRole.HEADLINE)?.smallSize || 'https://journaly-email-assets.s3.us-east-2.amazonaws.com/sample-post-img.jpg',
+          image: note.postComment.post.images.find((image) => image.imageRole === ImageRole.HEADLINE)?.smallSize || 'https://dlke4x4hpr6qb.cloudfront.net/sample-post-img.jpg',
           commentAuthor: note.postComment.author.handle,
         })
       }
@@ -93,7 +93,7 @@ const getDataForUpdateEmail = async (
           comment: note.comment,
           thread: note.comment.thread,
           post: note.comment.thread.post,
-          image: note.comment.thread.post.images.find((image) => image.imageRole === ImageRole.HEADLINE)?.smallSize || 'https://journaly-email-assets.s3.us-east-2.amazonaws.com/sample-post-img.jpg',
+          image: note.comment.thread.post.images.find((image) => image.imageRole === ImageRole.HEADLINE)?.smallSize || 'https://dlke4x4hpr6qb.cloudfront.net/sample-post-img.jpg',
           commentAuthor: note.comment.author.handle,
         })
       }

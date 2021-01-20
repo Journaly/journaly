@@ -99,7 +99,7 @@ const updateEmail = (data: DataForUpdateEmail) => {
         margin: 0 auto 25px;
       ">
         <img
-          src="https://journaly-email-assets.s3.us-east-2.amazonaws.com/j-logo-100.png"
+          src="https://dlke4x4hpr6qb.cloudfront.net/j-logo-100.png"
           style="width: 75px;"
         >
         <h1 style="

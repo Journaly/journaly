@@ -31,7 +31,7 @@ const getDataForUpdateEmail = async (
   const prisma = getDBClient()
   const validated: ValidatedNotification[] = []
   let lastNotificationDate = new Date(0)
-  let thanksCount
+  let thanksCount = 0
 
   const user = (await prisma.user.findUnique({ where: { id: userId } })) as User
   const notes = await prisma.pendingNotification.findMany({

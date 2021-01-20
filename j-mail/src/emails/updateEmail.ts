@@ -16,6 +16,7 @@ const divider = `
 const formatNotificationBlock = (note: ValidatedNotification): string => {
   switch (note.type) {
     case ('POST_COMMENT'): {
+      const commentTime = note.postComment.createdAt.toString()
       return `
         <div>
           <img src="${note.image}" style="
@@ -42,12 +43,13 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
             </h3>
             <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.postComment.body}</p>
             <p style="font-size: 16px;"><span style="font-weight: 600;">From:</span> ${note.commentAuthor}</p>
-            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatShortDateAndTime(note.postComment.createdAt)}</p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatShortDateAndTime(commentTime)}</p>
           </div>
         </div>
       `
     }
     case ('THREAD_COMMENT'): {
+      const commentTime = note.comment.createdAt.toString()
       return `
         <div>
           <img src="${note.image}" style="
@@ -75,7 +77,7 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
             <p style="font-size: 16px;"><span style="font-weight: 600;">In response to:</span> <span style="background: #4391C940; padding: 0 5px;">${note.thread.highlightedContent}</span></p>
             <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.comment.body}</p>
             <p style="font-size: 16px;"><span style="font-weight: 600;">From:</span> ${note.commentAuthor}</p>
-            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatShortDateAndTime(note.comment.createdAt)}</p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatShortDateAndTime(commentTime)}</p>
           </div>
         </div>
       `

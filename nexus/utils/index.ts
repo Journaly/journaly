@@ -36,6 +36,11 @@ const typeToElStrMap: { [key: string]: string } = {
   'list-item': 'li',
   link: 'a',
   paragraph: 'p',
+  p: 'p',
+  table: 'table',
+  td: 'td',
+  tr: 'tr',
+  th: 'th',
 }
 
 type textNodeFormatType = 'italic' | 'bold' | 'underline'
@@ -50,7 +55,15 @@ const textNodeFormatEls: { [T in textNodeFormatType]: string } = {
 }
 
 const emptySet = new Set<string>([])
-const nonBodyTypes = new Set<string>(['heading-one', 'heading-two', 'block-quote'])
+const nonBodyTypes = new Set<string>([
+  'heading-one',
+  'heading-two',
+  'block-quote',
+  'table',
+  'td',
+  'tr',
+  'th',
+])
 
 const breakCharacters = new Set([
   ' ', // Good ole ASCII space

@@ -54,8 +54,9 @@ const PostCard: React.FC<Props> = ({
     <>
       <Link href={'/post/[id]'} as={`/post/${id}`}>
         <a className={postCardStyles}>
-          <img className="post-image" src={displayImage} alt={imageAlt} />
-
+          <div>
+            <img className="post-image" src={displayImage} alt={imageAlt} />
+          </div>
           <div className="post-card-details">
             <div className="post-text" dir="auto">
               <h1 className="post-title">
@@ -65,7 +66,6 @@ const PostCard: React.FC<Props> = ({
                 <LineClamp lines={2} text={excerpt} />
               </div>
             </div>
-
             <div className="post-avatar-and-data">
               {avatar && (
                 <div className="avatar-and-language">
@@ -75,7 +75,6 @@ const PostCard: React.FC<Props> = ({
                     ) : (
                       <BlankAvatarIcon size={27} />
                     )}
-
                     <p className="author">{handle || name}</p>
                   </div>
                   <div className="post-language">
@@ -84,7 +83,6 @@ const PostCard: React.FC<Props> = ({
                   </div>
                 </div>
               )}
-
               <div className="post-data">
                 {isPublished && (
                   <div className="post-stats">
@@ -98,14 +96,12 @@ const PostCard: React.FC<Props> = ({
                     </div>
                   </div>
                 )}
-
                 <div className="post-subtext">
                   {formatShortDate(publishedAt || createdAt)} -{' '}
                   {t('readTime', { minutes: readTime || 1 })}
                 </div>
               </div>
             </div>
-
             {!avatar && (
               <p className="post-action">{isDraft ? t('finishAction') : t('readAction')}</p>
             )}

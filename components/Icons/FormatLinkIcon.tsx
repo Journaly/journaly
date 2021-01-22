@@ -1,4 +1,5 @@
 import * as React from 'react'
+import theme from '@/theme'
 
 type FormatLinkIconProps = React.SVGProps<SVGSVGElement> & {
   title?: string
@@ -12,8 +13,8 @@ const FormatLinkIcon = ({ title, titleId, ...props }: FormatLinkIconProps) => {
       viewBox="0 0 24 24"
       width={24}
       aria-labelledby={titleId}
-      fill="#fff"
-      color="#fff"
+      fill={theme.colors.white}
+      color={theme.colors.white}
       {...props}
     >
       {title ? <title id={titleId}>{title}</title> : null}

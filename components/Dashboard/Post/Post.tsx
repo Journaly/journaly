@@ -545,16 +545,17 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         }
 
         .post-body p {
-          margin: 5px 0;
+          margin: 10px 0;
         }
 
         .post-body table {
           width: 100%;
+          margin-bottom: 10px;
         }
 
         .post-body td {
-          background-color: rgb(255, 255, 255);
-          border: 1px solid rgb(193, 199, 208);
+          background-color: ${theme.colors.white};
+          border: 1px solid ${theme.colors.gray400};
           padding: 0 8px;
           vertical-align: bottom;
         }

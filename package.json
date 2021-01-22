@@ -78,6 +78,7 @@
     "reactjs-popup": "^2.0.4",
     "slate": "^0.59.0",
     "slate-history": "^0.59.0",
+    "slate-hyperscript": "^0.59.0",
     "slate-react": "^0.59.0",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",

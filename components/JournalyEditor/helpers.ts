@@ -169,16 +169,6 @@ export const withLinks = (editor: Editor) => {
     }
   }
 
-  // editor.insertData = (data: SlateElement) => {
-  //   const text = data.getData('text/plain')
-
-  //   if (text && isUrl(text)) {
-  //     wrapLink(editor, text)
-  //   } else {
-  //     insertData(data)
-  //   }
-  // }
-
   return editor
 }
 

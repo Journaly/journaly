@@ -65,11 +65,11 @@ const PostComments = ({
         })
 
         if (data?.postById) {
-          const postComment = {
-            ...mutationResult.data.createPostComment,
-          }
           const dataClone = cloneDeep(data)
-          dataClone.postById.postComments = [...dataClone.postById.postComments, postComment]
+          dataClone.postById.postComments = [
+            ...dataClone.postById.postComments,
+            mutationResult.data.createPostComment,
+          ]
 
           cache.writeQuery({ query: PostPageDocument, data: dataClone })
         }

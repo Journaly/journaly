@@ -36,7 +36,6 @@ const PostPage: NextPage = () => {
                   comments={post.postComments}
                   outdatedThreads={outdatedThreads}
                   currentUser={currentUser || null}
-                  onNewComment={refetch}
                   onUpdateComment={refetch}
                   onDeleteComment={refetch}
                 />

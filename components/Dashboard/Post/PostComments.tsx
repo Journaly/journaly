@@ -122,6 +122,7 @@ const PostComments = ({
                     comment={comment}
                     canEdit={canEdit}
                     onDeleteComment={onDeleteComment}
+                    onUpdateComment={onUpdateComment}
                     key={comment.id}
                   />
                 )

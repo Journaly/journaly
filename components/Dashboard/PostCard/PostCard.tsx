@@ -55,7 +55,6 @@ const PostCard: React.FC<Props> = ({
       <Link href={'/post/[id]'} as={`/post/${id}`}>
         <a className={postCardStyles}>
           <img className="post-image" src={displayImage} alt={imageAlt} />
-
           <div className="post-card-details">
             <div className="post-text" dir="auto">
               <h1 className="post-title">
@@ -65,7 +64,6 @@ const PostCard: React.FC<Props> = ({
                 <LineClamp lines={2} text={excerpt} />
               </div>
             </div>
-
             <div className="post-avatar-and-data">
               {avatar && (
                 <div className="avatar-and-language">
@@ -75,7 +73,6 @@ const PostCard: React.FC<Props> = ({
                     ) : (
                       <BlankAvatarIcon size={27} />
                     )}
-
                     <p className="author">{handle || name}</p>
                   </div>
                   <div className="post-language">
@@ -84,7 +81,6 @@ const PostCard: React.FC<Props> = ({
                   </div>
                 </div>
               )}
-
               <div className="post-data">
                 {isPublished && (
                   <div className="post-stats">
@@ -98,14 +94,12 @@ const PostCard: React.FC<Props> = ({
                     </div>
                   </div>
                 )}
-
                 <div className="post-subtext">
                   {formatShortDate(publishedAt || createdAt)} -{' '}
                   {t('readTime', { minutes: readTime || 1 })}
                 </div>
               </div>
             </div>
-
             {!avatar && (
               <p className="post-action">{isDraft ? t('finishAction') : t('readAction')}</p>
             )}
@@ -121,6 +115,7 @@ const PostCard: React.FC<Props> = ({
           background-color: ${theme.colors.white};
           width: 100%;
           border-radius: ${postBorderRadius};
+          overflow: hidden;
           box-shadow: 0px 8px 10px #00000029;
           transition: all 150ms ease-in;
         }
@@ -142,8 +137,7 @@ const PostCard: React.FC<Props> = ({
           width: 100%;
           height: 225px;
           object-fit: cover;
-          border-top-right-radius: ${postBorderRadius};
-          border-top-left-radius: ${postBorderRadius};
+          flex-shrink: 0;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           :not(.stacked) .post-image {

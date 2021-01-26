@@ -152,7 +152,7 @@ const PostComments = ({
           </>
         ) : (
           <div className="outdated-comments-container">
-            {!outdatedThreads.length && <div>No outdated threads to see</div>}
+            {!outdatedThreads.length && <div>{t('noOutdatedThreadsMessage')}</div>}
             {outdatedThreads.map((thread) => (
               <div className="archived-thread-container" key={thread.id}>
                 <Thread

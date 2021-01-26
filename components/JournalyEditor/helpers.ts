@@ -2,12 +2,13 @@ import isUrl from 'is-url'
 import { Editor, Transforms, Element as SlateElement, Range } from 'slate'
 import { toast } from 'react-toastify'
 import { TFunction } from 'next-i18next'
+import { DEFAULTS_TABLE, setDefaults, someNode, insertTable } from '@udecode/slate-plugins'
 
-export type ButtonType = 'mark' | 'block' | 'link'
+export type ButtonType = 'mark' | 'block' | 'link' | 'table'
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 
-type CheckIfTypeIsActiveArgs = {
+type IsTypeActiveArgs = {
   type: ButtonType
   editor: Editor
   format: string
@@ -21,6 +22,8 @@ type ToggleByTypeArgs = {
 }
 
 type ToggleArgs = Omit<ToggleByTypeArgs, 'type'>
+
+export const options = setDefaults(DEFAULTS_TABLE, {})
 
 const validateProtocol = (href: string) => {
   const httpStr = 'http://'
@@ -60,11 +63,27 @@ const isBlockActive = (editor: Editor, format: string) => {
   return !!match
 }
 
-export const isTypeActive = ({ type, editor, format }: CheckIfTypeIsActiveArgs) => {
+export const isTableActive = (editor: Editor) => {
+  return someNode(editor, { match: { type: options.table.type } })
+}
+
+export const tableHandler = ({ editor, format }: ToggleArgs) => {
+  const tableActions = {
+    'insert-table': insertTable,
+  }
+
+  const tableFormatKey = format as keyof typeof tableActions
+  if (tableActions[tableFormatKey]) {
+    tableActions[tableFormatKey](editor, options)
+  }
+}
+
+export const isTypeActive = ({ type, editor, format }: IsTypeActiveArgs) => {
   const fn = {
     mark: isMarkActive,
     block: isBlockActive,
     link: isLinkActive,
+    table: isTableActive,
   }[type]
 
   return fn(editor, format)
@@ -75,7 +94,7 @@ const toggleBlock = ({ editor, format }: ToggleArgs) => {
   const isList = LIST_TYPES.includes(format)
 
   Transforms.unwrapNodes(editor, {
-    match: (n) => LIST_TYPES.includes(n.type),
+    match: (n) => LIST_TYPES.includes(n.type as string),
     split: true,
   })
 
@@ -136,7 +155,7 @@ const toggleLink = ({ editor, t }: ToggleArgs) => {
 }
 
 export const withLinks = (editor: Editor) => {
-  const { insertData, insertText, isInline } = editor
+  const { insertText, isInline } = editor
 
   editor.isInline = (element) => {
     return element.type === 'link' ? true : isInline(element)
@@ -150,16 +169,6 @@ export const withLinks = (editor: Editor) => {
     }
   }
 
-  editor.insertData = (data: SlateElement) => {
-    const text = data.getData('text/plain')
-
-    if (text && isUrl(text)) {
-      wrapLink(editor, text)
-    } else {
-      insertData(data)
-    }
-  }
-
   return editor
 }
 
@@ -168,6 +177,7 @@ export const toogleByType = ({ type, editor, format, t }: ToggleByTypeArgs) => {
     mark: toggleMark,
     block: toggleBlock,
     link: toggleLink,
+    table: tableHandler,
   }
 
   toggles[type]({ editor, format, t })

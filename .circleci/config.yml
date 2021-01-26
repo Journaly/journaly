@@ -17,6 +17,10 @@ jobs:
       - run:
           command: npm run build
           name: Build
+          environment:
+            ANALYZE: 1
+      - store_artifacts:
+          path: .next/analyze
       - save_cache:
           key: node-deps-v2-{{ checksum "package-lock.json" }}
           paths:

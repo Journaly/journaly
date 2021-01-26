@@ -2,6 +2,7 @@ import {
   ValidatedNotification,
   DataForUpdateEmail,
   mapCat,
+  formatShortDateAndTime,
 } from '../utils'
 
 const divider = `
@@ -17,39 +18,65 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
     case ('POST_COMMENT'): {
       return `
         <div>
-          <h3>
-            New post comment on post:
-            <a
-              href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
-              style="
-                color: #4391C9;
-                text-decoration: none;
-                font-size: 16px;
-            ">
-              ${note.post.title}
-            </a>
-          </h3>
-          <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.postComment.body}</p>
+          <img src="${note.image}" style="
+            display: block;
+            width: 100%;
+            height: 150px;
+            background: lightblue;
+            margin: 0 auto;
+            object-fit: cover;
+            object-position: center;
+          ">
+          <div>
+            <h3>
+              New post comment on post:
+              <a
+                href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
+                style="
+                  color: #4391C9;
+                  text-decoration: none;
+                  font-size: 16px;
+              ">
+                ${note.post.title}
+              </a>
+            </h3>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.postComment.body}</p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">From:</span> ${note.commentAuthor}</p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatShortDateAndTime(note.postComment.createdAt)}</p>
+          </div>
         </div>
       `
     }
     case ('THREAD_COMMENT'): {
       return `
         <div>
-          <h3>
-            New feedback comment on post:
-            <a
-              href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
-              style="
-                color: #4391C9;
-                text-decoration: none;
-                font-size: 16px;
-            ">
-                ${note.post.title}
-            </a>
-          </h3>
-          <p style="font-size: 16px;"><span style="font-weight: 600;">In response to:</span> <span style="background: #4391C940; padding: 0 5px;">${note.thread.highlightedContent}</span></p>
-          <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.comment.body}</p>
+          <img src="${note.image}" style="
+            display: block;
+            width: 100%;
+            height: 150px;
+            background: lightblue;
+            margin: 0 auto;
+            object-fit: cover;
+            object-position: center;
+          ">
+          <div>
+            <h3>
+              New feedback comment on post:
+              <a
+                href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
+                style="
+                  color: #4391C9;
+                  text-decoration: none;
+                  font-size: 16px;
+              ">
+                  ${note.post.title}
+              </a>
+            </h3>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">In response to:</span> <span style="background: #4391C940; padding: 0 5px;">${note.thread.highlightedContent}</span></p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Comment:</span> ${note.comment.body}</p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">From:</span> ${note.commentAuthor}</p>
+            <p style="font-size: 16px;"><span style="font-weight: 600;">Date:</span> ${formatShortDateAndTime(note.comment.createdAt)}</p>
+          </div>
         </div>
       `
     }
@@ -74,7 +101,7 @@ const updateEmail = (data: DataForUpdateEmail) => {
         margin: 0 auto 25px;
       ">
         <img
-          src="https://journaly-email-assets.s3.us-east-2.amazonaws.com/j-logo-100.png"
+          src="https://dlke4x4hpr6qb.cloudfront.net/j-logo-100.png"
           style="width: 75px;"
         >
         <h1 style="
@@ -137,7 +164,13 @@ const updateEmail = (data: DataForUpdateEmail) => {
         width: 80%;
         padding: 5px 20px;
         margin: 0 auto 25px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-weight: 400;
+        font-size: 10px;
       ">
+        ${data.thanksCount > 0 ? (
+          `<p style="font-size: 14px;">You also received <span style="font-weight: 600;">${data.thanksCount}</span> thanks for feedback you gave to fellow community members!</p>`
+        ) : ''}
         <p style="font-size: 14px;">Keep up all the great work and thank you for contributing to the community!</p>
         <p style="font-size: 14px; font-weight: 600;">Robin @ Journaly</p>
       </div>
@@ -147,9 +180,6 @@ const updateEmail = (data: DataForUpdateEmail) => {
         background-color: #313131;
         width: 80%;
         text-align: center; 
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-weight: 400;
-        font-size: 10px;
       ">
         <p style="
           text-transform: uppercase;

@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 
+import cloneDeep from 'lodash/cloneDeep'
+import { toast } from 'react-toastify'
 import {
   useCreatePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
   UserWithLanguagesFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
+  PostPageDocument,
+  PostPageQuery,
+  PostPageQueryVariables,
 } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
 
@@ -13,26 +18,27 @@ import PostComment from './PostComment'
 import Thread from '@/components/InlineFeedbackPopover/Thread'
 import Button, { ButtonVariant } from '@/elements/Button'
 import TabToggle from '@/elements/TabToggle'
+import useUILanguage from '@/hooks/useUILanguage'
+import { generateNegativeRandomNumber } from '@/utils/number'
 
 type PostCommentsProps = {
   postId: number
   comments: PostCommentType[]
   outdatedThreads: ThreadType[]
   currentUser: UserType | null
-  onNewComment: () => void
   onUpdateComment: () => void
   onDeleteComment: () => void
 }
 
-const PostComments: React.FC<PostCommentsProps> = ({
+const PostComments = ({
   postId,
   comments,
   outdatedThreads,
-  onNewComment,
   onUpdateComment,
   onDeleteComment,
   currentUser,
-}) => {
+}: PostCommentsProps) => {
+  const uiLanguage = useUILanguage()
   const { t } = useTranslation('comment')
 
   const tabs = [
@@ -40,17 +46,34 @@ const PostComments: React.FC<PostCommentsProps> = ({
     { key: 'outdated', text: t('tabOutdatedKey') },
   ]
 
-  const [activeKey, setActiveKey] = useState<string>(tabs[0].key)
+  const [activeKey, setActiveKey] = useState(tabs[0].key)
+  const [postCommentBody, setPostCommentBody] = useState('')
 
-  const handleToggle = (key: string): void => {
+  const handleToggle = (key: string) => {
     setActiveKey(key)
   }
 
-  const [postCommentBody, setPostCommentBody] = React.useState<string>('')
   const [createPostComment, { loading }] = useCreatePostCommentMutation({
-    onCompleted: () => {
-      onNewComment()
-      setPostCommentBody('')
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    update: (cache, mutationResult) => {
+      if (mutationResult.data?.createPostComment) {
+        const data = cache.readQuery<PostPageQuery, PostPageQueryVariables>({
+          query: PostPageDocument,
+          variables: { id: postId, uiLanguage },
+        })
+
+        if (data?.postById) {
+          const dataClone = cloneDeep(data)
+          dataClone.postById.postComments = [
+            ...dataClone.postById.postComments,
+            mutationResult.data.createPostComment,
+          ]
+
+          cache.writeQuery({ query: PostPageDocument, data: dataClone })
+        }
+      }
     },
   })
 
@@ -62,7 +85,22 @@ const PostComments: React.FC<PostCommentsProps> = ({
         postId,
         body: postCommentBody,
       },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        createPostComment: {
+          __typename: 'PostComment',
+          author: {
+            __typename: 'User',
+            handle: currentUser!.handle,
+            id: currentUser!.id,
+          },
+          id: generateNegativeRandomNumber(),
+          createdAt: new Date().toISOString(),
+          body: postCommentBody,
+        },
+      },
     })
+    setPostCommentBody('')
   }
 
   return (
@@ -76,15 +114,16 @@ const PostComments: React.FC<PostCommentsProps> = ({
           <>
             <div className="post-comments">
               {!comments.length && <div>{t('noCommentsYetMessage')}</div>}
-              {comments.map((comment, idx) => {
-                const canEdit = currentUser?.id === comment.author.id
+              {comments.map((comment) => {
+                const canEdit = currentUser?.id === comment.author.id && comment.id > 0
+
                 return (
                   <PostComment
                     comment={comment}
                     canEdit={canEdit}
-                    onUpdateComment={onUpdateComment}
                     onDeleteComment={onDeleteComment}
-                    key={idx}
+                    onUpdateComment={onUpdateComment}
+                    key={comment.id}
                   />
                 )
               })}
@@ -114,12 +153,11 @@ const PostComments: React.FC<PostCommentsProps> = ({
         ) : (
           <div className="outdated-comments-container">
             {!outdatedThreads.length && <div>No outdated threads to see</div>}
-            {outdatedThreads.map((thread, idx) => (
-              <div className="archived-thread-container">
+            {outdatedThreads.map((thread) => (
+              <div className="archived-thread-container" key={thread.id}>
                 <Thread
                   thread={thread}
                   currentUser={currentUser}
-                  key={idx}
                   onNewComment={() => {}}
                   onDeleteThread={() => {}}
                   onUpdateComment={onUpdateComment}

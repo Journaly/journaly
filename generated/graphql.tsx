@@ -2,6 +2,9 @@ import gql from 'graphql-tag'
 import * as ApolloReactCommon from '@apollo/client'
 import * as ApolloReactHooks from '@apollo/client'
 export type Maybe<T> = T | null
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -48,6 +51,9 @@ export type EditorNode = {
   italic?: Maybe<Scalars['Boolean']>
   bold?: Maybe<Scalars['Boolean']>
   underline?: Maybe<Scalars['Boolean']>
+  link?: Maybe<Scalars['String']>
+  url?: Maybe<Scalars['String']>
+  hyperlink?: Maybe<Scalars['Boolean']>
   children?: Maybe<Array<EditorNode>>
 }
 
@@ -126,6 +132,18 @@ export type PostPage = {
   __typename?: 'PostPage'
   posts: Array<Post>
   count: Scalars['Int']
+}
+
+export type InitiatePostImageUploadResponse = {
+  __typename?: 'InitiatePostImageUploadResponse'
+  /** URL for the client to PUT an image to */
+  uploadUrl: Scalars['String']
+  /** polling goes here */
+  checkUrl: Scalars['String']
+  /** final url of the large size transform */
+  finalUrlLarge: Scalars['String']
+  /** final url of the mall size transform */
+  finalUrlSmall: Scalars['String']
 }
 
 export type User = {
@@ -304,6 +322,7 @@ export type Mutation = {
   createPost: Post
   updatePost: Post
   deletePost: Post
+  initiatePostImageUpload: InitiatePostImageUploadResponse
   createUser: User
   updateUser: User
   updatePassword: User
@@ -450,10 +469,10 @@ export type MutationDeleteCommentThanksArgs = {
   commentThanksId: Scalars['Int']
 }
 
-export type CreateCommentMutationVariables = {
+export type CreateCommentMutationVariables = Exact<{
   body: Scalars['String']
   threadId: Scalars['Int']
-}
+}>
 
 export type CreateCommentMutation = { __typename?: 'Mutation' } & {
   createComment: { __typename?: 'Comment' } & Pick<Comment, 'body'> & {
@@ -461,65 +480,63 @@ export type CreateCommentMutation = { __typename?: 'Mutation' } & {
     }
 }
 
-export type CreatePostCommentMutationVariables = {
+export type CreatePostCommentMutationVariables = Exact<{
   body: Scalars['String']
   postId: Scalars['Int']
-}
+}>
 
 export type CreatePostCommentMutation = { __typename?: 'Mutation' } & {
-  createPostComment: { __typename?: 'PostComment' } & Pick<PostComment, 'body'> & {
-      author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
-    }
+  createPostComment: { __typename?: 'PostComment' } & PostCommentFragmentFragment
 }
 
-export type CreateThreadMutationVariables = {
+export type CreateThreadMutationVariables = Exact<{
   postId: Scalars['Int']
   startIndex: Scalars['Int']
   endIndex: Scalars['Int']
   highlightedContent: Scalars['String']
-}
+}>
 
 export type CreateThreadMutation = { __typename?: 'Mutation' } & {
   createThread: { __typename?: 'Thread' } & ThreadFragmentFragment
 }
 
-export type DeleteCommentMutationVariables = {
+export type DeleteCommentMutationVariables = Exact<{
   commentId: Scalars['Int']
-}
+}>
 
 export type DeleteCommentMutation = { __typename?: 'Mutation' } & {
   deleteComment: { __typename?: 'Comment' } & Pick<Comment, 'id'>
 }
 
-export type DeletePostCommentMutationVariables = {
+export type DeletePostCommentMutationVariables = Exact<{
   postCommentId: Scalars['Int']
-}
+}>
 
 export type DeletePostCommentMutation = { __typename?: 'Mutation' } & {
   deletePostComment: { __typename?: 'PostComment' } & Pick<PostComment, 'id'>
 }
 
-export type DeleteThreadMutationVariables = {
+export type DeleteThreadMutationVariables = Exact<{
   threadId: Scalars['Int']
-}
+}>
 
 export type DeleteThreadMutation = { __typename?: 'Mutation' } & {
   deleteThread: { __typename?: 'Thread' } & Pick<Thread, 'id'>
 }
 
-export type UpdateCommentMutationVariables = {
+export type UpdateCommentMutationVariables = Exact<{
   body: Scalars['String']
   commentId: Scalars['Int']
-}
+}>
 
 export type UpdateCommentMutation = { __typename?: 'Mutation' } & {
   updateComment: { __typename?: 'Comment' } & CommentFragmentFragment
 }
 
-export type UpdatePostCommentMutationVariables = {
+export type UpdatePostCommentMutationVariables = Exact<{
   body: Scalars['String']
   postCommentId: Scalars['Int']
-}
+}>
 
 export type UpdatePostCommentMutation = { __typename?: 'Mutation' } & {
   updatePostComment: { __typename?: 'PostComment' } & PostCommentFragmentFragment
@@ -670,10 +687,10 @@ export type UserBadgeFragmentFragment = { __typename?: 'UserBadge' } & Pick<
   'type' | 'createdAt'
 >
 
-export type AddLanguageRelationMutationVariables = {
+export type AddLanguageRelationMutationVariables = Exact<{
   languageId: Scalars['Int']
   level: LanguageLevel
-}
+}>
 
 export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
   addLanguageRelation: { __typename?: 'LanguageRelation' } & {
@@ -681,16 +698,16 @@ export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
   }
 }
 
-export type LanguagesQueryVariables = {
+export type LanguagesQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
-  topics?: Maybe<Array<Scalars['Int']>>
-}
+  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+}>
 
 export type LanguagesQuery = { __typename?: 'Query' } & {
   languages: Array<{ __typename?: 'Language' } & LanguageWithPostCountFragmentFragment>
 }
 
-export type LanguagesFormDataQueryVariables = {}
+export type LanguagesFormDataQueryVariables = Exact<{ [key: string]: never }>
 
 export type LanguagesFormDataQuery = { __typename?: 'Query' } & {
   languages: Array<{ __typename?: 'Language' } & LanguageFragmentFragment>
@@ -705,27 +722,27 @@ export type LanguagesFormDataQuery = { __typename?: 'Query' } & {
   >
 }
 
-export type RemoveLanguageRelationMutationVariables = {
+export type RemoveLanguageRelationMutationVariables = Exact<{
   languageId: Scalars['Int']
-}
+}>
 
 export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
   removeLanguageRelation: { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>
 }
 
-export type PostPageQueryVariables = {
+export type PostPageQueryVariables = Exact<{
   id: Scalars['Int']
   uiLanguage: UiLanguage
-}
+}>
 
 export type PostPageQuery = { __typename?: 'Query' } & {
   postById: { __typename?: 'Post' } & PostWithTopicsFragmentFragment
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
-export type ProfilePageQueryVariables = {
+export type ProfilePageQueryVariables = Exact<{
   userId: Scalars['Int']
-}
+}>
 
 export type ProfilePageQuery = { __typename?: 'Query' } & {
   userById: { __typename?: 'User' } & ProfileUserFragmentFragment
@@ -738,31 +755,31 @@ export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
 } & UserWithLanguagesFragmentFragment &
   SocialMediaFragmentFragment
 
-export type CreatePostMutationVariables = {
+export type CreatePostMutationVariables = Exact<{
   title: Scalars['String']
-  body: Array<EditorNode>
+  body: Array<EditorNode> | EditorNode
   languageId: Scalars['Int']
-  topicIds?: Maybe<Array<Scalars['Int']>>
+  topicIds?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
   status: PostStatus
-  images?: Maybe<Array<ImageInput>>
-}
+  images?: Maybe<Array<ImageInput> | ImageInput>
+}>
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
   createPost: { __typename?: 'Post' } & Pick<Post, 'id'>
 }
 
-export type DeletePostMutationVariables = {
+export type DeletePostMutationVariables = Exact<{
   postId: Scalars['Int']
-}
+}>
 
 export type DeletePostMutation = { __typename?: 'Mutation' } & {
   deletePost: { __typename?: 'Post' } & Pick<Post, 'id'>
 }
 
-export type EditPostQueryVariables = {
+export type EditPostQueryVariables = Exact<{
   id: Scalars['Int']
   uiLanguage: UiLanguage
-}
+}>
 
 export type EditPostQuery = { __typename?: 'Query' } & {
   postById: { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc' | 'updatedAt'> & {
@@ -778,14 +795,14 @@ export type EditPostQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
-export type FeedQueryVariables = {
+export type FeedQueryVariables = Exact<{
   first: Scalars['Int']
   skip: Scalars['Int']
   search?: Maybe<Scalars['String']>
-  languages?: Maybe<Array<Scalars['Int']>>
-  topics?: Maybe<Array<Scalars['Int']>>
+  languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
   followedAuthors?: Maybe<Scalars['Boolean']>
-}
+}>
 
 export type FeedQuery = { __typename?: 'Query' } & {
   feed: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
@@ -793,98 +810,107 @@ export type FeedQuery = { __typename?: 'Query' } & {
     }
 }
 
-export type NewPostQueryVariables = {
-  uiLanguage: UiLanguage
+export type InitiatePostImageUploadMutationVariables = Exact<{ [key: string]: never }>
+
+export type InitiatePostImageUploadMutation = { __typename?: 'Mutation' } & {
+  initiatePostImageUpload: { __typename?: 'InitiatePostImageUploadResponse' } & Pick<
+    InitiatePostImageUploadResponse,
+    'uploadUrl' | 'checkUrl' | 'finalUrlLarge' | 'finalUrlSmall'
+  >
 }
+
+export type NewPostQueryVariables = Exact<{
+  uiLanguage: UiLanguage
+}>
 
 export type NewPostQuery = { __typename?: 'Query' } & {
   topics: Array<{ __typename?: 'Topic' } & TopicFragmentFragment>
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
-export type PostByIdQueryVariables = {
+export type PostByIdQueryVariables = Exact<{
   id: Scalars['Int']
   uiLanguage: UiLanguage
-}
+}>
 
 export type PostByIdQuery = { __typename?: 'Query' } & {
   postById: { __typename?: 'Post' } & PostWithTopicsFragmentFragment
 }
 
-export type PostsQueryVariables = {
+export type PostsQueryVariables = Exact<{
   authorId: Scalars['Int']
   status: PostStatus
-}
+}>
 
 export type PostsQuery = { __typename?: 'Query' } & {
   posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
 }
 
-export type UpdatePostMutationVariables = {
+export type UpdatePostMutationVariables = Exact<{
   postId: Scalars['Int']
   title?: Maybe<Scalars['String']>
   languageId?: Maybe<Scalars['Int']>
-  topicIds?: Maybe<Array<Scalars['Int']>>
-  body?: Maybe<Array<EditorNode>>
+  topicIds?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  body?: Maybe<Array<EditorNode> | EditorNode>
   status?: Maybe<PostStatus>
-  images?: Maybe<Array<ImageInput>>
-}
+  images?: Maybe<Array<ImageInput> | ImageInput>
+}>
 
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
   updatePost: { __typename?: 'Post' } & PostFragmentFragment
 }
 
-export type CreateCommentThanksMutationVariables = {
+export type CreateCommentThanksMutationVariables = Exact<{
   commentId: Scalars['Int']
-}
+}>
 
 export type CreateCommentThanksMutation = { __typename?: 'Mutation' } & {
   createCommentThanks: { __typename?: 'CommentThanks' } & CommentThanksFragmentFragment
 }
 
-export type DeleteCommentThanksMutationVariables = {
+export type DeleteCommentThanksMutationVariables = Exact<{
   commentThanksId: Scalars['Int']
-}
+}>
 
 export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
   deleteCommentThanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'>
 }
 
-export type TopicsQueryVariables = {
+export type TopicsQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
   uiLanguage: UiLanguage
-  languages?: Maybe<Array<Scalars['Int']>>
-}
+  languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+}>
 
 export type TopicsQuery = { __typename?: 'Query' } & {
   topics: Array<{ __typename?: 'Topic' } & TopicWithPostCountFragmentFragment>
 }
 
-export type CreateUserMutationVariables = {
+export type CreateUserMutationVariables = Exact<{
   handle: Scalars['String']
   email: Scalars['String']
   password: Scalars['String']
-}
+}>
 
 export type CreateUserMutation = { __typename?: 'Mutation' } & {
   createUser: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'email'>
 }
 
-export type CurrentUserQueryVariables = {}
+export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
 
 export type CurrentUserQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
-export type FollowUserMutationVariables = {
+export type FollowUserMutationVariables = Exact<{
   followedUserId: Scalars['Int']
-}
+}>
 
 export type FollowUserMutation = { __typename?: 'Mutation' } & {
   followUser: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
-export type FollowingUsersQueryVariables = {}
+export type FollowingUsersQueryVariables = Exact<{ [key: string]: never }>
 
 export type FollowingUsersQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<
@@ -894,40 +920,40 @@ export type FollowingUsersQuery = { __typename?: 'Query' } & {
   >
 }
 
-export type LoginUserMutationVariables = {
+export type LoginUserMutationVariables = Exact<{
   identifier: Scalars['String']
   password: Scalars['String']
-}
+}>
 
 export type LoginUserMutation = { __typename?: 'Mutation' } & {
   loginUser: { __typename?: 'User' } & UserFragmentFragment
 }
 
-export type LogoutMutationVariables = {}
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>
 
 export type LogoutMutation = { __typename?: 'Mutation' } & {
   logout: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
-export type RequestResetPasswordMutationVariables = {
+export type RequestResetPasswordMutationVariables = Exact<{
   identifier: Scalars['String']
-}
+}>
 
 export type RequestResetPasswordMutation = { __typename?: 'Mutation' } & {
   requestResetPassword: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
-export type ResetPasswordMutationVariables = {
+export type ResetPasswordMutationVariables = Exact<{
   resetToken: Scalars['String']
   password: Scalars['String']
   confirmPassword: Scalars['String']
-}
+}>
 
 export type ResetPasswordMutation = { __typename?: 'Mutation' } & {
   resetPassword: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
-export type SettingsFormDataQueryVariables = {}
+export type SettingsFormDataQueryVariables = Exact<{ [key: string]: never }>
 
 export type SettingsFormDataQuery = { __typename?: 'Query' } & {
   languages: Array<{ __typename?: 'Language' } & LanguageFragmentFragment>
@@ -942,35 +968,35 @@ export type SettingsFormDataQuery = { __typename?: 'Query' } & {
   >
 }
 
-export type UnfollowUserMutationVariables = {
+export type UnfollowUserMutationVariables = Exact<{
   followedUserId: Scalars['Int']
-}
+}>
 
 export type UnfollowUserMutation = { __typename?: 'Mutation' } & {
   unfollowUser: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
-export type UpdatePasswordMutationVariables = {
+export type UpdatePasswordMutationVariables = Exact<{
   oldPassword: Scalars['String']
   newPassword: Scalars['String']
-}
+}>
 
 export type UpdatePasswordMutation = { __typename?: 'Mutation' } & {
   updatePassword: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
-export type UpdateSocialMediaMutationVariables = {
+export type UpdateSocialMediaMutationVariables = Exact<{
   facebook?: Maybe<Scalars['String']>
   instagram?: Maybe<Scalars['String']>
   youtube?: Maybe<Scalars['String']>
   website?: Maybe<Scalars['String']>
-}
+}>
 
 export type UpdateSocialMediaMutation = { __typename?: 'Mutation' } & {
   updateSocialMedia: { __typename?: 'SocialMedia' } & Pick<SocialMedia, 'id'>
 }
 
-export type UpdateUserMutationVariables = {
+export type UpdateUserMutationVariables = Exact<{
   email?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
   profileImage?: Maybe<Scalars['String']>
@@ -978,21 +1004,21 @@ export type UpdateUserMutationVariables = {
   handle?: Maybe<Scalars['String']>
   city?: Maybe<Scalars['String']>
   country?: Maybe<Scalars['String']>
-}
+}>
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
   updateUser: { __typename?: 'User' } & UserFragmentFragment
 }
 
-export type UserByIdQueryVariables = {
+export type UserByIdQueryVariables = Exact<{
   id: Scalars['Int']
-}
+}>
 
 export type UserByIdQuery = { __typename?: 'Query' } & {
   userById: { __typename?: 'User' } & UserWithLanguagesFragmentFragment
 }
 
-export type UsersQueryVariables = {}
+export type UsersQueryVariables = Exact<{ [key: string]: never }>
 
 export type UsersQuery = { __typename?: 'Query' } & {
   users: Array<
@@ -1310,14 +1336,10 @@ export type CreateCommentMutationOptions = ApolloReactCommon.BaseMutationOptions
 export const CreatePostCommentDocument = gql`
   mutation createPostComment($body: String!, $postId: Int!) {
     createPostComment(body: $body, postId: $postId) {
-      body
-      author {
-        id
-        name
-        handle
-      }
+      ...PostCommentFragment
     }
   }
+  ${PostCommentFragmentFragmentDoc}
 `
 export type CreatePostCommentMutationFn = ApolloReactCommon.MutationFunction<
   CreatePostCommentMutation,
@@ -2220,6 +2242,58 @@ export function useFeedLazyQuery(
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
 export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
+export const InitiatePostImageUploadDocument = gql`
+  mutation initiatePostImageUpload {
+    initiatePostImageUpload {
+      uploadUrl
+      checkUrl
+      finalUrlLarge
+      finalUrlSmall
+    }
+  }
+`
+export type InitiatePostImageUploadMutationFn = ApolloReactCommon.MutationFunction<
+  InitiatePostImageUploadMutation,
+  InitiatePostImageUploadMutationVariables
+>
+
+/**
+ * __useInitiatePostImageUploadMutation__
+ *
+ * To run a mutation, you first call `useInitiatePostImageUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInitiatePostImageUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [initiatePostImageUploadMutation, { data, loading, error }] = useInitiatePostImageUploadMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useInitiatePostImageUploadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    InitiatePostImageUploadMutation,
+    InitiatePostImageUploadMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    InitiatePostImageUploadMutation,
+    InitiatePostImageUploadMutationVariables
+  >(InitiatePostImageUploadDocument, baseOptions)
+}
+export type InitiatePostImageUploadMutationHookResult = ReturnType<
+  typeof useInitiatePostImageUploadMutation
+>
+export type InitiatePostImageUploadMutationResult = ApolloReactCommon.MutationResult<
+  InitiatePostImageUploadMutation
+>
+export type InitiatePostImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  InitiatePostImageUploadMutation,
+  InitiatePostImageUploadMutationVariables
+>
 export const NewPostDocument = gql`
   query newPost($uiLanguage: UILanguage!) {
     topics {

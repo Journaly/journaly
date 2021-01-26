@@ -235,7 +235,7 @@ const PostContent = React.memo(
   }),
 )
 
-const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) => {
+const Post = ({ post, currentUser, refetch }: IPostProps) => {
   const { t } = useTranslation('post')
 
   const selectableRef = React.useRef<HTMLDivElement>(null)
@@ -539,8 +539,25 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           cursor: pointer;
           border-radius: 3px;
         }
+
         .thread-highlight:hover {
           background-color: ${theme.colors.highlightColorHover};
+        }
+
+        .post-body p {
+          margin: 10px 0;
+        }
+
+        .post-body table {
+          width: 100%;
+          margin-bottom: 10px;
+        }
+
+        .post-body td {
+          background-color: ${theme.colors.white};
+          border: 1px solid ${theme.colors.gray400};
+          padding: 0 8px;
+          vertical-align: bottom;
         }
       `}</style>
       <style jsx>{`
@@ -580,17 +597,10 @@ const Post: React.FC<IPostProps> = ({ post, currentUser, refetch }: IPostProps) 
           grid-column: 2;
           /* Helps to avoid horizontal scroll for this layout */
           min-width: 0;
-        }
-
-        h2 {
-          margin: 20px 0;
-        }
-
-        .post-body {
           margin-bottom: 50px;
         }
 
-        .post-body p {
+        h2 {
           margin: 20px 0;
         }
 

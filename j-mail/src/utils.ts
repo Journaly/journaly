@@ -1,9 +1,8 @@
 import AWS from 'aws-sdk'
+import { format, parseISO } from 'date-fns'
 
 import {
   PrismaClient,
-  PendingNotification,
-  NotificationType,
   User,
   Post,
   Thread,
@@ -24,14 +23,15 @@ export type EmailParams = {
 }
 
 export type ValidatedNotification = 
-  | { type: 'POST_COMMENT', notificationDate: Date, postComment: PostComment, post: Post}
-  | { type: 'THREAD_COMMENT', notificationDate: Date, comment: Comment, thread: Thread, post: Post}
+  | { type: 'POST_COMMENT', notificationDate: Date, postComment: PostComment, post: Post, image: string, commentAuthor: string, }
+  | { type: 'THREAD_COMMENT', notificationDate: Date, comment: Comment, thread: Thread, post: Post, image: string, commentAuthor: string, }
 
 export type DataForUpdateEmail = {
   user: User,
   lastNotificationDate: Date,
   own: ValidatedNotification[],
   other: ValidatedNotification[],
+  thanksCount: number,
 }
 
 const cacheFn = <T>(create: () => T): () => T => {
@@ -68,4 +68,8 @@ export const enqueueEmail = (emailParams: EmailParams) => {
 
 export const mapCat = <T>(data: T[], cb: (arg: T) => string, sep: string = '\n') => {
   return data.map(cb).join(sep)
+}
+
+export const formatShortDateAndTime = (date: Date): string => {
+  return format(date, 'MMMM d, HH:m')
 }

@@ -8,6 +8,7 @@ import { appWithTranslation } from '@/config/i18n'
 import '@/styles/reset.css'
 import '@/styles/globalStyles.css'
 import 'react-toastify/dist/ReactToastify.css'
+import 'reactjs-popup/dist/index.css'
 import '@/styles/react-toastify-overrides.css'
 
 // Show loading progress on page loads

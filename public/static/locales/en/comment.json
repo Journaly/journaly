@@ -7,5 +7,6 @@
   "addCommentPlaceholder": "Add a comment...",
   "noCommentsYetMessage": "No comments... yet!",
   "tabGeneralKey": "General",
-  "tabOutdatedKey": "Outdated"
+  "tabOutdatedKey": "Outdated",
+  "noOutdatedThreadsMessage": "No outdated threads to see"
 }

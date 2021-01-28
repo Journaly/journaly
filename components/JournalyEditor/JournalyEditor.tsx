@@ -58,7 +58,6 @@ const JournalyEditor = ({ value, setValue, slateRef }: JournalyEditorProps) => {
             plugins={plugins}
             renderElement={[renderElement]}
             renderLeaf={[renderLeaf]}
-            placeholder="It all started this morning when..."
             spellCheck
             onKeyDown={[
               (event: React.KeyboardEvent) => {

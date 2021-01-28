@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import _ from 'lodash'
+import { useTranslation } from '@/config/i18n'
 
 type Props = {
   defaultValue: string
@@ -8,6 +9,7 @@ type Props = {
 }
 
 const SearchInput: React.FC<Props> = ({ defaultValue, onChange, debounceTime }) => {
+  const { t } = useTranslation('my-feed')
   const [oldDefaultValue, setOldDefaultValue] = useState(defaultValue)
   const [value, setValue] = useState(defaultValue)
 
@@ -32,7 +34,7 @@ const SearchInput: React.FC<Props> = ({ defaultValue, onChange, debounceTime }) 
     <>
       <input
         type="text"
-        placeholder="Search posts"
+        placeholder={t('textSearchPlaceholder')}
         className="search-box"
         value={value}
         maxLength={50}

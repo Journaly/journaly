@@ -30,11 +30,6 @@ type PostCommentsProps = {
   onDeleteComment: () => void
 }
 
-const tabs = [
-  { key: 'general', text: 'General' },
-  { key: 'outdated', text: 'Outdated' },
-]
-
 const PostComments = ({
   postId,
   comments,
@@ -45,6 +40,11 @@ const PostComments = ({
 }: PostCommentsProps) => {
   const uiLanguage = useUILanguage()
   const { t } = useTranslation('comment')
+
+  const tabs = [
+    { key: 'general', text: t('tabGeneralKey') },
+    { key: 'outdated', text: t('tabOutdatedKey') },
+  ]
 
   const [activeKey, setActiveKey] = useState(tabs[0].key)
   const [postCommentBody, setPostCommentBody] = useState('')
@@ -152,7 +152,7 @@ const PostComments = ({
           </>
         ) : (
           <div className="outdated-comments-container">
-            {!outdatedThreads.length && <div>No outdated threads to see</div>}
+            {!outdatedThreads.length && <div>{t('noOutdatedThreadsMessage')}</div>}
             {outdatedThreads.map((thread) => (
               <div className="archived-thread-container" key={thread.id}>
                 <Thread

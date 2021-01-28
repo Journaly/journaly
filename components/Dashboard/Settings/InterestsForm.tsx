@@ -27,11 +27,10 @@ const InterestsForm: React.FC = () => {
               name="interests"
               className="j-field"
               ref={register()}
-              placeholder="Coming soon..."
+              placeholder={t('profile.interests.topicsPlaceholder')}
               disabled={true}
             />
           </div>
-
           <Button
             type="submit"
             className="settings-submit-button"

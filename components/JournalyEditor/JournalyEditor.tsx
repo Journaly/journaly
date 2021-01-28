@@ -6,9 +6,9 @@ import { pipe, TablePlugin, EditablePlugins } from '@udecode/slate-plugins'
 import isHotkey from 'is-hotkey'
 
 import theme from '@/theme'
-
 import PostBodyStyles from '@/components/PostBodyStyles'
 import Toolbar from './Toolbar'
+import { useTranslation } from '@/config/i18n'
 import RenderElement from './RenderElement'
 import RenderLeaf from './RenderLeaf'
 import { withLinks, toggleMark, options } from './helpers'
@@ -33,10 +33,10 @@ type JournalyEditorProps = {
   setValue: (value: Node[]) => void
   slateRef: React.RefObject<Editor>
 }
-
 const plugins = [TablePlugin(options)]
 
 const JournalyEditor = ({ value, setValue, slateRef }: JournalyEditorProps) => {
+  const { t } = useTranslation('common')
   const renderElement = useCallback((props) => <RenderElement {...props} />, [])
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
   const editor = useMemo(() => {
@@ -53,12 +53,11 @@ const JournalyEditor = ({ value, setValue, slateRef }: JournalyEditorProps) => {
       <div className="editor-container">
         <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
           <Toolbar />
-
           <EditablePlugins
             plugins={plugins}
             renderElement={[renderElement]}
             renderLeaf={[renderLeaf]}
-            placeholder="It all started this morning when..."
+            placeholder={t('editor.placeholderPrompt')}
             spellCheck
             onKeyDown={[
               (event: React.KeyboardEvent) => {

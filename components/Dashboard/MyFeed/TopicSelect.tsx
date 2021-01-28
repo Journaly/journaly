@@ -1,6 +1,7 @@
 import React from 'react'
 import MultiSelect from '@/elements/MultiSelect'
 import { Topic } from '@/generated/graphql'
+import { useTranslation } from '@/config/i18n'
 
 type Props = {
   topics: Topic[] | undefined
@@ -10,6 +11,7 @@ type Props = {
 }
 
 const TopicSelect: React.FC<Props> = ({ topics, selectedTopicsIds, onAdd, onRemove }) => {
+  const { t } = useTranslation('my-feed')
   const formattedTopicOptions = (topics || []).map(({ name, id, postCount }) => ({
     value: id,
     displayName: `${name} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
@@ -23,7 +25,7 @@ const TopicSelect: React.FC<Props> = ({ topics, selectedTopicsIds, onAdd, onRemo
       selectedOptionValues={selectedTopicsIds}
       onAdd={onAdd}
       onRemove={onRemove}
-      placeholder="Select topics"
+      placeholder={t('topicSelectPlaceholder')}
     />
   )
 }

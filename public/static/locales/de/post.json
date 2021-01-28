@@ -1,4 +1,9 @@
 {
+  "header": "Lass uns einen Beitrag verfassen",
+  "titlePlaceholder": "Die beste Geschichte, die nie erzählt wurde...",
+  "languageSelectPlaceholder": "Wähle eine Sprache",
+  "topicSelectPlaceholder": "Wähle bis zu fünf Themen",
+  "uploadImageButtonText": "Bild hochladen",
   "draft": "Entwurf",
   "publishDraft": "Entwurf veröffentlichen",
   "saveDraftCTA": "Entwurf speichern",

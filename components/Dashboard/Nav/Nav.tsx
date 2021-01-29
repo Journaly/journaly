@@ -86,19 +86,19 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               <NavLink href="/dashboard/my-feed">
                 <a className="nav-link" onClick={handleCollapse}>
                   <FeedIcon aria-hidden="true" />
-                  <span className="nav-link-text">{t('nav.myFeed')}</span>
+                  <span className="nav-link-text">{t('dashboardNav.myFeed')}</span>
                 </a>
               </NavLink>
               <NavLink href="/dashboard/my-posts">
                 <a className="nav-link" onClick={handleCollapse}>
                   <FeedIcon aria-hidden="true" />
-                  <span className="nav-link-text">{t('nav.myPosts')}</span>
+                  <span className="nav-link-text">{t('dashboardNav.myPosts')}</span>
                 </a>
               </NavLink>
               <NavLink href="/dashboard/new-post">
                 <a className="nav-link" onClick={handleCollapse}>
                   <img src="/images/icons/new-post-icon.svg" alt="" />
-                  <span className="nav-link-text">{t('nav.newPost')}</span>
+                  <span className="nav-link-text">{t('dashboardNav.newPost')}</span>
                 </a>
               </NavLink>
 
@@ -107,14 +107,14 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               <NavLink href="/dashboard/settings/profile">
                 <a className="nav-link" onClick={handleCollapse}>
                   <img src="/images/icons/settings-icon.svg" alt="" />
-                  <span className="nav-link-text">{t('nav.settings')}</span>
+                  <span className="nav-link-text">{t('dashboardNav.settings')}</span>
                 </a>
               </NavLink>
 
               <Link href="/">
                 <a className="log-out nav-link" onClick={handleLogOut}>
                   <img src="/images/icons/logout-icon.svg" alt="Log out" />
-                  <span className="nav-link-text">{t('nav.logOut')}</span>
+                  <span className="nav-link-text">{t('dashboardNav.logOut')}</span>
                 </a>
               </Link>
             </div>

@@ -6,5 +6,11 @@
   "followedUsers": "followed journalers",
   "textSearchPlaceholder": "Search posts",
   "topicSelectPlaceholder": "Topics",
-  "languageSelectPlaceholder": "Languages"
+  "languageSelectPlaceholder": "Languages",
+  "pagination": {
+    "previous": "Prev",
+    "next": "Next",
+    "page": "Page",
+    "of": "of"
+  }
 }

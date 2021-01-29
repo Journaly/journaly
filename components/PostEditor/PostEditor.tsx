@@ -152,7 +152,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
   return (
     <div className="post-editor">
       <label htmlFor="post-title" className="title-input">
-        Title
+        {t('titleLabel')}
       </label>
       <input
         className="j-field"
@@ -166,7 +166,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         dir="auto"
       />
 
-      <label htmlFor="post-language">Language</label>
+      <label htmlFor="post-language">{t('languageLabel')}</label>
       <Select
         id="language"
         options={userLanguages}
@@ -175,7 +175,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         placeholder={t('languageSelectPlaceholder')}
       />
 
-      <label htmlFor="post-topics">Topics</label>
+      <label htmlFor="post-topics">{t('topicsLabel')}</label>
       <MultiSelect
         id="post-topics"
         options={formattedTopicOptions}

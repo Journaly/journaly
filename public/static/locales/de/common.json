@@ -10,9 +10,15 @@
     "reasonTwoText": "Es gibt viele persönliche Vorteile, ein Tagebuch zu führen, und es ist für viele Menschen eine beliebte positive Angewohnheit, die sie nicht missen möchten. Journaly fördert dich beim Sprachenlernen und hilft dir gleichzeitig dabei, alle Vorteile des Tagebuchschreibens zu nutzen!",
     "reasonThreeText": "Viele Seiten helfen dir, einen Sprachpartner zu finden, indem sie einfach deine Sprachinteressen abgleichen - aber das ist uns nicht gut genug! Journaly hilft dir, Leute zu finden, die auch die gleichen Interessen haben wie du!",
     "videoHeader": "Ein wunderbares Schreiberlebnis",
-    "testimonialsHeader": "Was Journaler sagen"
+    "testimonialsHeader": "Was Journaler sagen",
+    "nav": {
+      "about": "Über",
+      "blog": "Blog",
+      "logIn": "Login",
+      "signUp": "Registrieren"
+    }
   },
-  "nav": {
+  "dashboardNav": {
     "myFeed": "Mein Feed",
     "myPosts": "Meine Beiträge",
     "newPost": "Neuer Beitrag",

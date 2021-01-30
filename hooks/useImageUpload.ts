@@ -3,29 +3,24 @@ import fetch from 'isomorphic-unfetch'
 import { toast } from 'react-toastify'
 
 import { useTranslation } from '@/config/i18n'
-import { useInitiatePostImageUploadMutation } from '@/generated/graphql'
 import { wait } from '@/utils'
 
 interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
 }
 
-type Image = {
-  large: string
-  small: string
+interface UploadHook<T> {
+  (getUploadData: () => Promise<T>): [
+    T | null,
+    boolean,
+    (e: HTMLInputEvent) => Promise<T | null>,
+    () => void,
+  ]
 }
 
-type useImageUploadType = [
-  Image | null,
-  boolean,
-  (e: HTMLInputEvent) => Promise<Image | null>,
-  () => void,
-]
-
-const useImageUpload = (): useImageUploadType => {
+const useImageUpload: UploadHook = (getUploadData) => {
   const [image, setImage] = useState<Image | null>(null)
   const [uploadingImage, setUploadingImage] = useState(false)
-  const [initImageUpload] = useInitiatePostImageUploadMutation()
   const { t } = useTranslation('common')
 
   const onFileInputChange = async (e: HTMLInputEvent) => {
@@ -38,21 +33,14 @@ const useImageUpload = (): useImageUploadType => {
       return null
     }
 
-    const { data: uploadData } = await initImageUpload()
+    const uploadData: T  = await getUploadData()
 
     if (!uploadData) {
       setUploadingImage(false)
       return null
     }
 
-    const {
-      initiatePostImageUpload: {
-        uploadUrl,
-        checkUrl,
-        finalUrlLarge,
-        finalUrlSmall,
-      }
-    } = uploadData
+    const { uploadUrl, checkUrl, } = uploadData
 
     await fetch(uploadUrl, {
       method: 'PUT',
@@ -60,7 +48,7 @@ const useImageUpload = (): useImageUploadType => {
     })
 
     let successful = false
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 20; i++) {
       await wait(500)
 
       const response = await fetch(checkUrl, { method: 'HEAD' })
@@ -77,16 +65,12 @@ const useImageUpload = (): useImageUploadType => {
       return null
     }
 
-    const returnValue = {
-      large: finalUrlLarge,
-      small: finalUrlSmall,
-    }
-
-    setImage(returnValue)
-    return returnValue
+    setImage(uploadData)
+    return uploadData
   }
 
   return [image, uploadingImage, onFileInputChange, () => setImage(null)]
 }
+
 
 export default useImageUpload

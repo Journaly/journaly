@@ -41,36 +41,55 @@ const useImageUpload = <T extends BaseUploadData>(getUploadData: () => Promise<T
       return null
     }
 
-    const uploadData = await getUploadData()
+    let uploadData: T | undefined
+    try {
+      uploadData = await getUploadData()
+    } catch (e) {
+      console.error(e)
+      setUploadingImage(false)
+      toast.error(t('imageErrors.initial'))
+      return null
+    }
 
     if (!uploadData) {
       setUploadingImage(false)
-      toast.error(t('imageUploadErrorMessage'))
+      toast.error(t('imageErrors.initital'))
       return null
     }
 
     const { uploadUrl, checkUrl, } = uploadData
 
-    await fetch(uploadUrl, {
-      method: 'PUT',
-      body: files[0]
-    })
+    try {
+      await fetch(uploadUrl, {
+        method: 'PUT',
+        body: files[0]
+      })
+    } catch (e) {
+      console.error(e)
+      setUploadingImage(false)
+      toast.error(t('imageErrors.dataUpload'))
+      return null
+    }
 
     let successful = false
     for (let i = 0; i < 20; i++) {
       await wait(500)
 
-      const response = await fetch(checkUrl, { method: 'HEAD' })
-      if (response.status === 200) {
-        successful = true
-        break
+      try {
+        const response = await fetch(`${checkUrl}?t=${i}`, { method: 'HEAD' })
+        if (response.status === 200) {
+          successful = true
+          break
+        }
+      } catch (e) {
+        console.error(e)
       }
     }
 
     setUploadingImage(false)
 
     if (!successful) {
-      toast.error(t('imageUploadErrorMessage'))
+      toast.error(t('imageErrors.allDoneChecksFailed'))
       return null
     }
 

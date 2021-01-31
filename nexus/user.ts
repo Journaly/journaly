@@ -13,7 +13,10 @@ import { promisify } from 'util'
 import { PostStatus } from '@journaly/j-db-client'
 
 import { NotAuthorizedError, UserInputError } from './errors'
-import { sendPasswordResetTokenEmail } from './utils'
+import {
+  generateThumbbusterUrl,
+  sendPasswordResetTokenEmail,
+} from './utils'
 import { validateUpdateUserMutationData } from './utils/userValidation'
 
 const User = objectType({
@@ -80,6 +83,14 @@ const User = objectType({
   },
 })
 
+const InitiateAvatarImageUploadResponse = objectType({
+  name: 'InitiateAvatarImageUploadResponse',
+  definition(t) {
+    t.string('uploadUrl', { description: 'URL for the client to PUT an image to' })
+    t.string('checkUrl', { description: 'polling goes here' })
+    t.string('finalUrl', { description: 'final url of the transform' })
+  },
+})
 
 const UserBadge = objectType({
   name: 'UserBadge',
@@ -223,6 +234,39 @@ const UserMutations = extendType({
             id: userId,
           },
         })
+      },
+    })
+
+    t.field('initiateAvatarImageUpload', {
+      type: 'InitiateAvatarImageUploadResponse',
+      resolve: async (_parent, args, ctx: any) => {
+        const transformBucket = process.env.THUMBBUSTER_TRANSFORM_BUCKET
+        const cdnDomain = process.env.THUMBBUSTER_CDN_DOMAIN
+
+        if (!transformBucket) {
+          throw new Error('Must specify `THUMBBUSTER_TRANSFORM_BUCKET` env var')
+        } else if (!cdnDomain) {
+          throw new Error('Must specify `THUMBBUSTER_CDN_DOMAIN` env var')
+        }
+
+        const { userId } = ctx.request
+        const currentUser = await ctx.db.user.findUnique({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (!currentUser) {
+          throw new NotAuthorizedError()
+        }
+
+        const [uuid, uploadUrl] = await generateThumbbusterUrl('avatar-image')
+
+        return {
+          uploadUrl,
+          checkUrl: `https://${transformBucket}.s3.us-east-2.amazonaws.com/avatar-image/${uuid}-large`,
+          finalUrl: `https://${cdnDomain}/avatar-image/${uuid}-large`,
+        }
       },
     })
 
@@ -479,4 +523,5 @@ export default [
   UserBadge,
   UserQueries,
   UserMutations,
+  InitiateAvatarImageUploadResponse,
 ]

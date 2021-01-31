@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
 
@@ -15,6 +15,8 @@ import HamburgerIcon from '../Header/HamburgerIcon'
 import NavLink from '@/components/NavLink'
 import FeedIcon from '@/components/Icons/FeedIcon'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
+import HelpIcon from '@/components/Icons/HelpIcon'
+import Modal from '@/components/Modal'
 
 interface Props {
   expanded: boolean
@@ -26,6 +28,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
   const { data, refetch, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation()
+  const [shouldShowModal, setShouldShowModal] = useState(false)
 
   let currentUser: UserType | null = data?.currentUser as UserType
   if (error) currentUser = null
@@ -120,14 +123,36 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             </div>
           </>
         )}
-
-        <h1 className="nav-logo">
-          <Link href="/">
-            <a onClick={handleCollapse}>
-              J<span>ournaly</span>
-            </a>
-          </Link>
-        </h1>
+        
+        <div className="nav-support">
+          <span className="help-btn" onClick={() => setShouldShowModal(true)}>
+            <HelpIcon width={30} height={30} />
+          </span>
+          <h1 className="nav-logo">
+            <Link href="/">
+              <a onClick={handleCollapse}>
+                J<span>ournaly</span>
+              </a>
+            </Link>
+          </h1>
+        </div>
+        {shouldShowModal && (
+          <Modal
+            title="Support"
+            body={
+              <>
+                <p>Need help? We've got your back!</p>
+                <p>Please send an email to <a href="mailto:hello@journaly.com" style={{
+                  color: theme.colors.blueLight,
+                }}>hello@journaly.com</a> with a detailed description of your issue and we will get back to you as soon as we can!</p>
+              </>
+            }
+            footer={
+              <p>Thanks for helping us make Journaly a better place for everyone</p>
+            }
+            onClose={() => setShouldShowModal(false)}
+          />
+        )}
       </nav>
       <style jsx>{`
         .nav-background {
@@ -173,10 +198,17 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           transform: translateX(0%);
         }
 
-        .nav-logo {
+        .nav-support {
           /* The auto top margin allows the logo to take up enough space, but push itself down */
           margin: auto 0 15px;
           text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .help-btn:hover {
+          cursor: pointer;
         }
 
         .nav-wrapper:not(.logged-in) .nav-logo {

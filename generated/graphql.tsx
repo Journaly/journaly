@@ -175,6 +175,16 @@ export type UserBadge = {
   createdAt: Scalars['DateTime']
 }
 
+export type InitiateAvatarImageUploadResponse = {
+  __typename?: 'InitiateAvatarImageUploadResponse'
+  /** URL for the client to PUT an image to */
+  uploadUrl: Scalars['String']
+  /** polling goes here */
+  checkUrl: Scalars['String']
+  /** final url of the transform */
+  finalUrl: Scalars['String']
+}
+
 export type LanguageRelation = {
   __typename?: 'LanguageRelation'
   id: Scalars['Int']
@@ -325,6 +335,7 @@ export type Mutation = {
   initiatePostImageUpload: InitiatePostImageUploadResponse
   createUser: User
   updateUser: User
+  initiateAvatarImageUpload: InitiateAvatarImageUploadResponse
   updatePassword: User
   loginUser: User
   requestResetPassword: User
@@ -917,6 +928,15 @@ export type FollowingUsersQuery = { __typename?: 'Query' } & {
     { __typename?: 'User' } & Pick<User, 'id'> & {
         following: Array<{ __typename?: 'User' } & Pick<User, 'id'>>
       }
+  >
+}
+
+export type InitiateAvatarImageUploadMutationVariables = Exact<{ [key: string]: never }>
+
+export type InitiateAvatarImageUploadMutation = { __typename?: 'Mutation' } & {
+  initiateAvatarImageUpload: { __typename?: 'InitiateAvatarImageUploadResponse' } & Pick<
+    InitiateAvatarImageUploadResponse,
+    'uploadUrl' | 'checkUrl' | 'finalUrl'
   >
 }
 
@@ -2837,6 +2857,57 @@ export type FollowingUsersLazyQueryHookResult = ReturnType<typeof useFollowingUs
 export type FollowingUsersQueryResult = ApolloReactCommon.QueryResult<
   FollowingUsersQuery,
   FollowingUsersQueryVariables
+>
+export const InitiateAvatarImageUploadDocument = gql`
+  mutation initiateAvatarImageUpload {
+    initiateAvatarImageUpload {
+      uploadUrl
+      checkUrl
+      finalUrl
+    }
+  }
+`
+export type InitiateAvatarImageUploadMutationFn = ApolloReactCommon.MutationFunction<
+  InitiateAvatarImageUploadMutation,
+  InitiateAvatarImageUploadMutationVariables
+>
+
+/**
+ * __useInitiateAvatarImageUploadMutation__
+ *
+ * To run a mutation, you first call `useInitiateAvatarImageUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInitiateAvatarImageUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [initiateAvatarImageUploadMutation, { data, loading, error }] = useInitiateAvatarImageUploadMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useInitiateAvatarImageUploadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    InitiateAvatarImageUploadMutation,
+    InitiateAvatarImageUploadMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    InitiateAvatarImageUploadMutation,
+    InitiateAvatarImageUploadMutationVariables
+  >(InitiateAvatarImageUploadDocument, baseOptions)
+}
+export type InitiateAvatarImageUploadMutationHookResult = ReturnType<
+  typeof useInitiateAvatarImageUploadMutation
+>
+export type InitiateAvatarImageUploadMutationResult = ApolloReactCommon.MutationResult<
+  InitiateAvatarImageUploadMutation
+>
+export type InitiateAvatarImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  InitiateAvatarImageUploadMutation,
+  InitiateAvatarImageUploadMutationVariables
 >
 export const LoginUserDocument = gql`
   mutation loginUser($identifier: String!, $password: String!) {

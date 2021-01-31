@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import {
   arg,
   intArg,
@@ -14,7 +13,7 @@ import {
   hasAuthorPermissions,
   NodeType,
   sendNewBadgeEmail,
-  AWS,
+  generateThumbbusterUrl,
 } from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
@@ -26,7 +25,6 @@ import {
 } from '@journaly/j-db-client'
 import { EditorNode, ImageInput } from './inputTypes'
 
-const s3 = new AWS.S3({ region: 'us-east-2' })
 
 const assignPostCountBadges = async (
   db: PrismaClient,
@@ -730,12 +728,11 @@ const PostMutations = extendType({
     t.field('initiatePostImageUpload', {
       type: 'InitiatePostImageUploadResponse',
       resolve: async (_parent, _args, ctx) => {
-        const upBucket = process.env.THUMBBUSTER_UPLOAD_BUCKET
         const transformBucket = process.env.THUMBBUSTER_TRANSFORM_BUCKET
         const cdnDomain = process.env.THUMBBUSTER_CDN_DOMAIN
 
-        if (!upBucket) {
-          throw new Error('Must specify `THUMBBUSTER_UPLOAD_BUCKET` env var')
+        if (!transformBucket) {
+          throw new Error('Must specify `THUMBBUSTER_TRANSFORM_BUCKET` env var')
         } else if (!cdnDomain) {
           throw new Error('Must specify `THUMBBUSTER_CDN_DOMAIN` env var')
         }
@@ -751,20 +748,13 @@ const PostMutations = extendType({
           throw new NotAuthorizedError()
         }
 
-        const uuid = uuidv4()
-        const uploadUrl = await (new Promise<string>((res, rej) => {
-          s3.getSignedUrl(
-            'putObject',
-            { Bucket: upBucket, Key: uuid },
-            (err, url) => err ? rej(err) : res(url)
-          )
-        }))
+        const [uuid, uploadUrl] = await generateThumbbusterUrl('post-image')
 
         return {
           uploadUrl,
-          checkUrl: `https://${transformBucket}.s3.us-east-2.amazonaws.com/${uuid}-large`,
-          finalUrlLarge: `https://${cdnDomain}/${uuid}-large`,
-          finalUrlSmall: `https://${cdnDomain}/${uuid}-small`,
+          checkUrl: `https://${transformBucket}.s3.us-east-2.amazonaws.com/post-image/${uuid}-large`,
+          finalUrlLarge: `https://${cdnDomain}/post-image/${uuid}-large`,
+          finalUrlSmall: `https://${cdnDomain}/post-image/${uuid}-small`,
         }
       }
     })

@@ -1,4 +1,4 @@
-import useImageUpload from '@/hooks/useImageUpload'
+import useImageUpload, { UploadHook } from '@/hooks/useImageUpload'
 import {
   useInitiatePostImageUploadMutation,
   InitiatePostImageUploadResponse,
@@ -8,13 +8,9 @@ const usePostImageUpload: UploadHook<InitiatePostImageUploadResponse> = () => {
   const [initiatePostImageUpload] = useInitiatePostImageUploadMutation()
 
   const getUploadData = async () =>  {
-    const {
-      data: {
-        initiatePostImageUpload: uploadData
-      }
-    } = await initiatePostImageUpload()
+    const resp = await initiatePostImageUpload()
 
-    return uploadData
+    return resp?.data?.initiatePostImageUpload
   }
 
   return useImageUpload(getUploadData)

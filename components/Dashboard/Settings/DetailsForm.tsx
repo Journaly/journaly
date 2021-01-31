@@ -47,7 +47,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
     if (image) {
       updateUser({
         variables: {
-          profileImage: image.large,
+          profileImage: image.finalUrl,
         },
       })
     }

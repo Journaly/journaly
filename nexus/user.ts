@@ -239,7 +239,7 @@ const UserMutations = extendType({
 
     t.field('initiateAvatarImageUpload', {
       type: 'InitiateAvatarImageUploadResponse',
-      resolve: async (_parent, args, ctx: any) => {
+      resolve: async (_parent, _args, ctx) => {
         const transformBucket = process.env.THUMBBUSTER_TRANSFORM_BUCKET
         const cdnDomain = process.env.THUMBBUSTER_CDN_DOMAIN
 

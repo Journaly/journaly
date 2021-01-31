@@ -9,17 +9,25 @@ interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
 }
 
-interface UploadHook<T> {
-  (getUploadData: () => Promise<T>): [
-    T | null,
-    boolean,
-    (e: HTMLInputEvent) => Promise<T | null>,
-    () => void,
-  ]
+type UploadHookOutput<T> = [
+  T | null,
+  boolean,
+  (e: HTMLInputEvent) => Promise<T | null>,
+  () => void,
+]
+
+type BaseUploadData = {
+  uploadUrl: string
+  checkUrl: string
 }
 
-const useImageUpload: UploadHook = (getUploadData) => {
-  const [image, setImage] = useState<Image | null>(null)
+export interface UploadHook<T> {
+  (): UploadHookOutput<T>
+}
+
+
+const useImageUpload = <T extends BaseUploadData>(getUploadData: () => Promise<T | undefined>): UploadHookOutput<T> => {
+  const [image, setImage] = useState<T | null>(null)
   const [uploadingImage, setUploadingImage] = useState(false)
   const { t } = useTranslation('common')
 
@@ -33,10 +41,11 @@ const useImageUpload: UploadHook = (getUploadData) => {
       return null
     }
 
-    const uploadData: T  = await getUploadData()
+    const uploadData = await getUploadData()
 
     if (!uploadData) {
       setUploadingImage(false)
+      toast.error(t('imageUploadErrorMessage'))
       return null
     }
 

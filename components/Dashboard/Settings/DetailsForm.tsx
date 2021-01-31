@@ -4,7 +4,7 @@ import { useTranslation } from '@/config/i18n'
 import FormError from '@/components/FormError'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
-import useImageUpload from '@/hooks/useImageUpload'
+import useAvatarImageUpload from '@/hooks/useAvatarImageUpload'
 import Button, { ButtonVariant } from '@/elements/Button'
 import theme from '@/theme'
 import { User as UserType, useUpdateUserMutation } from '@/generated/graphql'
@@ -39,15 +39,15 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
     },
   })
 
-  const [image, uploadingImage, onFileInputChange] = useImageUpload()
-  const profileImage = image?.large || currentUser.profileImage
+  const [image, uploadingImage, onFileInputChange] = useAvatarImageUpload()
+  const profileImage = image?.finalUrl || currentUser.profileImage
 
   const updateUserProfileImage = async (e: HTMLInputEvent): Promise<void> => {
     const image = await onFileInputChange(e)
     if (image) {
       updateUser({
         variables: {
-          profileImage: image.large,
+          profileImage: image.finalUrl,
         },
       })
     }

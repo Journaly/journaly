@@ -1,0 +1,7 @@
+mutation initiateAvatarImageUpload {
+  initiateAvatarImageUpload {
+    uploadUrl
+    checkUrl
+    finalUrl
+  }
+}

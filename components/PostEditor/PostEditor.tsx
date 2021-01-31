@@ -9,7 +9,7 @@ import Select from '@/elements/Select'
 import MultiSelect from '@/elements/MultiSelect'
 import { ButtonVariant } from '@/elements/Button'
 import theme from '@/theme'
-import useImageUpload from '@/hooks/useImageUpload'
+import usePostImageUpload from '@/hooks/usePostImageUpload'
 import useAutosavedState from '@/hooks/useAutosavedState'
 import {
   UserWithLanguagesFragmentFragment as UserWithLanguagesType,
@@ -98,8 +98,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
     return { value, displayName }
   })
 
-  const [image, uploadingImage, onFileInputChange, resetImage] = useImageUpload()
-  const postImage = image?.large || initialData.image?.largeSize || DEFAULT_IMAGE_URL
+  const [image, uploadingImage, onFileInputChange, resetImage] = usePostImageUpload()
+  const postImage = image?.finalUrlLarge || initialData.image?.largeSize || DEFAULT_IMAGE_URL
 
   const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
   const formattedTopicOptions = (topics || []).map(({ name, id }) => ({
@@ -134,8 +134,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
     const returnImage = !image
       ? null
       : {
-          largeSize: image.large,
-          smallSize: image.small,
+          largeSize: image.finalUrlLarge,
+          smallSize: image.finalUrlSmall,
           imageRole: ImageRole.Headline,
         }
 

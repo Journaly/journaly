@@ -47,13 +47,17 @@
       "description": "Published 100 posts. Talk about sticking with it!"
     }
   },
-  "imageUploadErrorMessage": "An error occured while uploading your image. Please try again later.",
   "emptyMessage": "Empty...",
   "e404": "Resource not found",
   "e403": "Not Authorized",
   "modal": {
     "confirm": "Confirm",
     "cancel": "Cancel"
+  },
+  "imageErrors": {
+    "initial": "Error communicating with Journaly server. Please try again later.",
+    "dataUpload": "Error transfering image to storage medium. Please try again later.",
+    "allDoneChecksFailed": "An error occured while uploading your image. Please try again later."
   },
   "editor": {
     "placeholderPrompt": "It all started this morning when..."

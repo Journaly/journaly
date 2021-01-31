@@ -3,29 +3,32 @@ import fetch from 'isomorphic-unfetch'
 import { toast } from 'react-toastify'
 
 import { useTranslation } from '@/config/i18n'
-import { useInitiatePostImageUploadMutation } from '@/generated/graphql'
 import { wait } from '@/utils'
 
 interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
 }
 
-type Image = {
-  large: string
-  small: string
-}
-
-type useImageUploadType = [
-  Image | null,
+type UploadHookOutput<T> = [
+  T | null,
   boolean,
-  (e: HTMLInputEvent) => Promise<Image | null>,
+  (e: HTMLInputEvent) => Promise<T | null>,
   () => void,
 ]
 
-const useImageUpload = (): useImageUploadType => {
-  const [image, setImage] = useState<Image | null>(null)
+type BaseUploadData = {
+  uploadUrl: string
+  checkUrl: string
+}
+
+export interface UploadHook<T> {
+  (): UploadHookOutput<T>
+}
+
+
+const useImageUpload = <T extends BaseUploadData>(getUploadData: () => Promise<T | undefined>): UploadHookOutput<T> => {
+  const [image, setImage] = useState<T | null>(null)
   const [uploadingImage, setUploadingImage] = useState(false)
-  const [initImageUpload] = useInitiatePostImageUploadMutation()
   const { t } = useTranslation('common')
 
   const onFileInputChange = async (e: HTMLInputEvent) => {
@@ -38,55 +41,64 @@ const useImageUpload = (): useImageUploadType => {
       return null
     }
 
-    const { data: uploadData } = await initImageUpload()
-
-    if (!uploadData) {
+    let uploadData: T | undefined
+    try {
+      uploadData = await getUploadData()
+    } catch (e) {
+      console.error(e)
       setUploadingImage(false)
+      toast.error(t('imageErrors.initial'))
       return null
     }
 
-    const {
-      initiatePostImageUpload: {
-        uploadUrl,
-        checkUrl,
-        finalUrlLarge,
-        finalUrlSmall,
-      }
-    } = uploadData
+    if (!uploadData) {
+      setUploadingImage(false)
+      toast.error(t('imageErrors.initital'))
+      return null
+    }
 
-    await fetch(uploadUrl, {
-      method: 'PUT',
-      body: files[0]
-    })
+    const { uploadUrl, checkUrl, } = uploadData
+
+    try {
+      await fetch(uploadUrl, {
+        method: 'PUT',
+        body: files[0]
+      })
+    } catch (e) {
+      console.error(e)
+      setUploadingImage(false)
+      toast.error(t('imageErrors.dataUpload'))
+      return null
+    }
 
     let successful = false
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 20; i++) {
       await wait(500)
 
-      const response = await fetch(checkUrl, { method: 'HEAD' })
-      if (response.status === 200) {
-        successful = true
-        break
+      try {
+        const response = await fetch(`${checkUrl}?t=${i}`, { method: 'HEAD' })
+        if (response.status === 200) {
+          successful = true
+          break
+        }
+      } catch (e) {
+        console.error(e)
       }
     }
 
     setUploadingImage(false)
 
     if (!successful) {
-      toast.error(t('imageUploadErrorMessage'))
+      toast.error(t('imageErrors.allDoneChecksFailed'))
       return null
     }
 
-    const returnValue = {
-      large: finalUrlLarge,
-      small: finalUrlSmall,
-    }
-
-    setImage(returnValue)
-    return returnValue
+    setImage(uploadData)
+    return uploadData
   }
 
   return [image, uploadingImage, onFileInputChange, () => setImage(null)]
 }
+
 
 export default useImageUpload

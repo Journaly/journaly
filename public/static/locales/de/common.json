@@ -3,7 +3,14 @@
   "error": "Auf dem Server ist ein Fehler aufgetreten",
   "loading": "Lädt...",
   "home": {
-    "reasonsHeader": "Drei Gründe, Journaly zu verwenden"
+    "reasonsHeader": "Drei Gründe, Journaly zu verwenden",
+    "elevatorPitch": "Verbessere deine Sprachkenntnisse und verbinde dich mit anderen durch Journaling.",
+    "getStartedText": "Los geht's!",
+    "reasonOneText": "Schreiben ist ein mächtiges Instrument, um Sprachkenntnisse zu verbessern, aber es erfordert Anstrengungen und ist am besten, wenn man Feedback bekommt. Journaly ist ein Ort für deine Texte und tolles Feedback von anderen Sprachlernenden!",
+    "reasonTwoText": "Es gibt viele persönliche Vorteile, ein Tagebuch zu führen, und es ist für viele Menschen eine beliebte positive Angewohnheit, die sie nicht missen möchten. Journaly fördert dich beim Sprachenlernen und hilft dir gleichzeitig dabei, alle Vorteile des Tagebuchschreibens zu nutzen!",
+    "reasonThreeText": "Viele Seiten helfen dir, einen Sprachpartner zu finden, indem sie einfach deine Sprachinteressen abgleichen - aber das ist uns nicht gut genug! Journaly hilft dir, Leute zu finden, die auch die gleichen Interessen haben wie du!",
+    "videoHeader": "Ein wunderbares Schreiberlebnis",
+    "testimonialsHeader": "Was Journaler sagen"
   },
   "nav": {
     "myFeed": "Mein Feed",
@@ -23,11 +30,11 @@
     },
     "CODE_CONTRIBUTOR": {
       "title": "Code Contributor",
-      "description": "Hat Code zur Journaly-Codebasis beigetragen. Sie können den Journaly-Quellcode unter https://github.com/Journaly/journaly finden und selbst dazu beitragen."
+      "description": "Hat Code zur Journaly-Codebasis beigetragen. Du kannst den Journaly-Quellcode unter https://github.com/Journaly/journaly finden und selbst dazu beitragen."
     },
     "TEN_POSTS": {
       "title": "10 Beiträge",
-      "description": "Hat 10 Beträge veröffentlicht. Jetzt geht es erst richtig los!"
+      "description": "Hat 10 Beiträge veröffentlicht. Jetzt geht es erst richtig los!"
     },
     "ONEHUNDRED_POSTS": {
       "title": "100 Beiträge",
@@ -38,7 +45,10 @@
   "e404": "Seite nicht gefunden",
   "e403": "Nicht autorisiert",
   "modal": {
-    "confirm": "Betätigen",
+    "confirm": "Bestätigen",
     "cancel": "Abbrechen"
+  },
+  "editor": {
+    "placeholderPrompt": "Alles begann heute früh, als..."
   }
 }

@@ -3,25 +3,26 @@ import { useTranslation } from '@/config/i18n'
 
 type ReasonCardProps = {
   image: string
+  reasonTexts: string[]
   reasonNumber: number
 }
 
 const imagePath = 'images/home'
 const imageUrls = ['hand-writing.jpg', 'hands-typing.jpg', 'typewriter.jpg']
-const reasonTexts = [
-  'Writing is such a powerful tool for improving your language skills, but it takes effort and is best when you can get feedback. Journaly is a home for your writing and great feedback from fellow language learners!',
-  'There are many personal benefits to keeping a journal, and it is one of the most desired positive habits for many people. Journaly supercharges your language learning while helping you get all the benefits of keeping a journal!',
-  'Many sites help you find a language exchange partner by simply matching your language interests - but that’s not good enough for us. Journaly helps you find people who also share the same interests as you!',
-]
 
 const ReasonsSection = () => {
   const { t } = useTranslation('common')
+  const reasonTexts = [
+    t('home.reasonOneText'),
+    t('home.reasonTwoText'),
+    t('home.reasonThreeText'),
+  ]
 
   return (
     <HomeSection sectionHeading={t('home.reasonsHeader')} grey>
       <div className="reasons-container">
         {imageUrls.map((url, i) => (
-          <ReasonCard key={i} image={`${imagePath}/${url}`} reasonNumber={i} />
+          <ReasonCard key={i} image={`${imagePath}/${url}`} reasonTexts={reasonTexts} reasonNumber={i} />
         ))}
       </div>
 
@@ -43,7 +44,7 @@ const ReasonsSection = () => {
   )
 }
 
-const ReasonCard: React.FC<ReasonCardProps> = ({ image, reasonNumber }) => (
+const ReasonCard: React.FC<ReasonCardProps> = ({ image, reasonTexts, reasonNumber }) => (
   <div className="reason-card">
     <img src={image} />
 

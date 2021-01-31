@@ -1,6 +1,7 @@
 import React from 'react'
 import MultiSelect from '@/elements/MultiSelect'
 import { LanguagesQuery } from '@/generated/graphql'
+import { useTranslation } from '@/config/i18n'
 
 type Props = {
   languagesData: LanguagesQuery | undefined
@@ -15,6 +16,7 @@ const LanguageSelect: React.FC<Props> = ({
   onAdd,
   onRemove,
 }) => {
+  const { t } = useTranslation('my-feed')
   const languageOptions = (languagesData?.languages || []).map(
     ({ dialect, id, name, postCount }) => {
       const languageName =
@@ -32,7 +34,7 @@ const LanguageSelect: React.FC<Props> = ({
     <MultiSelect
       options={languageOptions}
       selectedOptionValues={selectedLanguagesIds}
-      placeholder="Languages"
+      placeholder={t('languageSelectPlaceholder')}
       onAdd={onAdd}
       onRemove={onRemove}
     />

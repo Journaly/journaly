@@ -29,7 +29,16 @@
       "legend": "Languages",
       "nativeLanguagesLabel": "What language(s) do you speak at a native level?",
       "learningLanguagesLabel": "What language(s) are you learning?",
-      "welcomeModalFormLabel": "Tell us your native language(s) and which language(s) you're learning"
+      "welcomeModalFormLabel": "Tell us your native language(s) and which language(s) you're learning",
+      "languageSelectPlaceholder": "Select a language...",
+      "levelSelectPlaceholder": "Select a level...",
+      "addLanguageButtonText": "Add",
+      "levels": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced",
+        "native": "Native"
+      }
     },
     "bio": {
       "legend": "Bio",
@@ -40,7 +49,8 @@
     },
     "interests": {
       "legend": "Interests",
-      "topicsLabel": "Tell us about the topics you're interested in! This will help us show you posts you'll like and find people with similar interests to you."
+      "topicsLabel": "Tell us about the topics you're interested in! This will help us show you posts you'll like and find people with similar interests to you.",
+      "topicsPlaceholder": "Coming soon..."
     },
     "social": {
       "legend": "Social",
@@ -69,10 +79,13 @@
       "legend": "Change Password",
       "submitButton": "Update",
       "oldPasswordLabel": "Enter old password",
+      "oldPasswordPlaceholder": "Old password",
       "oldPasswordError": "Enter your old password",
       "newPasswordLabel": "Choose new password",
+      "newPasswordPlaceholder": "New password",
       "newPasswordError": "Enter your new password",
       "confirmNewPasswordLabel": "Re-enter new password",
+      "confirmNewPasswordPlaceholder": "Confirm password",
       "confirmNewPasswordError": "Confirm your new password",
       "confirmNewPasswordMatchError": "Passwords do not match",
       "newPasswordMinimumErrorMessage": "Password must be at least 6 characters",

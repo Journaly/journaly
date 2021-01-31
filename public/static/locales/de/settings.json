@@ -29,22 +29,32 @@
       "legend": "Sprachen",
       "nativeLanguagesLabel": "Welche Sprache(n) sprichst du auf Muttersprachler-Niveau?",
       "learningLanguagesLabel": "Welche Sprache(n) lernst du?",
-      "welcomeModalFormLabel": "Teile uns deine Muttersprache(n) mit und welche Sprache(n) du lernst"
+      "welcomeModalFormLabel": "Teile uns deine Muttersprache(n) mit und welche Sprache(n) du lernst",
+      "languageSelectPlaceholder": "Select a language...",
+      "levelSelectPlaceholder": "Wähle ein Niveau ...",
+      "addLanguageButtonText": "Hinzufügen",
+      "levels": {
+        "beginner": "Anfänger",
+        "intermediate": "Mittlere Kenntnisse",
+        "advanced": "Fortgeschritten",
+        "native": "Muttersprachler/in"
+      }
     },
     "bio": {
       "legend": "Über mich",
       "bioLabel": "Erzähl uns etwas über dich!",
-      "bioError": "Dein 'Über mich' muss {{characters}} oder weniger Zeichen enthalten.",
-      "bioInputDescription": "Mindestens {{characters}} Zeichen",
+      "bioError": "Dein 'Über mich' darf bis zu {{characters}} enthalten.",
+      "bioInputDescription": "Maximal {{characters}} Zeichen",
       "bioSuccess": "Über mich erfolgreich aktualisiert"
     },
     "interests": {
       "legend": "Interessen",
-      "topicsLabel": "Erzähle uns welche Themen dich interessieren! Das wird uns helfen dir Beiträge zu zeigen, die dir gefallen werden, und Leute finden, die dieselben Interessen wie du haben."
+      "topicsLabel": "Erzähle uns, welche Themen dich interessieren! Das wird uns helfen, dir Beiträge zu zeigen, die dir gefallen werden, und Leute zu finden, die dieselben Interessen wie du haben.",
+      "topicsPlaceholder": "Kommt bald..."
     },
     "social": {
       "legend": "Soziale Medien",
-      "socialLabel": "Möchtest du dich mit anderen Journalern über Soziale Medien verbinden? Oder möchtest du deine eigene Arbeit promoten? Teile uns mit wie man dich finden kann.",
+      "socialLabel": "Möchtest du dich mit anderen Journalern über Soziale Medien verbinden? Oder möchtest du deine eigene Arbeit promoten? Teile uns mit, wie man dich finden kann.",
       "facebookPlaceholder": "facebook.com/DeineSeite",
       "youtubePlaceholder": "youtube.com/channel/DeinKanal",
       "instagramPlaceholder": "instagram.com/DeineSeite",
@@ -69,10 +79,13 @@
       "legend": "Passwort ändern",
       "submitButton": "Aktualisieren",
       "oldPasswordLabel": "Altes Passwort eingeben",
+      "oldPasswordPlaceholder": "Altes Passwort",
       "oldPasswordError": "Gib dein altes Passwort ein",
       "newPasswordLabel": "Neues Passwort auswählen",
+      "newPasswordPlaceholder": "Neues Passwort",
       "newPasswordError": "Gib ein neues Passwort ein",
       "confirmNewPasswordLabel": "Wiederhole dein neues Passwort",
+      "confirmNewPasswordPlaceholder": "Passwort bestätigen",
       "confirmNewPasswordError": "Neues Passwort bestätigen",
       "confirmNewPasswordMatchError": "Die beiden Passwörter stimmen nicht überein",
       "newPasswordMinimumErrorMessage": "Das Passwort muss min. 6 Zeichen lang sein",

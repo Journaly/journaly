@@ -3,5 +3,8 @@
   "noPostsMessage": "Es gibt noch nichts zu sehen ...",
   "clearFilters": "Filter löschen",
   "myLanguages": "Meine Sprachen",
-  "followedUsers": "Journaler, denen ich folge"
+  "followedUsers": "Journaler, denen ich folge",
+  "textSearchPlaceholder": "Beiträge durchsuchen",
+  "topicSelectPlaceholder": "Themen",
+  "languageSelectPlaceholder": "Sprachen"
 }

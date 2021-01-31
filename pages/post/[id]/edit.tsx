@@ -138,7 +138,14 @@ const EditPostPage: NextPage = () => {
               display: flex;
               flex-direction: row;
               margin: 0 auto;
-              justify-content: space-between;
+              width: 250px;
+              justify-content: space-around;
+            }
+
+            @media (max-width: ${theme.breakpoints.XS}) {
+              .button-container {
+                width: 100%;
+              }
             }
 
             .error-message {

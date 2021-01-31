@@ -18,7 +18,7 @@ type ToggleByTypeArgs = {
   type: ButtonType
   editor: Editor
   format: string
-  t?: TFunction
+  t: TFunction
 }
 
 type ToggleArgs = Omit<ToggleByTypeArgs, 'type'>

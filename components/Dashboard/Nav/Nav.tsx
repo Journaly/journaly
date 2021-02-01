@@ -138,17 +138,21 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         </div>
         {shouldShowModal && (
           <Modal
-            title="Support"
+            title={t('helpModal.header')}
             body={
               <>
-                <p>Need help? We've got your back!</p>
-                <p>Please send an email to <a href="mailto:hello@journaly.com" style={{
+                <p style={{
+                  marginTop: '25px',
+                }}>{t('helpModal.bodyOne')}</p>
+                <p>{t('helpModal.bodyTwo')}<a href="mailto:hello@journaly.com" style={{
                   color: theme.colors.blueLight,
-                }}>hello@journaly.com</a> with a detailed description of your issue and we will get back to you as soon as we can!</p>
+                }}>hello@journaly.com</a>{t('helpModal.bodyThree')}</p>
               </>
             }
             footer={
-              <p>Thanks for helping us make Journaly a better place for everyone</p>
+              <p style={{
+                margin: '0 auto',
+              }}>{t('helpModal.footer')}</p>
             }
             onClose={() => setShouldShowModal(false)}
           />

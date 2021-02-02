@@ -10,9 +10,15 @@
     "reasonTwoText": "There are many personal benefits to keeping a journal, and it is one of the most desired positive habits for many people. Journaly supercharges your language learning while helping you get all the benefits of keeping a journal!",
     "reasonThreeText": "Many sites help you find a language exchange partner by simply matching your language interests - but that’s not good enough for us. Journaly helps you find people who also share the same interests as you!",
     "videoHeader": "A Delightful Writing Experience",
-    "testimonialsHeader": "What Journalers are saying"
+    "testimonialsHeader": "What Journalers are saying",
+    "nav": {
+      "about": "About",
+      "blog": "Blog",
+      "logIn": "Log in",
+      "signUp": "Sign up"
+    }
   },
-  "nav": {
+  "dashboardNav": {
     "myFeed": "My Feed",
     "myPosts": "My Posts",
     "newPost": "New Post",

@@ -2,6 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { useTranslation } from '@/config/i18n'
 
 type Props = {
   currentPage: number
@@ -11,6 +12,7 @@ type Props = {
 }
 
 const Pagination: React.FC<Props> = ({ currentPage, total, numPerPage, title }) => {
+  const { t } = useTranslation('my-feed')
   const { pathname } = useRouter()
   const pages = Math.ceil(total / numPerPage)
 
@@ -31,15 +33,15 @@ const Pagination: React.FC<Props> = ({ currentPage, total, numPerPage, title }) 
 
       <Link href={adjacentPageUrl(-1)}>
         <a className="adjacent-page-link" aria-disabled={currentPage <= 1}>
-          &larr; Prev
+          &larr; {t('pagination.previous')}
         </a>
       </Link>
       <p>
-        Page {currentPage} of {pages}
+        {t('pagination.page')} {currentPage} {t('pagination.of')} {pages}
       </p>
       <Link href={adjacentPageUrl(1)}>
         <a className="adjacent-page-link" aria-disabled={currentPage >= pages}>
-          Next &rarr;
+          {t('pagination.next')} &rarr;
         </a>
       </Link>
 

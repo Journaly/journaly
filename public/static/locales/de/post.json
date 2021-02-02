@@ -17,6 +17,7 @@
   "deletePostError": "Beim Löschen des Beitrags ist ein Fehler aufgetreten.",
   "titleLabel": "Titel",
   "languageLabel": "Sprache",
+  "topicsLabel": "Themen",
   "save": "Speichern",
   "finishAction": "Beitrag vervollständigen",
   "noLanguageError": "Bitte eine Sprache auswählen.",
@@ -27,5 +28,6 @@
     "title": "Beitrag löschen",
     "body": "Bist du sicher, dass du diesen Beitrag löschen möchtest?"
   },
+  "enterUrlPrompt": "Gib die URL des Links ein",
   "websitePatternError": "Invalid website url. e.g. domain.com or sub.domain.com"
 }

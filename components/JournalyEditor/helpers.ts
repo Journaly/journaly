@@ -140,7 +140,8 @@ const wrapLink = (editor: Editor, url: string) => {
 }
 
 const toggleLink = ({ editor, t }: ToggleArgs) => {
-  let url: string | undefined | null = window.prompt('Enter the URL of the link:')
+  const enterUrlPrompt = t ? t('enterUrlPrompt') : 'Enter the URL of the link:'
+  let url: string | undefined | null = window.prompt(enterUrlPrompt)
   if (!url) return
 
   url = validateProtocol(url)

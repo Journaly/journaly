@@ -17,6 +17,7 @@
   "deletePostError": "There was an error while deleting post.",
   "titleLabel": "Title",
   "languageLabel": "Language",
+  "topicsLabel": "Topics",
   "save": "Save",
   "finishAction": "Finish post",
   "noLanguageError": "Please select a language.",
@@ -27,5 +28,6 @@
     "title": "Delete Post",
     "body": "Are you sure you want to delete this post?"
   },
+  "enterUrlPrompt": "Enter the URL of the link:",
   "websitePatternError": "Invalid website url. e.g. domain.com or sub.domain.com"
 }

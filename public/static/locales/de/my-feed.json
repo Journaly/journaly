@@ -6,5 +6,11 @@
   "followedUsers": "Journaler, denen ich folge",
   "textSearchPlaceholder": "Beiträge durchsuchen",
   "topicSelectPlaceholder": "Themen",
-  "languageSelectPlaceholder": "Sprachen"
+  "languageSelectPlaceholder": "Sprachen",
+  "pagination": {
+    "previous": "Zurück",
+    "next": "Weiter",
+    "page": "Seite",
+    "of": "von"
+  }
 }

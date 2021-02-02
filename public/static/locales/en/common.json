@@ -25,6 +25,13 @@
     "settings": "Settings",
     "logOut": "Log Out"
   },
+  "helpModal": {
+    "header": "Support",
+    "bodyOne": "Need help? We've got your back!",
+    "bodyTwo": "Please send an email to ",
+    "bodyThree": " with a detailed description of your issue and we will get back to you as soon as we can!",
+    "footer": "Thanks for helping us make Journaly a better place for everyone"
+  },
   "badge": {
     "ALPHA_USER": {
       "title": "Alpha User",

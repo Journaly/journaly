@@ -1,12 +1,60 @@
 import isUrl from 'is-url'
-import { Editor, Transforms, Element as SlateElement, Range } from 'slate'
+import {
+  Text,
+  Editor,
+  Transforms,
+  Element as SlateElement,
+  Range
+} from 'slate'
 import { toast } from 'react-toastify'
 import { TFunction } from 'next-i18next'
 import { DEFAULTS_TABLE, setDefaults, someNode, insertTable } from '@udecode/slate-plugins'
 
+declare module 'slate' {
+  interface CustomText {
+    bold?: boolean
+    italic?: boolean
+    underline?: boolean
+  }
+
+  interface CustomElement {
+    type?: string
+    url?: string
+  }
+
+  type CustomNode = Editor | CustomElement | Text
+
+  interface CustomTypes {
+    Element: CustomElement
+    Node: CustomNode
+    Text: CustomText
+  }
+}
+
 export type ButtonType = 'mark' | 'block' | 'link' | 'table'
 
-const LIST_TYPES = ['numbered-list', 'bulleted-list']
+/*
+// TODO: Actually type `isXActive` functions
+type MarkType =
+  | 'bold'
+  | 'italic'
+  | 'underline'
+
+type ElementType =
+  | 'heading-one'
+  | 'heading-two'
+  | 'block-quote'
+  | 'bulleted-list'
+  | 'numbered-list'
+  | 'list-item'
+  | 'link'
+  | 'paragraph'
+  | 'table'
+  | 'td'
+  | 'tr'
+  | 'th'
+  */
+
 
 type IsTypeActiveArgs = {
   type: ButtonType
@@ -24,6 +72,8 @@ type ToggleByTypeArgs = {
 type ToggleArgs = Omit<ToggleByTypeArgs, 'type'>
 
 export const options = setDefaults(DEFAULTS_TABLE, {})
+
+const LIST_TYPES = ['numbered-list', 'bulleted-list']
 
 const validateProtocol = (href: string) => {
   const httpStr = 'http://'
@@ -43,25 +93,24 @@ const unwrapLink = (editor: Editor) => {
   })
 }
 
-const isLinkActive = (editor: Editor) => {
-  const [link] = Editor.nodes(editor, {
-    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'link',
-  })
-  return !!link
-}
-
 const isMarkActive = (editor: Editor, format: string) => {
-  const marks = Editor.marks(editor)
+  const marks = Editor.marks(editor) as { [key: string]: boolean | undefined }
   return marks ? marks[format] === true : false
 }
 
 const isBlockActive = (editor: Editor, format: string) => {
   const [match] = Editor.nodes(editor, {
-    match: (n) => n.type === format,
+    match: (n) => (
+      !Editor.isEditor(n) &&
+      SlateElement.isElement(n) &&
+      n.type === format
+    ),
   })
 
   return !!match
 }
+
+const isLinkActive = (editor: Editor) => isBlockActive(editor, 'link')
 
 export const isTableActive = (editor: Editor) => {
   return someNode(editor, { match: { type: options.table.type } })
@@ -94,7 +143,11 @@ const toggleBlock = ({ editor, format }: ToggleArgs) => {
   const isList = LIST_TYPES.includes(format)
 
   Transforms.unwrapNodes(editor, {
-    match: (n) => LIST_TYPES.includes(n.type as string),
+    match: (n) => (
+      !Editor.isEditor(n) &&
+      SlateElement.isElement(n) &&
+      LIST_TYPES.includes(n.type as string)
+    ),
     split: true,
   })
 

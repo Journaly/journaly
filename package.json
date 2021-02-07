@@ -31,7 +31,9 @@
     "migrate:up": "npm explore '@journaly/j-db-client' -- npm run migrate:up",
     "migrate:save": "npm explore '@journaly/j-db-client' -- npm run migrate:save",
     "empty-db": "source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
-    "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed"
+    "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed",
+    "translations:topics:pull": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/pull-topic-translations.ts",
+    "translations:topics:push": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/push-topic-translations.ts"
   },
   "prisma": {
     "schema": "node_modules/@journaly/j-db-client/prisma/schema.prisma"
@@ -108,6 +110,7 @@
     "@typescript-eslint/eslint-plugin": "^2.29.0",
     "@typescript-eslint/parser": "^2.29.0",
     "colors": "^1.4.0",
+    "csv": "^5.3.2",
     "cypress": "^4.3.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",

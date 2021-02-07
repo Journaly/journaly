@@ -5,8 +5,6 @@ import {
   UILanguage,
 } from '@journaly/j-db-client'
 
-const db = new PrismaClient()
-
 const sourceSequence = `food
 reading
 business
@@ -96,6 +94,7 @@ const priority = ({ id, devName }) => {
 }
 
 const main = async () => {
+  const db = new PrismaClient()
   const uiLangs: UILanguage[] = ['GERMAN']
 
   const topics = (await db.topic.findMany({})).sort((a, b) => priority(a) - priority(b))

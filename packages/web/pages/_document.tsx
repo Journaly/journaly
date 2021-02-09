@@ -31,7 +31,6 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
     return (
       <Html lang={language}>
         <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta charSet="utf-8" />
           <link
             href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap"

@@ -1,5 +1,5 @@
 import React from 'react'
-import MultiSelect from '@/elements/MultiSelect'
+import MultiSelect from '@/components/MultiSelect'
 import { LanguagesQuery } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
 

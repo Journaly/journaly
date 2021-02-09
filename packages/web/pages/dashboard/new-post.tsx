@@ -10,7 +10,7 @@ import PostEditor, {
   validatePostData,
 } from '@/components/PostEditor'
 import theme from '@/theme'
-import Button, { ButtonVariant } from '@/elements/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 import {
   useNewPostQuery,
   useCreatePostMutation,

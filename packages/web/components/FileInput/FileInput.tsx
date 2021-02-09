@@ -1,5 +1,5 @@
 import React from 'react'
-import Button, { ButtonVariant } from '@/elements/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 
 interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget

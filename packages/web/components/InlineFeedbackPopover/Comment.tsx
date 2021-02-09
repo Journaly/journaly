@@ -10,7 +10,7 @@ import {
 } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
 
-import Button, { ButtonSize, ButtonVariant } from '@/elements/Button'
+import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import theme from '@/theme'
 import EditIcon from '@/components/Icons/EditIcon'

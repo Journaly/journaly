@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 import BlogPageLayout from '@/components/Layouts/BlogPageLayout'
-import ExternalLink from '@/elements/ExternalLink'
+import ExternalLink from '@/components/ExternalLink'
 import { brandBlue } from '@/utils'
 import { withApollo } from '@/lib/apollo'
 

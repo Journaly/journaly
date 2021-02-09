@@ -6,9 +6,9 @@ import {
   useAddLanguageRelationMutation,
   useRemoveLanguageRelationMutation,
 } from '@/generated/graphql'
-import Select from '@/elements/Select'
-import Button, { ButtonVariant } from '@/elements/Button'
-import { OptionPills } from '@/elements/MultiSelect'
+import Select from '@/components/Select'
+import Button, { ButtonVariant } from '@/components/Button'
+import { OptionPills } from '@/components/MultiSelect'
 import { languageNameWithDialect } from '@/utils/languages'
 import theme from '@/theme'
 import { useTranslation } from '@/config/i18n'

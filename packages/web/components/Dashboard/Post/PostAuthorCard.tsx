@@ -10,8 +10,8 @@ import {
 import { useTranslation } from '@/config/i18n'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import { languageNameWithDialect } from '@/utils/languages'
-import Button, { ButtonVariant } from '@/elements/Button'
-import LevelGauge from '@/elements/LevelGauge'
+import Button, { ButtonVariant } from '@/components/Button'
+import LevelGauge from '@/components/LevelGauge'
 
 type PostAuthorCardProps = {
   author: Author

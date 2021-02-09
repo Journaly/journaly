@@ -10,7 +10,7 @@ import { useTranslation } from '@/config/i18n'
 import { formatLongDate } from '@/utils'
 
 import theme from '@/theme'
-import LevelGauge from '@/elements/LevelGauge'
+import LevelGauge from '@/components/LevelGauge'
 
 type PostHeaderProps = {
   postTitle: string

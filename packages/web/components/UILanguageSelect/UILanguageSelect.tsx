@@ -2,7 +2,7 @@ import React from 'react'
 import { I18nContext } from 'react-i18next'
 import { i18n } from '@/config/i18n'
 
-import Button, { ButtonVariant } from '@/elements/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 
 import FlagUSIcon from '@/components/Icons/FlagUSIcon'
 import FlagDEIcon from '@/components/Icons/FlagDEIcon'

@@ -7,12 +7,12 @@ import {
   PostStatus as PostStatusType,
   PostCardFragmentFragment as PostCardType,
 } from '@/generated/graphql'
-import LineClamp from '@/elements/LineClamp'
+import LineClamp from '@/components/LineClamp'
 import LikeIcon from '@/components/Icons/LikeIcon'
 import CommentIcon from '@/components/Icons/CommentIcon'
 import theme from '@/theme'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
-import LevelGauge from '@/elements/LevelGauge'
+import LevelGauge from '@/components/LevelGauge'
 
 type Props = {
   post: PostCardType

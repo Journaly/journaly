@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { width } from '@/utils'
 import theme from '@/theme'
-import Button, { ButtonSize } from '@/elements/Button'
+import Button, { ButtonSize } from '@/components/Button'
 import { useTranslation } from '@/config/i18n'
 
 const TopSection = () => {

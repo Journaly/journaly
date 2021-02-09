@@ -11,7 +11,7 @@ import {
 
 import theme from '@/theme'
 import Comment from './Comment'
-import Button, { ButtonVariant } from '@/elements/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 
 type ThreadProps = {
   thread: ThreadType

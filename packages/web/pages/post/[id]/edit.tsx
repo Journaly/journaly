@@ -12,7 +12,7 @@ import PostEditor, {
   OutputPostData,
 } from '@/components/PostEditor'
 import theme from '@/theme'
-import Button, { ButtonVariant } from '@/elements/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 import { ImageRole, useEditPostQuery, useUpdatePostMutation } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import useUILanguage from '@/hooks/useUILanguage'

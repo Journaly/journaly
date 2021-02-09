@@ -2,7 +2,7 @@ import React from 'react'
 
 import theme from '@/theme'
 import XIcon from '@/components/Icons/XIcon'
-import { Option, OptionValue } from '@/elements/Select/Select'
+import { Option, OptionValue } from '@/components/Select/Select'
 
 type Props<T extends OptionValue> = {
   selectedOptions: Option<T>[]

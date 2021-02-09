@@ -6,7 +6,7 @@ import { useTranslation } from '@/config/i18n'
 import FormError from '@/components/FormError'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
-import Button, { ButtonVariant } from '@/elements/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 import { useUpdateUserMutation } from '@/generated/graphql'
 import theme from '@/theme'
 

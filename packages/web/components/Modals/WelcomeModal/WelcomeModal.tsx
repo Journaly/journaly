@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Modal from '@/components/Modal'
 import WelcomeModalBody from './WelcomeModalBody'
-import Button from '@/elements/Button'
+import Button from '@/components/Button'
 import {
   LanguagesFormDataQuery,
   useLanguagesFormDataQuery,

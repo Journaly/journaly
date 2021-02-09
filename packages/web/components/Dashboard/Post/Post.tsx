@@ -15,7 +15,7 @@ import {
   ImageRole,
   Post as PostModel,
 } from '@/generated/graphql'
-import Button, { ButtonVariant } from '@/elements/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
 import PostBodyStyles from '@/components/PostBodyStyles'
 import PencilIcon from '@/components/Icons/PencilIcon'

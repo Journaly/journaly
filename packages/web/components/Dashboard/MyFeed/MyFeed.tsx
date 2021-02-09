@@ -15,7 +15,7 @@ import {
   useTopicsQuery,
 } from '@/generated/graphql'
 import LoadingWrapper from '@/components/LoadingWrapper'
-import Button, { ButtonVariant } from '@/elements/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 import useToggle from '@/hooks/useToggle'
 import SearchInput from './SearchInput'
 import LanguageSelect from './LanguageSelect'

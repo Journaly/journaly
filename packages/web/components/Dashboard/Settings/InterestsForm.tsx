@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from '@/config/i18n'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
-import Button, { ButtonVariant } from '@/elements/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 
 const InterestsForm: React.FC = () => {
   const { t } = useTranslation('settings')

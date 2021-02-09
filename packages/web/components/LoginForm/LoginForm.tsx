@@ -6,7 +6,7 @@ import { useForm, ErrorMessage } from 'react-hook-form'
 import { useTranslation } from '@/config/i18n'
 import { useLoginUserMutation, CurrentUserDocument, useCurrentUserQuery } from '@/generated/graphql'
 import FormError from '@/components/FormError'
-import Button from '@/elements/Button'
+import Button from '@/components/Button'
 import { brandBlue } from '@/utils'
 import theme from '@/theme'
 

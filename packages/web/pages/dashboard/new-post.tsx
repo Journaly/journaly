@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
 import { withApollo } from '@/lib/apollo'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
@@ -22,7 +23,6 @@ import {
 import AuthGate from '@/components/AuthGate'
 import { useTranslation } from '@/config/i18n'
 import useUILanguage from '@/hooks/useUILanguage'
-import { toast } from 'react-toastify'
 
 const initialData: InputPostData = {
   title: '',

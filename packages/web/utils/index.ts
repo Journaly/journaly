@@ -1,4 +1,4 @@
-import xss from 'xss'
+import { filterXSS, whiteList } from 'xss'
 export * from './breakpoints'
 export * from './colors'
 export * from './css'
@@ -13,9 +13,9 @@ export function fromEntries<V>(iterable: Iterable<[string, V]>) {
 }
 
 export const sanitize = (html: string): string => {
-  return xss.filterXSS(html, {
+  return filterXSS(html, {
     whiteList: {
-      ...xss.whiteList,
+      ...whiteList,
       a: ['href', 'target', 'rel'],
     },
   })

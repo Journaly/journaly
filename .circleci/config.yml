@@ -10,23 +10,23 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - node-deps-v2-{{ checksum "package-lock.json" }}
+            - node-deps-v2-{{ checksum "packages/web/package-lock.json" }}
       - run:
-          command: npm ci
+          command: cd packages/web && npm ci
           name: Installing NPM packages
       - run:
-          command: npm run build
+          command: cd packages/web && npm run build
           name: Build
           environment:
             ANALYZE: 1
       - store_artifacts:
           path: .next/analyze
       - save_cache:
-          key: node-deps-v2-{{ checksum "package-lock.json" }}
+          key: node-deps-v2-{{ checksum "packages/web/package-lock.json" }}
           paths:
-              - ~/.npm
-              - ~/.cache
-              - ./.next/cache
+            - ~/packages/web/.npm
+            - ~/packages/web/.cache
+            - ./packages/web/.next/cache
 
 workflows:
   main:

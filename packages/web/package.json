@@ -23,7 +23,6 @@
     "svgr": "node scripts/svgr.js",
     "type-check": "tsc",
     "seed": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/seed.ts",
-    "diff-test": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/diff-test.ts",
     "db:snapshot": "pg_dump $DATABASE_URL > snapshot.sql",
     "db:restore": "npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
     "prisma:generate": "npm explore '@journaly/j-db-client' -- npm run prisma:generate",

@@ -6,7 +6,8 @@
   },
   "nav": {
     "profile": "Profile Info",
-    "account": "Account"
+    "account": "Account",
+    "subscription": "Subscription"
   },
   "updateButton": "Update",
   "profile": {
@@ -95,6 +96,9 @@
     }
   },
   "subscription": {
-    "subscribeCta": "Subscribe to Journaly Premium!"
+    "legend": "Subscribe to Journaly Premium",
+    "subscribeCta": "Subscribe!",
+    "subscribeSuccessMessage": "Congratulations! You're now a Journaly Premium member!",
+    "subscribeFailureMessage": "Oh no! Something went wrong. Please try again."
   }
 }

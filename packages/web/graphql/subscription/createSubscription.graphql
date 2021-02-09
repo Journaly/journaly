@@ -1,0 +1,5 @@
+mutation createUserSubscription($type: UserSubscriptionType!, $price: Int!) {
+  createUserSubscription(type: $type, price: $price) {
+    id
+  }
+}

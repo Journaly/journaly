@@ -1,0 +1,22 @@
+{
+  "name": "journaly",
+  "version": "2.0.0",
+  "description": "A foreign language journaling platform for exchanging feedback with native or advanced speakers and building community around shared interests and languages.",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "npx cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Journaly/journaly.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/Journaly/journaly/issues"
+  },
+  "homepage": "https://github.com/Journaly/journaly#readme",
+  "devDependencies": {
+    "cypress": "^4.9.0"
+  }
+}

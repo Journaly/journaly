@@ -3,6 +3,7 @@ import { NextPage } from 'next'
 import { withApollo } from '@/lib/apollo'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import AuthGate from '@/components/AuthGate'
+import SubscriptionForm from '@/components/Dashboard/Settings/SubscriptionForm'
 
 const Subscription: NextPage = () => {
   return (
@@ -10,10 +11,14 @@ const Subscription: NextPage = () => {
       <>
         <SettingsPageLayout>
           <div className="forms-container">
-            <p>Let's make some monay!</p>
+            <SubscriptionForm />
           </div>
         </SettingsPageLayout>
         <style jsx>{`
+          .forms-container {
+            width: 100%;
+            max-width: 1008px;
+          }
         `}</style>
       </>
     </AuthGate>

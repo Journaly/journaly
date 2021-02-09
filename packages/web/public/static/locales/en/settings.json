@@ -74,7 +74,7 @@
       "instagramPatternError": "Invalid instagram url. e.g. instagram.com/YourPage"
     }
   },
-  "account":{
+  "account": {
     "updatePasswordForm": {
       "legend": "Change Password",
       "submitButton": "Update",
@@ -93,5 +93,8 @@
       "updateError": "There was an error updating your password.",
       "newPasswordCannotBeTheSameError": "new password cannot be the same as old"
     }
+  },
+  "subscription": {
+    "subscribeCta": "Subscribe to Journaly Premium!"
   }
 }

@@ -86,7 +86,7 @@ More detailed documentation can be found within each directory (WIP).
 
 1. Update your `.env` file with your new postgres username & password. Copy and paste your root `.env` into `j-db-client/prisma/.env`. You should end up with two of the same file, one in root and the other in `j-db-client`.
 
-1. Finally, from the root of the project, apply database migrations to your new database instance:
+1. Finally, from the `packages/j-db-client` directory, apply database migrations to your new database instance:
 
    ```bash
    $ npm run migrate:up
@@ -96,25 +96,11 @@ More detailed documentation can be found within each directory (WIP).
 
 #### Useful Commands For Working With Your DB
 
-**NOTE: All DB commands/scripts are run from within the `packages/j-db-client` directory**
+**NOTE: All DB commands/scripts are run from within the `packages/j-db-client` directory. Detailed documentation can be found [here](./packages/j-db-client)**
 
 - Start up your psql `journaly_db` shell: `psql <your_db_url>`
 - Wipe out the database, and reinsert the seed data: `npm run reseed-db`
 - Update the generated GQL queries/mutations for use on the front end: `npm run codegen`
-
-#### Database Migrations
-
-Database migrations are how changes to the data model(`schema.prisma`) get applied to a database. Changes that you make to the data model in your local environment also need to be applied to databases in other environments, e.g. production, and migrations are how that change is reproduced elsewhere. If you edit the data model, you'll want to run the following commands from the root of the project:
-
-```sh
-$ npm run migrate:save
-$ npm run migrate:up
-$ npm i @journaly/j-db-client
-```
-
-The first command creates a migration, resulting in a new file in the `j-db-client/prisma/migrations` directory. The second applies that migration to the local database. Finally, re-installing the `@journaly/j-db-client` package results in an updated `PrismaClient`. You'll want to commit any new migration artifacts that you create.
-
-_Previous migrations should never be edited._
 
 ### Running Journaly
 

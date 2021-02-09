@@ -38,7 +38,7 @@ Here is an overview of the project setup:
 |------ web/ # Our core application that users engage with on the web
 |------ j-mail/ # A simple managed queue service for handling transactional emails from within the app
 |------ j-db-client/ # A database client that can be imported into any service to interact with the db
-|-------- datamodel.prisma # our database schema
+|-------- schema.prisma # our database schema
 |-------- migrations/
 ```
 

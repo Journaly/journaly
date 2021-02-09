@@ -2,14 +2,14 @@
 
 An internal database client that can be imported into any of the other Journaly services in order to perform database operations.
 
-- This package is built with [Prisma](https://github.com/prisma/prisma), which generates type-safe database queries are mutations based on our data model (or schema) which lives in `prisma/datamodel.prisma`.
+- This package is built with [Prisma](https://github.com/prisma/prisma), which generates type-safe database queries are mutations based on our data model (or schema) which lives in `prisma/schema.prisma`.
 - When this package is installed within one of our services, a `PrismaClient` that contains all of these database operations is generated and can then be imported and used as needed.
 
 ## Updating the datamodel
 
 If you need to update the data model, you'll need to follow these steps:
 
-1. Make your change in `prisma/datamodel.prisma`.
+1. Make your change in `prisma/schema.prisma`.
 1. Run `npm run migrate:save` and choose a descriptive name, such as `add-pending-notification-table` - this will generate a new directory within `./prisma/migrations` that contains the files for your migration.
 1. Run `npm run migrate:up` to apply this migration to your local database instance.
 

@@ -14,6 +14,6 @@ mutation createPost(
     status: $status
     images: $images
   ) {
-    id
+    ...PostCardFragment
   }
 }

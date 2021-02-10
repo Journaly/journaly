@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
 import { withApollo } from '@/lib/apollo'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
@@ -15,6 +16,9 @@ import {
   useNewPostQuery,
   useCreatePostMutation,
   PostStatus as PostStatusType,
+  PostsQuery,
+  PostsQueryVariables,
+  PostsDocument,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import { useTranslation } from '@/config/i18n'
@@ -39,11 +43,35 @@ const NewPostPage: NextPage = () => {
   const { data: { currentUser, topics } = {} } = useNewPostQuery({
     variables: { uiLanguage },
   })
-  const dataRef = React.useRef<OutputPostData>()
+  const dataRef = useRef<OutputPostData>()
   const router = useRouter()
   const { t } = useTranslation('post')
-  const [createPost] = useCreatePostMutation()
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [createPost, createPostOptions] = useCreatePostMutation({
+    onCompleted: (mutationResult) => {
+      dataRef.current?.clear()
+      router.push({ pathname: `/post/${mutationResult.createPost.id}` })
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    update: (cache, mutationResult) => {
+      if (currentUser?.id && mutationResult.data?.createPost) {
+        const data = cache.readQuery<PostsQuery, PostsQueryVariables>({
+          query: PostsDocument,
+          variables: {
+            status: mutationResult.data.createPost.status,
+            authorId: currentUser.id,
+          },
+        })
+
+        if (data?.posts) {
+          data.posts.push(mutationResult.data.createPost)
+          cache.writeQuery({ query: PostsDocument, data: data.posts })
+        }
+      }
+    },
+  })
+  const [errorMessage, setErrorMessage] = useState('')
 
   const createNewPost = async (status: PostStatusType) => {
     if (!(createPost && dataRef.current)) {
@@ -56,20 +84,10 @@ const NewPostPage: NextPage = () => {
       return
     }
 
-    const { title, languageId, topicIds, image, body, clear } = dataRef.current
+    const { title, languageId, topicIds, image, body } = dataRef.current
     const images = image ? [image] : []
 
-    const createPostResponse = await createPost({
-      variables: { title, body, status, languageId, topicIds, images },
-    })
-
-    if (!createPostResponse?.data?.createPost) {
-      console.error('Got empty response when attempting to create post.')
-      return
-    }
-
-    clear()
-    router.push({ pathname: `/post/${createPostResponse.data.createPost.id}` })
+    createPost({ variables: { title, body, status, languageId, topicIds, images } })
   }
 
   return (
@@ -93,18 +111,21 @@ const NewPostPage: NextPage = () => {
               type="submit"
               variant={ButtonVariant.Primary}
               data-test="post-submit"
-              onClick={(e: React.MouseEvent) => {
+              loading={createPostOptions.loading}
+              onClick={(e) => {
                 e.preventDefault()
                 createNewPost(PostStatusType.Published)
               }}
             >
               {t('publishCTA')}
             </Button>
+
             <Button
               type="submit"
               variant={ButtonVariant.Secondary}
               data-test="post-draft"
-              onClick={(e: React.MouseEvent) => {
+              disabled={createPostOptions.loading}
+              onClick={(e) => {
                 e.preventDefault()
                 createNewPost(PostStatusType.Draft)
               }}
@@ -112,7 +133,9 @@ const NewPostPage: NextPage = () => {
               {t('saveDraftCTA')}
             </Button>
           </div>
+
           {errorMessage && <span className="error-message">{errorMessage}</span>}
+
           <style jsx>{`
             display: flex;
             flex-direction: column;

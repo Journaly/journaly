@@ -153,6 +153,7 @@ fragment PostCardFragment on Post {
   publishedAt
   publishedLanguageLevel
   commentCount
+  status
   images {
     smallSize
   }

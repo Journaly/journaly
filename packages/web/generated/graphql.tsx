@@ -663,6 +663,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
   | 'publishedAt'
   | 'publishedLanguageLevel'
   | 'commentCount'
+  | 'status'
 > & {
     images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
@@ -776,7 +777,7 @@ export type CreatePostMutationVariables = Exact<{
 }>
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
-  createPost: { __typename?: 'Post' } & Pick<Post, 'id'>
+  createPost: { __typename?: 'Post' } & PostCardFragmentFragment
 }
 
 export type DeletePostMutationVariables = Exact<{
@@ -1228,6 +1229,7 @@ export const PostCardFragmentFragmentDoc = gql`
     publishedAt
     publishedLanguageLevel
     commentCount
+    status
     images {
       smallSize
     }
@@ -1396,9 +1398,7 @@ export function useCreatePostCommentMutation(
   >(CreatePostCommentDocument, baseOptions)
 }
 export type CreatePostCommentMutationHookResult = ReturnType<typeof useCreatePostCommentMutation>
-export type CreatePostCommentMutationResult = ApolloReactCommon.MutationResult<
-  CreatePostCommentMutation
->
+export type CreatePostCommentMutationResult = ApolloReactCommon.MutationResult<CreatePostCommentMutation>
 export type CreatePostCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreatePostCommentMutation,
   CreatePostCommentMutationVariables
@@ -1550,9 +1550,7 @@ export function useDeletePostCommentMutation(
   >(DeletePostCommentDocument, baseOptions)
 }
 export type DeletePostCommentMutationHookResult = ReturnType<typeof useDeletePostCommentMutation>
-export type DeletePostCommentMutationResult = ApolloReactCommon.MutationResult<
-  DeletePostCommentMutation
->
+export type DeletePostCommentMutationResult = ApolloReactCommon.MutationResult<DeletePostCommentMutation>
 export type DeletePostCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   DeletePostCommentMutation,
   DeletePostCommentMutationVariables
@@ -1694,9 +1692,7 @@ export function useUpdatePostCommentMutation(
   >(UpdatePostCommentDocument, baseOptions)
 }
 export type UpdatePostCommentMutationHookResult = ReturnType<typeof useUpdatePostCommentMutation>
-export type UpdatePostCommentMutationResult = ApolloReactCommon.MutationResult<
-  UpdatePostCommentMutation
->
+export type UpdatePostCommentMutationResult = ApolloReactCommon.MutationResult<UpdatePostCommentMutation>
 export type UpdatePostCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdatePostCommentMutation,
   UpdatePostCommentMutationVariables
@@ -1747,9 +1743,7 @@ export function useAddLanguageRelationMutation(
 export type AddLanguageRelationMutationHookResult = ReturnType<
   typeof useAddLanguageRelationMutation
 >
-export type AddLanguageRelationMutationResult = ApolloReactCommon.MutationResult<
-  AddLanguageRelationMutation
->
+export type AddLanguageRelationMutationResult = ApolloReactCommon.MutationResult<AddLanguageRelationMutation>
 export type AddLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AddLanguageRelationMutation,
   AddLanguageRelationMutationVariables
@@ -1906,9 +1900,7 @@ export function useRemoveLanguageRelationMutation(
 export type RemoveLanguageRelationMutationHookResult = ReturnType<
   typeof useRemoveLanguageRelationMutation
 >
-export type RemoveLanguageRelationMutationResult = ApolloReactCommon.MutationResult<
-  RemoveLanguageRelationMutation
->
+export type RemoveLanguageRelationMutationResult = ApolloReactCommon.MutationResult<RemoveLanguageRelationMutation>
 export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RemoveLanguageRelationMutation,
   RemoveLanguageRelationMutationVariables
@@ -2037,9 +2029,10 @@ export const CreatePostDocument = gql`
       status: $status
       images: $images
     ) {
-      id
+      ...PostCardFragment
     }
   }
+  ${PostCardFragmentFragmentDoc}
 `
 export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
   CreatePostMutation,
@@ -2307,9 +2300,7 @@ export function useInitiatePostImageUploadMutation(
 export type InitiatePostImageUploadMutationHookResult = ReturnType<
   typeof useInitiatePostImageUploadMutation
 >
-export type InitiatePostImageUploadMutationResult = ApolloReactCommon.MutationResult<
-  InitiatePostImageUploadMutation
->
+export type InitiatePostImageUploadMutationResult = ApolloReactCommon.MutationResult<InitiatePostImageUploadMutation>
 export type InitiatePostImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
   InitiatePostImageUploadMutation,
   InitiatePostImageUploadMutationVariables
@@ -2562,9 +2553,7 @@ export function useCreateCommentThanksMutation(
 export type CreateCommentThanksMutationHookResult = ReturnType<
   typeof useCreateCommentThanksMutation
 >
-export type CreateCommentThanksMutationResult = ApolloReactCommon.MutationResult<
-  CreateCommentThanksMutation
->
+export type CreateCommentThanksMutationResult = ApolloReactCommon.MutationResult<CreateCommentThanksMutation>
 export type CreateCommentThanksMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateCommentThanksMutation,
   CreateCommentThanksMutationVariables
@@ -2612,9 +2601,7 @@ export function useDeleteCommentThanksMutation(
 export type DeleteCommentThanksMutationHookResult = ReturnType<
   typeof useDeleteCommentThanksMutation
 >
-export type DeleteCommentThanksMutationResult = ApolloReactCommon.MutationResult<
-  DeleteCommentThanksMutation
->
+export type DeleteCommentThanksMutationResult = ApolloReactCommon.MutationResult<DeleteCommentThanksMutation>
 export type DeleteCommentThanksMutationOptions = ApolloReactCommon.BaseMutationOptions<
   DeleteCommentThanksMutation,
   DeleteCommentThanksMutationVariables
@@ -2902,9 +2889,7 @@ export function useInitiateAvatarImageUploadMutation(
 export type InitiateAvatarImageUploadMutationHookResult = ReturnType<
   typeof useInitiateAvatarImageUploadMutation
 >
-export type InitiateAvatarImageUploadMutationResult = ApolloReactCommon.MutationResult<
-  InitiateAvatarImageUploadMutation
->
+export type InitiateAvatarImageUploadMutationResult = ApolloReactCommon.MutationResult<InitiateAvatarImageUploadMutation>
 export type InitiateAvatarImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
   InitiateAvatarImageUploadMutation,
   InitiateAvatarImageUploadMutationVariables
@@ -3039,9 +3024,7 @@ export function useRequestResetPasswordMutation(
 export type RequestResetPasswordMutationHookResult = ReturnType<
   typeof useRequestResetPasswordMutation
 >
-export type RequestResetPasswordMutationResult = ApolloReactCommon.MutationResult<
-  RequestResetPasswordMutation
->
+export type RequestResetPasswordMutationResult = ApolloReactCommon.MutationResult<RequestResetPasswordMutation>
 export type RequestResetPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RequestResetPasswordMutation,
   RequestResetPasswordMutationVariables
@@ -3305,9 +3288,7 @@ export function useUpdateSocialMediaMutation(
   >(UpdateSocialMediaDocument, baseOptions)
 }
 export type UpdateSocialMediaMutationHookResult = ReturnType<typeof useUpdateSocialMediaMutation>
-export type UpdateSocialMediaMutationResult = ApolloReactCommon.MutationResult<
-  UpdateSocialMediaMutation
->
+export type UpdateSocialMediaMutationResult = ApolloReactCommon.MutationResult<UpdateSocialMediaMutation>
 export type UpdateSocialMediaMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSocialMediaMutation,
   UpdateSocialMediaMutationVariables

@@ -9,37 +9,38 @@ generator prisma_client {
 }
 
 model User {
-  id                       Int                       @id @default(autoincrement())
-  name                     String?
-  email                    String                    @unique
-  handle                   String                    @unique
-  auth                     Auth?
-  userRole                 UserRole                  @default(FREE_USER)
-  bio                      String?
-  city                     String?
-  country                  String?
-  posts                    Post[]
-  subscription             UserSubscription?
-  socialMedia              SocialMedia?
-  languagesNative          LanguageNative[]
-  languagesLearning        LanguageLearning[]
-  languages                LanguageRelation[]
-  createdAt                DateTime                  @default(now())
-  updatedAt                DateTime                  @updatedAt
-  userInterests            UserInterest[]
-  pageView                 PageView[]
-  profileImage             String?
-  threadSubscriptions      ThreadSubscription[]
-  postLikes                PostLike[]
-  commentThanks            CommentThanks[]
-  postCommentThanks        PostCommentThanks[]
-  comments                 Comment[]
-  postComments             PostComment[]
-  badges                   UserBadge[]
-  followedBy               User[]                    @relation("UserFollows", references: [id])
-  following                User[]                    @relation("UserFollows", references: [id])
-  postCommentSubscriptions PostCommentSubscription[]
-  PendingNotification      PendingNotification[]
+  id                                Int                                 @id @default(autoincrement())
+  name                              String?
+  email                             String                              @unique
+  handle                            String                              @unique
+  auth                              Auth?
+  userRole                          UserRole                            @default(USER)
+  bio                               String?
+  city                              String?
+  country                           String?
+  posts                             Post[]
+  subscription                      MembershipSubscription?
+  socialMedia                       SocialMedia?
+  languagesNative                   LanguageNative[]
+  languagesLearning                 LanguageLearning[]
+  languages                         LanguageRelation[]
+  createdAt                         DateTime                            @default(now())
+  updatedAt                         DateTime                            @updatedAt
+  userInterests                     UserInterest[]
+  pageView                          PageView[]
+  profileImage                      String?
+  threadSubscriptions               ThreadSubscription[]
+  postLikes                         PostLike[]
+  commentThanks                     CommentThanks[]
+  postCommentThanks                 PostCommentThanks[]
+  comments                          Comment[]
+  postComments                      PostComment[]
+  badges                            UserBadge[]
+  followedBy                        User[]                              @relation("UserFollows", references: [id])
+  following                         User[]                              @relation("UserFollows", references: [id])
+  postCommentSubscriptions          PostCommentSubscription[]
+  PendingNotification               PendingNotification[]
+  MembershipSubscriptionTransaction MembershipSubscriptionTransaction[]
 }
 
 model Auth {
@@ -293,14 +294,24 @@ model PostCommentSubscription {
   @@unique([userId, postId])
 }
 
-model UserSubscription {
+model MembershipSubscription {
   id        Int                  @id @default(autoincrement())
   type      UserSubscriptionType
   price     Int
   user      User                 @relation(fields: [userId], references: [id])
   userId    Int
+  expiresAt DateTime?
   createdAt DateTime             @default(now())
   updatedAt DateTime             @updatedAt
+}
+
+model MembershipSubscriptionTransaction {
+  id          Int      @id @default(autoincrement())
+  chargeCents Int
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model PageView {
@@ -348,8 +359,7 @@ model PendingNotification {
 enum UserRole {
   ADMIN
   MODERATOR
-  FREE_USER
-  PRO_USER
+  USER
 }
 
 enum PostStatus {
@@ -386,6 +396,6 @@ enum NotificationType {
 enum UserSubscriptionType {
   MONTHLY
   QUARTERLY
-  HALFLY
-  YEARLY
+  SEMIANNUALY
+  ANNUALY
 }

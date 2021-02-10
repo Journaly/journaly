@@ -1,14 +1,12 @@
 import { readFile } from 'fs'
-import { parse } from 'csv'
-import {
-  PrismaClient,
-  UILanguage,
-} from '@journaly/j-db-client'
+import csv from 'csv'
+import jdbClient from '@journaly/j-db-client'
+const { PrismaClient } = jdbClient
 
 
 const main = async () => {
   const db = new PrismaClient()
-  const uiLangs: UILanguage[] = ['GERMAN']
+  const uiLangs = ['GERMAN']
 
   for (let lang of uiLangs) {
     const mat = await (new Promise((res, rej) => {
@@ -18,11 +16,11 @@ const main = async () => {
           return
         }
 
-        parse(data, {}, (err, out) => err ? rej(err) : res(out))
+        csv.parse(data, {}, (err, out) => err ? rej(err) : res(out))
       })
     }))
 
-    for (let row of (mat as [string, string, string][])) {
+    for (let row of mat) {
       const [idStr, devName, targetName] = row
       await db.topicTranslation.upsert({
         where: {
@@ -49,5 +47,5 @@ const main = async () => {
 }
 
 main()
-  .catch((e) => { throw e })
+  .catch((e) => { process.exit(1) })
   .then(() => process.exit(0))

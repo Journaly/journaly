@@ -1,9 +1,8 @@
 import { writeFile } from 'fs'
-import { stringify } from 'csv'
-import {
-  PrismaClient,
-  UILanguage,
-} from '@journaly/j-db-client'
+import csv from 'csv'
+import jdbClient from '@journaly/j-db-client'
+
+const { PrismaClient } = jdbClient
 
 const sourceSequence = `food
 reading
@@ -95,7 +94,7 @@ const priority = ({ id, devName }) => {
 
 const main = async () => {
   const db = new PrismaClient()
-  const uiLangs: UILanguage[] = ['GERMAN']
+  const uiLangs = ['GERMAN']
 
   const topics = (await db.topic.findMany({})).sort((a, b) => priority(a) - priority(b))
 
@@ -116,7 +115,7 @@ const main = async () => {
     }
 
     const repr = await (new Promise(
-      (res, rej) => stringify(table, (err, out) => err ? rej(err) : res(out))
+      (res, rej) => csv.stringify(table, (err, out) => err ? rej(err) : res(out))
     ))
 
     await (new Promise((res, rej) => {
@@ -128,3 +127,5 @@ const main = async () => {
 main()
   .catch((e) => { throw e })
   .then(() => process.exit(0))
+
+export {}

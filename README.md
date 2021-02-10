@@ -36,7 +36,7 @@ Here is an overview of the project setup:
 |---- cypress/
 |---- packages/
 |------ web/ # Our core application that users engage with on the web
-|------ j-mail/ # A simple managed queue service for handling transactional emails from within the app
+|------ j-mail/ # An application handling transactional email via a messaging queue and scheduled jobs against the DB
 |------ j-db-client/ # A database client that can be imported into any service to interact with the db
 |-------- schema.prisma # our database schema
 |-------- migrations/
@@ -55,12 +55,13 @@ More detailed documentation can be found within each directory (WIP).
 1. Locate the `.env.example` file and copy the contents into a new `.env` file alongside it.
 1. Navigate to `packages/web`
 1. Run `npm ci`
+1. Run `npm run build`
 
 #### Setting Up Your Local DB Instance
 
 1. Install Postgres
 
-- Mac/Linux users should use Homebrew
+- For Mac users, we recommend using Homebrew. Linux users will probably want to use your distro's postgres package manager
   _Note that this set your Postgres DB to run when your computer starts up and will stay running in the background_.
 
   ```bash

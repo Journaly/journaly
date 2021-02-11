@@ -1,5 +1,7 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import Link from 'next/link'
+import { toast } from 'react-toastify'
+import classNames from 'classnames'
 
 import {
   useUpdateCommentMutation,
@@ -7,9 +9,10 @@ import {
   CommentFragmentFragment as CommentType,
   useCreateCommentThanksMutation,
   useDeleteCommentThanksMutation,
+  CommentThanks,
+  UserFragmentFragment,
 } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
-
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import theme from '@/theme'
@@ -17,32 +20,32 @@ import EditIcon from '@/components/Icons/EditIcon'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import { formatDateRelativeToNow } from '@/utils'
 import LikeIcon from '@/components/Icons/LikeIcon'
+import { generateNegativeRandomNumber } from '@/utils/number'
 
 type CommentProps = {
   comment: CommentType
   canEdit: boolean
-  onUpdateComment: any
-  currentUserId: number | undefined
+  onUpdateComment(): void
+  currentUser?: UserFragmentFragment | null
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, currentUserId }) => {
+const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProps) => {
   const { t } = useTranslation('comment')
-
   const editTextarea = useRef<HTMLTextAreaElement>(null)
-  const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
-  const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
-
-  // Check to see if the currentUser has already liked this comment
-  const hasThankedComment =
-    comment.thanks.find((thanks) => thanks.author.id === currentUserId) !== undefined
-
-  const numThanks = comment.thanks.length
-
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [updatingCommentBody, setUpdatingCommentBody] = useState(comment.body)
   const [updateComment, { loading }] = useUpdateCommentMutation({
     onCompleted: () => {
       onUpdateComment()
     },
   })
+
+  // Check to see if the currentUser has already liked this comment
+  const hasThankedComment = useMemo(() => {
+    return comment.thanks.find((thanks) => thanks.author.id === currentUser?.id) !== undefined
+  }, [comment.thanks, currentUser?.id])
+
+  const numThanks = comment.thanks.length
 
   const updateExistingComment = () => {
     updateComment({
@@ -69,34 +72,72 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
     })
   }
 
-  const [createCommentThanks] = useCreateCommentThanksMutation()
-  const createNewCommentThanks = async () => {
-    await createCommentThanks({
-      variables: {
-        commentId: comment.id,
+  const [createCommentThanks, createCommentThanksResult] = useCreateCommentThanksMutation({
+    update(cache, { data }) {
+      if (data?.createCommentThanks) {
+        cache.modify({
+          id: `${comment.__typename}:${comment.id}`,
+          fields: {
+            thanks: (existingComments: CommentThanks[] = []) => {
+              return [...existingComments, data.createCommentThanks]
+            },
+          },
+        })
+      }
+    },
+    onError: (error) => toast.error(error),
+  })
+  const createNewCommentThanks = () => {
+    createCommentThanks({
+      variables: { commentId: comment.id },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        createCommentThanks: {
+          __typename: 'CommentThanks',
+          id: generateNegativeRandomNumber(),
+          author: {
+            __typename: 'User',
+            handle: currentUser!.handle,
+            name: currentUser?.name,
+            profileImage: currentUser?.profileImage,
+            id: currentUser!.id,
+          },
+        },
       },
     })
-    await onUpdateComment()
   }
+  const [deleteCommentThanks, deleteCommentThanksResult] = useDeleteCommentThanksMutation({
+    update(cache, { data }) {
+      if (data?.deleteCommentThanks) {
+        cache.modify({
+          id: `${comment.__typename}:${comment.id}`,
+          fields: {
+            thanks: (existingComments: CommentThanks[] = []) => {
+              return existingComments.filter(
+                (existingComment) => data.deleteCommentThanks.id !== existingComment.id,
+              )
+            },
+          },
+        })
 
-  const [deleteCommentThanks] = useDeleteCommentThanksMutation({
-    onCompleted: () => {
-      // just refetches the post as in updateComment
-      onUpdateComment()
+        cache.evict({ id: `${data.deleteCommentThanks.__typename}:${data.deleteCommentThanks.id}` })
+      }
     },
+    onError: (error) => toast.error(error),
   })
 
   const deleteExistingCommentThanks = () => {
-    const currentCommentThanks = comment.thanks.find((thanks) => thanks.author.id === currentUserId)
+    const currentCommentThanks = comment.thanks.find(
+      (thanks) => thanks.author.id === currentUser?.id,
+    )
 
     if (currentCommentThanks) {
-      deleteCommentThanks({
-        variables: {
-          commentThanksId: currentCommentThanks.id,
-        },
-      })
+      deleteCommentThanks({ variables: { commentThanksId: currentCommentThanks.id } })
     }
   }
+
+  const isLoadingCommentThanks =
+    createCommentThanksResult.loading || deleteCommentThanksResult.loading
 
   return (
     <div className="comment">
@@ -137,6 +178,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
       {canEdit && !isEditMode && (
         <div className="edit-block">
           <span
+            role="button"
             className="edit-btn"
             onClick={() => {
               setIsEditMode(true)
@@ -152,7 +194,7 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
           >
             <EditIcon size={24} />
           </span>
-          <span className="delete-btn" onClick={deleteExistingComment}>
+          <span role="button" className="delete-btn" onClick={deleteExistingComment}>
             <DeleteIcon size={24} />
           </span>
         </div>
@@ -183,11 +225,12 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
           </Button>
         </>
       )}
-      {!canEdit && currentUserId && (
-        <div className="edit-block">
+      {!canEdit && currentUser?.id && (
+        <div className={classNames('edit-block', { progress: isLoadingCommentThanks })}>
           <span
             className="like-btn"
             onClick={hasThankedComment ? deleteExistingCommentThanks : createNewCommentThanks}
+            role="button"
           >
             <LikeIcon filled={hasThankedComment} />
           </span>
@@ -280,6 +323,12 @@ const Comment: React.FC<CommentProps> = ({ comment, canEdit, onUpdateComment, cu
         }
         .like-btn :global(svg:hover) {
           cursor: pointer;
+        }
+        .progress {
+          cursor: progress;
+        }
+        .progress > .like-btn {
+          pointer-events: none;
         }
 
         .thanks-count {

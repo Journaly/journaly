@@ -81,7 +81,7 @@ const Thread: React.FC<ThreadProps> = ({
                 canEdit={canEdit}
                 key={idx}
                 onUpdateComment={onUpdateComment}
-                currentUserId={currentUser?.id}
+                currentUser={currentUser}
               />
             )
           })}

@@ -10,7 +10,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - node-deps-v2-{{ checksum "packages/web/package-lock.json" }}
+            - node-deps-v3-{{ checksum "packages/web/package-lock.json" }}
       - run:
           command: cd packages/web && npm ci
           name: Installing NPM packages
@@ -22,10 +22,10 @@ jobs:
       - store_artifacts:
           path: .next/analyze
       - save_cache:
-          key: node-deps-v2-{{ checksum "packages/web/package-lock.json" }}
+          key: node-deps-v3-{{ checksum "packages/web/package-lock.json" }}
           paths:
-            - ~/packages/web/.npm
-            - ~/packages/web/.cache
+            - ~/.npm
+            - ~/.cache
             - ./packages/web/.next/cache
 
 workflows:

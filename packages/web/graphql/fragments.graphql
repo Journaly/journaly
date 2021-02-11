@@ -1,0 +1,201 @@
+fragment UserFragment on User {
+  id
+  name
+  handle
+  email
+  bio
+  userRole
+  profileImage
+  city
+  country
+}
+
+fragment UserWithStatsFragment on User {
+  ...UserFragment
+  postsWrittenCount
+  thanksReceivedCount
+}
+
+fragment UserWithLanguagesFragment on User {
+  ...UserFragment
+  languages {
+    id
+    level
+    language {
+      ...LanguageFragment
+    }
+  }
+}
+
+fragment SocialMediaFragment on User {
+  socialMedia {
+    id
+    facebook
+    youtube
+    instagram
+    website
+  }
+}
+
+fragment AuthorFragment on User {
+  id
+  name
+  handle
+  profileImage
+}
+
+fragment AuthorWithStatsFragment on User {
+  ...AuthorFragment
+  postsWrittenCount
+  thanksReceivedCount
+}
+
+fragment AuthorWithLanguagesFragment on User {
+  ...AuthorWithStatsFragment
+  languages {
+    language {
+      ...LanguageFragment
+    }
+    level
+  }
+}
+
+fragment CommentFragment on Comment {
+  id
+  body
+  createdAt
+  author {
+    ...AuthorFragment
+  }
+  thanks {
+    id
+    author {
+      id
+      name
+      handle
+    }
+  }
+}
+
+fragment CommentThanksFragment on CommentThanks {
+  id
+  author {
+    ...AuthorFragment
+  }
+}
+
+fragment PostCommentFragment on PostComment {
+  id
+  body
+  createdAt
+  author {
+    ...AuthorFragment
+  }
+}
+
+fragment ThreadFragment on Thread {
+  id
+  startIndex
+  endIndex
+  highlightedContent
+  archived
+  comments(orderBy: { createdAt: asc }) {
+    ...CommentFragment
+  }
+}
+
+fragment PostFragment on Post {
+  id
+  title
+  body
+  status
+  excerpt
+  readTime
+  createdAt
+  publishedAt
+  publishedLanguageLevel
+  author {
+    ...AuthorWithLanguagesFragment
+  }
+  threads {
+    ...ThreadFragment
+  }
+  postComments(orderBy: { createdAt: asc }) {
+    ...PostCommentFragment
+  }
+  images {
+    id
+    smallSize
+    largeSize
+    imageRole
+  }
+}
+
+fragment PostWithTopicsFragment on Post {
+  ...PostFragment
+  postTopics {
+    ...PostTopicFragment
+  }
+  language {
+    id
+    name
+    dialect
+  }
+}
+
+fragment PostCardFragment on Post {
+  id
+  title
+  body
+  excerpt
+  readTime
+  createdAt
+  publishedAt
+  publishedLanguageLevel
+  commentCount
+  status
+  images {
+    smallSize
+  }
+  likes {
+    id
+  }
+  author {
+    ...AuthorFragment
+  }
+  language {
+    ...LanguageFragment
+  }
+}
+
+fragment LanguageFragment on Language {
+  id
+  name
+  dialect
+}
+
+fragment LanguageWithPostCountFragment on Language {
+  ...LanguageFragment
+  postCount(topics: $topics)
+}
+
+fragment TopicFragment on Topic {
+  id
+  name(uiLanguage: $uiLanguage)
+}
+
+fragment TopicWithPostCountFragment on Topic {
+  ...TopicFragment
+  postCount(languages: $languages)
+}
+
+fragment PostTopicFragment on PostTopic {
+  topic {
+    ...TopicFragment
+  }
+}
+
+fragment UserBadgeFragment on UserBadge {
+  type
+  createdAt
+}

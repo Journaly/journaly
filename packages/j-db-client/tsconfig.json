@@ -5,7 +5,8 @@
     "declaration": true,
     "strict": true,
     "outDir": "dist/",
-    "types": []
+    "types": [],
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts"

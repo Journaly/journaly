@@ -3,7 +3,7 @@
   "steps": [
     {
       "tag": "CreateEnum",
-      "enum": "UserSubscriptionType",
+      "enum": "MembershipSubscriptionType",
       "values": [
         "MONTHLY",
         "QUARTERLY",
@@ -16,10 +16,6 @@
       "enum": "UserRole",
       "createdValues": [
         "USER"
-      ],
-      "deletedValues": [
-        "FREE_USER",
-        "PRO_USER"
       ]
     },
     {
@@ -73,7 +69,7 @@
       "tag": "CreateField",
       "model": "MembershipSubscription",
       "field": "type",
-      "type": "UserSubscriptionType",
+      "type": "MembershipSubscriptionType",
       "arity": "Required"
     },
     {

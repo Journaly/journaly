@@ -295,14 +295,14 @@ model PostCommentSubscription {
 }
 
 model MembershipSubscription {
-  id        Int                  @id @default(autoincrement())
-  type      UserSubscriptionType
+  id        Int                        @id @default(autoincrement())
+  type      MembershipSubscriptionType
   price     Int
-  user      User                 @relation(fields: [userId], references: [id])
+  user      User                       @relation(fields: [userId], references: [id])
   userId    Int
   expiresAt DateTime?
-  createdAt DateTime             @default(now())
-  updatedAt DateTime             @updatedAt
+  createdAt DateTime                   @default(now())
+  updatedAt DateTime                   @updatedAt
 }
 
 model MembershipSubscriptionTransaction {
@@ -393,7 +393,7 @@ enum NotificationType {
   NEW_POST
 }
 
-enum UserSubscriptionType {
+enum MembershipSubscriptionType {
   MONTHLY
   QUARTERLY
   SEMIANNUALY

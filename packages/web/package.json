@@ -29,7 +29,9 @@
     "migrate:up": "npm explore '@journaly/j-db-client' -- npm run migrate:up",
     "migrate:save": "npm explore '@journaly/j-db-client' -- npm run migrate:save",
     "empty-db": "source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
-    "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed"
+    "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed",
+    "translations:topics:pull": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/pull-topic-translations.mjs",
+    "translations:topics:push": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/push-topic-translations.mjs"
   },
   "prisma": {
     "schema": "node_modules/@journaly/j-db-client/prisma/schema.prisma"

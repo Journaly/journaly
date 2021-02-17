@@ -85,6 +85,9 @@ const Toolbar = () => {
         <ToolbarButton type="block" format="heading-two">
           <FormatTitleIcon title="Apply heading" titleId="toolbar-title-icon" />
         </ToolbarButton>
+        <ToolbarButton type="image" format="image">
+          <FormatQuoteIcon title="Image" titleId="" />
+        </ToolbarButton>
         <ToolbarButton type="block" format="block-quote">
           <FormatQuoteIcon title="Block quote" titleId="toolbar-quote-icon" />
         </ToolbarButton>

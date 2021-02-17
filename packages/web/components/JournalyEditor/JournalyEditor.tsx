@@ -11,7 +11,7 @@ import Toolbar from './Toolbar'
 import { useTranslation } from '@/config/i18n'
 import RenderElement from './RenderElement'
 import RenderLeaf from './RenderLeaf'
-import { withLinks, toggleMark, options } from './helpers'
+import { withLinks, withImages, toggleMark, options } from './helpers'
 
 /**
  * The Journaly Rich Text Editor
@@ -40,7 +40,12 @@ const JournalyEditor = ({ value, setValue, slateRef }: JournalyEditorProps) => {
   const renderElement = useCallback((props) => <RenderElement {...props} />, [])
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
   const editor = useMemo(() => {
-    const withPlugins = [withReact, withHistory, withLinks] as const
+    const withPlugins = [
+      withReact,
+      withHistory,
+      withLinks,
+      withImages,
+    ] as const
     return pipe(createEditor(), ...withPlugins) as ReactEditor
   }, [])
 

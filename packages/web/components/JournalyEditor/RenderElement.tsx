@@ -27,6 +27,15 @@ const RenderElement = ({ attributes, children, element }: RenderElementProps) =>
       return <li {...attributes}>{children}</li>
     case 'numbered-list':
       return <ol {...attributes}>{children}</ol>
+    case 'image':
+      return (
+        <div {...attributes}>
+          <div contentEditable={false}>
+            <img src={element.url} />
+          </div>
+          {children}
+        </div>
+      )
     default:
       return <p {...attributes}>{children}</p>
   }

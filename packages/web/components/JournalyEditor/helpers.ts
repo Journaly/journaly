@@ -31,7 +31,7 @@ declare module 'slate' {
   }
 }
 
-export type ButtonType = 'mark' | 'block' | 'link' | 'table'
+export type ButtonType = 'mark' | 'block' | 'link' | 'table' | 'image'
 
 /*
 // TODO: Actually type `isXActive` functions
@@ -111,6 +111,7 @@ const isBlockActive = (editor: Editor, format: string) => {
 }
 
 const isLinkActive = (editor: Editor) => isBlockActive(editor, 'link')
+const isImageActive = (editor: Editor) => isBlockActive(editor, 'image')
 
 export const isTableActive = (editor: Editor) => {
   return someNode(editor, { match: { type: options.table.type } })
@@ -133,6 +134,7 @@ export const isTypeActive = ({ type, editor, format }: IsTypeActiveArgs) => {
     block: isBlockActive,
     link: isLinkActive,
     table: isTableActive,
+    image: isImageActive,
   }[type]
 
   return fn(editor, format)
@@ -226,12 +228,53 @@ export const withLinks = (editor: Editor) => {
   return editor
 }
 
+const insertImage = (editor, url) => {
+  const text = { text: '' }
+  const image = { type: 'image', url, children: [text] }
+  Transforms.insertNodes(editor, image)
+}
+
+export const withImages = (editor: Editor) => {
+  const { insertData, isVoid } = editor
+
+  editor.isVoid = element => {
+    return element.type === 'image' ? true : isVoid(element)
+  }
+
+  editor.insertData = data => {
+    const text = data.getData('text/plain')
+    const { files } = data
+
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const reader = new FileReader()
+        const [mime] = file.type.split('/')
+
+        if (mime === 'image') {
+          reader.addEventListener('load', () => {
+            const url = reader.result
+            insertImage(editor, url)
+          })
+
+          reader.readAsDataURL(file)
+        }
+      }
+    } else {
+      insertData(data)
+    }
+  }
+
+  return editor
+  
+}
+
 export const toogleByType = ({ type, editor, format, t }: ToggleByTypeArgs) => {
   const toggles = {
     mark: toggleMark,
     block: toggleBlock,
     link: toggleLink,
     table: tableHandler,
+    image: imageHandler,
   }
 
   toggles[type]({ editor, format, t })

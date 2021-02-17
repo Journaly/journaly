@@ -46,7 +46,6 @@
     "@types/cors": "^2.8.6",
     "@types/diff": "^4.0.2",
     "@types/escape-html": "^1.0.0",
-    "@types/express": "^4.17.3",
     "@types/jsonwebtoken": "^8.3.8",
     "@types/node": "^13.9.0",
     "@types/nodemailer": "^6.4.0",

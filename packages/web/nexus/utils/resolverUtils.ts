@@ -21,3 +21,16 @@ export const generateThumbbusterUrl = async (transform: string) => {
 
   return [uuid, uploadUrl]
 }
+
+export const getThumbusterVars = (): [string, string] => {
+  const transformBucket = process.env.THUMBBUSTER_TRANSFORM_BUCKET
+  const cdnDomain = process.env.THUMBBUSTER_CDN_DOMAIN
+
+  if (!transformBucket) {
+    throw new Error('Must specify `THUMBBUSTER_TRANSFORM_BUCKET` env var')
+  } else if (!cdnDomain) {
+    throw new Error('Must specify `THUMBBUSTER_CDN_DOMAIN` env var')
+  }
+
+  return [transformBucket, cdnDomain]
+}

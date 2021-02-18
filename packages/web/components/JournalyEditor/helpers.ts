@@ -228,9 +228,27 @@ export const withLinks = (editor: Editor) => {
   return editor
 }
 
-const insertImage = (editor, url) => {
-  const text = { text: '' }
-  const image = { type: 'image', url, children: [text] }
+const dataUrlizeFile = (file): Promise<string> => {
+  const reader = new FileReader()
+  return (new Promise((res) => {
+    reader.addEventListener('load', () => {
+      res(resader.result)
+    })
+
+    reader.readAsDataURL(file)
+  }))
+
+}
+
+const insertImage = async (editor, file) => {
+  const url = dataUrlizeFile(file)
+
+  const image = {
+    type: 'image',
+    url,
+    file,
+    children: [{ text: '' }]
+  }
   Transforms.insertNodes(editor, image)
 }
 
@@ -247,16 +265,10 @@ export const withImages = (editor: Editor) => {
 
     if (files && files.length > 0) {
       for (const file of files) {
-        const reader = new FileReader()
         const [mime] = file.type.split('/')
 
         if (mime === 'image') {
-          reader.addEventListener('load', () => {
-            const url = reader.result
-            insertImage(editor, url)
-          })
-
-          reader.readAsDataURL(file)
+          insertImage(editor, file)
         }
       }
     } else {

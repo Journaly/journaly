@@ -38,6 +38,25 @@ const initialData: InputPostData = {
   timestamp: 0,
 }
 
+import { Node } from 'slate'
+
+const extractImages = (body: Node[]): Node[] => {
+  const images: Node[] = []
+  const walk = (nodes: Node[]) => {
+    for (const node of nodes) {
+      if (node.type === 'image') {
+        images.push(node)
+      } else if (node.children?.length) {
+        walk(node.children)
+      }
+    }
+  }
+
+  walk(body)
+  return images
+}
+
+
 const NewPostPage: NextPage = () => {
   const uiLanguage = useUILanguage()
   const { data: { currentUser, topics } = {} } = useNewPostQuery({
@@ -87,7 +106,10 @@ const NewPostPage: NextPage = () => {
     const { title, languageId, topicIds, image, body } = dataRef.current
     const images = image ? [image] : []
 
-    createPost({ variables: { title, body, status, languageId, topicIds, images } })
+    const eimg = extractImages(body)
+    debugger
+
+    //createPost({ variables: { title, body, status, languageId, topicIds, images } })
   }
 
   return (

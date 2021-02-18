@@ -161,7 +161,7 @@ const InitiatePostImageUploadResponse = objectType({
 })
 
 const InitiateInlinePostImageUploadResponse = objectType({
-  name: 'InitiatePostImageUploadResponse',
+  name: 'InitiateInlinePostImageUploadResponse',
   definition(t) {
     t.string('uploadUrl', { description: 'URL for the client to PUT an image to' })
     t.string('checkUrl', { description: 'polling goes here' })

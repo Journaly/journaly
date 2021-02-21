@@ -1,0 +1,7 @@
+mutation initiateInlinePostImageUpload {
+  initiateInlinePostImageUpload {
+    uploadUrl
+    checkUrl
+    finalUrl
+  }
+}

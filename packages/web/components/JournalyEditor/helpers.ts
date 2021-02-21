@@ -246,6 +246,7 @@ const insertImage = async (editor, file) => {
   const image = {
     type: 'image',
     url,
+    uploaded: false,
     children: [{ text: '' }]
   }
   Transforms.insertNodes(editor, image)

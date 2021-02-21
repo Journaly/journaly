@@ -146,6 +146,16 @@ export type InitiatePostImageUploadResponse = {
   finalUrlSmall: Scalars['String']
 }
 
+export type InitiateInlinePostImageUploadResponse = {
+  __typename?: 'InitiateInlinePostImageUploadResponse'
+  /** URL for the client to PUT an image to */
+  uploadUrl: Scalars['String']
+  /** polling goes here */
+  checkUrl: Scalars['String']
+  /** final url of the transform */
+  finalUrl: Scalars['String']
+}
+
 export type User = {
   __typename?: 'User'
   id: Scalars['Int']
@@ -333,6 +343,7 @@ export type Mutation = {
   updatePost: Post
   deletePost: Post
   initiatePostImageUpload: InitiatePostImageUploadResponse
+  initiateInlinePostImageUpload: InitiateInlinePostImageUploadResponse
   createUser: User
   updateUser: User
   initiateAvatarImageUpload: InitiateAvatarImageUploadResponse
@@ -820,6 +831,15 @@ export type FeedQuery = { __typename?: 'Query' } & {
   feed: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
       posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
     }
+}
+
+export type InitiateInlinePostImageUploadMutationVariables = Exact<{ [key: string]: never }>
+
+export type InitiateInlinePostImageUploadMutation = { __typename?: 'Mutation' } & {
+  initiateInlinePostImageUpload: { __typename?: 'InitiateInlinePostImageUploadResponse' } & Pick<
+    InitiateInlinePostImageUploadResponse,
+    'uploadUrl' | 'checkUrl' | 'finalUrl'
+  >
 }
 
 export type InitiatePostImageUploadMutationVariables = Exact<{ [key: string]: never }>
@@ -2255,6 +2275,55 @@ export function useFeedLazyQuery(
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
 export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
+export const InitiateInlinePostImageUploadDocument = gql`
+  mutation initiateInlinePostImageUpload {
+    initiateInlinePostImageUpload {
+      uploadUrl
+      checkUrl
+      finalUrl
+    }
+  }
+`
+export type InitiateInlinePostImageUploadMutationFn = ApolloReactCommon.MutationFunction<
+  InitiateInlinePostImageUploadMutation,
+  InitiateInlinePostImageUploadMutationVariables
+>
+
+/**
+ * __useInitiateInlinePostImageUploadMutation__
+ *
+ * To run a mutation, you first call `useInitiateInlinePostImageUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInitiateInlinePostImageUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [initiateInlinePostImageUploadMutation, { data, loading, error }] = useInitiateInlinePostImageUploadMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useInitiateInlinePostImageUploadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    InitiateInlinePostImageUploadMutation,
+    InitiateInlinePostImageUploadMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    InitiateInlinePostImageUploadMutation,
+    InitiateInlinePostImageUploadMutationVariables
+  >(InitiateInlinePostImageUploadDocument, baseOptions)
+}
+export type InitiateInlinePostImageUploadMutationHookResult = ReturnType<
+  typeof useInitiateInlinePostImageUploadMutation
+>
+export type InitiateInlinePostImageUploadMutationResult = ApolloReactCommon.MutationResult<InitiateInlinePostImageUploadMutation>
+export type InitiateInlinePostImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  InitiateInlinePostImageUploadMutation,
+  InitiateInlinePostImageUploadMutationVariables
+>
 export const InitiatePostImageUploadDocument = gql`
   mutation initiatePostImageUpload {
     initiatePostImageUpload {

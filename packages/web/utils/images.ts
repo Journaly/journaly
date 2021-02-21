@@ -11,8 +11,8 @@ const blobifyDataUrl = (url: string) => {
   const arr = url.split(',')
   const mime = arr[0].match(/:(.*?);/)[1]
   const bstr = atob(arr[1])
-  const u8arr = new Uint8Array(n)
   let n = bstr.length
+  const u8arr = new Uint8Array(n)
 
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n)
@@ -47,7 +47,7 @@ const uploadFileOrBlob = async <T extends BaseUploadData>(getUploadData: () => P
     try {
       await fetch(uploadUrl, {
         method: 'PUT',
-        body: file
+        body: file.name ? file : new File([file], 'upload'),
       })
     } catch (e) {
       return [true, 'UPLOAD_ERROR']

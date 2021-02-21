@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useCallback } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { withApollo } from '@/lib/apollo'
+import { Node } from 'slate'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import PostEditor, {
@@ -19,11 +20,16 @@ import {
   PostsQuery,
   PostsQueryVariables,
   PostsDocument,
+  useInitiateInlinePostImageUploadMutation,
+  InitiateInlinePostImageUploadResponse,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import { useTranslation } from '@/config/i18n'
 import useUILanguage from '@/hooks/useUILanguage'
-import { blobifyDataUrl } from '@/utils/images'
+import {
+  uploadFileOrBlob,
+  blobifyDataUrl,
+} from '@/utils/images'
 
 const initialData: InputPostData = {
   title: '',
@@ -38,8 +44,6 @@ const initialData: InputPostData = {
   ],
   timestamp: 0,
 }
-
-import { Node } from 'slate'
 
 const extractImages = (body: Node[]): Node[] => {
   const images: Node[] = []
@@ -57,10 +61,33 @@ const extractImages = (body: Node[]): Node[] => {
   return images
 }
 
-const uploadImagesAndModifyDocument = async (body: Node[]) => {
-  const images = extractImages(body)
-  for (const image of images) {
+
+const useUploadInlineImages = () => {
+  const [initiateInlinePostImageUpload] = useInitiateInlinePostImageUploadMutation()
+
+  const getUploadData = async () =>  {
+    const resp = await initiateInlinePostImageUpload()
+
+    return resp?.data?.initiateInlinePostImageUpload
   }
+
+  return useCallback(async (body: []) =>  {
+      const images = extractImages(body)
+      for (const image of images) {
+        if (image.uploaded)
+          continue
+
+        const blob = await blobifyDataUrl(image.url)
+        const [err, result] = await uploadFileOrBlob(getUploadData, blob)
+        if (err) {
+          throw new Error('Error uploading inline post image.')
+        }
+
+        image.url = result.finalUrl
+        image.uploaded = true
+      }
+    },
+    [initiateInlinePostImageUpload])
 }
 
 
@@ -72,6 +99,7 @@ const NewPostPage: NextPage = () => {
   const dataRef = useRef<OutputPostData>()
   const router = useRouter()
   const { t } = useTranslation('post')
+  const uploadInlineImages = useUploadInlineImages()
   const [createPost, createPostOptions] = useCreatePostMutation({
     onCompleted: (mutationResult) => {
       dataRef.current?.clear()
@@ -113,10 +141,9 @@ const NewPostPage: NextPage = () => {
     const { title, languageId, topicIds, image, body } = dataRef.current
     const images = image ? [image] : []
 
-    const eimg = extractImages(body)
-    debugger
+    await uploadInlineImages(body)
 
-    //createPost({ variables: { title, body, status, languageId, topicIds, images } })
+    createPost({ variables: { title, body, status, languageId, topicIds, images } })
   }
 
   return (

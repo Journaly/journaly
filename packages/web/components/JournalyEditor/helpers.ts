@@ -232,7 +232,7 @@ const dataUrlizeFile = (file): Promise<string> => {
   const reader = new FileReader()
   return (new Promise((res) => {
     reader.addEventListener('load', () => {
-      res(resader.result)
+      res(reader.result)
     })
 
     reader.readAsDataURL(file)
@@ -241,12 +241,11 @@ const dataUrlizeFile = (file): Promise<string> => {
 }
 
 const insertImage = async (editor, file) => {
-  const url = dataUrlizeFile(file)
+  const url = await dataUrlizeFile(file)
 
   const image = {
     type: 'image',
     url,
-    file,
     children: [{ text: '' }]
   }
   Transforms.insertNodes(editor, image)

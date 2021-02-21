@@ -23,6 +23,7 @@ import {
 import AuthGate from '@/components/AuthGate'
 import { useTranslation } from '@/config/i18n'
 import useUILanguage from '@/hooks/useUILanguage'
+import { blobifyDataUrl } from '@/utils/images'
 
 const initialData: InputPostData = {
   title: '',
@@ -54,6 +55,12 @@ const extractImages = (body: Node[]): Node[] => {
 
   walk(body)
   return images
+}
+
+const uploadImagesAndModifyDocument = async (body: Node[]) => {
+  const images = extractImages(body)
+  for (const image of images) {
+  }
 }
 
 

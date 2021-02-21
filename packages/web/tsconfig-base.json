@@ -13,6 +13,6 @@
       "@/theme/*": ["theme/*"],
       "@/utils": ["utils/index"],
       "@/utils/*": ["utils/*"]
-    },
+    }
   }
 }

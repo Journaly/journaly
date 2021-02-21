@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { withApollo } from '@/lib/apollo'
 import { Node } from 'slate'
+import cloneDeep from 'lodash/cloneDeep'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import PostEditor, {
@@ -71,23 +72,26 @@ const useUploadInlineImages = () => {
     return resp?.data?.initiateInlinePostImageUpload
   }
 
-  return useCallback(async (body: []) =>  {
-      const images = extractImages(body)
-      for (const image of images) {
-        if (image.uploaded)
-          continue
+  return useCallback(async (body: Node[]) =>  {
+    const clonedBody = cloneDeep(body)
+    const images = extractImages(clonedBody)
+    for (const image of images) {
+      if (image.uploaded)
+        continue
 
-        const blob = await blobifyDataUrl(image.url)
-        const [err, result] = await uploadFileOrBlob(getUploadData, blob)
-        if (err) {
-          throw new Error('Error uploading inline post image.')
-        }
-
-        image.url = result.finalUrl
-        image.uploaded = true
+      const blob = await blobifyDataUrl(image.url)
+      const [err, result] = await uploadFileOrBlob(getUploadData, blob)
+      if (err) {
+        throw new Error('Error uploading inline post image.')
       }
-    },
-    [initiateInlinePostImageUpload])
+
+      image.url = result.finalUrl
+      image.uploaded = true
+    }
+
+    return clonedBody
+  },
+  [initiateInlinePostImageUpload])
 }
 
 
@@ -141,9 +145,18 @@ const NewPostPage: NextPage = () => {
     const { title, languageId, topicIds, image, body } = dataRef.current
     const images = image ? [image] : []
 
-    await uploadInlineImages(body)
+    const modifiedBody = await uploadInlineImages(body)
 
-    createPost({ variables: { title, body, status, languageId, topicIds, images } })
+    createPost({
+      variables: {
+        title,
+        status,
+        languageId,
+        topicIds,
+        images,
+        body: modifiedBody
+      }
+    })
   }
 
   return (

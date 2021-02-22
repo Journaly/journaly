@@ -1,4 +1,9 @@
 import fetch from 'isomorphic-unfetch'
+import {
+  Node,
+  ImageElement,
+  BaseElement,
+} from 'slate'
 
 import { wait } from '@/utils'
 
@@ -9,7 +14,18 @@ type BaseUploadData = {
 
 const blobifyDataUrl = (url: string) => {
   const arr = url.split(',')
-  const mime = arr[0].match(/:(.*?);/)[1]
+
+  if (arr.length !== 2) {
+    throw new Error('Invalid data URI supplied.')
+  }
+
+  const match = arr[0].match(/:(.*?);/)
+
+  if (!match || !match[1]) {
+    throw new Error('Invalid data URI supplied.')
+  }
+
+  const mime = match[1]
   const bstr = atob(arr[1])
   let n = bstr.length
   const u8arr = new Uint8Array(n)
@@ -27,19 +43,25 @@ type ImageUploadErrorType =
   | 'PROCESSING_ERROR'
 
 type Result<T, E> = 
-  | [false, T]
-  | [true, E]
+  | { failed: false, value: T }
+  | { failed: true, error: E }
 
-const uploadFileOrBlob = async <T extends BaseUploadData>(getUploadData: () => Promise<T | undefined>, file: Blob|File): Promise<Result<T, ImageUploadErrorType>>  => {
+type ImageNode = ImageElement & BaseElement
+
+const isImageNode = (arg: Node): arg is ImageNode => {
+  return 'type' in arg && arg.type === 'image'
+}
+
+const uploadFile = async <T extends BaseUploadData>(getUploadData: () => Promise<T | undefined>, file: File): Promise<Result<T, ImageUploadErrorType>>  => {
     let uploadData: T | undefined
     try {
       uploadData = await getUploadData()
     } catch (e) {
-      return [true, 'GET_UPLOAD_DATA_ERROR']
+      return { failed: true, error: 'GET_UPLOAD_DATA_ERROR' }
     }
 
     if (!uploadData) {
-      return [true, 'GET_UPLOAD_DATA_ERROR']
+      return { failed: true, error: 'GET_UPLOAD_DATA_ERROR'}
     }
 
     const { uploadUrl, checkUrl } = uploadData
@@ -47,10 +69,10 @@ const uploadFileOrBlob = async <T extends BaseUploadData>(getUploadData: () => P
     try {
       await fetch(uploadUrl, {
         method: 'PUT',
-        body: file.name ? file : new File([file], 'upload'),
+        body: file,
       })
     } catch (e) {
-      return [true, 'UPLOAD_ERROR']
+      return { failed: true, error: 'UPLOAD_ERROR' }
     }
 
     let successful = false
@@ -69,16 +91,20 @@ const uploadFileOrBlob = async <T extends BaseUploadData>(getUploadData: () => P
     }
 
     if (!successful) {
-      return [true, 'PROCESSING_ERROR']
+      return { failed: true, error: 'PROCESSING_ERROR' }
     }
 
-    return [false, uploadData]
+    return { failed: false, value: uploadData}
 }
 
 export {
-  uploadFileOrBlob,
+  uploadFile,
   blobifyDataUrl,
-  BaseUploadData,
+  isImageNode,
+}
+
+export type {
   ImageUploadErrorType,
+  BaseUploadData,
 }
 

@@ -17,12 +17,30 @@ declare module 'slate' {
     underline?: boolean
   }
 
-  interface CustomElement {
+  type CustomBaseElement = {
     type?: string
-    url?: string
   }
 
-  type CustomNode = Editor | CustomElement | Text
+  type LinkElement = {
+    type: 'link'
+    url: string
+  } 
+
+  type ImageElement = {
+    type: 'image'
+    url: string
+    uploaded: boolean
+  } 
+
+  type CustomElement = 
+    | CustomBaseElement
+    | LinkElement
+    | ImageElement
+
+  type CustomNode =
+    | Editor
+    | Text
+    | CustomElement
 
   interface CustomTypes {
     Element: CustomElement

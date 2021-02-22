@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { useTranslation } from '@/config/i18n'
-import { uploadFileOrBlob, BaseUploadData } from '@/utils/images'
+import { uploadFile, BaseUploadData } from '@/utils/images'
 
 interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
@@ -35,7 +35,7 @@ const useImageUpload = <T extends BaseUploadData>(getUploadData: () => Promise<T
       return null
     }
 
-    const [err, result] = await uploadFileOrBlob(getUploadData, files[0])
+    const [err, result] = await uploadFile(getUploadData, files[0])
 
     setUploadingImage(false)
 

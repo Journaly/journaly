@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { withApollo } from '@/lib/apollo'
-import { Node } from 'slate'
+import { Node, ImageElement } from 'slate'
 import cloneDeep from 'lodash/cloneDeep'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
@@ -22,14 +22,14 @@ import {
   PostsQueryVariables,
   PostsDocument,
   useInitiateInlinePostImageUploadMutation,
-  InitiateInlinePostImageUploadResponse,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import { useTranslation } from '@/config/i18n'
 import useUILanguage from '@/hooks/useUILanguage'
 import {
-  uploadFileOrBlob,
+  uploadFile,
   blobifyDataUrl,
+  isImageNode,
 } from '@/utils/images'
 
 const initialData: InputPostData = {
@@ -46,13 +46,13 @@ const initialData: InputPostData = {
   timestamp: 0,
 }
 
-const extractImages = (body: Node[]): Node[] => {
-  const images: Node[] = []
+const extractImages = (body: Node[]): ImageElement[] => {
+  const images: ImageElement[] = []
   const walk = (nodes: Node[]) => {
     for (const node of nodes) {
-      if (node.type === 'image') {
+      if (isImageNode(node)) {
         images.push(node)
-      } else if (node.children?.length) {
+      } else if ('children' in node) {
         walk(node.children)
       }
     }
@@ -80,12 +80,13 @@ const useUploadInlineImages = () => {
         continue
 
       const blob = await blobifyDataUrl(image.url)
-      const [err, result] = await uploadFileOrBlob(getUploadData, blob)
-      if (err) {
+      const file =  new File([blob], 'upload')
+      const result = await uploadFile(getUploadData, file)
+      if (result.failed) {
         throw new Error('Error uploading inline post image.')
       }
 
-      image.url = result.finalUrl
+      image.url = result.value.finalUrl
       image.uploaded = true
     }
 

@@ -37,7 +37,7 @@
   "dependencies": {
     "@apollo/client": "^3.2.5",
     "@apollo/react-ssr": "^4.0.0",
-    "@journaly/j-db-client": "1.0.4",
+    "@journaly/j-db-client": "^3.0.0",
     "@nexus/schema": "^0.19.2",
     "@stripe/react-stripe-js": "^1.2.2",
     "@stripe/stripe-js": "^1.12.1",

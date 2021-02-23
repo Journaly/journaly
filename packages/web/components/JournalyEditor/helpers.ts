@@ -1,55 +1,16 @@
 import isUrl from 'is-url'
 import {
-  Text,
   Editor,
   Transforms,
   Element as SlateElement,
-  Range
+  Range,
 } from 'slate'
+import { ReactEditor } from 'slate-react'
 import { toast } from 'react-toastify'
 import { TFunction } from 'next-i18next'
 import { DEFAULTS_TABLE, setDefaults, someNode, insertTable } from '@udecode/slate-plugins'
 
-declare module 'slate' {
-  interface CustomText {
-    bold?: boolean
-    italic?: boolean
-    underline?: boolean
-  }
-
-  type CustomBaseElement = {
-    type?: string
-  }
-
-  type LinkElement = {
-    type: 'link'
-    url: string
-  } 
-
-  type ImageElement = {
-    type: 'image'
-    url: string
-    uploaded: boolean
-  } 
-
-  type CustomElement = 
-    | CustomBaseElement
-    | LinkElement
-    | ImageElement
-
-  type CustomNode =
-    | Editor
-    | Text
-    | CustomElement
-
-  interface CustomTypes {
-    Element: CustomElement
-    Node: CustomNode
-    Text: CustomText
-  }
-}
-
-export type ButtonType = 'mark' | 'block' | 'link' | 'table' | 'image'
+export type ButtonType = 'mark' | 'block' | 'link' | 'table'
 
 /*
 // TODO: Actually type `isXActive` functions
@@ -228,7 +189,7 @@ const toggleLink = ({ editor, t }: ToggleArgs) => {
   }
 }
 
-export const withLinks = (editor: Editor) => {
+export const withLinks = (editor: ReactEditor) => {
   const { insertText, isInline } = editor
 
   editor.isInline = (element) => {
@@ -246,11 +207,18 @@ export const withLinks = (editor: Editor) => {
   return editor
 }
 
-const dataUrlizeFile = (file): Promise<string> => {
+const dataUrlizeFile = (file: File): Promise<string> => {
   const reader = new FileReader()
-  return (new Promise((res) => {
+  return (new Promise((res, rej) => {
     reader.addEventListener('load', () => {
-      res(reader.result)
+      if (reader.result) {
+        // `results`'s type depends on what `.read*` method was called, in this
+        // case `.readAsDataURL()` ensures we're getting a string, but there's
+        // no direct way to express that in the type system, so assert here.
+        res(reader.result as string)
+      } else {
+        rej()
+      }
     })
 
     reader.readAsDataURL(file)
@@ -258,7 +226,7 @@ const dataUrlizeFile = (file): Promise<string> => {
 
 }
 
-const insertImage = async (editor, file) => {
+const insertImage = async (editor: ReactEditor, file: File) => {
   const url = await dataUrlizeFile(file)
 
   const image = {
@@ -270,7 +238,7 @@ const insertImage = async (editor, file) => {
   Transforms.insertNodes(editor, image)
 }
 
-export const withImages = (editor: Editor) => {
+export const withImages = (editor: ReactEditor) => {
   const { insertData, isVoid } = editor
 
   editor.isVoid = element => {
@@ -278,7 +246,6 @@ export const withImages = (editor: Editor) => {
   }
 
   editor.insertData = data => {
-    const text = data.getData('text/plain')
     const { files } = data
 
     if (files && files.length > 0) {
@@ -304,7 +271,6 @@ export const toogleByType = ({ type, editor, format, t }: ToggleByTypeArgs) => {
     block: toggleBlock,
     link: toggleLink,
     table: tableHandler,
-    image: imageHandler,
   }
 
   toggles[type]({ editor, format, t })

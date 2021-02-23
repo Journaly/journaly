@@ -1,9 +1,4 @@
 import fetch from 'isomorphic-unfetch'
-import {
-  Node,
-  ImageElement,
-  BaseElement,
-} from 'slate'
 
 import { wait } from '@/utils'
 
@@ -46,11 +41,6 @@ type Result<T, E> =
   | { failed: false, value: T }
   | { failed: true, error: E }
 
-type ImageNode = ImageElement & BaseElement
-
-const isImageNode = (arg: Node): arg is ImageNode => {
-  return 'type' in arg && arg.type === 'image'
-}
 
 const uploadFile = async <T extends BaseUploadData>(getUploadData: () => Promise<T | undefined>, file: File): Promise<Result<T, ImageUploadErrorType>>  => {
     let uploadData: T | undefined
@@ -100,7 +90,6 @@ const uploadFile = async <T extends BaseUploadData>(getUploadData: () => Promise
 export {
   uploadFile,
   blobifyDataUrl,
-  isImageNode,
 }
 
 export type {

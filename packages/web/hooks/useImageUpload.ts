@@ -35,12 +35,12 @@ const useImageUpload = <T extends BaseUploadData>(getUploadData: () => Promise<T
       return null
     }
 
-    const [err, result] = await uploadFile(getUploadData, files[0])
+    const result = await uploadFile(getUploadData, files[0])
 
     setUploadingImage(false)
 
-    if (err) {
-      switch (result) {
+    if (result.failed) {
+      switch (result.error) {
         case 'GET_UPLOAD_DATA_ERROR':
           toast.error(t('imageErrors.initial'))
           break
@@ -55,8 +55,8 @@ const useImageUpload = <T extends BaseUploadData>(getUploadData: () => Promise<T
       return null
     }
 
-    setImage(result)
-    return result
+    setImage(result.value)
+    return result.value
   }
 
   return [image, uploadingImage, onFileInputChange, () => setImage(null)]

@@ -29,8 +29,11 @@ import useUILanguage from '@/hooks/useUILanguage'
 import {
   uploadFile,
   blobifyDataUrl,
-  isImageNode,
 } from '@/utils/images'
+import {
+  isImageNode,
+  ImageNode,
+} from '@/utils/slate'
 
 const initialData: InputPostData = {
   title: '',
@@ -47,7 +50,8 @@ const initialData: InputPostData = {
 }
 
 const extractImages = (body: Node[]): ImageElement[] => {
-  const images: ImageElement[] = []
+  const images: ImageNode[] = []
+
   const walk = (nodes: Node[]) => {
     for (const node of nodes) {
       if (isImageNode(node)) {

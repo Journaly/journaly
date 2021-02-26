@@ -19,7 +19,7 @@ const ToolbarButton = ({ type, format, children }: ButtonProps) => {
   const isEditorFocused = useFocused()
   const active = isEditorFocused && isTypeActive({ type, format, editor })
 
-  const handleClick = useCallback(() => (event: React.MouseEvent) => {
+  const handleClick = useCallback((event: React.MouseEvent) => {
     event.preventDefault()
     toogleByType({ type, format, editor, t })
   }, [type, format, editor, t])

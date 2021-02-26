@@ -1,0 +1,5 @@
+mutation createMembershipSubscription($type: MembershipSubscriptionType!) {
+  createMembershipSubscription(type: $type) {
+    id
+  }
+}

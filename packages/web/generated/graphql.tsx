@@ -227,6 +227,15 @@ export type CommentThanks = {
   comment: Comment
 }
 
+export type MembershipSubscription = {
+  __typename?: 'MembershipSubscription'
+  id: Scalars['Int']
+  price: Scalars['Int']
+  type: MembershipSubscriptionType
+  userId: Scalars['Int']
+  expiresAt?: Maybe<Scalars['DateTime']>
+}
+
 export enum ImageRole {
   Headline = 'HEADLINE',
   Inline = 'INLINE',
@@ -260,8 +269,7 @@ export enum LanguageLevel {
 export enum UserRole {
   Admin = 'ADMIN',
   Moderator = 'MODERATOR',
-  FreeUser = 'FREE_USER',
-  ProUser = 'PRO_USER',
+  User = 'USER',
 }
 
 export enum BadgeType {
@@ -270,6 +278,13 @@ export enum BadgeType {
   TenPosts = 'TEN_POSTS',
   OnehundredPosts = 'ONEHUNDRED_POSTS',
   CodeContributor = 'CODE_CONTRIBUTOR',
+}
+
+export enum MembershipSubscriptionType {
+  Monthly = 'MONTHLY',
+  Quarterly = 'QUARTERLY',
+  Semiannualy = 'SEMIANNUALY',
+  Annualy = 'ANNUALY',
 }
 
 export enum SortOrder {
@@ -348,6 +363,7 @@ export type Mutation = {
   updateSocialMedia: SocialMedia
   createCommentThanks: CommentThanks
   deleteCommentThanks: CommentThanks
+  createMembershipSubscription: MembershipSubscription
 }
 
 export type MutationCreateThreadArgs = {
@@ -478,6 +494,10 @@ export type MutationCreateCommentThanksArgs = {
 
 export type MutationDeleteCommentThanksArgs = {
   commentThanksId: Scalars['Int']
+}
+
+export type MutationCreateMembershipSubscriptionArgs = {
+  type: MembershipSubscriptionType
 }
 
 export type CreateCommentMutationVariables = Exact<{
@@ -740,6 +760,17 @@ export type RemoveLanguageRelationMutationVariables = Exact<{
 
 export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
   removeLanguageRelation: { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>
+}
+
+export type CreateMembershipSubscriptionMutationVariables = Exact<{
+  type: MembershipSubscriptionType
+}>
+
+export type CreateMembershipSubscriptionMutation = { __typename?: 'Mutation' } & {
+  createMembershipSubscription: { __typename?: 'MembershipSubscription' } & Pick<
+    MembershipSubscription,
+    'id'
+  >
 }
 
 export type PostPageQueryVariables = Exact<{
@@ -1904,6 +1935,54 @@ export type RemoveLanguageRelationMutationResult = ApolloReactCommon.MutationRes
 export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RemoveLanguageRelationMutation,
   RemoveLanguageRelationMutationVariables
+>
+export const CreateMembershipSubscriptionDocument = gql`
+  mutation createMembershipSubscription($type: MembershipSubscriptionType!) {
+    createMembershipSubscription(type: $type) {
+      id
+    }
+  }
+`
+export type CreateMembershipSubscriptionMutationFn = ApolloReactCommon.MutationFunction<
+  CreateMembershipSubscriptionMutation,
+  CreateMembershipSubscriptionMutationVariables
+>
+
+/**
+ * __useCreateMembershipSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useCreateMembershipSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMembershipSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMembershipSubscriptionMutation, { data, loading, error }] = useCreateMembershipSubscriptionMutation({
+ *   variables: {
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useCreateMembershipSubscriptionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateMembershipSubscriptionMutation,
+    CreateMembershipSubscriptionMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateMembershipSubscriptionMutation,
+    CreateMembershipSubscriptionMutationVariables
+  >(CreateMembershipSubscriptionDocument, baseOptions)
+}
+export type CreateMembershipSubscriptionMutationHookResult = ReturnType<
+  typeof useCreateMembershipSubscriptionMutation
+>
+export type CreateMembershipSubscriptionMutationResult = ApolloReactCommon.MutationResult<CreateMembershipSubscriptionMutation>
+export type CreateMembershipSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateMembershipSubscriptionMutation,
+  CreateMembershipSubscriptionMutationVariables
 >
 export const PostPageDocument = gql`
   query postPage($id: Int!, $uiLanguage: UILanguage!) {

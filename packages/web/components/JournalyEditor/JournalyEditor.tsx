@@ -70,7 +70,7 @@ const JournalyEditor = ({ value, setValue, slateRef }: JournalyEditorProps) => {
                   // Convert React keyboard event to native keyboard event
                   if (isHotkey(hotkey, (event as unknown) as KeyboardEvent)) {
                     event.preventDefault()
-                    toggleMark({ editor, format: mark })
+                    toggleMark(editor, mark)
                   }
                 })
               },

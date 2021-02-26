@@ -24,8 +24,9 @@ import FormatQuoteIcon from '@/components/Icons/FormatQuoteIcon'
 import FormatListNumberedIcon from '@/components/Icons/FormatListNumberedIcon'
 import FormatListBulletedIcon from '@/components/Icons/FormatListBulletedIcon'
 
+import ToggleMarkButton from './ToggleMarkButton'
 import ToolbarButton from './ToolbarButton'
-import { options, isTableActive } from './helpers'
+import { options, isTableActive } from '../helpers'
 
 const Toolbar = () => {
   const editor = useSlate()
@@ -70,15 +71,15 @@ const Toolbar = () => {
   return (
     <div className={toolbarClasses} ref={toolbarRef}>
       <div className="editor-toolbar">
-        <ToolbarButton type="mark" format="bold">
+        <ToggleMarkButton type="bold">
           <FormatBoldIcon title="Bold" titleId="toolbar-bold-icon" />
-        </ToolbarButton>
-        <ToolbarButton type="mark" format="italic">
+        </ToggleMarkButton>
+        <ToggleMarkButton type="italic">
           <FormatItalicIcon title="Italic" titleId="toolbar-italic-icon" />
-        </ToolbarButton>
-        <ToolbarButton type="mark" format="underline">
+        </ToggleMarkButton>
+        <ToggleMarkButton type="underline">
           <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
-        </ToolbarButton>
+        </ToggleMarkButton>
         <ToolbarButton type="link" format="link">
           <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
         </ToolbarButton>

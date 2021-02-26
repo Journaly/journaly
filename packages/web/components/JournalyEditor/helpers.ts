@@ -10,7 +10,8 @@ import { toast } from 'react-toastify'
 import { TFunction } from 'next-i18next'
 import { DEFAULTS_TABLE, setDefaults, someNode, insertTable } from '@udecode/slate-plugins'
 
-export type ButtonType = 'mark' | 'block' | 'link' | 'table'
+export type ButtonType = 'block' | 'link' | 'table'
+export type MarkType = 'bold' | 'underline' | 'italic'
 
 /*
 // TODO: Actually type `isXActive` functions
@@ -72,9 +73,9 @@ const unwrapLink = (editor: Editor) => {
   })
 }
 
-const isMarkActive = (editor: Editor, format: string) => {
+export const isMarkActive = (editor: Editor, type: MarkType) => {
   const marks = Editor.marks(editor) as { [key: string]: boolean | undefined }
-  return marks ? marks[format] === true : false
+  return marks ? marks[type] === true : false
 }
 
 const isBlockActive = (editor: Editor, format: string) => {
@@ -109,11 +110,9 @@ export const tableHandler = ({ editor, format }: ToggleArgs) => {
 
 export const isTypeActive = ({ type, editor, format }: IsTypeActiveArgs) => {
   const fn = {
-    mark: isMarkActive,
     block: isBlockActive,
     link: isLinkActive,
     table: isTableActive,
-    image: isImageActive,
   }[type]
 
   return fn(editor, format)
@@ -142,13 +141,11 @@ const toggleBlock = ({ editor, format }: ToggleArgs) => {
   }
 }
 
-export const toggleMark = ({ editor, format }: ToggleArgs) => {
-  const isActive = isMarkActive(editor, format)
-
-  if (isActive) {
-    Editor.removeMark(editor, format)
+export const toggleMark = (editor: Editor, type: MarkType) => {
+  if (isMarkActive(editor, type)) {
+    Editor.removeMark(editor, type)
   } else {
-    Editor.addMark(editor, format, true)
+    Editor.addMark(editor, type, true)
   }
 }
 
@@ -267,7 +264,6 @@ export const withImages = (editor: ReactEditor) => {
 
 export const toogleByType = ({ type, editor, format, t }: ToggleByTypeArgs) => {
   const toggles = {
-    mark: toggleMark,
     block: toggleBlock,
     link: toggleLink,
     table: tableHandler,

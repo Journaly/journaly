@@ -199,6 +199,7 @@ const UserMutations = extendType({
           'Set-Cookie',
           serialize('token', token, {
             httpOnly: true,
+            domain: process.env.NODE_ENV === 'production' ? 'journaly.com' : undefined,
             maxAge: 60 * 60 * 24 * 365,
             path: '/',
           }),

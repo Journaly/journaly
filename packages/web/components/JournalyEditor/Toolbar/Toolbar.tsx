@@ -17,6 +17,7 @@ import { navConstants } from '@/components/Dashboard/Nav'
 import FormatBoldIcon from '@/components/Icons/FormatBoldIcon'
 import FormatItalicIcon from '@/components/Icons/FormatItalicIcon'
 import FormatUnderlinedIcon from '@/components/Icons/FormatUnderlinedIcon'
+import ImageIcon from '@/components/Icons/ImageIcon'
 import FormatTitleIcon from '@/components/Icons/FormatTitleIcon'
 import FormatLinkIcon from '@/components/Icons/FormatLinkIcon'
 import FormatTableIcon from '@/components/Icons/FormatTableIcon'
@@ -82,7 +83,7 @@ const Toolbar = () => {
           <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
         </ToggleMarkButton>
         <InsertImageButton>
-          <FormatLinkIcon title="Insert Image" />
+          <ImageIcon title="Insert image" />
         </InsertImageButton>
         <ToolbarButton type="link" format="link">
           <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />

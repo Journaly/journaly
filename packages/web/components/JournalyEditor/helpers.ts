@@ -223,7 +223,7 @@ const dataUrlizeFile = (file: File): Promise<string> => {
 
 }
 
-const insertImage = async (editor: ReactEditor, file: File) => {
+export const insertImage = async (editor: ReactEditor, file: File) => {
   const url = await dataUrlizeFile(file)
 
   const image = {

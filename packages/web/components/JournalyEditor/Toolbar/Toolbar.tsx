@@ -26,6 +26,7 @@ import FormatListBulletedIcon from '@/components/Icons/FormatListBulletedIcon'
 
 import ToggleMarkButton from './ToggleMarkButton'
 import ToolbarButton from './ToolbarButton'
+import InsertImageButton from './InsertImageButton'
 import { options, isTableActive } from '../helpers'
 
 const Toolbar = () => {
@@ -80,6 +81,9 @@ const Toolbar = () => {
         <ToggleMarkButton type="underline">
           <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
         </ToggleMarkButton>
+        <InsertImageButton>
+          <FormatLinkIcon title="Insert Image" />
+        </InsertImageButton>
         <ToolbarButton type="link" format="link">
           <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
         </ToolbarButton>

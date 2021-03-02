@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import { useSlate, useFocused } from 'slate-react'
 
-import theme from '@/theme'
 import { useTranslation } from '@/config/i18n'
 
 import BaseToolbarButton from './BaseToolbarButton'

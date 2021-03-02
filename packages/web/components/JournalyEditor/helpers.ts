@@ -91,7 +91,6 @@ const isBlockActive = (editor: Editor, format: string) => {
 }
 
 const isLinkActive = (editor: Editor) => isBlockActive(editor, 'link')
-const isImageActive = (editor: Editor) => isBlockActive(editor, 'image')
 
 export const isTableActive = (editor: Editor) => {
   return someNode(editor, { match: { type: options.table.type } })

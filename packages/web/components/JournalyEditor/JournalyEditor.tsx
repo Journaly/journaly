@@ -11,7 +11,13 @@ import Toolbar from './Toolbar'
 import { useTranslation } from '@/config/i18n'
 import RenderElement from './RenderElement'
 import RenderLeaf from './RenderLeaf'
-import { withLinks, withImages, toggleMark, options } from './helpers'
+import {
+  withLinks,
+  withImages,
+  toggleMark,
+  options,
+  MarkType,
+} from './helpers'
 
 /**
  * The Journaly Rich Text Editor
@@ -22,7 +28,7 @@ import { withLinks, withImages, toggleMark, options } from './helpers'
 
 type HotKey = 'mod+b' | 'mod+i' | 'mod+u'
 
-const HOTKEYS: { [key in HotKey]: string } = {
+const HOTKEYS: { [key in HotKey]: MarkType } = {
   'mod+b': 'bold',
   'mod+i': 'italic',
   'mod+u': 'underline',

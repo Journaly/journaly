@@ -4,7 +4,15 @@ import { useSlate } from 'slate-react'
 import BaseToolbarButton from './BaseToolbarButton'
 import { insertImage } from '../helpers'
 
-const InsertImageButtton = ({ children }) => {
+interface HTMLInputEvent extends React.FormEvent {
+  target: HTMLInputElement & EventTarget
+}
+
+type InsertImageButtonPropType = {
+  children: React.ReactNode
+}
+
+const InsertImageButton = ({ children }: InsertImageButtonPropType) => {
   const editor = useSlate()
   const fileInput = React.useRef<HTMLInputElement>(null)
 
@@ -44,4 +52,4 @@ const InsertImageButtton = ({ children }) => {
   )
 }
 
-export default InsertImageButtton
+export default InsertImageButton

@@ -80,6 +80,7 @@
     "slate-history": "https://journaly-hosted-packages.s3.us-east-2.amazonaws.com/slate-history-v0.60.3-journaly.0.tgz",
     "slate-hyperscript": "https://journaly-hosted-packages.s3.us-east-2.amazonaws.com/slate-hyperscript-v0.60.3-journaly.0.tgz",
     "slate-react": "https://journaly-hosted-packages.s3.us-east-2.amazonaws.com/slate-react-v0.60.3-journaly.0.tgz",
+    "stripe": "^8.137.0",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
     "uuid": "^8.3.2",

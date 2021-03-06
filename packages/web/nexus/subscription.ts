@@ -57,9 +57,8 @@ const MembershipSubscriptionMutations = extendType({
           throw new Error("You must be logged in to create a subscription")
         }
         
-        const price = calculateSubPrice(args.type)
         const charge = await stripeConfig.paymentIntents.create({
-          amount: price,
+          amount: calculateSubPrice(args.type),
           currency: 'USD',
           confirm: true,
           payment_method: args.token,
@@ -68,12 +67,10 @@ const MembershipSubscriptionMutations = extendType({
           throw new Error(err.message)
         })
 
-        console.log('CHARGE', charge)
-
         const subscription = await ctx.db.membershipSubscription.create({
           data: {
             type: args.type,
-            price,
+            price: charge.amount,
             user: {
               connect: {
                 id: userId,
@@ -83,7 +80,7 @@ const MembershipSubscriptionMutations = extendType({
           }
         })
 
-        const transaction = await ctx.db.membershipSubscriptionTransaction.create({
+        await ctx.db.membershipSubscriptionTransaction.create({
           data: {
             chargeCents: subscription.price,
             user: {

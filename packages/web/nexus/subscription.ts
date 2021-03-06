@@ -3,7 +3,9 @@ import {
   arg,
   extendType,
   objectType,
+  stringArg,
 } from '@nexus/schema'
+import stripeConfig from './utils/stripe'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
@@ -13,6 +15,16 @@ const MembershipSubscription = objectType({
     t.model.type()
     t.model.userId()
     t.model.expiresAt()
+  }
+})
+
+const MembershipSubscriptionTransaction = objectType({
+  name: 'MembershipSubscriptionTransaction',
+  definition(t) {
+    t.model.id()
+    t.model.user()
+    t.model.chargeCents()
+    t.model.createdAt()
   }
 })
 
@@ -36,14 +48,32 @@ const MembershipSubscriptionMutations = extendType({
       type: 'MembershipSubscription',
       args: {
         type: arg({ type: 'MembershipSubscriptionType', required: true }),
+        token: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
-       return ctx.db.membershipSubscription.create({
+        if (!userId) {
+          throw new Error("You must be logged in to create a subscription")
+        }
+        
+        const price = calculateSubPrice(args.type)
+        const charge = await stripeConfig.paymentIntents.create({
+          amount: price,
+          currency: 'USD',
+          confirm: true,
+          payment_method: args.token,
+        }).catch(err => {
+          console.log(err)
+          throw new Error(err.message)
+        })
+
+        console.log('CHARGE', charge)
+
+        const subscription = await ctx.db.membershipSubscription.create({
           data: {
             type: args.type,
-            price: calculateSubPrice(args.type),
+            price,
             user: {
               connect: {
                 id: userId,
@@ -52,9 +82,22 @@ const MembershipSubscriptionMutations = extendType({
             expiresAt: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
           }
         })
-      }
+
+        const transaction = await ctx.db.membershipSubscriptionTransaction.create({
+          data: {
+            chargeCents: subscription.price,
+            user: {
+              connect: {
+                id: userId,
+              }
+            },
+          }
+        })
+
+        return subscription
+      },
     })
-  }
+  },
 })
 
 export default [

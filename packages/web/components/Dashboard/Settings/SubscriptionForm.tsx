@@ -41,8 +41,8 @@ const SubscriptionForm: React.FC = () => {
     nProgress.start()
     // 1. Create payment method via stripe
     //    Token comes back here if successful
-    if (elements) {
-      const { error, paymentMethod } = await stripe?.createPaymentMethod({
+    if (elements && stripe) {
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: 'card',
         card: elements.getElement(CardElement),
       })
@@ -50,17 +50,21 @@ const SubscriptionForm: React.FC = () => {
       // 2. Handle any errors from sttipe
       if (error) {
         setStripeError(error)
+        nProgress.done()
+        return
       }
-    }
-    // 3. Send token from #1 to serverside logic
-    // 4. Redirect to receipt/order page
-
-    if (!loading && Object.keys(errors).length === 0) {
-      createUserSubscription({
-        variables: {
-          type: data.type,
-        },
-      })
+      // 3. Send token from #1 to serverside logic
+      // 4. Redirect to receipt/order page
+  
+      if (!loading && Object.keys(errors).length === 0 && paymentMethod) {
+        createUserSubscription({
+          variables: {
+            // TODO: refactor to data.type
+            type: MembershipSubscriptionType.Monthly,
+            token: paymentMethod.id,
+          },
+        })
+      }
     }
     nProgress.done()
   }

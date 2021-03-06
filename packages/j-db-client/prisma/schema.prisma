@@ -294,6 +294,13 @@ model PostCommentSubscription {
   @@unique([userId, postId])
 }
 
+// TODO: Open questions:
+// • Should we have a description field on either of these models?
+// • Should we not have a relationship or something that indicates which subscription
+//   or subscription type a transaction is for?
+// • Should we store the stripe charge.id so that we always have a direct
+//   reference to the stripe charge?
+
 model MembershipSubscription {
   id        Int                        @id @default(autoincrement())
   type      MembershipSubscriptionType

@@ -1,5 +1,5 @@
-mutation createMembershipSubscription($type: MembershipSubscriptionType!) {
-  createMembershipSubscription(type: $type) {
+mutation createMembershipSubscription($type: MembershipSubscriptionType!, $token: String!) {
+  createMembershipSubscription(type: $type, token: $token) {
     id
   }
 }

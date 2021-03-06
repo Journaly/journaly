@@ -498,6 +498,7 @@ export type MutationDeleteCommentThanksArgs = {
 
 export type MutationCreateMembershipSubscriptionArgs = {
   type: MembershipSubscriptionType
+  token: Scalars['String']
 }
 
 export type CreateCommentMutationVariables = Exact<{
@@ -764,6 +765,7 @@ export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
 
 export type CreateMembershipSubscriptionMutationVariables = Exact<{
   type: MembershipSubscriptionType
+  token: Scalars['String']
 }>
 
 export type CreateMembershipSubscriptionMutation = { __typename?: 'Mutation' } & {
@@ -1937,8 +1939,8 @@ export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutati
   RemoveLanguageRelationMutationVariables
 >
 export const CreateMembershipSubscriptionDocument = gql`
-  mutation createMembershipSubscription($type: MembershipSubscriptionType!) {
-    createMembershipSubscription(type: $type) {
+  mutation createMembershipSubscription($type: MembershipSubscriptionType!, $token: String!) {
+    createMembershipSubscription(type: $type, token: $token) {
       id
     }
   }
@@ -1962,6 +1964,7 @@ export type CreateMembershipSubscriptionMutationFn = ApolloReactCommon.MutationF
  * const [createMembershipSubscriptionMutation, { data, loading, error }] = useCreateMembershipSubscriptionMutation({
  *   variables: {
  *      type: // value for 'type'
+ *      token: // value for 'token'
  *   },
  * });
  */

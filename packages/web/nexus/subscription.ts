@@ -28,16 +28,14 @@ const MembershipSubscriptionTransaction = objectType({
   }
 })
 
-const calculateSubPrice = (subType: MembershipSubscriptionType) => {
+const getSubscriptionPriceId = (subType: MembershipSubscriptionType) => {
   switch(subType) {
     case MembershipSubscriptionType.MONTHLY:
-      return 1000
+      return 'price_1ISRgvB8OEjVdGPaQr7ZANW8'
     case MembershipSubscriptionType.QUARTERLY:
-      return 2700
-    case MembershipSubscriptionType.SEMIANNUALY:
-      return 5000
+      return 'price_1ISRgvB8OEjVdGPaeOx4m255'
     case MembershipSubscriptionType.ANNUALY:
-      return 1000
+      return 'price_1ISRgvB8OEjVdGPam1PTr6hE'
   }
 }
 
@@ -56,39 +54,62 @@ const MembershipSubscriptionMutations = extendType({
         if (!userId) {
           throw new Error("You must be logged in to create a subscription")
         }
-        
-        const charge = await stripeConfig.paymentIntents.create({
-          amount: calculateSubPrice(args.type),
-          currency: 'USD',
-          confirm: true,
-          payment_method: args.token,
-        }).catch(err => {
-          console.log(err)
-          throw new Error(err.message)
+
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: userId,
+          },
         })
 
-        const subscription = await ctx.db.membershipSubscription.create({
-          data: {
-            type: args.type,
-            price: charge.amount,
-            user: {
-              connect: {
-                id: userId,
-              }
+        if (!user) throw new Error("User not found")
+
+        let customerId
+
+        if (!user.stripeCustomerId) {
+          const customer = (await stripeConfig.customers.create({
+            payment_method: args.token,
+            description: `${user.handle} (${user.id})`,
+            email: user.email,
+            metadata: {
+              id: user.id,
+              handle: user.handle,
             },
-            expiresAt: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
-          }
+          }))
+          console.log(customer)
+          // TODO update stripeCustomerId on User
+          customerId = customer.id
+        } else {
+          customerId = user.stripeCustomerId
+        }
+
+        const charge = await stripeConfig.subscriptions.create({
+          items: [{
+            price: getSubscriptionPriceId(args.type),
+            metadata: {
+              journalyUserId: userId,
+            },
+          }],
+          default_payment_method: args.token,
+          customer: customerId,
         })
 
-        await ctx.db.membershipSubscriptionTransaction.create({
-          data: {
-            chargeCents: subscription.price,
-            user: {
-              connect: {
-                id: userId,
-              }
-            },
-          }
+        const subData = {
+          type: args.type,
+          user: {
+            connect: {
+              id: userId,
+            }
+          },
+          expiresAt: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
+        }
+
+        // TODO: Log failure and get proper alarms set up
+        const subscription = await ctx.db.membershipSubscription.upsert({
+          create: subData,
+          update: subData,
+          where: {
+            userId,
+          },
         })
 
         return subscription

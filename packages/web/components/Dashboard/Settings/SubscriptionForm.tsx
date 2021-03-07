@@ -10,6 +10,8 @@ import { useTranslation } from '@/config/i18n'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
 import { useCreateMembershipSubscriptionMutation, MembershipSubscriptionType } from '@/generated/graphql'
+import Select from '@/components/Select'
+import { Option } from '@/components/Select/Select'
 
 type FormValues = {
   type: MembershipSubscriptionType
@@ -17,11 +19,13 @@ type FormValues = {
 
 const stripeLib = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string)
 
-const SubscriptionForm: React.FC = () => {
+const SubscriptionForm = () => {
   const { t } = useTranslation('settings')
   const [stripeError, setStripeError] = useState<StripeError>()
   const stripe = useStripe()
   const elements = useElements()
+
+  // const subscriptionOptions: Option<T>[] = []
 
   const { handleSubmit, errors, formState } = useForm<FormValues>({
     mode: 'onSubmit',
@@ -30,6 +34,7 @@ const SubscriptionForm: React.FC = () => {
 
   const [createUserSubscription, { loading }] = useCreateMembershipSubscriptionMutation({
     onCompleted: () => {
+      // TODO: bust the cache for the User
       toast.success(t('subscription.subscribeSuccessMessage'))
     },
     onError: () => {
@@ -42,9 +47,14 @@ const SubscriptionForm: React.FC = () => {
     // 1. Create payment method via stripe
     //    Token comes back here if successful
     if (elements && stripe) {
+      const card = elements.getElement(CardElement)
+      if (!card) {
+        // TODO: figure out actual user messages
+        throw new Error("Card element not found")
+      }
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: 'card',
-        card: elements.getElement(CardElement),
+        card,
       })
       console.log(paymentMethod)
       // 2. Handle any errors from sttipe
@@ -79,6 +89,8 @@ const SubscriptionForm: React.FC = () => {
       >
         {(stripeError || errorInput) && <FormError error={stripeError?.message || errorInput?.message as string}/>}
         <SettingsFieldset legend={t('subscription.legend')}>
+          <p style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
+          {/* <Select options={} /> */}
           <CardElement />
           <Button
             type="submit"

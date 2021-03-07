@@ -41,6 +41,7 @@ model User {
   postCommentSubscriptions          PostCommentSubscription[]
   PendingNotification               PendingNotification[]
   MembershipSubscriptionTransaction MembershipSubscriptionTransaction[]
+  stripeCustomerId                  String?
 }
 
 model Auth {
@@ -294,31 +295,31 @@ model PostCommentSubscription {
   @@unique([userId, postId])
 }
 
-// TODO: Open questions:
-// • Should we have a description field on either of these models?
-// • Should we not have a relationship or something that indicates which subscription
-//   or subscription type a transaction is for?
-// • Should we store the stripe charge.id so that we always have a direct
-//   reference to the stripe charge?
-
 model MembershipSubscription {
-  id        Int                        @id @default(autoincrement())
-  type      MembershipSubscriptionType
-  price     Int
-  user      User                       @relation(fields: [userId], references: [id])
-  userId    Int
-  expiresAt DateTime?
-  createdAt DateTime                   @default(now())
-  updatedAt DateTime                   @updatedAt
+  id                   Int                          @id @default(autoincrement())
+  period               MembershipSubscriptionPeriod
+  user                 User                         @relation(fields: [userId], references: [id])
+  userId               Int
+  stripeSubscription   Json
+  stripeSubscriptionId String
+  expiresAt            DateTime?
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+
+  @@unique([userId])
 }
 
 model MembershipSubscriptionTransaction {
-  id          Int      @id @default(autoincrement())
-  chargeCents Int
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                           Int                          @id @default(autoincrement())
+  chargeCents                  Int
+  chargeCurrency               String
+  user                         User                         @relation(fields: [userId], references: [id])
+  userId                       Int
+  membershipSubscriptionPeriod MembershipSubscriptionPeriod
+  stripeChargeId               String
+  stripeChargeData             Json
+  createdAt                    DateTime                     @default(now())
+  updatedAt                    DateTime                     @updatedAt
 }
 
 model PageView {
@@ -400,9 +401,8 @@ enum NotificationType {
   NEW_POST
 }
 
-enum MembershipSubscriptionType {
+enum MembershipSubscriptionPeriod {
   MONTHLY
   QUARTERLY
-  SEMIANNUALY
   ANNUALY
 }

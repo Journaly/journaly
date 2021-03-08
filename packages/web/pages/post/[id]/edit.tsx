@@ -16,6 +16,7 @@ import Button, { ButtonVariant } from '@/components/Button'
 import { ImageRole, useEditPostQuery, useUpdatePostMutation } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import useUILanguage from '@/hooks/useUILanguage'
+import useUploadInlineImages from '@/hooks/useUploadInlineImages'
 
 const EditPostPage: NextPage = () => {
   const router = useRouter()
@@ -31,6 +32,7 @@ const EditPostPage: NextPage = () => {
   const dataRef = React.useRef<OutputPostData>()
   const [initialData, setInitialData] = React.useState<InputPostData | null>(null)
   const [updatePost] = useUpdatePostMutation()
+  const uploadInlineImages = useUploadInlineImages()
 
   React.useEffect(() => {
     if (postById) {
@@ -69,14 +71,15 @@ const EditPostPage: NextPage = () => {
 
     const { title, languageId, topicIds, image, body, clear } = dataRef.current
     const images = image ? [image] : []
+    const modifiedBody = await uploadInlineImages(body)
 
     const { data } = await updatePost({
       variables: {
         postId: id,
+        body: modifiedBody,
         title,
         languageId,
         topicIds,
-        body,
         images,
       },
     })

@@ -1,11 +1,9 @@
-import React, { useRef, useState, useCallback } from 'react'
+import React, { useRef, useState } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { withApollo } from '@/lib/apollo'
-import { Node, ImageElement } from 'slate'
 import cloneDeep from 'lodash/cloneDeep'
-import NProgress from 'nprogress'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import PostEditor, {
@@ -27,14 +25,7 @@ import {
 import AuthGate from '@/components/AuthGate'
 import { useTranslation } from '@/config/i18n'
 import useUILanguage from '@/hooks/useUILanguage'
-import {
-  uploadFile,
-  blobifyDataUrl,
-} from '@/utils/images'
-import {
-  isImageNode,
-  ImageNode,
-} from '@/utils/slate'
+import useUploadInlineImages from '@/hooks/useUploadInlineImages'
 
 const initialData: InputPostData = {
   title: '',
@@ -49,66 +40,6 @@ const initialData: InputPostData = {
   ],
   timestamp: 0,
 }
-
-const extractImages = (body: Node[]): ImageElement[] => {
-  const images: ImageNode[] = []
-
-  const walk = (nodes: Node[]) => {
-    for (const node of nodes) {
-      if (isImageNode(node)) {
-        images.push(node)
-      } else if ('children' in node) {
-        walk(node.children)
-      }
-    }
-  }
-
-  walk(body)
-  return images
-}
-
-
-const useUploadInlineImages = () => {
-  const [initiateInlinePostImageUpload] = useInitiateInlinePostImageUploadMutation()
-
-  const getUploadData = async () =>  {
-    const resp = await initiateInlinePostImageUpload()
-
-    return resp?.data?.initiateInlinePostImageUpload
-  }
-
-  return useCallback(async (body: Node[]) =>  {
-    const clonedBody = cloneDeep(body)
-    const images = extractImages(clonedBody).filter(({ uploaded }) => !uploaded)
-
-    if (images.length) {
-      NProgress.start()
-
-      try {
-        for (let i=0; i < images.length; i++) {
-          const image = images[i]
-          const blob = await blobifyDataUrl(image.url)
-          const file =  new File([blob], 'upload')
-          const result = await uploadFile(getUploadData, file)
-          if (result.failed) {
-            throw new Error('Error uploading inline post image.')
-          }
-
-          image.url = result.value.finalUrl
-          image.uploaded = true
-
-          NProgress.set(i / images.length)
-        }
-      } finally {
-        NProgress.done()
-      }
-    }
-
-    return clonedBody
-  },
-  [initiateInlinePostImageUpload])
-}
-
 
 const NewPostPage: NextPage = () => {
   const uiLanguage = useUILanguage()

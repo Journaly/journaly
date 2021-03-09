@@ -71,7 +71,14 @@ const EditPostPage: NextPage = () => {
 
     const { title, languageId, topicIds, image, body, clear } = dataRef.current
     const images = image ? [image] : []
-    const modifiedBody = await uploadInlineImages(body)
+
+    try {
+      const modifiedBody = await uploadInlineImages(body)
+    } catch (err) {
+      console.error(err)
+      setErrorMessage(t('postSaveError'))
+      return
+    }
 
     const { data } = await updatePost({
       variables: {

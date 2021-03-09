@@ -54,6 +54,7 @@ const useUploadInlineImages = () => {
           const blob = await blobifyDataUrl(image.url)
           const file =  new File([blob], 'upload')
           const result = await uploadFile(getUploadData, file)
+
           if (result.failed) {
             throw new Error('Error uploading inline post image.')
           }

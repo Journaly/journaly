@@ -48,7 +48,10 @@ const NewPostPage: NextPage = () => {
   const router = useRouter()
   const { t } = useTranslation('post')
   const uploadInlineImages = useUploadInlineImages()
-  const [createPost, createPostOptions] = useCreatePostMutation({
+  const [saving, setSaving] = React.useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const [createPost] = useCreatePostMutation({
     onCompleted: (mutationResult) => {
       dataRef.current?.clear()
       router.push({ pathname: `/post/${mutationResult.createPost.id}` })
@@ -73,15 +76,16 @@ const NewPostPage: NextPage = () => {
       }
     },
   })
-  const [errorMessage, setErrorMessage] = useState('')
 
-  const createNewPost = async (status: PostStatusType) => {
+  const createNewPost = React.useCallback(async (status: PostStatusType) => {
     if (!(createPost && dataRef.current)) {
       return
     }
+    setSaving(true)
 
     const [valid, message] = validatePostData(dataRef.current, t)
     if (!valid) {
+      setSaving(false)
       setErrorMessage(message)
       return
     }
@@ -91,23 +95,39 @@ const NewPostPage: NextPage = () => {
 
     try {
       const modifiedBody = await uploadInlineImages(body)
+      createPost({
+        variables: {
+          title,
+          status,
+          languageId,
+          topicIds,
+          images,
+          body: modifiedBody
+        }
+      })
     } catch (err) {
       console.error(err)
       setErrorMessage(t('postSaveError'))
       return
+    } finally {
+      setSaving(false)
     }
+  }, [
+    dataRef,
+    uploadInlineImages,
+    setSaving,
+    createPost,
+  ])
 
-    createPost({
-      variables: {
-        title,
-        status,
-        languageId,
-        topicIds,
-        images,
-        body: modifiedBody
-      }
-    })
-  }
+  const handlePublishClick = React.useCallback((e) => {
+    e.preventDefault()
+    createNewPost(PostStatusType.Published)
+  }, [createNewPost])
+
+  const handleDraftClick = React.useCallback((e) => {
+    e.preventDefault()
+    createNewPost(PostStatusType.Draft)
+  }, [createNewPost])
 
   return (
     <AuthGate>
@@ -117,6 +137,7 @@ const NewPostPage: NextPage = () => {
 
           {currentUser && (
             <PostEditor
+              disabled={saving}
               currentUser={currentUser}
               topics={topics || []}
               autosaveKey="new-post"
@@ -130,11 +151,8 @@ const NewPostPage: NextPage = () => {
               type="submit"
               variant={ButtonVariant.Primary}
               data-test="post-submit"
-              loading={createPostOptions.loading}
-              onClick={(e) => {
-                e.preventDefault()
-                createNewPost(PostStatusType.Published)
-              }}
+              loading={saving}
+              onClick={handlePublishClick}
             >
               {t('publishCTA')}
             </Button>
@@ -143,11 +161,8 @@ const NewPostPage: NextPage = () => {
               type="submit"
               variant={ButtonVariant.Secondary}
               data-test="post-draft"
-              disabled={createPostOptions.loading}
-              onClick={(e) => {
-                e.preventDefault()
-                createNewPost(PostStatusType.Draft)
-              }}
+              loading={saving}
+              onClick={handleDraftClick}
             >
               {t('saveDraftCTA')}
             </Button>

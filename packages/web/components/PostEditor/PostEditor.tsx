@@ -43,6 +43,7 @@ type PostEditorProps = {
   dataRef: React.MutableRefObject<OutputPostData | undefined>
   initialData: InputPostData
   topics: TopicType[]
+  disabled?: boolean
 }
 
 type validatePostDataSignature = (
@@ -70,6 +71,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
   initialData,
   dataRef,
   topics,
+  disabled,
 }) => {
   const { t } = useTranslation('post')
   const slateRef = React.useRef<Editor>(null)
@@ -164,6 +166,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         placeholder={t('titlePlaceholder')}
         autoComplete="off"
         dir="auto"
+        disabled={disabled}
       />
 
       <label htmlFor="post-language">{t('languageLabel')}</label>
@@ -173,6 +176,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         value={langId ? langId.toString() : ''}
         onChange={(value) => setLangId(parseInt(value, 10))}
         placeholder={t('languageSelectPlaceholder')}
+        disabled={disabled}
       />
 
       <label htmlFor="post-topics">{t('topicsLabel')}</label>
@@ -183,7 +187,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         onAdd={addTopic}
         onRemove={removeTopic}
         placeholder={t('topicSelectPlaceholder')}
-        disabled={selectedTopics.length >= 5}
+        disabled={disabled || selectedTopics.length >= 5}
       />
 
       <div className="header-preview-container">
@@ -215,7 +219,12 @@ const PostEditor: React.FC<PostEditorProps> = ({
       </div>
 
       <div className="editor-padding">
-        <JournalyEditor value={body} setValue={setBody} slateRef={slateRef} />
+        <JournalyEditor
+          value={body}
+          setValue={setBody}
+          slateRef={slateRef}
+          disabled={disabled}
+        />
       </div>
 
       <style jsx>{`
@@ -234,6 +243,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
 
         .header-preview-container {
           margin-top: 24px;
+          opacity: ${disabled ? 0.6 : 'auto'};
         }
 
         .image-upload-input {

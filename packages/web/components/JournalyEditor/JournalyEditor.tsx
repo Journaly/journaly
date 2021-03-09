@@ -38,10 +38,16 @@ type JournalyEditorProps = {
   value: Node[]
   setValue: (value: Node[]) => void
   slateRef: React.RefObject<Editor>
+  disabled?: boolean
 }
 const plugins = [TablePlugin(options)]
 
-const JournalyEditor = ({ value, setValue, slateRef }: JournalyEditorProps) => {
+const JournalyEditor = ({
+  value,
+  setValue,
+  slateRef,
+  disabled,
+}: JournalyEditorProps) => {
   const { t } = useTranslation('common')
   const renderElement = useCallback((props) => <RenderElement {...props} />, [])
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
@@ -69,6 +75,7 @@ const JournalyEditor = ({ value, setValue, slateRef }: JournalyEditorProps) => {
             renderElement={[renderElement]}
             renderLeaf={[renderLeaf]}
             placeholder={t('editor.placeholderPrompt')}
+            readOnly={disabled}
             spellCheck
             onKeyDown={[
               (event: React.KeyboardEvent) => {
@@ -92,6 +99,7 @@ const JournalyEditor = ({ value, setValue, slateRef }: JournalyEditorProps) => {
           border-radius: 5px;
           min-height: 200px;
           background-color: ${theme.colors.white};
+          opacity: ${disabled ? 0.6 : 'auto'};
         }
       `}</style>
     </div>

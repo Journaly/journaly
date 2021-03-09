@@ -3,7 +3,6 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { withApollo } from '@/lib/apollo'
-import cloneDeep from 'lodash/cloneDeep'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import PostEditor, {
@@ -20,7 +19,6 @@ import {
   PostsQuery,
   PostsQueryVariables,
   PostsDocument,
-  useInitiateInlinePostImageUploadMutation,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import { useTranslation } from '@/config/i18n'

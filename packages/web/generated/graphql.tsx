@@ -51,6 +51,7 @@ export type EditorNode = {
   italic?: Maybe<Scalars['Boolean']>
   bold?: Maybe<Scalars['Boolean']>
   underline?: Maybe<Scalars['Boolean']>
+  uploaded?: Maybe<Scalars['Boolean']>
   link?: Maybe<Scalars['String']>
   url?: Maybe<Scalars['String']>
   hyperlink?: Maybe<Scalars['Boolean']>
@@ -174,6 +175,7 @@ export type User = {
   languages: Array<LanguageRelation>
   following: Array<User>
   followedBy: Array<User>
+  isPremiumUser: Scalars['Boolean']
   postsWrittenCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
 }
@@ -583,6 +585,9 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
   >
 } & UserFragmentFragment
 
+export type CurrentUserFragmentFragment = { __typename?: 'User' } & Pick<User, 'isPremiumUser'> &
+  UserWithLanguagesFragmentFragment
+
 export type SocialMediaFragmentFragment = { __typename?: 'User' } & {
   socialMedia?: Maybe<
     { __typename?: 'SocialMedia' } & Pick<
@@ -815,7 +820,7 @@ export type EditPostQuery = { __typename?: 'Query' } & {
       >
     }
   topics: Array<{ __typename?: 'Topic' } & TopicFragmentFragment>
-  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
 export type FeedQueryVariables = Exact<{
@@ -857,7 +862,7 @@ export type NewPostQueryVariables = Exact<{
 
 export type NewPostQuery = { __typename?: 'Query' } & {
   topics: Array<{ __typename?: 'Topic' } & TopicFragmentFragment>
-  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
 export type PostByIdQueryVariables = Exact<{
@@ -931,7 +936,7 @@ export type CreateUserMutation = { __typename?: 'Mutation' } & {
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
 
 export type CurrentUserQuery = { __typename?: 'Query' } & {
-  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
 export type FollowUserMutationVariables = Exact<{
@@ -1090,6 +1095,34 @@ export const UserWithStatsFragmentFragmentDoc = gql`
   }
   ${UserFragmentFragmentDoc}
 `
+export const LanguageFragmentFragmentDoc = gql`
+  fragment LanguageFragment on Language {
+    id
+    name
+    dialect
+  }
+`
+export const UserWithLanguagesFragmentFragmentDoc = gql`
+  fragment UserWithLanguagesFragment on User {
+    ...UserFragment
+    languages {
+      id
+      level
+      language {
+        ...LanguageFragment
+      }
+    }
+  }
+  ${UserFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
+`
+export const CurrentUserFragmentFragmentDoc = gql`
+  fragment CurrentUserFragment on User {
+    ...UserWithLanguagesFragment
+    isPremiumUser
+  }
+  ${UserWithLanguagesFragmentFragmentDoc}
+`
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {
     id
@@ -1114,13 +1147,6 @@ export const AuthorWithStatsFragmentFragmentDoc = gql`
     thanksReceivedCount
   }
   ${AuthorFragmentFragmentDoc}
-`
-export const LanguageFragmentFragmentDoc = gql`
-  fragment LanguageFragment on Language {
-    id
-    name
-    dialect
-  }
 `
 export const AuthorWithLanguagesFragmentFragmentDoc = gql`
   fragment AuthorWithLanguagesFragment on User {
@@ -1279,20 +1305,6 @@ export const TopicWithPostCountFragmentFragmentDoc = gql`
     postCount(languages: $languages)
   }
   ${TopicFragmentFragmentDoc}
-`
-export const UserWithLanguagesFragmentFragmentDoc = gql`
-  fragment UserWithLanguagesFragment on User {
-    ...UserFragment
-    languages {
-      id
-      level
-      language {
-        ...LanguageFragment
-      }
-    }
-  }
-  ${UserFragmentFragmentDoc}
-  ${LanguageFragmentFragmentDoc}
 `
 export const UserBadgeFragmentFragmentDoc = gql`
   fragment UserBadgeFragment on UserBadge {
@@ -2169,11 +2181,11 @@ export const EditPostDocument = gql`
       ...TopicFragment
     }
     currentUser {
-      ...UserWithLanguagesFragment
+      ...CurrentUserFragment
     }
   }
   ${TopicFragmentFragmentDoc}
-  ${UserWithLanguagesFragmentFragmentDoc}
+  ${CurrentUserFragmentFragmentDoc}
 `
 
 /**
@@ -2380,11 +2392,11 @@ export const NewPostDocument = gql`
       ...TopicFragment
     }
     currentUser {
-      ...UserWithLanguagesFragment
+      ...CurrentUserFragment
     }
   }
   ${TopicFragmentFragmentDoc}
-  ${UserWithLanguagesFragmentFragmentDoc}
+  ${CurrentUserFragmentFragmentDoc}
 `
 
 /**
@@ -2771,10 +2783,10 @@ export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const CurrentUserDocument = gql`
   query currentUser {
     currentUser {
-      ...UserWithLanguagesFragment
+      ...CurrentUserFragment
     }
   }
-  ${UserWithLanguagesFragmentFragmentDoc}
+  ${CurrentUserFragmentFragmentDoc}
 `
 
 /**

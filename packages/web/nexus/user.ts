@@ -59,6 +59,11 @@ const User = objectType({
     t.model.languages({ pagination: false })
     t.model.following({ pagination: false })
     t.model.followedBy({ pagination: false })
+    t.boolean('isPremiumUser', {
+      resolve(_parent, _args, _ctx, _info) {
+        return false
+      }
+    })
     t.int('postsWrittenCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.post.count({

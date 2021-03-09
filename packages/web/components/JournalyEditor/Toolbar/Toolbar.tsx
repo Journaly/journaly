@@ -30,7 +30,11 @@ import ToolbarButton from './ToolbarButton'
 import InsertImageButton from './InsertImageButton'
 import { options, isTableActive } from '../helpers'
 
-const Toolbar = () => {
+type ToolbarProps = {
+  allowInlineImages: boolean
+}
+
+const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
   const editor = useSlate()
   const isEditorFocused = useFocused()
   const toolbarRef = useRef<HTMLDivElement>(null)
@@ -82,9 +86,11 @@ const Toolbar = () => {
         <ToggleMarkButton type="underline">
           <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
         </ToggleMarkButton>
-        <InsertImageButton>
-          <ImageIcon title="Insert image" />
-        </InsertImageButton>
+        { allowInlineImages && (
+          <InsertImageButton>
+            <ImageIcon title="Insert image" />
+          </InsertImageButton>
+        )}
         <ToolbarButton type="link" format="link">
           <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
         </ToolbarButton>

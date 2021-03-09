@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
 import { createEditor, Editor, Node } from 'slate'
-import { Slate, withReact, ReactEditor } from 'slate-react'
+import { Slate, withReact } from 'slate-react'
 import { withHistory } from 'slate-history'
 import { pipe, TablePlugin, EditablePlugins } from '@udecode/slate-plugins'
 import isHotkey from 'is-hotkey'
@@ -38,6 +38,7 @@ type JournalyEditorProps = {
   value: Node[]
   setValue: (value: Node[]) => void
   slateRef: React.RefObject<Editor>
+  allowInlineImages: boolean
   disabled?: boolean
 }
 const plugins = [TablePlugin(options)]
@@ -47,18 +48,22 @@ const JournalyEditor = ({
   setValue,
   slateRef,
   disabled,
+  allowInlineImages,
 }: JournalyEditorProps) => {
   const { t } = useTranslation('common')
   const renderElement = useCallback((props) => <RenderElement {...props} />, [])
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
   const editor = useMemo(() => {
     const withPlugins = [
-      withReact,
       withHistory,
       withLinks,
-      withImages,
-    ] as const
-    return pipe(createEditor(), ...withPlugins) as ReactEditor
+    ]
+
+    if (allowInlineImages) {
+      withPlugins.push(withImages)
+    }
+
+    return pipe(withReact(createEditor()), ...withPlugins)
   }, [])
 
   useEffect(() => {
@@ -69,7 +74,7 @@ const JournalyEditor = ({
     <div className="editor-wrapper">
       <div className="editor-container">
         <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
-          <Toolbar />
+          <Toolbar allowInlineImages={allowInlineImages} />
           <EditablePlugins
             plugins={plugins}
             renderElement={[renderElement]}

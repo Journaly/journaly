@@ -3,6 +3,6 @@ query newPost($uiLanguage: UILanguage!) {
     ...TopicFragment
   }
   currentUser {
-    ...UserWithLanguagesFragment
+    ...CurrentUserFragment
   }
 }

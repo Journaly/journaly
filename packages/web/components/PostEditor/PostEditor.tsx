@@ -12,7 +12,7 @@ import theme from '@/theme'
 import usePostImageUpload from '@/hooks/usePostImageUpload'
 import useAutosavedState from '@/hooks/useAutosavedState'
 import {
-  UserWithLanguagesFragmentFragment as UserWithLanguagesType,
+  CurrentUserFragmentFragment as UserType,
   TopicFragmentFragment as TopicType,
   PostStatus as PostStatusType,
   ImageInput,
@@ -38,7 +38,7 @@ type InputPostData = BasePostData & {
 }
 
 type PostEditorProps = {
-  currentUser: UserWithLanguagesType
+  currentUser: UserType,
   autosaveKey: string
   dataRef: React.MutableRefObject<OutputPostData | undefined>
   initialData: InputPostData
@@ -224,6 +224,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
           setValue={setBody}
           slateRef={slateRef}
           disabled={disabled}
+          allowInlineImages={currentUser.isPremiumUser}
         />
       </div>
 

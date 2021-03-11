@@ -2,15 +2,12 @@ import { useEffect } from 'react'
 import Head from 'next/head'
 import Router from 'next/router'
 
-let _dataLayer = []
-
 const gtag = (...args) => {
-  const dataLayer = (
-    (typeof window !== 'undefined' && window.dataLayer)
-    || _dataLayer
-  )
+  if (typeof window === 'undefined')
+    return
 
-  dataLayer.push(args)
+  window.dataLayer = window.dataLayer || []
+  window.dataLayer.push(args)
 }
 
 const GoogleAnalytics = () => {
@@ -18,11 +15,6 @@ const GoogleAnalytics = () => {
     return null
 
   useEffect(() => {
-    window.dataLayer = window.dataLayer || _dataLayer
-
-    gtag('js', new Date())
-    gtag('config', process.env.NEXT_PUBLIC_GA_ID)
-
     Router.events.on('routeChangeComplete', (url) => {
       gtag('set', 'page', url)
       gtag('send', 'pageview')
@@ -32,8 +24,18 @@ const GoogleAnalytics = () => {
   return (
     <Head>
       <script 
-        sync
+        async
         src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+      />
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+          `
+        }}
       />
     </Head>
   )

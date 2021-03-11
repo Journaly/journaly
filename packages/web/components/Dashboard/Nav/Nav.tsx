@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
 
@@ -8,7 +8,8 @@ import theme from '@/theme'
 import {
   useLogoutMutation,
   useCurrentUserQuery,
-  User as UserType
+  User as UserType,
+  CurrentUserDocument,
 } from '@/generated/graphql'
 
 import HamburgerIcon from '../Header/HamburgerIcon'
@@ -27,7 +28,11 @@ interface Props {
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
   const { data, refetch, error } = useCurrentUserQuery()
-  const [logout] = useLogoutMutation()
+  const [logout] = useLogoutMutation({
+    refetchQueries: [
+      { query: CurrentUserDocument }
+    ]
+  })
   const [shouldShowModal, setShouldShowModal] = useState(false)
 
   let currentUser: UserType | null = data?.currentUser as UserType
@@ -52,16 +57,12 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
     }
   }
 
-  const handleLogOut = (): void => {
-    handleCollapse()
-    logout()
-
-    // Clear the currentUser cache
-    refetch()
+  const handleLogOut = useCallback(async (): void => {
+    await logout()
 
     // Redirect to home page
     Router.push('/')
-  }
+  }, [logout])
 
   return (
     <div className={navStyles}>
@@ -114,12 +115,10 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                 </a>
               </NavLink>
 
-              <Link href="/">
-                <a className="log-out nav-link" onClick={handleLogOut}>
-                  <img src="/images/icons/logout-icon.svg" alt="Log out" />
-                  <span className="nav-link-text">{t('dashboardNav.logOut')}</span>
-                </a>
-              </Link>
+              <a role="button" className="log-out nav-link" onClick={handleLogOut}>
+                <img src="/images/icons/logout-icon.svg" alt="Log out" />
+                <span className="nav-link-text">{t('dashboardNav.logOut')}</span>
+              </a>
             </div>
           </>
         )}

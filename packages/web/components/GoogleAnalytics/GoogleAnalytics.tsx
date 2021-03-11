@@ -6,8 +6,12 @@ const gtag = (...args) => {
   if (typeof window === 'undefined')
     return
 
-  window.dataLayer = window.dataLayer || []
-  window.dataLayer.push(args)
+  if (window.gtag) {
+    window.gtag(...args)
+  } else {
+    window.dataLayer = window.dataLayer || []
+    window.dataLayer.push(args)
+  }
 }
 
 const GoogleAnalytics = () => {
@@ -17,7 +21,7 @@ const GoogleAnalytics = () => {
   useEffect(() => {
     Router.events.on('routeChangeComplete', (url) => {
       gtag('set', 'page', url)
-      gtag('send', 'pageview')
+      gtag('event', 'page_view')
     })
   }, [])
 

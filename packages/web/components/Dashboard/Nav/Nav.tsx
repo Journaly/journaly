@@ -27,7 +27,7 @@ interface Props {
 
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
-  const { data, refetch, error } = useCurrentUserQuery()
+  const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
     refetchQueries: [
       { query: CurrentUserDocument }
@@ -57,7 +57,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
     }
   }
 
-  const handleLogOut = useCallback(async (): void => {
+  const handleLogOut = useCallback(async () => {
     await logout()
 
     // Redirect to home page

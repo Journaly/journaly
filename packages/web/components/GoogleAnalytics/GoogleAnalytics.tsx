@@ -2,7 +2,14 @@ import { useEffect } from 'react'
 import Head from 'next/head'
 import Router from 'next/router'
 
-const gtag = (...args) => {
+declare global {
+  interface Window {
+    dataLayer: any[]
+    gtag: (...args: any[]) => void
+  }
+}
+
+const gtag = (...args: any[]) => {
   if (typeof window === 'undefined')
     return
 

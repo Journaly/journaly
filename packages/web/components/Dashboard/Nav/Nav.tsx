@@ -124,9 +124,11 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         )}
         
         <div className="nav-support">
-          <span className="help-btn" onClick={() => setShouldShowModal(true)}>
-            <HelpIcon width={30} height={30} />
-          </span>
+          { currentUser && (
+            <span role="button" className="help-btn" onClick={() => setShouldShowModal(true)}>
+              <HelpIcon width={30} height={30} />
+            </span>
+          )}
           <h1 className="nav-logo">
             <Link href="/">
               <a onClick={handleCollapse}>
@@ -203,7 +205,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
 
         .nav-support {
           /* The auto top margin allows the logo to take up enough space, but push itself down */
-          margin: auto 0 15px;
+          margin: ${ currentUser ? 'auto 0 15px' : 'auto 0'};
+          grid-row-start: ${ currentUser ? 3 : 2 };
           text-align: center;
           display: flex;
           flex-direction: column;

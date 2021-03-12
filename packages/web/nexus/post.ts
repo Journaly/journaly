@@ -14,6 +14,7 @@ import {
   NodeType,
   sendNewBadgeEmail,
   generateThumbbusterUrl,
+  getThumbusterVars,
 } from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
@@ -156,6 +157,15 @@ const InitiatePostImageUploadResponse = objectType({
     t.string('checkUrl', { description: 'polling goes here' })
     t.string('finalUrlLarge', { description: 'final url of the large size transform' })
     t.string('finalUrlSmall', { description: 'final url of the mall size transform' })
+  },
+})
+
+const InitiateInlinePostImageUploadResponse = objectType({
+  name: 'InitiateInlinePostImageUploadResponse',
+  definition(t) {
+    t.string('uploadUrl', { description: 'URL for the client to PUT an image to' })
+    t.string('checkUrl', { description: 'polling goes here' })
+    t.string('finalUrl', { description: 'final url of the transform' })
   },
 })
 
@@ -728,16 +738,9 @@ const PostMutations = extendType({
     t.field('initiatePostImageUpload', {
       type: 'InitiatePostImageUploadResponse',
       resolve: async (_parent, _args, ctx) => {
-        const transformBucket = process.env.THUMBBUSTER_TRANSFORM_BUCKET
-        const cdnDomain = process.env.THUMBBUSTER_CDN_DOMAIN
-
-        if (!transformBucket) {
-          throw new Error('Must specify `THUMBBUSTER_TRANSFORM_BUCKET` env var')
-        } else if (!cdnDomain) {
-          throw new Error('Must specify `THUMBBUSTER_CDN_DOMAIN` env var')
-        }
-
         const { userId } = ctx.request
+        const [transformBucket, cdnDomain] = getThumbusterVars()
+
         const currentUser = await ctx.db.user.findUnique({
           where: {
             id: userId,
@@ -758,6 +761,32 @@ const PostMutations = extendType({
         }
       }
     })
+
+    t.field('initiateInlinePostImageUpload', {
+      type: 'InitiateInlinePostImageUploadResponse',
+      resolve: async (_parent, _args, ctx) => {
+        const { userId } = ctx.request
+        const [transformBucket, cdnDomain] = getThumbusterVars()
+
+        const currentUser = await ctx.db.user.findUnique({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (!currentUser) {
+          throw new NotAuthorizedError()
+        }
+
+        const [uuid, uploadUrl] = await generateThumbbusterUrl('inline-post-image')
+
+        return {
+          uploadUrl,
+          checkUrl: `https://${transformBucket}.s3.us-east-2.amazonaws.com/inline-post-image/${uuid}-default`,
+          finalUrl: `https://${cdnDomain}/inline-post-image/${uuid}-default`,
+        }
+      }
+    })
   },
 })
 
@@ -766,6 +795,7 @@ export default [
   Post,
   PostPage,
   InitiatePostImageUploadResponse,
+  InitiateInlinePostImageUploadResponse,
   PostQueries,
   PostMutations,
 ]

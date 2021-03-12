@@ -27,6 +27,11 @@ fragment UserWithLanguagesFragment on User {
   }
 }
 
+fragment CurrentUserFragment on User {
+  ...UserWithLanguagesFragment
+  isPremiumUser
+}
+
 fragment SocialMediaFragment on User {
   socialMedia {
     id

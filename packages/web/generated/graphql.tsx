@@ -51,6 +51,7 @@ export type EditorNode = {
   italic?: Maybe<Scalars['Boolean']>
   bold?: Maybe<Scalars['Boolean']>
   underline?: Maybe<Scalars['Boolean']>
+  uploaded?: Maybe<Scalars['Boolean']>
   link?: Maybe<Scalars['String']>
   url?: Maybe<Scalars['String']>
   hyperlink?: Maybe<Scalars['Boolean']>
@@ -146,6 +147,16 @@ export type InitiatePostImageUploadResponse = {
   finalUrlSmall: Scalars['String']
 }
 
+export type InitiateInlinePostImageUploadResponse = {
+  __typename?: 'InitiateInlinePostImageUploadResponse'
+  /** URL for the client to PUT an image to */
+  uploadUrl: Scalars['String']
+  /** polling goes here */
+  checkUrl: Scalars['String']
+  /** final url of the transform */
+  finalUrl: Scalars['String']
+}
+
 export type User = {
   __typename?: 'User'
   id: Scalars['Int']
@@ -164,6 +175,7 @@ export type User = {
   languages: Array<LanguageRelation>
   following: Array<User>
   followedBy: Array<User>
+  isPremiumUser: Scalars['Boolean']
   postsWrittenCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
 }
@@ -333,6 +345,7 @@ export type Mutation = {
   updatePost: Post
   deletePost: Post
   initiatePostImageUpload: InitiatePostImageUploadResponse
+  initiateInlinePostImageUpload: InitiateInlinePostImageUploadResponse
   createUser: User
   updateUser: User
   initiateAvatarImageUpload: InitiateAvatarImageUploadResponse
@@ -572,6 +585,9 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
   >
 } & UserFragmentFragment
 
+export type CurrentUserFragmentFragment = { __typename?: 'User' } & Pick<User, 'isPremiumUser'> &
+  UserWithLanguagesFragmentFragment
+
 export type SocialMediaFragmentFragment = { __typename?: 'User' } & {
   socialMedia?: Maybe<
     { __typename?: 'SocialMedia' } & Pick<
@@ -804,7 +820,7 @@ export type EditPostQuery = { __typename?: 'Query' } & {
       >
     }
   topics: Array<{ __typename?: 'Topic' } & TopicFragmentFragment>
-  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
 export type FeedQueryVariables = Exact<{
@@ -822,6 +838,15 @@ export type FeedQuery = { __typename?: 'Query' } & {
     }
 }
 
+export type InitiateInlinePostImageUploadMutationVariables = Exact<{ [key: string]: never }>
+
+export type InitiateInlinePostImageUploadMutation = { __typename?: 'Mutation' } & {
+  initiateInlinePostImageUpload: { __typename?: 'InitiateInlinePostImageUploadResponse' } & Pick<
+    InitiateInlinePostImageUploadResponse,
+    'uploadUrl' | 'checkUrl' | 'finalUrl'
+  >
+}
+
 export type InitiatePostImageUploadMutationVariables = Exact<{ [key: string]: never }>
 
 export type InitiatePostImageUploadMutation = { __typename?: 'Mutation' } & {
@@ -837,7 +862,7 @@ export type NewPostQueryVariables = Exact<{
 
 export type NewPostQuery = { __typename?: 'Query' } & {
   topics: Array<{ __typename?: 'Topic' } & TopicFragmentFragment>
-  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
 export type PostByIdQueryVariables = Exact<{
@@ -911,7 +936,7 @@ export type CreateUserMutation = { __typename?: 'Mutation' } & {
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
 
 export type CurrentUserQuery = { __typename?: 'Query' } & {
-  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
 export type FollowUserMutationVariables = Exact<{
@@ -1070,6 +1095,34 @@ export const UserWithStatsFragmentFragmentDoc = gql`
   }
   ${UserFragmentFragmentDoc}
 `
+export const LanguageFragmentFragmentDoc = gql`
+  fragment LanguageFragment on Language {
+    id
+    name
+    dialect
+  }
+`
+export const UserWithLanguagesFragmentFragmentDoc = gql`
+  fragment UserWithLanguagesFragment on User {
+    ...UserFragment
+    languages {
+      id
+      level
+      language {
+        ...LanguageFragment
+      }
+    }
+  }
+  ${UserFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
+`
+export const CurrentUserFragmentFragmentDoc = gql`
+  fragment CurrentUserFragment on User {
+    ...UserWithLanguagesFragment
+    isPremiumUser
+  }
+  ${UserWithLanguagesFragmentFragmentDoc}
+`
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {
     id
@@ -1094,13 +1147,6 @@ export const AuthorWithStatsFragmentFragmentDoc = gql`
     thanksReceivedCount
   }
   ${AuthorFragmentFragmentDoc}
-`
-export const LanguageFragmentFragmentDoc = gql`
-  fragment LanguageFragment on Language {
-    id
-    name
-    dialect
-  }
 `
 export const AuthorWithLanguagesFragmentFragmentDoc = gql`
   fragment AuthorWithLanguagesFragment on User {
@@ -1259,20 +1305,6 @@ export const TopicWithPostCountFragmentFragmentDoc = gql`
     postCount(languages: $languages)
   }
   ${TopicFragmentFragmentDoc}
-`
-export const UserWithLanguagesFragmentFragmentDoc = gql`
-  fragment UserWithLanguagesFragment on User {
-    ...UserFragment
-    languages {
-      id
-      level
-      language {
-        ...LanguageFragment
-      }
-    }
-  }
-  ${UserFragmentFragmentDoc}
-  ${LanguageFragmentFragmentDoc}
 `
 export const UserBadgeFragmentFragmentDoc = gql`
   fragment UserBadgeFragment on UserBadge {
@@ -2149,11 +2181,11 @@ export const EditPostDocument = gql`
       ...TopicFragment
     }
     currentUser {
-      ...UserWithLanguagesFragment
+      ...CurrentUserFragment
     }
   }
   ${TopicFragmentFragmentDoc}
-  ${UserWithLanguagesFragmentFragmentDoc}
+  ${CurrentUserFragmentFragmentDoc}
 `
 
 /**
@@ -2255,6 +2287,55 @@ export function useFeedLazyQuery(
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
 export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
 export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
+export const InitiateInlinePostImageUploadDocument = gql`
+  mutation initiateInlinePostImageUpload {
+    initiateInlinePostImageUpload {
+      uploadUrl
+      checkUrl
+      finalUrl
+    }
+  }
+`
+export type InitiateInlinePostImageUploadMutationFn = ApolloReactCommon.MutationFunction<
+  InitiateInlinePostImageUploadMutation,
+  InitiateInlinePostImageUploadMutationVariables
+>
+
+/**
+ * __useInitiateInlinePostImageUploadMutation__
+ *
+ * To run a mutation, you first call `useInitiateInlinePostImageUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInitiateInlinePostImageUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [initiateInlinePostImageUploadMutation, { data, loading, error }] = useInitiateInlinePostImageUploadMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useInitiateInlinePostImageUploadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    InitiateInlinePostImageUploadMutation,
+    InitiateInlinePostImageUploadMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    InitiateInlinePostImageUploadMutation,
+    InitiateInlinePostImageUploadMutationVariables
+  >(InitiateInlinePostImageUploadDocument, baseOptions)
+}
+export type InitiateInlinePostImageUploadMutationHookResult = ReturnType<
+  typeof useInitiateInlinePostImageUploadMutation
+>
+export type InitiateInlinePostImageUploadMutationResult = ApolloReactCommon.MutationResult<InitiateInlinePostImageUploadMutation>
+export type InitiateInlinePostImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  InitiateInlinePostImageUploadMutation,
+  InitiateInlinePostImageUploadMutationVariables
+>
 export const InitiatePostImageUploadDocument = gql`
   mutation initiatePostImageUpload {
     initiatePostImageUpload {
@@ -2311,11 +2392,11 @@ export const NewPostDocument = gql`
       ...TopicFragment
     }
     currentUser {
-      ...UserWithLanguagesFragment
+      ...CurrentUserFragment
     }
   }
   ${TopicFragmentFragmentDoc}
-  ${UserWithLanguagesFragmentFragmentDoc}
+  ${CurrentUserFragmentFragmentDoc}
 `
 
 /**
@@ -2702,10 +2783,10 @@ export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
 export const CurrentUserDocument = gql`
   query currentUser {
     currentUser {
-      ...UserWithLanguagesFragment
+      ...CurrentUserFragment
     }
   }
-  ${UserWithLanguagesFragmentFragmentDoc}
+  ${CurrentUserFragmentFragmentDoc}
 `
 
 /**

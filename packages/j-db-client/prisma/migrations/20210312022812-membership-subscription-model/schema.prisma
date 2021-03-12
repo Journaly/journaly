@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator prisma_client {
@@ -367,6 +367,8 @@ model PendingNotification {
 enum UserRole {
   ADMIN
   MODERATOR
+  FREE_USER
+  PRO_USER
   USER
 }
 

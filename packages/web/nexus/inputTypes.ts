@@ -12,6 +12,7 @@ export const EditorNode = inputObjectType({
     t.boolean('italic', { nullable: true })
     t.boolean('bold', { nullable: true })
     t.boolean('underline', { nullable: true })
+    t.boolean('uploaded', { nullable: true })
     t.string('link', { nullable: true })
     t.string('url', { nullable: true })
     t.boolean('hyperlink', { nullable: true })

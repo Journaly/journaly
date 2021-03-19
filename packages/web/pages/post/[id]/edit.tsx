@@ -16,12 +16,14 @@ import Button, { ButtonVariant } from '@/components/Button'
 import { ImageRole, useEditPostQuery, useUpdatePostMutation } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import useUILanguage from '@/hooks/useUILanguage'
+import useUploadInlineImages from '@/hooks/useUploadInlineImages'
 
 const EditPostPage: NextPage = () => {
   const router = useRouter()
   const idStr = router.query.id as string
   const id = parseInt(idStr, 10)
   const { t } = useTranslation('post')
+  const [saving, setSaving] = React.useState<boolean>(false)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const uiLanguage = useUILanguage()
 
@@ -31,6 +33,7 @@ const EditPostPage: NextPage = () => {
   const dataRef = React.useRef<OutputPostData>()
   const [initialData, setInitialData] = React.useState<InputPostData | null>(null)
   const [updatePost] = useUpdatePostMutation()
+  const uploadInlineImages = useUploadInlineImages()
 
   React.useEffect(() => {
     if (postById) {
@@ -56,38 +59,66 @@ const EditPostPage: NextPage = () => {
     }
   }, [postById])
 
-  const savePost = async () => {
+  const savePost = React.useCallback(async () => {
     if (!dataRef.current) {
       return
     }
 
+    setSaving(true)
+
     const [valid, message] = validatePostData(dataRef.current, t)
     if (!valid) {
       setErrorMessage(message)
+      setSaving(false)
       return
     }
 
     const { title, languageId, topicIds, image, body, clear } = dataRef.current
     const images = image ? [image] : []
 
-    const { data } = await updatePost({
-      variables: {
-        postId: id,
-        title,
-        languageId,
-        topicIds,
-        body,
-        images,
-      },
-    })
+    let postId: number
+    try {
+      const modifiedBody = await uploadInlineImages(body)
 
-    if (!data || !data.updatePost) {
+      const { data } = await updatePost({
+        variables: {
+          postId: id,
+          body: modifiedBody,
+          title,
+          languageId,
+          topicIds,
+          images,
+        },
+      })
+
+      if (!data || !data.updatePost) {
+        throw new Error('Missing post data after mutation.')
+      }
+
+      postId = data.updatePost.id
+    } catch (err) {
+      console.error(err)
+      setErrorMessage(t('postSaveError'))
+      setSaving(false)
       return
     }
 
     clear()
-    router.push({ pathname: `/post/${data.updatePost.id}` })
-  }
+    setSaving(false)
+    router.push({ pathname: `/post/${postId}` })
+  }, [
+    setSaving,
+    setErrorMessage,
+    dataRef,
+    uploadInlineImages,
+    updatePost,
+    router,
+  ])
+
+  const onSaveClick = React.useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    savePost()
+  }, [savePost])
 
   return (
     <AuthGate>
@@ -97,6 +128,7 @@ const EditPostPage: NextPage = () => {
 
           {initialData && currentUser && (
             <PostEditor
+              disabled={saving}
               currentUser={currentUser}
               topics={topics || []}
               autosaveKey={`edit-post:${id}`}
@@ -110,10 +142,8 @@ const EditPostPage: NextPage = () => {
               type="submit"
               variant={ButtonVariant.Primary}
               data-test="post-submit"
-              onClick={(e: React.MouseEvent) => {
-                e.preventDefault()
-                savePost()
-              }}
+              loading={saving}
+              onClick={onSaveClick}
             >
               {t('save')}
             </Button>

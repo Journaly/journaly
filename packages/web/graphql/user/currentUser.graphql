@@ -1,5 +1,5 @@
 query currentUser {
   currentUser {
-    ...UserWithLanguagesFragment
+    ...CurrentUserFragment
   }
 }

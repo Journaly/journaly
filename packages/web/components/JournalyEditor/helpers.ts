@@ -1,37 +1,17 @@
 import isUrl from 'is-url'
 import {
-  Text,
   Editor,
   Transforms,
   Element as SlateElement,
-  Range
+  Range,
 } from 'slate'
+import { ReactEditor } from 'slate-react'
 import { toast } from 'react-toastify'
 import { TFunction } from 'next-i18next'
 import { DEFAULTS_TABLE, setDefaults, someNode, insertTable } from '@udecode/slate-plugins'
 
-declare module 'slate' {
-  interface CustomText {
-    bold?: boolean
-    italic?: boolean
-    underline?: boolean
-  }
-
-  interface CustomElement {
-    type?: string
-    url?: string
-  }
-
-  type CustomNode = Editor | CustomElement | Text
-
-  interface CustomTypes {
-    Element: CustomElement
-    Node: CustomNode
-    Text: CustomText
-  }
-}
-
-export type ButtonType = 'mark' | 'block' | 'link' | 'table'
+export type ButtonType = 'block' | 'link' | 'table'
+export type MarkType = 'bold' | 'underline' | 'italic'
 
 /*
 // TODO: Actually type `isXActive` functions
@@ -93,9 +73,9 @@ const unwrapLink = (editor: Editor) => {
   })
 }
 
-const isMarkActive = (editor: Editor, format: string) => {
+export const isMarkActive = (editor: Editor, type: MarkType) => {
   const marks = Editor.marks(editor) as { [key: string]: boolean | undefined }
-  return marks ? marks[format] === true : false
+  return marks ? marks[type] === true : false
 }
 
 const isBlockActive = (editor: Editor, format: string) => {
@@ -129,7 +109,6 @@ export const tableHandler = ({ editor, format }: ToggleArgs) => {
 
 export const isTypeActive = ({ type, editor, format }: IsTypeActiveArgs) => {
   const fn = {
-    mark: isMarkActive,
     block: isBlockActive,
     link: isLinkActive,
     table: isTableActive,
@@ -161,13 +140,11 @@ const toggleBlock = ({ editor, format }: ToggleArgs) => {
   }
 }
 
-export const toggleMark = ({ editor, format }: ToggleArgs) => {
-  const isActive = isMarkActive(editor, format)
-
-  if (isActive) {
-    Editor.removeMark(editor, format)
+export const toggleMark = (editor: Editor, type: MarkType) => {
+  if (isMarkActive(editor, type)) {
+    Editor.removeMark(editor, type)
   } else {
-    Editor.addMark(editor, format, true)
+    Editor.addMark(editor, type, true)
   }
 }
 
@@ -208,7 +185,7 @@ const toggleLink = ({ editor, t }: ToggleArgs) => {
   }
 }
 
-export const withLinks = (editor: Editor) => {
+export const withLinks = (editor: ReactEditor) => {
   const { insertText, isInline } = editor
 
   editor.isInline = (element) => {
@@ -226,9 +203,66 @@ export const withLinks = (editor: Editor) => {
   return editor
 }
 
+const dataUrlizeFile = (file: File): Promise<string> => {
+  const reader = new FileReader()
+  return (new Promise((res, rej) => {
+    reader.addEventListener('load', () => {
+      if (reader.result) {
+        // `results`'s type depends on what `.read*` method was called, in this
+        // case `.readAsDataURL()` ensures we're getting a string, but there's
+        // no direct way to express that in the type system, so assert here.
+        res(reader.result as string)
+      } else {
+        rej()
+      }
+    })
+
+    reader.readAsDataURL(file)
+  }))
+
+}
+
+export const insertImage = async (editor: ReactEditor, file: File) => {
+  const url = await dataUrlizeFile(file)
+
+  const image = {
+    type: 'image',
+    url,
+    uploaded: false,
+    children: [{ text: '' }]
+  }
+  Transforms.insertNodes(editor, image)
+}
+
+export const withImages = (editor: ReactEditor) => {
+  const { insertData, isVoid } = editor
+
+  editor.isVoid = element => {
+    return element.type === 'image' ? true : isVoid(element)
+  }
+
+  editor.insertData = data => {
+    const { files } = data
+
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const [mime] = file.type.split('/')
+
+        if (mime === 'image') {
+          insertImage(editor, file)
+        }
+      }
+    } else {
+      insertData(data)
+    }
+  }
+
+  return editor
+  
+}
+
 export const toogleByType = ({ type, editor, format, t }: ToggleByTypeArgs) => {
   const toggles = {
-    mark: toggleMark,
     block: toggleBlock,
     link: toggleLink,
     table: tableHandler,

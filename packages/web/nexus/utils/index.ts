@@ -112,15 +112,20 @@ const htmlifyEditorNode = (node: NodeType): string => {
     }, escapeHTML(node.text))
   }
 
-  const tagName = getNodeTagName(node)
-  const content = (node.children || []).map(htmlifyEditorNode).join('')
-  const attributes: string[] = []
+  if (node.type === 'image') {
+    // Images are a special case since they have no closer nor children
+    return `<img src=${node.url}>`
+  } else {
+    const tagName = getNodeTagName(node)
+    const content = (node.children || []).map(htmlifyEditorNode).join('')
+    const attributes: string[] = []
 
-  if (node.type === 'link' && node.url) {
-    attributes.push(`href="${node.url}" target="_blank" rel="noopener noreferrer"`)
+    if (node.type === 'link' && node.url) {
+      attributes.push(`href="${node.url}" target="_blank" rel="noopener noreferrer"`)
+    }
+
+    return `<${tagName} ${attributes.join(' ')}>${content}</${tagName}>`
   }
-
-  return `<${tagName} ${attributes.join(' ')}>${content}</${tagName}>`
 }
 
 export const htmlifyEditorNodes = (value: NodeType[]): string => {

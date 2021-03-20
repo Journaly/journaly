@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import fetch from 'isomorphic-unfetch'
 import { toast } from 'react-toastify'
 
 import { useTranslation } from '@/config/i18n'
-import { wait } from '@/utils'
+import { uploadFile, BaseUploadData } from '@/utils/images'
 
 interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
@@ -15,11 +14,6 @@ type UploadHookOutput<T> = [
   (e: HTMLInputEvent) => Promise<T | null>,
   () => void,
 ]
-
-type BaseUploadData = {
-  uploadUrl: string
-  checkUrl: string
-}
 
 export interface UploadHook<T> {
   (): UploadHookOutput<T>
@@ -41,60 +35,28 @@ const useImageUpload = <T extends BaseUploadData>(getUploadData: () => Promise<T
       return null
     }
 
-    let uploadData: T | undefined
-    try {
-      uploadData = await getUploadData()
-    } catch (e) {
-      console.error(e)
-      setUploadingImage(false)
-      toast.error(t('imageErrors.initial'))
-      return null
-    }
-
-    if (!uploadData) {
-      setUploadingImage(false)
-      toast.error(t('imageErrors.initital'))
-      return null
-    }
-
-    const { uploadUrl, checkUrl, } = uploadData
-
-    try {
-      await fetch(uploadUrl, {
-        method: 'PUT',
-        body: files[0]
-      })
-    } catch (e) {
-      console.error(e)
-      setUploadingImage(false)
-      toast.error(t('imageErrors.dataUpload'))
-      return null
-    }
-
-    let successful = false
-    for (let i = 0; i < 20; i++) {
-      await wait(500)
-
-      try {
-        const response = await fetch(`${checkUrl}?t=${i}`, { method: 'HEAD' })
-        if (response.status === 200) {
-          successful = true
-          break
-        }
-      } catch (e) {
-        console.error(e)
-      }
-    }
+    const result = await uploadFile(getUploadData, files[0])
 
     setUploadingImage(false)
 
-    if (!successful) {
-      toast.error(t('imageErrors.allDoneChecksFailed'))
+    if (result.failed) {
+      switch (result.error) {
+        case 'GET_UPLOAD_DATA_ERROR':
+          toast.error(t('imageErrors.initial'))
+          break
+        case 'UPLOAD_ERROR':
+          toast.error(t('imageErrors.dataUpload'))
+          break
+        case 'PROCESSING_ERROR':
+          toast.error(t('imageErrors.allDoneChecksFailed'))
+          break
+      }
+
       return null
     }
 
-    setImage(uploadData)
-    return uploadData
+    setImage(result.value)
+    return result.value
   }
 
   return [image, uploadingImage, onFileInputChange, () => setImage(null)]

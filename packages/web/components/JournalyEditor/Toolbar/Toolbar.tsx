@@ -17,6 +17,7 @@ import { navConstants } from '@/components/Dashboard/Nav'
 import FormatBoldIcon from '@/components/Icons/FormatBoldIcon'
 import FormatItalicIcon from '@/components/Icons/FormatItalicIcon'
 import FormatUnderlinedIcon from '@/components/Icons/FormatUnderlinedIcon'
+import ImageIcon from '@/components/Icons/ImageIcon'
 import FormatTitleIcon from '@/components/Icons/FormatTitleIcon'
 import FormatLinkIcon from '@/components/Icons/FormatLinkIcon'
 import FormatTableIcon from '@/components/Icons/FormatTableIcon'
@@ -24,10 +25,16 @@ import FormatQuoteIcon from '@/components/Icons/FormatQuoteIcon'
 import FormatListNumberedIcon from '@/components/Icons/FormatListNumberedIcon'
 import FormatListBulletedIcon from '@/components/Icons/FormatListBulletedIcon'
 
+import ToggleMarkButton from './ToggleMarkButton'
 import ToolbarButton from './ToolbarButton'
-import { options, isTableActive } from './helpers'
+import InsertImageButton from './InsertImageButton'
+import { options, isTableActive } from '../helpers'
 
-const Toolbar = () => {
+type ToolbarProps = {
+  allowInlineImages: boolean
+}
+
+const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
   const editor = useSlate()
   const isEditorFocused = useFocused()
   const toolbarRef = useRef<HTMLDivElement>(null)
@@ -70,15 +77,20 @@ const Toolbar = () => {
   return (
     <div className={toolbarClasses} ref={toolbarRef}>
       <div className="editor-toolbar">
-        <ToolbarButton type="mark" format="bold">
+        <ToggleMarkButton type="bold">
           <FormatBoldIcon title="Bold" titleId="toolbar-bold-icon" />
-        </ToolbarButton>
-        <ToolbarButton type="mark" format="italic">
+        </ToggleMarkButton>
+        <ToggleMarkButton type="italic">
           <FormatItalicIcon title="Italic" titleId="toolbar-italic-icon" />
-        </ToolbarButton>
-        <ToolbarButton type="mark" format="underline">
+        </ToggleMarkButton>
+        <ToggleMarkButton type="underline">
           <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
-        </ToolbarButton>
+        </ToggleMarkButton>
+        { allowInlineImages && (
+          <InsertImageButton>
+            <ImageIcon title="Insert image" />
+          </InsertImageButton>
+        )}
         <ToolbarButton type="link" format="link">
           <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
         </ToolbarButton>

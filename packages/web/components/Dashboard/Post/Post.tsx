@@ -24,6 +24,8 @@ import { Router, useTranslation } from '@/config/i18n'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 
+import {getCoords} from './helpers'
+
 interface IPostProps {
   post: PostType
   currentUser: UserType | null | undefined
@@ -427,8 +429,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
 
     setActiveThreadId(parseInt(target.dataset.tid, 10))
     setPopoverPosition({
-      x: target.offsetLeft,
-      y: target.offsetTop,
+      ...getCoords(target),
       w: target.offsetWidth,
       h: target.offsetHeight,
     })

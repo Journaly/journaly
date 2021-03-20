@@ -108,7 +108,7 @@ const SelectBase = <T extends OptionValue>(
         }
 
         .select-container:hover :global(.select-arrow) {
-          fill: ${theme.colors.blueLight};
+          fill: ${disabled ? '#FFFFFF' : theme.colors.blueLight };
         }
 
         select {
@@ -118,7 +118,7 @@ const SelectBase = <T extends OptionValue>(
           border-radius: 5px;
           background: ${theme.colors.white};
           box-shadow: 0px 8px 10px #00000029;
-          cursor: pointer;
+          cursor: ${disabled ? 'auto' : 'pointer'};
           -webkit-appearance: none;
           -moz-appearance: none;
           -ms-appearance: none;

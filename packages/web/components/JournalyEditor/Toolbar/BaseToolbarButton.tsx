@@ -1,37 +1,26 @@
 import React from 'react'
-import { useSlate, useFocused } from 'slate-react'
 import classNames from 'classnames'
 
 import theme from '@/theme'
-import { useTranslation } from '@/config/i18n'
-
-import { ButtonType, toogleByType, isTypeActive } from './helpers'
 
 type ButtonProps = {
-  type: ButtonType
-  format: string
   children: React.ReactNode
+  active: boolean
+  onClick: (e: React.MouseEvent) => void
 }
 
-const ToolbarButton = ({ type, format, children }: ButtonProps) => {
-  const { t } = useTranslation('post')
-  const editor = useSlate()
-  const isEditorFocused = useFocused()
-  const active = isEditorFocused && isTypeActive({ type, format, editor })
+const BaseToolbarButton = ({ onClick, active, children }: ButtonProps) => {
   const buttonClasses = classNames('toolbar-button', { active })
 
-  const handleMouseDown = (event: React.MouseEvent) => {
-    event.preventDefault()
-    toogleByType({ type, format, editor, t })
-  }
-
   return (
-    <div className={buttonClasses} onMouseDown={handleMouseDown}>
+    <button className={buttonClasses} onClick={onClick}>
       {children}
 
       <style jsx>{`
         .toolbar-button {
           height: 100%;
+          padding: 1px;
+          border: none;
           margin-right: 10px;
           border-radius: 5px;
           background-color: ${theme.colors.gray800};
@@ -55,8 +44,8 @@ const ToolbarButton = ({ type, format, children }: ButtonProps) => {
           color: ${theme.colors.blueLight};
         }
       `}</style>
-    </div>
+    </button>
   )
 }
 
-export default ToolbarButton
+export default BaseToolbarButton

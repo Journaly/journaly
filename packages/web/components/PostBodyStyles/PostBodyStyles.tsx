@@ -40,6 +40,12 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
         color: ${theme.colors.blueLight};
       }
 
+      .${parentClassName} img {
+        max-width: 100%;
+        margin: 0 auto;
+        display: block;
+      }
+
       @media (min-width: ${theme.breakpoints.SM}) {
         .${parentClassName} p {
           font-size: 20px;

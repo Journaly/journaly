@@ -9,6 +9,7 @@ import FormError from '@/components/FormError'
 import Button from '@/components/Button'
 import { brandBlue } from '@/utils'
 import theme from '@/theme'
+import { gtag } from '@/components/GoogleAnalytics'
 
 const LoginForm: React.FC = () => {
   const { t } = useTranslation('authentication')
@@ -24,6 +25,7 @@ const LoginForm: React.FC = () => {
 
   const [loginUser, { loading, error }] = useLoginUserMutation({
     onCompleted: async () => {
+      gtag('event', 'login', { 'method': 'Journaly' })
       await refetch()
       router.push({
         pathname: '/dashboard/my-feed',

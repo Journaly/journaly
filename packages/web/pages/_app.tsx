@@ -5,6 +5,8 @@ import NProgress from 'nprogress'
 import { ToastContainer } from 'react-toastify'
 import { appWithTranslation } from '@/config/i18n'
 
+import GoogleAnalytics from '@/components/GoogleAnalytics'
+
 import '@/styles/reset.css'
 import '@/styles/globalStyles.css'
 import 'react-toastify/dist/ReactToastify.css'
@@ -29,6 +31,7 @@ class JournalyApp extends App {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="stylesheet" type="text/css" href="/nprogress.css" />
         </Head>
+        <GoogleAnalytics />
         <Component {...pageProps} />
         <ToastContainer />
       </>

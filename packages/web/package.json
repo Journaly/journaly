@@ -37,8 +37,7 @@
     "schema": "node_modules/@journaly/j-db-client/prisma/schema.prisma"
   },
   "dependencies": {
-    "@apollo/client": "^3.2.5",
-    "@apollo/react-ssr": "^4.0.0",
+    "@apollo/client": "^3.3.12",
     "@journaly/j-db-client": "1.0.4",
     "@nexus/schema": "^0.19.2",
     "@types/bcryptjs": "^2.4.2",

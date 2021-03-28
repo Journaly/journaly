@@ -16,6 +16,7 @@ import Button, { ButtonVariant } from '@/components/Button'
 import { ImageRole, useEditPostQuery, useUpdatePostMutation } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import useUILanguage from '@/hooks/useUILanguage'
+import useAuthCheck from '@/hooks/useAuthCheck'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
 
 const EditPostPage: NextPage = () => {
@@ -34,6 +35,10 @@ const EditPostPage: NextPage = () => {
   const [initialData, setInitialData] = React.useState<InputPostData | null>(null)
   const [updatePost] = useUpdatePostMutation()
   const uploadInlineImages = useUploadInlineImages()
+
+  useAuthCheck(() => {
+    return currentUser!.id === postById!.author.id
+  }, !!(currentUser && postById))
 
   React.useEffect(() => {
     if (postById) {

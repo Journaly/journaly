@@ -8,13 +8,24 @@ export type ApolloClientCache = any
 
 let apolloClient: ApolloClient<ApolloClientCache> | null = null
 
+type JournalySSRContextType = {
+  redirectTarget: string | null
+}
+
+const JournalySSRContext = React.createContext<JournalySSRContextType>({
+  redirectTarget: null
+})
+JournalySSRContext.displayName = 'JournalySSRContext'
+
 interface WithApolloInitialProps {
   apolloState?: ApolloClientCache
 }
 
 interface WithApolloProps extends WithApolloInitialProps {
   apolloClient?: ApolloClient<ApolloClientCache>
+  ssrContext: JournalySSRContextType
 }
+
 
 /**
  * Creates and provides the apolloContext
@@ -31,12 +42,19 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
   const WithApollo: NextPage<
     PageProps & WithApolloProps,
     PageInitialProps & WithApolloInitialProps
-  > = ({ apolloClient, apolloState, ...pageProps }) => {
+  > = ({
+    apolloClient,
+    apolloState,
+    ssrContext,
+    ...pageProps
+  }) => {
     const client = apolloClient || initApolloClient(apolloState)
     return (
-      <ApolloProvider client={client}>
-        <PageComponent {...(pageProps as PageProps)} />
-      </ApolloProvider>
+      <JournalySSRContext.Provider value={ssrContext}>
+        <ApolloProvider client={client}>
+          <PageComponent {...(pageProps as PageProps)} />
+        </ApolloProvider>
+      </JournalySSRContext.Provider>
     )
   }
 
@@ -82,13 +100,16 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
 
         // Only if ssr is enabled
         if (ssr) {
+          const ssrContext = { redirectTarget: null }
+
           try {
             // Run all GraphQL queries
-            const { getDataFromTree } = await import('@apollo/react-ssr')
+            const { getDataFromTree } = await import('@apollo/client/react/ssr')
             await getDataFromTree(
               <AppTree
                 pageProps={{
                   ...pageProps,
+                  ssrContext,
                   apolloClient,
                 }}
               />,
@@ -98,6 +119,11 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
             // Handle them in components via the data.error prop:
             // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
             console.error('Error while running `getDataFromTree`', error)
+          }
+
+          if (ssrContext.redirectTarget && ctx?.res) {
+            (ctx.res as any).redirect(ssrContext.redirectTarget)
+            return pageProps
           }
 
           // getDataFromTree does not call componentWillUnmount
@@ -176,4 +202,8 @@ function createApolloClient(initialState: ApolloClientCache = {}, headers = {}) 
     cache: new InMemoryCache().restore(initialState),
     connectToDevTools: true,
   })
+}
+
+export {
+  JournalySSRContext
 }

@@ -103,6 +103,7 @@ const CommentSelectionButton = ({ position, display, onClick }: CommentSelection
           left: ${position.x};
           z-index: 10;
           transition: background-color 0.2s ease-in-out;
+          transform: translateX(-50%);
         }
 
         .comment-btn:hover :global(#g-stroke) {

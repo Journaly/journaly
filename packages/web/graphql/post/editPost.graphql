@@ -3,6 +3,9 @@ query editPost($id: Int!, $uiLanguage: UILanguage!) {
     title
     bodySrc
     updatedAt
+    author {
+      id
+    }
     language {
       id
     }

@@ -6,6 +6,7 @@ import {
   ThreadFragmentFragment as ThreadType,
   UserFragmentFragment as UserType,
 } from '@/generated/graphql'
+import { gtag } from '@/components/GoogleAnalytics'
 
 import Thread from './Thread'
 
@@ -104,8 +105,20 @@ const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({ target, childr
   return ReactDOM.createPortal(popover, popoverRoot)
 })
 
-const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPopoverProps>(
-  ({ target, thread, onNewComment, onUpdateComment, onDeleteThread, currentUser }, ref) => (
+const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPopoverProps>((
+{
+  target,
+  thread,
+  onNewComment,
+  onUpdateComment,
+  onDeleteThread,
+  currentUser
+}, ref) => {
+  React.useEffect(() => {
+    gtag('event', 'open_thread', { 'event_label': `thread#${thread.id}` })
+  }, [thread.id])
+
+  return (
     <Popover target={target} ref={ref}>
       <Thread
         thread={thread}
@@ -115,7 +128,7 @@ const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPop
         onDeleteThread={onDeleteThread}
       />
     </Popover>
-  ),
-)
+  )
+})
 
 export default InlineFeedbackPopover

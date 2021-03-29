@@ -33,7 +33,7 @@ interface IPostProps {
 }
 
 // Elements whose boundaries a comment can cross
-const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
+const elementWhiteList = new Set(['SPAN', 'EM', 'U', 'STRONG'])
 
 type CommentSelectionButtonProps = {
   position: {
@@ -422,17 +422,35 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
       return
     }
 
-    const target = e.target as HTMLElement
+    // Traverse from event target up to post body container looking for any
+    // ancestor that is a thread highlight.
+    let threadHighlight = null
+    let currentElement = e.target as HTMLElement
+    while (
+      currentElement &&
+      currentElement !== e.currentTarget
+    ) {
+      if (
+        currentElement.classList.contains('thread-highlight') ||
+        currentElement.dataset.tid
+      ) {
+        threadHighlight = currentElement as HTMLElement
+        break
+      } else {
+        currentElement = currentElement.parentElement
+      }
+    }
 
-    if (!target.classList.contains('thread-highlight') || !target.dataset.tid) {
+    // Click was on something that wasn't highlighted, do nothing
+    if (!threadHighlight) {
       return
     }
 
-    setActiveThreadId(parseInt(target.dataset.tid, 10))
+    setActiveThreadId(parseInt(threadHighlight.dataset.tid, 10))
     setPopoverPosition({
-      ...getCoords(target),
-      w: target.offsetWidth,
-      h: target.offsetHeight,
+      ...getCoords(threadHighlight),
+      w: threadHighlight.offsetWidth,
+      h: threadHighlight.offsetHeight,
     })
   }
 

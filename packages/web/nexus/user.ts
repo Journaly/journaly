@@ -60,8 +60,16 @@ const User = objectType({
     t.model.following({ pagination: false })
     t.model.followedBy({ pagination: false })
     t.boolean('isPremiumUser', {
-      resolve(_parent, _args, _ctx, _info) {
-        return false
+      resolve: async (parent, _args, ctx, _info) => {
+        const userMembershipSubscription = await ctx.db.membershipSubscription.findUnique({
+          where: {
+            userId: parent.id,
+          },
+        })
+
+        if (!userMembershipSubscription) return false
+        if (userMembershipSubscription.expiresAt < new Date(Date.now())) return false
+        return true
       }
     })
     t.int('postsWrittenCount', {

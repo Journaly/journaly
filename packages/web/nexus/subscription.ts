@@ -1,4 +1,4 @@
-import { MembershipSubscriptionType } from '@journaly/j-db-client'
+import { MembershipSubscriptionPeriod, InputJsonValue } from '@journaly/j-db-client'
 import {
   arg,
   extendType,
@@ -11,30 +11,29 @@ const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
   definition(t) {
     t.model.id()
-    t.model.price()
-    t.model.type()
+    t.model.period()
     t.model.userId()
     t.model.expiresAt()
   }
 })
 
-const MembershipSubscriptionTransaction = objectType({
-  name: 'MembershipSubscriptionTransaction',
-  definition(t) {
-    t.model.id()
-    t.model.user()
-    t.model.chargeCents()
-    t.model.createdAt()
-  }
-})
+// const MembershipSubscriptionTransaction = objectType({
+//   name: 'MembershipSubscriptionTransaction',
+//   definition(t) {
+//     t.model.id()
+//     t.model.user()
+//     t.model.chargeCents()
+//     t.model.createdAt()
+//   }
+// })
 
-const getSubscriptionPriceId = (subType: MembershipSubscriptionType) => {
+const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
   switch(subType) {
-    case MembershipSubscriptionType.MONTHLY:
+    case MembershipSubscriptionPeriod.MONTHLY:
       return 'price_1ISRgvB8OEjVdGPaQr7ZANW8'
-    case MembershipSubscriptionType.QUARTERLY:
+    case MembershipSubscriptionPeriod.QUARTERLY:
       return 'price_1ISRgvB8OEjVdGPaeOx4m255'
-    case MembershipSubscriptionType.ANNUALY:
+    case MembershipSubscriptionPeriod.ANNUALY:
       return 'price_1ISRgvB8OEjVdGPam1PTr6hE'
   }
 }
@@ -45,7 +44,7 @@ const MembershipSubscriptionMutations = extendType({
     t.field('createMembershipSubscription', {
       type: 'MembershipSubscription',
       args: {
-        type: arg({ type: 'MembershipSubscriptionType', required: true }),
+        period: arg({ type: 'MembershipSubscriptionPeriod', required: true }),
         token: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -82,9 +81,9 @@ const MembershipSubscriptionMutations = extendType({
           customerId = user.stripeCustomerId
         }
 
-        const charge = await stripeConfig.subscriptions.create({
+        const stripeSubscription = await stripeConfig.subscriptions.create({
           items: [{
-            price: getSubscriptionPriceId(args.type),
+            price: getSubscriptionPriceId(args.period),
             metadata: {
               journalyUserId: userId,
             },
@@ -94,13 +93,17 @@ const MembershipSubscriptionMutations = extendType({
         })
 
         const subData = {
-          type: args.type,
+          period: args.period,
           user: {
             connect: {
               id: userId,
             }
           },
-          expiresAt: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
+          // Give 2 days grace period
+          expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+          // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
+          stripeSubscription: stripeSubscription as unknown as InputJsonValue,
+          stripeSubscriptionId: stripeSubscription.id,
         }
 
         // TODO: Log failure and get proper alarms set up

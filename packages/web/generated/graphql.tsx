@@ -242,8 +242,7 @@ export type CommentThanks = {
 export type MembershipSubscription = {
   __typename?: 'MembershipSubscription'
   id: Scalars['Int']
-  price: Scalars['Int']
-  type: MembershipSubscriptionType
+  period: MembershipSubscriptionPeriod
   userId: Scalars['Int']
   expiresAt?: Maybe<Scalars['DateTime']>
 }
@@ -292,10 +291,9 @@ export enum BadgeType {
   CodeContributor = 'CODE_CONTRIBUTOR',
 }
 
-export enum MembershipSubscriptionType {
+export enum MembershipSubscriptionPeriod {
   Monthly = 'MONTHLY',
   Quarterly = 'QUARTERLY',
-  Semiannualy = 'SEMIANNUALY',
   Annualy = 'ANNUALY',
 }
 
@@ -510,7 +508,7 @@ export type MutationDeleteCommentThanksArgs = {
 }
 
 export type MutationCreateMembershipSubscriptionArgs = {
-  type: MembershipSubscriptionType
+  period: MembershipSubscriptionPeriod
   token: Scalars['String']
 }
 
@@ -780,7 +778,7 @@ export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
 }
 
 export type CreateMembershipSubscriptionMutationVariables = Exact<{
-  type: MembershipSubscriptionType
+  period: MembershipSubscriptionPeriod
   token: Scalars['String']
 }>
 
@@ -1971,8 +1969,8 @@ export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutati
   RemoveLanguageRelationMutationVariables
 >
 export const CreateMembershipSubscriptionDocument = gql`
-  mutation createMembershipSubscription($type: MembershipSubscriptionType!, $token: String!) {
-    createMembershipSubscription(type: $type, token: $token) {
+  mutation createMembershipSubscription($period: MembershipSubscriptionPeriod!, $token: String!) {
+    createMembershipSubscription(period: $period, token: $token) {
       id
     }
   }
@@ -1995,7 +1993,7 @@ export type CreateMembershipSubscriptionMutationFn = ApolloReactCommon.MutationF
  * @example
  * const [createMembershipSubscriptionMutation, { data, loading, error }] = useCreateMembershipSubscriptionMutation({
  *   variables: {
- *      type: // value for 'type'
+ *      period: // value for 'period'
  *      token: // value for 'token'
  *   },
  * });

@@ -44,6 +44,10 @@ a {
   color: black;
 }
 
+a[role="button"] {
+  cursor: pointer;
+}
+
 em,
 cite {
   font-style: italic;
@@ -113,3 +117,4 @@ input:focus {
   width: 1px;
   overflow: hidden;
 }
+

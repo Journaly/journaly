@@ -811,6 +811,7 @@ export type EditPostQueryVariables = Exact<{
 
 export type EditPostQuery = { __typename?: 'Query' } & {
   postById: { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc' | 'updatedAt'> & {
+      author: { __typename?: 'User' } & Pick<User, 'id'>
       language: { __typename?: 'Language' } & Pick<Language, 'id'>
       images: Array<
         { __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'smallSize' | 'imageRole'>
@@ -2162,6 +2163,9 @@ export const EditPostDocument = gql`
       title
       bodySrc
       updatedAt
+      author {
+        id
+      }
       language {
         id
       }

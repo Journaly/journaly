@@ -425,16 +425,13 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
     // Traverse from event target up to post body container looking for any
     // ancestor that is a thread highlight.
     let threadHighlight = null
-    let currentElement = e.target as HTMLElement
+    let currentElement: HTMLElement | null = e.target as HTMLElement
     while (
       currentElement &&
       currentElement !== e.currentTarget
     ) {
-      if (
-        currentElement.classList.contains('thread-highlight') ||
-        currentElement.dataset.tid
-      ) {
-        threadHighlight = currentElement as HTMLElement
+      if (currentElement.dataset.tid) {
+        threadHighlight = currentElement
         break
       } else {
         currentElement = currentElement.parentElement
@@ -442,7 +439,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
     }
 
     // Click was on something that wasn't highlighted, do nothing
-    if (!threadHighlight) {
+    if (!threadHighlight || !threadHighlight.dataset.tid) {
       return
     }
 

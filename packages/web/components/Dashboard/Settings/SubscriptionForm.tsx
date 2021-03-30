@@ -9,12 +9,12 @@ import FormError from '@/components/FormError'
 import { useTranslation } from '@/config/i18n'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
-import { useCreateMembershipSubscriptionMutation, MembershipSubscriptionType } from '@/generated/graphql'
+import { useCreateMembershipSubscriptionMutation, MembershipSubscriptionPeriod } from '@/generated/graphql'
 import Select from '@/components/Select'
-import { Option } from '@/components/Select/Select'
+// import { Option } from '@/components/Select/Select'
 
 type FormValues = {
-  type: MembershipSubscriptionType
+  period: MembershipSubscriptionPeriod
 }
 
 const stripeLib = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string)
@@ -25,7 +25,13 @@ const SubscriptionForm = () => {
   const stripe = useStripe()
   const elements = useElements()
 
-  // const subscriptionOptions: Option<T>[] = []
+  const subscriptionOptions = [
+    { value: MembershipSubscriptionPeriod.Monthly, displayName: 'Monthly' },
+    { value: MembershipSubscriptionPeriod.Quarterly, displayName: '3 Months' },
+    { value: MembershipSubscriptionPeriod.Annualy, displayName: '1 Year' },
+  ]
+
+  const [selectedOption, setSelectedOption] = useState(subscriptionOptions[0].displayName)
 
   const { handleSubmit, errors, formState } = useForm<FormValues>({
     mode: 'onSubmit',
@@ -57,20 +63,17 @@ const SubscriptionForm = () => {
         card,
       })
       console.log(paymentMethod)
-      // 2. Handle any errors from sttipe
       if (error) {
         setStripeError(error)
         nProgress.done()
         return
       }
-      // 3. Send token from #1 to serverside logic
-      // 4. Redirect to receipt/order page
   
       if (!loading && Object.keys(errors).length === 0 && paymentMethod) {
         createUserSubscription({
           variables: {
             // TODO: refactor to data.type
-            type: MembershipSubscriptionType.Monthly,
+            period: MembershipSubscriptionPeriod.Monthly,
             token: paymentMethod.id,
           },
         })
@@ -90,8 +93,17 @@ const SubscriptionForm = () => {
         {(stripeError || errorInput) && <FormError error={stripeError?.message || errorInput?.message as string}/>}
         <SettingsFieldset legend={t('subscription.legend')}>
           <p style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
-          {/* <Select options={} /> */}
-          <CardElement />
+          <Select
+            onChange={(value) => {setSelectedOption(value)}}
+            options={subscriptionOptions}
+            value={selectedOption.displayName}
+            placeholder="Which subscription would you like?"
+          />
+          <div style={{
+            marginBottom: '20px',
+          }}>
+            <CardElement/>
+          </div>
           <Button
             type="submit"
             loading={loading || formState.isSubmitting}

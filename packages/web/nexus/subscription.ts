@@ -63,8 +63,8 @@ const MembershipSubscriptionMutations = extendType({
         if (!user) throw new Error("User not found")
 
         let customerId
-
-        if (!user.stripeCustomerId) {
+        // TODO: remove this || true
+        if (!user.stripeCustomerId || true) {
           const customer = (await stripeConfig.customers.create({
             payment_method: args.token,
             description: `${user.handle} (${user.id})`,
@@ -74,11 +74,19 @@ const MembershipSubscriptionMutations = extendType({
               handle: user.handle,
             },
           }))
-          console.log(customer)
-          // TODO update stripeCustomerId on User
           customerId = customer.id
+          await ctx.db.user.update({
+            where: {
+              id: userId,
+            },
+            data: {
+              stripeCustomerId: customerId,
+            },
+          })
         } else {
           customerId = user.stripeCustomerId
+          // TODO: handle membership upgrades?
+          console.log('STRIPE CUSTOMER EXISTS!')
         }
 
         const stripeSubscription = await stripeConfig.subscriptions.create({
@@ -94,11 +102,6 @@ const MembershipSubscriptionMutations = extendType({
 
         const subData = {
           period: args.period,
-          user: {
-            connect: {
-              id: userId,
-            }
-          },
           // Give 2 days grace period
           expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
           // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
@@ -108,7 +111,14 @@ const MembershipSubscriptionMutations = extendType({
 
         // TODO: Log failure and get proper alarms set up
         const subscription = await ctx.db.membershipSubscription.upsert({
-          create: subData,
+          create: {
+            ...subData,
+            user: {
+              connect: {
+                id: userId,
+              },
+            },
+          },
           update: subData,
           where: {
             userId,
@@ -123,5 +133,5 @@ const MembershipSubscriptionMutations = extendType({
 
 export default [
   MembershipSubscription,
-  MembershipSubscriptionMutations
+  MembershipSubscriptionMutations,
 ]

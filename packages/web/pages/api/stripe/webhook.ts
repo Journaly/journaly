@@ -4,33 +4,50 @@ const handler = async (req: any, res: any) => {
   const db = new PrismaClient()
   const event = req.body
 
-  // fetch user by stripeCustomerId
-  // filter events for relevant ones
-  // process each one seperately
-
   // at some point could email customer after invoice.paid event
-
-  // 
-
   // handle cancellation and update user status
+
     try {
-      if (event.type === 'invoice.paid') {
-        console.log('CHARGE CREATED!')
+      if (event.type === 'charge.succeeded') {
+        console.log('CHARGE SUCCEEDED!')
         console.log(event)
-        await db.membershipSubscriptionTransaction.create({
+        const userQuery = await db.user.findMany({
+          where: {
+            stripeCustomerId: event.data.object.customer,
+          },
+        })
+
+        if (userQuery.length !== 1) throw new Error("Problem with user query")
+        const currentUser = userQuery[0]
+
+        const transaction = await db.membershipSubscriptionTransaction.create({
           data: {
             stripeChargeId: event.data.object.id,
             chargeCurrency: event.data.object.currency,
-            chargeCents: event.data.object.price,
+            chargeCents: event.data.object.amount,
             stripeChargeData: JSON.stringify(event.data.object),
+            // TODO: how should we set membershipSubscriptionPeriod?
+            membershipSubscriptionPeriod: 'MONTHLY',
             user: {
               connect: {
-                id: userId,
-              }
+                id: currentUser.id,
+              },
             },
           }
         })
         // update existing subscription object (expiresAt) + a day or two
+        await db.membershipSubscription.update({
+          where: {
+            userId: transaction.userId,
+          },
+          data: {
+            // TODO: how should we set expiresAt?
+          },
+        })
+      } else if (event.type === 'invoice.paid') {
+        console.log('INVOICE PAID')
+      }else if (event.type === 'invoice.payment_failed') {
+        // 
       }
         // else if (event.type === 'customer.subscription.deleted') {
         //   console.log('SUBSCRIPTION DELETED!')

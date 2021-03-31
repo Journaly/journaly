@@ -1077,7 +1077,10 @@ export type UserStatsQueryVariables = Exact<{
 }>
 
 export type UserStatsQuery = { __typename?: 'Query' } & {
-  userById: { __typename?: 'User' } & Pick<User, 'id'> & {
+  userById: { __typename?: 'User' } & Pick<
+    User,
+    'id' | 'postsWrittenCount' | 'thanksReceivedCount' | 'createdAt'
+  > & {
       postActivity: Array<
         { __typename?: 'DatedActivityCount' } & Pick<DatedActivityCount, 'count' | 'date'>
       >
@@ -3517,6 +3520,9 @@ export const UserStatsDocument = gql`
   query userStats($id: Int!) {
     userById(id: $id) {
       id
+      postsWrittenCount
+      thanksReceivedCount
+      createdAt
       postActivity {
         count
         date

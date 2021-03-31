@@ -94,17 +94,36 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
     }
   }, [data, start, end])
 
-  if (loading) {
-    return <span>Loading...</span>
-  }
-
   const colorScale = chroma
     .scale([theme.colors.white, theme.colors.blueLight])
     .mode('lab')
     .domain([0, denseData.max])
 
+  if (loading) {
+    return <span>Loading...</span>
+  }
+
   return (
     <>
+      <h2>Summary</h2>
+      <div>
+        <div className="summary-stat-item">
+          <span className="label">Total Posts: </span>
+          <span className="value">{data.userById.postsWrittenCount}</span>
+        </div>
+        <div className="summary-stat-item">
+          <span className="label">Thanks Received: </span>
+          <span className="value">{data.userById.thanksReceivedCount}</span>
+        </div>
+        <div className="summary-stat-item">
+          <span className="label">Registered: </span>
+          <span className="value">
+            {formatISO(parseISO(data.userById.createdAt), { representation: 'date'})}
+          </span>
+        </div>
+
+      </div>
+
       <h2>Posting History</h2>
       <svg
         className="activityChart"

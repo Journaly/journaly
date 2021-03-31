@@ -1,6 +1,9 @@
 query userStats($id: Int!) {
   userById(id: $id) {
     id
+    postsWrittenCount
+    thanksReceivedCount
+    createdAt
     postActivity {
       count
       date

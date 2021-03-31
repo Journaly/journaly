@@ -68,7 +68,7 @@ const User = objectType({
         })
 
         if (!userMembershipSubscription) return false
-        if (userMembershipSubscription.expiresAt < new Date(Date.now())) return false
+        if (userMembershipSubscription.expiresAt && userMembershipSubscription.expiresAt < new Date(Date.now())) return false
         return true
       }
     })

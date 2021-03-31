@@ -1077,11 +1077,11 @@ export type UserStatsQueryVariables = Exact<{
 }>
 
 export type UserStatsQuery = { __typename?: 'Query' } & {
-  userById: { __typename?: 'User' } & {
-    postActivity: Array<
-      { __typename?: 'DatedActivityCount' } & Pick<DatedActivityCount, 'count' | 'date'>
-    >
-  }
+  userById: { __typename?: 'User' } & Pick<User, 'id'> & {
+      postActivity: Array<
+        { __typename?: 'DatedActivityCount' } & Pick<DatedActivityCount, 'count' | 'date'>
+      >
+    }
 }
 
 export type UsersQueryVariables = Exact<{ [key: string]: never }>
@@ -3516,6 +3516,7 @@ export type UserByIdQueryResult = ApolloReactCommon.QueryResult<
 export const UserStatsDocument = gql`
   query userStats($id: Int!) {
     userById(id: $id) {
+      id
       postActivity {
         count
         date

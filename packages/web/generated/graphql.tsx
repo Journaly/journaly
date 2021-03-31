@@ -178,6 +178,7 @@ export type User = {
   isPremiumUser: Scalars['Boolean']
   postsWrittenCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
+  postActivity: Array<DatedActivityCount>
 }
 
 export type UserBadge = {
@@ -195,6 +196,12 @@ export type InitiateAvatarImageUploadResponse = {
   checkUrl: Scalars['String']
   /** final url of the transform */
   finalUrl: Scalars['String']
+}
+
+export type DatedActivityCount = {
+  __typename?: 'DatedActivityCount'
+  count: Scalars['Int']
+  date: Scalars['String']
 }
 
 export type LanguageRelation = {
@@ -1063,6 +1070,18 @@ export type UserByIdQueryVariables = Exact<{
 
 export type UserByIdQuery = { __typename?: 'Query' } & {
   userById: { __typename?: 'User' } & UserWithLanguagesFragmentFragment
+}
+
+export type UserStatsQueryVariables = Exact<{
+  id: Scalars['Int']
+}>
+
+export type UserStatsQuery = { __typename?: 'Query' } & {
+  userById: { __typename?: 'User' } & {
+    postActivity: Array<
+      { __typename?: 'DatedActivityCount' } & Pick<DatedActivityCount, 'count' | 'date'>
+    >
+  }
 }
 
 export type UsersQueryVariables = Exact<{ [key: string]: never }>
@@ -3493,6 +3512,55 @@ export type UserByIdLazyQueryHookResult = ReturnType<typeof useUserByIdLazyQuery
 export type UserByIdQueryResult = ApolloReactCommon.QueryResult<
   UserByIdQuery,
   UserByIdQueryVariables
+>
+export const UserStatsDocument = gql`
+  query userStats($id: Int!) {
+    userById(id: $id) {
+      postActivity {
+        count
+        date
+      }
+    }
+  }
+`
+
+/**
+ * __useUserStatsQuery__
+ *
+ * To run a query within a React component, call `useUserStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserStatsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserStatsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<UserStatsQuery, UserStatsQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<UserStatsQuery, UserStatsQueryVariables>(
+    UserStatsDocument,
+    baseOptions,
+  )
+}
+export function useUserStatsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserStatsQuery, UserStatsQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<UserStatsQuery, UserStatsQueryVariables>(
+    UserStatsDocument,
+    baseOptions,
+  )
+}
+export type UserStatsQueryHookResult = ReturnType<typeof useUserStatsQuery>
+export type UserStatsLazyQueryHookResult = ReturnType<typeof useUserStatsLazyQuery>
+export type UserStatsQueryResult = ApolloReactCommon.QueryResult<
+  UserStatsQuery,
+  UserStatsQueryVariables
 >
 export const UsersDocument = gql`
   query users {

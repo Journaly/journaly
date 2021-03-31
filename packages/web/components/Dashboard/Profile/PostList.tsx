@@ -4,10 +4,6 @@ import {
   PostCardFragmentFragment as PostType,
   UserWithLanguagesFragmentFragment as UserType,
 } from '@/generated/graphql'
-import {
-  layoutTopBottomPadding,
-  layoutLeftRightPadding,
-} from '@/components/Dashboard/dashboardConstants'
 import TranslationLink from '@/components/TranslationLink'
 import PostCard from '../PostCard'
 import theme from '@/theme'

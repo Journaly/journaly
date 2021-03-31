@@ -15,9 +15,17 @@ import { PostStatus } from '@journaly/j-db-client'
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
   generateThumbbusterUrl,
-  sendPasswordResetTokenEmail,
+  sendPasswordResetTokenEmail
 } from './utils'
 import { validateUpdateUserMutationData } from './utils/userValidation'
+
+const DatedActivityCount = objectType({
+  name: 'DatedActivityCount',
+  definition(t) {
+    t.int('count')
+    t.string('date')
+  }
+})
 
 const User = objectType({
   name: 'User',
@@ -83,6 +91,24 @@ const User = objectType({
             },
           },
         })
+      },
+    })
+
+    t.list.field('postActivity', {
+      type: 'DatedActivityCount',
+      resolve(parent, _args, ctx, _info) {
+        const stats = ctx.db.$queryRaw`
+          SELECT
+            DATE("publishedAt") as date,
+            COUNT(*) as count
+          FROM "Post"
+          WHERE
+            "authorId" = ${parent.id}
+            AND "status" = 'PUBLISHED'
+           GROUP BY date
+           ORDER BY date DESC;
+        `
+        return stats
       },
     })
   },
@@ -529,4 +555,5 @@ export default [
   UserQueries,
   UserMutations,
   InitiateAvatarImageUploadResponse,
+  DatedActivityCount,
 ]

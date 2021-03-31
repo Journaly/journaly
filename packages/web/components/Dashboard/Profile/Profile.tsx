@@ -13,6 +13,7 @@ import {
 import TabToggle from '@/components/TabToggle'
 
 import ProfileCard from './ProfileCard'
+import ProfileStats from './ProfileStats'
 import PostList from './PostList'
 
 type ProfileTabsProps = {
@@ -49,6 +50,9 @@ const ProfileTabs = ({ isLoggedInUser, user, posts}: ProfileTabsProps) => {
             posts={posts}
           />
         )}
+        { activeKey === 'stats' && (
+          <ProfileStats userId={user.id} />
+        )}
       </div>
 
       <style jsx>{`
@@ -62,6 +66,7 @@ const ProfileTabs = ({ isLoggedInUser, user, posts}: ProfileTabsProps) => {
 
         .tab-container {
           align-self: center;
+          margin-bottom: 10px;
         }
 
         @media (min-width: ${theme.breakpoints.MD}) {

@@ -5,7 +5,9 @@ import addWeeks from 'date-fns/addWeeks'
 import parseISO from 'date-fns/parseISO'
 import formatISO from 'date-fns/formatISO'
 import getDay from 'date-fns/getDay'
+import getMonth from 'date-fns/getMonth'
 import eachDayOfInterval from 'date-fns/eachDayOfInterval'
+import eachMonthOfInterval from 'date-fns/eachMonthOfInterval'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 import theme from '@/theme'
@@ -19,6 +21,20 @@ const CELL_WIDTH = 8
 const CELL_PADDING = 2
 const NUM_WEEKS = 18
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const MONTH_SHORT_NAMES = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+]
 
 const ProfileStats = ({ userId }: ProfileStatsProps) => {
   const { data, loading } = useUserStatsQuery({
@@ -57,9 +73,24 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
       return { x, y, count, date }
     })
 
+    const months = eachMonthOfInterval({ start, end }).map(date => {
+      const x = (
+        rightEdge
+        - (CELL_WIDTH + CELL_PADDING)
+        * differenceInCalendarWeeks(end, date))
+      return {
+        name: MONTH_SHORT_NAMES[getMonth(date)],
+        x,
+      }
+    })
+
+    // Remove first month since it would be off screen.
+    months.shift()
+
     return {
       max: Math.max(max, 1),
-      days
+      months,
+      days,
     }
   }, [data, start, end])
 
@@ -77,9 +108,9 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
       <h2>Posting History</h2>
       <svg
         className="activityChart"
-        viewBox={`0 0 ${(NUM_WEEKS + 1)* (CELL_WIDTH + CELL_PADDING) + 20} 100`}
+        viewBox={`0 0 ${(NUM_WEEKS + 1) * (CELL_WIDTH + CELL_PADDING) + 20} 100`}
       >
-        <g transform="translate(20, 5)">
+        <g transform="translate(20, 10)">
           {denseData.days.map(d => (
             <rect
               key={d.date}
@@ -95,7 +126,19 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
             />
           ))}
         </g>
-        <g>
+        <g transform="translate(20, 7)">
+          {denseData.months.map((d, ind) => (
+            <text
+              key={ind}
+              x={d.x}
+              y="0"
+              fontSize={CELL_WIDTH - 1}
+            >
+              {d.name}
+            </text>
+          ))}
+        </g>
+        <g transform="translate(0, 6)">
           {DAYS_OF_WEEK.map((name, ind) => (
             <text
               key={ind}
@@ -112,6 +155,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
         h2 {
           text-align: center;
           ${theme.typography.headingLG}
+          margin-bottom: 15px;
         }
 
         .activityChart {

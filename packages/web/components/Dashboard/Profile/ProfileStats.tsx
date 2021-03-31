@@ -74,6 +74,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
 
   return (
     <>
+      <h2>Posting History</h2>
       <svg
         className="activityChart"
         viewBox={`0 0 ${(NUM_WEEKS + 1)* (CELL_WIDTH + CELL_PADDING) + 20} 100`}
@@ -108,6 +109,11 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
         </g>
       </svg>
       <style jsx>{`
+        h2 {
+          text-align: center;
+          ${theme.typography.headingLG}
+        }
+
         .activityChart {
           max-height: 300px;
           width: 100%;

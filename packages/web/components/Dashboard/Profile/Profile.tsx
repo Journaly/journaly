@@ -62,16 +62,16 @@ const ProfileTabs = ({ isLoggedInUser, user, posts}: ProfileTabsProps) => {
           padding: 0 ${layoutLeftRightPadding} ${layoutTopBottomPadding};
           background-color: ${theme.colors.white};
           box-shadow: 0px 8px 10px #00000029;
+          padding: 25px;
         }
 
         .tab-container {
           align-self: center;
-          margin-bottom: 10px;
+          margin-bottom: 20px;
         }
 
         @media (min-width: ${theme.breakpoints.MD}) {
           .container {
-            padding: 25px;
             border-top: 0;
             overflow: auto;
           }

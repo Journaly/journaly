@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTranslation, Trans } from '@/config/i18n'
+import { Trans } from '@/config/i18n'
 import {
   PostCardFragmentFragment as PostType,
   UserWithLanguagesFragmentFragment as UserType,
@@ -19,12 +19,8 @@ type Props = {
 }
 
 const PostList: React.FC<Props> = ({ isLoggedInUser, user, posts }) => {
-  const { t } = useTranslation(['profile'])
-
   return (
     <div className="post-list">
-      <h1 className="posts-title">{t('postsTitle')}</h1>
-
       {posts.length ? (
         posts.map((post) => <PostCard key={post.id} post={post} />)
       ) : (
@@ -45,28 +41,7 @@ const PostList: React.FC<Props> = ({ isLoggedInUser, user, posts }) => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding: 0 ${layoutLeftRightPadding} ${layoutTopBottomPadding};
-          background-color: ${theme.colors.white};
-          box-shadow: 0px 8px 10px #00000029;
         }
-        @media (min-width: ${theme.breakpoints.MD}) {
-          .post-list {
-            padding: 25px;
-            border-top: 0;
-            overflow: auto;
-          }
-        }
-
-        .posts-title {
-          margin: 40px 0;
-          ${theme.typography.headingLG};
-        }
-        @media (min-width: ${theme.breakpoints.MD}) {
-          .posts-title {
-            margin: 5px 0 40px;
-          }
-        }
-
         .post-list :global(.post-card-container) {
           margin-bottom: 50px;
         }

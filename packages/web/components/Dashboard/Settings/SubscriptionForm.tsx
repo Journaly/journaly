@@ -31,7 +31,7 @@ const SubscriptionForm = () => {
     { value: MembershipSubscriptionPeriod.Annualy, displayName: '1 Year' },
   ]
 
-  const [selectedOption, setSelectedOption] = useState(subscriptionOptions[0].displayName)
+  const [selectedOption, setSelectedOption] = useState<MembershipSubscriptionPeriod>(MembershipSubscriptionPeriod.Monthly)
 
   const { handleSubmit, errors, formState } = useForm<FormValues>({
     mode: 'onSubmit',
@@ -54,10 +54,12 @@ const SubscriptionForm = () => {
     //    Token comes back here if successful
     if (elements && stripe) {
       const card = elements.getElement(CardElement)
+
       if (!card) {
         // TODO: figure out actual user messages
         throw new Error("Card element not found")
       }
+
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: 'card',
         card,
@@ -72,8 +74,7 @@ const SubscriptionForm = () => {
       if (!loading && Object.keys(errors).length === 0 && paymentMethod) {
         createUserSubscription({
           variables: {
-            // TODO: refactor to data.type
-            period: MembershipSubscriptionPeriod.Monthly,
+            period: selectedOption,
             token: paymentMethod.id,
           },
         })
@@ -96,10 +97,11 @@ const SubscriptionForm = () => {
           <Select
             onChange={(value) => {setSelectedOption(value)}}
             options={subscriptionOptions}
-            value={selectedOption.displayName}
+            value={selectedOption}
             placeholder="Which subscription would you like?"
           />
           <div style={{
+            marginTop: '20px',
             marginBottom: '20px',
           }}>
             <CardElement/>

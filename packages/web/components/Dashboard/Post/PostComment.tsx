@@ -96,7 +96,7 @@ const PostComment: React.FC<PostCommentProps> = ({
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <p>{comment.body}</p>
+            <p className="comment-body">{comment.body}</p>
           )}
         </div>
       </div>
@@ -200,6 +200,11 @@ const PostComment: React.FC<PostCommentProps> = ({
         .body-block {
           margin: 5px 10px 10px 0;
           text-align: left;
+        }
+
+        .comment-body {
+          white-space: pre-line;
+          word-wrap: break-word;
         }
 
         .body-block :global(p) {

@@ -171,7 +171,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <p>{comment.body}</p>
+            <p className="comment-body">{comment.body}</p>
           )}
         </div>
       </div>
@@ -298,7 +298,8 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           text-align: left;
         }
 
-        .body-block :global(p) {
+        .comment-body {
+          white-space: pre-line;
           word-wrap: break-word;
         }
 

@@ -50,7 +50,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
   }, [data])
 
   const denseData = useMemo(() => {
-    const indexable = {}
+    const indexable: { [key: string]: number } = {}
     if (data?.userById?.postActivity) {
       const { postActivity } = data.userById
       for (var i=0; i < postActivity.length; i++) {
@@ -99,7 +99,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
     .mode('lab')
     .domain([0, denseData.max])
 
-  if (loading) {
+  if (loading || !data) {
     return <span>Loading...</span>
   }
 
@@ -132,7 +132,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
         <g transform="translate(20, 10)">
           {denseData.days.map(d => (
             <rect
-              key={d.date}
+              key={formatISO(d.date)}
               fill={colorScale(d.count).hex()}
               stroke={theme.colors.gray300}
               strokeWidth={0.5}

@@ -1,12 +1,11 @@
 import React from 'react'
-import { Trans } from '@/config/i18n'
+import { useTranslation, Trans } from '@/config/i18n'
 import {
   PostCardFragmentFragment as PostType,
   UserWithLanguagesFragmentFragment as UserType,
 } from '@/generated/graphql'
 import TranslationLink from '@/components/TranslationLink'
 import PostCard from '../PostCard'
-import theme from '@/theme'
 
 type Props = {
   isLoggedInUser: boolean
@@ -15,6 +14,8 @@ type Props = {
 }
 
 const PostList: React.FC<Props> = ({ isLoggedInUser, user, posts }) => {
+  const { t } = useTranslation(['profile'])
+
   return (
     <div className="post-list">
       {posts.length ? (

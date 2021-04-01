@@ -46,6 +46,7 @@ const User = objectType({
     t.model.posts({ pagination: false })
     t.model.profileImage()
     t.model.createdAt()
+    t.model.membershipSubscription()
     t.model.socialMedia({
       type: 'SocialMedia',
       resolve: async (parent, _args, ctx) => {

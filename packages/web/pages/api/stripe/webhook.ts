@@ -1,30 +1,26 @@
-import { PrismaClient, MembershipSubscriptionPeriod } from '@journaly/j-db-client'
+import { MembershipSubscriptionPeriod } from '@journaly/j-db-client'
 import stripe from '../../../nexus/utils/stripe'
+import { getClient } from '../../../nexus/utils'
 
 const handler = async (req: any, res: any) => {
-  const db = new PrismaClient()
+  const db = getClient()
   const event = req.body
 
-  const updateStripeSubscription = async (subscriptionId: string, eventType: string) => {
+  const updateStripeSubscription = async (subscriptionId: string) => {
     const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId)
+    let expiresAt = stripeSubscription.current_period_end * 1000
 
-    let expiresAt
-    switch(eventType) {
-      case 'PAYMENT_SUCCEEDED':
-        expiresAt = new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2))
-        break
-      case 'PAYMENT_FAILED':
-        expiresAt = new Date(Date.now())
-        break
+    // Apply a grace period of 2 days to 'active' subscriptions
+    if (stripeSubscription.status === 'active') {
+      expiresAt += 24 * 60 * 60 * 1000 * 2
     }
     
-    // update existing subscription object (expiresAt) + a day or two
     await db.membershipSubscription.update({
       where: {
         stripeSubscriptionId: subscriptionId,
       },
       data: {
-        expiresAt,
+        expiresAt: new Date(expiresAt)
       },
     })
   }
@@ -87,7 +83,7 @@ const handler = async (req: any, res: any) => {
           }
         })
 
-        updateStripeSubscription(subscriptionLine.subscription, 'PAYMENT_SUCCEEDED')
+        await updateStripeSubscription(subscriptionLine.subscription)
       } else if (event.type === 'invoice.payment_failed') {
         /**
          * For now we'll just do nothing and allow the subscription to expire
@@ -102,7 +98,7 @@ const handler = async (req: any, res: any) => {
           throw new Error("First line item is not a subscription. Something seems wrong here...")
         }
 
-        updateStripeSubscription(subscriptionLine.subscription, 'PAYMENT_FAILED')
+        await updateStripeSubscription(subscriptionLine.subscription)
       }
     } catch (err) {
       // TODO: get better logging
@@ -112,9 +108,6 @@ const handler = async (req: any, res: any) => {
   res.status(200).json({
     received: true,
   })
-
-  // TODO (@Lanny): do your thang! 🧹
-  db.$disconnect()
 }
 
 export default handler

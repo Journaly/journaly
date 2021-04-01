@@ -5,7 +5,7 @@ import {
   objectType,
   stringArg,
 } from '@nexus/schema'
-import stripeConfig from './utils/stripe'
+import stripe from './utils/stripe'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
@@ -16,16 +16,6 @@ const MembershipSubscription = objectType({
     t.model.expiresAt()
   }
 })
-
-// const MembershipSubscriptionTransaction = objectType({
-//   name: 'MembershipSubscriptionTransaction',
-//   definition(t) {
-//     t.model.id()
-//     t.model.user()
-//     t.model.chargeCents()
-//     t.model.createdAt()
-//   }
-// })
 
 const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
   switch(subType) {
@@ -41,7 +31,7 @@ const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
 const MembershipSubscriptionMutations = extendType({
   type: 'Mutation',
   definition(t) {
-    t.field('createMembershipSubscription', {
+    t.field('purchaseMembershipSubscription', {
       type: 'MembershipSubscription',
       args: {
         period: arg({ type: 'MembershipSubscriptionPeriod', required: true }),
@@ -64,8 +54,8 @@ const MembershipSubscriptionMutations = extendType({
 
         let customerId
         // TODO: remove this || true
-        if (!user.stripeCustomerId || true) {
-          const customer = (await stripeConfig.customers.create({
+        if (!user.stripeCustomerId) {
+          const customer = (await stripe.customers.create({
             payment_method: args.token,
             description: `${user.handle} (${user.id})`,
             email: user.email,
@@ -84,12 +74,11 @@ const MembershipSubscriptionMutations = extendType({
             },
           })
         } else {
-          customerId = user.stripeCustomerId
-          // TODO: handle membership upgrades?
+          customerId = (await stripe.customers.retrieve(user.stripeCustomerId)).id
           console.log('STRIPE CUSTOMER EXISTS!')
         }
 
-        const stripeSubscription = await stripeConfig.subscriptions.create({
+        const stripeSubscription = await stripe.subscriptions.create({
           items: [{
             price: getSubscriptionPriceId(args.period),
             metadata: {

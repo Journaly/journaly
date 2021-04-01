@@ -1,5 +1,0 @@
-mutation createMembershipSubscription($period: MembershipSubscriptionPeriod!, $token: String!) {
-  createMembershipSubscription(period: $period, token: $token) {
-    id
-  }
-}

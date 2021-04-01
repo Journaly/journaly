@@ -374,7 +374,7 @@ export type Mutation = {
   updateSocialMedia: SocialMedia
   createCommentThanks: CommentThanks
   deleteCommentThanks: CommentThanks
-  createMembershipSubscription: MembershipSubscription
+  purchaseMembershipSubscription: MembershipSubscription
 }
 
 export type MutationCreateThreadArgs = {
@@ -507,7 +507,7 @@ export type MutationDeleteCommentThanksArgs = {
   commentThanksId: Scalars['Int']
 }
 
-export type MutationCreateMembershipSubscriptionArgs = {
+export type MutationPurchaseMembershipSubscriptionArgs = {
   period: MembershipSubscriptionPeriod
   token: Scalars['String']
 }
@@ -777,13 +777,13 @@ export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
   removeLanguageRelation: { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>
 }
 
-export type CreateMembershipSubscriptionMutationVariables = Exact<{
+export type PurchaseMembershipSubscriptionMutationVariables = Exact<{
   period: MembershipSubscriptionPeriod
   token: Scalars['String']
 }>
 
-export type CreateMembershipSubscriptionMutation = { __typename?: 'Mutation' } & {
-  createMembershipSubscription: { __typename?: 'MembershipSubscription' } & Pick<
+export type PurchaseMembershipSubscriptionMutation = { __typename?: 'Mutation' } & {
+  purchaseMembershipSubscription: { __typename?: 'MembershipSubscription' } & Pick<
     MembershipSubscription,
     'id'
   >
@@ -1969,54 +1969,54 @@ export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutati
   RemoveLanguageRelationMutation,
   RemoveLanguageRelationMutationVariables
 >
-export const CreateMembershipSubscriptionDocument = gql`
-  mutation createMembershipSubscription($period: MembershipSubscriptionPeriod!, $token: String!) {
-    createMembershipSubscription(period: $period, token: $token) {
+export const PurchaseMembershipSubscriptionDocument = gql`
+  mutation purchaseMembershipSubscription($period: MembershipSubscriptionPeriod!, $token: String!) {
+    purchaseMembershipSubscription(period: $period, token: $token) {
       id
     }
   }
 `
-export type CreateMembershipSubscriptionMutationFn = ApolloReactCommon.MutationFunction<
-  CreateMembershipSubscriptionMutation,
-  CreateMembershipSubscriptionMutationVariables
+export type PurchaseMembershipSubscriptionMutationFn = ApolloReactCommon.MutationFunction<
+  PurchaseMembershipSubscriptionMutation,
+  PurchaseMembershipSubscriptionMutationVariables
 >
 
 /**
- * __useCreateMembershipSubscriptionMutation__
+ * __usePurchaseMembershipSubscriptionMutation__
  *
- * To run a mutation, you first call `useCreateMembershipSubscriptionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateMembershipSubscriptionMutation` returns a tuple that includes:
+ * To run a mutation, you first call `usePurchaseMembershipSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePurchaseMembershipSubscriptionMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createMembershipSubscriptionMutation, { data, loading, error }] = useCreateMembershipSubscriptionMutation({
+ * const [purchaseMembershipSubscriptionMutation, { data, loading, error }] = usePurchaseMembershipSubscriptionMutation({
  *   variables: {
  *      period: // value for 'period'
  *      token: // value for 'token'
  *   },
  * });
  */
-export function useCreateMembershipSubscriptionMutation(
+export function usePurchaseMembershipSubscriptionMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CreateMembershipSubscriptionMutation,
-    CreateMembershipSubscriptionMutationVariables
+    PurchaseMembershipSubscriptionMutation,
+    PurchaseMembershipSubscriptionMutationVariables
   >,
 ) {
   return ApolloReactHooks.useMutation<
-    CreateMembershipSubscriptionMutation,
-    CreateMembershipSubscriptionMutationVariables
-  >(CreateMembershipSubscriptionDocument, baseOptions)
+    PurchaseMembershipSubscriptionMutation,
+    PurchaseMembershipSubscriptionMutationVariables
+  >(PurchaseMembershipSubscriptionDocument, baseOptions)
 }
-export type CreateMembershipSubscriptionMutationHookResult = ReturnType<
-  typeof useCreateMembershipSubscriptionMutation
+export type PurchaseMembershipSubscriptionMutationHookResult = ReturnType<
+  typeof usePurchaseMembershipSubscriptionMutation
 >
-export type CreateMembershipSubscriptionMutationResult = ApolloReactCommon.MutationResult<CreateMembershipSubscriptionMutation>
-export type CreateMembershipSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateMembershipSubscriptionMutation,
-  CreateMembershipSubscriptionMutationVariables
+export type PurchaseMembershipSubscriptionMutationResult = ApolloReactCommon.MutationResult<PurchaseMembershipSubscriptionMutation>
+export type PurchaseMembershipSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PurchaseMembershipSubscriptionMutation,
+  PurchaseMembershipSubscriptionMutationVariables
 >
 export const PostPageDocument = gql`
   query postPage($id: Int!, $uiLanguage: UILanguage!) {

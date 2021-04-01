@@ -9,7 +9,7 @@ import FormError from '@/components/FormError'
 import { useTranslation } from '@/config/i18n'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
-import { useCreateMembershipSubscriptionMutation, MembershipSubscriptionPeriod } from '@/generated/graphql'
+import { usePurchaseMembershipSubscriptionMutation, MembershipSubscriptionPeriod } from '@/generated/graphql'
 import Select from '@/components/Select'
 // import { Option } from '@/components/Select/Select'
 
@@ -38,7 +38,7 @@ const SubscriptionForm = () => {
     reValidateMode: 'onSubmit',
   })
 
-  const [createUserSubscription, { loading }] = useCreateMembershipSubscriptionMutation({
+  const [purchaseMembershipSubscription, { loading }] = usePurchaseMembershipSubscriptionMutation({
     onCompleted: () => {
       // TODO: bust the cache for the User
       toast.success(t('subscription.subscribeSuccessMessage'))
@@ -48,7 +48,7 @@ const SubscriptionForm = () => {
     },
   })
 
-  const handleSubscribeSubmit = async (data: FormValues) => {
+  const handleSubscribeSubmit = async () => {
     nProgress.start()
     // 1. Create payment method via stripe
     //    Token comes back here if successful
@@ -72,7 +72,7 @@ const SubscriptionForm = () => {
       }
   
       if (!loading && Object.keys(errors).length === 0 && paymentMethod) {
-        createUserSubscription({
+        purchaseMembershipSubscription({
           variables: {
             period: selectedOption,
             token: paymentMethod.id,

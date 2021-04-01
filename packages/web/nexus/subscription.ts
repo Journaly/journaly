@@ -48,6 +48,9 @@ const MembershipSubscriptionMutations = extendType({
           where: {
             id: userId,
           },
+          include: {
+            membershipSubscription: true,
+          }
         })
 
         if (!user) throw new Error("User not found")
@@ -74,8 +77,18 @@ const MembershipSubscriptionMutations = extendType({
             },
           })
         } else {
-          customerId = (await stripe.customers.retrieve(user.stripeCustomerId)).id
-          console.log('STRIPE CUSTOMER EXISTS!')
+          const customer = (await stripe.customers.retrieve(user.stripeCustomerId))
+          customerId = customer.id
+          console.log('STRIPE CUSTOMER EXISTS!', customer)
+
+          
+
+          if (args.period !== user.membershipSubscription?.period) {
+            console.log('Customer is changing their subscription!')
+            // (await stripe.customers.update({
+
+            // }))
+          }
         }
 
         const stripeSubscription = await stripe.subscriptions.create({

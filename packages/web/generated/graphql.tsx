@@ -171,6 +171,7 @@ export type User = {
   posts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
+  membershipSubscription?: Maybe<MembershipSubscription>
   socialMedia?: Maybe<SocialMedia>
   languages: Array<LanguageRelation>
   following: Array<User>
@@ -814,6 +815,21 @@ export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
 } & UserWithLanguagesFragmentFragment &
   SocialMediaFragmentFragment
 
+export type SubscriptionSettingsPageQueryVariables = Exact<{ [key: string]: never }>
+
+export type SubscriptionSettingsPageQuery = { __typename?: 'Query' } & {
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithSubscriptionFragmentFragment>
+}
+
+export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<User, 'id'> & {
+    membershipSubscription?: Maybe<
+      { __typename?: 'MembershipSubscription' } & Pick<
+        MembershipSubscription,
+        'id' | 'period' | 'expiresAt'
+      >
+    >
+  }
+
 export type CreatePostMutationVariables = Exact<{
   title: Scalars['String']
   body: Array<EditorNode> | EditorNode
@@ -1366,6 +1382,16 @@ export const ProfileUserFragmentFragmentDoc = gql`
   ${UserWithLanguagesFragmentFragmentDoc}
   ${UserBadgeFragmentFragmentDoc}
   ${SocialMediaFragmentFragmentDoc}
+`
+export const UserWithSubscriptionFragmentFragmentDoc = gql`
+  fragment UserWithSubscriptionFragment on User {
+    id
+    membershipSubscription {
+      id
+      period
+      expiresAt
+    }
+  }
 `
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
@@ -2124,6 +2150,62 @@ export type ProfilePageLazyQueryHookResult = ReturnType<typeof useProfilePageLaz
 export type ProfilePageQueryResult = ApolloReactCommon.QueryResult<
   ProfilePageQuery,
   ProfilePageQueryVariables
+>
+export const SubscriptionSettingsPageDocument = gql`
+  query subscriptionSettingsPage {
+    currentUser {
+      ...UserWithSubscriptionFragment
+    }
+  }
+  ${UserWithSubscriptionFragmentFragmentDoc}
+`
+
+/**
+ * __useSubscriptionSettingsPageQuery__
+ *
+ * To run a query within a React component, call `useSubscriptionSettingsPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSubscriptionSettingsPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscriptionSettingsPageQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscriptionSettingsPageQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    SubscriptionSettingsPageQuery,
+    SubscriptionSettingsPageQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    SubscriptionSettingsPageQuery,
+    SubscriptionSettingsPageQueryVariables
+  >(SubscriptionSettingsPageDocument, baseOptions)
+}
+export function useSubscriptionSettingsPageLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    SubscriptionSettingsPageQuery,
+    SubscriptionSettingsPageQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    SubscriptionSettingsPageQuery,
+    SubscriptionSettingsPageQueryVariables
+  >(SubscriptionSettingsPageDocument, baseOptions)
+}
+export type SubscriptionSettingsPageQueryHookResult = ReturnType<
+  typeof useSubscriptionSettingsPageQuery
+>
+export type SubscriptionSettingsPageLazyQueryHookResult = ReturnType<
+  typeof useSubscriptionSettingsPageLazyQuery
+>
+export type SubscriptionSettingsPageQueryResult = ApolloReactCommon.QueryResult<
+  SubscriptionSettingsPageQuery,
+  SubscriptionSettingsPageQueryVariables
 >
 export const CreatePostDocument = gql`
   mutation createPost(

@@ -19,7 +19,7 @@ model User {
   city                              String?
   country                           String?
   posts                             Post[]
-  subscription                      MembershipSubscription?
+  membershipSubscription            MembershipSubscription?
   socialMedia                       SocialMedia?
   languagesNative                   LanguageNative[]
   languagesLearning                 LanguageLearning[]
@@ -301,7 +301,7 @@ model MembershipSubscription {
   user                 User                         @relation(fields: [userId], references: [id])
   userId               Int
   stripeSubscription   Json
-  stripeSubscriptionId String
+  stripeSubscriptionId String                       @unique
   expiresAt            DateTime?
   createdAt            DateTime                     @default(now())
   updatedAt            DateTime                     @updatedAt
@@ -316,8 +316,8 @@ model MembershipSubscriptionTransaction {
   user                         User                         @relation(fields: [userId], references: [id])
   userId                       Int
   membershipSubscriptionPeriod MembershipSubscriptionPeriod
-  stripeChargeId               String
-  stripeChargeData             Json
+  stripeInvoiceId              String
+  stripeInvoiceData            Json
   createdAt                    DateTime                     @default(now())
   updatedAt                    DateTime                     @updatedAt
 }

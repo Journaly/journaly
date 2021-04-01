@@ -5,9 +5,18 @@ const handler = async (req: any, res: any) => {
   const db = new PrismaClient()
   const event = req.body
 
-  const updateStripeSubscription = async (subscriptionId: string) => {
+  const updateStripeSubscription = async (subscriptionId: string, eventType: string) => {
     const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId)
-    console.log('YELLO!', stripeSubscription)
+
+    let expiresAt
+    switch(eventType) {
+      case 'PAYMENT_SUCCEEDED':
+        expiresAt = new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2))
+        break
+      case 'PAYMENT_FAILED':
+        expiresAt = new Date(Date.now())
+        break
+    }
     
     // update existing subscription object (expiresAt) + a day or two
     await db.membershipSubscription.update({
@@ -15,15 +24,12 @@ const handler = async (req: any, res: any) => {
         stripeSubscriptionId: subscriptionId,
       },
       data: {
-        expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+        expiresAt,
       },
     })
   }
 
   console.log(event)
-
-  // at some point could email customer after invoice.paid event
-  // handle cancellation and update user status
 
     try {
       if (event.type === 'invoice.paid') {
@@ -81,29 +87,28 @@ const handler = async (req: any, res: any) => {
           }
         })
 
-        updateStripeSubscription(subscriptionLine.subscription)
+        updateStripeSubscription(subscriptionLine.subscription, 'PAYMENT_SUCCEEDED')
       } else if (event.type === 'invoice.payment_failed') {
-        // update customer?
-        // check on expiry/grace period?
-        // email user?
+        /**
+         * For now we'll just do nothing and allow the subscription to expire
+         */
+        const invoice = event.data.object
+        const subscriptionLine = invoice.lines.data[0]
+
+        if (!subscriptionLine) {
+          throw new Error("Subscription line missing")
+        }
+        if (subscriptionLine.type !== 'subscription') {
+          throw new Error("First line item is not a subscription. Something seems wrong here...")
+        }
+
+        updateStripeSubscription(subscriptionLine.subscription, 'PAYMENT_FAILED')
       }
-        // else if (event.type === 'customer.subscription.deleted') {
-        //   console.log('SUBSCRIPTION DELETED!')
-        //   console.log(event)
-        //   const user = db.user.findUnique({
-        //     where: {
-        //       stripeCustomerId: event.data.object.customer,
-        //     }
-        //   })
-        // }
     } catch (err) {
       // TODO: get better logging
       console.log(err)
     }
 
-  // TODO: update user status to premium
-
-  // console.log(event)
   res.status(200).json({
     received: true,
   })

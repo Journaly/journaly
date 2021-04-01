@@ -4,15 +4,21 @@ import { withApollo } from '@/lib/apollo'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import AuthGate from '@/components/AuthGate'
 import SubscriptionForm from '@/components/Dashboard/Settings/SubscriptionForm'
+import { useSubscriptionSettingsPageQuery } from '@/generated/graphql'
 
 const Subscription: NextPage = () => {
+  const { loading, data } = useSubscriptionSettingsPageQuery()
+  console.log(data)
+
   return (
     <AuthGate>
       <>
         <SettingsPageLayout>
-          <div className="forms-container">
-            <SubscriptionForm />
-          </div>
+          {data?.currentUser && !loading && (
+            <div className="forms-container">
+              <SubscriptionForm user={data.currentUser} />
+            </div>
+          )}
         </SettingsPageLayout>
         <style jsx>{`
           .forms-container {

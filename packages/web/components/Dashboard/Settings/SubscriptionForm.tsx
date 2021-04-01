@@ -9,21 +9,37 @@ import FormError from '@/components/FormError'
 import { useTranslation } from '@/config/i18n'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
-import { usePurchaseMembershipSubscriptionMutation, MembershipSubscriptionPeriod } from '@/generated/graphql'
+import { usePurchaseMembershipSubscriptionMutation,
+  MembershipSubscriptionPeriod,
+  UserWithSubscriptionFragmentFragment as UserType,
+} from '@/generated/graphql'
 import Select from '@/components/Select'
-// import { Option } from '@/components/Select/Select'
+import parseISO from 'date-fns/parseISO'
 
 type FormValues = {
   period: MembershipSubscriptionPeriod
 }
 
+type SubscriptionFormProps = {
+  user: UserType
+}
+
 const stripeLib = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string)
 
-const SubscriptionForm = () => {
+const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
+  console.log(user)
   const { t } = useTranslation('settings')
   const [stripeError, setStripeError] = useState<StripeError>()
   const stripe = useStripe()
   const elements = useElements()
+  let subscriptionStatus
+  if (!user.membershipSubscription) {
+    subscriptionStatus = 'Free user'
+  } else if (parseISO(user.membershipSubscription.expiresAt) < new Date()) {
+    subscriptionStatus = 'Journaly Premium user'
+  } else {
+    subscriptionStatus = 'Free user - Premium Membership Expired'
+  }
 
   const subscriptionOptions = [
     { value: MembershipSubscriptionPeriod.Monthly, displayName: 'Monthly' },
@@ -94,6 +110,7 @@ const SubscriptionForm = () => {
         {(stripeError || errorInput) && <FormError error={stripeError?.message || errorInput?.message as string}/>}
         <SettingsFieldset legend={t('subscription.legend')}>
           <p style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
+          <p>Current subscription status: {subscriptionStatus}</p>
           <Select
             onChange={(value) => {setSelectedOption(value)}}
             options={subscriptionOptions}
@@ -119,9 +136,9 @@ const SubscriptionForm = () => {
   )
 }
 
-const Checkout = () => (
+const Checkout = ({ user }: SubscriptionFormProps) => (
   <Elements stripe={stripeLib}>
-    <SubscriptionForm />
+    <SubscriptionForm user={user} />
   </Elements>
 )
 

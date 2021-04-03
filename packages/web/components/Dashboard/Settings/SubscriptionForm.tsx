@@ -122,14 +122,10 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
         <SettingsFieldset legend={t('subscription.legend')}>
           <p style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
           <p style={{ marginBottom: '20px' }}>Current subscription status: {subscriptionStatus}</p>
-          {user.membershipSubscription && user.membershipSubscription.stripeSubscriptionId && (
+          {user.membershipSubscription && (
             <Button
               onClick={() => {
-                cancelMembershipSubscription({
-                  variables: {
-                    stripeSubscriptionId: user.membershipSubscription.stripeSubscriptionId,
-                  }
-                })
+                cancelMembershipSubscription()
               }}
               variant={ButtonVariant.Destructive}
             >

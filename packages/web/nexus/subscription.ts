@@ -14,7 +14,6 @@ const MembershipSubscription = objectType({
     t.model.period()
     t.model.userId()
     t.model.expiresAt()
-    t.model.stripeSubscriptionId()
   }
 })
 
@@ -57,7 +56,6 @@ const MembershipSubscriptionMutations = extendType({
         if (!user) throw new Error("User not found")
 
         let customerId
-        // TODO: remove this || true
         if (!user.stripeCustomerId) {
           const customer = (await stripe.customers.create({
             payment_method: args.token,
@@ -99,7 +97,7 @@ const MembershipSubscriptionMutations = extendType({
           }
   
           // TODO: Log failure and get proper alarms set up
-          const subscription = await ctx.db.membershipSubscription.upsert({
+          return await ctx.db.membershipSubscription.upsert({
             create: {
               ...subData,
               user: {
@@ -113,15 +111,11 @@ const MembershipSubscriptionMutations = extendType({
               userId,
             },
           })
-          return subscription
         } else {
           const customer = await stripe.customers.retrieve(user.stripeCustomerId)
-          customerId = customer.id
 
           if (customer && user.membershipSubscription?.stripeSubscriptionId) {
-            console.log('Customer is changing their subscription!')
-            const stripeSubscription = (await stripe.subscriptions.retrieve(user.membershipSubscription?.stripeSubscriptionId))
-            console.log(stripeSubscription)
+            const stripeSubscription = (await stripe.subscriptions.retrieve(user.membershipSubscription.stripeSubscriptionId))
             const subscriptionUpdated = await stripe.subscriptions.update(stripeSubscription.items.data[0].id, {
               cancel_at_period_end: false,
               payment_behavior: 'pending_if_incomplete',
@@ -136,7 +130,7 @@ const MembershipSubscriptionMutations = extendType({
               console.log('Payment failed!')
             }
             // Update our records with the new subscription info
-            await ctx.db.membershipSubscription.update({
+            return ctx.db.membershipSubscription.update({
               where: {
                 userId,
               },
@@ -146,18 +140,13 @@ const MembershipSubscriptionMutations = extendType({
                 stripeSubscription: subscriptionUpdated as unknown as InputJsonValue,
               },
             })
-            return
           }
         }
-        return
       },
     })
     t.field('cancelMembershipSubscription', {
       type: 'MembershipSubscription',
-      args: {
-        stripeSubscriptionId: stringArg({ required: true }),
-      },
-      resolve: async (_parent, args, ctx) => {
+      resolve: async (_parent, _args, ctx) => {
         const { userId } = ctx.request
 
         if (!userId) {
@@ -174,25 +163,23 @@ const MembershipSubscriptionMutations = extendType({
         })
 
         if (!user) throw new Error("User not found")
-
-        const stripeSubscriptionItems = await stripe.subscriptions.retrieve(args.stripeSubscriptionId)
-        const stripeSubscription = stripeSubscriptionItems.items.data[0]
-
-        if (user.membershipSubscription?.stripeSubscriptionId !== stripeSubscription.id) {
-          throw new Error("User does not match stripe subscription")
+        if (!user?.membershipSubscription?.stripeSubscriptionId) {
+          throw new Error("User has no subscription to cancel")
         }
 
-        const cancelledSubscription = await stripe.subscriptions.update(stripeSubscription.id, {
+        await stripe.subscriptions.update(user.membershipSubscription.stripeSubscriptionId, {
           cancel_at_period_end: true,
         })
-        console.log('User is cancelling subscription')
-        // leave our copy of membershipSubscription alone and let expire at end of current period
-        const journalyMembershipSubscription = await ctx.db.membershipSubscription.findUnique({
+
+        // simply update our equivalent of cancel_at_period_end and let expire at end of current period
+        return await ctx.db.membershipSubscription.update({
           where: {
-            stripeSubscriptionId: stripeSubscription.id
+            userId,
+          },
+          data: {
+            cancelAtPeriodEnd: true,
           }
         })
-        if (journalyMembershipSubscription) return journalyMembershipSubscription.id
       }
     })
   }

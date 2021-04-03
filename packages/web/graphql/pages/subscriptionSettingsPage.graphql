@@ -10,6 +10,5 @@ fragment UserWithSubscriptionFragment on User {
     id
     period
     expiresAt
-    stripeSubscriptionId
   }
 }

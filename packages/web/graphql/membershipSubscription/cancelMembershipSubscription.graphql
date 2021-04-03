@@ -1,5 +1,5 @@
-mutation cancelMembershipSubscription($stripeSubscriptionId: String!) {
-  cancelMembershipSubscription(stripeSubscriptionId: $stripeSubscriptionId) {
+mutation cancelMembershipSubscription {
+  cancelMembershipSubscription {
     id
   }
 }

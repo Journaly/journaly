@@ -246,7 +246,6 @@ export type MembershipSubscription = {
   period: MembershipSubscriptionPeriod
   userId: Scalars['Int']
   expiresAt?: Maybe<Scalars['DateTime']>
-  stripeSubscriptionId: Scalars['String']
 }
 
 export enum ImageRole {
@@ -515,10 +514,6 @@ export type MutationPurchaseMembershipSubscriptionArgs = {
   token: Scalars['String']
 }
 
-export type MutationCancelMembershipSubscriptionArgs = {
-  stripeSubscriptionId: Scalars['String']
-}
-
 export type CreateCommentMutationVariables = Exact<{
   body: Scalars['String']
   threadId: Scalars['Int']
@@ -784,9 +779,7 @@ export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
   removeLanguageRelation: { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>
 }
 
-export type CancelMembershipSubscriptionMutationVariables = Exact<{
-  stripeSubscriptionId: Scalars['String']
-}>
+export type CancelMembershipSubscriptionMutationVariables = Exact<{ [key: string]: never }>
 
 export type CancelMembershipSubscriptionMutation = { __typename?: 'Mutation' } & {
   cancelMembershipSubscription: { __typename?: 'MembershipSubscription' } & Pick<
@@ -842,7 +835,7 @@ export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pic
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
         MembershipSubscription,
-        'id' | 'period' | 'expiresAt' | 'stripeSubscriptionId'
+        'id' | 'period' | 'expiresAt'
       >
     >
   }
@@ -1407,7 +1400,6 @@ export const UserWithSubscriptionFragmentFragmentDoc = gql`
       id
       period
       expiresAt
-      stripeSubscriptionId
     }
   }
 `
@@ -2014,8 +2006,8 @@ export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutati
   RemoveLanguageRelationMutationVariables
 >
 export const CancelMembershipSubscriptionDocument = gql`
-  mutation cancelMembershipSubscription($stripeSubscriptionId: String!) {
-    cancelMembershipSubscription(stripeSubscriptionId: $stripeSubscriptionId) {
+  mutation cancelMembershipSubscription {
+    cancelMembershipSubscription {
       id
     }
   }
@@ -2038,7 +2030,6 @@ export type CancelMembershipSubscriptionMutationFn = ApolloReactCommon.MutationF
  * @example
  * const [cancelMembershipSubscriptionMutation, { data, loading, error }] = useCancelMembershipSubscriptionMutation({
  *   variables: {
- *      stripeSubscriptionId: // value for 'stripeSubscriptionId'
  *   },
  * });
  */

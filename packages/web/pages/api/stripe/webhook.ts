@@ -100,6 +100,7 @@ const handler = async (req: any, res: any) => {
 
         await updateStripeSubscription(subscriptionLine.subscription)
       }
+      // handle creating a new membershipSubscriptionTransaction when upgrading/downgrading
     } catch (err) {
       // TODO: get better logging
       console.log(err)

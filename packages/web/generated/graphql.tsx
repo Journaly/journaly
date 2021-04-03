@@ -246,6 +246,7 @@ export type MembershipSubscription = {
   period: MembershipSubscriptionPeriod
   userId: Scalars['Int']
   expiresAt?: Maybe<Scalars['DateTime']>
+  stripeSubscriptionId: Scalars['String']
 }
 
 export enum ImageRole {
@@ -376,6 +377,7 @@ export type Mutation = {
   createCommentThanks: CommentThanks
   deleteCommentThanks: CommentThanks
   purchaseMembershipSubscription: MembershipSubscription
+  cancelMembershipSubscription: MembershipSubscription
 }
 
 export type MutationCreateThreadArgs = {
@@ -511,6 +513,10 @@ export type MutationDeleteCommentThanksArgs = {
 export type MutationPurchaseMembershipSubscriptionArgs = {
   period: MembershipSubscriptionPeriod
   token: Scalars['String']
+}
+
+export type MutationCancelMembershipSubscriptionArgs = {
+  stripeSubscriptionId: Scalars['String']
 }
 
 export type CreateCommentMutationVariables = Exact<{
@@ -778,6 +784,17 @@ export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
   removeLanguageRelation: { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>
 }
 
+export type CancelMembershipSubscriptionMutationVariables = Exact<{
+  stripeSubscriptionId: Scalars['String']
+}>
+
+export type CancelMembershipSubscriptionMutation = { __typename?: 'Mutation' } & {
+  cancelMembershipSubscription: { __typename?: 'MembershipSubscription' } & Pick<
+    MembershipSubscription,
+    'id'
+  >
+}
+
 export type PurchaseMembershipSubscriptionMutationVariables = Exact<{
   period: MembershipSubscriptionPeriod
   token: Scalars['String']
@@ -825,7 +842,7 @@ export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pic
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
         MembershipSubscription,
-        'id' | 'period' | 'expiresAt'
+        'id' | 'period' | 'expiresAt' | 'stripeSubscriptionId'
       >
     >
   }
@@ -1390,6 +1407,7 @@ export const UserWithSubscriptionFragmentFragmentDoc = gql`
       id
       period
       expiresAt
+      stripeSubscriptionId
     }
   }
 `
@@ -1994,6 +2012,54 @@ export type RemoveLanguageRelationMutationResult = ApolloReactCommon.MutationRes
 export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RemoveLanguageRelationMutation,
   RemoveLanguageRelationMutationVariables
+>
+export const CancelMembershipSubscriptionDocument = gql`
+  mutation cancelMembershipSubscription($stripeSubscriptionId: String!) {
+    cancelMembershipSubscription(stripeSubscriptionId: $stripeSubscriptionId) {
+      id
+    }
+  }
+`
+export type CancelMembershipSubscriptionMutationFn = ApolloReactCommon.MutationFunction<
+  CancelMembershipSubscriptionMutation,
+  CancelMembershipSubscriptionMutationVariables
+>
+
+/**
+ * __useCancelMembershipSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useCancelMembershipSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelMembershipSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelMembershipSubscriptionMutation, { data, loading, error }] = useCancelMembershipSubscriptionMutation({
+ *   variables: {
+ *      stripeSubscriptionId: // value for 'stripeSubscriptionId'
+ *   },
+ * });
+ */
+export function useCancelMembershipSubscriptionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CancelMembershipSubscriptionMutation,
+    CancelMembershipSubscriptionMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CancelMembershipSubscriptionMutation,
+    CancelMembershipSubscriptionMutationVariables
+  >(CancelMembershipSubscriptionDocument, baseOptions)
+}
+export type CancelMembershipSubscriptionMutationHookResult = ReturnType<
+  typeof useCancelMembershipSubscriptionMutation
+>
+export type CancelMembershipSubscriptionMutationResult = ApolloReactCommon.MutationResult<CancelMembershipSubscriptionMutation>
+export type CancelMembershipSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CancelMembershipSubscriptionMutation,
+  CancelMembershipSubscriptionMutationVariables
 >
 export const PurchaseMembershipSubscriptionDocument = gql`
   mutation purchaseMembershipSubscription($period: MembershipSubscriptionPeriod!, $token: String!) {

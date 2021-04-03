@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { loadStripe, StripeError } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import nProgress from 'nprogress'
-import Button from '@/components/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 import FormError from '@/components/FormError'
 import { useTranslation } from '@/config/i18n'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
@@ -12,6 +12,7 @@ import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
 import { usePurchaseMembershipSubscriptionMutation,
   MembershipSubscriptionPeriod,
   UserWithSubscriptionFragmentFragment as UserType,
+  useCancelMembershipSubscriptionMutation,
 } from '@/generated/graphql'
 import Select from '@/components/Select'
 import parseISO from 'date-fns/parseISO'
@@ -99,6 +100,16 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
     nProgress.done()
   }
 
+  const [cancelMembershipSubscription] = useCancelMembershipSubscriptionMutation({
+    onCompleted: () => {
+      // TODO: bust the cache for the User
+      toast.success(t('You have cancelled your subscription'))
+    },
+    onError: () => {
+      toast.error(t('There was a problem cancelling your subscription'))
+    },
+  })
+
   const errorInput = Object.values(errors)[0]
 
   return (
@@ -110,7 +121,21 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
         {(stripeError || errorInput) && <FormError error={stripeError?.message || errorInput?.message as string}/>}
         <SettingsFieldset legend={t('subscription.legend')}>
           <p style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
-          <p>Current subscription status: {subscriptionStatus}</p>
+          <p style={{ marginBottom: '20px' }}>Current subscription status: {subscriptionStatus}</p>
+          {user.membershipSubscription && user.membershipSubscription.stripeSubscriptionId && (
+            <Button
+              onClick={() => {
+                cancelMembershipSubscription({
+                  variables: {
+                    stripeSubscriptionId: user.membershipSubscription.stripeSubscriptionId,
+                  }
+                })
+              }}
+              variant={ButtonVariant.Destructive}
+            >
+              Cancel Subscription
+            </Button>
+          )}
           <Select
             onChange={(value) => {setSelectedOption(value)}}
             options={subscriptionOptions}

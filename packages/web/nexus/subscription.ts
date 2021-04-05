@@ -1,4 +1,4 @@
-import { MembershipSubscriptionPeriod, InputJsonValue } from '@journaly/j-db-client'
+import { MembershipSubscriptionPeriod, InputJsonValue, MembershipSubscription as FooBar } from '@journaly/j-db-client'
 import {
   arg,
   extendType,
@@ -57,7 +57,7 @@ const MembershipSubscriptionMutations = extendType({
 
         let customerId
         if (!user.stripeCustomerId) {
-          const customer = (await stripe.customers.create({
+          const customer = await stripe.customers.create({
             payment_method: args.token,
             description: `${user.handle} (${user.id})`,
             email: user.email,
@@ -65,7 +65,7 @@ const MembershipSubscriptionMutations = extendType({
               id: user.id,
               handle: user.handle,
             },
-          }))
+          })
           customerId = customer.id
           await ctx.db.user.update({
             where: {
@@ -97,7 +97,7 @@ const MembershipSubscriptionMutations = extendType({
           }
   
           // TODO: Log failure and get proper alarms set up
-          return await ctx.db.membershipSubscription.upsert({
+          return ctx.db.membershipSubscription.upsert({
             create: {
               ...subData,
               user: {
@@ -113,34 +113,47 @@ const MembershipSubscriptionMutations = extendType({
           })
         } else {
           const customer = await stripe.customers.retrieve(user.stripeCustomerId)
+          
+          if (!customer) throw new Error("User has stripeCustomerId but unable to find customer in Stripe")
+          if (!user.membershipSubscription) throw new Error("User has stripeCustomerId but no membershipSubscription")
 
-          if (customer && user.membershipSubscription?.stripeSubscriptionId) {
-            const stripeSubscription = (await stripe.subscriptions.retrieve(user.membershipSubscription.stripeSubscriptionId))
-            const subscriptionUpdated = await stripe.subscriptions.update(stripeSubscription.items.data[0].id, {
-              cancel_at_period_end: false,
-              payment_behavior: 'pending_if_incomplete',
-              proration_behavior: 'always_invoice',
-              items: [{
-                id: stripeSubscription.items.data[0].id,
-                price: getSubscriptionPriceId(args.period),
-              }]
-            })
-            if (subscriptionUpdated.pending_update) {
-              // Payment failed
-              console.log('Payment failed!')
-            }
-            // Update our records with the new subscription info
-            return ctx.db.membershipSubscription.update({
-              where: {
-                userId,
-              },
-              data: {
-                period: args.period,
-                expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
-                stripeSubscription: subscriptionUpdated as unknown as InputJsonValue,
-              },
-            })
+          await stripe.paymentMethods.attach(args.token, {
+            customer: customer.id,
+          })
+
+          // Update customer's default method in case they've entered a new card
+          await stripe.customers.update(customer.id, {
+            invoice_settings: {
+              default_payment_method: args.token,
+            },
+          })
+          const stripeSubscription = await stripe.subscriptions.retrieve(user.membershipSubscription.stripeSubscriptionId)
+          const subscriptionUpdated = await stripe.subscriptions.update(stripeSubscription.id, {
+            payment_behavior: 'pending_if_incomplete',
+            proration_behavior: 'always_invoice',
+            items: [{
+              id: stripeSubscription.items.data[0].id,
+              price: getSubscriptionPriceId(args.period),
+            }],
+          })
+          if (subscriptionUpdated.pending_update) {
+            // Payment failed
+            throw new Error("Unable to update subscription, possible payment failure")
           }
+          await stripe.subscriptions.update(stripeSubscription.id, {
+            cancel_at_period_end: false,
+          })
+          // Update our records with the new subscription info
+          return ctx.db.membershipSubscription.update({
+            where: {
+              userId,
+            },
+            data: {
+              period: args.period,
+              expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+              stripeSubscription: subscriptionUpdated as unknown as InputJsonValue,
+            },
+          })
         }
       },
     })

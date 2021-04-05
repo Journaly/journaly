@@ -24,21 +24,14 @@ const handler = async (req: any, res: any) => {
       },
     })
   }
-
-  console.log(event)
-
     try {
       if (event.type === 'invoice.paid') {
-        console.log(event)
         const invoice = event.data.object
-        const subscriptionLine = invoice.lines.data[0]
+        // TODO: do some bookkeeping around other line items
+        const subscriptionLine = invoice.lines.data.find((item: any) => item.type === 'subscription')
 
         if (!subscriptionLine) {
           throw new Error("Subscription line missing")
-        }
-        
-        if (subscriptionLine.type !== 'subscription') {
-          throw new Error("First line item is not a subscription. Something seems wrong here...")
         }
 
         const userQuery = await db.user.findMany({

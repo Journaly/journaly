@@ -8,7 +8,6 @@ import { useSubscriptionSettingsPageQuery } from '@/generated/graphql'
 
 const Subscription: NextPage = () => {
   const { loading, data } = useSubscriptionSettingsPageQuery()
-  console.log(data)
 
   return (
     <AuthGate>

@@ -28,7 +28,6 @@ type SubscriptionFormProps = {
 const stripeLib = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string)
 
 const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
-  console.log(user)
   const { t } = useTranslation('settings')
   const [stripeError, setStripeError] = useState<StripeError>()
   const stripe = useStripe()
@@ -81,7 +80,6 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
         type: 'card',
         card,
       })
-      console.log(paymentMethod)
       if (error) {
         setStripeError(error)
         nProgress.done()

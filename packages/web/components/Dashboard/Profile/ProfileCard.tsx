@@ -252,6 +252,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           }
         }
 
+        .profile-name,
         .languages-and-interests,
         .bio {
           max-width: 660px;

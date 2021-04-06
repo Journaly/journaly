@@ -15,7 +15,8 @@ import { usePurchaseMembershipSubscriptionMutation,
   useCancelMembershipSubscriptionMutation,
 } from '@/generated/graphql'
 import Select from '@/components/Select'
-import parseISO from 'date-fns/parseISO'
+import theme from '@/theme'
+import { formatLongDate } from '@/utils'
 
 type FormValues = {
   period: MembershipSubscriptionPeriod
@@ -32,19 +33,22 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
   const [stripeError, setStripeError] = useState<StripeError>()
   const stripe = useStripe()
   const elements = useElements()
-  let subscriptionStatus
-  if (!user.membershipSubscription) {
-    subscriptionStatus = 'Free user'
-  } else if (parseISO(user.membershipSubscription.expiresAt) < new Date()) {
-    subscriptionStatus = 'Journaly Premium user'
-  } else {
-    subscriptionStatus = 'Free user - Premium Membership Expired'
+  let subscriptionPlan: string | undefined
+  // (period) => string
+  if (user?.membershipSubscription?.period === MembershipSubscriptionPeriod.Monthly) {
+    subscriptionPlan = '1 Month - £12'
+  } else if (user?.membershipSubscription?.period === MembershipSubscriptionPeriod.Quarterly) {
+    subscriptionPlan = '3 Months - £30'
+  } else if (user?.membershipSubscription?.period === MembershipSubscriptionPeriod.Annualy) {
+    subscriptionPlan = '1 Year - £100'
   }
+  const isCancelling = user.membershipSubscription?.cancelAtPeriodEnd
+  const [showPaymentForm, setShowPaymentForm] = useState(!user.isPremiumUser)
 
   const subscriptionOptions = [
-    { value: MembershipSubscriptionPeriod.Monthly, displayName: 'Monthly' },
-    { value: MembershipSubscriptionPeriod.Quarterly, displayName: '3 Months' },
-    { value: MembershipSubscriptionPeriod.Annualy, displayName: '1 Year' },
+    { value: MembershipSubscriptionPeriod.Monthly, displayName: 'Monthly - £12' },
+    { value: MembershipSubscriptionPeriod.Quarterly, displayName: '3 Months - £30' },
+    { value: MembershipSubscriptionPeriod.Annualy, displayName: '1 Year - £100' },
   ]
 
   const [selectedOption, setSelectedOption] = useState<MembershipSubscriptionPeriod>(MembershipSubscriptionPeriod.Monthly)
@@ -108,8 +112,28 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
     },
   })
 
-  const errorInput = Object.values(errors)[0]
+  const SubscriptionStatusBadge = () => {
+    return (
+      <>
+        <span className="badge">
+          {user.isPremiumUser ? 'premium user' : 'free user'}
+        </span>
+        <style jsx>{`
+          .badge {
+            padding: 10px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-size: ${theme.typography.paragraphSM}
+            font-weight: 600;
+            background-color: ${!user.isPremiumUser ? theme.colors.gray100 : theme.colors.greenLight};
+            color: ${!user.isPremiumUser ? theme.colors.gray600 : theme.colors.greenDark};
+          }
+        `}</style>
+      </>
+    )
+  }
 
+  const errorInput = Object.values(errors)[0]
   return (
     <>
       <SettingsForm
@@ -117,40 +141,81 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
         errorInputName={Object.keys(errors)[0] || ''}
       >
         {(stripeError || errorInput) && <FormError error={stripeError?.message || errorInput?.message as string}/>}
-        <SettingsFieldset legend={t('subscription.legend')}>
-          <p style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
-          <p style={{ marginBottom: '20px' }}>Current subscription status: {subscriptionStatus}</p>
-          {user.membershipSubscription && (
+        <p style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
+        <p style={{ marginBottom: '20px' }}><strong>Subscription status:</strong> <SubscriptionStatusBadge /></p>
+        {user.isPremiumUser && (
+          <>
+            <p style={{ marginBottom: '20px' }}><strong>Current Plan:</strong> {subscriptionPlan}</p>
+            {isCancelling ? (
+              <>
+                <p style={{ marginBottom: '20px' }}>Your subscription will end on <strong style={{ color: theme.colors.red }}>{formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
+                {/* Add mutation for this */}
+                <Button variant={ButtonVariant.Link}>Reactivate subscription</Button>
+              </>
+            ) : (
+              <>
+                <p style={{ marginBottom: '20px' }}><strong>Next billing date:</strong> Your subscription will renew on <strong>{formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
+              </>
+            )}
+          </>
+        )}
+        {showPaymentForm && (
+          <SettingsFieldset legend=''>
+            <Select
+              onChange={(value) => {setSelectedOption(value)}}
+              options={subscriptionOptions}
+              value={selectedOption}
+              placeholder="Which subscription would you like?"
+            />
+            <div style={{
+              marginTop: '20px',
+              marginBottom: '20px',
+            }}>
+              <CardElement/>
+            </div>
+            <Button
+              type="submit"
+              loading={loading || formState.isSubmitting}
+              style={{
+                marginTop: '15px',
+              }}
+            >{t('subscription.subscribeCta')}</Button>
+          </SettingsFieldset>
+        )}
+        {!user?.membershipSubscription?.cancelAtPeriodEnd && (
+          <>
+            <Button
+              onClick={() => {
+                setShowPaymentForm(true)
+              }}
+              variant={ButtonVariant.Link}
+            >
+              Change Plan
+            </Button>
             <Button
               onClick={() => {
                 cancelMembershipSubscription()
               }}
-              variant={ButtonVariant.Destructive}
+              variant={ButtonVariant.Link}
+              style={{
+                color: theme.colors.red,
+                marginLeft: '10px',
+              }}
             >
               Cancel Subscription
             </Button>
-          )}
-          <Select
-            onChange={(value) => {setSelectedOption(value)}}
-            options={subscriptionOptions}
-            value={selectedOption}
-            placeholder="Which subscription would you like?"
-          />
-          <div style={{
-            marginTop: '20px',
-            marginBottom: '20px',
-          }}>
-            <CardElement/>
-          </div>
-          <Button
-            type="submit"
-            loading={loading || formState.isSubmitting}
-            style={{
-              marginTop: '15px',
-            }}
-          >{t('subscription.subscribeCta')}</Button>
-        </SettingsFieldset>
+          </>
+        )}
       </SettingsForm>
+      <style jsx>{`
+        .membership-renewal-info-container {
+          display: flex;
+          flex-direction: column;
+        }
+        :global(fieldset > legend) {
+          display: none;
+        }
+      `}</style>
     </>
   )
 }

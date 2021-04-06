@@ -119,7 +119,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
         </span>
         <span>
           { user.postsWrittenCount
-            ? `In that time they've published ${user.postsWrittenCount} posts. `
+            ? `In that time they've published ${user.postsWrittenCount} posts in ${user.languagesPostedInCount} different languages. `
             : 'So far they haven\'t written any posts. '
           }
         </span>

@@ -177,6 +177,7 @@ export type User = {
   followedBy: Array<User>
   isPremiumUser: Scalars['Boolean']
   postsWrittenCount: Scalars['Int']
+  languagesPostedInCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
   threadCommentsCount: Scalars['Int']
   postCommentsCount: Scalars['Int']
@@ -1085,6 +1086,7 @@ export type UserStatsQuery = { __typename?: 'Query' } & {
     | 'name'
     | 'handle'
     | 'postsWrittenCount'
+    | 'languagesPostedInCount'
     | 'threadCommentsCount'
     | 'postCommentsCount'
     | 'thanksReceivedCount'
@@ -3532,6 +3534,7 @@ export const UserStatsDocument = gql`
       name
       handle
       postsWrittenCount
+      languagesPostedInCount
       threadCommentsCount
       postCommentsCount
       thanksReceivedCount

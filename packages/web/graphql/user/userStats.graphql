@@ -4,6 +4,7 @@ query userStats($id: Int!) {
     name
     handle
     postsWrittenCount
+    languagesPostedInCount
     threadCommentsCount
     postCommentsCount
     thanksReceivedCount

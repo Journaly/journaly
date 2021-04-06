@@ -83,6 +83,20 @@ const User = objectType({
         })
       },
     })
+    t.int('languagesPostedInCount', {
+      async resolve(parent, _args, ctx, _info) {
+        const q = await (ctx.db.$queryRaw`
+          SELECT COUNT(DISTINCT "languageId") as count
+          FROM "Post"
+          WHERE
+            "authorId" = ${parent.id}
+            AND "status" = 'PUBLISHED'
+          ;
+        `)
+
+        return q[0].count
+      }
+    })
     t.int('thanksReceivedCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.commentThanks.count({

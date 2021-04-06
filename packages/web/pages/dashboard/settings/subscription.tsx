@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { withApollo } from '@/lib/apollo'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import AuthGate from '@/components/AuthGate'
-import SubscriptionForm from '@/components/Dashboard/Settings/SubscriptionForm'
+import SubscriptionForm from '@/components/Dashboard/Settings/Subscription/SubscriptionForm'
 import { useSubscriptionSettingsPageQuery } from '@/generated/graphql'
 import theme from '@/theme'
 

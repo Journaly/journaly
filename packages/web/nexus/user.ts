@@ -72,6 +72,7 @@ const User = objectType({
         return false
       }
     })
+
     t.int('postsWrittenCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.post.count({
@@ -86,14 +87,25 @@ const User = objectType({
       resolve(parent, _args, ctx, _info) {
         return ctx.db.commentThanks.count({
           where: {
-            comment: {
-              authorId: parent.id,
-            },
+            comment: { authorId: parent.id, },
           },
         })
       },
     })
-
+    t.int('threadCommentsCount', {
+      resolve(parent, _args, ctx, _info) {
+        return ctx.db.comment.count({
+          where: { authorId: parent.id },
+        })
+      },
+    })
+    t.int('postCommentsCount', {
+      resolve(parent, _args, ctx, _info) {
+        return ctx.db.postComment.count({
+          where: { authorId: parent.id },
+        })
+      },
+    })
     t.list.field('postActivity', {
       type: 'DatedActivityCount',
       resolve(parent, _args, ctx, _info) {
@@ -108,7 +120,7 @@ const User = objectType({
            GROUP BY date
            ORDER BY date DESC;
         `
-        return stats
+        return stats || []
       },
     })
   },

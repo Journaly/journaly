@@ -9,8 +9,11 @@ import getDay from 'date-fns/getDay'
 import getMonth from 'date-fns/getMonth'
 import eachDayOfInterval from 'date-fns/eachDayOfInterval'
 import eachMonthOfInterval from 'date-fns/eachMonthOfInterval'
+import formatDuration from 'date-fns/formatDuration'
+import intervalToDuration from 'date-fns/intervalToDuration'
 
 import theme from '@/theme'
+import { formatLongDate } from '@/utils'
 import { useUserStatsQuery } from '@/generated/graphql'
 
 type ProfileStatsProps = {
@@ -103,25 +106,35 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
     return <span>Loading...</span>
   }
 
+  const user = data.userById
+  const joinDate = parseISO(user.createdAt)
+  const age = formatDuration(intervalToDuration({ start: joinDate, end: new Date()}), { format: ['years', 'months', 'days'] })
+
   return (
     <>
       <h2>Summary</h2>
-      <div>
-        <div className="summary-stat-item">
-          <span className="label">Total Posts: </span>
-          <span className="value">{data.userById.postsWrittenCount}</span>
-        </div>
-        <div className="summary-stat-item">
-          <span className="label">Thanks Received: </span>
-          <span className="value">{data.userById.thanksReceivedCount}</span>
-        </div>
-        <div className="summary-stat-item">
-          <span className="label">Registered: </span>
-          <span className="value">
-            {formatISO(parseISO(data.userById.createdAt), { representation: 'date'})}
-          </span>
-        </div>
-
+      <div className="summary-copy">
+        <span>
+          {`${user.name || user.handle} has been journaling on Journaly since ${formatLongDate(user.createdAt)} (that's ${age}). `}
+        </span>
+        <span>
+          { user.postsWrittenCount
+            ? `In that time they've published ${user.postsWrittenCount} posts. `
+            : 'So far they haven\'t written any posts. '
+          }
+        </span>
+        <span>
+          { (user.threadCommentsCount || user.postCommentsCount)
+            ? `They've also left ${user.postCommentsCount} general comments on posts and ${user.threadCommentsCount} inline comments, helping other users improve their language skills. `
+            : 'They haven\'t left any feedback on other journalers\' posts yet. '
+          }
+        </span>
+        <span>
+          { user.thanksReceivedCount
+            ? `For their hard work helping others, they've been thanked ${user.thanksReceivedCount} times.`
+            : null
+          }
+        </span>
       </div>
 
       <h2>Posting History</h2>
@@ -180,6 +193,12 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
         .activityChart {
           max-height: 300px;
           width: 100%;
+        }
+
+        .summary-copy {
+          max-width: 600px;
+          align-self: center;
+          margin-bottom: 20px;
         }
       `}</style>
     </>

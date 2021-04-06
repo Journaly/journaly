@@ -178,6 +178,8 @@ export type User = {
   isPremiumUser: Scalars['Boolean']
   postsWrittenCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
+  threadCommentsCount: Scalars['Int']
+  postCommentsCount: Scalars['Int']
   postActivity: Array<DatedActivityCount>
 }
 
@@ -1079,7 +1081,14 @@ export type UserStatsQueryVariables = Exact<{
 export type UserStatsQuery = { __typename?: 'Query' } & {
   userById: { __typename?: 'User' } & Pick<
     User,
-    'id' | 'postsWrittenCount' | 'thanksReceivedCount' | 'createdAt'
+    | 'id'
+    | 'name'
+    | 'handle'
+    | 'postsWrittenCount'
+    | 'threadCommentsCount'
+    | 'postCommentsCount'
+    | 'thanksReceivedCount'
+    | 'createdAt'
   > & {
       postActivity: Array<
         { __typename?: 'DatedActivityCount' } & Pick<DatedActivityCount, 'count' | 'date'>
@@ -3520,7 +3529,11 @@ export const UserStatsDocument = gql`
   query userStats($id: Int!) {
     userById(id: $id) {
       id
+      name
+      handle
       postsWrittenCount
+      threadCommentsCount
+      postCommentsCount
       thanksReceivedCount
       createdAt
       postActivity {

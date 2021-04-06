@@ -1,7 +1,11 @@
 query userStats($id: Int!) {
   userById(id: $id) {
     id
+    name
+    handle
     postsWrittenCount
+    threadCommentsCount
+    postCommentsCount
     thanksReceivedCount
     createdAt
     postActivity {

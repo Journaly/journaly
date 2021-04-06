@@ -125,7 +125,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
         </span>
         <span>
           { (user.threadCommentsCount || user.postCommentsCount)
-            ? `They've also left ${user.postCommentsCount} general comments on posts and ${user.threadCommentsCount} inline comments, helping other users improve their language skills. `
+            ? `They've also left ${user.postCommentsCount} general comments on posts and ${user.threadCommentsCount} inline feedback comments, helping other users improve their language skills. `
             : 'They haven\'t left any feedback on other journalers\' posts yet. '
           }
         </span>

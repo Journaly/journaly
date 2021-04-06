@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import chroma from 'chroma-js'
 import differenceInCalendarWeeks from 'date-fns/differenceInCalendarWeeks'
+import addDays from 'date-fns/addDays'
 import addWeeks from 'date-fns/addWeeks'
 import parseISO from 'date-fns/parseISO'
 import formatISO from 'date-fns/formatISO'
@@ -8,7 +9,6 @@ import getDay from 'date-fns/getDay'
 import getMonth from 'date-fns/getMonth'
 import eachDayOfInterval from 'date-fns/eachDayOfInterval'
 import eachMonthOfInterval from 'date-fns/eachMonthOfInterval'
-import { zonedTimeToUtc } from 'date-fns-tz'
 
 import theme from '@/theme'
 import { useUserStatsQuery } from '@/generated/graphql'
@@ -44,7 +44,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
   })
 
   const [start, end] = useMemo(() => {
-    const end = zonedTimeToUtc(new Date(), Intl.DateTimeFormat().resolvedOptions().timeZone)
+    const end = addDays(new Date(), 1)
     const start = addWeeks(end, -NUM_WEEKS)
     return [start, end]
   }, [data])

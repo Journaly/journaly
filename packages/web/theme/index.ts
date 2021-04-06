@@ -25,6 +25,8 @@ type Colors =
   | 'blue'
   | 'blueLight'
   | 'red'
+  | 'greenLight'
+  | 'greenDark'
   | 'highlightColor'
   | 'highlightColorHover'
 
@@ -71,6 +73,8 @@ const theme: Theme = {
     highlightColor: '#4391C940',
     highlightColorHover: '#4391C980',
     red: '#c42f14',
+    greenLight: '#B0EED3',
+    greenDark: '#1AAE6F',
   },
   breakpoints: fromEntries(
     // Add px to breakpoint values: { XS: '600px', SM: '768px' }

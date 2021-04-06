@@ -14,6 +14,7 @@ const MembershipSubscription = objectType({
     t.model.period()
     t.model.userId()
     t.model.expiresAt()
+    t.model.cancelAtPeriodEnd()
   }
 })
 

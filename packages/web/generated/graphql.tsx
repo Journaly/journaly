@@ -246,6 +246,7 @@ export type MembershipSubscription = {
   period: MembershipSubscriptionPeriod
   userId: Scalars['Int']
   expiresAt?: Maybe<Scalars['DateTime']>
+  cancelAtPeriodEnd: Scalars['Boolean']
 }
 
 export enum ImageRole {
@@ -831,11 +832,14 @@ export type SubscriptionSettingsPageQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithSubscriptionFragmentFragment>
 }
 
-export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<User, 'id'> & {
+export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<
+  User,
+  'id' | 'isPremiumUser'
+> & {
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
         MembershipSubscription,
-        'id' | 'period' | 'expiresAt'
+        'id' | 'period' | 'expiresAt' | 'cancelAtPeriodEnd'
       >
     >
   }
@@ -1396,10 +1400,12 @@ export const ProfileUserFragmentFragmentDoc = gql`
 export const UserWithSubscriptionFragmentFragmentDoc = gql`
   fragment UserWithSubscriptionFragment on User {
     id
+    isPremiumUser
     membershipSubscription {
       id
       period
       expiresAt
+      cancelAtPeriodEnd
     }
   }
 `

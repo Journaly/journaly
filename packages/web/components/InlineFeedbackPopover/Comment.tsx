@@ -42,8 +42,8 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
   })
 
   const [DeleteConfirmationModal, confirmDeletion] = useConfirmationModal({
-    title: 'Delete Comment',
-    body: 'Are you sure you want to delete this comment?'
+    title: t('deleteCommentConfirmModalTitle'),
+    body: t('deleteCommentConfirmModalBody')
   })
 
   // Check to see if the currentUser has already liked this comment

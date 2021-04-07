@@ -5,7 +5,10 @@ type Args = {
   title: string
   body: string
 }
-const useConfirmationModal = ({ title, body }: Args) => {
+const useConfirmationModal = ({
+  title,
+  body
+}: Args): [React.FC, () => Promise<boolean>] => {
   const resolveRef = React.useRef<((confirmed: boolean) => void) | null>()
   const [show, setShow] = React.useState(false)
 
@@ -24,7 +27,7 @@ const useConfirmationModal = ({ title, body }: Args) => {
   )
 
   const confirmWithUser = async () => {
-    const promise = new Promise(res => resolveRef.current = res)
+    const promise = new Promise<boolean>(res => resolveRef.current = res)
 
     setShow(true)
     const confirmed = await promise

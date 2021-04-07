@@ -131,8 +131,8 @@ const User = objectType({
           WHERE
             "authorId" = ${parent.id}
             AND "status" = 'PUBLISHED'
-           GROUP BY date
-           ORDER BY date DESC;
+         GROUP BY date
+         ORDER BY date DESC;
         `
         return stats || []
       },

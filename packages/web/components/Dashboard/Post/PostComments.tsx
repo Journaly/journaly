@@ -18,6 +18,7 @@ import PostComment from './PostComment'
 import Thread from '@/components/InlineFeedbackPopover/Thread'
 import Button, { ButtonVariant } from '@/components/Button'
 import TabToggle from '@/components/TabToggle'
+import Textarea from '@/components/Textarea'
 import useUILanguage from '@/hooks/useUILanguage'
 import { generateNegativeRandomNumber } from '@/utils/number'
 
@@ -131,7 +132,7 @@ const PostComments = ({
             {currentUser && (
               <form onSubmit={createNewPostComment}>
                 <div className="new-comment-block">
-                  <textarea
+                  <Textarea
                     placeholder={t('addCommentPlaceholder')}
                     value={postCommentBody}
                     onChange={(e) => setPostCommentBody(e.target.value)}
@@ -143,6 +144,7 @@ const PostComments = ({
                     loading={loading}
                     className="submit-btn"
                     variant={ButtonVariant.PrimaryDark}
+                    title="ctrl + enter"
                   >
                     {t('submit')}
                   </Button>
@@ -210,7 +212,7 @@ const PostComments = ({
           margin-top: 5px;
         }
 
-        .new-comment-block textarea {
+        .new-comment-block :global(textarea) {
           min-height: 4em;
           width: 100%;
           padding: 5px;
@@ -220,7 +222,7 @@ const PostComments = ({
           resize: vertical;
         }
 
-        .new-comment-block textarea:focus {
+        .new-comment-block :global(textarea:focus) {
           outline: none;
         }
 

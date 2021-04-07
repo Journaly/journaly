@@ -12,10 +12,11 @@ import {
   CommentThanks,
   UserFragmentFragment,
 } from '@/generated/graphql'
+import theme from '@/theme'
 import { useTranslation } from '@/config/i18n'
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
-import theme from '@/theme'
+import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
 import EditIcon from '@/components/Icons/EditIcon'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import { formatDateRelativeToNow } from '@/utils'
@@ -38,6 +39,11 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
     onCompleted: () => {
       onUpdateComment()
     },
+  })
+
+  const [DeleteConfirmationModal, confirmDeletion] = useConfirmationModal({
+    title: 'Delete Comment',
+    body: 'Are you sure you want to delete this comment?'
   })
 
   // Check to see if the currentUser has already liked this comment
@@ -64,7 +70,10 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
     },
   })
 
-  const deleteExistingComment = () => {
+  const deleteExistingComment = async () => {
+    if (!(await confirmDeletion()))
+      return
+
     deleteComment({
       variables: {
         commentId: comment.id,
@@ -237,6 +246,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           <span className="thanks-count">{numThanks}</span>
         </div>
       )}
+      <DeleteConfirmationModal />
       <style jsx>{`
         .comment {
           margin-bottom: 10px;

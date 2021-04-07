@@ -172,13 +172,20 @@ function initApolloClient(initialState?: ApolloClientCache, headers = {}) {
 function createApolloClient(initialState: ApolloClientCache = {}, headers = {}) {
   let graphqlUri = '/api/graphql'
 
-  // In production use GraphCDN, which is running at api.journaly.com
-  if (process.env.NODE_ENV === 'production') {
-    graphqlUri = `https://api.journaly.com`
-  } else if (typeof window === 'undefined') {
+  if (typeof window === 'undefined') {
     // If doing SSR, we have to absolutize this URL. On client domain can be
     // inferred from document location.
-    graphqlUri = `http://localhost:3000/api/graphql`
+    const deploymentHost = process.env.DEPLOYMENT_URL || process.env.VERCEL_URL
+
+    if (process.env.NODE_ENV === 'production') {
+      if (!deploymentHost) {
+        throw new Error('In production, one of `DEPLOYMENT_URL` or `VERCEL_URL` must be set.')
+      }
+
+      graphqlUri = `https://${deploymentHost}/api/graphql`
+    } else {
+      graphqlUri = `http://${deploymentHost || 'localhost:3000'}/api/graphql`
+    }
   } else {
     graphqlUri = `${document.location.origin}/api/graphql`
   }

@@ -15,9 +15,17 @@ import { PostStatus } from '@journaly/j-db-client'
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
   generateThumbbusterUrl,
-  sendPasswordResetTokenEmail,
+  sendPasswordResetTokenEmail
 } from './utils'
 import { validateUpdateUserMutationData } from './utils/userValidation'
+
+const DatedActivityCount = objectType({
+  name: 'DatedActivityCount',
+  definition(t) {
+    t.int('count')
+    t.string('date')
+  }
+})
 
 const User = objectType({
   name: 'User',
@@ -64,6 +72,7 @@ const User = objectType({
         return false
       }
     })
+
     t.int('postsWrittenCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.post.count({
@@ -74,15 +83,58 @@ const User = objectType({
         })
       },
     })
+    t.int('languagesPostedInCount', {
+      async resolve(parent, _args, ctx, _info) {
+        const q = await (ctx.db.$queryRaw`
+          SELECT COUNT(DISTINCT "languageId") as count
+          FROM "Post"
+          WHERE
+            "authorId" = ${parent.id}
+            AND "status" = 'PUBLISHED'
+          ;
+        `)
+
+        return q[0].count
+      }
+    })
     t.int('thanksReceivedCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.commentThanks.count({
           where: {
-            comment: {
-              authorId: parent.id,
-            },
+            comment: { authorId: parent.id, },
           },
         })
+      },
+    })
+    t.int('threadCommentsCount', {
+      resolve(parent, _args, ctx, _info) {
+        return ctx.db.comment.count({
+          where: { authorId: parent.id },
+        })
+      },
+    })
+    t.int('postCommentsCount', {
+      resolve(parent, _args, ctx, _info) {
+        return ctx.db.postComment.count({
+          where: { authorId: parent.id },
+        })
+      },
+    })
+    t.list.field('postActivity', {
+      type: 'DatedActivityCount',
+      resolve(parent, _args, ctx, _info) {
+        const stats = ctx.db.$queryRaw`
+          SELECT
+            DATE("publishedAt") as date,
+            COUNT(*) as count
+          FROM "Post"
+          WHERE
+            "authorId" = ${parent.id}
+            AND "status" = 'PUBLISHED'
+         GROUP BY date
+         ORDER BY date DESC;
+        `
+        return stats || []
       },
     })
   },
@@ -529,4 +581,5 @@ export default [
   UserQueries,
   UserMutations,
   InitiateAvatarImageUploadResponse,
+  DatedActivityCount,
 ]

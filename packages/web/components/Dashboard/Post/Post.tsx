@@ -561,10 +561,6 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           background-color: ${theme.colors.highlightColorHover};
         }
 
-        .post-body p {
-          margin: 10px 0;
-        }
-
         .post-body table {
           width: 100%;
           margin-bottom: 10px;

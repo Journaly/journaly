@@ -8,5 +8,7 @@
   "noCommentsYetMessage": "No comments... yet!",
   "tabGeneralKey": "General",
   "tabOutdatedKey": "Outdated",
-  "noOutdatedThreadsMessage": "No outdated threads to see"
+  "noOutdatedThreadsMessage": "No outdated threads to see",
+  "deleteCommentConfirmModalTitle": "Delete Comment",
+  "deleteCommentConfirmModalBody": "Are you sure you want to delete this comment?"
 }

@@ -34,8 +34,8 @@ const PostComment: React.FC<PostCommentProps> = ({
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
   const [DeleteConfirmationModal, confirmDeletion] = useConfirmationModal({
-    title: 'Delete Comment',
-    body: 'Are you sure you want to delete this comment?'
+    title: t('deleteCommentConfirmModalTitle'),
+    body: t('deleteCommentConfirmModalBody')
   })
 
   const [updateComment, { loading }] = useUpdatePostCommentMutation({

@@ -3,27 +3,25 @@ import { toast } from 'react-toastify'
 import nProgress from 'nprogress'
 import { loadStripe, StripeError } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
-import { usePurchaseMembershipSubscriptionMutation,
+import {
+  usePurchaseMembershipSubscriptionMutation,
   MembershipSubscriptionPeriod,
 } from '@/generated/graphql'
-import Select from '@/components/Select'
 import Button from '@/components/Button'
+import SubscriptionPlanSelect from './SubscriptionPlanSelect'
 import { useTranslation } from '@/config/i18n'
 
 const stripeLib = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string)
 
-const PaymentForm = () => {
+type PaymentFormProps = {
+  onSuccess?: () => void
+}
+
+const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
   const { t } = useTranslation('settings')
   const [stripeError, setStripeError] = useState<StripeError>()
   const stripe = useStripe()
   const elements = useElements()
-
-  const subscriptionOptions = [
-    { value: MembershipSubscriptionPeriod.Monthly, displayName: 'Monthly - £12' },
-    { value: MembershipSubscriptionPeriod.Quarterly, displayName: '3 Months - £30' },
-    { value: MembershipSubscriptionPeriod.Annualy, displayName: '1 Year - £100' },
-  ]
-
   const [selectedOption, setSelectedOption] = useState<MembershipSubscriptionPeriod>(
     MembershipSubscriptionPeriod.Monthly,
   )
@@ -31,6 +29,7 @@ const PaymentForm = () => {
   const [purchaseMembershipSubscription, { loading }] = usePurchaseMembershipSubscriptionMutation({
     onCompleted: () => {
       // TODO: bust the cache for the User
+      onSuccess && onSuccess()
       toast.success(t('subscription.subscribeSuccessMessage'))
     },
     onError: () => {
@@ -73,33 +72,33 @@ const PaymentForm = () => {
   }
 
   return (
-    <div>
-      <Select
-        onChange={(value) => {setSelectedOption(value)}}
-        options={subscriptionOptions}
-        value={selectedOption}
-        placeholder="Which subscription would you like?"
-      />
-      {stripeError && <p>{stripeError.message}</p>}
-      <div className="card-field-container">
-        <CardElement/>
-      </div>
-      <Button
-        type="submit"
-        loading={loading}
-        style={{
-          marginTop: '15px',
-        }}
-        onClick={handleSubmitPaymentForm}
-      >
-        {t('subscription.subscribeCta')}
-      </Button>
-      <style jsx>{`
-        .card-field-container {
-          margin: 20px 0;
-        }
-      `}</style>
-    </div>
+    <Elements stripe={stripeLib}>
+      <form onSubmit={handleSubmitPaymentForm} className="payments-form">
+        <SubscriptionPlanSelect
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
+        {stripeError && <p>{stripeError.message}</p>}
+        <div className="card-field-container">
+          <CardElement/>
+        </div>
+        <Button
+          type="submit"
+          loading={loading}
+        >
+          {t('subscription.subscribeCta')}
+        </Button>
+        <style jsx>{`
+          .card-field-container {
+            margin: 20px 0;
+          }
+
+          .payments-form :global(button) {
+            margin-top: 15px;
+          }
+        `}</style>
+      </form>
+    </Elements>
   )
 }
 

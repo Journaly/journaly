@@ -220,8 +220,74 @@ const MembershipSubscriptionMutations = extendType({
         })
       }
     })
-    // updatePlan
-    // updatePaymentMethod
+    t.field('updateSubscriptionPlan', {
+      type: 'MembershipSubscription',
+      args: {
+        period: arg({ type: 'MembershipSubscriptionPeriod', required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error("You must be logged in to update a subscription")
+        }
+
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: userId,
+          },
+          include: {
+            membershipSubscription: true,
+          }
+        })
+
+        if (!user) throw new Error("User not found")
+        if (!user?.membershipSubscription?.stripeSubscriptionId) {
+          throw new Error("User has no subscription to update")
+        }
+
+        return setPlan(
+          userId,
+          ctx.db,
+          user.membershipSubscription.stripeSubscriptionId,
+          args.period,
+        )
+      }
+    })
+    t.field('updateSubscriptionPaymentMethod', {
+      type: 'MembershipSubscription',
+      args: {
+        token: stringArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error("You must be logged in to update a payment method")
+        }
+
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: userId,
+          },
+          include: {
+            membershipSubscription: true,
+          }
+        })
+
+        if (!user) throw new Error("User not found")
+        if (!user?.membershipSubscription?.stripeSubscriptionId) {
+          throw new Error("User has no subscription to update")
+        }
+
+        return setPaymentMethod(
+          userId,
+          ctx.db,
+          user.membershipSubscription.stripeSubscriptionId,
+          args.token,
+        )
+      }
+    })
   }
 })
 

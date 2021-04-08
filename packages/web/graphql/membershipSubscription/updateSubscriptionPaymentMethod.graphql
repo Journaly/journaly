@@ -1,0 +1,5 @@
+mutation updateSubscriptionPaymentMethod($token: String!) {
+  updateSubscriptionPaymentMethod(token: $token) {
+    id
+  }
+}

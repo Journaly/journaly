@@ -12,5 +12,7 @@ fragment UserWithSubscriptionFragment on User {
     period
     expiresAt
     cancelAtPeriodEnd
+    lastFourCardNumbers
+    cardType
   }
 }

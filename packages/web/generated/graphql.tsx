@@ -257,6 +257,8 @@ export type MembershipSubscription = {
   userId: Scalars['Int']
   expiresAt?: Maybe<Scalars['DateTime']>
   cancelAtPeriodEnd: Scalars['Boolean']
+  lastFourCardNumbers: Scalars['String']
+  cardType: Scalars['String']
 }
 
 export enum ImageRole {
@@ -887,7 +889,7 @@ export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pic
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
         MembershipSubscription,
-        'id' | 'period' | 'expiresAt' | 'cancelAtPeriodEnd'
+        'id' | 'period' | 'expiresAt' | 'cancelAtPeriodEnd' | 'lastFourCardNumbers' | 'cardType'
       >
     >
   }
@@ -1477,6 +1479,8 @@ export const UserWithSubscriptionFragmentFragmentDoc = gql`
       period
       expiresAt
       cancelAtPeriodEnd
+      lastFourCardNumbers
+      cardType
     }
   }
 `

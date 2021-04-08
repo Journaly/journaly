@@ -16,6 +16,8 @@ const MembershipSubscription = objectType({
     t.model.userId()
     t.model.expiresAt()
     t.model.cancelAtPeriodEnd()
+    t.model.lastFourCardNumbers()
+    t.model.cardType()
   }
 })
 

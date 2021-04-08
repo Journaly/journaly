@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
 import Button, { ButtonVariant } from '@/components/Button'
-import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
 import { useTranslation } from '@/config/i18n'
 import {
@@ -92,7 +91,9 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
         {user.isPremiumUser && (
           <>
             <p><strong>Current Plan:</strong> {subscriptionPlan}</p>
-            <CardOnFile last4="1234" onUpdateCard={() => {}} />
+            {user.membershipSubscription?.lastFourCardNumbers && (
+              <CardOnFile last4="1234" onUpdateCard={() => {}} />
+            )}
             {isCancelling ? (
               <>
                 <p>Your subscription will end on <strong style={{ color: theme.colors.red }}>{formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>

@@ -377,7 +377,7 @@ export type Mutation = {
   createCommentThanks: CommentThanks
   deleteCommentThanks: CommentThanks
   purchaseMembershipSubscription: MembershipSubscription
-  cancelMembershipSubscription: MembershipSubscription
+  updateSubscriptionRenewal: MembershipSubscription
 }
 
 export type MutationCreateThreadArgs = {
@@ -513,6 +513,10 @@ export type MutationDeleteCommentThanksArgs = {
 export type MutationPurchaseMembershipSubscriptionArgs = {
   period: MembershipSubscriptionPeriod
   token: Scalars['String']
+}
+
+export type MutationUpdateSubscriptionRenewalArgs = {
+  cancelAtPeriodEnd: Scalars['Boolean']
 }
 
 export type CreateCommentMutationVariables = Exact<{
@@ -780,15 +784,6 @@ export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
   removeLanguageRelation: { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>
 }
 
-export type CancelMembershipSubscriptionMutationVariables = Exact<{ [key: string]: never }>
-
-export type CancelMembershipSubscriptionMutation = { __typename?: 'Mutation' } & {
-  cancelMembershipSubscription: { __typename?: 'MembershipSubscription' } & Pick<
-    MembershipSubscription,
-    'id'
-  >
-}
-
 export type PurchaseMembershipSubscriptionMutationVariables = Exact<{
   period: MembershipSubscriptionPeriod
   token: Scalars['String']
@@ -796,6 +791,17 @@ export type PurchaseMembershipSubscriptionMutationVariables = Exact<{
 
 export type PurchaseMembershipSubscriptionMutation = { __typename?: 'Mutation' } & {
   purchaseMembershipSubscription: { __typename?: 'MembershipSubscription' } & Pick<
+    MembershipSubscription,
+    'id'
+  >
+}
+
+export type UpdateSubscriptionRenewalMutationVariables = Exact<{
+  cancelAtPeriodEnd: Scalars['Boolean']
+}>
+
+export type UpdateSubscriptionRenewalMutation = { __typename?: 'Mutation' } & {
+  updateSubscriptionRenewal: { __typename?: 'MembershipSubscription' } & Pick<
     MembershipSubscription,
     'id'
   >
@@ -2011,53 +2017,6 @@ export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutati
   RemoveLanguageRelationMutation,
   RemoveLanguageRelationMutationVariables
 >
-export const CancelMembershipSubscriptionDocument = gql`
-  mutation cancelMembershipSubscription {
-    cancelMembershipSubscription {
-      id
-    }
-  }
-`
-export type CancelMembershipSubscriptionMutationFn = ApolloReactCommon.MutationFunction<
-  CancelMembershipSubscriptionMutation,
-  CancelMembershipSubscriptionMutationVariables
->
-
-/**
- * __useCancelMembershipSubscriptionMutation__
- *
- * To run a mutation, you first call `useCancelMembershipSubscriptionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCancelMembershipSubscriptionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [cancelMembershipSubscriptionMutation, { data, loading, error }] = useCancelMembershipSubscriptionMutation({
- *   variables: {
- *   },
- * });
- */
-export function useCancelMembershipSubscriptionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    CancelMembershipSubscriptionMutation,
-    CancelMembershipSubscriptionMutationVariables
-  >,
-) {
-  return ApolloReactHooks.useMutation<
-    CancelMembershipSubscriptionMutation,
-    CancelMembershipSubscriptionMutationVariables
-  >(CancelMembershipSubscriptionDocument, baseOptions)
-}
-export type CancelMembershipSubscriptionMutationHookResult = ReturnType<
-  typeof useCancelMembershipSubscriptionMutation
->
-export type CancelMembershipSubscriptionMutationResult = ApolloReactCommon.MutationResult<CancelMembershipSubscriptionMutation>
-export type CancelMembershipSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CancelMembershipSubscriptionMutation,
-  CancelMembershipSubscriptionMutationVariables
->
 export const PurchaseMembershipSubscriptionDocument = gql`
   mutation purchaseMembershipSubscription($period: MembershipSubscriptionPeriod!, $token: String!) {
     purchaseMembershipSubscription(period: $period, token: $token) {
@@ -2106,6 +2065,54 @@ export type PurchaseMembershipSubscriptionMutationResult = ApolloReactCommon.Mut
 export type PurchaseMembershipSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
   PurchaseMembershipSubscriptionMutation,
   PurchaseMembershipSubscriptionMutationVariables
+>
+export const UpdateSubscriptionRenewalDocument = gql`
+  mutation updateSubscriptionRenewal($cancelAtPeriodEnd: Boolean!) {
+    updateSubscriptionRenewal(cancelAtPeriodEnd: $cancelAtPeriodEnd) {
+      id
+    }
+  }
+`
+export type UpdateSubscriptionRenewalMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateSubscriptionRenewalMutation,
+  UpdateSubscriptionRenewalMutationVariables
+>
+
+/**
+ * __useUpdateSubscriptionRenewalMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubscriptionRenewalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubscriptionRenewalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubscriptionRenewalMutation, { data, loading, error }] = useUpdateSubscriptionRenewalMutation({
+ *   variables: {
+ *      cancelAtPeriodEnd: // value for 'cancelAtPeriodEnd'
+ *   },
+ * });
+ */
+export function useUpdateSubscriptionRenewalMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateSubscriptionRenewalMutation,
+    UpdateSubscriptionRenewalMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateSubscriptionRenewalMutation,
+    UpdateSubscriptionRenewalMutationVariables
+  >(UpdateSubscriptionRenewalDocument, baseOptions)
+}
+export type UpdateSubscriptionRenewalMutationHookResult = ReturnType<
+  typeof useUpdateSubscriptionRenewalMutation
+>
+export type UpdateSubscriptionRenewalMutationResult = ApolloReactCommon.MutationResult<UpdateSubscriptionRenewalMutation>
+export type UpdateSubscriptionRenewalMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateSubscriptionRenewalMutation,
+  UpdateSubscriptionRenewalMutationVariables
 >
 export const PostPageDocument = gql`
   query postPage($id: Int!, $uiLanguage: UILanguage!) {

@@ -1,6 +1,7 @@
-import { MembershipSubscriptionPeriod, InputJsonValue, MembershipSubscription as FooBar } from '@journaly/j-db-client'
+import { MembershipSubscriptionPeriod, InputJsonValue, PrismaClient } from '@journaly/j-db-client'
 import {
   arg,
+  booleanArg,
   extendType,
   objectType,
   stringArg,
@@ -27,6 +28,63 @@ const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
     case MembershipSubscriptionPeriod.ANNUALY:
       return 'price_1ISRgvB8OEjVdGPam1PTr6hE'
   }
+}
+
+const setPaymentMethod = async (
+  userId: number,
+  db: PrismaClient,
+  customerId: string,
+  paymentMethodId: string,
+) => {
+  const customer = await stripe.customers.retrieve(customerId)
+  
+  if (!customer) throw new Error("User has stripeCustomerId but unable to find customer in Stripe")
+
+  await stripe.paymentMethods.attach(paymentMethodId, {
+    customer: customer.id,
+  })
+
+  // Update customer's default method in case they've entered a new card
+  await stripe.customers.update(customer.id, {
+    invoice_settings: {
+      default_payment_method: paymentMethodId,
+    },
+  })
+}
+
+const setPlan = async (
+  userId: number,
+  db: PrismaClient,
+  stripeSubscriptionId: string,
+  subscriptionPeriod: MembershipSubscriptionPeriod,
+) => {
+  const stripeSubscription = await stripe.subscriptions.retrieve(stripeSubscriptionId)
+  const subscriptionUpdated = await stripe.subscriptions.update(stripeSubscription.id, {
+    payment_behavior: 'pending_if_incomplete',
+    proration_behavior: 'always_invoice',
+    items: [{
+      id: stripeSubscription.items.data[0].id,
+      price: getSubscriptionPriceId(subscriptionPeriod),
+    }],
+  })
+  if (subscriptionUpdated.pending_update) {
+    // Payment failed
+    throw new Error("Unable to update subscription, possible payment failure")
+  }
+  await stripe.subscriptions.update(stripeSubscription.id, {
+    cancel_at_period_end: false,
+  })
+  // Update our records with the new subscription info
+  return db.membershipSubscription.update({
+    where: {
+      userId,
+    },
+    data: {
+      period: subscriptionPeriod,
+      expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+      stripeSubscription: subscriptionUpdated as unknown as InputJsonValue,
+    },
+  })
 }
 
 const MembershipSubscriptionMutations = extendType({
@@ -113,54 +171,20 @@ const MembershipSubscriptionMutations = extendType({
             },
           })
         } else {
-          const customer = await stripe.customers.retrieve(user.stripeCustomerId)
-          
-          if (!customer) throw new Error("User has stripeCustomerId but unable to find customer in Stripe")
           if (!user.membershipSubscription) throw new Error("User has stripeCustomerId but no membershipSubscription")
-
-          await stripe.paymentMethods.attach(args.token, {
-            customer: customer.id,
-          })
-
-          // Update customer's default method in case they've entered a new card
-          await stripe.customers.update(customer.id, {
-            invoice_settings: {
-              default_payment_method: args.token,
-            },
-          })
-          const stripeSubscription = await stripe.subscriptions.retrieve(user.membershipSubscription.stripeSubscriptionId)
-          const subscriptionUpdated = await stripe.subscriptions.update(stripeSubscription.id, {
-            payment_behavior: 'pending_if_incomplete',
-            proration_behavior: 'always_invoice',
-            items: [{
-              id: stripeSubscription.items.data[0].id,
-              price: getSubscriptionPriceId(args.period),
-            }],
-          })
-          if (subscriptionUpdated.pending_update) {
-            // Payment failed
-            throw new Error("Unable to update subscription, possible payment failure")
-          }
-          await stripe.subscriptions.update(stripeSubscription.id, {
-            cancel_at_period_end: false,
-          })
-          // Update our records with the new subscription info
-          return ctx.db.membershipSubscription.update({
-            where: {
-              userId,
-            },
-            data: {
-              period: args.period,
-              expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
-              stripeSubscription: subscriptionUpdated as unknown as InputJsonValue,
-            },
-          })
+          
+          await setPaymentMethod(userId, ctx.db, user.stripeCustomerId, args.token)
+          const membershipSubscription = await setPlan(userId, ctx.db, user.membershipSubscription.stripeSubscriptionId, args.period)
+          return membershipSubscription
         }
       },
     })
-    t.field('cancelMembershipSubscription', {
+    t.field('updateSubscriptionRenewal', {
       type: 'MembershipSubscription',
-      resolve: async (_parent, _args, ctx) => {
+      args: {
+        cancelAtPeriodEnd: booleanArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
         if (!userId) {
@@ -182,7 +206,7 @@ const MembershipSubscriptionMutations = extendType({
         }
 
         await stripe.subscriptions.update(user.membershipSubscription.stripeSubscriptionId, {
-          cancel_at_period_end: true,
+          cancel_at_period_end: args.cancelAtPeriodEnd,
         })
 
         // simply update our equivalent of cancel_at_period_end and let expire at end of current period
@@ -191,11 +215,13 @@ const MembershipSubscriptionMutations = extendType({
             userId,
           },
           data: {
-            cancelAtPeriodEnd: true,
+            cancelAtPeriodEnd: args.cancelAtPeriodEnd,
           }
         })
       }
     })
+    // updatePlan
+    // updatePaymentMethod
   }
 })
 

@@ -1,5 +1,0 @@
-mutation cancelMembershipSubscription {
-  cancelMembershipSubscription {
-    id
-  }
-}

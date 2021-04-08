@@ -10,6 +10,7 @@ import { useTranslation } from '@/config/i18n'
 
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
+import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
 import theme from '@/theme'
 import EditIcon from '@/components/Icons/EditIcon'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
@@ -32,6 +33,10 @@ const PostComment: React.FC<PostCommentProps> = ({
 
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState<string>(comment.body)
+  const [DeleteConfirmationModal, confirmDeletion] = useConfirmationModal({
+    title: t('deleteCommentConfirmModalTitle'),
+    body: t('deleteCommentConfirmModalBody')
+  })
 
   const [updateComment, { loading }] = useUpdatePostCommentMutation({
     onCompleted: () => {
@@ -57,7 +62,10 @@ const PostComment: React.FC<PostCommentProps> = ({
     },
   })
 
-  const deleteExistingComment = () => {
+  const deleteExistingComment = async () => {
+    if (!(await confirmDeletion()))
+      return
+
     deleteComment({
       variables: {
         postCommentId: comment.id,
@@ -136,6 +144,7 @@ const PostComment: React.FC<PostCommentProps> = ({
           </Button>
         </>
       )}
+      <DeleteConfirmationModal />
       <style jsx>{`
         .comment {
           margin-bottom: 10px;

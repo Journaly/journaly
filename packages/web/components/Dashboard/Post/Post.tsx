@@ -364,6 +364,11 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         return
       }
 
+      // Mouse events in modals shouldn't close the thread popover
+      if ((e as any).path.find((el: HTMLElement) => el.id === 'modal-root')) {
+        return
+      }
+
       setActiveThreadId(-1)
     }
 

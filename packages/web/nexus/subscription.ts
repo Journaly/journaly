@@ -35,6 +35,8 @@ const setPaymentMethod = async (
   db: PrismaClient,
   customerId: string,
   paymentMethodId: string,
+  lastFourCardNumbers: string = '1234',
+  cardType: string = 'Visa'
 ) => {
   const customer = await stripe.customers.retrieve(customerId)
   
@@ -50,6 +52,16 @@ const setPaymentMethod = async (
       default_payment_method: paymentMethodId,
     },
   })
+
+  return db.membershipSubscription.update({
+    where: {
+      userId,
+    },
+    data: {
+      lastFourCardNumbers,
+      cardType,
+    },
+  })
 }
 
 const setPlan = async (
@@ -57,6 +69,7 @@ const setPlan = async (
   db: PrismaClient,
   stripeSubscriptionId: string,
   subscriptionPeriod: MembershipSubscriptionPeriod,
+  cancelAtPeriodEnd: boolean,
 ) => {
   const stripeSubscription = await stripe.subscriptions.retrieve(stripeSubscriptionId)
   const subscriptionUpdated = await stripe.subscriptions.update(stripeSubscription.id, {
@@ -72,7 +85,7 @@ const setPlan = async (
     throw new Error("Unable to update subscription, possible payment failure")
   }
   await stripe.subscriptions.update(stripeSubscription.id, {
-    cancel_at_period_end: false,
+    cancel_at_period_end: cancelAtPeriodEnd,
   })
   // Update our records with the new subscription info
   return db.membershipSubscription.update({
@@ -153,6 +166,8 @@ const MembershipSubscriptionMutations = extendType({
             // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
             stripeSubscription: stripeSubscription as unknown as InputJsonValue,
             stripeSubscriptionId: stripeSubscription.id,
+            lastFourCardNumbers: '1234',
+            cardType: 'Visa',
           }
   
           // TODO: Log failure and get proper alarms set up
@@ -174,7 +189,13 @@ const MembershipSubscriptionMutations = extendType({
           if (!user.membershipSubscription) throw new Error("User has stripeCustomerId but no membershipSubscription")
           
           await setPaymentMethod(userId, ctx.db, user.stripeCustomerId, args.token)
-          const membershipSubscription = await setPlan(userId, ctx.db, user.membershipSubscription.stripeSubscriptionId, args.period)
+          const membershipSubscription = await setPlan(
+            userId,
+            ctx.db,
+            user.membershipSubscription.stripeSubscriptionId,
+            args.period,
+            false,
+          )
           return membershipSubscription
         }
       },
@@ -251,6 +272,7 @@ const MembershipSubscriptionMutations = extendType({
           ctx.db,
           user.membershipSubscription.stripeSubscriptionId,
           args.period,
+          false,
         )
       }
     })
@@ -280,12 +302,13 @@ const MembershipSubscriptionMutations = extendType({
           throw new Error("User has no subscription to update")
         }
 
-        return setPaymentMethod(
+        const membershipSubscription = await setPaymentMethod(
           userId,
           ctx.db,
           user.membershipSubscription.stripeSubscriptionId,
           args.token,
         )
+        return membershipSubscription
       }
     })
   }

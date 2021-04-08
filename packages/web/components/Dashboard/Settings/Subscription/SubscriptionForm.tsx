@@ -32,6 +32,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
   }
   const isCancelling = user.membershipSubscription?.cancelAtPeriodEnd
   const [showPaymentForm, setShowPaymentForm] = useState(!user.isPremiumUser)
+  const [showPaymentFormModal, setShowPaymentFormModal] = useState(false)
 
   const [updateSubscriptionRenewal] = useUpdateSubscriptionRenewalMutation({
     onCompleted: () => {
@@ -66,6 +67,9 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
 
   return (
     <>
+      {showPaymentFormModal && (
+        <PaymentFormModal onClose={() => setShowPaymentFormModal(false)} />
+      )}
       <SettingsForm
         onSubmit={() => {}}
         errorInputName={''}

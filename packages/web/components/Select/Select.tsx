@@ -117,7 +117,7 @@ const SelectBase = <T extends OptionValue>(
           padding: 10px;
           border-radius: 5px;
           background: ${theme.colors.white};
-          box-shadow: 0px 8px 10px #00000029;
+          box-shadow: 0px 8px 22px #00000029;
           cursor: ${disabled ? 'auto' : 'pointer'};
           -webkit-appearance: none;
           -moz-appearance: none;

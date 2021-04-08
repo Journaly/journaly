@@ -10,6 +10,7 @@ import {
 import Button from '@/components/Button'
 import SubscriptionPlanSelect from './SubscriptionPlanSelect'
 import { useTranslation } from '@/config/i18n'
+import theme from '@/theme'
 
 const stripeLib = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string)
 
@@ -91,6 +92,9 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
         <style jsx>{`
           .card-field-container {
             margin: 20px 0;
+            border: 1px solid ${theme.colors.gray300};
+            padding: 10px;
+            border-radius: 5px;
           }
 
           .payments-form :global(button) {

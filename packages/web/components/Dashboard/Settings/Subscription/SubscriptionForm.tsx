@@ -11,8 +11,8 @@ import {
 } from '@/generated/graphql'
 import theme from '@/theme'
 import { formatLongDate } from '@/utils'
-import PaymentForm from './PaymentForm'
 import CardOnFile from './CardOnFile'
+import PaymentForm from './PaymentForm'
 import PaymentFormModal from './PaymentFormModal'
 
 type SubscriptionFormProps = {
@@ -98,9 +98,9 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
           </>
         )}
         {showPaymentForm && (
-          <PaymentFormModal onClose={() => setShowPaymentForm(false)} />
+          <PaymentForm />
         )}
-        {!user?.membershipSubscription?.cancelAtPeriodEnd && (
+        {!user?.membershipSubscription?.cancelAtPeriodEnd && !showPaymentForm && (
           <>
             <Button
               onClick={() => {

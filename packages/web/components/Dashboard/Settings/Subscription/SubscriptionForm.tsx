@@ -7,11 +7,13 @@ import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import {
   MembershipSubscriptionPeriod,
   UserWithSubscriptionFragmentFragment as UserType,
-  useCancelMembershipSubscriptionMutation,
+  useUpdateSubscriptionRenewalMutation,
 } from '@/generated/graphql'
 import theme from '@/theme'
 import { formatLongDate } from '@/utils'
 import PaymentForm from './PaymentForm'
+import CardOnFile from './CardOnFile'
+import PaymentFormModal from './PaymentFormModal'
 
 type SubscriptionFormProps = {
   user: UserType
@@ -22,16 +24,16 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
   let subscriptionPlan: string | undefined
   // (period) => string
   if (user?.membershipSubscription?.period === MembershipSubscriptionPeriod.Monthly) {
-    subscriptionPlan = '1 Month - £12'
+    subscriptionPlan = '1 Month / £12'
   } else if (user?.membershipSubscription?.period === MembershipSubscriptionPeriod.Quarterly) {
-    subscriptionPlan = '3 Months - £30'
+    subscriptionPlan = '3 Months / £30'
   } else if (user?.membershipSubscription?.period === MembershipSubscriptionPeriod.Annualy) {
-    subscriptionPlan = '1 Year - £100'
+    subscriptionPlan = '1 Year / £100'
   }
   const isCancelling = user.membershipSubscription?.cancelAtPeriodEnd
   const [showPaymentForm, setShowPaymentForm] = useState(!user.isPremiumUser)
 
-  const [cancelMembershipSubscription] = useCancelMembershipSubscriptionMutation({
+  const [updateSubscriptionRenewal] = useUpdateSubscriptionRenewalMutation({
     onCompleted: () => {
       // TODO: bust the cache for the User
       toast.success(t('You have cancelled your subscription'))
@@ -69,15 +71,24 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
         errorInputName={''}
       >
         <p style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
-        <p style={{ marginBottom: '20px' }}><strong>Subscription status:</strong> <SubscriptionStatusBadge /></p>
+        <p style={{ marginBottom: '10px' }}><strong>Subscription status:</strong> <SubscriptionStatusBadge /></p>
         {user.isPremiumUser && (
           <>
-            <p style={{ marginBottom: '20px' }}><strong>Current Plan:</strong> {subscriptionPlan}</p>
+            <p><strong>Current Plan:</strong> {subscriptionPlan}</p>
+            <CardOnFile last4="1234" onUpdateCard={() => {}} />
             {isCancelling ? (
               <>
                 <p>Your subscription will end on <strong style={{ color: theme.colors.red }}>{formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
                 {/* Add mutation for this */}
-                <Button variant={ButtonVariant.Link}>Reactivate subscription</Button>
+                <Button
+                  variant={ButtonVariant.Link}
+                  onClick={() => {
+                  updateSubscriptionRenewal({
+                    variables: {
+                      cancelAtPeriodEnd: false,
+                    }
+                  })
+              }}>Reactivate subscription</Button>
               </>
             ) : (
               <>
@@ -87,7 +98,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
           </>
         )}
         {showPaymentForm && (
-          <PaymentForm />
+          <PaymentFormModal onClose={() => setShowPaymentForm(false)} />
         )}
         {!user?.membershipSubscription?.cancelAtPeriodEnd && (
           <>
@@ -101,7 +112,11 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
             </Button>
             <Button
               onClick={() => {
-                cancelMembershipSubscription()
+                updateSubscriptionRenewal({
+                  variables: {
+                    cancelAtPeriodEnd: true,
+                  }
+                })
               }}
               variant={ButtonVariant.Link}
               style={{

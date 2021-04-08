@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
 import Button, { ButtonVariant } from '@/components/Button'
-import { useTranslation } from '@/config/i18n'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
+import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
+import { useTranslation } from '@/config/i18n'
 import {
   MembershipSubscriptionPeriod,
   UserWithSubscriptionFragmentFragment as UserType,
@@ -44,6 +45,21 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
     },
   })
 
+  const [CancelSubscriptionConfirmationModal, confirmCancellation] = useConfirmationModal({
+    title: 'Cancel Your Journaly Premium Subscription',
+    body: 'Are you sure you want to cancel your subscription?'
+  })
+
+  const handleCancelSubscription = async () => {
+    if (!(await confirmCancellation())) return
+    
+    updateSubscriptionRenewal({
+      variables: {
+        cancelAtPeriodEnd: true,
+      }
+    })
+  }
+
   const SubscriptionStatusBadge = () => {
     return (
       <>
@@ -70,10 +86,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
       {showPaymentFormModal && (
         <PaymentFormModal onClose={() => setShowPaymentFormModal(false)} />
       )}
-      <SettingsForm
-        onSubmit={() => {}}
-        errorInputName={''}
-      >
+      <div className="page-container">
         <p style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
         <p style={{ marginBottom: '10px' }}><strong>Subscription status:</strong> <SubscriptionStatusBadge /></p>
         {user.isPremiumUser && (
@@ -115,13 +128,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
               Change Plan
             </Button>
             <Button
-              onClick={() => {
-                updateSubscriptionRenewal({
-                  variables: {
-                    cancelAtPeriodEnd: true,
-                  }
-                })
-              }}
+              onClick={handleCancelSubscription}
               variant={ButtonVariant.Link}
               style={{
                 color: theme.colors.red,
@@ -132,8 +139,16 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
             </Button>
           </>
         )}
-      </SettingsForm>
+      </div>
+      <CancelSubscriptionConfirmationModal />
       <style jsx>{`
+        .page-container {
+          width: 100%;
+          padding: 25px;
+          background-color: ${theme.colors.white};
+          box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
+        }
+
         .membership-renewal-info-container {
           display: flex;
           flex-direction: column;

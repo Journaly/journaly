@@ -38,7 +38,8 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
     },
   })
 
-  const handleSubmitPaymentForm = async () => {
+  const handleSubmitPaymentForm = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     nProgress.start()
     // 1. Create payment method via stripe
     //    Token comes back here if successful
@@ -73,36 +74,34 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
   }
 
   return (
-    <Elements stripe={stripeLib}>
-      <form onSubmit={handleSubmitPaymentForm} className="payments-form">
-        <SubscriptionPlanSelect
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
-        />
-        {stripeError && <p>{stripeError.message}</p>}
-        <div className="card-field-container">
-          <CardElement/>
-        </div>
-        <Button
-          type="submit"
-          loading={loading}
-        >
-          {t('subscription.subscribeCta')}
-        </Button>
-        <style jsx>{`
-          .card-field-container {
-            margin: 20px 0;
-            border: 1px solid ${theme.colors.gray300};
-            padding: 10px;
-            border-radius: 5px;
-          }
+    <form onSubmit={handleSubmitPaymentForm} className="payments-form">
+      <SubscriptionPlanSelect
+        selectedOption={selectedOption}
+        setSelectedOption={setSelectedOption}
+      />
+      {stripeError && <p>{stripeError.message}</p>}
+      <div className="card-field-container">
+        <CardElement/>
+      </div>
+      <Button
+        type="submit"
+        loading={loading}
+      >
+        {t('subscription.subscribeCta')}
+      </Button>
+      <style jsx>{`
+        .card-field-container {
+          margin: 20px 0;
+          border: 1px solid ${theme.colors.gray300};
+          padding: 10px;
+          border-radius: 5px;
+        }
 
-          .payments-form :global(button) {
-            margin-top: 15px;
-          }
-        `}</style>
-      </form>
-    </Elements>
+        .payments-form :global(button) {
+          margin-top: 15px;
+        }
+      `}</style>
+    </form>
   )
 }
 

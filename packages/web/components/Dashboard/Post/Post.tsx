@@ -33,7 +33,7 @@ interface IPostProps {
 }
 
 // Elements whose boundaries a comment can cross
-const elementWhiteList = new Set(['SPAN', 'EM', 'STRONG'])
+const elementWhiteList = new Set(['SPAN', 'EM', 'U', 'STRONG'])
 
 type CommentSelectionButtonProps = {
   position: {
@@ -364,6 +364,11 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         return
       }
 
+      // Mouse events in modals shouldn't close the thread popover
+      if ((e as any).path.find((el: HTMLElement) => el.id === 'modal-root')) {
+        return
+      }
+
       setActiveThreadId(-1)
     }
 
@@ -422,17 +427,32 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
       return
     }
 
-    const target = e.target as HTMLElement
+    // Traverse from event target up to post body container looking for any
+    // ancestor that is a thread highlight.
+    let threadHighlight = null
+    let currentElement: HTMLElement | null = e.target as HTMLElement
+    while (
+      currentElement &&
+      currentElement !== e.currentTarget
+    ) {
+      if (currentElement.dataset.tid) {
+        threadHighlight = currentElement
+        break
+      } else {
+        currentElement = currentElement.parentElement
+      }
+    }
 
-    if (!target.classList.contains('thread-highlight') || !target.dataset.tid) {
+    // Click was on something that wasn't highlighted, do nothing
+    if (!threadHighlight || !threadHighlight.dataset.tid) {
       return
     }
 
-    setActiveThreadId(parseInt(target.dataset.tid, 10))
+    setActiveThreadId(parseInt(threadHighlight.dataset.tid, 10))
     setPopoverPosition({
-      ...getCoords(target),
-      w: target.offsetWidth,
-      h: target.offsetHeight,
+      ...getCoords(threadHighlight),
+      w: threadHighlight.offsetWidth,
+      h: threadHighlight.offsetHeight,
     })
   }
 
@@ -544,10 +564,6 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
 
         .thread-highlight:hover {
           background-color: ${theme.colors.highlightColorHover};
-        }
-
-        .post-body p {
-          margin: 10px 0;
         }
 
         .post-body table {

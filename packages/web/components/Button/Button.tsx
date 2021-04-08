@@ -28,6 +28,7 @@ type Props = {
   className?: string
   disabled?: boolean
   loading?: boolean
+  title?: string
   id?: string
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   size?: ButtonSize
@@ -212,4 +213,4 @@ const Button: React.FC<Props> = (props) => {
   )
 }
 
-export default Button
+export default React.memo(Button)

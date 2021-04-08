@@ -12,6 +12,7 @@ import {
 import theme from '@/theme'
 import Comment from './Comment'
 import Button, { ButtonVariant } from '@/components/Button'
+import Textarea from '@/components/Textarea'
 
 type ThreadProps = {
   thread: ThreadType
@@ -92,7 +93,7 @@ const Thread: React.FC<ThreadProps> = ({
           <form onSubmit={createNewComment}>
             <fieldset>
               <div className="new-comment-block">
-                <textarea
+                <Textarea
                   placeholder={t('addCommentPlaceholder')}
                   value={commentBody}
                   onChange={(e) => setCommentBody(e.target.value)}
@@ -164,7 +165,7 @@ const Thread: React.FC<ThreadProps> = ({
           padding-top: 10px;
         }
 
-        .new-comment-block textarea {
+        .new-comment-block :global(textarea) {
           min-height: 4em;
           width: 100%;
           background-color: transparent;
@@ -173,7 +174,7 @@ const Thread: React.FC<ThreadProps> = ({
           resize: vertical;
         }
 
-        .new-comment-block textarea:focus {
+        .new-comment-block :global(textarea:focus) {
           outline: none;
         }
 

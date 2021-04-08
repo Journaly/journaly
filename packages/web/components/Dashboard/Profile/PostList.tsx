@@ -4,13 +4,8 @@ import {
   PostCardFragmentFragment as PostType,
   UserWithLanguagesFragmentFragment as UserType,
 } from '@/generated/graphql'
-import {
-  layoutTopBottomPadding,
-  layoutLeftRightPadding,
-} from '@/components/Dashboard/dashboardConstants'
 import TranslationLink from '@/components/TranslationLink'
 import PostCard from '../PostCard'
-import theme from '@/theme'
 
 type Props = {
   isLoggedInUser: boolean
@@ -23,8 +18,6 @@ const PostList: React.FC<Props> = ({ isLoggedInUser, user, posts }) => {
 
   return (
     <div className="post-list">
-      <h1 className="posts-title">{t('postsTitle')}</h1>
-
       {posts.length ? (
         posts.map((post) => <PostCard key={post.id} post={post} />)
       ) : (
@@ -45,28 +38,7 @@ const PostList: React.FC<Props> = ({ isLoggedInUser, user, posts }) => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding: 0 ${layoutLeftRightPadding} ${layoutTopBottomPadding};
-          background-color: ${theme.colors.white};
-          box-shadow: 0px 8px 10px #00000029;
         }
-        @media (min-width: ${theme.breakpoints.MD}) {
-          .post-list {
-            padding: 25px;
-            border-top: 0;
-            overflow: auto;
-          }
-        }
-
-        .posts-title {
-          margin: 40px 0;
-          ${theme.typography.headingLG};
-        }
-        @media (min-width: ${theme.breakpoints.MD}) {
-          .posts-title {
-            margin: 5px 0 40px;
-          }
-        }
-
         .post-list :global(.post-card-container) {
           margin-bottom: 50px;
         }

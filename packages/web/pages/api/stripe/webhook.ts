@@ -4,7 +4,16 @@ import { getClient } from '../../../nexus/utils'
 
 const handler = async (req: any, res: any) => {
   const db = getClient()
-  const event = req.body
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!);
+  }
+  catch (err) {
+    req.status(400).send(`Webhook Error: ${err.message}`);
+    return
+  }
 
   const updateStripeSubscription = async (subscriptionId: string) => {
     const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId)

@@ -109,6 +109,10 @@
     "reactivateSubscription": "Reactivate subscription",
     "planSelectPlaceholder": "Which subscription would you like?",
     "cardOnFile": "Card on file:",
-    "updateCard": "Update Card"
+    "updateCard": "Update Card",
+    "subscriptionStatus": "Subscription status:",
+    "nextBillingDate": "Next billing date:",
+    "premiumUser": "premium user",
+    "freeUser": "free user"
   }
 }

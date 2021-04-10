@@ -63,7 +63,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
     return (
       <>
         <span className="badge">
-          {user.isPremiumUser ? 'premium user' : 'free user'}
+          {t(`subscription.${user.isPremiumUser ? 'premiumUser' : 'freeUser'}`)}
         </span>
         <style jsx>{`
           .badge {
@@ -86,8 +86,8 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
         <PaymentFormModal onClose={() => setShowPaymentFormModal(false)} />
       )}
       <div className="page-container">
-        <p style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
-        <p style={{ marginBottom: '10px' }}><strong>Subscription status:</strong> <SubscriptionStatusBadge /></p>
+        <p className="subscription-copy" style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
+        <p className="subscription-status"><strong>{t('subscription.subscriptionStatus')}</strong> <SubscriptionStatusBadge /></p>
         {user.isPremiumUser && (
           <>
             <p><strong>{t('subscription.currentPlan')}</strong> {subscriptionPlan}</p>
@@ -109,7 +109,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
               </>
             ) : (
               <>
-                <p style={{ marginBottom: '20px' }}><strong>Next billing date:</strong>{t('subscription.subscriptionRenewsOn')}<strong> {formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
+                <p className="subscription-copy"><strong>{t('subscription.nextBillingDate')}</strong>{t('subscription.subscriptionRenewsOn')}<strong> {formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
               </>
             )}
           </>
@@ -153,9 +153,15 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
           display: flex;
           flex-direction: column;
         }
-        :global(fieldset > legend) {
-          display: none;
+
+        .subscription-copy {
+          margin-bottom: 20px;
         }
+
+        .subscription-status {
+          margin-bottom: 10px;
+        }
+
       `}</style>
     </>
   )

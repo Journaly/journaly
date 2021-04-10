@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { toast } from 'react-toastify'
 import nProgress from 'nprogress'
 import { loadStripe, StripeError } from '@stripe/stripe-js'
@@ -11,8 +11,6 @@ import Button from '@/components/Button'
 import SubscriptionPlanSelect from './SubscriptionPlanSelect'
 import { useTranslation } from '@/config/i18n'
 import theme from '@/theme'
-
-const stripeLib = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string)
 
 type PaymentFormProps = {
   onSuccess?: () => void
@@ -105,10 +103,17 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
   )
 }
 
-const Checkout = () => (
-  <Elements stripe={stripeLib}>
-    <PaymentForm />
-  </Elements>
-)
+const Checkout = () => {
+  const stripeLib = useMemo(
+    () => loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string),
+    []
+  )
+  
+  return (
+    <Elements stripe={stripeLib}>
+      <PaymentForm />
+    </Elements>
+  )
+}
 
 export default Checkout

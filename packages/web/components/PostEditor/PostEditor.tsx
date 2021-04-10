@@ -224,7 +224,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
           setValue={setBody}
           slateRef={slateRef}
           disabled={disabled}
-          allowInlineImages={currentUser.isPremiumUser}
+          allowInlineImages={!!currentUser.membershipSubscription?.isActive}
         />
       </div>
 

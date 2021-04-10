@@ -31,7 +31,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
     subscriptionPlan = '1 Year / £100'
   }
   const isCancelling = user.membershipSubscription?.cancelAtPeriodEnd
-  const [showPaymentForm, setShowPaymentForm] = useState(!user.isPremiumUser)
+  const [showPaymentForm, setShowPaymentForm] = useState(!user.membershipSubscription?.isActive)
   const [showPaymentFormModal, setShowPaymentFormModal] = useState(false)
 
   const [updateSubscriptionRenewal] = useUpdateSubscriptionRenewalMutation({
@@ -63,7 +63,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
     return (
       <>
         <span className="badge">
-          {t(`subscription.${user.isPremiumUser ? 'premiumUser' : 'freeUser'}`)}
+          {t(`subscription.${user.membershipSubscription?.isActive ? 'premiumUser' : 'freeUser'}`)}
         </span>
         <style jsx>{`
           .badge {
@@ -72,8 +72,8 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
             text-transform: uppercase;
             font-size: ${theme.typography.paragraphSM}
             font-weight: 600;
-            background-color: ${!user.isPremiumUser ? theme.colors.gray100 : theme.colors.greenLight};
-            color: ${!user.isPremiumUser ? theme.colors.gray600 : theme.colors.greenDark};
+            background-color: ${!user.membershipSubscription?.isActive ? theme.colors.gray100 : theme.colors.greenLight};
+            color: ${!user.membershipSubscription?.isActive ? theme.colors.gray600 : theme.colors.greenDark};
           }
         `}</style>
       </>
@@ -88,7 +88,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
       <div className="page-container">
         <p className="subscription-copy" style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
         <p className="subscription-status"><strong>{t('subscription.subscriptionStatus')}</strong> <SubscriptionStatusBadge /></p>
-        {user.isPremiumUser && (
+        {user.membershipSubscription?.isActive && (
           <>
             <p><strong>{t('subscription.currentPlan')}</strong> {subscriptionPlan}</p>
             {user.membershipSubscription?.lastFourCardNumbers && (
@@ -117,7 +117,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
         {showPaymentForm && (
           <PaymentForm />
         )}
-        {user.isPremiumUser && !user?.membershipSubscription?.cancelAtPeriodEnd && !showPaymentForm && (
+        {user.membershipSubscription?.isActive && !user?.membershipSubscription?.cancelAtPeriodEnd && !showPaymentForm && (
           <>
             <Button
               onClick={() => {

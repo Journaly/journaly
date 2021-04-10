@@ -20,7 +20,7 @@ const SubscriptionPlanSelect = ({ selectedOption, setSelectedOption}: Subscripti
 
   return (
     <Select
-      onChange={(value) => {setSelectedOption(value)}}
+      onChange={setSelectedOption}
       options={subscriptionOptions}
       value={selectedOption}
       placeholder={t('subscription.planSelectPlaceholder')}

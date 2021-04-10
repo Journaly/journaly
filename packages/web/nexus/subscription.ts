@@ -17,7 +17,13 @@ const MembershipSubscription = objectType({
     t.model.expiresAt()
     t.model.cancelAtPeriodEnd()
     t.model.lastFourCardNumbers()
-    t.model.cardType()
+    t.model.cardBrand()
+    t.boolean('isActive', {
+      resolve: async (parent, _args, _ctx, _info) => {
+        if (parent.expiresAt && parent.expiresAt < new Date(Date.now())) return false
+        return true
+      }
+    })
   }
 })
 
@@ -38,7 +44,7 @@ const setPaymentMethod = async (
   customerId: string,
   paymentMethodId: string,
   lastFourCardNumbers: string = '1234',
-  cardType: string = 'Visa'
+  cardBrand: string = 'Visa'
 ) => {
   const customer = await stripe.customers.retrieve(customerId)
   
@@ -61,7 +67,7 @@ const setPaymentMethod = async (
     },
     data: {
       lastFourCardNumbers,
-      cardType,
+      cardBrand,
     },
   })
 }
@@ -169,7 +175,7 @@ const MembershipSubscriptionMutations = extendType({
             stripeSubscription: stripeSubscription as unknown as InputJsonValue,
             stripeSubscriptionId: stripeSubscription.id,
             lastFourCardNumbers: '1234',
-            cardType: 'Visa',
+            cardBrand: 'Visa',
           }
   
           // TODO: Log failure and get proper alarms set up

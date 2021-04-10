@@ -26,9 +26,10 @@ const handler = async (req: any, res: any) => {
   }
     try {
       if (event.type === 'invoice.paid') {
-        const invoice = event.data.object
-        // TODO: do some bookkeeping around other line items
-        const subscriptionLine = invoice.lines.data.find((item: any) => item.type === 'subscription')
+        const stripeInvoice = event.data.object
+        const subscriptionLine = stripeInvoice.lines.data.find((item: any) => item.type === 'subscription')
+        console.log('stripeINVOICE', stripeInvoice)
+        console.log('LINES', stripeInvoice.lines.data)
 
         if (!subscriptionLine) {
           throw new Error("Subscription line missing")
@@ -36,7 +37,7 @@ const handler = async (req: any, res: any) => {
 
         const userQuery = await db.user.findMany({
           where: {
-            stripeCustomerId: invoice.customer,
+            stripeCustomerId: stripeInvoice.customer,
           },
           include: {
             membershipSubscription: true,
@@ -61,12 +62,10 @@ const handler = async (req: any, res: any) => {
         const membershipPeriod = convertStripePriceToMembershipPeriod(subscriptionLine.price.id)
         if (!membershipPeriod) throw new Error("Unable to resolve a period from invoice object")
 
-        await db.membershipSubscriptionTransaction.create({
+        const invoice = await db.membershipSubscriptionInvoice.create({
           data: {
-            stripeInvoiceId: invoice.id,
-            chargeCurrency: invoice.currency,
-            chargeCents: invoice.amount_paid,
-            stripeInvoiceData: JSON.stringify(invoice),
+            stripeInvoiceId: stripeInvoice.id,
+            stripeInvoiceData: stripeInvoice,
             membershipSubscriptionPeriod: membershipPeriod,
             user: {
               connect: {
@@ -75,6 +74,24 @@ const handler = async (req: any, res: any) => {
             },
           }
         })
+
+        for (const item of stripeInvoice.lines.data) {
+          await db.membershipSubscriptionInvoiceItem.create({
+            data: {
+              amount: item.amount,
+              currency: item.currency,
+              description: item.description,
+              proration: item.proration,
+              invoice: {
+                connect: {
+                  id: invoice.id,
+                },
+              },
+              stripeInvoiceItemId: item.stripeInvoiceItemId,
+              stripeInvoiceItemData: item,
+            },
+          })
+        }
 
         await updateStripeSubscription(subscriptionLine.subscription)
       } else if (event.type === 'invoice.payment_failed') {

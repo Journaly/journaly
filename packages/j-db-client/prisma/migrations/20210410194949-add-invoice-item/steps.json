@@ -1,0 +1,346 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateModel",
+      "model": "MembershipSubscriptionInvoice"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoice",
+      "field": "id",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoice",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoice",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoice",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "autoincrement()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoice",
+      "field": "user",
+      "type": "User",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoice",
+          "field": "user"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoice",
+          "field": "user"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[userId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoice",
+          "field": "user"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoice",
+      "field": "userId",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoice",
+      "field": "membershipSubscriptionPeriod",
+      "type": "MembershipSubscriptionPeriod",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoice",
+      "field": "stripeInvoiceId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoice",
+      "field": "stripeInvoiceData",
+      "type": "Json",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoice",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoice",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoice",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoice",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoice",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoice",
+      "field": "MembershipSubscriptionInvoiceItem",
+      "type": "MembershipSubscriptionInvoiceItem",
+      "arity": "List"
+    },
+    {
+      "tag": "DeleteModel",
+      "model": "MembershipSubscriptionTransaction"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "MembershipSubscriptionInvoice",
+      "type": "MembershipSubscriptionInvoice",
+      "arity": "List"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "User",
+      "field": "MembershipSubscriptionTransaction"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "User",
+      "field": "MembershipSubscriptionInvoiceItem"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscription",
+      "field": "cardBrand",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MembershipSubscription",
+      "field": "cardType"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "amount",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "currency",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "description",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "proration",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "invoice",
+      "type": "MembershipSubscriptionInvoice",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoiceItem",
+          "field": "invoice"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoiceItem",
+          "field": "invoice"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[invoiceId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionInvoiceItem",
+          "field": "invoice"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "invoiceId",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "stripeInvoiceItemId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "stripeInvoiceItemData",
+      "type": "Json",
+      "arity": "Required"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "chargeCents"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "chargeCurrency"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "user"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "userId"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "membershipSubscriptionPeriod"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "stripeInvoiceId"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MembershipSubscriptionInvoiceItem",
+      "field": "stripeInvoiceData"
+    }
+  ]
+}

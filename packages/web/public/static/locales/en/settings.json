@@ -96,10 +96,19 @@
     }
   },
   "subscription": {
-    "legend": "Journaly Premium",
+    "title": "Journaly Premium",
     "subscribeCta": "Subscribe!",
     "subscribeSuccessMessage": "Congratulations! You're now a Journaly Premium member!",
     "subscribeFailureMessage": "Oh no! Something went wrong. Please try again.",
-    "copy": "With our premium subscription you get access to awesome features that make the Journaly experience more enjoyable and that allow you to customize your experience more."
+    "copy": "With our premium subscription you get access to awesome features that make the Journaly experience more enjoyable and that allow you to customize your experience more.",
+    "currentPlan": "Current Plan:",
+    "changePlan": "Change Plan",
+    "cancelSubscription": "Cancel Subscription",
+    "subscriptionEndsOn": "Your subscription will end on",
+    "subscriptionRenewsOn": "Your subscription will renew on",
+    "reactivateSubscription": "Reactivate subscription",
+    "planSelectPlaceholder": "Which subscription would you like?",
+    "cardOnFile": "Card on file:",
+    "updateCard": "Update Card"
   }
 }

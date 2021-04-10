@@ -3,6 +3,7 @@ import {
   MembershipSubscriptionPeriod,
 } from '@/generated/graphql'
 import Select from '@/components/Select'
+import { useTranslation } from '@/config/i18n'
 
 type SubscriptionPlanSelectProps = {
   selectedOption: MembershipSubscriptionPeriod
@@ -10,6 +11,7 @@ type SubscriptionPlanSelectProps = {
 }
 
 const SubscriptionPlanSelect = ({ selectedOption, setSelectedOption}: SubscriptionPlanSelectProps) => {
+  const { t } = useTranslation('settings')
   const subscriptionOptions = [
     { value: MembershipSubscriptionPeriod.Monthly, displayName: 'Monthly - £12' },
     { value: MembershipSubscriptionPeriod.Quarterly, displayName: '3 Months - £30' },
@@ -21,7 +23,7 @@ const SubscriptionPlanSelect = ({ selectedOption, setSelectedOption}: Subscripti
       onChange={(value) => {setSelectedOption(value)}}
       options={subscriptionOptions}
       value={selectedOption}
-      placeholder="Which subscription would you like?"
+      placeholder={t('subscription.planSelectPlaceholder')}
     />
   )
 }

@@ -1,6 +1,6 @@
 # J-DB-Client
 
-An internal database client that can be imported into any of the other Journaly services in order to perform database operations. It is published on NPM as a private package in the Journaly NPM organization and thus any changes need to be versioned and published (see steps below).
+An internal database client that can be imported into any of the other Journaly services in order to perform database operations. It is published on NPM by the Journaly NPM organization and thus any changes need to be versioned and published (see steps below – access to the Journaly NPM account is required).
 
 - This package is built with [Prisma](https://github.com/prisma/prisma), which generates type-safe database queries are mutations based on our data model (or schema) which lives in `prisma/schema.prisma`.
 - When this package is installed within one of our services, a `PrismaClient` that contains all of these database operations is generated and can then be imported and used as needed.

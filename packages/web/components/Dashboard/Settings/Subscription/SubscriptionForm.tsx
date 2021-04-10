@@ -90,14 +90,13 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
         <p style={{ marginBottom: '10px' }}><strong>Subscription status:</strong> <SubscriptionStatusBadge /></p>
         {user.isPremiumUser && (
           <>
-            <p><strong>Current Plan:</strong> {subscriptionPlan}</p>
+            <p><strong>{t('subscription.currentPlan')}</strong> {subscriptionPlan}</p>
             {user.membershipSubscription?.lastFourCardNumbers && (
               <CardOnFile last4="1234" onUpdateCard={() => {}} />
             )}
             {isCancelling ? (
               <>
-                <p>Your subscription will end on <strong style={{ color: theme.colors.red }}>{formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
-                {/* Add mutation for this */}
+                <p>{t('subscription.subscriptionEndsOn')}<strong style={{ color: theme.colors.red }}> {formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
                 <Button
                   variant={ButtonVariant.Link}
                   onClick={() => {
@@ -106,11 +105,11 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
                       cancelAtPeriodEnd: false,
                     }
                   })
-              }}>Reactivate subscription</Button>
+              }}>{t('subscription.reactivateSubscription')}</Button>
               </>
             ) : (
               <>
-                <p style={{ marginBottom: '20px' }}><strong>Next billing date:</strong> Your subscription will renew on <strong>{formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
+                <p style={{ marginBottom: '20px' }}><strong>Next billing date:</strong>{t('subscription.subscriptionRenewsOn')}<strong> {formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
               </>
             )}
           </>
@@ -118,7 +117,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
         {showPaymentForm && (
           <PaymentForm />
         )}
-        {!user?.membershipSubscription?.cancelAtPeriodEnd && !showPaymentForm && (
+        {user.isPremiumUser && !user?.membershipSubscription?.cancelAtPeriodEnd && !showPaymentForm && (
           <>
             <Button
               onClick={() => {
@@ -126,7 +125,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
               }}
               variant={ButtonVariant.Link}
             >
-              Change Plan
+              {t('subscription.changePlan')}
             </Button>
             <Button
               onClick={handleCancelSubscription}
@@ -136,7 +135,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
                 marginLeft: '10px',
               }}
             >
-              Cancel Subscription
+              {t('subscription.cancelSubscription')}
             </Button>
           </>
         )}

@@ -1,6 +1,7 @@
-import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
-import theme from '@/theme'
 import React from 'react'
+import theme from '@/theme'
+import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
+import { useTranslation } from '@/config/i18n'
 
 type CardOnFileProps = {
   last4: string
@@ -8,10 +9,11 @@ type CardOnFileProps = {
 }
 
 const CardOnFile = ({ last4, onUpdateCard }: CardOnFileProps) => {
+  const { t } = useTranslation('settings')
   return (
     <div className="wrapper">
       <div className="container">
-        <p>Card on file:</p>
+        <p>{t('subscription.cardOnFile')}</p>
         <div className="number-container">
           <div>XXXX</div>
           <span className="divider">-</span>
@@ -28,7 +30,7 @@ const CardOnFile = ({ last4, onUpdateCard }: CardOnFileProps) => {
             style={{ marginRight: '20px' }}
             onClick={onUpdateCard}
           >
-            Update Card
+            {t('subscription.updateCard')}
           </Button>
         </div>
       </div>

@@ -6,8 +6,10 @@ import AuthGate from '@/components/AuthGate'
 import SubscriptionForm from '@/components/Dashboard/Settings/Subscription/SubscriptionForm'
 import { useSubscriptionSettingsPageQuery } from '@/generated/graphql'
 import theme from '@/theme'
+import { useTranslation } from '@/config/i18n'
 
 const Subscription: NextPage = () => {
+  const { t } = useTranslation('settings')
   const { loading, data } = useSubscriptionSettingsPageQuery()
 
   return (
@@ -16,7 +18,7 @@ const Subscription: NextPage = () => {
         <SettingsPageLayout>
           {data?.currentUser && !loading && (
             <div className="forms-container">
-              <h1 >Journaly Premium</h1>
+              <h1>{t('subscription.title')}</h1>
               <SubscriptionForm user={data.currentUser} />
             </div>
           )}

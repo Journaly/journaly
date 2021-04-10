@@ -6,13 +6,13 @@ query subscriptionSettingsPage {
 
 fragment UserWithSubscriptionFragment on User {
   id
-  isPremiumUser
   membershipSubscription {
     id
     period
     expiresAt
     cancelAtPeriodEnd
     lastFourCardNumbers
-    cardType
+    cardBrand
+    isActive
   }
 }

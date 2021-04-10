@@ -176,7 +176,6 @@ export type User = {
   languages: Array<LanguageRelation>
   following: Array<User>
   followedBy: Array<User>
-  isPremiumUser: Scalars['Boolean']
   postsWrittenCount: Scalars['Int']
   languagesPostedInCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
@@ -259,6 +258,7 @@ export type MembershipSubscription = {
   cancelAtPeriodEnd: Scalars['Boolean']
   lastFourCardNumbers: Scalars['String']
   cardType: Scalars['String']
+  isActive: Scalars['Boolean']
 }
 
 export enum ImageRole {
@@ -633,8 +633,11 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
   >
 } & UserFragmentFragment
 
-export type CurrentUserFragmentFragment = { __typename?: 'User' } & Pick<User, 'isPremiumUser'> &
-  UserWithLanguagesFragmentFragment
+export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
+  membershipSubscription?: Maybe<
+    { __typename?: 'MembershipSubscription' } & Pick<MembershipSubscription, 'isActive'>
+  >
+} & UserWithLanguagesFragmentFragment
 
 export type SocialMediaFragmentFragment = { __typename?: 'User' } & {
   socialMedia?: Maybe<
@@ -882,14 +885,17 @@ export type SubscriptionSettingsPageQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithSubscriptionFragmentFragment>
 }
 
-export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<
-  User,
-  'id' | 'isPremiumUser'
-> & {
+export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<User, 'id'> & {
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
         MembershipSubscription,
-        'id' | 'period' | 'expiresAt' | 'cancelAtPeriodEnd' | 'lastFourCardNumbers' | 'cardType'
+        | 'id'
+        | 'period'
+        | 'expiresAt'
+        | 'cancelAtPeriodEnd'
+        | 'lastFourCardNumbers'
+        | 'cardType'
+        | 'isActive'
       >
     >
   }
@@ -1254,7 +1260,9 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
 export const CurrentUserFragmentFragmentDoc = gql`
   fragment CurrentUserFragment on User {
     ...UserWithLanguagesFragment
-    isPremiumUser
+    membershipSubscription {
+      isActive
+    }
   }
   ${UserWithLanguagesFragmentFragmentDoc}
 `
@@ -1473,7 +1481,6 @@ export const ProfileUserFragmentFragmentDoc = gql`
 export const UserWithSubscriptionFragmentFragmentDoc = gql`
   fragment UserWithSubscriptionFragment on User {
     id
-    isPremiumUser
     membershipSubscription {
       id
       period
@@ -1481,6 +1488,7 @@ export const UserWithSubscriptionFragmentFragmentDoc = gql`
       cancelAtPeriodEnd
       lastFourCardNumbers
       cardType
+      isActive
     }
   }
 `

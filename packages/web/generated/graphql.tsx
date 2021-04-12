@@ -257,7 +257,7 @@ export type MembershipSubscription = {
   expiresAt?: Maybe<Scalars['DateTime']>
   cancelAtPeriodEnd: Scalars['Boolean']
   lastFourCardNumbers: Scalars['String']
-  cardType: Scalars['String']
+  cardBrand: Scalars['String']
   isActive: Scalars['Boolean']
 }
 
@@ -894,7 +894,7 @@ export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pic
         | 'expiresAt'
         | 'cancelAtPeriodEnd'
         | 'lastFourCardNumbers'
-        | 'cardType'
+        | 'cardBrand'
         | 'isActive'
       >
     >
@@ -1487,7 +1487,7 @@ export const UserWithSubscriptionFragmentFragmentDoc = gql`
       expiresAt
       cancelAtPeriodEnd
       lastFourCardNumbers
-      cardType
+      cardBrand
       isActive
     }
   }

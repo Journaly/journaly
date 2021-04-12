@@ -10,7 +10,7 @@ import { useTranslation } from '@/config/i18n'
 
 const Subscription: NextPage = () => {
   const { t } = useTranslation('settings')
-  const { loading, data } = useSubscriptionSettingsPageQuery()
+  const { loading, data, refetch: refetchUser } = useSubscriptionSettingsPageQuery()
 
   return (
     <AuthGate>
@@ -19,7 +19,7 @@ const Subscription: NextPage = () => {
           {data?.currentUser && !loading && (
             <div className="forms-container">
               <h1>{t('subscription.title')}</h1>
-              <SubscriptionForm user={data.currentUser} />
+              <SubscriptionForm user={data.currentUser} onSuccess={refetchUser} />
             </div>
           )}
         </SettingsPageLayout>

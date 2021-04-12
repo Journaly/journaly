@@ -4,15 +4,16 @@ import PaymentForm from './PaymentForm'
 
 type PaymentFormModalProps = {
   onClose: () => void
+  onSuccess: () => void
 }
 
-const PaymentFormModal: React.FC<PaymentFormModalProps> = ({ onClose }) => {
+const PaymentFormModal: React.FC<PaymentFormModalProps> = ({ onClose, onSuccess }) => {
   return (
     <Modal
       title="Payment Info"
       body={
         <div>
-          <PaymentForm />
+          <PaymentForm onSuccess={onSuccess} />
           <style jsx>{`
             div {
               width: 80vw;

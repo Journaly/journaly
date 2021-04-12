@@ -13,7 +13,7 @@ import { useTranslation } from '@/config/i18n'
 import theme from '@/theme'
 
 type PaymentFormProps = {
-  onSuccess?: () => void
+  onSuccess: () => void
 }
 
 const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
@@ -27,8 +27,7 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
 
   const [purchaseMembershipSubscription, { loading }] = usePurchaseMembershipSubscriptionMutation({
     onCompleted: () => {
-      // TODO: bust the cache for the User
-      onSuccess && onSuccess()
+      onSuccess()
       toast.success(t('subscription.subscribeSuccessMessage'))
     },
     onError: () => {
@@ -103,15 +102,14 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
   )
 }
 
-const Checkout = () => {
-  const stripeLib = useMemo(
-    () => loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string),
-    []
-  )
+const Checkout = (props: PaymentFormProps) => {
+  const stripeLib = useMemo(() => {
+    return loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string)
+  }, [])
   
   return (
     <Elements stripe={stripeLib}>
-      <PaymentForm />
+      <PaymentForm {...props} />
     </Elements>
   )
 }

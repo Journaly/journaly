@@ -17,9 +17,10 @@ import PaymentFormModal from './PaymentFormModal'
 
 type SubscriptionFormProps = {
   user: UserType
+  onSuccess: () => void
 }
 
-const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
+const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
   const { t } = useTranslation('settings')
   let subscriptionPlan: string | undefined
   // (period) => string
@@ -36,7 +37,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
 
   const [updateSubscriptionRenewal] = useUpdateSubscriptionRenewalMutation({
     onCompleted: () => {
-      // TODO: bust the cache for the User
+      onSuccess()
       toast.success(t('You have cancelled your subscription'))
     },
     onError: () => {
@@ -83,7 +84,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
   return (
     <>
       {showPaymentFormModal && (
-        <PaymentFormModal onClose={() => setShowPaymentFormModal(false)} />
+        <PaymentFormModal onClose={() => setShowPaymentFormModal(false)} onSuccess={onSuccess} />
       )}
       <div className="page-container">
         <p className="subscription-copy" style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
@@ -92,7 +93,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
           <>
             <p><strong>{t('subscription.currentPlan')}</strong> {subscriptionPlan}</p>
             {user.membershipSubscription?.lastFourCardNumbers && (
-              <CardOnFile last4="1234" onUpdateCard={() => {}} />
+              <CardOnFile last4={user.membershipSubscription.lastFourCardNumbers} onUpdateCard={() => {}} />
             )}
             {isCancelling ? (
               <>
@@ -115,7 +116,7 @@ const SubscriptionForm = ({ user }: SubscriptionFormProps) => {
           </>
         )}
         {showPaymentForm && (
-          <PaymentForm />
+          <PaymentForm onSuccess={onSuccess} />
         )}
         {user.membershipSubscription?.isActive && !user?.membershipSubscription?.cancelAtPeriodEnd && !showPaymentForm && (
           <>

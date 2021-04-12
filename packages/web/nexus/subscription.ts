@@ -43,18 +43,15 @@ const setPaymentMethod = async (
   db: PrismaClient,
   customerId: string,
   paymentMethodId: string,
-  lastFourCardNumbers: string = '1234',
-  cardBrand: string = 'Visa'
 ) => {
   const customer = await stripe.customers.retrieve(customerId)
   
   if (!customer) throw new Error("User has stripeCustomerId but unable to find customer in Stripe")
 
-  await stripe.paymentMethods.attach(paymentMethodId, {
+  const stripePaymentMethod = await stripe.paymentMethods.attach(paymentMethodId, {
     customer: customer.id,
   })
 
-  // Update customer's default method in case they've entered a new card
   await stripe.customers.update(customer.id, {
     invoice_settings: {
       default_payment_method: paymentMethodId,
@@ -66,8 +63,8 @@ const setPaymentMethod = async (
       userId,
     },
     data: {
-      lastFourCardNumbers,
-      cardBrand,
+      lastFourCardNumbers: stripePaymentMethod.card?.last4,
+      cardBrand: stripePaymentMethod.card?.brand,
     },
   })
 }
@@ -166,6 +163,9 @@ const MembershipSubscriptionMutations = extendType({
             default_payment_method: args.token,
             customer: customerId,
           })
+
+          const stripePaymentMethod = await stripe.paymentMethods.retrieve(args.token)
+          if (!stripePaymentMethod.card) throw new Error("Unable to retrieve payment method")
   
           const subData = {
             period: args.period,
@@ -174,8 +174,8 @@ const MembershipSubscriptionMutations = extendType({
             // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
             stripeSubscription: stripeSubscription as unknown as InputJsonValue,
             stripeSubscriptionId: stripeSubscription.id,
-            lastFourCardNumbers: '1234',
-            cardBrand: 'Visa',
+            lastFourCardNumbers: stripePaymentMethod.card.last4,
+            cardBrand: stripePaymentMethod.card.brand,
           }
   
           // TODO: Log failure and get proper alarms set up

@@ -63,9 +63,9 @@ const handler = async (req: any, res: any) => {
 
         const convertStripePriceToMembershipPeriod = (priceId: string) => {
           switch(priceId) {
-            case 'price_1ISRgvB8OEjVdGPaQr7ZANW8':
+            case 'price_1IfUxzB8OEjVdGPaoVEVtPcY':
               return MembershipSubscriptionPeriod.MONTHLY
-            case 'price_1ISRgvB8OEjVdGPaeOx4m255':
+            case 'price_1IfUzeB8OEjVdGPapy59R8xs':
               return MembershipSubscriptionPeriod.QUARTERLY
             case 'price_1ISRgvB8OEjVdGPam1PTr6hE':
               return MembershipSubscriptionPeriod.ANNUALY

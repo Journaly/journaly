@@ -89,6 +89,8 @@ const setPlan = async (
     // Payment failed
     throw new Error("Unable to update subscription, possible payment failure")
   }
+  // For unknown reasons we are unable to set the `cancel_at_period_end`
+  // in the same call as `payment/proration_behavior` so we make a second call
   await stripe.subscriptions.update(stripeSubscription.id, {
     cancel_at_period_end: cancelAtPeriodEnd,
   })
@@ -101,6 +103,7 @@ const setPlan = async (
       period: subscriptionPeriod,
       expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
       stripeSubscription: subscriptionUpdated as unknown as InputJsonValue,
+      cancelAtPeriodEnd,
     },
   })
 }

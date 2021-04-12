@@ -1,11 +1,12 @@
-import { MembershipSubscriptionPeriod } from '@journaly/j-db-client'
+import { InputJsonValue, MembershipSubscriptionPeriod } from '@journaly/j-db-client'
+import Stripe from 'stripe'
 import stripe from '../../../nexus/utils/stripe'
 import { getClient } from '../../../nexus/utils'
 
 const handler = async (req: any, res: any) => {
   const db = getClient()
-  const sig = req.headers['stripe-signature'];
-  let event;
+  const sig = req.headers['stripe-signature']
+  let event: Stripe.Event
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!);
@@ -35,18 +36,22 @@ const handler = async (req: any, res: any) => {
   }
     try {
       if (event.type === 'invoice.paid') {
-        const stripeInvoice = event.data.object
+        const stripeInvoice = event.data.object as Stripe.Invoice
         const subscriptionLine = stripeInvoice.lines.data.find((item: any) => item.type === 'subscription')
+        let customerId: string = (typeof stripeInvoice.customer === 'string') ? stripeInvoice.customer : stripeInvoice.customer.id
         console.log('stripeINVOICE', stripeInvoice)
         console.log('LINES', stripeInvoice.lines.data)
 
-        if (!subscriptionLine) {
+        if (!subscriptionLine?.price) {
           throw new Error("Subscription line missing")
+        }
+        if (!subscriptionLine.subscription) {
+          throw new Error("Subscription ID not present on subscriptionLine")
         }
 
         const userQuery = await db.user.findMany({
           where: {
-            stripeCustomerId: stripeInvoice.customer,
+            stripeCustomerId: customerId,
           },
           include: {
             membershipSubscription: true,
@@ -74,7 +79,7 @@ const handler = async (req: any, res: any) => {
         const invoice = await db.membershipSubscriptionInvoice.create({
           data: {
             stripeInvoiceId: stripeInvoice.id,
-            stripeInvoiceData: stripeInvoice,
+            stripeInvoiceData: stripeInvoice as unknown as InputJsonValue,
             membershipSubscriptionPeriod: membershipPeriod,
             user: {
               connect: {
@@ -89,15 +94,15 @@ const handler = async (req: any, res: any) => {
             data: {
               amount: item.amount,
               currency: item.currency,
-              description: item.description,
+              description: item.description || '',
               proration: item.proration,
               invoice: {
                 connect: {
                   id: invoice.id,
                 },
               },
-              stripeInvoiceItemId: item.stripeInvoiceItemId,
-              stripeInvoiceItemData: item,
+              stripeInvoiceItemId: item.id,
+              stripeInvoiceItemData: item as unknown as InputJsonValue,
             },
           })
         }
@@ -107,14 +112,17 @@ const handler = async (req: any, res: any) => {
         /**
          * For now we'll just do nothing and allow the subscription to expire
          */
-        const invoice = event.data.object
-        const subscriptionLine = invoice.lines.data[0]
+        const stripeInvoice = event.data.object as Stripe.Invoice
+        const subscriptionLine = stripeInvoice.lines.data.find((item: any) => item.type === 'subscription')
 
         if (!subscriptionLine) {
           throw new Error("Subscription line missing")
         }
         if (subscriptionLine.type !== 'subscription') {
           throw new Error("First line item is not a subscription. Something seems wrong here...")
+        }
+        if (!subscriptionLine.subscription) {
+          throw new Error("Subscription ID not present on subscriptionLine")
         }
 
         await updateStripeSubscription(subscriptionLine.subscription)

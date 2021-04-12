@@ -51,6 +51,7 @@ const setPaymentMethod = async (
   const stripePaymentMethod = await stripe.paymentMethods.attach(paymentMethodId, {
     customer: customer.id,
   })
+  if (!stripePaymentMethod.card) throw new Error("Unable to retrieve payment method")
 
   await stripe.customers.update(customer.id, {
     invoice_settings: {
@@ -63,8 +64,8 @@ const setPaymentMethod = async (
       userId,
     },
     data: {
-      lastFourCardNumbers: stripePaymentMethod.card?.last4,
-      cardBrand: stripePaymentMethod.card?.brand,
+      lastFourCardNumbers: stripePaymentMethod.card.last4,
+      cardBrand: stripePaymentMethod.card.brand,
     },
   })
 }
@@ -89,11 +90,13 @@ const setPlan = async (
     // Payment failed
     throw new Error("Unable to update subscription, possible payment failure")
   }
-  // For unknown reasons we are unable to set the `cancel_at_period_end`
-  // in the same call as `payment/proration_behavior` so we make a second call
-  await stripe.subscriptions.update(stripeSubscription.id, {
-    cancel_at_period_end: cancelAtPeriodEnd,
-  })
+  if (subscriptionUpdated.cancel_at_period_end !== cancelAtPeriodEnd) {
+    // For unknown reasons we are unable to set the `cancel_at_period_end`
+    // in the same call as `payment/proration_behavior` so we make a second call
+    await stripe.subscriptions.update(stripeSubscription.id, {
+      cancel_at_period_end: cancelAtPeriodEnd,
+    })
+  }
   // Update our records with the new subscription info
   return db.membershipSubscription.update({
     where: {

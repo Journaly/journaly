@@ -45,16 +45,16 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
   const [updateSubscriptionRenewal] = useUpdateSubscriptionRenewalMutation({
     onCompleted: () => {
       onSuccess()
-      toast.success(t('You have cancelled your subscription'))
+      toast.success(t('subscription.cancellationSuccess'))
     },
     onError: () => {
-      toast.error(t('There was a problem cancelling your subscription'))
+      toast.error(t('subscription.cancellationError'))
     },
   })
 
   const [CancelSubscriptionConfirmationModal, confirmCancellation] = useConfirmationModal({
-    title: 'Cancel Your Journaly Premium Subscription',
-    body: 'Are you sure you want to cancel your subscription?'
+    title: t('subscription.cancelSubscriptionConfirmationTitle'),
+    body: t('subscription.cancelSubscriptionConfirmationBody'),
   })
 
   const handleCancelSubscription = async () => {

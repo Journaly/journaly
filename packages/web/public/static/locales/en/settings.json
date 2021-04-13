@@ -116,6 +116,9 @@
     "freeUser": "free user",
     "monthlyPrice": "1 Month / £12",
     "quarterlyPrice": "3 Months / £30",
-    "annualPrice": "1 Year / £100"
+    "annualPrice": "1 Year / £100",
+    "paymentInfo": "Payment Info",
+    "cancelSubscriptionConfirmationTitle": "Cancel Your Journaly Premium Subscription",
+    "cancelSubscriptionConfirmationBody": "Are you sure you want to cancel your subscription?"
   }
 }

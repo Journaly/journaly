@@ -1,6 +1,7 @@
 import React from 'react'
 import Modal from '@/components/Modal'
 import PaymentForm from './PaymentForm'
+import { useTranslation } from '@/config/i18n'
 
 type PaymentFormModalProps = {
   onClose: () => void
@@ -8,9 +9,10 @@ type PaymentFormModalProps = {
 }
 
 const PaymentFormModal: React.FC<PaymentFormModalProps> = ({ onClose, onSuccess }) => {
+  const { t } = useTranslation('settings')
   return (
     <Modal
-      title="Payment Info"
+      title={t('subscription.paymentInfo')}
       body={
         <div>
           <PaymentForm onSuccess={onSuccess} />

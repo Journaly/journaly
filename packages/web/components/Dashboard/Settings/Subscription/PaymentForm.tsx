@@ -62,7 +62,7 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
         purchaseMembershipSubscription({
           variables: {
             period: selectedOption,
-            token: paymentMethod.id,
+            paymentMethodId: paymentMethod.id,
           },
         })
       }

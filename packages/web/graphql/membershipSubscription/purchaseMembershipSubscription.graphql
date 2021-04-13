@@ -1,5 +1,8 @@
-mutation purchaseMembershipSubscription($period: MembershipSubscriptionPeriod!, $token: String!) {
-  purchaseMembershipSubscription(period: $period, token: $token) {
+mutation purchaseMembershipSubscription(
+  $period: MembershipSubscriptionPeriod!
+  $paymentMethodId: String!
+) {
+  purchaseMembershipSubscription(period: $period, paymentMethodId: $paymentMethodId) {
     id
   }
 }

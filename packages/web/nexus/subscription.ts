@@ -118,7 +118,7 @@ const MembershipSubscriptionMutations = extendType({
       type: 'MembershipSubscription',
       args: {
         period: arg({ type: 'MembershipSubscriptionPeriod', required: true }),
-        token: stringArg({ required: true }),
+        paymentMethodId: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -138,10 +138,9 @@ const MembershipSubscriptionMutations = extendType({
 
         if (!user) throw new Error("User not found")
 
-        let customerId
         if (!user.stripeCustomerId) {
           const customer = await stripe.customers.create({
-            payment_method: args.token,
+            payment_method: args.paymentMethodId,
             description: `${user.handle} (${user.id})`,
             email: user.email,
             metadata: {
@@ -149,13 +148,12 @@ const MembershipSubscriptionMutations = extendType({
               handle: user.handle,
             },
           })
-          customerId = customer.id
           await ctx.db.user.update({
             where: {
               id: userId,
             },
             data: {
-              stripeCustomerId: customerId,
+              stripeCustomerId: customer.id,
             },
           })
 
@@ -166,11 +164,11 @@ const MembershipSubscriptionMutations = extendType({
                 journalyUserId: userId,
               },
             }],
-            default_payment_method: args.token,
-            customer: customerId,
+            default_payment_method: args.paymentMethodId,
+            customer: customer.id,
           })
 
-          const stripePaymentMethod = await stripe.paymentMethods.retrieve(args.token)
+          const stripePaymentMethod = await stripe.paymentMethods.retrieve(args.paymentMethodId)
           if (!stripePaymentMethod.card) throw new Error("Unable to retrieve payment method")
   
           const subData = {
@@ -202,7 +200,7 @@ const MembershipSubscriptionMutations = extendType({
         } else {
           if (!user.membershipSubscription) throw new Error("User has stripeCustomerId but no membershipSubscription")
           
-          await setPaymentMethod(userId, ctx.db, user.stripeCustomerId, args.token)
+          await setPaymentMethod(userId, ctx.db, user.stripeCustomerId, args.paymentMethodId)
           const membershipSubscription = await setPlan(
             userId,
             ctx.db,
@@ -293,7 +291,7 @@ const MembershipSubscriptionMutations = extendType({
     t.field('updateSubscriptionPaymentMethod', {
       type: 'MembershipSubscription',
       args: {
-        token: stringArg({ required: true }),
+        paymentMethodId: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -320,7 +318,7 @@ const MembershipSubscriptionMutations = extendType({
           userId,
           ctx.db,
           user.membershipSubscription.stripeSubscriptionId,
-          args.token,
+          args.paymentMethodId,
         )
         return membershipSubscription
       }

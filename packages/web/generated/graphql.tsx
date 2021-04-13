@@ -526,7 +526,7 @@ export type MutationDeleteCommentThanksArgs = {
 
 export type MutationPurchaseMembershipSubscriptionArgs = {
   period: MembershipSubscriptionPeriod
-  token: Scalars['String']
+  paymentMethodId: Scalars['String']
 }
 
 export type MutationUpdateSubscriptionRenewalArgs = {
@@ -538,7 +538,7 @@ export type MutationUpdateSubscriptionPlanArgs = {
 }
 
 export type MutationUpdateSubscriptionPaymentMethodArgs = {
-  token: Scalars['String']
+  paymentMethodId: Scalars['String']
 }
 
 export type CreateCommentMutationVariables = Exact<{
@@ -811,7 +811,7 @@ export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
 
 export type PurchaseMembershipSubscriptionMutationVariables = Exact<{
   period: MembershipSubscriptionPeriod
-  token: Scalars['String']
+  paymentMethodId: Scalars['String']
 }>
 
 export type PurchaseMembershipSubscriptionMutation = { __typename?: 'Mutation' } & {
@@ -822,7 +822,7 @@ export type PurchaseMembershipSubscriptionMutation = { __typename?: 'Mutation' }
 }
 
 export type UpdateSubscriptionPaymentMethodMutationVariables = Exact<{
-  token: Scalars['String']
+  paymentMethodId: Scalars['String']
 }>
 
 export type UpdateSubscriptionPaymentMethodMutation = { __typename?: 'Mutation' } & {
@@ -2095,8 +2095,11 @@ export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutati
   RemoveLanguageRelationMutationVariables
 >
 export const PurchaseMembershipSubscriptionDocument = gql`
-  mutation purchaseMembershipSubscription($period: MembershipSubscriptionPeriod!, $token: String!) {
-    purchaseMembershipSubscription(period: $period, token: $token) {
+  mutation purchaseMembershipSubscription(
+    $period: MembershipSubscriptionPeriod!
+    $paymentMethodId: String!
+  ) {
+    purchaseMembershipSubscription(period: $period, paymentMethodId: $paymentMethodId) {
       id
     }
   }
@@ -2120,7 +2123,7 @@ export type PurchaseMembershipSubscriptionMutationFn = ApolloReactCommon.Mutatio
  * const [purchaseMembershipSubscriptionMutation, { data, loading, error }] = usePurchaseMembershipSubscriptionMutation({
  *   variables: {
  *      period: // value for 'period'
- *      token: // value for 'token'
+ *      paymentMethodId: // value for 'paymentMethodId'
  *   },
  * });
  */
@@ -2144,8 +2147,8 @@ export type PurchaseMembershipSubscriptionMutationOptions = ApolloReactCommon.Ba
   PurchaseMembershipSubscriptionMutationVariables
 >
 export const UpdateSubscriptionPaymentMethodDocument = gql`
-  mutation updateSubscriptionPaymentMethod($token: String!) {
-    updateSubscriptionPaymentMethod(token: $token) {
+  mutation updateSubscriptionPaymentMethod($paymentMethodId: String!) {
+    updateSubscriptionPaymentMethod(paymentMethodId: $paymentMethodId) {
       id
     }
   }
@@ -2168,7 +2171,7 @@ export type UpdateSubscriptionPaymentMethodMutationFn = ApolloReactCommon.Mutati
  * @example
  * const [updateSubscriptionPaymentMethodMutation, { data, loading, error }] = useUpdateSubscriptionPaymentMethodMutation({
  *   variables: {
- *      token: // value for 'token'
+ *      paymentMethodId: // value for 'paymentMethodId'
  *   },
  * });
  */

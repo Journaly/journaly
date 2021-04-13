@@ -144,7 +144,7 @@ const MembershipSubscriptionMutations = extendType({
             description: `${user.handle} (${user.id})`,
             email: user.email,
             metadata: {
-              id: user.id,
+              journalyUserId: user.id,
               handle: user.handle,
             },
           })

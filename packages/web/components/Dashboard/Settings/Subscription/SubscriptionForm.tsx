@@ -22,15 +22,22 @@ type SubscriptionFormProps = {
 
 const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
   const { t } = useTranslation('settings')
+
   let subscriptionPlan: string | undefined
-  // (period) => string
-  if (user?.membershipSubscription?.period === MembershipSubscriptionPeriod.Monthly) {
-    subscriptionPlan = '1 Month / £12'
-  } else if (user?.membershipSubscription?.period === MembershipSubscriptionPeriod.Quarterly) {
-    subscriptionPlan = '3 Months / £30'
-  } else if (user?.membershipSubscription?.period === MembershipSubscriptionPeriod.Annualy) {
-    subscriptionPlan = '1 Year / £100'
+  const convertSubscriptionPeriodToPrice = (subscriptionPlan: MembershipSubscriptionPeriod) => {
+    switch(subscriptionPlan) {
+      case MembershipSubscriptionPeriod.Monthly:
+        return t('subscription.monthlyPrice')
+      case MembershipSubscriptionPeriod.Quarterly:
+        return t('subscription.quarterlyPrice')
+      case MembershipSubscriptionPeriod.Annualy:
+        return t('subscription.annualPrice')
+    }
   }
+  if (user.membershipSubscription) {
+    subscriptionPlan = convertSubscriptionPeriodToPrice(user.membershipSubscription.period)
+  }
+
   const isCancelling = user.membershipSubscription?.cancelAtPeriodEnd
   const [showPaymentForm, setShowPaymentForm] = useState(!user.membershipSubscription?.isActive)
   const [showPaymentFormModal, setShowPaymentFormModal] = useState(false)

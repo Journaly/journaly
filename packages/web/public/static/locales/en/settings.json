@@ -121,6 +121,8 @@
     "cancelSubscriptionConfirmationTitle": "Cancel Your Journaly Premium Subscription",
     "cancelSubscriptionConfirmationBody": "Are you sure you want to cancel your subscription?",
     "cancellationSuccess": "You have cancelled your subscription",
-    "cancellationError": "There was a problem cancelling your subscription"
+    "cancellationError": "There was a problem cancelling your subscription",
+    "updateCardSuccess": "You have successfully updated the card on file",
+    "updateCardError": "There was a problem updating the card on file"
   }
 }

@@ -103,7 +103,10 @@ const PaymentForm = ({ onSuccess, isUpdatingCard = false }: PaymentFormProps) =>
         <CardElement
           options={{
             style: {
-              base: { fontSize: '16px' },
+              base: {
+                fontSize: '16px',
+                fontWeight: 'lighter',
+              },
             },
           }}
                   

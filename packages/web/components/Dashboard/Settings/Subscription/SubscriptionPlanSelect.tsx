@@ -20,6 +20,7 @@ const SubscriptionPlanSelect = ({ selectedOption, setSelectedOption}: Subscripti
 
   return (
     <Select
+      flat
       onChange={setSelectedOption}
       options={subscriptionOptions}
       value={selectedOption}

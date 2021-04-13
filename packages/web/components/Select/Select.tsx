@@ -19,6 +19,7 @@ type Props<T extends OptionValue> = {
   value?: T | undefined
   placeholder: string
   onChange: (value: T, event?: React.ChangeEvent<HTMLSelectElement>) => void
+  flat?: boolean
   disabled?: boolean
   loading?: boolean
   id?: string
@@ -57,6 +58,7 @@ const SelectBase = <T extends OptionValue>(
     value,
     placeholder,
     onChange,
+    flat = false,
     loading = false,
     disabled = false,
     id,
@@ -117,7 +119,12 @@ const SelectBase = <T extends OptionValue>(
           padding: 10px;
           border-radius: 5px;
           background: ${theme.colors.white};
-          box-shadow: 0px 8px 22px #00000029;
+
+          ${flat
+            ? `border: 1px solid ${theme.colors.gray700};`
+            : 'box-shadow: 0px 8px 22px #00000029;'
+          }
+
           cursor: ${disabled ? 'auto' : 'pointer'};
           -webkit-appearance: none;
           -moz-appearance: none;

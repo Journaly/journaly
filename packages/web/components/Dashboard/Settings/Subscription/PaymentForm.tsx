@@ -98,9 +98,16 @@ const PaymentForm = ({ onSuccess, isUpdatingCard = false }: PaymentFormProps) =>
         selectedOption={selectedOption}
         setSelectedOption={setSelectedOption}
       />
-      {stripeError && <p>{stripeError.message}</p>}
+      {stripeError && <p className="error">{stripeError.message}</p>}
       <div className="card-field-container">
-        <CardElement/>
+        <CardElement
+          options={{
+            style: {
+              base: { fontSize: '16px' },
+            },
+          }}
+                  
+        />
       </div>
       <Button
         type="submit"
@@ -111,9 +118,14 @@ const PaymentForm = ({ onSuccess, isUpdatingCard = false }: PaymentFormProps) =>
       <style jsx>{`
         .card-field-container {
           margin: 20px 0;
-          border: 1px solid ${theme.colors.gray300};
-          padding: 10px;
+          border: 1px solid ${theme.colors.gray700};
+          padding: 14px;
           border-radius: 5px;
+        }
+
+        .error {
+          color: ${theme.colors.red};
+          margin-top: 20px;
         }
 
         .payments-form :global(button) {

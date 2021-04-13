@@ -11,34 +11,28 @@ type CardOnFileProps = {
 const CardOnFile = ({ last4, onUpdateCard }: CardOnFileProps) => {
   const { t } = useTranslation('settings')
   return (
-    <div className="wrapper">
-      <div className="container">
-        <p>{t('subscription.cardOnFile')}</p>
-        <div className="number-container">
-          <div>XXXX</div>
-          <span className="divider">-</span>
-          <div>XXXX</div>
-          <span className="divider">-</span>
-          <div>XXXX</div>
-          <span className="divider">-</span>
-          <div>{last4}</div>
-        </div>
-        <div className="card-action-container">
-          <Button
-            size={ButtonSize.Small}
-            variant={ButtonVariant.Link}
-            style={{ marginRight: '20px' }}
-            onClick={onUpdateCard}
-          >
-            {t('subscription.updateCard')}
-          </Button>
-        </div>
+    <div className="container">
+      <p>{t('subscription.cardOnFile')}</p>
+      <div className="number-container">
+        <div>XXXX</div>
+        <span className="divider">-</span>
+        <div>XXXX</div>
+        <span className="divider">-</span>
+        <div>XXXX</div>
+        <span className="divider">-</span>
+        <div>{last4}</div>
+      </div>
+      <div className="card-action-container">
+        <Button
+          size={ButtonSize.Small}
+          variant={ButtonVariant.Link}
+          style={{ marginRight: '20px' }}
+          onClick={onUpdateCard}
+        >
+          {t('subscription.updateCard')}
+        </Button>
       </div>
       <style jsx>{`
-        .wrapper {
-          margin: 10px 0 15px;
-        }
-
         .container {
           display: flex;
           flex-direction: column;
@@ -50,6 +44,7 @@ const CardOnFile = ({ last4, onUpdateCard }: CardOnFileProps) => {
           box-shadow: 0px 8px 10px #00000029;
           align-items: center;
           justify-content: center;
+          margin: 10px 0 15px;
         }
 
         .container > p {

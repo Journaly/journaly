@@ -113,6 +113,9 @@
     "subscriptionStatus": "Subscription status:",
     "nextBillingDate": "Next billing date:",
     "premiumUser": "premium user",
-    "freeUser": "free user"
+    "freeUser": "free user",
+    "monthlyPrice": "1 Month / £12",
+    "quarterlyPrice": "3 Months / £30",
+    "annualPrice": "1 Year / £100"
   }
 }

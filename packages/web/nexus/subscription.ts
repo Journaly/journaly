@@ -55,7 +55,7 @@ const setPaymentMethod = async (
 
   await stripe.customers.update(customer.id, {
     invoice_settings: {
-      default_payment_method: paymentMethodId,
+      default_payment_method: stripePaymentMethod.id,
     },
   })
 

@@ -5,6 +5,7 @@ import { loadStripe, StripeError } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import {
   usePurchaseMembershipSubscriptionMutation,
+  useUpdateSubscriptionPaymentMethodMutation,
   MembershipSubscriptionPeriod,
 } from '@/generated/graphql'
 import Button from '@/components/Button'
@@ -14,9 +15,10 @@ import theme from '@/theme'
 
 type PaymentFormProps = {
   onSuccess: () => void
+  isUpdatingCard?: boolean
 }
 
-const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
+const PaymentForm = ({ onSuccess, isUpdatingCard = false }: PaymentFormProps) => {
   const { t } = useTranslation('settings')
   const [stripeError, setStripeError] = useState<StripeError>()
   const stripe = useStripe()
@@ -32,6 +34,16 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
     },
     onError: () => {
       toast.error(t('subscription.subscribeFailureMessage'))
+    },
+  })
+
+  const [updatePaymentMethod] = useUpdateSubscriptionPaymentMethodMutation({
+    onCompleted: () => {
+      onSuccess()
+      toast.success(t('subscription.updateCardSuccess'))
+    },
+    onError: () => {
+      toast.error(t('subscription.updateCardError'))
     },
   })
 
@@ -58,13 +70,23 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
         return
       }
   
-      if (!loading && !stripeError && paymentMethod) {
-        purchaseMembershipSubscription({
-          variables: {
-            period: selectedOption,
-            paymentMethodId: paymentMethod.id,
-          },
-        })
+      if (isUpdatingCard) {
+        if (!loading && !stripeError && paymentMethod) {
+          updatePaymentMethod({
+            variables: {
+              paymentMethodId: paymentMethod.id,
+            }
+          })
+        }
+      } else {
+        if (!loading && !stripeError && paymentMethod) {
+          purchaseMembershipSubscription({
+            variables: {
+              period: selectedOption,
+              paymentMethodId: paymentMethod.id,
+            },
+          })
+        }
       }
     }
     nProgress.done()

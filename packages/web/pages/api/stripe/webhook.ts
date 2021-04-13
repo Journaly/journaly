@@ -1,6 +1,6 @@
 import { InputJsonValue, MembershipSubscriptionPeriod, PrismaClient } from '@journaly/j-db-client'
 import Stripe from 'stripe'
-import stripe from '../../../nexus/utils/stripe'
+import stripe, { logPaymentsError } from '../../../nexus/utils/stripe'
 import { getClient } from '../../../nexus/utils'
 
 const updateStripeSubscription = async (subscriptionId: string, db: PrismaClient) => {
@@ -44,6 +44,12 @@ const handler = async (req: any, res: any) => {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!);
   }
   catch (err) {
+    logPaymentsError(
+      err.message,
+      err,
+      req.body,
+    )
+
     req.status(400).send(`Webhook Error: ${err.message}`);
     return
   }
@@ -131,8 +137,11 @@ const handler = async (req: any, res: any) => {
     }
     // handle creating a new membershipSubscriptionTransaction when upgrading/downgrading
   } catch (err) {
-    // TODO: get better logging
-    console.log(err)
+    logPaymentsError(
+      err.message,
+      err,
+      event
+    )
   }
 
   res.status(200).json({

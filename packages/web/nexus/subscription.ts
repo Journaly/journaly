@@ -6,7 +6,7 @@ import {
   objectType,
   stringArg,
 } from '@nexus/schema'
-import stripe, { paymentErrorWrapper } from './utils/stripe'
+import stripe, { paymentErrorWrapper } from '@/nexus/utils/stripe'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',

@@ -1,7 +1,7 @@
 import { InputJsonValue, MembershipSubscriptionPeriod, PrismaClient } from '@journaly/j-db-client'
 import Stripe from 'stripe'
-import stripe, { logPaymentsError } from '../../../nexus/utils/stripe'
-import { getClient } from '../../../nexus/utils'
+import stripe, { logPaymentsError } from '@/nexus/utils/stripe'
+import { getClient } from '@/nexus/utils'
 
 const updateStripeSubscription = async (subscriptionId: string, db: PrismaClient) => {
   const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId)

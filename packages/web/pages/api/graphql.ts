@@ -67,7 +67,7 @@ const handler = async (req: any, res: any) => {
   const response = await graphqlHandler(req, res)
 
   console.log(`GraphQL request took ${Date.now() - start} ms`)
-  console.log('Test log', { foo: 42, bar: 'zork' })
+  console.log('Test log', JSON.stringify({ foo: 42, bar: 'zork' }))
 
   return response
 }

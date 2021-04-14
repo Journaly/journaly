@@ -6,7 +6,7 @@ import {
   objectType,
   stringArg,
 } from '@nexus/schema'
-import stripe from './utils/stripe'
+import stripe, { paymentErrorWrapper } from '@/nexus/utils/stripe'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
@@ -120,7 +120,7 @@ const MembershipSubscriptionMutations = extendType({
         period: arg({ type: 'MembershipSubscriptionPeriod', required: true }),
         paymentMethodId: stringArg({ required: true }),
       },
-      resolve: async (_parent, args, ctx) => {
+      resolve: (_parent, args, ctx) => paymentErrorWrapper(async () => {
         const { userId } = ctx.request
 
         if (!userId) {
@@ -210,14 +210,14 @@ const MembershipSubscriptionMutations = extendType({
           )
           return membershipSubscription
         }
-      },
+      }),
     })
     t.field('updateSubscriptionRenewal', {
       type: 'MembershipSubscription',
       args: {
         cancelAtPeriodEnd: booleanArg({ required: true }),
       },
-      resolve: async (_parent, args, ctx) => {
+      resolve: async (_parent, args, ctx) => paymentErrorWrapper(async () => {
         const { userId } = ctx.request
 
         if (!userId) {
@@ -251,7 +251,7 @@ const MembershipSubscriptionMutations = extendType({
             cancelAtPeriodEnd: args.cancelAtPeriodEnd,
           }
         })
-      }
+      }),
     })
     t.field('updateSubscriptionPlan', {
       type: 'MembershipSubscription',
@@ -293,7 +293,7 @@ const MembershipSubscriptionMutations = extendType({
       args: {
         paymentMethodId: stringArg({ required: true }),
       },
-      resolve: async (_parent, args, ctx) => {
+      resolve: async (_parent, args, ctx) => paymentErrorWrapper(async () => {
         const { userId } = ctx.request
 
         if (!userId) {
@@ -321,7 +321,7 @@ const MembershipSubscriptionMutations = extendType({
           args.paymentMethodId,
         )
         return membershipSubscription
-      }
+      }),
     })
   }
 })

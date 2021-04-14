@@ -27,14 +27,19 @@ export const config = {
   }
 };
 
-const handler = (req: any, res: any) => {
+const handler = async (req: any, res: any) => {
   const { token } = req.cookies
   req.response = res
   if (token) {
     const { userId } = jwt.verify(token, process.env.APP_SECRET!) as any
     req.userId = userId
   }
-  return graphqlHandler(req, res)
+  const start = Date.now()
+  const response = await graphqlHandler(req, res)
+
+  console.log(`GraphQL request took ${Date.now() - start} ms`)
+
+  return response
 }
 
 export default handler

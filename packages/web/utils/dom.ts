@@ -10,7 +10,7 @@ const findEventTargetParent = (
   if (event.path) {
     return event.path.find(pred)
   } else if (event.srcElement || event.target) {
-    let currentEl: HTMLElement = (event.srcElement || event.target)
+    let currentEl: HTMLElement | null = (event.srcElement || event.target)
     while (currentEl) {
       if (pred(currentEl))
         return currentEl

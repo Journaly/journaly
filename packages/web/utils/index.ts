@@ -3,6 +3,7 @@ export * from './breakpoints'
 export * from './colors'
 export * from './css'
 export * from './date'
+export * from './dom'
 
 // Polyfill Object.fromEntries
 export function fromEntries<V>(iterable: Iterable<[string, V]>) {

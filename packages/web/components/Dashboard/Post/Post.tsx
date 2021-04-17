@@ -2,7 +2,12 @@ import React from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 
-import { sanitize, iOS, wait } from '@/utils'
+import {
+  findEventTargetParent,
+  sanitize,
+  iOS,
+  wait,
+} from '@/utils'
 import {
   PostWithTopicsFragmentFragment as PostType,
   UserFragmentFragment as UserType,
@@ -364,8 +369,8 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         return
       }
 
-      // Mouse events in modals shouldn't close the thread popover
-      if ((e as any).path.find((el: HTMLElement) => el.id === 'modal-root')) {
+      // Mouse/touch events in modals shouldn't close the thread popover
+      if (findEventTargetParent(e, (el) => el.id === 'modal-root')) {
         return
       }
 

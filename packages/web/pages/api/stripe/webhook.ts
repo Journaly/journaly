@@ -40,22 +40,26 @@ const handler = async (req: any, res: any) => {
   const sig = req.headers['stripe-signature']
   let event: Stripe.Event
 
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!);
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!);
+    }
+    catch (err) {
+      logPaymentsError(
+        err.message,
+        err,
+        req.body,
+      )
+  
+      res.status(400).send(`Webhook Error: ${err.message}`);
+      return
+    }
+  } else {
+    event = req.body
   }
-  catch (err) {
-    logPaymentsError(
-      err.message,
-      err,
-      req.body,
-    )
-
-    req.status(400).send(`Webhook Error: ${err.message}`);
-    return
-  }
 
   try {
-    if (event.type === 'invoice.paid') {
+    if (event && event.type === 'invoice.paid') {
       const stripeInvoice = event.data.object as Stripe.Invoice
       const subscriptionLine = stripeInvoice.lines.data.find((item: any) => item.type === 'subscription')
       let customerId: string = (typeof stripeInvoice.customer === 'string') ? stripeInvoice.customer : stripeInvoice.customer.id
@@ -116,7 +120,7 @@ const handler = async (req: any, res: any) => {
       }
 
       await updateStripeSubscription(subscriptionLine.subscription, db)
-    } else if (event.type === 'invoice.payment_failed') {
+    } else if (event && event.type === 'invoice.payment_failed') {
       /**
        * For now we'll just do nothing and allow the subscription to expire
        */

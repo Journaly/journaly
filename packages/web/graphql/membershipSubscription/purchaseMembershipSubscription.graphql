@@ -1,0 +1,8 @@
+mutation purchaseMembershipSubscription(
+  $period: MembershipSubscriptionPeriod!
+  $paymentMethodId: String!
+) {
+  purchaseMembershipSubscription(period: $period, paymentMethodId: $paymentMethodId) {
+    id
+  }
+}

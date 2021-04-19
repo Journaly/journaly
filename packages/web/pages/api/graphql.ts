@@ -1,38 +1,9 @@
 require('dotenv').config()
 import jwt from 'jsonwebtoken'
 import { ApolloServer } from 'apollo-server-micro'
-import { PrismaClient } from '@journaly/j-db-client'
+import { getClient } from '../../nexus/utils'
 
 import { schema } from '../../nexus'
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      prisma: PrismaClient;
-    }
-  }
-}
-
-let _prisma: PrismaClient | null
-
-const getClient = (): PrismaClient => {
-  if (process.env.NODE_ENV === 'development') {
-    if (!global.prisma) {
-      console.log('Creating new database client [DEV]')
-      global.prisma = new PrismaClient()
-    }
-
-    return global.prisma
-  } else {
-    if (!_prisma) {
-      console.log('Creating new database client [PROD]')
-      _prisma = new PrismaClient()
-    }
-
-    return _prisma
-  }
-}
-
 
 const server = new ApolloServer({
   schema,
@@ -56,14 +27,19 @@ export const config = {
   }
 };
 
-const handler = (req: any, res: any) => {
+const handler = async (req: any, res: any) => {
   const { token } = req.cookies
   req.response = res
   if (token) {
     const { userId } = jwt.verify(token, process.env.APP_SECRET!) as any
     req.userId = userId
   }
-  return graphqlHandler(req, res)
+  const start = Date.now()
+  const response = await graphqlHandler(req, res)
+
+  console.log(`GraphQL request took ${Date.now() - start} ms`)
+
+  return response
 }
 
 export default handler

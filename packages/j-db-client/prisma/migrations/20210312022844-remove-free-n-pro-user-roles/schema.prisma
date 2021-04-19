@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator prisma_client {
@@ -9,39 +9,39 @@ generator prisma_client {
 }
 
 model User {
-  id                            Int                             @id @default(autoincrement())
-  name                          String?
-  email                         String                          @unique
-  handle                        String                          @unique
-  auth                          Auth?
-  userRole                      UserRole                        @default(USER)
-  bio                           String?
-  city                          String?
-  country                       String?
-  posts                         Post[]
-  membershipSubscription        MembershipSubscription?
-  socialMedia                   SocialMedia?
-  languagesNative               LanguageNative[]
-  languagesLearning             LanguageLearning[]
-  languages                     LanguageRelation[]
-  createdAt                     DateTime                        @default(now())
-  updatedAt                     DateTime                        @updatedAt
-  userInterests                 UserInterest[]
-  pageView                      PageView[]
-  profileImage                  String?
-  threadSubscriptions           ThreadSubscription[]
-  postLikes                     PostLike[]
-  commentThanks                 CommentThanks[]
-  postCommentThanks             PostCommentThanks[]
-  comments                      Comment[]
-  postComments                  PostComment[]
-  badges                        UserBadge[]
-  followedBy                    User[]                          @relation("UserFollows", references: [id])
-  following                     User[]                          @relation("UserFollows", references: [id])
-  postCommentSubscriptions      PostCommentSubscription[]
-  PendingNotification           PendingNotification[]
-  MembershipSubscriptionInvoice MembershipSubscriptionInvoice[]
-  stripeCustomerId              String?
+  id                                Int                                 @id @default(autoincrement())
+  name                              String?
+  email                             String                              @unique
+  handle                            String                              @unique
+  auth                              Auth?
+  userRole                          UserRole                            @default(USER)
+  bio                               String?
+  city                              String?
+  country                           String?
+  posts                             Post[]
+  subscription                      MembershipSubscription?
+  socialMedia                       SocialMedia?
+  languagesNative                   LanguageNative[]
+  languagesLearning                 LanguageLearning[]
+  languages                         LanguageRelation[]
+  createdAt                         DateTime                            @default(now())
+  updatedAt                         DateTime                            @updatedAt
+  userInterests                     UserInterest[]
+  pageView                          PageView[]
+  profileImage                      String?
+  threadSubscriptions               ThreadSubscription[]
+  postLikes                         PostLike[]
+  commentThanks                     CommentThanks[]
+  postCommentThanks                 PostCommentThanks[]
+  comments                          Comment[]
+  postComments                      PostComment[]
+  badges                            UserBadge[]
+  followedBy                        User[]                              @relation("UserFollows", references: [id])
+  following                         User[]                              @relation("UserFollows", references: [id])
+  postCommentSubscriptions          PostCommentSubscription[]
+  PendingNotification               PendingNotification[]
+  MembershipSubscriptionTransaction MembershipSubscriptionTransaction[]
+  stripeCustomerId                  String?
 }
 
 model Auth {
@@ -301,11 +301,7 @@ model MembershipSubscription {
   user                 User                         @relation(fields: [userId], references: [id])
   userId               Int
   stripeSubscription   Json
-  stripeSubscriptionId String                       @unique
-  cancelAtPeriodEnd    Boolean                      @default(false)
-  lastFourCardNumbers  String
-  cardBrand            String
-  lastPaymentFailure   Boolean                      @default(false)
+  stripeSubscriptionId String
   expiresAt            DateTime?
   createdAt            DateTime                     @default(now())
   updatedAt            DateTime                     @updatedAt
@@ -313,30 +309,17 @@ model MembershipSubscription {
   @@unique([userId])
 }
 
-model MembershipSubscriptionInvoice {
-  id                                Int                                 @id @default(autoincrement())
-  user                              User                                @relation(fields: [userId], references: [id])
-  userId                            Int
-  membershipSubscriptionPeriod      MembershipSubscriptionPeriod
-  stripeInvoiceId                   String
-  stripeInvoiceData                 Json
-  createdAt                         DateTime                            @default(now())
-  updatedAt                         DateTime                            @updatedAt
-  MembershipSubscriptionInvoiceItem MembershipSubscriptionInvoiceItem[]
-}
-
-model MembershipSubscriptionInvoiceItem {
-  id                    Int                           @id @default(autoincrement())
-  amount                Int
-  currency              String
-  description           String
-  proration             Boolean
-  invoice               MembershipSubscriptionInvoice @relation(fields: [invoiceId], references: [id])
-  invoiceId             Int
-  stripeInvoiceItemId   String
-  stripeInvoiceItemData Json
-  createdAt             DateTime                      @default(now())
-  updatedAt             DateTime                      @updatedAt
+model MembershipSubscriptionTransaction {
+  id                           Int                          @id @default(autoincrement())
+  chargeCents                  Int
+  chargeCurrency               String
+  user                         User                         @relation(fields: [userId], references: [id])
+  userId                       Int
+  membershipSubscriptionPeriod MembershipSubscriptionPeriod
+  stripeChargeId               String
+  stripeChargeData             Json
+  createdAt                    DateTime                     @default(now())
+  updatedAt                    DateTime                     @updatedAt
 }
 
 model PageView {

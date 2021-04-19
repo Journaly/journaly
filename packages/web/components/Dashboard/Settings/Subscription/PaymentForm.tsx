@@ -78,6 +78,7 @@ const PaymentForm = ({ onSuccess, isUpdatingCard = false }: PaymentFormProps) =>
             }
           })
         }
+        // card.clear()
       } else {
         if (!loading && !stripeError && paymentMethod) {
           purchaseMembershipSubscription({
@@ -87,6 +88,7 @@ const PaymentForm = ({ onSuccess, isUpdatingCard = false }: PaymentFormProps) =>
             },
           })
         }
+        // card.clear()
       }
     }
     nProgress.done()

@@ -1,4 +1,8 @@
-import { MembershipSubscriptionPeriod, InputJsonValue, PrismaClient } from '@journaly/j-db-client'
+import { 
+  MembershipSubscriptionPeriod,
+  InputJsonValue,
+  PrismaClient,
+} from '@journaly/j-db-client'
 import {
   arg,
   booleanArg,
@@ -7,6 +11,7 @@ import {
   stringArg,
 } from '@nexus/schema'
 import stripe, { paymentErrorWrapper } from '@/nexus/utils/stripe'
+import Stripe from 'stripe'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
@@ -39,8 +44,6 @@ const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
 }
 
 const setPaymentMethod = async (
-  userId: number,
-  db: PrismaClient,
   customerId: string,
   paymentMethodId: string,
 ) => {
@@ -58,7 +61,16 @@ const setPaymentMethod = async (
       default_payment_method: stripePaymentMethod.id,
     },
   })
-
+  return stripePaymentMethod
+}
+// TODO: DB Cleanup - add customer payment info to User model & remove from Subscription.
+// Merge this fn with setPaymentMethod
+const updateSubscriptionWithPaymentMethod = (
+  userId: number,
+  db: PrismaClient,
+  stripePaymentMethod: Stripe.PaymentMethod,
+) => {
+  if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
   return db.membershipSubscription.update({
     where: {
       userId,
@@ -137,10 +149,12 @@ const MembershipSubscriptionMutations = extendType({
         })
 
         if (!user) throw new Error("User not found")
-
-        if (!user.stripeCustomerId) {
+        
+        let customerId: string
+        if (user.stripeCustomerId) {
+          customerId = user.stripeCustomerId
+        } else {
           const customer = await stripe.customers.create({
-            payment_method: args.paymentMethodId,
             description: `${user.handle} (${user.id})`,
             email: user.email,
             metadata: {
@@ -148,6 +162,7 @@ const MembershipSubscriptionMutations = extendType({
               handle: user.handle,
             },
           })
+          customerId = customer.id
           await ctx.db.user.update({
             where: {
               id: userId,
@@ -156,7 +171,10 @@ const MembershipSubscriptionMutations = extendType({
               stripeCustomerId: customer.id,
             },
           })
-
+        }
+        const stripePaymentMethod = await setPaymentMethod(customerId, args.paymentMethodId)
+        if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
+        if (!user.membershipSubscription) {
           const stripeSubscription = await stripe.subscriptions.create({
             items: [{
               price: getSubscriptionPriceId(args.period),
@@ -164,44 +182,33 @@ const MembershipSubscriptionMutations = extendType({
                 journalyUserId: userId,
               },
             }],
-            default_payment_method: args.paymentMethodId,
-            customer: customer.id,
-            trial_end: process.env.NODE_ENV === 'development' ? 1619947505 : undefined,
+            customer: customerId,
+            // If we're in dev, create subscription with a trial period
+            // that expires 30 seconds from the current time in order to test recurring payments
+            trial_end: process.env.NODE_ENV === 'development' ? ~~(Date.now() / 1000 + 300) : undefined,
           })
-
-          const stripePaymentMethod = await stripe.paymentMethods.retrieve(args.paymentMethodId)
-          if (!stripePaymentMethod.card) throw new Error("Unable to retrieve payment method")
-  
-          const subData = {
-            period: args.period,
-            // Give 2 days grace period
-            expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
-            // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
-            stripeSubscription: stripeSubscription as unknown as InputJsonValue,
-            stripeSubscriptionId: stripeSubscription.id,
-            lastFourCardNumbers: stripePaymentMethod.card.last4,
-            cardBrand: stripePaymentMethod.card.brand,
-          }
   
           // TODO: Log failure and get proper alarms set up
-          return ctx.db.membershipSubscription.upsert({
-            create: {
-              ...subData,
+          const membershipSubscription = await ctx.db.membershipSubscription.create({
+            data: {
+              period: args.period,
+              // Give 2 days grace period
+              expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+              // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
+              stripeSubscription: stripeSubscription as unknown as InputJsonValue,
+              stripeSubscriptionId: stripeSubscription.id,
+              lastFourCardNumbers: stripePaymentMethod.card.last4,
+              cardBrand: stripePaymentMethod.card.brand,
               user: {
                 connect: {
                   id: userId,
-                },
-              },
-            },
-            update: subData,
-            where: {
-              userId,
+                }
+              }
             },
           })
+          return membershipSubscription
         } else {
-          if (!user.membershipSubscription) throw new Error("User has stripeCustomerId but no membershipSubscription")
-          
-          await setPaymentMethod(userId, ctx.db, user.stripeCustomerId, args.paymentMethodId)
+          await updateSubscriptionWithPaymentMethod(userId, ctx.db, stripePaymentMethod)
           const membershipSubscription = await setPlan(
             userId,
             ctx.db,
@@ -315,13 +322,11 @@ const MembershipSubscriptionMutations = extendType({
           throw new Error("User has no subscription to update")
         }
 
-        const membershipSubscription = await setPaymentMethod(
-          userId,
-          ctx.db,
+        const paymentMethod = await setPaymentMethod(
           user.membershipSubscription.stripeSubscriptionId,
           args.paymentMethodId,
         )
-        return membershipSubscription
+        return updateSubscriptionWithPaymentMethod(userId, ctx.db, paymentMethod)
       }),
     })
   }

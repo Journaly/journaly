@@ -166,6 +166,7 @@ const MembershipSubscriptionMutations = extendType({
             }],
             default_payment_method: args.paymentMethodId,
             customer: customer.id,
+            trial_end: process.env.NODE_ENV === 'development' ? 1619947505 : undefined,
           })
 
           const stripePaymentMethod = await stripe.paymentMethods.retrieve(args.paymentMethodId)

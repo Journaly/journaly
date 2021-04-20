@@ -40,9 +40,11 @@ const handler = async (req: any, res: any) => {
   const sig = req.headers['stripe-signature']
   let event: Stripe.Event
 
+  console.log(process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
+  console.log(req.headers)
   if (process.env.NODE_ENV === 'production') {
     try {
-      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!);
+      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
     }
     catch (err) {
       logPaymentsError(
@@ -51,7 +53,7 @@ const handler = async (req: any, res: any) => {
         req.body,
       )
   
-      res.status(400).send(`Webhook Error: ${err.message}`);
+      res.status(400).send(`Webhook Error: ${err.message}`)
       return
     }
   } else {

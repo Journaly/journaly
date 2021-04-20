@@ -1,36 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react'
 import theme from '@/theme'
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
+
 import { useTranslation } from '@/config/i18n'
+import UpdateCardFormModal from './UpdateCardFormModal'
 
 type CardOnFileProps = {
   last4: string
-  onUpdateCard: () => void
+  onSuccess: () => void
 }
 
-const CardOnFile = ({ last4, onUpdateCard }: CardOnFileProps) => {
+const CardOnFile = ({ last4, onSuccess }: CardOnFileProps) => {
   const { t } = useTranslation('settings')
+  const [showUpdateCardFormModal, setShowUpdateCardFormModal] = useState(false)
+
   return (
-    <div className="container">
-      <p>{t('subscription.cardOnFile')}</p>
-      <div className="number-container">
-        <div>XXXX</div>
-        <span className="divider">-</span>
-        <div>XXXX</div>
-        <span className="divider">-</span>
-        <div>XXXX</div>
-        <span className="divider">-</span>
-        <div>{last4}</div>
-      </div>
-      <div className="card-action-container">
-        <Button
-          size={ButtonSize.Small}
-          variant={ButtonVariant.Link}
-          style={{ marginRight: '20px' }}
-          onClick={onUpdateCard}
-        >
-          {t('subscription.updateCard')}
-        </Button>
+    <>
+      {showUpdateCardFormModal && (
+        <UpdateCardFormModal onClose={() => setShowUpdateCardFormModal(false)} onSuccess={onSuccess} />
+      )}
+      <div className="container">
+        <p>{t('subscription.cardOnFile')}</p>
+        <div className="number-container">
+          <div>XXXX</div>
+          <span className="divider">-</span>
+          <div>XXXX</div>
+          <span className="divider">-</span>
+          <div>XXXX</div>
+          <span className="divider">-</span>
+          <div>{last4}</div>
+        </div>
+        <div className="card-action-container">
+          <Button
+            size={ButtonSize.Small}
+            variant={ButtonVariant.Link}
+            style={{ marginRight: '20px' }}
+            onClick={() => setShowUpdateCardFormModal(true)}
+          >
+            {t('subscription.updateCard')}
+          </Button>
+        </div>
       </div>
       <style jsx>{`
         .container {
@@ -71,7 +80,7 @@ const CardOnFile = ({ last4, onUpdateCard }: CardOnFileProps) => {
           display: flex;
         }
     `}</style>
-    </div>
+    </>
   )
 }
 

@@ -94,13 +94,14 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
         <PaymentFormModal onClose={() => setShowPaymentFormModal(false)} onSuccess={onSuccess} />
       )}
       <div className="page-container">
-        <p className="subscription-copy" style={{ marginBottom: '20px' }}>{t('subscription.copy')}</p>
+        <p className="subscription-copy" style={{ marginBottom: '20px' }}>{t('subscription.premiumGeneralCopy')}</p>
+        <p className="subscription-copy" style={{ marginBottom: '20px' }}>{t('subscription.premiumFeatureCopy')}</p>
         <p className="subscription-status"><strong>{t('subscription.subscriptionStatus')}</strong> <SubscriptionStatusBadge /></p>
         {user.membershipSubscription?.isActive && (
           <>
             <p><strong>{t('subscription.currentPlan')}</strong> {subscriptionPlan}</p>
             {user.membershipSubscription?.lastFourCardNumbers && (
-              <CardOnFile last4={user.membershipSubscription.lastFourCardNumbers} onUpdateCard={() => setShowPaymentFormModal(true)} />
+              <CardOnFile last4={user.membershipSubscription.lastFourCardNumbers} onSuccess={onSuccess} />
             )}
             {isCancelling ? (
               <>

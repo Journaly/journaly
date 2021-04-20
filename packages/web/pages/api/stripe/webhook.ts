@@ -62,8 +62,7 @@ const handler = async (req: any, res: any) => {
   if (process.env.NODE_ENV === 'production') {
     try {
       event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
-    }
-    catch (err) {
+    } catch (err) {
       logPaymentsError(
         err.message,
         err,

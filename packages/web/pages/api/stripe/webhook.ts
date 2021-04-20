@@ -40,6 +40,7 @@ const handler = async (req: any, res: any) => {
   const sig = req.headers['stripe-signature']
   let event: Stripe.Event
 
+  console.log(req.body)
   console.log(process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
   console.log(req.headers)
   if (process.env.NODE_ENV === 'production') {

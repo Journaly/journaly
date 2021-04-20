@@ -100,7 +100,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
           <>
             <p><strong>{t('subscription.currentPlan')}</strong> {subscriptionPlan}</p>
             {user.membershipSubscription?.lastFourCardNumbers && (
-              <CardOnFile last4={user.membershipSubscription.lastFourCardNumbers} onUpdateCard={() => setShowPaymentFormModal(true)} />
+              <CardOnFile last4={user.membershipSubscription.lastFourCardNumbers} onSuccess={onSuccess} />
             )}
             {isCancelling ? (
               <>

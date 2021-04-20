@@ -16,7 +16,8 @@ const logPaymentsError = (
       errorMessage: message,
       stack: error ? error.stack : new Error().stack,
       event,
-    })
+    }),
+    'PAYMENTS ERROR END'
   )
 }
 

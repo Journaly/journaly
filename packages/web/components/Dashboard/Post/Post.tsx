@@ -25,7 +25,7 @@ import theme from '@/theme'
 import PostBodyStyles from '@/components/PostBodyStyles'
 import PencilIcon from '@/components/Icons/PencilIcon'
 import InlineFeedbackPopover from '@/components/InlineFeedbackPopover'
-import { Router, useTranslation } from '@/config/i18n'
+import { Router, useTranslation } from 'next-i18next'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 

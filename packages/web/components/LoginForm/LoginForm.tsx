@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
 
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { useLoginUserMutation, CurrentUserDocument, useCurrentUserQuery } from '@/generated/graphql'
 import FormError from '@/components/FormError'
 import Button from '@/components/Button'

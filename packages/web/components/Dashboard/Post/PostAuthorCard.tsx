@@ -7,7 +7,7 @@ import {
   useUnfollowUserMutation,
   useFollowingUsersQuery,
 } from '@/generated/graphql'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import { languageNameWithDialect } from '@/utils/languages'
 import Button, { ButtonVariant } from '@/components/Button'

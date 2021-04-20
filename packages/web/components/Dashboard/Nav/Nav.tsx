@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
 
-import { Router, useTranslation } from '@/config/i18n'
+import { Router, useTranslation } from 'next-i18next'
 import { navConstants } from './nav-constants'
 import theme from '@/theme'
 import {

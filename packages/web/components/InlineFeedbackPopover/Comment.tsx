@@ -13,7 +13,7 @@ import {
   UserFragmentFragment,
 } from '@/generated/graphql'
 import theme from '@/theme'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'

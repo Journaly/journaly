@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Node } from 'slate'
 import { withApollo } from '@/lib/apollo'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import PostEditor, {

@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { formatShortDate } from '@/utils/date'
 import {
   PostStatus as PostStatusType,

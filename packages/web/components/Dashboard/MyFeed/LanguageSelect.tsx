@@ -1,7 +1,7 @@
 import React from 'react'
 import MultiSelect from '@/components/MultiSelect'
 import { LanguagesQuery } from '@/generated/graphql'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 type Props = {
   languagesData: LanguagesQuery | undefined

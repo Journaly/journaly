@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import theme from '@/theme'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import {
   ProfileUserFragmentFragment as UserType,
   PostCardFragmentFragment as PostCardType,

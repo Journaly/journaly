@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Router, { withRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { ToastContainer } from 'react-toastify'
-import { appWithTranslation } from '@/config/i18n'
+import { appWithTranslation } from 'next-i18next'
 
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 

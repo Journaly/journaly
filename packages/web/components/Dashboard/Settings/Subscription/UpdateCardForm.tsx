@@ -4,40 +4,35 @@ import nProgress from 'nprogress'
 import { loadStripe, StripeError } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import {
-  usePurchaseMembershipSubscriptionMutation,
-  MembershipSubscriptionPeriod,
+  useUpdateSubscriptionPaymentMethodMutation,
 } from '@/generated/graphql'
 import Button from '@/components/Button'
-import SubscriptionPlanSelect from './SubscriptionPlanSelect'
 import { useTranslation } from '@/config/i18n'
 import theme from '@/theme'
 
-type PaymentFormProps = {
+type UpdateCardFormProps = {
   onSuccess: () => void
 }
 
-const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
+const UpdateCardForm = ({ onSuccess }: UpdateCardFormProps) => {
   const { t } = useTranslation('settings')
   const [stripeError, setStripeError] = useState<StripeError>()
   const [resolverError, setResolverError] = useState<string>()
   const stripe = useStripe()
   const elements = useElements()
-  const [selectedOption, setSelectedOption] = useState<MembershipSubscriptionPeriod>(
-    MembershipSubscriptionPeriod.Monthly,
-  )
 
-  const [purchaseMembershipSubscription, { loading }] = usePurchaseMembershipSubscriptionMutation({
+  const [updatePaymentMethod, { loading }] = useUpdateSubscriptionPaymentMethodMutation({
     onCompleted: () => {
       onSuccess()
-      toast.success(t('subscription.subscribeSuccessMessage'))
+      toast.success(t('subscription.updateCardSuccess'))
     },
     onError: (error) => {
       setResolverError(error.message)
-      toast.error(t('subscription.subscribeFailureMessage'))
+      toast.error(t('subscription.updateCardError'))
     },
   })
 
-  const handleSubmitPaymentForm = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitUpdateCardForm = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     nProgress.start()
     // 1. Create payment method via stripe
@@ -54,7 +49,6 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
         type: 'card',
         card,
       })
-
       if (error) {
         setStripeError(error)
         nProgress.done()
@@ -62,11 +56,10 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
       }
   
       if (!loading && !stripeError && paymentMethod) {
-        purchaseMembershipSubscription({
+        updatePaymentMethod({
           variables: {
-            period: selectedOption,
             paymentMethodId: paymentMethod.id,
-          },
+          }
         })
       }
       // TODO: Ideally this should happen only after the resolver gives a successful response
@@ -76,11 +69,7 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmitPaymentForm} className="payments-form">
-      <SubscriptionPlanSelect
-        selectedOption={selectedOption}
-        setSelectedOption={setSelectedOption}
-      />
+    <form onSubmit={handleSubmitUpdateCardForm} className="payments-form">
       {stripeError && <p className="error">{stripeError.message}</p>}
       {resolverError && <p className="error">{resolverError}</p>}
       <div className="card-field-container">
@@ -123,14 +112,14 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
   )
 }
 
-const Checkout = (props: PaymentFormProps) => {
+const Checkout = (props: UpdateCardFormProps) => {
   const stripeLib = useMemo(() => {
     return loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string)
   }, [])
   
   return (
     <Elements stripe={stripeLib}>
-      <PaymentForm {...props} />
+      <UpdateCardForm {...props} />
     </Elements>
   )
 }

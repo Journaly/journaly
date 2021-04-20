@@ -175,6 +175,15 @@ const MembershipSubscriptionMutations = extendType({
         const stripePaymentMethod = await setPaymentMethod(customerId, args.paymentMethodId)
         if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
         if (!user.membershipSubscription) {
+
+          // If we're in dev or stage, create subscription with a trial period
+          // that expires 5 minutes from the current time in order to test
+          // recurring payments
+          const trialEnd = (
+            process.env.NODE_ENV === 'development' ||
+            process.env.VERCEL_GIT_COMMIT_REF === 'staging'
+          ) ? ~~(Date.now() / 1000 + 300) : undefined
+
           const stripeSubscription = await stripe.subscriptions.create({
             items: [{
               price: getSubscriptionPriceId(args.period),
@@ -183,9 +192,7 @@ const MembershipSubscriptionMutations = extendType({
               },
             }],
             customer: customerId,
-            // If we're in dev, create subscription with a trial period
-            // that expires 30 seconds from the current time in order to test recurring payments
-            trial_end: process.env.NODE_ENV === 'development' ? ~~(Date.now() / 1000 + 300) : undefined,
+            trial_end: trialEnd
           })
   
           // TODO: Log failure and get proper alarms set up

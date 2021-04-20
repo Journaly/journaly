@@ -11,11 +11,11 @@ export const config = {
   },
 }
 
-const webhookPayloadParser = (req: any): string => {
+const webhookPayloadParser = (req: any): Promise<string> => {
   return new Promise((res) => {
-    const parts = []
+    const parts: string[] = []
 
-    req.on('data', (chunk) => parts.push(chunk))
+    req.on('data', (chunk: string) => parts.push(chunk))
     req.on('end', () => res(parts.join('')))
   })
 }

@@ -3,6 +3,23 @@ import Stripe from 'stripe'
 import stripe, { logPaymentsError } from '@/nexus/utils/stripe'
 import { getClient } from '@/nexus/utils'
 
+// Disable body parsing so stripe can validate the literal string it sent us
+// against its signature.
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
+
+const webhookPayloadParser = (req: any): string => {
+  return new Promise((res) => {
+    const parts = []
+
+    req.on('data', (chunk) => parts.push(chunk))
+    req.on('end', () => res(parts.join('')))
+  })
+}
+
 const updateStripeSubscription = async (subscriptionId: string, db: PrismaClient) => {
   const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId)
   let expiresAt = stripeSubscription.current_period_end * 1000
@@ -38,27 +55,26 @@ const convertStripePriceToMembershipPeriod = (priceId: string) => {
 const handler = async (req: any, res: any) => {
   const db = getClient()
   const sig = req.headers['stripe-signature']
+  const body = await webhookPayloadParser(req)
+
   let event: Stripe.Event
 
-  console.log(req.body)
-  console.log(process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
-  console.log(req.headers)
   if (process.env.NODE_ENV === 'production') {
     try {
-      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
+      event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
     }
     catch (err) {
       logPaymentsError(
         err.message,
         err,
-        req.body,
+        body,
       )
   
       res.status(400).send(`Webhook Error: ${err.message}`)
       return
     }
   } else {
-    event = req.body
+    event = JSON.parse(body)
   }
 
   try {

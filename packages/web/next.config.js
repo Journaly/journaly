@@ -1,10 +1,6 @@
 let config = {
   target: 'serverless',
   productionBrowserSourceMaps: true,
-  api: {
-    // Disable body parser for API routes so stripe can do its validation magic
-    bodyParser: false,
-  },
 }
 
 if (process.env.ANALYZE === '1') {

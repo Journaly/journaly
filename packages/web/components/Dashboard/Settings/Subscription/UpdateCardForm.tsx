@@ -41,7 +41,6 @@ const UpdateCardForm = ({ onSuccess }: UpdateCardFormProps) => {
       const card = elements.getElement(CardElement)
 
       if (!card) {
-        // TODO: figure out actual user messages
         throw new Error("Card element not found")
       }
 
@@ -53,17 +52,18 @@ const UpdateCardForm = ({ onSuccess }: UpdateCardFormProps) => {
         setStripeError(error)
         nProgress.done()
         return
+      } else {
+        setStripeError(undefined)
       }
   
-      if (!loading && !stripeError && paymentMethod) {
-        updatePaymentMethod({
+      if (!loading && paymentMethod) {
+        await updatePaymentMethod({
           variables: {
             paymentMethodId: paymentMethod.id,
           }
         })
+        card.clear()
       }
-      // TODO: Ideally this should happen only after the resolver gives a successful response
-      card.clear()
     }
     nProgress.done()
   }

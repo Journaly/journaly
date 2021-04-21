@@ -46,7 +46,6 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
       const card = elements.getElement(CardElement)
 
       if (!card) {
-        // TODO: figure out actual user messages
         throw new Error("Card element not found")
       }
 
@@ -59,18 +58,19 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
         setStripeError(error)
         nProgress.done()
         return
+      } else {
+        setStripeError(undefined)
       }
   
-      if (!loading && !stripeError && paymentMethod) {
-        purchaseMembershipSubscription({
+      if (!loading && paymentMethod) {
+        await purchaseMembershipSubscription({
           variables: {
             period: selectedOption,
             paymentMethodId: paymentMethod.id,
           },
         })
+        card.clear()
       }
-      // TODO: Ideally this should happen only after the resolver gives a successful response
-      card.clear()
     }
     nProgress.done()
   }

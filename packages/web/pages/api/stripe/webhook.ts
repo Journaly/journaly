@@ -77,7 +77,7 @@ const handler = async (req: any, res: any) => {
   }
 
   try {
-    if (event && event.type === 'invoice.paid') {
+    if (event.type === 'invoice.paid') {
       const stripeInvoice = event.data.object as Stripe.Invoice
       const subscriptionLine = stripeInvoice.lines.data.find((item: any) => item.type === 'subscription')
       let customerId: string = (typeof stripeInvoice.customer === 'string') ? stripeInvoice.customer : stripeInvoice.customer.id
@@ -138,7 +138,7 @@ const handler = async (req: any, res: any) => {
       }
 
       await updateStripeSubscription(subscriptionLine.subscription, db)
-    } else if (event && event.type === 'invoice.payment_failed') {
+    } else if (event.type === 'invoice.payment_failed') {
       /**
        * For now we'll just do nothing and allow the subscription to expire
        */
@@ -156,6 +156,11 @@ const handler = async (req: any, res: any) => {
       }
 
       await updateStripeSubscription(subscriptionLine.subscription, db)
+    } else if (event.type === 'customer.subscription.updated') {
+      // This happens when customer changes plans OR a subscription expires
+      // Either way, reconcile the DB state with the current state of the Stripe subscription
+      const subscription = event.data.object as Stripe.Subscription
+      await updateStripeSubscription(subscription.id, db)
     }
     // handle creating a new membershipSubscriptionTransaction when upgrading/downgrading
   } catch (err) {

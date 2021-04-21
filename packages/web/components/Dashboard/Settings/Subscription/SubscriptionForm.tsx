@@ -118,7 +118,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
               </>
             ) : (
               <>
-                <p className="subscription-copy"><strong>{t('subscription.nextBillingDate')}</strong>{t('subscription.subscriptionRenewsOn')}<strong> {formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
+                <p className="subscription-copy"><strong>{t('subscription.nextBillingDate')}</strong> {t('subscription.subscriptionRenewsOn')}<strong> {formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
               </>
             )}
           </>

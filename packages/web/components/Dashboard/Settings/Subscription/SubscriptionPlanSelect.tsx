@@ -13,9 +13,9 @@ type SubscriptionPlanSelectProps = {
 const SubscriptionPlanSelect = ({ selectedOption, setSelectedOption}: SubscriptionPlanSelectProps) => {
   const { t } = useTranslation('settings')
   const subscriptionOptions = [
-    { value: MembershipSubscriptionPeriod.Monthly, displayName: 'Monthly - £12' },
-    { value: MembershipSubscriptionPeriod.Quarterly, displayName: '3 Months - £30' },
-    { value: MembershipSubscriptionPeriod.Annualy, displayName: '1 Year - £100' },
+    { value: MembershipSubscriptionPeriod.Monthly, displayName: t('subscription.monthlyPrice') },
+    { value: MembershipSubscriptionPeriod.Quarterly, displayName: t('subscription.quarterlyPrice') },
+    { value: MembershipSubscriptionPeriod.Annualy, displayName: t('subscription.annualPrice') },
   ]
 
   return (

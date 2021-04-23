@@ -4,6 +4,16 @@ let config = {
   target: 'serverless',
   productionBrowserSourceMaps: true,
   i18n,
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.node = {
+        'fs': 'empty',
+        'next-i18next/serverSideTranslations': 'empty',
+      }
+    }
+
+    return config
+  }
 }
 
 if (process.env.ANALYZE === '1') {

@@ -1,8 +1,9 @@
 import React from 'react'
+import { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
 import fetch from 'isomorphic-unfetch'
-import { NextPage } from 'next'
 
 export type ApolloClientCache = any
 
@@ -49,6 +50,14 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
     ...pageProps
   }) => {
     const client = apolloClient || initApolloClient(apolloState)
+
+    // Assign locale here so it can be read back for translation fetching in
+    // getInitialProps. This is a hack.
+    if (ssrContext) {
+      const { locale } = useRouter()
+      ssrContext.locale = locale
+    }
+
     return (
       <JournalySSRContext.Provider value={ssrContext}>
         <ApolloProvider client={client}>
@@ -100,7 +109,10 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
 
         // Only if ssr is enabled
         if (ssr) {
-          const ssrContext = { redirectTarget: null }
+          const ssrContext = {
+            redirectTarget: null,
+            locale: null,
+          }
 
           try {
             // Run all GraphQL queries
@@ -121,6 +133,17 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
             console.error('Error while running `getDataFromTree`', error)
           }
 
+          if (ssrContext.locale) {
+            const { serverSideTranslations } = await import('next-i18next/serverSideTranslations')
+            pageProps = {
+              ...pageProps,
+              ...await serverSideTranslations(
+                ssrContext.locale,
+                pageProps.namespacesRequired
+              )
+            }
+          }
+
           if (ssrContext.redirectTarget && ctx?.res) {
             (ctx.res as any).redirect(ssrContext.redirectTarget)
             return pageProps
@@ -129,6 +152,17 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
           // getDataFromTree does not call componentWillUnmount
           // head side effect therefore need to be cleared manually
           Head.rewind()
+        }
+      } else {
+        const url = new URL(`${document.location.origin}/api/translations`)
+        url.searchParams.append('locale', window.next.router.locale)
+        url.searchParams.append('namespacesRequired', pageProps.namespacesRequired)
+
+        const translationProps = await fetch(url.toString()).then(res => res.json())
+
+        pageProps = {
+          ...pageProps,
+          ...translationProps
         }
       }
 

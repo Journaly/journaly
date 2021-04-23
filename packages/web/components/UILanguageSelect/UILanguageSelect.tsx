@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { I18nContext } from 'react-i18next'
 import { i18n } from 'next-i18next'
 
@@ -21,9 +22,11 @@ const UILanguageSelect = () => {
       <ul className="flag-list">
         {uiLangData.map(({ Icon, code }) => (
           <li key={code} className={code === language ? 'selected' : ''}>
-            <Button variant={ButtonVariant.Icon} onClick={() => i18n.changeLanguage(code)}>
-              <Icon width={30} />
-            </Button>
+            <Link href='' locale={code}>
+              <a>
+                <Icon width={30} />
+              </a>
+            </Link>
           </li>
         ))}
       </ul>
@@ -36,6 +39,11 @@ const UILanguageSelect = () => {
 
         .flag-list > li {
           margin-right: 5px;
+        }
+
+        .flag-list > li a {
+          display: block;
+          line-height: 0;
         }
 
         .flag-list > li.selected {

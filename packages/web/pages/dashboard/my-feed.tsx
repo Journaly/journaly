@@ -24,7 +24,7 @@ const MyFeedPage: NextPage<InitialProps> = () => {
 }
 
 MyFeedPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'settings', 'my-feed'],
+  namespacesRequired: ['common', 'post', 'settings', 'my-feed'],
 })
 
 export default withApollo(MyFeedPage)

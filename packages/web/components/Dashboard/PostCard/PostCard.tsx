@@ -29,7 +29,7 @@ const PostCard: React.FC<Props> = ({
   avatar = false,
   stacked = false,
 }) => {
-  const { t } = useTranslation('post')
+  const { t } = useTranslation(['post'])
   const {
     id,
     title,

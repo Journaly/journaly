@@ -19,8 +19,6 @@ Router.events.on('routeChangeError', () => NProgress.done())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 
 class JournalyApp extends App {
-  componentDidMount() {}
-
   render() {
     const { Component, pageProps } = this.props
 

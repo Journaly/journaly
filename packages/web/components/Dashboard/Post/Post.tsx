@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 
@@ -25,7 +26,7 @@ import theme from '@/theme'
 import PostBodyStyles from '@/components/PostBodyStyles'
 import PencilIcon from '@/components/Icons/PencilIcon'
 import InlineFeedbackPopover from '@/components/InlineFeedbackPopover'
-import { Router, useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 
@@ -245,6 +246,7 @@ const PostContent = React.memo(
 
 const Post = ({ post, currentUser, refetch }: IPostProps) => {
   const { t } = useTranslation('post')
+  const router = useRouter()
 
   const selectableRef = React.useRef<HTMLDivElement>(null)
   const popoverRef = React.useRef<HTMLDivElement>(null)
@@ -256,7 +258,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
   const [deletePost] = useDeletePostMutation({
     onCompleted: () => {
       toast.success(t('deletePostSuccess'))
-      Router.push('/dashboard/my-posts')
+      router.push('/dashboard/my-posts')
     },
     onError: () => {
       toast.error(t('deletePostError'))
@@ -503,7 +505,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
                 type="button"
                 variant={ButtonVariant.Secondary}
                 onClick={() => {
-                  Router.push('/post/[id]/edit', `/post/${post.id}/edit`)
+                  router.push('/post/[id]/edit', `/post/${post.id}/edit`)
                 }}
               >
                 {t('editPostAction')}

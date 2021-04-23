@@ -1,8 +1,9 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import classNames from 'classnames'
 
-import { Router, useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next'
 import { navConstants } from './nav-constants'
 import theme from '@/theme'
 import {
@@ -27,6 +28,7 @@ interface Props {
 
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
+  const router = useRouter()
   const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
     refetchQueries: [
@@ -61,7 +63,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
     await logout()
 
     // Redirect to home page
-    Router.push('/')
+    router.push('/')
   }, [logout])
 
   return (

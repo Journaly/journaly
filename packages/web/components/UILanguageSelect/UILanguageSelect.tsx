@@ -1,9 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
 import { I18nContext } from 'react-i18next'
-import { i18n } from 'next-i18next'
-
-import Button, { ButtonVariant } from '@/components/Button'
 
 import FlagUSIcon from '@/components/Icons/FlagUSIcon'
 import FlagDEIcon from '@/components/Icons/FlagDEIcon'

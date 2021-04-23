@@ -1,6 +1,6 @@
 import App from 'next/app'
 import Head from 'next/head'
-import Router, { withRouter } from 'next/router'
+import Router from 'next/router'
 import NProgress from 'nprogress'
 import { ToastContainer } from 'react-toastify'
 import { appWithTranslation } from 'next-i18next'
@@ -37,4 +37,4 @@ class JournalyApp extends App {
   }
 }
 
-export default appWithTranslation(withRouter(JournalyApp))
+export default appWithTranslation(JournalyApp)

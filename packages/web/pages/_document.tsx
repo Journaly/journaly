@@ -19,7 +19,7 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
     const initialProps = await Document.getInitialProps(context)
 
     const additionalProps = {
-      language: i18n.language,
+      language: i18n?.language || null,
     }
 
     return { ...initialProps, ...additionalProps }

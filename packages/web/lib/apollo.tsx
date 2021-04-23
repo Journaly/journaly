@@ -11,10 +11,12 @@ let apolloClient: ApolloClient<ApolloClientCache> | null = null
 
 type JournalySSRContextType = {
   redirectTarget: string | null
+  locale: string | null
 }
 
 const JournalySSRContext = React.createContext<JournalySSRContextType>({
-  redirectTarget: null
+  redirectTarget: null,
+  locale: null,
 })
 JournalySSRContext.displayName = 'JournalySSRContext'
 
@@ -55,7 +57,7 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
     // getInitialProps. This is a hack.
     if (ssrContext) {
       const { locale } = useRouter()
-      ssrContext.locale = locale
+      ssrContext.locale = locale || null
     }
 
     return (
@@ -138,8 +140,8 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
             pageProps = {
               ...pageProps,
               ...await serverSideTranslations(
-                ssrContext.locale,
-                pageProps.namespacesRequired
+                ssrContext.locale!,
+                (pageProps as any).namespacesRequired
               )
             }
           }
@@ -155,8 +157,8 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
         }
       } else {
         const url = new URL(`${document.location.origin}/api/translations`)
-        url.searchParams.append('locale', window.next.router.locale)
-        url.searchParams.append('namespacesRequired', pageProps.namespacesRequired)
+        url.searchParams.append('locale', (window as any).next.router.locale)
+        url.searchParams.append('namespacesRequired', (pageProps as any).namespacesRequired)
 
         const translationProps = await fetch(url.toString()).then(res => res.json())
 

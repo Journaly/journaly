@@ -1,6 +1,6 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
 import Button, { ButtonVariant } from '@/components/Button'

@@ -7,7 +7,6 @@ import {
 } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { toast } from 'react-toastify'
-import { TFunction } from 'next-i18next'
 import { DEFAULTS_TABLE, setDefaults, someNode, insertTable } from '@udecode/slate-plugins'
 
 export type ButtonType = 'block' | 'link' | 'table'
@@ -46,7 +45,7 @@ type ToggleByTypeArgs = {
   type: ButtonType
   editor: Editor
   format: string
-  t?: TFunction
+  t?: (key: string) => string
 }
 
 type ToggleArgs = Omit<ToggleByTypeArgs, 'type'>

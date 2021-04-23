@@ -7,7 +7,7 @@ import AuthGate from '@/components/AuthGate'
 import MyPosts from '@/components/Dashboard/MyPosts'
 import { PostStatus as PostStatusType } from '@/generated/graphql'
 import theme from '@/theme'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 type Tab = {
   key: PostStatusType

@@ -11,7 +11,7 @@ import {
   PostPageQuery,
   PostPageQueryVariables,
 } from '@/generated/graphql'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 import theme from '@/theme'
 import PostComment from './PostComment'

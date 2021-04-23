@@ -1,9 +1,9 @@
 import App from 'next/app'
 import Head from 'next/head'
-import Router, { withRouter } from 'next/router'
+import Router from 'next/router'
 import NProgress from 'nprogress'
 import { ToastContainer } from 'react-toastify'
-import { appWithTranslation } from '@/config/i18n'
+import { appWithTranslation } from 'next-i18next'
 
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 
@@ -19,8 +19,6 @@ Router.events.on('routeChangeError', () => NProgress.done())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 
 class JournalyApp extends App {
-  componentDidMount() {}
-
   render() {
     const { Component, pageProps } = this.props
 
@@ -39,4 +37,4 @@ class JournalyApp extends App {
   }
 }
 
-export default appWithTranslation(withRouter(JournalyApp))
+export default appWithTranslation(JournalyApp)

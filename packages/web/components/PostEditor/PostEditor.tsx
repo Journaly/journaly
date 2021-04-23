@@ -19,7 +19,7 @@ import {
   ImageRole,
 } from '@/generated/graphql'
 import { languageNameWithDialect } from '@/utils/languages'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 type BasePostData = {
   title: string

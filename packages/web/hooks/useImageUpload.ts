@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { uploadFile, BaseUploadData } from '@/utils/images'
 
 interface HTMLInputEvent extends React.FormEvent {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTranslation, Trans } from '@/config/i18n'
+import { useTranslation, Trans } from 'next-i18next'
 import {
   PostCardFragmentFragment as PostType,
   UserWithLanguagesFragmentFragment as UserType,

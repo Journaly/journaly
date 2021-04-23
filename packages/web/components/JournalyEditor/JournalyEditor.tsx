@@ -8,7 +8,7 @@ import isHotkey from 'is-hotkey'
 import theme from '@/theme'
 import PostBodyStyles from '@/components/PostBodyStyles'
 import Toolbar from './Toolbar'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import RenderElement from './RenderElement'
 import RenderLeaf from './RenderLeaf'
 import {

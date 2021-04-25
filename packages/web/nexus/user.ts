@@ -236,9 +236,9 @@ const UserMutations = extendType({
           // Prisma's error code for unique constraint violation
           if (ex.code === 'P2002') {
             if (ex.meta.target.find((x: string) => x === 'email')) {
-              throw new UserInputError("Email address is already in use. Please try logging in")
+              throw new UserInputError("This email address is already in use. Please try logging in")
             } else if (ex.meta.target.find((x: string) => x === 'handle')) {
-              throw new UserInputError("Handle is already in use")
+              throw new UserInputError("This handle is already in use")
             } else {
               throw ex
             }
@@ -347,7 +347,7 @@ const UserMutations = extendType({
         const isValid = await bcrypt.compare(args.oldPassword, user.auth.password)
 
         if (!isValid) {
-          throw new Error('Invalid old password')
+          throw new Error('Old password is incorrect')
         }
 
         const newPassword = await bcrypt.hash(args.newPassword, 10)

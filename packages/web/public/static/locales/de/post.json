@@ -1,7 +1,7 @@
 {
   "header": "Lass uns einen Beitrag verfassen",
   "titlePlaceholder": "Die beste Geschichte, die nie erzählt wurde...",
-  "languageSelectPlaceholder": "Wähle eine Sprache",
+  "languageSelectPlaceholder": "Wähle eine Sprache aus ...",
   "topicSelectPlaceholder": "Wähle bis zu fünf Themen",
   "uploadImageButtonText": "Bild hochladen",
   "draft": "Entwurf",
@@ -29,5 +29,5 @@
     "body": "Bist du sicher, dass du diesen Beitrag löschen möchtest?"
   },
   "enterUrlPrompt": "Gib die URL des Links ein",
-  "websitePatternError": "Invalid website url. e.g. domain.com or sub.domain.com"
+  "websitePatternError": "Ungültiger Webseiten-Link, z. B. DeineDomain.com oder DeineSubdomain.domain.com"
 }

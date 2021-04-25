@@ -23,7 +23,7 @@
   "noLanguageError": "Please select a language.",
   "emptyTitleError": "Please specify a non-empty title.",
   "draftPublishedSuccess": "Post successfully published!",
-  "postSaveError": "An error occured saving your post.",
+  "postSaveError": "An error occurred saving your post.",
   "postBy": "by",
   "deleteModal": {
     "title": "Delete Post",

@@ -1,13 +1,18 @@
 {
   "login": {
     "title": "Log into your account",
-    "submitButtonText": "Log In"
+    "submitButtonText": "Log In",
+    "userNotFoundError": "User not found"
   },
   "signup": {
     "title": "Sign up for an account",
     "submitButtonText": "Sign Up!",
     "goToLoginText": "Already have an account?",
-    "goToLoginLink": "Log in"
+    "goToLoginLink": "Log in",
+    "emailInUseError": "This email address is already in use. Please try logging in",
+    "handleInUseError": "This handle is already in use",
+    "invalidPasswordError": "Invalid password",
+    "invalidHandleError": "Invalid handle"
   },
   "requestReset": {
     "title": "Request Password Reset Email",
@@ -20,7 +25,10 @@
   "resetPassword": {
     "title": "Reset Your Password",
     "submitButtonText": "Reset Password",
-    "successMessage": "You successfully reset your password! Please log in"
+    "successMessage": "You successfully reset your password! Please log in",
+    "invalidOldPasswordError": "Old password is incorrect",
+    "passwordsDoNotMatchError": "Passwords do not match",
+    "invalidResetTokenError": "This reset token is either invalid or has expired"
   },
   "handleInputLabel": "Handle",
   "handleInputHelperMessage": "Can be letters, numbers, -, _, and cannot contain spaces",

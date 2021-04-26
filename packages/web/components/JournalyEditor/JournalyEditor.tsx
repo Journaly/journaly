@@ -102,9 +102,12 @@ const JournalyEditor = ({
           padding: 0 25px 10px;
           border: 1px solid ${theme.colors.black};
           border-radius: 5px;
-          min-height: 200px;
           background-color: ${theme.colors.white};
           opacity: ${disabled ? 0.6 : 'auto'};
+        }
+
+        .editor-container > :global([contenteditable="true"]) {
+          min-height: 200px;
         }
       `}</style>
     </div>

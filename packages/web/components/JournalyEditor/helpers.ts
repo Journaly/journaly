@@ -225,13 +225,21 @@ const dataUrlizeFile = (file: File): Promise<string> => {
 export const insertImage = async (editor: ReactEditor, file: File) => {
   const url = await dataUrlizeFile(file)
 
-  const image = {
-    type: 'image',
-    url,
-    uploaded: false,
-    children: [{ text: '' }]
-  }
-  Transforms.insertNodes(editor, image)
+  const nodes = [
+    {
+      type: 'image',
+      url,
+      uploaded: false,
+      children: [{ text: '' }]
+    },
+    // Insert an empty paragraph after the image so typing can continue.
+    {
+      type: 'paragraph',
+      children: [{text: ''}]
+    },
+  ]
+
+  Transforms.insertNodes(editor, nodes)
 }
 
 export const withImages = (editor: ReactEditor) => {

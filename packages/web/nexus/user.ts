@@ -15,7 +15,8 @@ import { PostStatus } from '@journaly/j-db-client'
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
   generateThumbbusterUrl,
-  sendPasswordResetTokenEmail
+  sendPasswordResetTokenEmail,
+  subscribeUserToProductUpdates,
 } from './utils'
 import { validateUpdateUserMutationData } from './utils/userValidation'
 
@@ -247,6 +248,8 @@ const UserMutations = extendType({
           }
         }
 
+        await subscribeUserToProductUpdates(user, ctx.db)
+
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
         ctx.response.setHeader(
           'Set-Cookie',
@@ -281,12 +284,18 @@ const UserMutations = extendType({
           email: args.email?.toLowerCase(),
         }
 
-        return ctx.db.user.update({
+        const user = await ctx.db.user.update({
           data: updates,
           where: {
             id: userId,
           },
         })
+
+        if (args.email) {
+          await subscribeUserToProductUpdates(user, ctx.db)
+        }
+
+        return user
       },
     })
 

@@ -1,8 +1,26 @@
 const fs = require('fs/promises')
 const path = require('path')
-const jsonParser = require('jsonc-parser')
 
 const NodeGit = require('nodegit')
+const jsonParser = require('jsonc-parser')
+const createCsvWriter = require('csv-writer').createObjectCsvWriter
+
+const LOCALES = [
+  'de',
+  'es',
+]
+
+const NAMESPACES = [
+  'authentication',
+  'comment',
+  'common',
+  'my-feed',
+  'my-posts',
+  'post-author-card',
+  'post',
+  'profile',
+  'settings',
+]
 
 const slurpFile = async (path) => {
   return await fs.readFile(path, { encoding: 'UTF-8' });
@@ -53,9 +71,18 @@ const getProperties = (tree, lineByOffset, path=[]) => {
 }
 
 const getAnnotatedTranslations = async (repo, filePath) => {
+  const resolvedFilePath = path.resolve(`../../${filePath}`)
+
+  try {
+    await fs.stat(resolvedFilePath)
+  } catch {
+    // If no file exists, there are no translations or annotations to provide.
+    return {}
+  }
+
   const [blame, fileStr] = await Promise.all([
     NodeGit.Blame.file(repo, filePath),
-    slurpFile(path.resolve(`../../${filePath}`)),
+    slurpFile(resolvedFilePath),
   ])
   const translations = getTranslations(fileStr)
 
@@ -77,7 +104,7 @@ const getAnnotatedTranslations = async (repo, filePath) => {
   return annotated
 }
 
-const compareTranslations = async (repo, sourceFilePath, targetFilePath) => {
+const compareTranslationFiles = async (repo, sourceFilePath, targetFilePath) => {
   const sourceAnnotations = await getAnnotatedTranslations(repo, sourceFilePath)
   const targetAnnotations = await getAnnotatedTranslations(repo, targetFilePath)
 
@@ -142,15 +169,72 @@ const reportCLI = (comparison) => {
   console.log(`up to date: ${upToDate.length}, out of date: ${needsUpdate.length}, missing: ${missing.length}`)
 }
 
-const doThing = async () => {
+const generateAllLocalesReport = async () => {
   const repo = await NodeGit.Repository.open(path.resolve('../../'))
-  const comparison = await compareTranslations(
-    repo,
-    'packages/web/public/static/locales/en/common.json',
-    'packages/web/public/static/locales/de/common.json'
-  )
 
-  reportCLI(comparison)
+  const report = {
+    locales: {}
+  }
+
+  for (locale of LOCALES) {
+    const localeReport = {
+      namespaces: {}
+    }
+
+    for (ns of NAMESPACES) {
+      const comparison = await compareTranslationFiles(
+        repo,
+        `packages/web/public/static/locales/en/${ns}.json`,
+        `packages/web/public/static/locales/${locale}/${ns}.json`,
+      )
+
+      localeReport.namespaces[ns] = comparison
+    }
+
+    report.locales[locale] = localeReport
+  }
+
+  return report
+}
+
+const doThing = async () => {
+  const report = await generateAllLocalesReport()
+
+  for (locale in report.locales) {
+    const localeReport = report.locales[locale]
+    const writer = createCsvWriter({
+      path: `translation-templates/${locale}.csv`,
+      header: [
+        { id: 'namespace', title: 'namespace' },
+        { id: 'fullId', title: 'key' },
+        { id: 'status', title: 'status' },
+        { id: 'source', title: 'Source String' },
+        { id: 'target', title: 'Translated String' },
+        { id: 'tlnotes', title: 'Translator Notes' },
+        { id: 'lastCommitSHA', title: 'Last Commit to Source' },
+      ]
+    })
+
+    const records = []
+
+    for (ns in localeReport.namespaces) {
+      const nsReport = localeReport.namespaces[ns]
+
+      for (comp of nsReport) {
+        records.push({
+          'namespace': ns,
+          fullId: comp.source.fullId,
+          status: comp.status,
+          source: comp.source.value.value,
+          target: comp.target ? comp.target.value.value : '',
+          tlnotes: '',
+          lastCommitSHA: comp.source.lastCommitSHA
+        })
+      }
+    }
+
+    writer.writeRecords(records)
+  }
 }
 
 doThing()

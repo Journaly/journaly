@@ -149,7 +149,6 @@ const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
     ? `https://api.moosend.com/v3/subscribers/${listId}/update/${user.moosendSubscriberId}.json?apikey=${apiKey}`
     : `https://api.moosend.com/v3/subscribers/${listId}/subscribe.json?apikey=${apiKey}`
 
-  console.log(url)
   const resp = (await fetch(url, {
     method: 'POST',
     headers: {

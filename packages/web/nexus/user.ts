@@ -284,12 +284,18 @@ const UserMutations = extendType({
           email: args.email?.toLowerCase(),
         }
 
-        return ctx.db.user.update({
+        const user = await ctx.db.user.update({
           data: updates,
           where: {
             id: userId,
           },
         })
+
+        if (args.email) {
+          await subscribeUserToProductUpdates(user, ctx.db)
+        }
+
+        return user
       },
     })
 

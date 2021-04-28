@@ -127,7 +127,7 @@ const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {
   })
 }
 
-type MoosendSubscribeResponse = {
+type MoosendSubscriberResponse = {
   Code: number,
   Error: string | null,
   Context: {
@@ -144,8 +144,12 @@ const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
     return
   }
 
-  console.log('MOMO')
-  const url = `https://api.moosend.com/v3/subscribers/${listId}/subscribe.json?apikey=${apiKey}`
+  // If user already has an ID, do an update instead (only changes the URL)
+  const url = user.moosendSubscriberId
+    ? `https://api.moosend.com/v3/subscribers/${listId}/update/${user.moosendSubscriberId}.json?apikey=${apiKey}`
+    : `https://api.moosend.com/v3/subscribers/${listId}/subscribe.json?apikey=${apiKey}`
+
+  console.log(url)
   const resp = (await fetch(url, {
     method: 'POST',
     headers: {
@@ -161,10 +165,9 @@ const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
         `registrationDate=${user.createdAt.toISOString()}`,
       ]
     })
-  }).then(r => r.json())) as MoosendSubscribeResponse
+  }).then(r => r.json())) as MoosendSubscriberResponse
 
   if (resp['Error']) {
-    console.log('BAZL')
     throw new Error(resp['Error'])
   }
 
@@ -172,10 +175,15 @@ const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
     throw new Error('Subscription call returned a non-zero code, but had no Error')
   }
 
-  return db.user.update({
-    where: { id: user.id },
-    data: { moosendSubscriberId: resp.ID }
-  })
+  if (user.moosendSubscriberId) {
+    return user
+  } else {
+    // Only update the DB if we created a new subscriber.
+    return db.user.update({
+      where: { id: user.id },
+      data: { moosendSubscriberId: resp.Context.ID }
+    })
+  }
 }
 
 export {

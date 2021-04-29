@@ -2,7 +2,8 @@
   "breadcrumbs": {
     "settings": "Settings",
     "profile": "Edit your profile",
-    "account": "Account"
+    "account": "Account",
+    "subscription": "Subscription"
   },
   "nav": {
     "profile": "Profile Info",
@@ -100,8 +101,8 @@
     "subscribeCta": "Subscribe!",
     "subscribeSuccessMessage": "Congratulations! You're now a Journaly Premium member!",
     "subscribeFailureMessage": "Oh no! Something went wrong. Please try again.",
-    "premiumGeneralCopy": "With our premium subscription you get access to awesome features that make the Journaly experience more enjoyable and customisable, while also supporting our loving and hardworking team who have spent literally thousands of hours building Journaly for free until now ❤︎",
-    "premiumFeatureCopy": "Today, your premium subscription unlocks the ability to upload images inside of your posts! We will be adding more exciting premium features in the near future :)",
+    "premiumGeneralCopy": "With our premium subscription you get access to awesome features that make the Journaly experience more enjoyable and customisable. Today, you will gain the ability to include an unlimited number of images inside your posts and really bring them to life, with many more exciting features on the way!",
+    "premiumFeatureCopy": "Your subscription to Premium helps to support the loving and hardworking team behind the scenes and make Journaly a sustainable plaform so that the core experience can remain free and accessible to everyone ❤︎",
     "currentPlan": "Current Plan:",
     "changePlan": "Change Plan",
     "cancelSubscription": "Cancel Subscription",

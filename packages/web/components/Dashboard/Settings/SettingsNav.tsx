@@ -8,6 +8,7 @@ const SettingsNav: React.FC = () => {
   const links = {
     profile: t('nav.profile'),
     account: t('nav.account'),
+    subscription: t('nav.subscription')
   }
 
   return (

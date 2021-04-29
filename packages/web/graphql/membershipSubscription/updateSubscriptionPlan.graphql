@@ -1,0 +1,6 @@
+mutation updateSubscriptionPlan($period: MembershipSubscriptionPeriod!) {
+  updateSubscriptionPlan(period: $period) {
+    id
+    period
+  }
+}

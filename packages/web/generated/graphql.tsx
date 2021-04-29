@@ -171,11 +171,11 @@ export type User = {
   posts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
+  membershipSubscription?: Maybe<MembershipSubscription>
   socialMedia?: Maybe<SocialMedia>
   languages: Array<LanguageRelation>
   following: Array<User>
   followedBy: Array<User>
-  isPremiumUser: Scalars['Boolean']
   postsWrittenCount: Scalars['Int']
   languagesPostedInCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
@@ -249,6 +249,18 @@ export type CommentThanks = {
   comment: Comment
 }
 
+export type MembershipSubscription = {
+  __typename?: 'MembershipSubscription'
+  id: Scalars['Int']
+  period: MembershipSubscriptionPeriod
+  userId: Scalars['Int']
+  expiresAt?: Maybe<Scalars['DateTime']>
+  cancelAtPeriodEnd: Scalars['Boolean']
+  lastFourCardNumbers: Scalars['String']
+  cardBrand: Scalars['String']
+  isActive: Scalars['Boolean']
+}
+
 export enum ImageRole {
   Headline = 'HEADLINE',
   Inline = 'INLINE',
@@ -282,8 +294,7 @@ export enum LanguageLevel {
 export enum UserRole {
   Admin = 'ADMIN',
   Moderator = 'MODERATOR',
-  FreeUser = 'FREE_USER',
-  ProUser = 'PRO_USER',
+  User = 'USER',
 }
 
 export enum BadgeType {
@@ -292,6 +303,12 @@ export enum BadgeType {
   TenPosts = 'TEN_POSTS',
   OnehundredPosts = 'ONEHUNDRED_POSTS',
   CodeContributor = 'CODE_CONTRIBUTOR',
+}
+
+export enum MembershipSubscriptionPeriod {
+  Monthly = 'MONTHLY',
+  Quarterly = 'QUARTERLY',
+  Annualy = 'ANNUALY',
 }
 
 export enum SortOrder {
@@ -371,6 +388,10 @@ export type Mutation = {
   updateSocialMedia: SocialMedia
   createCommentThanks: CommentThanks
   deleteCommentThanks: CommentThanks
+  purchaseMembershipSubscription: MembershipSubscription
+  updateSubscriptionRenewal: MembershipSubscription
+  updateSubscriptionPlan: MembershipSubscription
+  updateSubscriptionPaymentMethod: MembershipSubscription
 }
 
 export type MutationCreateThreadArgs = {
@@ -503,6 +524,23 @@ export type MutationDeleteCommentThanksArgs = {
   commentThanksId: Scalars['Int']
 }
 
+export type MutationPurchaseMembershipSubscriptionArgs = {
+  period: MembershipSubscriptionPeriod
+  paymentMethodId: Scalars['String']
+}
+
+export type MutationUpdateSubscriptionRenewalArgs = {
+  cancelAtPeriodEnd: Scalars['Boolean']
+}
+
+export type MutationUpdateSubscriptionPlanArgs = {
+  period: MembershipSubscriptionPeriod
+}
+
+export type MutationUpdateSubscriptionPaymentMethodArgs = {
+  paymentMethodId: Scalars['String']
+}
+
 export type CreateCommentMutationVariables = Exact<{
   body: Scalars['String']
   threadId: Scalars['Int']
@@ -595,8 +633,11 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
   >
 } & UserFragmentFragment
 
-export type CurrentUserFragmentFragment = { __typename?: 'User' } & Pick<User, 'isPremiumUser'> &
-  UserWithLanguagesFragmentFragment
+export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
+  membershipSubscription?: Maybe<
+    { __typename?: 'MembershipSubscription' } & Pick<MembershipSubscription, 'isActive'>
+  >
+} & UserWithLanguagesFragmentFragment
 
 export type SocialMediaFragmentFragment = { __typename?: 'User' } & {
   socialMedia?: Maybe<
@@ -768,6 +809,51 @@ export type RemoveLanguageRelationMutation = { __typename?: 'Mutation' } & {
   removeLanguageRelation: { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id'>
 }
 
+export type PurchaseMembershipSubscriptionMutationVariables = Exact<{
+  period: MembershipSubscriptionPeriod
+  paymentMethodId: Scalars['String']
+}>
+
+export type PurchaseMembershipSubscriptionMutation = { __typename?: 'Mutation' } & {
+  purchaseMembershipSubscription: { __typename?: 'MembershipSubscription' } & Pick<
+    MembershipSubscription,
+    'id'
+  >
+}
+
+export type UpdateSubscriptionPaymentMethodMutationVariables = Exact<{
+  paymentMethodId: Scalars['String']
+}>
+
+export type UpdateSubscriptionPaymentMethodMutation = { __typename?: 'Mutation' } & {
+  updateSubscriptionPaymentMethod: { __typename?: 'MembershipSubscription' } & Pick<
+    MembershipSubscription,
+    'id'
+  >
+}
+
+export type UpdateSubscriptionPlanMutationVariables = Exact<{
+  period: MembershipSubscriptionPeriod
+}>
+
+export type UpdateSubscriptionPlanMutation = { __typename?: 'Mutation' } & {
+  updateSubscriptionPlan: { __typename?: 'MembershipSubscription' } & Pick<
+    MembershipSubscription,
+    'id' | 'period'
+  >
+}
+
+export type UpdateSubscriptionRenewalMutationVariables = Exact<{
+  cancelAtPeriodEnd: Scalars['Boolean']
+}>
+
+export type UpdateSubscriptionRenewalMutation = { __typename?: 'Mutation' } & {
+  updateSubscriptionRenewal: { __typename?: 'MembershipSubscription' } & Pick<
+    MembershipSubscription,
+    'id'
+  >
+}
+
 export type PostPageQueryVariables = Exact<{
   id: Scalars['Int']
   uiLanguage: UiLanguage
@@ -792,6 +878,27 @@ export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
   badges: Array<{ __typename?: 'UserBadge' } & UserBadgeFragmentFragment>
 } & UserWithLanguagesFragmentFragment &
   SocialMediaFragmentFragment
+
+export type SubscriptionSettingsPageQueryVariables = Exact<{ [key: string]: never }>
+
+export type SubscriptionSettingsPageQuery = { __typename?: 'Query' } & {
+  currentUser?: Maybe<{ __typename?: 'User' } & UserWithSubscriptionFragmentFragment>
+}
+
+export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<User, 'id'> & {
+    membershipSubscription?: Maybe<
+      { __typename?: 'MembershipSubscription' } & Pick<
+        MembershipSubscription,
+        | 'id'
+        | 'period'
+        | 'expiresAt'
+        | 'cancelAtPeriodEnd'
+        | 'lastFourCardNumbers'
+        | 'cardBrand'
+        | 'isActive'
+      >
+    >
+  }
 
 export type CreatePostMutationVariables = Exact<{
   title: Scalars['String']
@@ -1153,7 +1260,9 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
 export const CurrentUserFragmentFragmentDoc = gql`
   fragment CurrentUserFragment on User {
     ...UserWithLanguagesFragment
-    isPremiumUser
+    membershipSubscription {
+      isActive
+    }
   }
   ${UserWithLanguagesFragmentFragmentDoc}
 `
@@ -1368,6 +1477,20 @@ export const ProfileUserFragmentFragmentDoc = gql`
   ${UserWithLanguagesFragmentFragmentDoc}
   ${UserBadgeFragmentFragmentDoc}
   ${SocialMediaFragmentFragmentDoc}
+`
+export const UserWithSubscriptionFragmentFragmentDoc = gql`
+  fragment UserWithSubscriptionFragment on User {
+    id
+    membershipSubscription {
+      id
+      period
+      expiresAt
+      cancelAtPeriodEnd
+      lastFourCardNumbers
+      cardBrand
+      isActive
+    }
+  }
 `
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
@@ -1971,6 +2094,203 @@ export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutati
   RemoveLanguageRelationMutation,
   RemoveLanguageRelationMutationVariables
 >
+export const PurchaseMembershipSubscriptionDocument = gql`
+  mutation purchaseMembershipSubscription(
+    $period: MembershipSubscriptionPeriod!
+    $paymentMethodId: String!
+  ) {
+    purchaseMembershipSubscription(period: $period, paymentMethodId: $paymentMethodId) {
+      id
+    }
+  }
+`
+export type PurchaseMembershipSubscriptionMutationFn = ApolloReactCommon.MutationFunction<
+  PurchaseMembershipSubscriptionMutation,
+  PurchaseMembershipSubscriptionMutationVariables
+>
+
+/**
+ * __usePurchaseMembershipSubscriptionMutation__
+ *
+ * To run a mutation, you first call `usePurchaseMembershipSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePurchaseMembershipSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [purchaseMembershipSubscriptionMutation, { data, loading, error }] = usePurchaseMembershipSubscriptionMutation({
+ *   variables: {
+ *      period: // value for 'period'
+ *      paymentMethodId: // value for 'paymentMethodId'
+ *   },
+ * });
+ */
+export function usePurchaseMembershipSubscriptionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    PurchaseMembershipSubscriptionMutation,
+    PurchaseMembershipSubscriptionMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    PurchaseMembershipSubscriptionMutation,
+    PurchaseMembershipSubscriptionMutationVariables
+  >(PurchaseMembershipSubscriptionDocument, baseOptions)
+}
+export type PurchaseMembershipSubscriptionMutationHookResult = ReturnType<
+  typeof usePurchaseMembershipSubscriptionMutation
+>
+export type PurchaseMembershipSubscriptionMutationResult = ApolloReactCommon.MutationResult<PurchaseMembershipSubscriptionMutation>
+export type PurchaseMembershipSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  PurchaseMembershipSubscriptionMutation,
+  PurchaseMembershipSubscriptionMutationVariables
+>
+export const UpdateSubscriptionPaymentMethodDocument = gql`
+  mutation updateSubscriptionPaymentMethod($paymentMethodId: String!) {
+    updateSubscriptionPaymentMethod(paymentMethodId: $paymentMethodId) {
+      id
+    }
+  }
+`
+export type UpdateSubscriptionPaymentMethodMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateSubscriptionPaymentMethodMutation,
+  UpdateSubscriptionPaymentMethodMutationVariables
+>
+
+/**
+ * __useUpdateSubscriptionPaymentMethodMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubscriptionPaymentMethodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubscriptionPaymentMethodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubscriptionPaymentMethodMutation, { data, loading, error }] = useUpdateSubscriptionPaymentMethodMutation({
+ *   variables: {
+ *      paymentMethodId: // value for 'paymentMethodId'
+ *   },
+ * });
+ */
+export function useUpdateSubscriptionPaymentMethodMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateSubscriptionPaymentMethodMutation,
+    UpdateSubscriptionPaymentMethodMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateSubscriptionPaymentMethodMutation,
+    UpdateSubscriptionPaymentMethodMutationVariables
+  >(UpdateSubscriptionPaymentMethodDocument, baseOptions)
+}
+export type UpdateSubscriptionPaymentMethodMutationHookResult = ReturnType<
+  typeof useUpdateSubscriptionPaymentMethodMutation
+>
+export type UpdateSubscriptionPaymentMethodMutationResult = ApolloReactCommon.MutationResult<UpdateSubscriptionPaymentMethodMutation>
+export type UpdateSubscriptionPaymentMethodMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateSubscriptionPaymentMethodMutation,
+  UpdateSubscriptionPaymentMethodMutationVariables
+>
+export const UpdateSubscriptionPlanDocument = gql`
+  mutation updateSubscriptionPlan($period: MembershipSubscriptionPeriod!) {
+    updateSubscriptionPlan(period: $period) {
+      id
+      period
+    }
+  }
+`
+export type UpdateSubscriptionPlanMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateSubscriptionPlanMutation,
+  UpdateSubscriptionPlanMutationVariables
+>
+
+/**
+ * __useUpdateSubscriptionPlanMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubscriptionPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubscriptionPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubscriptionPlanMutation, { data, loading, error }] = useUpdateSubscriptionPlanMutation({
+ *   variables: {
+ *      period: // value for 'period'
+ *   },
+ * });
+ */
+export function useUpdateSubscriptionPlanMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateSubscriptionPlanMutation,
+    UpdateSubscriptionPlanMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateSubscriptionPlanMutation,
+    UpdateSubscriptionPlanMutationVariables
+  >(UpdateSubscriptionPlanDocument, baseOptions)
+}
+export type UpdateSubscriptionPlanMutationHookResult = ReturnType<
+  typeof useUpdateSubscriptionPlanMutation
+>
+export type UpdateSubscriptionPlanMutationResult = ApolloReactCommon.MutationResult<UpdateSubscriptionPlanMutation>
+export type UpdateSubscriptionPlanMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateSubscriptionPlanMutation,
+  UpdateSubscriptionPlanMutationVariables
+>
+export const UpdateSubscriptionRenewalDocument = gql`
+  mutation updateSubscriptionRenewal($cancelAtPeriodEnd: Boolean!) {
+    updateSubscriptionRenewal(cancelAtPeriodEnd: $cancelAtPeriodEnd) {
+      id
+    }
+  }
+`
+export type UpdateSubscriptionRenewalMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateSubscriptionRenewalMutation,
+  UpdateSubscriptionRenewalMutationVariables
+>
+
+/**
+ * __useUpdateSubscriptionRenewalMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubscriptionRenewalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubscriptionRenewalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubscriptionRenewalMutation, { data, loading, error }] = useUpdateSubscriptionRenewalMutation({
+ *   variables: {
+ *      cancelAtPeriodEnd: // value for 'cancelAtPeriodEnd'
+ *   },
+ * });
+ */
+export function useUpdateSubscriptionRenewalMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateSubscriptionRenewalMutation,
+    UpdateSubscriptionRenewalMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateSubscriptionRenewalMutation,
+    UpdateSubscriptionRenewalMutationVariables
+  >(UpdateSubscriptionRenewalDocument, baseOptions)
+}
+export type UpdateSubscriptionRenewalMutationHookResult = ReturnType<
+  typeof useUpdateSubscriptionRenewalMutation
+>
+export type UpdateSubscriptionRenewalMutationResult = ApolloReactCommon.MutationResult<UpdateSubscriptionRenewalMutation>
+export type UpdateSubscriptionRenewalMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateSubscriptionRenewalMutation,
+  UpdateSubscriptionRenewalMutationVariables
+>
 export const PostPageDocument = gql`
   query postPage($id: Int!, $uiLanguage: UILanguage!) {
     postById(id: $id) {
@@ -2077,6 +2397,62 @@ export type ProfilePageLazyQueryHookResult = ReturnType<typeof useProfilePageLaz
 export type ProfilePageQueryResult = ApolloReactCommon.QueryResult<
   ProfilePageQuery,
   ProfilePageQueryVariables
+>
+export const SubscriptionSettingsPageDocument = gql`
+  query subscriptionSettingsPage {
+    currentUser {
+      ...UserWithSubscriptionFragment
+    }
+  }
+  ${UserWithSubscriptionFragmentFragmentDoc}
+`
+
+/**
+ * __useSubscriptionSettingsPageQuery__
+ *
+ * To run a query within a React component, call `useSubscriptionSettingsPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSubscriptionSettingsPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscriptionSettingsPageQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscriptionSettingsPageQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    SubscriptionSettingsPageQuery,
+    SubscriptionSettingsPageQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    SubscriptionSettingsPageQuery,
+    SubscriptionSettingsPageQueryVariables
+  >(SubscriptionSettingsPageDocument, baseOptions)
+}
+export function useSubscriptionSettingsPageLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    SubscriptionSettingsPageQuery,
+    SubscriptionSettingsPageQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    SubscriptionSettingsPageQuery,
+    SubscriptionSettingsPageQueryVariables
+  >(SubscriptionSettingsPageDocument, baseOptions)
+}
+export type SubscriptionSettingsPageQueryHookResult = ReturnType<
+  typeof useSubscriptionSettingsPageQuery
+>
+export type SubscriptionSettingsPageLazyQueryHookResult = ReturnType<
+  typeof useSubscriptionSettingsPageLazyQuery
+>
+export type SubscriptionSettingsPageQueryResult = ApolloReactCommon.QueryResult<
+  SubscriptionSettingsPageQuery,
+  SubscriptionSettingsPageQueryVariables
 >
 export const CreatePostDocument = gql`
   mutation createPost(

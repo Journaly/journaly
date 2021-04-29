@@ -1,0 +1,480 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateEnum",
+      "enum": "MembershipSubscriptionPeriod",
+      "values": [
+        "MONTHLY",
+        "QUARTERLY",
+        "ANNUALY"
+      ]
+    },
+    {
+      "tag": "UpdateEnum",
+      "enum": "UserRole",
+      "createdValues": [
+        "USER"
+      ]
+    },
+    {
+      "tag": "CreateModel",
+      "model": "MembershipSubscription"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscription",
+      "field": "id",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscription",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscription",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscription",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "autoincrement()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscription",
+      "field": "period",
+      "type": "MembershipSubscriptionPeriod",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscription",
+      "field": "user",
+      "type": "User",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscription",
+          "field": "user"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscription",
+          "field": "user"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[userId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscription",
+          "field": "user"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscription",
+      "field": "userId",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscription",
+      "field": "stripeSubscription",
+      "type": "Json",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscription",
+      "field": "stripeSubscriptionId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscription",
+      "field": "expiresAt",
+      "type": "DateTime",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscription",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscription",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscription",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscription",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscription",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "MembershipSubscription",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[userId]"
+            }
+          ]
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateModel",
+      "model": "MembershipSubscriptionTransaction"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "id",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionTransaction",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionTransaction",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionTransaction",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "autoincrement()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "chargeCents",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "chargeCurrency",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "user",
+      "type": "User",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionTransaction",
+          "field": "user"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionTransaction",
+          "field": "user"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[userId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionTransaction",
+          "field": "user"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "userId",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "membershipSubscriptionPeriod",
+      "type": "MembershipSubscriptionPeriod",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "stripeChargeId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "stripeChargeData",
+      "type": "Json",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionTransaction",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionTransaction",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscriptionTransaction",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "DeleteModel",
+      "model": "UserSubscription"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "PendingNotification",
+      "type": "PendingNotification",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "MembershipSubscriptionTransaction",
+      "type": "MembershipSubscriptionTransaction",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "stripeCustomerId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "userRole"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "newValue": "USER"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "User",
+      "field": "subscription",
+      "type": "MembershipSubscription"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Post",
+      "field": "PendingNotification",
+      "type": "PendingNotification",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Comment",
+      "field": "PendingNotification",
+      "type": "PendingNotification",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "PostComment",
+      "field": "PendingNotification",
+      "type": "PendingNotification",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "CommentThanks",
+      "field": "PendingNotification",
+      "type": "PendingNotification",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "PostCommentThanks",
+      "field": "PendingNotification",
+      "type": "PendingNotification",
+      "arity": "List"
+    }
+  ]
+}

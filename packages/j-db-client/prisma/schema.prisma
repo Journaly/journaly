@@ -9,37 +9,40 @@ generator prisma_client {
 }
 
 model User {
-  id                       Int                       @id @default(autoincrement())
-  name                     String?
-  email                    String                    @unique
-  handle                   String                    @unique
-  auth                     Auth?
-  userRole                 UserRole                  @default(FREE_USER)
-  bio                      String?
-  city                     String?
-  country                  String?
-  posts                    Post[]
-  subscription             UserSubscription?
-  socialMedia              SocialMedia?
-  languagesNative          LanguageNative[]
-  languagesLearning        LanguageLearning[]
-  languages                LanguageRelation[]
-  createdAt                DateTime                  @default(now())
-  updatedAt                DateTime                  @updatedAt
-  userInterests            UserInterest[]
-  pageView                 PageView[]
-  profileImage             String?
-  threadSubscriptions      ThreadSubscription[]
-  postLikes                PostLike[]
-  commentThanks            CommentThanks[]
-  postCommentThanks        PostCommentThanks[]
-  comments                 Comment[]
-  postComments             PostComment[]
-  badges                   UserBadge[]
-  followedBy               User[]                    @relation("UserFollows", references: [id])
-  following                User[]                    @relation("UserFollows", references: [id])
-  postCommentSubscriptions PostCommentSubscription[]
-  PendingNotification      PendingNotification[]
+  id                            Int                             @id @default(autoincrement())
+  name                          String?
+  email                         String                          @unique
+  handle                        String                          @unique
+  auth                          Auth?
+  userRole                      UserRole                        @default(USER)
+  bio                           String?
+  city                          String?
+  country                       String?
+  posts                         Post[]
+  membershipSubscription        MembershipSubscription?
+  socialMedia                   SocialMedia?
+  languagesNative               LanguageNative[]
+  languagesLearning             LanguageLearning[]
+  languages                     LanguageRelation[]
+  createdAt                     DateTime                        @default(now())
+  updatedAt                     DateTime                        @updatedAt
+  moosendSubscriberId           String?
+  userInterests                 UserInterest[]
+  pageView                      PageView[]
+  profileImage                  String?
+  threadSubscriptions           ThreadSubscription[]
+  postLikes                     PostLike[]
+  commentThanks                 CommentThanks[]
+  postCommentThanks             PostCommentThanks[]
+  comments                      Comment[]
+  postComments                  PostComment[]
+  badges                        UserBadge[]
+  followedBy                    User[]                          @relation("UserFollows", references: [id])
+  following                     User[]                          @relation("UserFollows", references: [id])
+  postCommentSubscriptions      PostCommentSubscription[]
+  PendingNotification           PendingNotification[]
+  MembershipSubscriptionInvoice MembershipSubscriptionInvoice[]
+  stripeCustomerId              String?
 }
 
 model Auth {
@@ -201,8 +204,8 @@ model CommentThanks {
   comment   Comment  @relation(fields: [commentId], references: [id])
   commentId Int
 
-  @@unique([authorId, commentId])
   PendingNotification PendingNotification[]
+  @@unique([authorId, commentId])
 }
 
 model PostCommentThanks {
@@ -213,8 +216,8 @@ model PostCommentThanks {
   PostComment   PostComment? @relation(fields: [postCommentId], references: [id])
   postCommentId Int?
 
-  @@unique([authorId, postCommentId])
   PendingNotification PendingNotification[]
+  @@unique([authorId, postCommentId])
 }
 
 model Comment {
@@ -293,14 +296,48 @@ model PostCommentSubscription {
   @@unique([userId, postId])
 }
 
-model UserSubscription {
-  id        Int      @id @default(autoincrement())
-  name      String
-  price     Int
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model MembershipSubscription {
+  id                   Int                          @id @default(autoincrement())
+  period               MembershipSubscriptionPeriod
+  user                 User                         @relation(fields: [userId], references: [id])
+  userId               Int
+  stripeSubscription   Json
+  stripeSubscriptionId String                       @unique
+  cancelAtPeriodEnd    Boolean                      @default(false)
+  lastFourCardNumbers  String
+  cardBrand            String
+  lastPaymentFailure   Boolean                      @default(false)
+  expiresAt            DateTime?
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+
+  @@unique([userId])
+}
+
+model MembershipSubscriptionInvoice {
+  id                                Int                                 @id @default(autoincrement())
+  user                              User                                @relation(fields: [userId], references: [id])
+  userId                            Int
+  membershipSubscriptionPeriod      MembershipSubscriptionPeriod
+  stripeInvoiceId                   String
+  stripeInvoiceData                 Json
+  createdAt                         DateTime                            @default(now())
+  updatedAt                         DateTime                            @updatedAt
+  MembershipSubscriptionInvoiceItem MembershipSubscriptionInvoiceItem[]
+}
+
+model MembershipSubscriptionInvoiceItem {
+  id                    Int                           @id @default(autoincrement())
+  amount                Int
+  currency              String
+  description           String
+  proration             Boolean
+  invoice               MembershipSubscriptionInvoice @relation(fields: [invoiceId], references: [id])
+  invoiceId             Int
+  stripeInvoiceItemId   String
+  stripeInvoiceItemData Json
+  createdAt             DateTime                      @default(now())
+  updatedAt             DateTime                      @updatedAt
 }
 
 model PageView {
@@ -348,8 +385,7 @@ model PendingNotification {
 enum UserRole {
   ADMIN
   MODERATOR
-  FREE_USER
-  PRO_USER
+  USER
 }
 
 enum PostStatus {
@@ -381,4 +417,10 @@ enum NotificationType {
   THREAD_COMMENT_THANKS
   POST_COMMENT_THANKS
   NEW_POST
+}
+
+enum MembershipSubscriptionPeriod {
+  MONTHLY
+  QUARTERLY
+  ANNUALY
 }

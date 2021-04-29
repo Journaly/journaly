@@ -12,7 +12,8 @@
       "@/theme": ["theme/index"],
       "@/theme/*": ["theme/*"],
       "@/utils": ["utils/index"],
-      "@/utils/*": ["utils/*"]
+      "@/utils/*": ["utils/*"],
+      "@/nexus/*": ["nexus/*"]
     }
   }
 }

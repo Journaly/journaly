@@ -15,7 +15,8 @@ import { PostStatus } from '@journaly/j-db-client'
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
   generateThumbbusterUrl,
-  sendPasswordResetTokenEmail
+  sendPasswordResetTokenEmail,
+  subscribeUserToProductUpdates,
 } from './utils'
 import { validateUpdateUserMutationData } from './utils/userValidation'
 
@@ -54,6 +55,7 @@ const User = objectType({
     t.model.posts({ pagination: false })
     t.model.profileImage()
     t.model.createdAt()
+    t.model.membershipSubscription()
     t.model.socialMedia({
       type: 'SocialMedia',
       resolve: async (parent, _args, ctx) => {
@@ -67,11 +69,6 @@ const User = objectType({
     t.model.languages({ pagination: false })
     t.model.following({ pagination: false })
     t.model.followedBy({ pagination: false })
-    t.boolean('isPremiumUser', {
-      resolve(_parent, _args, _ctx, _info) {
-        return false
-      }
-    })
 
     t.int('postsWrittenCount', {
       resolve(parent, _args, ctx, _info) {
@@ -240,9 +237,9 @@ const UserMutations = extendType({
           // Prisma's error code for unique constraint violation
           if (ex.code === 'P2002') {
             if (ex.meta.target.find((x: string) => x === 'email')) {
-              throw new UserInputError("Email address is already in use. Please try logging in")
+              throw new UserInputError("This email address is already in use. Please try logging in")
             } else if (ex.meta.target.find((x: string) => x === 'handle')) {
-              throw new UserInputError("Handle is already in use")
+              throw new UserInputError("This handle is already in use")
             } else {
               throw ex
             }
@@ -250,6 +247,8 @@ const UserMutations = extendType({
             throw ex
           }
         }
+
+        await subscribeUserToProductUpdates(user, ctx.db)
 
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
         ctx.response.setHeader(
@@ -285,12 +284,18 @@ const UserMutations = extendType({
           email: args.email?.toLowerCase(),
         }
 
-        return ctx.db.user.update({
+        const user = await ctx.db.user.update({
           data: updates,
           where: {
             id: userId,
           },
         })
+
+        if (args.email) {
+          await subscribeUserToProductUpdates(user, ctx.db)
+        }
+
+        return user
       },
     })
 
@@ -351,7 +356,7 @@ const UserMutations = extendType({
         const isValid = await bcrypt.compare(args.oldPassword, user.auth.password)
 
         if (!isValid) {
-          throw new Error('Invalid old password')
+          throw new Error('Old password is incorrect')
         }
 
         const newPassword = await bcrypt.hash(args.newPassword, 10)

@@ -15,7 +15,8 @@
       "about": "About",
       "blog": "Blog",
       "logIn": "Log in",
-      "signUp": "Sign up"
+      "signUp": "Sign up",
+      "dashboard": "Dashboard"
     }
   },
   "dashboardNav": {
@@ -64,7 +65,7 @@
   "imageErrors": {
     "initial": "Error communicating with Journaly server. Please try again later.",
     "dataUpload": "Error transfering image to storage medium. Please try again later.",
-    "allDoneChecksFailed": "An error occured while uploading your image. Please try again later."
+    "allDoneChecksFailed": "An error occurred while uploading your image. Please try again later."
   },
   "editor": {
     "placeholderPrompt": "It all started this morning when..."

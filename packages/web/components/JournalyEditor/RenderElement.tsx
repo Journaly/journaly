@@ -1,10 +1,30 @@
 import React from 'react'
 import { renderElementTable } from '@udecode/slate-plugins'
-import { RenderElementProps } from 'slate-react'
+import { useSelected, RenderElementProps } from 'slate-react'
 
 import { isImageNode, isLinkNode, isTableFamilyNode } from '@/utils/slate'
 
-const RenderElement = ({ attributes, children, element }: RenderElementProps) => {
+const ImageElement = ({ attributes, element, children }: RenderElementProps) => {
+  const selected = useSelected()
+
+  return isImageNode(element) ? (
+    <div {...attributes} className="embedded-image">
+      <div contentEditable={false}>
+        <img src={element.url} />
+      </div>
+      {children}
+      <style jsx>{`
+        .embedded-image img {
+          box-shadow: ${selected ? '0 0 0 3px #B4D5FF' : 'none'};
+        }
+      `}</style>
+    </div>
+  ) : null
+}
+
+const RenderElement = (props: RenderElementProps) => {
+  const { attributes, children, element } = props
+
   if (isTableFamilyNode(element)) {
     const tableElement = renderElementTable()({ attributes, children, element })
     if (tableElement) {
@@ -30,14 +50,7 @@ const RenderElement = ({ attributes, children, element }: RenderElementProps) =>
     case 'numbered-list':
       return <ol {...attributes}>{children}</ol>
     case 'image':
-      return isImageNode(element) ? (
-        <div {...attributes}>
-          <div contentEditable={false}>
-            <img src={element.url} />
-          </div>
-          {children}
-        </div>
-      ) : null
+      return <ImageElement {...props} />
     default:
       return <p {...attributes}>{children}</p>
   }

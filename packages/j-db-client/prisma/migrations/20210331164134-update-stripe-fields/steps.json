@@ -1,0 +1,52 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "membershipSubscription",
+      "type": "MembershipSubscription",
+      "arity": "Optional"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "User",
+      "field": "subscription"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MembershipSubscription",
+          "field": "stripeSubscriptionId"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "stripeInvoiceId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "stripeInvoiceData",
+      "type": "Json",
+      "arity": "Required"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "stripeChargeId"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MembershipSubscriptionTransaction",
+      "field": "stripeChargeData"
+    }
+  ]
+}

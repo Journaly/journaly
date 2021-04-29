@@ -1,9 +1,11 @@
+import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
+import { useTranslation } from '@/config/i18n'
 import { width, darkGrey } from '@/utils'
 import NavLink from '@/components/NavLink'
 import Logo from '@/components/Logo'
-import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
 
 const Nav = () => {
+  const { t } = useTranslation('common')
   const { data } = useCurrentUserQuery()
   const currentUser = data?.currentUser as UserType
 
@@ -14,22 +16,22 @@ const Nav = () => {
 
         <ul className="nav-items">
           <NavLink href="/about">
-            <a className="nav-link">About</a>
+            <a className="nav-link">{t('home.nav.about')}</a>
           </NavLink>
           <NavLink href="/blog/introducing-journaly">
-            <a className="nav-link">Blog</a>
+            <a className="nav-link">{t('home.nav.blog')}</a>
           </NavLink>
           {currentUser ? (
             <NavLink href="/dashboard/my-feed">
-              <a className="nav-link">Dashboard</a>
+              <a className="nav-link">{t('home.nav.dashboard')}</a>
             </NavLink>
           ) : (
             <>
               <NavLink href="/dashboard/login">
-                <a className="nav-link">Log in</a>
+                <a className="nav-link">{t('home.nav.logIn')}</a>
               </NavLink>
               <NavLink href="/dashboard/signup">
-                <a className="nav-link">Sign up</a>
+                <a className="nav-link">{t('home.nav.signUp')}</a>
               </NavLink>
             </>
           )}

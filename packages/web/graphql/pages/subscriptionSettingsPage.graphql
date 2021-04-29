@@ -1,0 +1,18 @@
+query subscriptionSettingsPage {
+  currentUser {
+    ...UserWithSubscriptionFragment
+  }
+}
+
+fragment UserWithSubscriptionFragment on User {
+  id
+  membershipSubscription {
+    id
+    period
+    expiresAt
+    cancelAtPeriodEnd
+    lastFourCardNumbers
+    cardBrand
+    isActive
+  }
+}

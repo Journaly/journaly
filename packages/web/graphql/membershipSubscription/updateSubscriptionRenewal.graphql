@@ -1,0 +1,5 @@
+mutation updateSubscriptionRenewal($cancelAtPeriodEnd: Boolean!) {
+  updateSubscriptionRenewal(cancelAtPeriodEnd: $cancelAtPeriodEnd) {
+    id
+  }
+}

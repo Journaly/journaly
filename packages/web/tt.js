@@ -8,6 +8,7 @@ const NodeGit = require('nodegit')
 const jsonParser = require('jsonc-parser')
 const createCsvWriter = require('csv-writer').createObjectCsvWriter
 const CsvReadableStream = require('csv-reader');
+const CLIProgress = require('cli-progress');
 
 const LOCALES = [
   'de',
@@ -35,6 +36,22 @@ const HEADER_SPEC = [
   { id: 'tlnotes', title: 'Translator Notes' },
   { id: 'lastCommitSHA', title: 'Last Commit to Source' },
 ]
+
+let _progressBar = null
+
+const initProgress = () => {
+  _progressBar = new CLIProgress.SingleBar({}, CLIProgress.Presets.shades_classic)
+  _progressBar.start(LOCALES.length * NAMESPACES.length + LOCALES.length, 0)
+}
+
+const reportProgress = () => {
+  _progressBar && _progressBar.increment()
+}
+
+const stopProgress = () => {
+  _progressBar && _progressBar.stop()
+}
+
 
 const slurpFile = async (path) => {
   return await fs.readFile(path, { encoding: 'UTF-8' });
@@ -158,31 +175,6 @@ const compareTranslationFiles = async (repo, sourceFilePath, targetFilePath) => 
   return merged
 }
 
-const reportCLI = (comparison) => {
-  const missing = comparison.filter(({ status }) => status === 'MISSING_TRANSLATION')
-  const needsUpdate = comparison.filter(({ status }) => status === 'SOURCE_NEWER')
-  const upToDate = comparison.filter(({ status }) => status === 'UP_TO_DATE')
-
-  if (missing.length) {
-    console.log('========== Missing Translations ========== ')
-    for (comp of missing) {
-      console.log(`- ${comp.source.fullId}`)
-    }
-    console.log('')
-  }
-
-  if (needsUpdate.length) {
-    console.log('========== Out of Date Translations ========== ')
-    for (comp of needsUpdate) {
-      console.log(`- ${comp.source.fullId}`)
-    }
-    console.log('')
-  }
-
-  console.log(`Checked ${comparison.length} translations:`)
-  console.log(`up to date: ${upToDate.length}, out of date: ${needsUpdate.length}, missing: ${missing.length}`)
-}
-
 const generateAllLocalesReport = async () => {
   const repo = await NodeGit.Repository.open(path.resolve('../../'))
 
@@ -203,6 +195,7 @@ const generateAllLocalesReport = async () => {
       )
 
       localeReport.namespaces[ns] = comparison
+      reportProgress()
     }
 
     report.locales[locale] = localeReport
@@ -240,7 +233,10 @@ const generateTemplates = async () => {
     }
 
     writer.writeRecords(records)
+    reportProgress()
   }
+
+  stopProgress()
 }
 
 const ingestFile = async (locale, file) => {
@@ -275,7 +271,6 @@ const ingestFile = async (locale, file) => {
   }
 
   for (ns in recordsByNamespace) {
-    console.log(ns)
     const targetFilePath = `../../packages/web/public/static/locales/${locale}/${ns}.json`
     let modifiedDoc = await slurpFile(targetFilePath)
 
@@ -310,7 +305,20 @@ require('yargs/yargs')(process.argv.splice(2))
   .command({
     command: 'generate',
     describe: 'Output translation template CSVs',
-    handler: generateTemplates
+    handler: async (argv) => {
+      if (argv.progress) {
+        initProgress()
+      }
+
+      await generateTemplates()
+    },
+    builder: (yargs) => (
+      yargs
+        .positional('progress', {
+          boolean: 'true',
+          default: false,
+        })
+    )
   })
   .command({
     command: 'ingest',

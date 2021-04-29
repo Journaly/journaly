@@ -107,6 +107,7 @@
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^2.29.0",
     "@typescript-eslint/parser": "^2.29.0",
+    "cli-progress": "^3.9.0",
     "colors": "^1.4.0",
     "csv-reader": "^1.0.7",
     "csv-writer": "^1.6.0",

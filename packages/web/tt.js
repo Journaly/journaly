@@ -15,6 +15,11 @@ const LOCALES = [
   'es',
 ]
 
+const LOCALE_NAME_MAP = {
+  'de': 'German',
+  'es': 'Spanish',
+}
+
 const NAMESPACES = [
   'authentication',
   'comment',
@@ -36,6 +41,114 @@ const HEADER_SPEC = [
   { id: 'tlnotes', title: 'Translator Notes' },
   { id: 'lastCommitSHA', title: 'Last Commit to Source' },
 ]
+
+const computeLocaleCompleteness = (localeReport) => {
+  let total = 0
+  let missing = 0
+  let ood = 0
+
+  for (ns in localeReport.namespaces) {
+    for (translation of localeReport.namespaces[ns]) {
+      total++
+
+      if (translation.status === 'MISSING_TRANSLATION') {
+        missing++
+      } else if (translation.status === 'SOURCE_NEWER') {
+        ood++
+      }
+    }
+  }
+
+  return [
+    `${(100 * missing / total).toFixed(2)}%`,
+    `${(100 * ood / total).toFixed(2)}%`,
+  ]
+}
+
+const generateIndexHTML = async (report) => {
+  const html = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Journaly Translations</title>
+    <style type="text/css">
+      body {
+        margin:40px auto;
+        max-width:650px;
+        line-height:1.6;
+        font-size:18px;
+        color:#444;
+        padding:0 10px
+      }
+      h1,h2,h3 {
+        line-height:1.2
+      }
+      table {
+        width: 100%;
+      }
+      thead th {
+        background-color: lightgray;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Help Translate Journaly!</h1>
+    </header>
+    <p>
+      Journaly is currently accepting translations in the ${LOCALES.length}
+      languages other than Enlish. We'd love to have your help improving these
+      or translating them into new languages!
+    </p>
+    <p>
+      To help translate one of the existing languages, find it in the table
+      below, download the linked template, fill it out and email it to
+      <a href="mailto:hello@journaly.com">hello@journally.com</a>.
+    </p>
+    <p>
+      To translate a language that isn't listed, drop us a line at
+      <a href="mailto:hello@journaly.com">hello@journally.com</a>.
+      and we'll look at adding it. Since not every language has the same usage
+      among our userbase, and because each translation requires maintainance
+      effort, we may hold on adding some languages until we find there is a
+      significant demand, but generally we're open to translations. Contact
+      us if you're not sure!
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Language</th>
+          <th>Template</th>
+          <th>% Missing</th>
+          <th>% Out of Date</th>
+        </tr>
+      </thead>
+      </tbody>
+      ${LOCALES.map(locale => {
+        const [missing, ood] = computeLocaleCompleteness(report.locales[locale])
+        return `
+          <tr>
+            <td>${LOCALE_NAME_MAP[locale]}</td>
+            <td><a href="templates/${locale}.csv">${locale}.csv</a></td>
+            <td>${missing}</td>
+            <td>${ood}</td>
+          </tr>
+        `
+      }).join('\n')}
+      </tbody>
+  </body>
+</html>
+  `
+
+  await fs.writeFile(
+    'translation-site/index.html',
+    html,
+    { encoding: 'UTF-8' }
+  )
+}
 
 let _progressBar = null
 
@@ -204,13 +317,11 @@ const generateAllLocalesReport = async () => {
   return report
 }
 
-const generateTemplates = async () => {
-  const report = await generateAllLocalesReport()
-
+const generateTemplates = async (report) => {
   for (locale in report.locales) {
     const localeReport = report.locales[locale]
     const writer = createCsvWriter({
-      path: `translation-templates/${locale}.csv`,
+      path: `translation-site/templates/${locale}.csv`,
       header: HEADER_SPEC,
     })
 
@@ -310,7 +421,9 @@ require('yargs/yargs')(process.argv.splice(2))
         initProgress()
       }
 
-      await generateTemplates()
+      const report = await generateAllLocalesReport()
+      await generateTemplates(report)
+      await generateIndexHTML(report)
     },
     builder: (yargs) => (
       yargs

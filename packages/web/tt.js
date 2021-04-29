@@ -1,9 +1,13 @@
+#!/usr/bin/env node
+
+const cbfs = require('fs')
 const fs = require('fs/promises')
 const path = require('path')
 
 const NodeGit = require('nodegit')
 const jsonParser = require('jsonc-parser')
 const createCsvWriter = require('csv-writer').createObjectCsvWriter
+const CsvReadableStream = require('csv-reader');
 
 const LOCALES = [
   'de',
@@ -20,6 +24,16 @@ const NAMESPACES = [
   'post',
   'profile',
   'settings',
+]
+
+const HEADER_SPEC = [
+  { id: 'namespace', title: 'namespace' },
+  { id: 'fullId', title: 'key' },
+  { id: 'status', title: 'status' },
+  { id: 'source', title: 'Source String' },
+  { id: 'target', title: 'Translated String' },
+  { id: 'tlnotes', title: 'Translator Notes' },
+  { id: 'lastCommitSHA', title: 'Last Commit to Source' },
 ]
 
 const slurpFile = async (path) => {
@@ -197,22 +211,14 @@ const generateAllLocalesReport = async () => {
   return report
 }
 
-const doThing = async () => {
+const generateTemplates = async () => {
   const report = await generateAllLocalesReport()
 
   for (locale in report.locales) {
     const localeReport = report.locales[locale]
     const writer = createCsvWriter({
       path: `translation-templates/${locale}.csv`,
-      header: [
-        { id: 'namespace', title: 'namespace' },
-        { id: 'fullId', title: 'key' },
-        { id: 'status', title: 'status' },
-        { id: 'source', title: 'Source String' },
-        { id: 'target', title: 'Translated String' },
-        { id: 'tlnotes', title: 'Translator Notes' },
-        { id: 'lastCommitSHA', title: 'Last Commit to Source' },
-      ]
+      header: HEADER_SPEC,
     })
 
     const records = []
@@ -237,4 +243,90 @@ const doThing = async () => {
   }
 }
 
-doThing()
+const ingestFile = async (locale, file) => {
+  const inputStream = cbfs.createReadStream(file, 'utf8')
+  const records = await (new Promise((res, rej) => {
+    const records = []
+
+    inputStream
+      .pipe(new CsvReadableStream())
+      .on('data', function (row) {
+        const record = {}
+        for (let i=0; i<row.length; i++) {
+          record[HEADER_SPEC[i].id] = row[i]
+        }
+        records.push(record)
+      })
+      .on('end', function () {
+        res(records)
+      })
+  }))
+
+  const recordsByLocale = {}
+
+  for (record of records) {
+    if (!(record.namespace in recordsByLocale)) {
+      recordsByLocale[record.namespace] = {}
+    }
+
+    recordsByLocale[record.namespace][record.fullId] = record
+  }
+
+  const ns = 'comment'
+  const targetFilePath = `../../packages/web/public/static/locales/${locale}/${ns}.json`
+  let modifiedDoc = await slurpFile(targetFilePath)
+
+  for (fullId in recordsByLocale[ns]) {
+    const record = recordsByLocale[ns][fullId]
+    modifiedDoc = jsonParser.applyEdits(
+      modifiedDoc, 
+      jsonParser.modify(
+        modifiedDoc,
+        fullId.split('.'),
+        record.target,
+        {
+          formattingOptions: {
+            tabSize: 2,
+            insertSpaces: true,
+            eol: '\n',
+          }
+        }
+      )
+    )
+  }
+
+  await fs.writeFile(
+    targetFilePath,
+    modifiedDoc,
+    { encoding: 'UTF-8' }
+  )
+}
+
+require('yargs/yargs')(process.argv.splice(2))
+  .command({
+    command: 'generate',
+    describe: 'Output translation template CSVs',
+    handler: generateTemplates
+  })
+  .command({
+    command: 'ingest',
+    describe: 'Ingest a filled out translation CSV into the translations',
+    builder: (yargs) => (
+      yargs
+        .positional('locale', {
+          choices: LOCALES,
+          desc: 'The locale (language) the CSV applies to.'
+        })
+        .require('locale')
+        .positional('file', {
+          desc: 'The CSV file to ingest',
+        })
+        .require('file')
+    ),
+    handler: async (argv) => {
+      await ingestFile(argv.locale, argv.file)
+    }
+  })
+  .demandCommand()
+  .help()
+  .argv

@@ -249,57 +249,61 @@ const ingestFile = async (locale, file) => {
     const records = []
 
     inputStream
-      .pipe(new CsvReadableStream())
+      .pipe(new CsvReadableStream({ skipHeader: true }))
       .on('data', function (row) {
         const record = {}
         for (let i=0; i<row.length; i++) {
           record[HEADER_SPEC[i].id] = row[i]
         }
-        records.push(record)
+        if (record.target) {
+          records.push(record)
+        }
       })
       .on('end', function () {
         res(records)
       })
   }))
 
-  const recordsByLocale = {}
+  const recordsByNamespace = {}
 
   for (record of records) {
-    if (!(record.namespace in recordsByLocale)) {
-      recordsByLocale[record.namespace] = {}
+    if (!(record.namespace in recordsByNamespace)) {
+      recordsByNamespace[record.namespace] = {}
     }
 
-    recordsByLocale[record.namespace][record.fullId] = record
+    recordsByNamespace[record.namespace][record.fullId] = record
   }
 
-  const ns = 'comment'
-  const targetFilePath = `../../packages/web/public/static/locales/${locale}/${ns}.json`
-  let modifiedDoc = await slurpFile(targetFilePath)
+  for (ns in recordsByNamespace) {
+    console.log(ns)
+    const targetFilePath = `../../packages/web/public/static/locales/${locale}/${ns}.json`
+    let modifiedDoc = await slurpFile(targetFilePath)
 
-  for (fullId in recordsByLocale[ns]) {
-    const record = recordsByLocale[ns][fullId]
-    modifiedDoc = jsonParser.applyEdits(
-      modifiedDoc, 
-      jsonParser.modify(
-        modifiedDoc,
-        fullId.split('.'),
-        record.target,
-        {
-          formattingOptions: {
-            tabSize: 2,
-            insertSpaces: true,
-            eol: '\n',
+    for (fullId in recordsByNamespace[ns]) {
+      const record = recordsByNamespace[ns][fullId]
+      modifiedDoc = jsonParser.applyEdits(
+        modifiedDoc, 
+        jsonParser.modify(
+          modifiedDoc,
+          fullId.split('.'),
+          record.target,
+          {
+            formattingOptions: {
+              tabSize: 2,
+              insertSpaces: true,
+              eol: '\n',
+            }
           }
-        }
+        )
       )
+    }
+
+    await fs.writeFile(
+      targetFilePath,
+      modifiedDoc,
+      { encoding: 'UTF-8' }
     )
   }
-
-  await fs.writeFile(
-    targetFilePath,
-    modifiedDoc,
-    { encoding: 'UTF-8' }
-  )
 }
 
 require('yargs/yargs')(process.argv.splice(2))

@@ -11,13 +11,6 @@ import {
   CommentThanks,
 } from '@journaly/j-db-client'
 
-declare global {
-  namespace NodeJS {
-    interface Global {
-      prisma: PrismaClient;
-    }
-  }
-}
 
 export const assertUnreachable = (x: never): never => {
   throw new Error(`Didn't expect to get here ${x}`)
@@ -353,26 +346,7 @@ export const createNotification = (
   return db.pendingNotification.create({ data })
 }
 
-let _prisma: PrismaClient | null
-
-export const getClient = (): PrismaClient => {
-  if (process.env.NODE_ENV === 'development') {
-    if (!global.prisma) {
-      console.log('Creating new database client [DEV]')
-      global.prisma = new PrismaClient()
-    }
-
-    return global.prisma
-  } else {
-    if (!_prisma) {
-      console.log('Creating new database client [PROD]')
-      _prisma = new PrismaClient()
-    }
-
-    return _prisma
-  }
-}
-
 export * from './email'
 export * from './aws'
 export * from './resolverUtils'
+export * from './db'

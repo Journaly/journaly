@@ -1,6 +1,11 @@
 import Stripe from 'stripe'
 
-const stripeConfig = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+import {
+  User,
+  PrismaClient,
+} from '@journaly/j-db-client'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2020-08-27',
 })
 
@@ -37,8 +42,38 @@ const paymentErrorWrapper: PaymentErrorWrapperType = async (fn) => {
   }
 }
 
-export default stripeConfig
+const getOrCreateStripeCustomer = async (
+  user: User,
+  db: PrismaClient
+): Promise<string> => {
+  if (user.stripeCustomerId) {
+    return user.stripeCustomerId
+  }
+
+  const customer = await stripe.customers.create({
+    description: `${user.handle} (${user.id})`,
+    email: user.email,
+    metadata: {
+      journalyUserId: user.id,
+      handle: user.handle,
+    },
+  })
+
+  await db.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      stripeCustomerId: customer.id,
+    },
+  })
+
+  return customer.id
+}
+
+export default stripe
 export {
   logPaymentsError,
-  paymentErrorWrapper 
+  paymentErrorWrapper,
+  getOrCreateStripeCustomer,
 }

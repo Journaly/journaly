@@ -27,8 +27,30 @@ jobs:
             - ~/.npm
             - ~/.cache
             - ./packages/web/.next/cache
+  update-translations-site:
+    executor: node/default
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - translations-site-dep{{ checksum "packages/web/package-lock.json" }}
+      - run:
+          command: cd packages/web && npm ci
+          name: Installing NPM packages
+      - run:
+          command: cd packages/web && node tt.js generate
+          name: Generate translations site
+      - upload:
+          command: cd packages/web && aws s3 cp --recursive translation-site s3://translations-website/
+          name: Upload site
+      - save_cache:
+          key: translations-site-dep{{ checksum "packages/web/package-lock.json" }}
+          paths:
+            - ~/.npm
+            - ~/.cache
 
 workflows:
   main:
     jobs:
       - build
+      - update-translations-site

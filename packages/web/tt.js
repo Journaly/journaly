@@ -19,6 +19,7 @@ const LOCALES = [
 const LOCALE_NAME_MAP = {
   'de': 'German',
   'es': 'Spanish',
+  'fr': 'French',
 }
 
 const NAMESPACES = [
@@ -100,8 +101,8 @@ const generateIndexHTML = async (report) => {
     </header>
     <p>
       Journaly is currently accepting translations in the ${LOCALES.length}
-      languages other than Enlish. We'd love to have your help improving these
-      or translating them into new languages!
+      languages other than English. We'd love to have your help improving these
+      or translating the UI into new languages!
     </p>
     <p>
       To help translate one of the existing languages, find it in the table
@@ -116,6 +117,74 @@ const generateIndexHTML = async (report) => {
       effort, we may hold on adding some languages until we find there is a
       significant demand, but generally we're open to translations. Contact
       us if you're not sure!
+    </p>
+
+    <h2>Filling out a Translation Template</h2>
+    <p>
+      To fill out a template, simply look at the "Source String" column which
+      contains the original English text, and enter the translation in the
+      "Translated String" column. Some strings contain variables which are
+      represented as "{{variable_name}}", which will be substituted with a
+      value on the site. For example the read time string is
+      "{{minutes}} min. read" in English and  "{{minutes}} Min. Lesezeit" in
+      German. Use the same variable name in your translation, move it around if
+      that's appropriate for the target language (e.g. it does not need to be
+      at the start of the string in the target langauge, just because it's at
+      the start in English), but keep the name the same.
+    </p>
+    <p>
+      The "Translator Notes" column is not processed by the system, but it's
+      there as a way for you, the translator, to communicate with us as
+      developers. Feel free to ask questions, explain a particular translation,
+      or generally record your thoughts. Your TL notes won't be revealed to
+      anyone besides the core Journaly team.
+    </p>
+    <p>
+      Please do not edit any columns other than "Translated String" and
+      "Translator Notes" as this affects our ability to automatically process
+      your submission.
+    </p>
+    <p>
+      The "status" column records what the system has marked the translation as,
+      e.g. is the translation missing, or has the English copy changed since the
+      last time a translation was submitted. Sometimes translations will be
+      marked out of date, even if they're still valid. If this is the case,
+      simply add a translator note indicating it, and we'll mark it as up to
+      date.
+    </p>
+    <p>
+      Also feel free to review translations that are marked as being up to date.
+      We assume good faith and do not independently verify every translation,
+      we've found that trusting people is generally warranted, but if you
+      find a translation that could be improved, don't be afraid to do so.
+    </p>
+
+    <h2>Tone in Translations</h2>
+    <p>
+      Translation is difficult and inherently subjective. We generally leave it
+      to the discresion of translators to determine what's appropriate. As a
+      general guide, our English copy is usually written in a semi-casual
+      tone, within the UI we <em>usually</em> avoid slang, but allow
+      contractions and casual constructs. We try to make coppy clearly
+      communicate function, but avoid stiff or clinical language.
+    </p>
+    <p>
+      In your translations, first consider what is natural for web content in
+      your language. If you language has strict distinctions between registers,
+      use whatever register is typical for websites. If there aren't hard and
+      fast rules in your language, try to replicate the "semi-casual" tone from
+      the English copy where possible.
+    </p>
+    <p>
+      When translating copy that's idiomatic in English, don't be afraid to go
+      off-script to come up with something that sounds natural in the target
+      language. For example, the placeholder text for post title is "The
+      Greatest Story Never Told...". This is a little tongue-in-cheek and if you
+      think of something that's in the same spirit, but has a different literal
+      translation, go for it! For informational text, like error messages, try
+      to keep the translation more literal. Where literal translations vary from
+      the English copy significantly, please leave a TL note to help us
+      understand the change and how it will read in your language.
     </p>
 
     <table>

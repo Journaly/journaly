@@ -8,12 +8,15 @@ jobs:
     executor: node/default
     dependencies:
       pre:
-        - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-        - sudo apt-get update
-        - sudo apt-get install -y libstdc++-4.9-dev
 
     steps:
       - checkout
+      - run:
+        name: Install libstdc++ (for nodegit)
+        command: |
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install -y libstdc++-4.9-dev
       - restore_cache:
           keys:
             - node-deps-v3-{{ checksum "packages/web/package-lock.json" }}
@@ -35,13 +38,14 @@ jobs:
             - ./packages/web/.next/cache
   update-translations-site:
     executor: node/default
-    dependencies:
-      pre:
-        - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-        - sudo apt-get update
-        - sudo apt-get install -y libstdc++-4.9-dev
     steps:
       - checkout
+      - run:
+        name: Install libstdc++ (for nodegit)
+        command: |
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install -y libstdc++-4.9-dev
       - restore_cache:
           keys:
             - translations-site-dep{{ checksum "packages/web/package-lock.json" }}

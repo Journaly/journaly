@@ -1,0 +1,28 @@
+{
+  "signInPrompt": "Por favor, registrese para continuar.",
+  "error": "Se ha producido un error en el servidor",
+  "loading": "Cargando...",
+  "home": {
+    "reasonsHeader": "Tres razones para utilizar Journaly",
+    "elevatorPitch": "Mejora tus habilidades de idiomas y conecta con otros a través de Journaling",
+    "getStartedText": "¡Vamos!",
+    "reasonOneText": "Escribir es una herramienta muy poderosa para mejorar tus habilidades en los idiomas, pero conlleva esfuerzo y es mejor cuando puedes recibir correcciones. Journaly es un lugar para tu escritura y asombrosas correcciones de aprendices de idiomas como tú.",
+    "reasonTwoText": "Hay muchos beneficios personales de escribir un diario, y uno de esos es de los más deseados hábitos positivos por mucha gente. Journaly super intensifica tu apredizaje de idiomas mientras te ayuda a obtener todos los beneficios que aporta llevar un diario.",
+    "reasonThreeText": "Muchos sitios te ayudan a encontrar un compañero de intercambio de idiomas simplemente comparando tus intereses lingüísticos - pero no es suficiente para nosotros. ¡Journaly te ayuda a encontrar personas que comparten tus mismos interese!",
+    "videoHeader": "Una experiencia de escritura maravillosa",
+    "testimonialsHeader": "Lo que estan diciento los jornalistas",
+    "nav": {
+      "about": "Acerca de",
+      "blog": "Blog",
+      "logIn": "Iniciar sesión",
+      "signUp": "Registrarse"
+    }
+  },
+  "dashboardNav": {
+    "myFeed": "Mi Feed",
+    "myPosts": "Mis publicaciones",
+    "newPost": "Nueva publicación",
+    "settings": "Ajustes",
+    "logOut": "Cerrar sesión"
+  }
+}

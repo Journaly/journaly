@@ -1,0 +1,12 @@
+{
+  "postCommentsTitle": "Comentarios",
+  "relativeTimeWord": "hace",
+  "save": "Guardar",
+  "cancel": "Cancelar",
+  "submit": "Publicar",
+  "addCommentPlaceholder": "Añadir un comentario",
+  "noCommentsYetMessage": "Ningún comentario... ¡todavía!",
+  "tabGeneralKey": "General",
+  "tabOutdatedKey": "Fuera de fecha",
+  "noOutdatedThreadsMessage": "No hay hilos fuera de fecha para ver"
+}

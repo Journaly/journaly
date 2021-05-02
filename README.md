@@ -143,3 +143,7 @@ query feed {
 
 If you'd like to become a contributor -- awesome!
 Please read our [contributing guide](./docs/contributing-guide.md) to get started :)
+
+### Translations
+
+If you'd like to help translate Journaly into your native language, we'd love to have your help! Head over to the [translations site](http://translations-website.s3-website.us-east-2.amazonaws.com/) to get started.

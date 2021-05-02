@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@4.1.0
+  node: circleci/node@4.3.0
 
 jobs:
   build:
@@ -31,9 +31,12 @@ jobs:
     executor: node/default
     steps:
       - checkout
+      - node/install:
+          node-version: 14.15.4
+          npm-version: 6.14.10
       - restore_cache:
           keys:
-            - translations-site-dep{{ checksum "packages/web/package-lock.json" }}
+            - translations-site-dep-v2-{{ checksum "packages/web/package-lock.json" }}
       - run:
           command: cd packages/web && npm ci
           name: Installing NPM packages

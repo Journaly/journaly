@@ -14,12 +14,22 @@ const LOCALES = [
   'de',
   'es',
   'fr',
+  'pl',
+  'it',
+  'ru',
+  'ko',
+  'pt-br',
 ]
 
 const LOCALE_NAME_MAP = {
   'de': 'German',
   'es': 'Spanish',
   'fr': 'French',
+  'pl': 'Polish',
+  'it': 'Italian',
+  'ru': 'Russian',
+  'ko': 'Korean',
+  'pt-br': 'Portuguese (Brazil)',
 }
 
 const NAMESPACES = [
@@ -170,7 +180,7 @@ const generateIndexHTML = async (report) => {
     </p>
     <p>
       In your translations, first consider what is natural for web content in
-      your language. If you language has strict distinctions between registers,
+      your language. If your language has strict distinctions between registers,
       use whatever register is typical for websites. If there aren't hard and
       fast rules in your language, try to replicate the "semi-casual" tone from
       the English copy where possible.

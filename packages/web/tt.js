@@ -13,6 +13,7 @@ const CLIProgress = require('cli-progress');
 const LOCALES = [
   'de',
   'es',
+  'fr',
 ]
 
 const LOCALE_NAME_MAP = {
@@ -383,7 +384,13 @@ const ingestFile = async (locale, file) => {
 
   for (ns in recordsByNamespace) {
     const targetFilePath = `../../packages/web/public/static/locales/${locale}/${ns}.json`
-    let modifiedDoc = await slurpFile(targetFilePath)
+    let modifiedDoc
+    try {
+      modifiedDoc = await slurpFile(targetFilePath)
+    } catch {
+      // Assume missing file
+      modifiedDoc = '{}'
+    }
 
     for (fullId in recordsByNamespace[ns]) {
       const record = recordsByNamespace[ns][fullId]

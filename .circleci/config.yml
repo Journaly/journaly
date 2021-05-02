@@ -45,7 +45,7 @@ jobs:
           command: cd packages/web && npm ci
       - run:
           name: Create site directory structure
-          command: mkdir -p translation-site/templates
+          command: mkdir -p packages/web/translation-site/templates
       - run:
           name: Generate translations site
           command: cd packages/web && node tt.js generate

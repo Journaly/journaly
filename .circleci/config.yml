@@ -6,9 +6,6 @@ orbs:
 jobs:
   build:
     executor: node/default
-    dependencies:
-      pre:
-
     steps:
       - checkout
       - run:

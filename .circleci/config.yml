@@ -64,4 +64,9 @@ workflows:
   main:
     jobs:
       - build
-      - update-translations-site
+      - update-translations-site:
+          filters:
+            branches:
+              only:
+                - master
+

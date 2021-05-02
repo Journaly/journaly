@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   node: circleci/node@4.3.0
+  aws-cli: circleci/aws-cli@2.0
 
 jobs:
   build:
@@ -37,6 +38,7 @@ jobs:
       - node/install:
           node-version: 14.15.4
           npm-version: 6.14.10
+      - aws-cli/install
       - restore_cache:
           keys:
             - translations-site-dep-v2-{{ checksum "packages/web/package-lock.json" }}

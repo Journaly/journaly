@@ -110,21 +110,21 @@ const generateIndexHTML = async (report) => {
       <h1>Help Translate Journaly!</h1>
     </header>
     <p>
-      Journaly is currently accepting translations in the ${LOCALES.length}
+      Journaly is currently accepting translations in ${LOCALES.length}
       languages other than English. We'd love to have your help improving these
       or translating the UI into new languages!
     </p>
     <p>
       To help translate one of the existing languages, find it in the table
       below, download the linked template, fill it out and email it to
-      <a href="mailto:hello@journaly.com">hello@journally.com</a>.
+      <a href="mailto:hello@journaly.com">hello@journaly.com</a>.
     </p>
     <p>
       To translate a language that isn't listed, drop us a line at
-      <a href="mailto:hello@journaly.com">hello@journally.com</a>.
+      <a href="mailto:hello@journaly.com">hello@journaly.com</a>.
       and we'll look at adding it. Since not every language has the same usage
       among our userbase, and because each translation requires maintainance
-      effort, we may hold on adding some languages until we find there is a
+      effort, we may wait to add some languages until we find there is a
       significant demand, but generally we're open to translations. Contact
       us if you're not sure!
     </p>
@@ -164,7 +164,7 @@ const generateIndexHTML = async (report) => {
     </p>
     <p>
       Also feel free to review translations that are marked as being up to date.
-      We assume good faith and do not independently verify every translation,
+      We generally trust the submissions we get and do not independently verify every translation,
       we've found that trusting people is generally warranted, but if you
       find a translation that could be improved, don't be afraid to do so.
     </p>
@@ -175,7 +175,7 @@ const generateIndexHTML = async (report) => {
       to the discresion of translators to determine what's appropriate. As a
       general guide, our English copy is usually written in a semi-casual
       tone, within the UI we <em>usually</em> avoid slang, but allow
-      contractions and casual constructs. We try to make coppy clearly
+      contractions and casual constructs. We try to make copy clearly
       communicate function, but avoid stiff or clinical language.
     </p>
     <p>

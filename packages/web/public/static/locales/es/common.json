@@ -24,5 +24,49 @@
     "newPost": "Nueva publicación",
     "settings": "Ajustes",
     "logOut": "Cerrar sesión"
+  },
+  "badge": {
+    "ALPHA_USER": {
+      "title": "Usuario alfa",
+      "description": "¡Participó en la prueba Alfa de Journaly. Hemos recorrido un largo camino desde entonces, pero este ususario estuvo en la primera línea ayudando a descubrir errores y formar Journaly desde el comienzo!"
+    },
+    "BETA_USER": {
+      "title": "Usuario beta",
+      "description": "Participó en la prueba Beta de Journaly. El héroe que Journaly necesita."
+    },
+    "CODE_CONTRIBUTOR": {
+      "title": "Colaborador de código",
+      "description": "Ha contribuído a la base de códigos de Journaly. Ud. puede encontrar el código fuente de Journaly y contribuir su mismo, en https://github.com/Journaly/journaly"
+    },
+    "TEN_POSTS": {
+      "title": "10 Publicaciones",
+      "description": "10 publicaciones. ¡Esto empieza a ir en serio!"
+    },
+    "ONEHUNDRED_POSTS": {
+      "title": "100 Publicaciones",
+      "description": "100 publicaciones. ¡Hablando de ser constante!"
+    }
+  },
+  "emptyMessage": "Vacío...",
+  "e404": "Recurso no encontrado",
+  "e403": "No autorizado",
+  "modal": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
+  },
+  "imageErrors": {
+    "initial": "Se ha producido un error al comunicarse con el servidor de Journaly. Por favor, vuelva a intentarlo más tarde.",
+    "dataUpload": "Se ha producido un error al transferir la imagen al medio de almacenamiento. Por favor, vuelva a intentarlo más tarde.",
+    "allDoneChecksFailed": "Se ha producido un error al subir su imagen. Por favor, vuelva a intentarlo más tarde."
+  },
+  "helpModal": {
+    "header": "Ayuda",
+    "bodyOne": "¿Necesita ayuda? ¡Nosotros le ayudamos!",
+    "bodyTwo": "Por favor envíe un correo a",
+    "bodyThree": "¡Da una descripción detallada de tu problema y te brindaremos una respuesta tan pronto como nos sea posible!",
+    "footer": "Gracias por ayudarnos a hacer de Journaly un mejor lugar para todos"
+  },
+  "editor": {
+    "placeholderPrompt": "Todo comenzó esta mañana cuando..."
   }
 }

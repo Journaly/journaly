@@ -29,7 +29,7 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
-    "@journaly/j-db-client": "1.0.4",
+    "@journaly/j-db-client": "^9.1.0",
     "aws-sdk": "^2.737.0",
     "date-fns": "^2.16.1",
     "nodemailer": "^6.4.11",

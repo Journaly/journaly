@@ -110,26 +110,76 @@ const generateIndexHTML = async (report) => {
       <h1>Help Translate Journaly!</h1>
     </header>
     <p>
-      Journaly is currently accepting translations in the ${LOCALES.length}
+      Journaly is currently accepting translations in ${LOCALES.length}
       languages other than English. We'd love to have your help improving these
       or translating the UI into new languages!
     </p>
     <p>
       To help translate one of the existing languages, find it in the table
       below, download the linked template, fill it out and email it to
-      <a href="mailto:hello@journaly.com">hello@journally.com</a>.
+      <a href="mailto:hello@journaly.com">hello@journaly.com</a>.
     </p>
     <p>
       To translate a language that isn't listed, drop us a line at
-      <a href="mailto:hello@journaly.com">hello@journally.com</a>.
+      <a href="mailto:hello@journaly.com">hello@journaly.com</a>.
       and we'll look at adding it. Since not every language has the same usage
       among our userbase, and because each translation requires maintainance
-      effort, we may hold on adding some languages until we find there is a
+      effort, we may wait to add some languages until we find there is a
       significant demand, but generally we're open to translations. Contact
       us if you're not sure!
     </p>
 
+    <h2>Some terminology</h2>
+    <p>
+      The section that follows contains some specialized language, if you've
+      worked with software translations before it may be famililar, but just
+      in case here's some of the terms we use and what they mean.
+    </p>
+    <ul>
+      <li>
+        "Strings" are simply pieces of text that are used in the site.
+      </li>
+      <li>
+        "Copy" similarly refers to text, although "a piece of copy" may consist
+        of multiple stings (e.g. several paragraphs may collectively be called
+        a piece of copy, but each paragraph will be its own string)
+      </li>
+      <li>
+        "Source" refers to copy as it was first written (in the case of Journaly
+        all our copy is written in English, so the English copy is also the
+        source copy)
+      </li>
+      <li>
+        "Target" conversely is the language that copy is translated to from
+        English.
+      </li>
+      <li>
+        "Tone", "Register" and "Style" are related concepts that describe,
+        roughly speaking, the emotional content of copy. Two sentences may mean
+        the same thing (e.g. in English "hi" and "good afternoon" mean more or
+        less the same thing, but have different tone, the later is more formal).
+      </li>
+    </ul>
+
+
     <h2>Filling out a Translation Template</h2>
+    <p>
+      The translation templates are CSV files, which is a simple spreadsheet
+      format. There are a number of tools for working with CSVs, the most widely
+      known is probably Microsoft Excel, but there are several free tools like:
+
+      <ul>
+        <li>Open Office (Windows, Mac, Linux)</li>
+        <li>Table Tool (Mac)</li>
+        <li>Google Sheets (Web)</li>
+      </ul>
+    </p>
+    <p>
+      You can use any program you like to edit CSV files, just keep in mind that
+      some (including Google Sheets and Excel) will convert the file when you
+      open it. So be sure to save/download your edits in the CSV format before
+      sending them back to us.
+    </p>
     <p>
       To fill out a template, simply look at the "Source String" column which
       contains the original English text, and enter the translation in the
@@ -164,7 +214,7 @@ const generateIndexHTML = async (report) => {
     </p>
     <p>
       Also feel free to review translations that are marked as being up to date.
-      We assume good faith and do not independently verify every translation,
+      We generally trust the submissions we get and do not independently verify every translation,
       we've found that trusting people is generally warranted, but if you
       find a translation that could be improved, don't be afraid to do so.
     </p>
@@ -175,7 +225,7 @@ const generateIndexHTML = async (report) => {
       to the discresion of translators to determine what's appropriate. As a
       general guide, our English copy is usually written in a semi-casual
       tone, within the UI we <em>usually</em> avoid slang, but allow
-      contractions and casual constructs. We try to make coppy clearly
+      contractions and casual constructs. We try to make copy clearly
       communicate function, but avoid stiff or clinical language.
     </p>
     <p>

@@ -2,47 +2,24 @@ import React from 'react'
 import { I18nContext } from 'react-i18next'
 import { i18n } from '@/config/i18n'
 
-import Button, { ButtonVariant } from '@/components/Button'
+import Select from '@/components/Select'
 
-import FlagUSIcon from '@/components/Icons/FlagUSIcon'
-import FlagDEIcon from '@/components/Icons/FlagDEIcon'
+const uiLanguageOptions = [
+  { value: 'en', displayName: 'English' },
+  { value: 'de', displayName: 'Deutsch' },
+  { value: 'es', displayName: 'Español' },
+]
 
 const UILanguageSelect = () => {
   const {
     i18n: { language },
   } = React.useContext(I18nContext)
-  const uiLangData = [
-    { Icon: FlagUSIcon, code: 'en' },
-    { Icon: FlagDEIcon, code: 'de' },
-  ]
-
   return (
-    <>
-      <ul className="flag-list">
-        {uiLangData.map(({ Icon, code }) => (
-          <li key={code} className={code === language ? 'selected' : ''}>
-            <Button variant={ButtonVariant.Icon} onClick={() => i18n.changeLanguage(code)}>
-              <Icon width={30} />
-            </Button>
-          </li>
-        ))}
-      </ul>
-
-      <style jsx>{`
-        .flag-list {
-          display: flex;
-          align-items: center;
-        }
-
-        .flag-list > li {
-          margin-right: 5px;
-        }
-
-        .flag-list > li.selected {
-          box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
-        }
-      `}</style>
-    </>
+    <Select
+      options={uiLanguageOptions}
+      value={language}
+      onChange={(value) => i18n.changeLanguage(value)}
+    />
   )
 }
 export default UILanguageSelect

@@ -1,13 +1,17 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@4.1.0
+  node: circleci/node@4.3.0
+  aws-cli: circleci/aws-cli@2.0
 
 jobs:
   build:
     executor: node/default
     steps:
       - checkout
+      - node/install:
+          node-version: 14.15.4
+          npm-version: 6.14.10
       - restore_cache:
           keys:
             - node-deps-v3-{{ checksum "packages/web/package-lock.json" }}
@@ -27,8 +31,42 @@ jobs:
             - ~/.npm
             - ~/.cache
             - ./packages/web/.next/cache
+  update-translations-site:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install:
+          node-version: 14.15.4
+          npm-version: 6.14.10
+      - aws-cli/install
+      - restore_cache:
+          keys:
+            - translations-site-dep-v2-{{ checksum "packages/web/package-lock.json" }}
+      - run:
+          name: Installing NPM packages
+          command: cd packages/web && npm ci
+      - run:
+          name: Create site directory structure
+          command: mkdir -p packages/web/translation-site/templates
+      - run:
+          name: Generate translations site
+          command: cd packages/web && node tt.js generate
+      - run:
+          name: Upload site
+          command: cd packages/web && aws s3 cp --recursive translation-site s3://translations-website/
+      - save_cache:
+          key: translations-site-dep{{ checksum "packages/web/package-lock.json" }}
+          paths:
+            - ~/.npm
+            - ~/.cache
 
 workflows:
   main:
     jobs:
       - build
+      - update-translations-site:
+          filters:
+            branches:
+              only:
+                - master
+

@@ -1,0 +1,48 @@
+{
+  "login": {
+    "title": "Ingrese a su cuenta",
+    "submitButtonText": "Iniciar sesión"
+  },
+  "signup": {
+    "title": "Crear una nueva cuenta",
+    "submitButtonText": "¡Regístrese!",
+    "goToLoginText": "¿Ya tiene una cuenta?",
+    "goToLoginLink": "Iniciar sesión"
+  },
+  "requestReset": {
+    "title": "Solicitar un correo para cambiar la contraseña",
+    "helperText": "Escriba su dirección de correo y le enviaremos un enlace para cambiar su contraseña.",
+    "submitButtonText": "Solicitar restablecimiento de correo electrónico",
+    "successMessage": "¡El enlace para cambiar su contraseña ha sido enviado a su dirección de correo!",
+    "goToLoginText": "¿Recuerda su contraseña?",
+    "goToLoginLink": "Iniciar sesión"
+  },
+  "resetPassword": {
+    "title": "Cambiar su contraseña",
+    "submitButtonText": "Cambiar contraseña",
+    "successMessage": "¡Su contraseña se ha cambiado con éxito! Por favor inicie sesión"
+  },
+  "handleInputLabel": "Seudónimo",
+  "handleInputHelperMessage": "Puede contener letras, números, -, _, sin espacios",
+  "handleInputPlaceholder": "Su nombre, o quizás, ¡un seudónmido divertido!",
+  "handleRequiredErrorMessage": "Un seudónimo es requerido",
+  "handleValidationErrorMessage": "El seudónimo sólo puebe contener letras, números, _, -, sin espacios",
+  "handleMinimumErrorMessage": "Su seudónimo debe contener al menos 3 caracteres",
+  "emailInputLabel": "Correo",
+  "emailInputPlaceholder": "Su correo electronico",
+  "emailRequiredErrorMessage": "Un correo es requerido",
+  "emailValidationErrorMessage": "Dirección de correo inválida",
+  "passwordInputLabel": "Contraseña",
+  "passwordInputPlaceholder": "Una contraseña segura",
+  "passwordRequiredErrorMessage": "Una contraseña es requerida",
+  "passwordValidationErrorMessage": "Contraseña inválida",
+  "passwordMinimumErrorMessage": "La contraseña debe contener al menos 6 caracteres",
+  "confirmPasswordInputLabel": "Confirrme la contraseña",
+  "confirmPasswordInputPlaceholder": "Vuelva a escribir su nueva contraseña",
+  "confirmPasswordRequiredErrorMessage": "Se requiere que confirme su contraseña",
+  "confirmPasswordValidationErrorMessage": "Confirmación de contraseña incorrecta",
+  "goToSignupText": "¿No tiene una cuenta?",
+  "goToSignupLink": "Registrarse",
+  "goToRequestResetText": "¿Tiene problemas para inicar sesión?",
+  "goToRequestResetLink": "Restablezca su contraseña"
+}

@@ -19,6 +19,9 @@
   "bugs": {
     "url": "https://github.com/Journaly/journaly/issues"
   },
+  "prisma": {
+    "schema": "node_modules/@journaly/j-db-client/prisma/schema.prisma"
+  },
   "homepage": "https://github.com/Journaly/journaly#readme",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.70",
@@ -29,7 +32,7 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
-    "@journaly/j-db-client": "1.0.4",
+    "@journaly/j-db-client": "^9.1.0",
     "aws-sdk": "^2.737.0",
     "date-fns": "^2.16.1",
     "nodemailer": "^6.4.11",

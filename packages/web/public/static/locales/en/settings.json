@@ -2,11 +2,13 @@
   "breadcrumbs": {
     "settings": "Settings",
     "profile": "Edit your profile",
-    "account": "Account"
+    "account": "Account",
+    "subscription": "Subscription"
   },
   "nav": {
     "profile": "Profile Info",
-    "account": "Account"
+    "account": "Account",
+    "subscription": "Subscription"
   },
   "updateButton": "Update",
   "profile": {
@@ -74,7 +76,7 @@
       "instagramPatternError": "Invalid instagram url. e.g. instagram.com/YourPage"
     }
   },
-  "account":{
+  "account": {
     "updatePasswordForm": {
       "legend": "Change Password",
       "submitButton": "Update",
@@ -93,5 +95,36 @@
       "updateError": "There was an error updating your password.",
       "newPasswordCannotBeTheSameError": "new password cannot be the same as old"
     }
+  },
+  "subscription": {
+    "title": "Journaly Premium",
+    "subscribeCta": "Subscribe!",
+    "subscribeSuccessMessage": "Congratulations! You're now a Journaly Premium member!",
+    "subscribeFailureMessage": "Oh no! Something went wrong. Please try again.",
+    "premiumGeneralCopy": "With our premium subscription you get access to awesome features that make the Journaly experience more enjoyable and customisable. Today, you will gain the ability to include an unlimited number of images inside your posts and really bring them to life, with many more exciting features on the way!",
+    "premiumFeatureCopy": "Your subscription to Premium helps to support the loving and hardworking team behind the scenes and make Journaly a sustainable plaform so that the core experience can remain free and accessible to everyone ❤︎",
+    "currentPlan": "Current Plan:",
+    "changePlan": "Change Plan",
+    "cancelSubscription": "Cancel Subscription",
+    "subscriptionEndsOn": "Your subscription will end on",
+    "subscriptionRenewsOn": "Your subscription will renew on",
+    "reactivateSubscription": "Reactivate subscription",
+    "planSelectPlaceholder": "Which subscription would you like?",
+    "cardOnFile": "Card on file:",
+    "updateCard": "Update Card",
+    "subscriptionStatus": "Subscription status:",
+    "nextBillingDate": "Next billing date:",
+    "premiumUser": "premium user",
+    "freeUser": "free user",
+    "monthlyPrice": "1 Month / £12",
+    "quarterlyPrice": "3 Months / £30",
+    "annualPrice": "1 Year / £100",
+    "paymentInfo": "Payment Info",
+    "cancelSubscriptionConfirmationTitle": "Cancel Your Journaly Premium Subscription",
+    "cancelSubscriptionConfirmationBody": "Are you sure you want to cancel your subscription?",
+    "cancellationSuccess": "You have cancelled your subscription",
+    "cancellationError": "There was a problem cancelling your subscription",
+    "updateCardSuccess": "You have successfully updated the card on file",
+    "updateCardError": "There was a problem updating the card on file"
   }
 }

@@ -11,6 +11,7 @@ const Breadcrumbs: React.FC = () => {
   const pathToBreadcrumb: { [key: string]: string } = {
     profile: t('breadcrumbs.profile'),
     account: t('breadcrumbs.account'),
+    subscription: t('breadcrumbs.subscription'),
   }
 
   return (

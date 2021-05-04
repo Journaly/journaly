@@ -15,7 +15,8 @@
       "about": "Über",
       "blog": "Blog",
       "logIn": "Login",
-      "signUp": "Registrieren"
+      "signUp": "Registrieren",
+      "dashboard": "Dashboard"
     }
   },
   "dashboardNav": {
@@ -24,6 +25,13 @@
     "newPost": "Neuer Beitrag",
     "settings": "Einstellungen",
     "logOut": "Ausloggen"
+  },
+  "helpModal": {
+    "header": "Hilfe",
+    "bodyOne": "Brauchst du Hilfe? Wir sind für dich da!",
+    "bodyTwo": "Bitte sende eine E-Mail an ",
+    "bodyThree": " mit einer detaillierten Beschreibung deines Problems und wir werden uns so schnell wie möglich bei dir melden!",
+    "footer": "Danke, dass du uns hilfst, Journaly zu einem besseren Ort für alle zu machen"
   },
   "badge": {
     "ALPHA_USER": {
@@ -53,6 +61,11 @@
   "modal": {
     "confirm": "Bestätigen",
     "cancel": "Abbrechen"
+  },
+  "imageErrors": {
+    "initial": "Fehler bei der Kommunikation mit dem Journaly-Server. Bitte versuche es später erneut.",
+    "dataUpload": "Fehler beim Übertragen des Bildes auf das Speichermedium. Bitte versuche es später noch einmal.",
+    "allDoneChecksFailed": "Beim Hochladen deines Bildes ist ein Fehler aufgetreten. Bitte versuche es später noch einmal."
   },
   "editor": {
     "placeholderPrompt": "Alles begann heute früh, als..."

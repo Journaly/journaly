@@ -13,6 +13,7 @@ import LanguageTypes from './language'
 import SocialMediaTypes from './socialMedia'
 import LikeTypes from './like'
 import ThanksTypes from './thanks'
+import SubscriptionTypes from './subscription'
 
 const reflectionRun = !!parseInt(process.env.NEXUS_REFLECTION || '0')
 
@@ -45,6 +46,7 @@ const schemaOpts: any = {
     ...SocialMediaTypes,
     ...LikeTypes,
     ...ThanksTypes,
+    ...SubscriptionTypes,
   ],
   plugins: [
     nexusPrisma({

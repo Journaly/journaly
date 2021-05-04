@@ -1,6 +1,8 @@
-import { User, BadgeType } from '@journaly/j-db-client'
+import fetch from 'isomorphic-unfetch'
+
+import { User, BadgeType, PrismaClient } from '@journaly/j-db-client'
+
 import { AWS } from './aws'
-import { makeEmail } from '@/lib/mail'
 
 const sqs = new AWS.SQS({ region: 'us-east-2' })
 
@@ -26,7 +28,21 @@ type SqsParams = {
   QueueUrl: string
 }
 
-export const sendJmail = (emailParams: EmailParams) => {
+const makeEmail = (text: string) => `
+<div className="email" style="
+  border: 1px solid black;
+  padding: 20px;
+  font-family: sans-serif;
+  line-height: 2;
+font-size: 20px;
+">
+  <h2>Howdy, Journaler!</h2>
+  ${text}
+  <p>Robin @ Journaly</p>
+</div>
+`
+
+const sendJmail = (emailParams: EmailParams) => {
   if (!process.env.JMAIL_QUEUE_URL) {
     if (process.env.NODE_ENV === 'production') {
       throw new Error(
@@ -59,7 +75,7 @@ export const sendJmail = (emailParams: EmailParams) => {
   })
 }
 
-export const sendPasswordResetTokenEmail = ({
+const sendPasswordResetTokenEmail = ({
   user,
   resetToken,
 }: sendPasswordResetTokenEmailArgs) => {
@@ -97,7 +113,7 @@ const getBadgeName = (badgeType: BadgeType): string => {
   return assertUnreachable(badgeType)
 }
 
-export const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {
+const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {
   return sendJmail({
     from: 'robin@journaly.com',
     to: user.email,
@@ -109,4 +125,69 @@ export const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) =>
       }/dashboard/profile/${user.id}">profile page</a>.</p>
     `),
   })
+}
+
+type MoosendSubscriberResponse = {
+  Code: number,
+  Error: string | null,
+  Context: {
+    ID: string
+  }
+}
+
+const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
+  const apiKey = process.env.MOOSEND_API_KEY
+  const listId = process.env.MOOSEND_PRODUCT_UPDATES_MAILING_LIST_ID
+
+  if (!apiKey || !listId) {
+    console.warn('No `MOOSEND_API_KEY` present, not signing user up for product updates.')
+    return
+  }
+
+  // If user already has an ID, do an update instead (only changes the URL)
+  const url = user.moosendSubscriberId
+    ? `https://api.moosend.com/v3/subscribers/${listId}/update/${user.moosendSubscriberId}.json?apikey=${apiKey}`
+    : `https://api.moosend.com/v3/subscribers/${listId}/subscribe.json?apikey=${apiKey}`
+
+  const resp = (await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    cache: 'no-cache',
+    body: JSON.stringify({
+      Name: user.name || user.handle,
+      Email: user.email,
+      CustomFields: [
+        `journalyId=${user.id}`,
+        `registrationDate=${user.createdAt.toISOString()}`,
+      ]
+    })
+  }).then(r => r.json())) as MoosendSubscriberResponse
+
+  if (resp['Error']) {
+    throw new Error(resp['Error'])
+  }
+
+  if (resp.Code !== 0) {
+    throw new Error('Subscription call returned a non-zero code, but had no Error')
+  }
+
+  if (user.moosendSubscriberId) {
+    return user
+  } else {
+    // Only update the DB if we created a new subscriber.
+    return db.user.update({
+      where: { id: user.id },
+      data: { moosendSubscriberId: resp.Context.ID }
+    })
+  }
+}
+
+export {
+  sendJmail,
+  sendPasswordResetTokenEmail,
+  sendNewBadgeEmail,
+  subscribeUserToProductUpdates,
 }

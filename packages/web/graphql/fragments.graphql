@@ -29,7 +29,9 @@ fragment UserWithLanguagesFragment on User {
 
 fragment CurrentUserFragment on User {
   ...UserWithLanguagesFragment
-  isPremiumUser
+  membershipSubscription {
+    isActive
+  }
 }
 
 fragment SocialMediaFragment on User {

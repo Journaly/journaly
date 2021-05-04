@@ -1,0 +1,7 @@
+{
+  "pageTitle": "Mis publicaciones",
+  "publishedTab": "Publicados",
+  "draftsTab": "Borradores",
+  "publishedEmptyState": "Aún no tiene publicaciones. Puede publicar un borrador o <1>crear una nueva publicación</1>",
+  "draftEmptyState": "No tiene borradores."
+}

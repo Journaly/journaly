@@ -120,3 +120,5 @@ config.stage.json
 api.graphql
 
 snapshot.sql
+
+packages/web/translation-site

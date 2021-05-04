@@ -1,0 +1,87 @@
+{
+  "breadcrumbs": {
+    "settings": "Ajustes",
+    "profile": "Edite su perfil",
+    "account": "Cuenta"
+  },
+  "nav": {
+    "profile": "Información de perfil",
+    "account": "Cuenta"
+  },
+  "updateButton": "Actualizar",
+  "profile": {
+    "details": {
+      "legend": "Sus datos",
+      "submitImage": "Subir imagen",
+      "nameLabel": "Su nombre (opcional)",
+      "displayNameLabel": "Seudónimo",
+      "displayNameError": "Debe tener un seudónimo",
+      "emailLabel": "Correo",
+      "emailError": "Un correo es requerido",
+      "locationLabel": "Localización (opcional)",
+      "updateSuccess": "Datos de perfil actualizados con éxito.",
+      "cityLabel": "Ciudad (opcional)",
+      "cityPlaceholder": "¿En qué ciudad vive?",
+      "countryLabel": "País (opcional)",
+      "countryPlaceholder": "¿En qué país vive?"
+    },
+    "languages": {
+      "legend": "Idiomas",
+      "nativeLanguagesLabel": "¿Qué idioma(s) habla a nivel nativo?\n",
+      "learningLanguagesLabel": "¿Qué idioma(s) está aprendiendo?",
+      "welcomeModalFormLabel": "Diganos cuál(es) son su(s) lengua(s) materna(s) y cuál(es) está aprendiendo",
+      "levelSelectPlaceholder": "Seleccione un nivel...",
+      "addLanguageButtonText": "Agregar",
+      "levels": {
+        "beginner": "Básico",
+        "intermediate": "Intermedio",
+        "advanced": "Avanzado",
+        "native": "Nativo"
+      }
+    },
+    "bio": {
+      "bioLabel": "¡Cuéntenos sobre usted!",
+      "bioError": "Tu biografía puede tener un máximo de {{caracteres}} caracteres.",
+      "bioInputDescription": "Máximo {{caracteres}} caracteres",
+      "bioSuccess": "Bio Actualizada exitosamente."
+    },
+    "interests": {
+      "legend": "Intereses",
+      "topicsLabel": "Cuéntanos acerca de los temas en los cuales estas interesado! Esto nos ayudará a mostrarte publicaciones que te gustarán y encontrarás otras personas con gustos similares al tuyo.",
+      "topicsPlaceholder": "Proximamente"
+    },
+    "social": {
+      "legend": "Redes sociales",
+      "socialLabel": "Quieres conectarte con otros Journalers a través de las redes sociales ? O promocionar tu propio trabajo?  Dile a Todos donde pueden encontrarte.",
+      "facebookPlaceholder": "facebook.com/SuPágina",
+      "youtubePlaceholder": "youtube.com/canal/SuCanal",
+      "instagramPlaceholder": "instagram.com/SuPágina",
+      "websitePlaceholder": "¿Tiene una página web?",
+      "success": "Red social actualizada con éxito."
+    },
+    "error": {
+      "updateError": "Se ha producido un error al actualizar su perfil.",
+      "handleValidationErrorMessage": "Su seudónimo sólo puede contener letras, números,_,-,sin espacios ",
+      "handleAlreadyinUseError": "Este seudónimo ya existe",
+      "handleMinimumErrorMessage": "Su seudónimo debe contener al menos 3 caracteres",
+      "emailValidationErrorMessage": "Correo inválido",
+      "emailAlreadyinUseError": "Este correo ya existe",
+      "websitePatternError": "url de página web inválida. p.ej.: tudominio.com o tusub.dominio.com ",
+      "youtubePatternError": "Url. de Youtube invalido Ejemplo,  youtube.com/channel/Tucanal o youtube.com/user/Tunombredeusuario",
+      "facebookPatternError": "Url. de Facebook Invalido Ejemplo, facebook.com/TuPagina o fb.com/TuPagina",
+      "instagramPatternError": "Url de instagram inválido. ej: instagram.com/SuPágina"
+    }
+  },
+  "account": {
+    "updatePasswordForm": {
+      "legend": "Cambiar contraseña",
+      "submitButton": "Actualizar",
+      "oldPasswordLabel": "Escriba su antigua contraseña",
+      "oldPasswordPlaceholder": "Antigua contraseña",
+      "oldPasswordError": "Escriba su antigua contraseña",
+      "newPasswordLabel": "Escoge Nueva contraseña",
+      "newPasswordPlaceholder": "Nueva contraseña",
+      "newPasswordError": "Escriba su nueva contraseña"
+    }
+  }
+}

@@ -42,6 +42,11 @@
         "native": "Native"
       }
     },
+    "uiLanguage": {
+      "legend": "UI Language",
+      "placeholder": "Select a language...",
+      "description": "Select the language you'd like the site UI to be displayed in."
+    },
     "bio": {
       "legend": "Bio",
       "bioLabel": "Tell us about yourself!",

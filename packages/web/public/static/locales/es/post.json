@@ -1,0 +1,33 @@
+{
+  "header": "Vamos a escribir una publicación",
+  "titlePlaceholder": "La gran historia jamás contada...",
+  "languageSelectPlaceholder": "Seleccione un idioma",
+  "topicSelectPlaceholder": "Seleccione hasta cinco temas",
+  "uploadImageButtonText": "Subir imagen",
+  "draft": "borrador",
+  "publishDraft": "Publicar borrador",
+  "saveDraftCTA": "Guardar borrador",
+  "publishCTA": "¡Publicar!",
+  "readTime": "{{minutos}} min. de lectura",
+  "readAction": "Leer publicación",
+  "editPost": "Editar publicación",
+  "editPostAction": "Editar publicación",
+  "deletePostAction": "Eliminar publicación",
+  "deletePostSuccess": "¡Publicación eliminada con éxito!",
+  "deletePostError": "Se ha producido un error al eliminar la publicación.",
+  "titleLabel": "Título",
+  "languageLabel": "Idioma",
+  "topicsLabel": "Temas",
+  "save": "Guardar",
+  "finishAction": "Acabar publicación",
+  "noLanguageError": "Por favor seleccione un idioma.",
+  "emptyTitleError": "Por favor incerte un título.",
+  "draftPublishedSuccess": "¡Publicación publicada con éxito!",
+  "postBy": "de",
+  "deleteModal": {
+    "title": "Eliminar publicación",
+    "body": "¿Está seguro de que quiere eliminar esta publicación?"
+  },
+  "enterUrlPrompt": "Incerte el URL del enlace:",
+  "websitePatternError": "URL de página web invalido. ej: dominio.com or sub.dominio.com"
+}

@@ -6,6 +6,7 @@ import { UiLanguage as UILanguage } from '@/generated/graphql'
 const langCodeToUILangMap: { [key: string]: UILanguage } = {
   en: UILanguage.English,
   de: UILanguage.German,
+  es: UILanguage.Spanish,
 }
 
 

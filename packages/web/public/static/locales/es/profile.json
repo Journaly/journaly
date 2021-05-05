@@ -1,0 +1,10 @@
+{
+  "card": {
+    "speaks": "hable",
+    "learns": "aprende",
+    "likes": "me gusta"
+  },
+  "postsTitle": "Publicaciones recientes",
+  "emptyPosts": "{{usuario}} todavía no ha escrito publicaciones.",
+  "loggedInUserEmptyPosts": "No tiene publicaciones recientes. <1>Escriba una nueva publicación</1>!"
+}

@@ -269,6 +269,7 @@ export enum ImageRole {
 export enum UiLanguage {
   English = 'ENGLISH',
   German = 'GERMAN',
+  Spanish = 'SPANISH',
 }
 
 export type ThreadCommentsOrderByInput = {

@@ -1,6 +1,6 @@
 # A Containerized Approach Using Docker and Compose - Approach Doc
 
-I would like to propose the adoption of docker and docker-compose to begin containerizing the Journaly stack, starting with the database, paving the way for other servers or services that require installing software on a local development machine.
+I would like to propose the adoption of docker and docker-compose to begin containerizing the Journaly stack, starting with the database and the node web server, paving the way for other servers or services that require installing software on a local development machine.
 
 ## Details
 
@@ -8,18 +8,21 @@ Installing postgres directly on a development machine might not be possible for 
 
 Additionally, we could have a more consistent database environment for all developers, for instance, setting up users and other related artifacts during the containerization process.
 
-When I first setup Journaly, I used docker for my DB, and with the following changes, had it up and running in little time.
-
 ### Docker
 
 We need a root level `Dockerfile` that looks something like this:
 
 ```docker
-FROM postgres:11
+FROM node as build
+WORKDIR /usr/src/app
 
-EXPOSE 5432
+COPY package*.json ./
+RUN npm ci
 
-COPY bootstrap.sh /docker-entrypoint-initdb.d/db-bootstrap.sh
+COPY . .
+RUN npm run build
+
+EXPOSE 3000
 ```
 
 You'll see that I have a bootstrap shell script to set up some initial database work:
@@ -47,19 +50,24 @@ Finally, we need a `docker-compose.yml` file to tie it all together:
 version: '3'
 
 services:
-  journaly:
-    image: 'journaly:latest'
-    ports:
-      - '5432:5432'
+  postgres:
+    image: "postgres:11"
+    environment:
+      POSTGRES_PASSWORD: "Password01!"
     volumes:
       - journaly_db:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: <db_password>
+    ports:
+      - "5432:5432"
+  
+  journaly:
+    image: 'journaly:latest'
     build: .
+    command: 'npm run start'
+    ports: 
+      - "3000:3000"
 
 volumes:
   journaly_db:
-
 ```
 
 ### Final Modifications
@@ -77,15 +85,13 @@ $ docker-compose build
 $ docker-compose up
 ```
 
-Nothing else changes for the setup instructions, the database is still exposed on the default postgres port `5432` and the database seed can run directly against the container.
+Nothing else changes for the setup instructions, the database is still exposed on the default postgres port `5432` and the database seed can run directly against the container. The node server will continue to be exposed on port `3000`.
 
 ## Concerns
 
 ### Docker Knowledge
 
 I found docker difficult to grasp when it came out and still struggle with advanced concepts. We'd be asking our developers to have some level of understanding of docker to work with our stack. If they don't have docker at all, it would require an install of additional software.
-
-At this point, it would be optional, and an alternative to installing postgres.
 
 ### Permissions
 

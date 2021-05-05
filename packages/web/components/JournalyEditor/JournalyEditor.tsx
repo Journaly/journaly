@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
-import { createEditor, Editor, Node } from 'slate'
+import { createEditor, Editor, Descendant } from 'slate'
 import { Slate, withReact } from 'slate-react'
 import { withHistory } from 'slate-history'
 import { pipe, TablePlugin, EditablePlugins } from '@udecode/slate-plugins'
@@ -35,8 +35,8 @@ const HOTKEYS: { [key in HotKey]: MarkType } = {
 }
 
 type JournalyEditorProps = {
-  value: Node[]
-  setValue: (value: Node[]) => void
+  value: Descendant[]
+  setValue: (value: Descendant[]) => void
   slateRef: React.RefObject<Editor>
   allowInlineImages: boolean
   disabled?: boolean
@@ -54,7 +54,7 @@ const JournalyEditor = ({
   const renderElement = useCallback((props) => <RenderElement {...props} />, [])
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
   const editor = useMemo(() => {
-    const withPlugins = [
+    const withPlugins: ((ed: Editor) => Editor)[] = [
       withHistory,
       withLinks,
     ]

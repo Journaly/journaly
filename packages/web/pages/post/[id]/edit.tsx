@@ -127,7 +127,7 @@ const EditPostPage: NextPage = () => {
 
   return (
     <AuthGate>
-      <DashboardLayout>
+      <DashboardLayout pad="aboveMobile">
         <form id="edit-post">
           <h1>{t('editPost')}</h1>
 

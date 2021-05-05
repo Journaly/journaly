@@ -132,7 +132,7 @@ const NewPostPage: NextPage = () => {
 
   return (
     <AuthGate>
-      <DashboardLayout withPadding={false}>
+      <DashboardLayout pad="aboveMobile">
         <form id="new-post">
           <h1>{t('header')}</h1>
 

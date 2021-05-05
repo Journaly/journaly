@@ -99,15 +99,19 @@ const JournalyEditor = ({
       <PostBodyStyles parentClassName="editor-container" />
       <style jsx>{`
         .editor-container {
+          display: flex;
+          flex-direction: column;
+
           padding: 0 25px 10px;
           border: 1px solid ${theme.colors.black};
           border-radius: 5px;
           background-color: ${theme.colors.white};
           opacity: ${disabled ? 0.6 : 'auto'};
+          min-height: 200px;
         }
 
         .editor-container > :global([contenteditable="true"]) {
-          min-height: 200px;
+          flex: 1;
         }
       `}</style>
     </div>

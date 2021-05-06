@@ -5,15 +5,14 @@
   "main": "dist/index",
   "scripts": {
     "build": "tsc",
-    "prisma": "prisma",
-    "migrate:up": "prisma migrate up --experimental",
-    "migrate:save": "prisma migrate save --experimental",
+    "prisma": "./db-check && prisma",
+    "migrate:up": "./db-check && prisma migrate up --experimental",
+    "migrate:save": "./db-check && prisma migrate save --experimental",
     "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed",
-    "db:snapshot": "pg_dump $DATABASE_URL > snapshot.sql",
-    "db:restore": "npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
-    "empty-db": "source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
-    "prisma:generate": "prisma generate",
-    "prisma:studio": "prisma studio --experimental"
+    "db:snapshot": "./db-check.js && pg_dump $DATABASE_URL > snapshot.sql",
+    "db:restore": "./db-check.js && npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
+    "empty-db": "./db-check && source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
+    "prisma:generate": "prisma generate"
   },
   "files": [
     "dist/**/*",

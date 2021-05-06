@@ -1,17 +1,17 @@
 {
   "name": "@journaly/j-db-client",
-  "version": "9.2.0",
+  "version": "10.0.0-ALPHA.2",
   "description": "Journaly's internal database client.",
   "main": "dist/index",
   "scripts": {
     "build": "tsc",
-    "prisma": "./db-check && prisma",
-    "migrate:up": "./db-check && prisma migrate up --experimental",
-    "migrate:save": "./db-check && prisma migrate save --experimental",
+    "prisma": "node db-check && prisma",
+    "migrate:up": "node db-check && prisma migrate up --experimental",
+    "migrate:save": "node db-check && prisma migrate save --experimental",
     "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed",
-    "db:snapshot": "./db-check.js && pg_dump $DATABASE_URL > snapshot.sql",
-    "db:restore": "./db-check.js && npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
-    "empty-db": "./db-check && source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
+    "db:snapshot": "node db-check.js && pg_dump $DATABASE_URL > snapshot.sql",
+    "db:restore": "node db-check.js && npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
+    "empty-db": "node db-check && source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
     "prisma:generate": "prisma generate"
   },
   "files": [
@@ -21,10 +21,10 @@
   "author": "Journaly",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "2.12.1",
-    "@prisma/cli": "2.11.0"
+    "@prisma/client": "2.21.0"
   },
   "devDependencies": {
-    "typescript": "3.8.3"
+    "prisma": "^2.22.0",
+    "typescript": "4.2.4"
   }
 }

@@ -30,7 +30,6 @@ model User {
   languages                     LanguageRelation[]
   membershipSubscription        MembershipSubscription?
   MembershipSubscriptionInvoice MembershipSubscriptionInvoice[]
-  pageView                      PageView[]
   PendingNotification           PendingNotification[]
   posts                         Post[]
   postComments                  PostComment[]
@@ -330,18 +329,6 @@ model MembershipSubscriptionInvoiceItem {
   stripeInvoiceItemId   String
   stripeInvoiceItemData Json
   invoice               MembershipSubscriptionInvoice @relation(fields: [invoiceId], references: [id])
-}
-
-model PageView {
-  id                  Int      @id @default(autoincrement())
-  userId              Int?
-  sessionId           String
-  pageName            String
-  timestamp           DateTime @default(now())
-  utmSource           String?
-  user_agent_string   String
-  user_agent_language String
-  user                User?    @relation(fields: [userId], references: [id])
 }
 
 model UserBadge {

@@ -1,6 +1,6 @@
 import {
   objectType,
-} from '@nexus/schema'
+} from 'nexus'
 
 const PostLike = objectType({
   name: 'PostLike',

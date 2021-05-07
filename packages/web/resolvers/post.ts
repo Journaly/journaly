@@ -5,7 +5,7 @@ import {
   booleanArg,
   objectType,
   extendType,
-} from '@nexus/schema'
+} from 'nexus'
 
 import {
   processEditorDocument,
@@ -18,9 +18,9 @@ import {
 } from './utils'
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
+  Prisma,
   PostStatus,
   BadgeType,
-  PostUpdateInput,
   PrismaClient,
   LanguageRelation,
 } from '@journaly/j-db-client'
@@ -496,7 +496,7 @@ const PostMutations = extendType({
         hasAuthorPermissions(originalPost, currentUser)
 
         // Actually make the change in the DB
-        let data: PostUpdateInput = {}
+        let data: Prisma.PostUpdateInput = {}
         if (args.title) {
           data.title = args.title
         }
@@ -525,7 +525,7 @@ const PostMutations = extendType({
             archived
           }) => {
             if (archived) {
-              return new Promise(res => res())
+              return new Promise<void>(res => res())
             } else if (startIndex === -1) {
               return ctx.db.thread.update({
                 where: { id },

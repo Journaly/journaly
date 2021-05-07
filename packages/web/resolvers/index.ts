@@ -1,6 +1,6 @@
 import * as path from 'path'
 
-import { makeSchema, declarativeWrappingPlugin } from '@nexus/schema'
+import { makeSchema, declarativeWrappingPlugin } from 'nexus'
 import { nexusPrisma } from 'nexus-plugin-prisma'
 
 import CommentTypes from './comment'

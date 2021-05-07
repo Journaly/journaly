@@ -3,7 +3,7 @@ import {
   stringArg,
   objectType,
   extendType,
-} from '@nexus/schema'
+} from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
@@ -30,13 +30,13 @@ const DatedActivityCount = objectType({
 
 const User = objectType({
   name: 'User',
-  rootTyping: 'prisma.User',
+  sourceType: 'prisma.User',
   definition(t) {
     t.model.id()
     t.model.name()
-    t.string('email', {
+    t.string('emailz', {
       nullable: true,
-      resolve(parent, _args, ctx, _info) {
+      resolve(parent, _args, ctx) {
         const { userId } = ctx.request
 
         if (userId && userId === parent.id) {

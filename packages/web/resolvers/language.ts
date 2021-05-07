@@ -1,4 +1,4 @@
-import { arg, booleanArg, intArg, objectType, extendType } from '@nexus/schema'
+import { arg, booleanArg, intArg, objectType, extendType } from 'nexus'
 import { PostStatus } from '@journaly/j-db-client'
 
 const LanguageRelation = objectType({

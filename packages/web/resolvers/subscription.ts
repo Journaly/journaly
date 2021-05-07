@@ -1,6 +1,6 @@
 import { 
+  Prisma,
   MembershipSubscriptionPeriod,
-  InputJsonValue,
   PrismaClient,
 } from '@journaly/j-db-client'
 import {
@@ -9,7 +9,7 @@ import {
   extendType,
   objectType,
   stringArg,
-} from '@nexus/schema'
+} from 'nexus'
 import stripe, { paymentErrorWrapper } from '@/nexus/utils/stripe'
 import Stripe from 'stripe'
 
@@ -117,7 +117,7 @@ const setPlan = async (
     data: {
       period: subscriptionPeriod,
       expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
-      stripeSubscription: subscriptionUpdated as unknown as InputJsonValue,
+      stripeSubscription: subscriptionUpdated as unknown as Prisma.InputJsonValue,
       cancelAtPeriodEnd,
     },
   })
@@ -202,7 +202,7 @@ const MembershipSubscriptionMutations = extendType({
               // Give 2 days grace period
               expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
               // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
-              stripeSubscription: stripeSubscription as unknown as InputJsonValue,
+              stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
               stripeSubscriptionId: stripeSubscription.id,
               lastFourCardNumbers: stripePaymentMethod.card.last4,
               cardBrand: stripePaymentMethod.card.brand,

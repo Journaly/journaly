@@ -2,7 +2,7 @@ import {
   intArg,
   objectType,
   extendType,
-} from '@nexus/schema'
+} from 'nexus'
 
 import { NotificationType } from '@journaly/j-db-client'
 

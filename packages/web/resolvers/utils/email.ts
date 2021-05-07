@@ -56,7 +56,7 @@ const sendJmail = (emailParams: EmailParams) => {
       'Would have sent the follwing email data to the jmail queue if I had a JMAIL_QUEUE_URL:',
     )
     console.info(emailParams)
-    return new Promise((res) => res())
+    return new Promise<void>((res) => res())
   }
 
   const params: SqsParams = {

@@ -1,5 +1,5 @@
 import { PostStatus } from '@journaly/j-db-client'
-import { arg, booleanArg, objectType, extendType, intArg } from '@nexus/schema'
+import { arg, booleanArg, objectType, extendType, intArg } from 'nexus'
 
 const TopicTranslation = objectType({
   name: 'TopicTranslation',
@@ -12,7 +12,7 @@ const TopicTranslation = objectType({
 
 const Topic = objectType({
   name: 'Topic',
-  rootTyping: 'prisma.Topic',
+  sourceType: 'prisma.Topic',
   definition(t) {
     t.model.id()
     t.string('name', {
@@ -30,7 +30,7 @@ const Topic = objectType({
           },
         })
 
-        return translation?.name || parent.devName
+        return translation.name || parent.devName
       },
     })
     t.int('postCount', {

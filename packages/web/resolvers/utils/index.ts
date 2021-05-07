@@ -1,13 +1,13 @@
 import { diffChars } from 'diff'
 import escapeHTML from 'escape-html'
 import {
+  Prisma,
   PrismaClient,
   User,
   Thread,
   Comment,
   Post,
   PostComment,
-  PendingNotificationCreateInput,
   CommentThanks,
 } from '@journaly/j-db-client'
 
@@ -326,7 +326,7 @@ export const createNotification = (
   user: User,
   note: NotificationCreationType,
 ) => {
-  const data: PendingNotificationCreateInput = {
+  const data: Prisma.PendingNotificationCreateInput = {
     user: { connect: { id: user.id } },
     type: note.type,
   }

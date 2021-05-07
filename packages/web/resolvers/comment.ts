@@ -3,9 +3,9 @@ import {
   stringArg,
   objectType,
   extendType,
-} from '@nexus/schema'
+} from 'nexus'
 
-import { NotificationType } from '@journaly/j-db-client'
+import { User, NotificationType } from '@journaly/j-db-client'
 
 import {
   hasAuthorPermissions,
@@ -201,7 +201,7 @@ const PostMutations = extendType({
         })
 
         const promises: Promise<any>[] = []
-        thread.subscriptions.forEach(({ user }) => {
+        thread.subscriptions.forEach(({ user }: { user: User }) => {
           if (user.id === userId) {
             // This is the user creating the comment, do not notify them.
             return
@@ -362,7 +362,7 @@ const PostMutations = extendType({
         })
 
         const promises: Promise<any>[] = []
-        post.postCommentSubscriptions.forEach(({ user }) => {
+        post.postCommentSubscriptions.forEach(({ user }: { user: User }) => {
           if (user.id === userId) {
             // This is the user creating the comment, do not notify them.
             return

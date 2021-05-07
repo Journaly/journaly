@@ -1,4 +1,4 @@
-import { inputObjectType } from '@nexus/schema'
+import { inputObjectType } from 'nexus'
 
 // Input type modeling the FE editor data structure. Not the best typing as this
 // is concepturally the untion of two types, internal nodes and leaf nodes, but

@@ -1,4 +1,4 @@
-import { stringArg, objectType, extendType } from '@nexus/schema'
+import { stringArg, objectType, extendType } from 'nexus'
 import { NotAuthorizedError, UserInputError } from './errors'
 import { validateSocialMediaInput } from './utils/socialMedia'
 

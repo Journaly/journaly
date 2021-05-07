@@ -14,7 +14,7 @@ CREATE TYPE "ImageRole" AS ENUM ('HEADLINE', 'INLINE');
 CREATE TYPE "UILanguage" AS ENUM ('ENGLISH', 'GERMAN', 'SPANISH');
 
 -- CreateEnum
-CREATE TYPE "BadgeType" AS ENUM ('ALPHA_USER', 'BETA_USER', 'TEN_POSTS', 'ONEHUNDRED_POSTS', 'CODE_CONTRIBUTOR');
+CREATE TYPE "BadgeType" AS ENUM ('ALPHA_USER', 'BETA_USER', 'ONEHUNDRED_POSTS', 'TEN_POSTS', 'CODE_CONTRIBUTOR');
 
 -- CreateEnum
 CREATE TYPE "NotificationType" AS ENUM ('THREAD_COMMENT', 'POST_COMMENT', 'THREAD_COMMENT_THANKS', 'POST_COMMENT_THANKS', 'NEW_POST');
@@ -30,13 +30,13 @@ CREATE TABLE "User" (
     "handle" TEXT NOT NULL,
     "userRole" "UserRole" NOT NULL DEFAULT E'USER',
     "bio" TEXT,
-    "city" TEXT,
-    "country" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "moosendSubscriberId" TEXT,
     "profileImage" TEXT,
+    "city" TEXT,
+    "country" TEXT,
     "stripeCustomerId" TEXT,
+    "moosendSubscriberId" TEXT,
 
     PRIMARY KEY ("id")
 );
@@ -105,13 +105,13 @@ CREATE TABLE "Post" (
     "status" "PostStatus" NOT NULL DEFAULT E'DRAFT',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "publishedAt" TIMESTAMP(3),
     "authorId" INTEGER NOT NULL,
     "readTime" INTEGER NOT NULL DEFAULT 1,
     "languageId" INTEGER NOT NULL,
+    "longitude" DECIMAL(65,30),
+    "latitude" DECIMAL(65,30),
+    "publishedAt" TIMESTAMP(3),
     "publishedLanguageLevel" "LanguageLevel" NOT NULL DEFAULT E'BEGINNER',
-    "longitude" DOUBLE PRECISION,
-    "latitude" DOUBLE PRECISION,
 
     PRIMARY KEY ("id")
 );
@@ -120,8 +120,8 @@ CREATE TABLE "Post" (
 CREATE TABLE "Language" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "devName" TEXT,
     "dialect" TEXT,
+    "devName" TEXT,
 
     PRIMARY KEY ("id")
 );
@@ -167,8 +167,8 @@ CREATE TABLE "PostTopic" (
 CREATE TABLE "PostLike" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "authorId" INTEGER NOT NULL,
     "postId" INTEGER NOT NULL,
+    "authorId" INTEGER NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -222,9 +222,9 @@ CREATE TABLE "Thread" (
     "id" SERIAL NOT NULL,
     "startIndex" INTEGER NOT NULL,
     "endIndex" INTEGER NOT NULL,
-    "archived" BOOLEAN NOT NULL DEFAULT false,
     "highlightedContent" TEXT NOT NULL,
     "postId" INTEGER NOT NULL,
+    "archived" BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY ("id")
 );
@@ -276,13 +276,13 @@ CREATE TABLE "MembershipSubscription" (
     "userId" INTEGER NOT NULL,
     "stripeSubscription" JSONB NOT NULL,
     "stripeSubscriptionId" TEXT NOT NULL,
-    "cancelAtPeriodEnd" BOOLEAN NOT NULL DEFAULT false,
-    "lastFourCardNumbers" TEXT NOT NULL,
-    "cardBrand" TEXT NOT NULL,
-    "lastPaymentFailure" BOOLEAN NOT NULL DEFAULT false,
     "expiresAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "cancelAtPeriodEnd" BOOLEAN NOT NULL DEFAULT false,
+    "lastFourCardNumbers" TEXT NOT NULL,
+    "lastPaymentFailure" BOOLEAN NOT NULL DEFAULT false,
+    "cardBrand" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -303,6 +303,8 @@ CREATE TABLE "MembershipSubscriptionInvoice" (
 -- CreateTable
 CREATE TABLE "MembershipSubscriptionInvoiceItem" (
     "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "amount" INTEGER NOT NULL,
     "currency" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -310,8 +312,6 @@ CREATE TABLE "MembershipSubscriptionInvoiceItem" (
     "invoiceId" INTEGER NOT NULL,
     "stripeInvoiceItemId" TEXT NOT NULL,
     "stripeInvoiceItemData" JSONB NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -410,10 +410,10 @@ CREATE UNIQUE INDEX "ThreadSubscription.userId_threadId_unique" ON "ThreadSubscr
 CREATE UNIQUE INDEX "PostCommentSubscription.userId_postId_unique" ON "PostCommentSubscription"("userId", "postId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "MembershipSubscription.stripeSubscriptionId_unique" ON "MembershipSubscription"("stripeSubscriptionId");
+CREATE UNIQUE INDEX "MembershipSubscription.userId_unique" ON "MembershipSubscription"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "MembershipSubscription.userId_unique" ON "MembershipSubscription"("userId");
+CREATE UNIQUE INDEX "MembershipSubscription.stripeSubscriptionId_unique" ON "MembershipSubscription"("stripeSubscriptionId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "UserBadge.userId_type_unique" ON "UserBadge"("userId", "type");
@@ -428,22 +428,22 @@ CREATE INDEX "_UserFollows_B_index" ON "_UserFollows"("B");
 ALTER TABLE "Auth" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "LanguageLearning" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "LanguageLearning" ADD FOREIGN KEY ("languageId") REFERENCES "Language"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "LanguageRelation" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "LanguageLearning" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "LanguageRelation" ADD FOREIGN KEY ("languageId") REFERENCES "Language"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "LanguageNative" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "LanguageRelation" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "LanguageNative" ADD FOREIGN KEY ("languageId") REFERENCES "Language"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "LanguageNative" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SocialMedia" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -458,10 +458,10 @@ ALTER TABLE "Post" ADD FOREIGN KEY ("languageId") REFERENCES "Language"("id") ON
 ALTER TABLE "TopicTranslation" ADD FOREIGN KEY ("topicId") REFERENCES "Topic"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserInterest" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserInterest" ADD FOREIGN KEY ("topicId") REFERENCES "Topic"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserInterest" ADD FOREIGN KEY ("topicId") REFERENCES "Topic"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserInterest" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PostTopic" ADD FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -509,16 +509,16 @@ ALTER TABLE "Image" ADD FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE
 ALTER TABLE "Prompt" ADD FOREIGN KEY ("topicId") REFERENCES "Topic"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ThreadSubscription" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "ThreadSubscription" ADD FOREIGN KEY ("threadId") REFERENCES "Thread"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PostCommentSubscription" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ThreadSubscription" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PostCommentSubscription" ADD FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PostCommentSubscription" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "MembershipSubscription" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -536,13 +536,7 @@ ALTER TABLE "PageView" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DEL
 ALTER TABLE "UserBadge" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("postCommentThanksId") REFERENCES "PostCommentThanks"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("commentId") REFERENCES "Comment"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("commentThanksId") REFERENCES "CommentThanks"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -551,7 +545,13 @@ ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("commentThanksId") REFERENCES
 ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("postCommentId") REFERENCES "PostComment"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("commentId") REFERENCES "Comment"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("postCommentThanksId") REFERENCES "PostCommentThanks"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PendingNotification" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_UserFollows" ADD FOREIGN KEY ("A") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

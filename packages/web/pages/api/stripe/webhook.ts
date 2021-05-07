@@ -1,4 +1,4 @@
-import { InputJsonValue, MembershipSubscriptionPeriod, PrismaClient } from '@journaly/j-db-client'
+import { Prisma, MembershipSubscriptionPeriod, PrismaClient } from '@journaly/j-db-client'
 import Stripe from 'stripe'
 import stripe, { logPaymentsError } from '@/nexus/utils/stripe'
 import { getClient } from '@/nexus/utils'
@@ -35,7 +35,7 @@ const updateStripeSubscription = async (subscriptionId: string, db: PrismaClient
     },
     data: {
       expiresAt: new Date(expiresAt),
-      stripeSubscription: stripeSubscription as unknown as InputJsonValue,
+      stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonObject,
     },
   })
 }
@@ -109,7 +109,7 @@ const handler = async (req: any, res: any) => {
       const invoice = await db.membershipSubscriptionInvoice.create({
         data: {
           stripeInvoiceId: stripeInvoice.id,
-          stripeInvoiceData: stripeInvoice as unknown as InputJsonValue,
+          stripeInvoiceData: stripeInvoice as unknown as Prisma.InputJsonObject,
           membershipSubscriptionPeriod: membershipPeriod,
           user: {
             connect: {
@@ -132,7 +132,7 @@ const handler = async (req: any, res: any) => {
               },
             },
             stripeInvoiceItemId: item.id,
-            stripeInvoiceItemData: item as unknown as InputJsonValue,
+            stripeInvoiceItemData: item as unknown as Prisma.InputJsonObject,
           },
         })
       }

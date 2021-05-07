@@ -34,7 +34,7 @@ const User = objectType({
   definition(t) {
     t.model.id()
     t.model.name()
-    t.string('emailz', {
+    t.string('email', {
       nullable: true,
       resolve(parent, _args, ctx) {
         const { userId } = ctx.request

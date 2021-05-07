@@ -5,9 +5,9 @@
   "main": "dist/index",
   "scripts": {
     "build": "tsc",
-    "migrate:deploy": "node db-check && prisma migrate deploy",
-    "migrate:dev:create": "node db-check && prisma migrate dev --create-only",
-    "migrate:dev:apply": "node db-check && prisma migrate dev",
+    "migrate:create": "node db-check && prisma migrate dev --create-only",
+    "migrate:apply": "node db-check && prisma migrate deploy",
+    "migrate:fake-initial": "node db-check && prisma migrate resolve --applied 20210507181000_re_init",
     "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed",
     "db:snapshot": "node db-check.js && pg_dump $DATABASE_URL > snapshot.sql",
     "db:restore": "node db-check.js && npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",

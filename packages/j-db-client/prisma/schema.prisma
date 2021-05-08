@@ -40,8 +40,8 @@ model User {
   threadSubscriptions           ThreadSubscription[]
   badges                        UserBadge[]
   userInterests                 UserInterest[]
-  User_B                        User[]                          @relation("UserFollows")
-  User_A                        User[]                          @relation("UserFollows")
+  followedBy                    User[]                          @relation("UserFollows", references: [id])
+  following                     User[]                          @relation("UserFollows", references: [id])
 }
 
 model Auth {

@@ -61,7 +61,7 @@ model LanguageLearning {
   language   Language @relation(fields: [languageId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
 
-  @@unique([userId, languageId], name: "LanguageLearning.userId_languageId_unique")
+  @@unique([userId, languageId])
 }
 
 model LanguageRelation {
@@ -73,7 +73,7 @@ model LanguageRelation {
   language   Language      @relation(fields: [languageId], references: [id])
   user       User          @relation(fields: [userId], references: [id])
 
-  @@unique([userId, languageId], name: "LanguageRelation.userId_languageId_unique")
+  @@unique([userId, languageId])
 }
 
 model LanguageNative {
@@ -84,7 +84,7 @@ model LanguageNative {
   language   Language @relation(fields: [languageId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
 
-  @@unique([userId, languageId], name: "LanguageNative.userId_languageId_unique")
+  @@unique([userId, languageId])
 }
 
 model SocialMedia {
@@ -135,7 +135,7 @@ model Language {
   LanguageRelation LanguageRelation[]
   posts            Post[]
 
-  @@unique([name, dialect], name: "Language.name_dialect_unique")
+  @@unique([name, dialect])
 }
 
 model Topic {
@@ -154,7 +154,7 @@ model TopicTranslation {
   topicId    Int
   topic      Topic      @relation(fields: [topicId], references: [id])
 
-  @@unique([uiLanguage, topicId], name: "TopicTranslation.uiLanguage_topicId_unique")
+  @@unique([uiLanguage, topicId])
 }
 
 model UserInterest {
@@ -165,7 +165,7 @@ model UserInterest {
   topic     Topic    @relation(fields: [topicId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
-  @@unique([userId, topicId], name: "UserInterest.userId_topicId_unique")
+  @@unique([userId, topicId])
 }
 
 model PostTopic {
@@ -175,7 +175,7 @@ model PostTopic {
   post    Post  @relation(fields: [postId], references: [id])
   topic   Topic @relation(fields: [topicId], references: [id])
 
-  @@unique([postId, topicId], name: "PostTopic.postId_topicId_unique")
+  @@unique([postId, topicId])
 }
 
 model PostLike {
@@ -186,7 +186,7 @@ model PostLike {
   author    User     @relation(fields: [authorId], references: [id])
   post      Post     @relation(fields: [postId], references: [id])
 
-  @@unique([authorId, postId], name: "PostLike.authorId_postId_unique")
+  @@unique([authorId, postId])
 }
 
 model CommentThanks {
@@ -198,7 +198,7 @@ model CommentThanks {
   comment             Comment               @relation(fields: [commentId], references: [id])
   PendingNotification PendingNotification[]
 
-  @@unique([authorId, commentId], name: "CommentThanks.authorId_commentId_unique")
+  @@unique([authorId, commentId])
 }
 
 model PostCommentThanks {
@@ -210,7 +210,7 @@ model PostCommentThanks {
   PostComment         PostComment?          @relation(fields: [postCommentId], references: [id])
   PendingNotification PendingNotification[]
 
-  @@unique([authorId, postCommentId], name: "PostCommentThanks.authorId_postCommentId_unique")
+  @@unique([authorId, postCommentId])
 }
 
 model Comment {
@@ -275,7 +275,7 @@ model ThreadSubscription {
   thread    Thread   @relation(fields: [threadId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
-  @@unique([userId, threadId], name: "ThreadSubscription.userId_threadId_unique")
+  @@unique([userId, threadId])
 }
 
 model PostCommentSubscription {
@@ -286,7 +286,7 @@ model PostCommentSubscription {
   post      Post     @relation(fields: [postId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
-  @@unique([userId, postId], name: "PostCommentSubscription.userId_postId_unique")
+  @@unique([userId, postId])
 }
 
 model MembershipSubscription {
@@ -338,7 +338,7 @@ model UserBadge {
   userId    Int
   user      User      @relation(fields: [userId], references: [id])
 
-  @@unique([userId, type], name: "UserBadge.userId_type_unique")
+  @@unique([userId, type])
 }
 
 model PendingNotification {

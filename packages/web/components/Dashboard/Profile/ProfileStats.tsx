@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react'
+import { useTranslation } from '@/config/i18n'
 import chroma from 'chroma-js'
+
 import differenceInCalendarWeeks from 'date-fns/differenceInCalendarWeeks'
 import addDays from 'date-fns/addDays'
 import addWeeks from 'date-fns/addWeeks'
@@ -40,6 +42,7 @@ const MONTH_SHORT_NAMES = [
 ]
 
 const ProfileStats = ({ userId }: ProfileStatsProps) => {
+  const { t } = useTranslation('profile')
   const { data, loading } = useUserStatsQuery({
     variables: {
       id: userId
@@ -112,32 +115,47 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
 
   return (
     <>
-      <h2>Summary</h2>
+      <h2>{t('stats.summary.title')}</h2>
       <div className="summary-copy">
         <span>
-          {`${user.name || user.handle} has been journaling on Journaly since ${formatLongDate(user.createdAt)} (that's ${age}). `}
+          {t('stats.summary.userAge', {
+            name: user.name || user.handle,
+            joinDate: formatLongDate(user.createdAt),
+            age,
+          })}
+          {' '}
         </span>
         <span>
           { user.postsWrittenCount
-            ? `In that time they've published ${user.postsWrittenCount} posts in ${user.languagesPostedInCount} different languages. `
-            : 'So far they haven\'t written any posts. '
+            ? t('stats.summary.postCount', {
+                postCount: user.postsWrittenCount,
+                languageCount: user.languagesPostedInCount,
+              })
+            : t('stats.summary.noPosts')
           }
+          {' '}
         </span>
         <span>
           { (user.threadCommentsCount || user.postCommentsCount)
-            ? `They've also left ${user.postCommentsCount} general comments on posts and ${user.threadCommentsCount} inline feedback comments, helping other users improve their language skills. `
-            : 'They haven\'t left any feedback on other journalers\' posts yet. '
+            ? t('stats.summary.commentCounts', {
+                postCommentCount: user.postCommentsCount,
+                threadCommentCount: user.threadCommentsCount,
+              })
+            : t('stats.summary.noComments')
           }
+          {' '}
         </span>
         <span>
           { user.thanksReceivedCount
-            ? `For their hard work helping others, they've been thanked ${user.thanksReceivedCount} times.`
+            ? t('stats.summary.thanksCount', {
+                thanksCount: user.thanksReceivedCount
+              })
             : null
           }
         </span>
       </div>
 
-      <h2>Posting History</h2>
+      <h2>{t('stats.activity.title')}</h2>
       <svg
         className="activityChart"
         viewBox={`0 0 ${(NUM_WEEKS + 1) * (CELL_WIDTH + CELL_PADDING) + 20} 100`}

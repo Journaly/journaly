@@ -4,6 +4,20 @@
     "learns": "learns",
     "likes": "likes"
   },
+  "stats": {
+    "summary": {
+      "title": "Summary",
+      "userAge": "{{name}} has been journaling on Journaly since {{joinDate}} (that's {{age}}).",
+      "postCount": "In that time they've published {{postCount}} posts in {{languageCount}} different languages.",
+      "noPosts": "So far they haven't written any posts.",
+      "commentCounts": "They've also left {{postCommentCount}} general comments on posts and {{threadCommentCount}} inline feedback comments, helping other users improve their language skills.",
+      "noComments": "They haven't left any feedback on other journalers' posts yet.",
+      "thanksCount": "For their hard work helping others, they've been thanked {{thanksCount}} times."
+    },
+    "activity": {
+      "title": "Posting History"
+    }
+  },
   "statsTitle": "Stats",
   "postsTitle": "Recent Posts",
   "emptyPosts": "{{user}} hasn't written any posts yet.",

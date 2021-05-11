@@ -24,7 +24,7 @@ type ProfileTabsProps = {
 
 
 const ProfileTabs = ({ isLoggedInUser, user, posts}: ProfileTabsProps) => {
-  const { t } = useTranslation(['profile'])
+  const { t } = useTranslation('profile')
   const tabs = [
     { key: 'posts', text: t('postsTitle') },
     { key: 'stats', text: t('statsTitle') },

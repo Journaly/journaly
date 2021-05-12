@@ -1,19 +1,19 @@
 {
   "name": "@journaly/j-db-client",
-  "version": "9.2.0",
+  "version": "10.0.2",
   "description": "Journaly's internal database client.",
   "main": "dist/index",
   "scripts": {
     "build": "tsc",
-    "prisma": "prisma",
-    "migrate:up": "prisma migrate up --experimental",
-    "migrate:save": "prisma migrate save --experimental",
+    "migrate:create": "node db-check && prisma migrate dev --create-only",
+    "migrate:apply": "node db-check && prisma migrate dev",
+    "migrate:deploy": "node db-check && prisma migrate deploy",
+    "migrate:fake-initial": "node db-check && prisma migrate resolve --applied 20210507181000_re_init",
     "reseed-db": "npm run empty-db && npm run migrate:up && npm run seed",
-    "db:snapshot": "pg_dump $DATABASE_URL > snapshot.sql",
-    "db:restore": "npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
-    "empty-db": "source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
-    "prisma:generate": "prisma generate",
-    "prisma:studio": "prisma studio --experimental"
+    "db:snapshot": "node db-check.js && pg_dump $DATABASE_URL > snapshot.sql",
+    "db:restore": "node db-check.js && npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
+    "empty-db": "node db-check && source .env && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
+    "prisma:generate": "prisma generate"
   },
   "files": [
     "dist/**/*",
@@ -22,10 +22,10 @@
   "author": "Journaly",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "2.12.1",
-    "@prisma/cli": "2.11.0"
+    "@prisma/client": "2.21.0"
   },
   "devDependencies": {
-    "typescript": "3.8.3"
+    "prisma": "2.21.0",
+    "typescript": "4.2.4"
   }
 }

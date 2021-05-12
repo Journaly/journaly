@@ -78,7 +78,7 @@ const NewPostPage: NextPage = () => {
   })
 
   const createNewPost = React.useCallback(async (status: PostStatusType) => {
-    if (!(createPost && dataRef.current)) {
+    if (!(dataRef.current)) {
       return
     }
     setSaving(true)

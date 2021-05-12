@@ -1,11 +1,11 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 generator prisma_client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -13,96 +13,88 @@ model User {
   name                          String?
   email                         String                          @unique
   handle                        String                          @unique
-  auth                          Auth?
   userRole                      UserRole                        @default(USER)
   bio                           String?
-  city                          String?
-  country                       String?
-  posts                         Post[]
-  membershipSubscription        MembershipSubscription?
-  socialMedia                   SocialMedia?
-  languagesNative               LanguageNative[]
-  languagesLearning             LanguageLearning[]
-  languages                     LanguageRelation[]
   createdAt                     DateTime                        @default(now())
   updatedAt                     DateTime                        @updatedAt
-  moosendSubscriberId           String?
-  userInterests                 UserInterest[]
-  pageView                      PageView[]
   profileImage                  String?
-  threadSubscriptions           ThreadSubscription[]
-  postLikes                     PostLike[]
-  commentThanks                 CommentThanks[]
-  postCommentThanks             PostCommentThanks[]
+  city                          String?
+  country                       String?
+  stripeCustomerId              String?
+  moosendSubscriberId           String?
+  auth                          Auth?
   comments                      Comment[]
+  commentThanks                 CommentThanks[]
+  languagesLearning             LanguageLearning[]
+  languagesNative               LanguageNative[]
+  languages                     LanguageRelation[]
+  membershipSubscription        MembershipSubscription?
+  MembershipSubscriptionInvoice MembershipSubscriptionInvoice[]
+  PendingNotification           PendingNotification[]
+  posts                         Post[]
   postComments                  PostComment[]
+  postCommentSubscriptions      PostCommentSubscription[]
+  postCommentThanks             PostCommentThanks[]
+  postLikes                     PostLike[]
+  socialMedia                   SocialMedia?
+  threadSubscriptions           ThreadSubscription[]
   badges                        UserBadge[]
+  userInterests                 UserInterest[]
   followedBy                    User[]                          @relation("UserFollows", references: [id])
   following                     User[]                          @relation("UserFollows", references: [id])
-  postCommentSubscriptions      PostCommentSubscription[]
-  PendingNotification           PendingNotification[]
-  MembershipSubscriptionInvoice MembershipSubscriptionInvoice[]
-  stripeCustomerId              String?
 }
 
 model Auth {
   id               Int     @id @default(autoincrement())
-  user             User    @relation(fields: [userId], references: [id])
   userId           Int     @unique
   password         String
   resetToken       String?
   resetTokenExpiry Int?
+  user             User    @relation(fields: [userId], references: [id])
 }
 
 model LanguageLearning {
   id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
   userId     Int
-  language   Language @relation(fields: [languageId], references: [id])
   languageId Int
   createdAt  DateTime @default(now())
+  language   Language @relation(fields: [languageId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, languageId])
 }
 
 model LanguageRelation {
   id         Int           @id @default(autoincrement())
-  user       User          @relation(fields: [userId], references: [id])
   userId     Int
-  language   Language      @relation(fields: [languageId], references: [id])
   languageId Int
   createdAt  DateTime      @default(now())
   level      LanguageLevel
+  language   Language      @relation(fields: [languageId], references: [id])
+  user       User          @relation(fields: [userId], references: [id])
 
   @@unique([userId, languageId])
 }
 
-enum LanguageLevel {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
-  NATIVE
-}
-
 model LanguageNative {
   id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
   userId     Int
-  language   Language @relation(fields: [languageId], references: [id])
   languageId Int
   createdAt  DateTime @default(now())
+  language   Language @relation(fields: [languageId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, languageId])
 }
 
 model SocialMedia {
   id        Int    @id @default(autoincrement())
-  user      User   @relation(fields: [userId], references: [id])
   userId    Int    @unique
   website   String
   youtube   String
   instagram String
   facebook  String
+  user      User   @relation(fields: [userId], references: [id])
 }
 
 model Post {
@@ -112,75 +104,76 @@ model Post {
   bodySrc                  String                    @default("")
   excerpt                  String
   status                   PostStatus                @default(DRAFT)
-  images                   Image[]
   createdAt                DateTime                  @default(now())
   updatedAt                DateTime                  @updatedAt
-  publishedAt              DateTime?
-  author                   User                      @relation(fields: [authorId], references: [id])
   authorId                 Int
   readTime                 Int                       @default(1)
-  likes                    PostLike[]
-  language                 Language                  @relation(fields: [languageId], references: [id])
+  wordCount                Int                       @default(0)
   languageId               Int
+  longitude                Decimal?
+  latitude                 Decimal?
+  publishedAt              DateTime?
   publishedLanguageLevel   LanguageLevel             @default(BEGINNER)
-  longitude                Float?
-  latitude                 Float?
-  threads                  Thread[]
-  postTopics               PostTopic[]
+  author                   User                      @relation(fields: [authorId], references: [id])
+  language                 Language                  @relation(fields: [languageId], references: [id])
+  images                   Image[]
+  PendingNotification      PendingNotification[]
   postComments             PostComment[]
   postCommentSubscriptions PostCommentSubscription[]
-  PendingNotification      PendingNotification[]
+  likes                    PostLike[]
+  postTopics               PostTopic[]
+  threads                  Thread[]
 }
 
 model Language {
-  id            Int                @id @default(autoincrement())
-  posts         Post[]
-  name          String
-  devName       String?
-  dialect       String?
-  nativeUsers   LanguageNative[]
-  learningUsers LanguageLearning[]
-
+  id               Int                @id @default(autoincrement())
+  name             String
+  dialect          String?
+  devName          String?
+  learningUsers    LanguageLearning[]
+  nativeUsers      LanguageNative[]
   LanguageRelation LanguageRelation[]
+  posts            Post[]
+
   @@unique([name, dialect])
 }
 
 model Topic {
   id                Int                @id @default(autoincrement())
   devName           String
-  userInterests     UserInterest[]
   postTopics        PostTopic[]
   prompt            Prompt[]
   topicTranslations TopicTranslation[]
+  userInterests     UserInterest[]
 }
 
 model TopicTranslation {
   id         Int        @id @default(autoincrement())
   uiLanguage UILanguage
   name       String
-  topic      Topic      @relation(fields: [topicId], references: [id])
   topicId    Int
+  topic      Topic      @relation(fields: [topicId], references: [id])
 
   @@unique([uiLanguage, topicId])
 }
 
 model UserInterest {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int
-  topic     Topic    @relation(fields: [topicId], references: [id])
   topicId   Int
   createdAt DateTime @default(now())
+  topic     Topic    @relation(fields: [topicId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, topicId])
 }
 
 model PostTopic {
   id      Int   @id @default(autoincrement())
-  post    Post  @relation(fields: [postId], references: [id])
   postId  Int
-  topic   Topic @relation(fields: [topicId], references: [id])
   topicId Int
+  post    Post  @relation(fields: [postId], references: [id])
+  topic   Topic @relation(fields: [topicId], references: [id])
 
   @@unique([postId, topicId])
 }
@@ -188,35 +181,35 @@ model PostTopic {
 model PostLike {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  post      Post     @relation(fields: [postId], references: [id])
   postId    Int
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
 
   @@unique([authorId, postId])
 }
 
 model CommentThanks {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  comment   Comment  @relation(fields: [commentId], references: [id])
-  commentId Int
-
+  id                  Int                   @id @default(autoincrement())
+  createdAt           DateTime              @default(now())
+  authorId            Int
+  commentId           Int
+  author              User                  @relation(fields: [authorId], references: [id])
+  comment             Comment               @relation(fields: [commentId], references: [id])
   PendingNotification PendingNotification[]
+
   @@unique([authorId, commentId])
 }
 
 model PostCommentThanks {
-  id            Int          @id @default(autoincrement())
-  createdAt     DateTime     @default(now())
-  author        User         @relation(fields: [authorId], references: [id])
-  authorId      Int
-  PostComment   PostComment? @relation(fields: [postCommentId], references: [id])
-  postCommentId Int?
-
+  id                  Int                   @id @default(autoincrement())
+  createdAt           DateTime              @default(now())
+  authorId            Int
+  postCommentId       Int?
+  author              User                  @relation(fields: [authorId], references: [id])
+  PostComment         PostComment?          @relation(fields: [postCommentId], references: [id])
   PendingNotification PendingNotification[]
+
   @@unique([authorId, postCommentId])
 }
 
@@ -225,10 +218,10 @@ model Comment {
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
   body                String
-  author              User                  @relation(fields: [authorId], references: [id])
   authorId            Int
-  thread              Thread                @relation(fields: [threadId], references: [id])
   threadId            Int
+  author              User                  @relation(fields: [authorId], references: [id])
+  thread              Thread                @relation(fields: [threadId], references: [id])
   thanks              CommentThanks[]
   PendingNotification PendingNotification[]
 }
@@ -238,22 +231,22 @@ model PostComment {
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
   body                String
-  author              User                  @relation(fields: [authorId], references: [id])
   authorId            Int
-  post                Post                  @relation(fields: [postId], references: [id])
   postId              Int
-  thanks              PostCommentThanks[]
+  author              User                  @relation(fields: [authorId], references: [id])
+  post                Post                  @relation(fields: [postId], references: [id])
   PendingNotification PendingNotification[]
+  thanks              PostCommentThanks[]
 }
 
 model Thread {
   id                 Int                  @id @default(autoincrement())
   startIndex         Int
   endIndex           Int
-  archived           Boolean              @default(false)
   highlightedContent String
-  post               Post                 @relation(fields: [postId], references: [id])
   postId             Int
+  archived           Boolean              @default(false)
+  post               Post                 @relation(fields: [postId], references: [id])
   comments           Comment[]
   subscriptions      ThreadSubscription[]
 }
@@ -263,24 +256,24 @@ model Image {
   smallSize String
   largeSize String
   imageRole ImageRole
-  post      Post?     @relation(fields: [postId], references: [id])
   postId    Int?
+  post      Post?     @relation(fields: [postId], references: [id])
 }
 
 model Prompt {
   id      Int    @id @default(autoincrement())
   text    String
-  topic   Topic  @relation(fields: [topicId], references: [id])
   topicId Int
+  topic   Topic  @relation(fields: [topicId], references: [id])
 }
 
 model ThreadSubscription {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int
-  thread    Thread   @relation(fields: [threadId], references: [id])
   threadId  Int
+  thread    Thread   @relation(fields: [threadId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, threadId])
 }
@@ -288,10 +281,10 @@ model ThreadSubscription {
 model PostCommentSubscription {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int
-  post      Post     @relation(fields: [postId], references: [id])
   postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, postId])
 }
@@ -299,87 +292,78 @@ model PostCommentSubscription {
 model MembershipSubscription {
   id                   Int                          @id @default(autoincrement())
   period               MembershipSubscriptionPeriod
-  user                 User                         @relation(fields: [userId], references: [id])
-  userId               Int
+  userId               Int                          @unique
   stripeSubscription   Json
   stripeSubscriptionId String                       @unique
-  cancelAtPeriodEnd    Boolean                      @default(false)
-  lastFourCardNumbers  String
-  cardBrand            String
-  lastPaymentFailure   Boolean                      @default(false)
   expiresAt            DateTime?
   createdAt            DateTime                     @default(now())
   updatedAt            DateTime                     @updatedAt
-
-  @@unique([userId])
+  cancelAtPeriodEnd    Boolean                      @default(false)
+  lastFourCardNumbers  String
+  lastPaymentFailure   Boolean                      @default(false)
+  cardBrand            String
+  user                 User                         @relation(fields: [userId], references: [id])
 }
 
 model MembershipSubscriptionInvoice {
   id                                Int                                 @id @default(autoincrement())
-  user                              User                                @relation(fields: [userId], references: [id])
   userId                            Int
   membershipSubscriptionPeriod      MembershipSubscriptionPeriod
   stripeInvoiceId                   String
   stripeInvoiceData                 Json
   createdAt                         DateTime                            @default(now())
   updatedAt                         DateTime                            @updatedAt
+  user                              User                                @relation(fields: [userId], references: [id])
   MembershipSubscriptionInvoiceItem MembershipSubscriptionInvoiceItem[]
 }
 
 model MembershipSubscriptionInvoiceItem {
   id                    Int                           @id @default(autoincrement())
+  createdAt             DateTime                      @default(now())
+  updatedAt             DateTime                      @updatedAt
   amount                Int
   currency              String
   description           String
   proration             Boolean
-  invoice               MembershipSubscriptionInvoice @relation(fields: [invoiceId], references: [id])
   invoiceId             Int
   stripeInvoiceItemId   String
   stripeInvoiceItemData Json
-  createdAt             DateTime                      @default(now())
-  updatedAt             DateTime                      @updatedAt
-}
-
-model PageView {
-  id                  Int      @id @default(autoincrement())
-  user                User?    @relation(fields: [userId], references: [id])
-  userId              Int?
-  sessionId           String
-  pageName            String
-  timestamp           DateTime @default(now())
-  utmSource           String?
-  // TODO (robin-macpherson): find user agent string parsing library and store each part separately
-  user_agent_string   String
-  user_agent_language String
+  invoice               MembershipSubscriptionInvoice @relation(fields: [invoiceId], references: [id])
 }
 
 model UserBadge {
   id        Int       @id @default(autoincrement())
   type      BadgeType
   createdAt DateTime  @default(now())
-  user      User      @relation(fields: [userId], references: [id])
   userId    Int
+  user      User      @relation(fields: [userId], references: [id])
 
   @@unique([userId, type])
 }
 
 model PendingNotification {
-  id        Int              @id @default(autoincrement())
-  type      NotificationType
-  createdAt DateTime         @default(now())
-  user      User             @relation(fields: [userId], references: [id])
-  userId    Int
-
-  post                Post?              @relation(fields: [postId], references: [id])
+  id                  Int                @id @default(autoincrement())
+  type                NotificationType
+  createdAt           DateTime           @default(now())
+  userId              Int
   postId              Int?
-  postCommentThanks   PostCommentThanks? @relation(fields: [postCommentThanksId], references: [id])
   postCommentThanksId Int?
-  commentThanks       CommentThanks?     @relation(fields: [commentThanksId], references: [id])
   commentThanksId     Int?
-  postComment         PostComment?       @relation(fields: [postCommentId], references: [id])
   postCommentId       Int?
-  comment             Comment?           @relation(fields: [commentId], references: [id])
   commentId           Int?
+  comment             Comment?           @relation(fields: [commentId], references: [id])
+  commentThanks       CommentThanks?     @relation(fields: [commentThanksId], references: [id])
+  postComment         PostComment?       @relation(fields: [postCommentId], references: [id])
+  postCommentThanks   PostCommentThanks? @relation(fields: [postCommentThanksId], references: [id])
+  post                Post?              @relation(fields: [postId], references: [id])
+  user                User               @relation(fields: [userId], references: [id])
+}
+
+enum LanguageLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  NATIVE
 }
 
 enum UserRole {
@@ -407,8 +391,8 @@ enum UILanguage {
 enum BadgeType {
   ALPHA_USER
   BETA_USER
-  TEN_POSTS
   ONEHUNDRED_POSTS
+  TEN_POSTS
   CODE_CONTRIBUTOR
 }
 

@@ -1,9 +1,9 @@
 require('dotenv').config()
 import jwt from 'jsonwebtoken'
 import { ApolloServer } from 'apollo-server-micro'
-import { getClient } from '../../nexus/utils'
+import { getClient } from '@/nexus/utils'
 
-import { schema } from '../../nexus'
+import { schema } from '../../resolvers'
 
 const server = new ApolloServer({
   schema,

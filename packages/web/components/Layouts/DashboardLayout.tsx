@@ -7,16 +7,15 @@ import Header from '@/components/Dashboard/Header'
 
 interface Props {
   children: React.ReactNode
-  withPadding?: boolean
+  pad?: 'always' | 'aboveMobile' | 'never'
 }
 
-const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
+const DashboardLayout: React.FC<Props> = ({ children, pad = 'always' }) => {
   const router = useRouter()
   const [navExpanded, setNavExpanded] = useState(false)
 
   const dashboardContainerStyles = classNames('dashboard-container', {
     'settings-page': router.pathname.includes('/settings/'),
-    'with-padding': withPadding,
   })
 
   const toggleNav = (): void => {
@@ -43,6 +42,17 @@ const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
           overflow: hidden;
         }
 
+        .dashboard-container {
+          padding: ${(pad === 'always' || pad === 'aboveMobile') ? layoutPadding : '0' };
+        }
+
+        @media (${navConstants.mobileNavOnly}) {
+          .dashboard-container {
+            ${(pad === 'aboveMobile') ? 'padding: 0;' : ''}
+          }
+        }
+
+
         @media (${navConstants.mobileNavOnly}) {
           .dashboard {
             padding-top: ${headerHeight};
@@ -55,9 +65,6 @@ const DashboardLayout: React.FC<Props> = ({ children, withPadding = true }) => {
           transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;
         }
 
-        .dashboard-container.with-padding {
-          padding: ${layoutPadding};
-        }
 
         @media (${navConstants.skinnyNavToDesktop}) {
           .dashboard-container {

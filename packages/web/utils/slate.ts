@@ -1,5 +1,5 @@
 import {
-  Editor,
+  BaseEditor,
   BaseElement,
   Node,
   ImageElement,
@@ -7,23 +7,27 @@ import {
   TableFamilyElement,
 } from 'slate'
 
+import { ReactEditor } from 'slate-react'
+import { HistoryEditor } from 'slate-history'
+
 import { ElementWithAttributes } from '@udecode/slate-plugins'
 
 declare module 'slate' {
   interface CustomText {
+    text: string
     bold?: boolean
     italic?: boolean
     underline?: boolean
   }
 
-  type CustomBaseElement = {
+  type CustomBaseElement = BaseElement & {
     type?: string
   }
 
   type LinkElement = {
     type: 'link'
     url: string
-  } 
+  } & CustomBaseElement
 
   type ImageElement = {
     type: 'image'
@@ -35,17 +39,20 @@ declare module 'slate' {
     type: 'table' | 'tr' | 'td' | 'th'
   }
 
+  type CustomEditor = BaseEditor & ReactEditor & HistoryEditor
+
   type CustomElement = 
     | CustomBaseElement
     | LinkElement
     | ImageElement
 
   type CustomNode =
-    | Editor
+    | CustomEditor
     | Text
     | CustomElement
 
   interface CustomTypes {
+    Editor: CustomEditor
     Element: CustomElement
     Node: CustomNode
     Text: CustomText
@@ -69,6 +76,7 @@ const isTableFamilyNode = (arg: Node): arg is TableFamilyNode => {
 }
 
 export type {
+  LinkElement,
   ImageNode,
   LinkNode,
 }

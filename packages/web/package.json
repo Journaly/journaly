@@ -21,6 +21,7 @@
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,md}'",
     "start": "cross-env NODE_ENV=production node server/index.js",
     "svgr": "node scripts/svgr.js",
+    "backfillMoosendSubscriberIds": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/backfillMoosendSubscriberIds.ts",
     "type-check": "tsc",
     "seed": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/seed.ts",
     "db:snapshot": "pg_dump $DATABASE_URL > snapshot.sql",

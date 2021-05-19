@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { withApollo } from '@/lib/apollo'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
+import { navConstants } from '@/components/Dashboard/Nav'
 import PostEditor, {
   InputPostData,
   OutputPostData,
@@ -131,7 +132,7 @@ const NewPostPage: NextPage = () => {
 
   return (
     <AuthGate>
-      <DashboardLayout>
+      <DashboardLayout pad="aboveMobile">
         <form id="new-post">
           <h1>{t('header')}</h1>
 
@@ -173,6 +174,12 @@ const NewPostPage: NextPage = () => {
           <style jsx>{`
             display: flex;
             flex-direction: column;
+            margin: 50px 25px;
+
+            @media (${navConstants.mobileNavOnly}) {
+              margin: 0;
+            }
+
 
             h1 {
               margin: 50px auto;

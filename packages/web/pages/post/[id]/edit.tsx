@@ -1,7 +1,7 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Node } from 'slate'
+import { Descendant } from 'slate'
 import { withApollo } from '@/lib/apollo'
 import { useTranslation } from '@/config/i18n'
 
@@ -54,7 +54,7 @@ const EditPostPage: NextPage = () => {
       const image = images.find(({ imageRole }) => imageRole === ImageRole.Headline) || null
 
       setInitialData({
-        body: JSON.parse(bodySrc) as Node[],
+        body: JSON.parse(bodySrc) as Descendant[],
         topicIds: postTopics.map((x) => x.topic.id),
         title,
         languageId,
@@ -127,7 +127,7 @@ const EditPostPage: NextPage = () => {
 
   return (
     <AuthGate>
-      <DashboardLayout>
+      <DashboardLayout pad="aboveMobile">
         <form id="edit-post">
           <h1>{t('editPost')}</h1>
 

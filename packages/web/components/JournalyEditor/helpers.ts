@@ -5,10 +5,10 @@ import {
   Element as SlateElement,
   Range,
 } from 'slate'
-import { ReactEditor } from 'slate-react'
 import { toast } from 'react-toastify'
 import { TFunction } from 'next-i18next'
 import { DEFAULTS_TABLE, setDefaults, someNode, insertTable } from '@udecode/slate-plugins'
+import { LinkElement } from '@/utils/slate'
 
 export type ButtonType = 'block' | 'link' | 'table'
 export type MarkType = 'bold' | 'underline' | 'italic'
@@ -155,7 +155,7 @@ const wrapLink = (editor: Editor, url: string) => {
 
   const { selection } = editor
   const isCollapsed = selection && Range.isCollapsed(selection)
-  const link = {
+  const link: LinkElement = {
     type: 'link',
     url,
     children: isCollapsed ? [{ text: url }] : [],
@@ -185,7 +185,7 @@ const toggleLink = ({ editor, t }: ToggleArgs) => {
   }
 }
 
-export const withLinks = (editor: ReactEditor) => {
+export const withLinks = (editor: Editor) => {
   const { insertText, isInline } = editor
 
   editor.isInline = (element) => {
@@ -222,7 +222,7 @@ const dataUrlizeFile = (file: File): Promise<string> => {
 
 }
 
-export const insertImage = async (editor: ReactEditor, file: File) => {
+export const insertImage = async (editor: Editor, file: File) => {
   const url = await dataUrlizeFile(file)
 
   const nodes = [
@@ -242,7 +242,7 @@ export const insertImage = async (editor: ReactEditor, file: File) => {
   Transforms.insertNodes(editor, nodes)
 }
 
-export const withImages = (editor: ReactEditor) => {
+export const withImages = (editor: Editor) => {
   const { insertData, isVoid } = editor
 
   editor.isVoid = element => {

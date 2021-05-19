@@ -1,5 +1,5 @@
 import React from 'react'
-import { Editor, Node } from 'slate'
+import { Editor, Descendant } from 'slate'
 
 import FileInput from '@/components/FileInput'
 import PostHeader from '@/components/PostHeader'
@@ -26,7 +26,7 @@ type BasePostData = {
   languageId: number
   topicIds: number[]
   image?: ImageInput | null
-  body: Node[]
+  body: Descendant[]
 }
 
 type OutputPostData = BasePostData & {
@@ -86,7 +86,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
     key: `${autosaveKey}:title`,
     debounceTime: 1000,
   })
-  const [body, setBody, resetBody] = useAutosavedState<Node[]>(initialData.body, {
+  const [body, setBody, resetBody] = useAutosavedState<Descendant[]>(initialData.body, {
     initialTimestamp: initialData.timestamp,
     key: `${autosaveKey}:body`,
     debounceTime: 1000,

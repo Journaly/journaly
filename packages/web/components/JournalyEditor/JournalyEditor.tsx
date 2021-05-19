@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
-import { createEditor, Editor, Node } from 'slate'
+import { createEditor, Editor, Descendant } from 'slate'
 import { Slate, withReact } from 'slate-react'
 import { withHistory } from 'slate-history'
 import { pipe, TablePlugin, EditablePlugins } from '@udecode/slate-plugins'
@@ -35,8 +35,8 @@ const HOTKEYS: { [key in HotKey]: MarkType } = {
 }
 
 type JournalyEditorProps = {
-  value: Node[]
-  setValue: (value: Node[]) => void
+  value: Descendant[]
+  setValue: (value: Descendant[]) => void
   slateRef: React.RefObject<Editor>
   allowInlineImages: boolean
   disabled?: boolean
@@ -54,7 +54,7 @@ const JournalyEditor = ({
   const renderElement = useCallback((props) => <RenderElement {...props} />, [])
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
   const editor = useMemo(() => {
-    const withPlugins = [
+    const withPlugins: ((ed: Editor) => Editor)[] = [
       withHistory,
       withLinks,
     ]
@@ -99,15 +99,19 @@ const JournalyEditor = ({
       <PostBodyStyles parentClassName="editor-container" />
       <style jsx>{`
         .editor-container {
+          display: flex;
+          flex-direction: column;
+
           padding: 0 25px 10px;
           border: 1px solid ${theme.colors.black};
           border-radius: 5px;
           background-color: ${theme.colors.white};
           opacity: ${disabled ? 0.6 : 'auto'};
+          min-height: 200px;
         }
 
         .editor-container > :global([contenteditable="true"]) {
-          min-height: 200px;
+          flex: 1;
         }
       `}</style>
     </div>

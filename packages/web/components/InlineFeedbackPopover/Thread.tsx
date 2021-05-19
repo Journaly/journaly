@@ -130,6 +130,7 @@ const Thread: React.FC<ThreadProps> = ({
           flex-direction: column;
           overflow: hidden;
           max-height: 100%;
+          background-color: ${theme.colors.white};
         }
 
         .thread-subject {

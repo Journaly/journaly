@@ -1,7 +1,7 @@
 import { getClient } from '@/nexus/utils/db'
 import stripe, { getOrCreateStripeCustomer } from '@/nexus/utils/stripe'
 import { 
-  InputJsonValue,
+  Prisma,
   MembershipSubscriptionPeriod,
 } from '@journaly/j-db-client'
 
@@ -37,7 +37,7 @@ const handler = async (userId: number, months: number | undefined) => {
     data: {
       period: MembershipSubscriptionPeriod.MONTHLY,
       expiresAt: expiresAt,
-      stripeSubscription: stripeSubscription as unknown as InputJsonValue,
+      stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
       stripeSubscriptionId: stripeSubscription.id,
       lastFourCardNumbers: 'NONE',
       cardBrand: 'visa',

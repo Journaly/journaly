@@ -121,15 +121,53 @@ const User = objectType({
       type: 'DatedActivityCount',
       resolve(parent, _args, ctx, _info) {
         const stats = ctx.db.$queryRaw`
+          WITH
+            post_activity AS (
+              SELECT
+                DATE("publishedAt") as date,
+                COUNT(*) as count
+              FROM "Post"
+              WHERE
+                "authorId" = 1
+                AND "status" = 'PUBLISHED'
+              GROUP BY date
+              ORDER BY date DESC
+            ),
+            thread_comment_activity AS (
+              SELECT
+                DATE("createdAt") as date,
+                COUNT(*) as count
+              FROM "Comment"
+              WHERE
+                "authorId" = 1
+              GROUP BY date
+              ORDER BY date DESC
+            ),
+            post_comment_activity AS (
+              SELECT
+                DATE("createdAt") as date,
+                COUNT(*) as count
+              FROM "PostComment"
+              WHERE
+                "authorId" = 1
+              GROUP BY date
+              ORDER BY date DESC
+            )
           SELECT
-            DATE("publishedAt") as date,
-            COUNT(*) as count
-          FROM "Post"
-          WHERE
-            "authorId" = ${parent.id}
-            AND "status" = 'PUBLISHED'
-         GROUP BY date
-         ORDER BY date DESC;
+            COALESCE(
+              post_activity.date,
+              thread_comment_activity.date,
+              post_comment_activity.date
+            ) AS date,
+            COALESCE(post_activity.count, 0) AS "postCount",
+            COALESCE(thread_comment_activity.count, 0) AS "threadCommentCount",
+            COALESCE(post_comment_activity.count, 0) AS "postCommentCount"
+          FROM post_activity
+          FULL JOIN thread_comment_activity
+            ON post_activity.date = thread_comment_activity.date
+          FULL JOIN post_comment_activity
+            ON post_activity.date = post_comment_activity.date
+          ;
         `
         return stats || []
       },

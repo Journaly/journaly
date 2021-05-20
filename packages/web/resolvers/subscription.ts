@@ -10,7 +10,10 @@ import {
   objectType,
   stringArg,
 } from 'nexus'
-import stripe, { paymentErrorWrapper } from '@/nexus/utils/stripe'
+import stripe, {
+  getOrCreateStripeCustomer,
+  paymentErrorWrapper
+} from '@/nexus/utils/stripe'
 import Stripe from 'stripe'
 
 const MembershipSubscription = objectType({
@@ -150,28 +153,8 @@ const MembershipSubscriptionMutations = extendType({
 
         if (!user) throw new Error("User not found")
         
-        let customerId: string
-        if (user.stripeCustomerId) {
-          customerId = user.stripeCustomerId
-        } else {
-          const customer = await stripe.customers.create({
-            description: `${user.handle} (${user.id})`,
-            email: user.email,
-            metadata: {
-              journalyUserId: user.id,
-              handle: user.handle,
-            },
-          })
-          customerId = customer.id
-          await ctx.db.user.update({
-            where: {
-              id: userId,
-            },
-            data: {
-              stripeCustomerId: customer.id,
-            },
-          })
-        }
+        const customerId = await getOrCreateStripeCustomer(user, ctx.db)
+
         const stripePaymentMethod = await setPaymentMethod(customerId, args.paymentMethodId)
         if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
         if (!user.membershipSubscription) {
@@ -195,7 +178,6 @@ const MembershipSubscriptionMutations = extendType({
             trial_end: trialEnd
           })
   
-          // TODO: Log failure and get proper alarms set up
           const membershipSubscription = await ctx.db.membershipSubscription.create({
             data: {
               period: args.period,

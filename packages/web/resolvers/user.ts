@@ -23,8 +23,10 @@ import { validateUpdateUserMutationData } from './utils/userValidation'
 const DatedActivityCount = objectType({
   name: 'DatedActivityCount',
   definition(t) {
-    t.int('count')
     t.string('date')
+    t.int('postCount')
+    t.int('threadCommentCount')
+    t.int('postCommentCount')
   }
 })
 
@@ -117,7 +119,7 @@ const User = objectType({
         })
       },
     })
-    t.list.field('postActivity', {
+    t.list.field('activityGraphData', {
       type: 'DatedActivityCount',
       resolve(parent, _args, ctx, _info) {
         const stats = ctx.db.$queryRaw`
@@ -128,7 +130,7 @@ const User = objectType({
                 COUNT(*) as count
               FROM "Post"
               WHERE
-                "authorId" = 1
+                "authorId" = ${parent.id}
                 AND "status" = 'PUBLISHED'
               GROUP BY date
               ORDER BY date DESC
@@ -139,7 +141,7 @@ const User = objectType({
                 COUNT(*) as count
               FROM "Comment"
               WHERE
-                "authorId" = 1
+                "authorId" = ${parent.id}
               GROUP BY date
               ORDER BY date DESC
             ),
@@ -149,7 +151,7 @@ const User = objectType({
                 COUNT(*) as count
               FROM "PostComment"
               WHERE
-                "authorId" = 1
+                "authorId" = ${parent.id}
               GROUP BY date
               ORDER BY date DESC
             )

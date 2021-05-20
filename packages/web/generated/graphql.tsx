@@ -181,7 +181,7 @@ export type User = {
   thanksReceivedCount: Scalars['Int']
   threadCommentsCount: Scalars['Int']
   postCommentsCount: Scalars['Int']
-  postActivity: Array<DatedActivityCount>
+  activityGraphData: Array<DatedActivityCount>
 }
 
 export type UserBadge = {
@@ -203,8 +203,10 @@ export type InitiateAvatarImageUploadResponse = {
 
 export type DatedActivityCount = {
   __typename?: 'DatedActivityCount'
-  count: Scalars['Int']
   date: Scalars['String']
+  postCount: Scalars['Int']
+  threadCommentCount: Scalars['Int']
+  postCommentCount: Scalars['Int']
 }
 
 export type LanguageRelation = {
@@ -301,8 +303,8 @@ export enum UserRole {
 export enum BadgeType {
   AlphaUser = 'ALPHA_USER',
   BetaUser = 'BETA_USER',
-  TenPosts = 'TEN_POSTS',
   OnehundredPosts = 'ONEHUNDRED_POSTS',
+  TenPosts = 'TEN_POSTS',
   CodeContributor = 'CODE_CONTRIBUTOR',
 }
 
@@ -1200,8 +1202,11 @@ export type UserStatsQuery = { __typename?: 'Query' } & {
     | 'thanksReceivedCount'
     | 'createdAt'
   > & {
-      postActivity: Array<
-        { __typename?: 'DatedActivityCount' } & Pick<DatedActivityCount, 'count' | 'date'>
+      activityGraphData: Array<
+        { __typename?: 'DatedActivityCount' } & Pick<
+          DatedActivityCount,
+          'date' | 'postCount' | 'threadCommentCount' | 'postCommentCount'
+        >
       >
     }
 }
@@ -3916,9 +3921,11 @@ export const UserStatsDocument = gql`
       postCommentsCount
       thanksReceivedCount
       createdAt
-      postActivity {
-        count
+      activityGraphData {
         date
+        postCount
+        threadCommentCount
+        postCommentCount
       }
     }
   }

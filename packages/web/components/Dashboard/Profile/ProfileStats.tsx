@@ -202,6 +202,32 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
       </div>
 
       <h2>{t('stats.activity.title')}</h2>
+      <div className="activity-type-toggles">
+        <label>
+          <input
+            type="checkbox"
+            checked={includePosts}
+            onChange={(e) => setIncludePosts(!includePosts)}
+          />
+          <span>{t('stats.activity.types.posts')}</span>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={includePostComments}
+            onChange={(e) => setIncludePostComments(!includePostComments)}
+          />
+          <span>{t('stats.activity.types.postComments')}</span>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={includeThreadComments}
+            onChange={(e) => setIncludeThreadComments(!includeThreadComments)}
+          />
+          <span>{t('stats.activity.types.threadComments')}</span>
+        </label>
+      </div>
       <svg
         className="activityChart"
         viewBox={`0 0 ${(NUM_WEEKS + 1) * (CELL_WIDTH + CELL_PADDING) + 20} 100`}
@@ -247,32 +273,6 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
           ))}
         </g>
       </svg>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={includePosts}
-            onChange={(e) => setIncludePosts(!includePosts)}
-          />
-          <span>{t('stats.activity.types.posts')}</span>
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={includePostComments}
-            onChange={(e) => setIncludePostComments(!includePostComments)}
-          />
-          <span>{t('stats.activity.types.postComments')}</span>
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={includeThreadComments}
-            onChange={(e) => setIncludeThreadComments(!includeThreadComments)}
-          />
-          <span>{t('stats.activity.types.threadComments')}</span>
-        </label>
-      </div>
       <style jsx>{`
         h2 {
           text-align: center;
@@ -289,6 +289,18 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
           max-width: 600px;
           align-self: center;
           margin-bottom: 20px;
+        }
+
+        .activity-type-toggles {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-around;
+          padding-bottom: 10px;
+        }
+
+        .activity-type-toggles > label > input {
+          margin-right: 5px;
         }
       `}</style>
     </>

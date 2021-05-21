@@ -79,7 +79,6 @@ const JournalyEditor = ({
             plugins={plugins}
             renderElement={[renderElement]}
             renderLeaf={[renderLeaf]}
-            placeholder={t('editor.placeholderPrompt')}
             readOnly={disabled}
             spellCheck
             onKeyDown={[
@@ -112,6 +111,7 @@ const JournalyEditor = ({
 
         .editor-container > :global([contenteditable="true"]) {
           flex: 1;
+          padding-top: 15px;
         }
       `}</style>
     </div>

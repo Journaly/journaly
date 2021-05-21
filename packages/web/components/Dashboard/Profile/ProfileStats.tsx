@@ -207,7 +207,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
           <input
             type="checkbox"
             checked={includePosts}
-            onChange={(e) => setIncludePosts(!includePosts)}
+            onChange={() => setIncludePosts(!includePosts)}
           />
           <span>{t('stats.activity.types.posts')}</span>
         </label>
@@ -215,7 +215,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
           <input
             type="checkbox"
             checked={includePostComments}
-            onChange={(e) => setIncludePostComments(!includePostComments)}
+            onChange={() => setIncludePostComments(!includePostComments)}
           />
           <span>{t('stats.activity.types.postComments')}</span>
         </label>
@@ -223,7 +223,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
           <input
             type="checkbox"
             checked={includeThreadComments}
-            onChange={(e) => setIncludeThreadComments(!includeThreadComments)}
+            onChange={() => setIncludeThreadComments(!includeThreadComments)}
           />
           <span>{t('stats.activity.types.threadComments')}</span>
         </label>

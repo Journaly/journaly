@@ -23,6 +23,7 @@ const MembershipSubscription = objectType({
     t.model.period()
     t.model.userId()
     t.model.expiresAt()
+    t.model.nextBillingDate()
     t.model.cancelAtPeriodEnd()
     t.model.lastFourCardNumbers()
     t.model.cardBrand()
@@ -120,6 +121,7 @@ const setPlan = async (
     data: {
       period: subscriptionPeriod,
       expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+      nextBillingDate: new Date(subscriptionUpdated.current_period_end * 1000),
       stripeSubscription: subscriptionUpdated as unknown as Prisma.InputJsonValue,
       cancelAtPeriodEnd,
     },
@@ -183,6 +185,7 @@ const MembershipSubscriptionMutations = extendType({
               period: args.period,
               // Give 2 days grace period
               expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+              nextBillingDate: new Date(stripeSubscription.current_period_end * 1000),
               // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
               stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
               stripeSubscriptionId: stripeSubscription.id,

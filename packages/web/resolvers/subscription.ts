@@ -116,7 +116,7 @@ const setPlan = async (
     data: {
       period: subscriptionPeriod,
       expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
-      nextBillingDate: new Date(subscriptionUpdated.current_period_end * 1000),
+      nextBillingDate: subscriptionUpdated.cancel_at_period_end ? null : new Date(subscriptionUpdated.current_period_end * 1000),
       stripeSubscription: subscriptionUpdated as unknown as Prisma.InputJsonValue,
       cancelAtPeriodEnd,
     },
@@ -240,7 +240,7 @@ const MembershipSubscriptionMutations = extendType({
           throw new Error("User has no subscription to cancel")
         }
 
-        await stripe.subscriptions.update(user.membershipSubscription.stripeSubscriptionId, {
+        const updatedSubscription = await stripe.subscriptions.update(user.membershipSubscription.stripeSubscriptionId, {
           cancel_at_period_end: args.cancelAtPeriodEnd,
         })
 
@@ -251,6 +251,7 @@ const MembershipSubscriptionMutations = extendType({
           },
           data: {
             cancelAtPeriodEnd: args.cancelAtPeriodEnd,
+            nextBillingDate: args.cancelAtPeriodEnd ? null : new Date(updatedSubscription.current_period_end * 1000),
           }
         })
       }),

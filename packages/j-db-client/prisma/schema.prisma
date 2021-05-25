@@ -42,8 +42,8 @@ model User {
   userInterests                 UserInterest[]
   followedBy                    User[]                          @relation("UserFollows", references: [id])
   following                     User[]                          @relation("UserFollows", references: [id])
-  lastFourCardNumbers  String
-  cardBrand            String
+  lastFourCardNumbers           String?
+  cardBrand                     String?
 }
 
 model Auth {

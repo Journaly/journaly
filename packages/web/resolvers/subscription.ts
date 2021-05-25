@@ -48,6 +48,8 @@ const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
 }
 
 const setPaymentMethod = async (
+  userId?: number,
+  db?: PrismaClient,
   customerId: string,
   paymentMethodId: string,
 ) => {
@@ -65,25 +67,18 @@ const setPaymentMethod = async (
       default_payment_method: stripePaymentMethod.id,
     },
   })
+  if (userId && db) {
+    await db.user.update({
+      where: {
+        userId,
+      },
+      data: {
+        lastFourCardNumbers: stripePaymentMethod.card.last4,
+        cardBrand: stripePaymentMethod.card.brand,
+      },
+    })
+  }
   return stripePaymentMethod
-}
-// TODO: DB Cleanup - add customer payment info to User model & remove from Subscription.
-// Merge this fn with setPaymentMethod
-const updateSubscriptionWithPaymentMethod = (
-  userId: number,
-  db: PrismaClient,
-  stripePaymentMethod: Stripe.PaymentMethod,
-) => {
-  if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
-  return db.membershipSubscription.update({
-    where: {
-      userId,
-    },
-    data: {
-      lastFourCardNumbers: stripePaymentMethod.card.last4,
-      cardBrand: stripePaymentMethod.card.brand,
-    },
-  })
 }
 
 const setPlan = async (
@@ -200,7 +195,7 @@ const MembershipSubscriptionMutations = extendType({
           })
           return membershipSubscription
         } else {
-          await updateSubscriptionWithPaymentMethod(userId, ctx.db, stripePaymentMethod)
+          await setPaymentMethod(userId, ctx.db, user.membershipSubscription.stripeSubscriptionId, stripePaymentMethod.id)
           const membershipSubscription = await setPlan(
             userId,
             ctx.db,
@@ -314,11 +309,12 @@ const MembershipSubscriptionMutations = extendType({
           throw new Error("User has no subscription to update")
         }
 
-        const paymentMethod = await setPaymentMethod(
+        return setPaymentMethod(
+          userId,
+          ctx.db,
           user.membershipSubscription.stripeSubscriptionId,
           args.paymentMethodId,
         )
-        return updateSubscriptionWithPaymentMethod(userId, ctx.db, paymentMethod)
       }),
     })
   }

@@ -184,14 +184,21 @@ const MembershipSubscriptionMutations = extendType({
               // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
               stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
               stripeSubscriptionId: stripeSubscription.id,
-              lastFourCardNumbers: stripePaymentMethod.card.last4,
-              cardBrand: stripePaymentMethod.card.brand,
               user: {
                 connect: {
                   id: userId,
-                }
+                }, 
               }
             },
+          })
+          await ctx.db.user.update({
+            where: {
+              id: userId,
+            },
+            data: {
+              lastFourCardNumbers: stripePaymentMethod.card.last4,
+              cardBrand: stripePaymentMethod.card.brand,
+            }
           })
           return membershipSubscription
         } else {

@@ -35,6 +35,7 @@ const updateStripeSubscription = async (subscriptionId: string, db: PrismaClient
     },
     data: {
       expiresAt: new Date(expiresAt),
+      nextBillingDate: stripeSubscription.cancel_at_period_end ? null : new Date(stripeSubscription.current_period_end * 1000),
       stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonObject,
     },
   })

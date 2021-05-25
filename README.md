@@ -130,6 +130,22 @@ query feed {
 }
 ```
 
+## Scripts
+
+### greant-free-subscription
+
+Usage:
+
+```
+npm run grant-free-subscription <user id> <months>
+```
+
+Be sure to set the following env vars:
+- `DATABASE_URL`
+- `FREE_PRICE_ID`
+- `STRIPE_SECRET_KEY` 
+
+
 ## More Helpful Docs
 
 1. [Debugging Journaly With VS Code](./docs/debugging.md)

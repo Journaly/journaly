@@ -450,9 +450,18 @@ const generateAllLocalesReport = async () => {
 const generateTemplates = async (report) => {
   for (locale in report.locales) {
     const localeReport = report.locales[locale]
+    const templatePath = `translation-site/templates/${locale}.csv`
+
+    await fs.writeFile(
+      templatePath,
+      '\ufeff' + HEADER_SPEC.map(({ title }) => title).join(',') + '\n',
+      { encoding: 'UTF-8' }
+    )
+
     const writer = createCsvWriter({
-      path: `translation-site/templates/${locale}.csv`,
+      path: templatePath,
       header: HEADER_SPEC,
+      append: true,
     })
 
     const records = []

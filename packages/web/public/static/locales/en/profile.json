@@ -15,7 +15,12 @@
       "thanksCount": "For their hard work helping others, they've been thanked {{thanksCount}} times."
     },
     "activity": {
-      "title": "Posting History"
+      "title": "Activity History",
+      "types": {
+        "posts": "Posts",
+        "postComments": "Post Comments",
+        "threadComments": "Inline Comments"
+      }
     }
   },
   "statsTitle": "Stats",

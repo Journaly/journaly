@@ -9,9 +9,11 @@ query userStats($id: Int!) {
     postCommentsCount
     thanksReceivedCount
     createdAt
-    postActivity {
-      count
+    activityGraphData {
       date
+      postCount
+      threadCommentCount
+      postCommentCount
     }
   }
 }

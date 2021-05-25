@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from '@/config/i18n'
 import chroma from 'chroma-js'
 
@@ -20,6 +20,12 @@ import { useUserStatsQuery } from '@/generated/graphql'
 
 type ProfileStatsProps = {
   userId: number
+}
+
+type ActivityCounts = {
+  postCount: number
+  postCommentCount: number
+  threadCommentCount: number
 }
 
 const CELL_WIDTH = 8
@@ -49,6 +55,17 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
     }
   })
 
+  const [includePosts, setIncludePosts] = useState(true)
+  const [includePostComments, setIncludePostComments] = useState(true)
+  const [includeThreadComments, setIncludeThreadComments] = useState(true)
+
+  const getCount = useCallback((d: ActivityCounts) => {
+    return (0
+      + (includePosts ? d.postCount : 0)
+      + (includePostComments ? d.postCommentCount : 0)
+      + (includeThreadComments ? d.threadCommentCount : 0))
+  }, [includePosts, includePostComments, includeThreadComments])
+
   const [start, end] = useMemo(() => {
     const end = addDays(new Date(), 1)
     const start = addWeeks(end, -NUM_WEEKS)
@@ -56,15 +73,24 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
   }, [data])
 
   const denseData = useMemo(() => {
-    const indexable: { [key: string]: number } = {}
-    if (data?.userById?.postActivity) {
-      const { postActivity } = data.userById
-      for (var i=0; i < postActivity.length; i++) {
-        indexable[postActivity[i].date] = postActivity[i].count
+    const indexable: { [key: string]: ActivityCounts } = {}
+    if (data?.userById?.activityGraphData) {
+      const { activityGraphData } = data.userById
+      for (var i=0; i < activityGraphData.length; i++) {
+        const {
+          date,
+          postCount,
+          postCommentCount,
+          threadCommentCount
+        } = activityGraphData[i]
+        indexable[date] = {
+          postCount,
+          postCommentCount,
+          threadCommentCount
+        }
       }
     }
 
-    let max = 0
     const rightEdge = NUM_WEEKS * (CELL_WIDTH + CELL_PADDING)
     const days = eachDayOfInterval({ start, end }).map(date => {
       const x = (
@@ -72,11 +98,20 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
         - (CELL_WIDTH + CELL_PADDING)
         * differenceInCalendarWeeks(end, date))
       const y = (CELL_WIDTH + CELL_PADDING) * getDay(date)
-      const count = indexable[formatISO(date, { representation: 'date' })] || 0
+      const {
+        postCount,
+        postCommentCount,
+        threadCommentCount
+      } = indexable[formatISO(date, { representation: 'date' })] || {}
 
-      max = Math.max(max, count)
-
-      return { x, y, count, date }
+      return {
+        x,
+        y,
+        date,
+        postCount: postCount || 0,
+        postCommentCount: postCommentCount || 0,
+        threadCommentCount: threadCommentCount || 0,
+      }
     })
 
     const months = eachMonthOfInterval({ start, end }).map(date => {
@@ -94,16 +129,27 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
     months.shift()
 
     return {
-      max: Math.max(max, 1),
       months,
       days,
     }
   }, [data, start, end])
 
+  const { maxValue, days } = useMemo(() => {
+    let max =  0
+    const days = denseData.days.map((d) => {
+      const count = getCount(d)
+      max = Math.max(max, count)
+
+      return { ...d, count }
+    })
+
+    return { days, maxValue: Math.max(max, 1) }
+  }, [denseData, getCount])
+
   const colorScale = chroma
     .scale([theme.colors.white, theme.colors.blueLight])
     .mode('lab')
-    .domain([0, denseData.max])
+    .domain([0, maxValue])
 
   if (loading || !data) {
     return <span>Loading...</span>
@@ -156,12 +202,38 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
       </div>
 
       <h2>{t('stats.activity.title')}</h2>
+      <div className="activity-type-toggles">
+        <label>
+          <input
+            type="checkbox"
+            checked={includePosts}
+            onChange={() => setIncludePosts(!includePosts)}
+          />
+          <span>{t('stats.activity.types.posts')}</span>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={includePostComments}
+            onChange={() => setIncludePostComments(!includePostComments)}
+          />
+          <span>{t('stats.activity.types.postComments')}</span>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={includeThreadComments}
+            onChange={() => setIncludeThreadComments(!includeThreadComments)}
+          />
+          <span>{t('stats.activity.types.threadComments')}</span>
+        </label>
+      </div>
       <svg
         className="activityChart"
         viewBox={`0 0 ${(NUM_WEEKS + 1) * (CELL_WIDTH + CELL_PADDING) + 20} 100`}
       >
         <g transform="translate(20, 10)">
-          {denseData.days.map(d => (
+          {days.map(d => (
             <rect
               key={formatISO(d.date)}
               fill={colorScale(d.count).hex()}
@@ -217,6 +289,18 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
           max-width: 600px;
           align-self: center;
           margin-bottom: 20px;
+        }
+
+        .activity-type-toggles {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-around;
+          padding-bottom: 10px;
+        }
+
+        .activity-type-toggles > label > input {
+          margin-right: 5px;
         }
       `}</style>
     </>

@@ -8,7 +8,6 @@ import isHotkey from 'is-hotkey'
 import theme from '@/theme'
 import PostBodyStyles from '@/components/PostBodyStyles'
 import Toolbar from './Toolbar'
-import { useTranslation } from '@/config/i18n'
 import RenderElement from './RenderElement'
 import RenderLeaf from './RenderLeaf'
 import {
@@ -50,7 +49,6 @@ const JournalyEditor = ({
   disabled,
   allowInlineImages,
 }: JournalyEditorProps) => {
-  const { t } = useTranslation('common')
   const renderElement = useCallback((props) => <RenderElement {...props} />, [])
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
   const editor = useMemo(() => {
@@ -79,7 +77,6 @@ const JournalyEditor = ({
             plugins={plugins}
             renderElement={[renderElement]}
             renderLeaf={[renderLeaf]}
-            placeholder={t('editor.placeholderPrompt')}
             readOnly={disabled}
             spellCheck
             onKeyDown={[
@@ -99,15 +96,20 @@ const JournalyEditor = ({
       <PostBodyStyles parentClassName="editor-container" />
       <style jsx>{`
         .editor-container {
+          display: flex;
+          flex-direction: column;
+
           padding: 0 25px 10px;
           border: 1px solid ${theme.colors.black};
           border-radius: 5px;
           background-color: ${theme.colors.white};
           opacity: ${disabled ? 0.6 : 'auto'};
+          min-height: 200px;
         }
 
         .editor-container > :global([contenteditable="true"]) {
-          min-height: 200px;
+          flex: 1;
+          padding-top: 15px;
         }
       `}</style>
     </div>

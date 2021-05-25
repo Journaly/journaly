@@ -30,7 +30,7 @@ const Topic = objectType({
           },
         })
 
-        return translation.name || parent.devName
+        return translation?.name || parent.devName
       },
     })
     t.int('postCount', {

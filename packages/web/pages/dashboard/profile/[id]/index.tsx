@@ -22,7 +22,7 @@ const ProfilePage: NextPage<InitialProps> = () => {
 
   return (
     <LoadingWrapper loading={loading} error={error}>
-      <DashboardLayout withPadding={false}>
+      <DashboardLayout pad="never">
         {userById && posts && (
           <Profile isLoggedInUser={currentUser?.id === userId} user={userById} posts={posts} />
         )}

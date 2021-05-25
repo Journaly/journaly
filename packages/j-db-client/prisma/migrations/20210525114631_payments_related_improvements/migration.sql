@@ -10,7 +10,16 @@ ALTER TABLE "User" ADD COLUMN     "lastFourCardNumbers" TEXT,
 ADD COLUMN     "cardBrand" TEXT;
 
 -- Backfill Payment Info
-UPDATE "User" SET "lastFourCardNumbers"
+WITH sq AS (
+	SELECT *
+	FROM "MembershipSubscription"
+)
+UPDATE "User"
+SET
+	"lastFourCardNumbers" = sq."lastFourCardNumbers",
+	"cardBrand" = sq."cardBrand"
+FROM sq
+WHERE "User".id = sq."userId";
 
 -- AlterTable
 ALTER TABLE "MembershipSubscription" DROP COLUMN "lastFourCardNumbers",
@@ -19,4 +28,3 @@ ADD COLUMN     "nextBillingDate" TIMESTAMP(3);
 
 -- Backfill nextBillingDate
 UPDATE "MembershipSubscription" SET "nextBillingDate" = "expiresAt";
-

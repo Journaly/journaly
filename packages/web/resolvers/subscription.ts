@@ -48,8 +48,8 @@ const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
 }
 
 const setPaymentMethod = async (
-  userId?: number,
-  db?: PrismaClient,
+  userId: number,
+  db: PrismaClient,
   customerId: string,
   paymentMethodId: string,
 ) => {
@@ -60,6 +60,7 @@ const setPaymentMethod = async (
   const stripePaymentMethod = await stripe.paymentMethods.attach(paymentMethodId, {
     customer: customer.id,
   })
+
   if (!stripePaymentMethod.card) throw new Error("Unable to retrieve payment method")
 
   await stripe.customers.update(customer.id, {
@@ -67,17 +68,17 @@ const setPaymentMethod = async (
       default_payment_method: stripePaymentMethod.id,
     },
   })
-  if (userId && db) {
-    await db.user.update({
-      where: {
-        userId,
-      },
-      data: {
-        lastFourCardNumbers: stripePaymentMethod.card.last4,
-        cardBrand: stripePaymentMethod.card.brand,
-      },
-    })
-  }
+
+  await db.user.update({
+    where: {
+      userId,
+    },
+    data: {
+      lastFourCardNumbers: stripePaymentMethod.card.last4,
+      cardBrand: stripePaymentMethod.card.brand,
+    },
+  })
+
   return stripePaymentMethod
 }
 
@@ -152,7 +153,7 @@ const MembershipSubscriptionMutations = extendType({
         
         const customerId = await getOrCreateStripeCustomer(user, ctx.db)
 
-        const stripePaymentMethod = await setPaymentMethod(customerId, args.paymentMethodId)
+        const stripePaymentMethod = await setPaymentMethod(userId, ctx.db, customerId, args.paymentMethodId)
         if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
         if (!user.membershipSubscription) {
 
@@ -191,18 +192,9 @@ const MembershipSubscriptionMutations = extendType({
               }
             },
           })
-          await ctx.db.user.update({
-            where: {
-              id: userId,
-            },
-            data: {
-              lastFourCardNumbers: stripePaymentMethod.card.last4,
-              cardBrand: stripePaymentMethod.card.brand,
-            }
-          })
+
           return membershipSubscription
         } else {
-          await setPaymentMethod(userId, ctx.db, user.membershipSubscription.stripeSubscriptionId, stripePaymentMethod.id)
           const membershipSubscription = await setPlan(
             userId,
             ctx.db,

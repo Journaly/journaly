@@ -71,6 +71,8 @@ const User = objectType({
     t.model.languages({ pagination: false })
     t.model.following({ pagination: false })
     t.model.followedBy({ pagination: false })
+    t.model.lastFourCardNumbers()
+    t.model.cardBrand()
 
     t.int('postsWrittenCount', {
       resolve(parent, _args, ctx, _info) {

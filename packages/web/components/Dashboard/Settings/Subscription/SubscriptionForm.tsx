@@ -100,8 +100,8 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
         {user.membershipSubscription?.isActive && (
           <>
             <p><strong>{t('subscription.currentPlan')}</strong> {subscriptionPlan}</p>
-            {user.membershipSubscription?.lastFourCardNumbers && (
-              <CardOnFile last4={user.membershipSubscription.lastFourCardNumbers} onSuccess={onSuccess} />
+            {user.lastFourCardNumbers && (
+              <CardOnFile last4={user.lastFourCardNumbers} onSuccess={onSuccess} />
             )}
             {isCancelling ? (
               <>

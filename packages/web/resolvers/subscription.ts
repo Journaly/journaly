@@ -14,7 +14,6 @@ import stripe, {
   getOrCreateStripeCustomer,
   paymentErrorWrapper
 } from '@/nexus/utils/stripe'
-import Stripe from 'stripe'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
@@ -25,8 +24,6 @@ const MembershipSubscription = objectType({
     t.model.expiresAt()
     t.model.nextBillingDate()
     t.model.cancelAtPeriodEnd()
-    t.model.lastFourCardNumbers()
-    t.model.cardBrand()
     t.boolean('isActive', {
       resolve: async (parent, _args, _ctx, _info) => {
         if (parent.expiresAt && parent.expiresAt < new Date(Date.now())) return false
@@ -71,7 +68,7 @@ const setPaymentMethod = async (
 
   await db.user.update({
     where: {
-      userId,
+      id: userId,
     },
     data: {
       lastFourCardNumbers: stripePaymentMethod.card.last4,
@@ -309,12 +306,13 @@ const MembershipSubscriptionMutations = extendType({
           throw new Error("User has no subscription to update")
         }
 
-        return setPaymentMethod(
+        await setPaymentMethod(
           userId,
           ctx.db,
           user.membershipSubscription.stripeSubscriptionId,
           args.paymentMethodId,
         )
+        return user.membershipSubscription
       }),
     })
   }

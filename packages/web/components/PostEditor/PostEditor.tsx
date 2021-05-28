@@ -63,7 +63,39 @@ const validatePostData: validatePostDataSignature = (data, t) => {
   return [true, '']
 }
 
-const DEFAULT_IMAGE_URL = '/images/samples/sample-post-img.jpg'
+const defaultImages = [
+  {
+    smallSize: 'https://thumbbuster-prod-transform-bucket.s3.us-east-2.amazonaws.com/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
+    largeSize: 'https://thumbbuster-prod-transform-bucket.s3.us-east-2.amazonaws.com/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-large',
+    imageRole: ImageRole.Headline,
+  },
+  {
+    smallSize: 'https://thumbbuster-prod-transform-bucket.s3.us-east-2.amazonaws.com/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-small',
+    largeSize: 'https://thumbbuster-prod-transform-bucket.s3.us-east-2.amazonaws.com/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-large',
+    imageRole: ImageRole.Headline,
+  },
+  {
+    smallSize: 'https://thumbbuster-prod-transform-bucket.s3.us-east-2.amazonaws.com/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-small',
+    largeSize: 'https://thumbbuster-prod-transform-bucket.s3.us-east-2.amazonaws.com/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-large',
+    imageRole: ImageRole.Headline,
+  },
+  {
+    smallSize: 'https://thumbbuster-prod-transform-bucket.s3.us-east-2.amazonaws.com/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-small',
+    largeSize: 'https://thumbbuster-prod-transform-bucket.s3.us-east-2.amazonaws.com/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-large',
+    imageRole: ImageRole.Headline,
+  },
+  {
+    smallSize: 'https://thumbbuster-prod-transform-bucket.s3.us-east-2.amazonaws.com/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-small',
+    largeSize: 'https://thumbbuster-prod-transform-bucket.s3.us-east-2.amazonaws.com/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-large',
+    imageRole: ImageRole.Headline,
+  },
+
+]
+
+const selectDefaultImage = () => {
+  const index = Math.floor(Math.random() * defaultImages.length)
+  return defaultImages[index]
+}
 
 const PostEditor: React.FC<PostEditorProps> = ({
   currentUser,
@@ -100,8 +132,10 @@ const PostEditor: React.FC<PostEditorProps> = ({
     return { value, displayName }
   })
 
+  const randomImageSelection = selectDefaultImage()
+
   const [image, uploadingImage, onFileInputChange, resetImage] = usePostImageUpload()
-  const postImage = image?.finalUrlLarge || initialData.image?.largeSize || DEFAULT_IMAGE_URL
+  const postImage = image?.finalUrlLarge || initialData.image?.largeSize || randomImageSelection.largeSize
 
   const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
   const formattedTopicOptions = (topics || []).map(({ name, id }) => ({
@@ -134,7 +168,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
     }
 
     const returnImage = !image
-      ? null
+      ? randomImageSelection
       : {
           largeSize: image.finalUrlLarge,
           smallSize: image.finalUrlSmall,

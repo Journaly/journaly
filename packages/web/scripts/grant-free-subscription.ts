@@ -39,8 +39,6 @@ const handler = async (userId: number, months: number | undefined) => {
       expiresAt: expiresAt,
       stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
       stripeSubscriptionId: stripeSubscription.id,
-      lastFourCardNumbers: 'NONE',
-      cardBrand: 'visa',
       user: {
         connect: {
           id: userId,

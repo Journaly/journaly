@@ -46,7 +46,7 @@ const PostCard: React.FC<Props> = ({
   } = post
   const isDraft = status === PostStatusType.Draft
   const isPublished = status === PostStatusType.Published
-  const displayImage = images.length ? images[0].smallSize : '/images/samples/sample-post-img.jpg'
+  const displayImage = images[0].smallSize
   const imageAlt = images.length === 0 ? 'Typewriter on an old wooden desk' : ''
   const postCardStyles = classNames('post-card-container', { stacked })
 

@@ -486,8 +486,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           publishedLanguageLevel={post.publishedLanguageLevel}
           authorName={post.author.handle}
           postImage={
-            (post.images || []).find((i: ImageType) => i.imageRole === ImageRole.Headline)
-              ?.largeSize || '/images/samples/sample-post-img.jpg'
+            (post.images).find((i: ImageType) => i.imageRole === ImageRole.Headline).largeSize
           }
           language={post.language}
           topics={post.postTopics.map(({ topic }) => topic)}

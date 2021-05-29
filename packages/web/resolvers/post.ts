@@ -454,7 +454,7 @@ const PostMutations = extendType({
         topicIds: intArg({ list: true, required: false }),
         body: EditorNode.asArg({ list: true, required: false }),
         status: arg({ type: 'PostStatus', required: false }),
-        headlineImage: HeadlineImageInput.asArg(),
+        headlineImage: HeadlineImageInput.asArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
         // Check user can actually do this

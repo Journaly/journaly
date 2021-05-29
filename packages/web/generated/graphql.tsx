@@ -446,7 +446,7 @@ export type MutationUpdatePostArgs = {
   topicIds?: Maybe<Array<Scalars['Int']>>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
-  headlineImage: HeadlineImageInput
+  headlineImage?: Maybe<HeadlineImageInput>
 }
 
 export type MutationDeletePostArgs = {
@@ -1004,7 +1004,7 @@ export type UpdatePostMutationVariables = Exact<{
   topicIds?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
   body?: Maybe<Array<EditorNode> | EditorNode>
   status?: Maybe<PostStatus>
-  headlineImage: HeadlineImageInput
+  headlineImage?: Maybe<HeadlineImageInput>
 }>
 
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
@@ -2939,7 +2939,7 @@ export const UpdatePostDocument = gql`
     $topicIds: [Int!]
     $body: [EditorNode!]
     $status: PostStatus
-    $headlineImage: HeadlineImageInput!
+    $headlineImage: HeadlineImageInput
   ) {
     updatePost(
       postId: $postId

@@ -35,7 +35,7 @@ const PostCard: React.FC<Props> = ({
     title,
     excerpt,
     readTime,
-    images,
+    headlineImage,
     likes,
     commentCount,
     author: { handle, name, profileImage },
@@ -46,15 +46,13 @@ const PostCard: React.FC<Props> = ({
   } = post
   const isDraft = status === PostStatusType.Draft
   const isPublished = status === PostStatusType.Published
-  const displayImage = images[0].smallSize
-  const imageAlt = images.length === 0 ? 'Typewriter on an old wooden desk' : ''
   const postCardStyles = classNames('post-card-container', { stacked })
 
   return (
     <>
       <Link href={'/post/[id]'} as={`/post/${id}`}>
         <a className={postCardStyles}>
-          <img className="post-image" src={displayImage} alt={imageAlt} />
+          <img className="post-image" src={headlineImage.smallSize} alt='' />
           <div className="post-card-details">
             <div className="post-text" dir="auto">
               <h1 className="post-title">

@@ -43,7 +43,7 @@ const getDataForUpdateEmail = async (
         include: {
           post: {
             include: {
-              images: true,
+              headlineImage: true,
             }
           },
           author: true,
@@ -55,7 +55,7 @@ const getDataForUpdateEmail = async (
             include: {
               post: {
                 include: {
-                  images: true,
+                  headlineImage: true,
                 }
               }
             }

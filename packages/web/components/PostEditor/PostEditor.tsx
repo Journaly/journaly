@@ -24,7 +24,7 @@ type BasePostData = {
   title: string
   languageId: number
   topicIds: number[]
-  headlineImage: HeadlineImageInput | null
+  headlineImage: HeadlineImageInput
   body: Descendant[]
 }
 
@@ -62,34 +62,6 @@ const validatePostData: validatePostDataSignature = (data, t) => {
   return [true, '']
 }
 
-const defaultImages = [
-  {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-large',
-  },
-  {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-large',
-  },
-  {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-large',
-  },
-  {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-large',
-  },
-  {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-large',
-  },
-]
-
-const selectDefaultImage = () => {
-  const index = Math.floor(Math.random() * defaultImages.length)
-  return defaultImages[index]
-}
-
 const PostEditor: React.FC<PostEditorProps> = ({
   currentUser,
   autosaveKey,
@@ -125,10 +97,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
     return { value, displayName }
   })
 
-  const randomImageSelection = selectDefaultImage()
-
   const [image, uploadingImage, onFileInputChange, resetImage] = usePostImageUpload()
-  const postImage = image?.finalUrlLarge || initialData.image?.largeSize || randomImageSelection.largeSize
+  const postImage = image?.finalUrlLarge || initialData.headlineImage.largeSize
 
   const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
   const formattedTopicOptions = (topics || []).map(({ name, id }) => ({
@@ -160,18 +130,11 @@ const PostEditor: React.FC<PostEditorProps> = ({
       resetLangId()
     }
 
-    const returnImage = !image
-      ? randomImageSelection
-      : {
-          largeSize: image.finalUrlLarge,
-          smallSize: image.finalUrlSmall,
-        }
-
     dataRef.current = {
       title,
       body,
       clear,
-      headlineImage: returnImage,
+      headlineImage,
       languageId: langId,
       topicIds: selectedTopics,
     }

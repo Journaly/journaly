@@ -42,6 +42,8 @@ model User {
   userInterests                 UserInterest[]
   followedBy                    User[]                          @relation("UserFollows", references: [id])
   following                     User[]                          @relation("UserFollows", references: [id])
+  lastFourCardNumbers           String?
+  cardBrand                     String?
 }
 
 model Auth {
@@ -297,10 +299,9 @@ model MembershipSubscription {
   expiresAt            DateTime?
   createdAt            DateTime                     @default(now())
   updatedAt            DateTime                     @updatedAt
+  nextBillingDate      DateTime?
   cancelAtPeriodEnd    Boolean                      @default(false)
-  lastFourCardNumbers  String
   lastPaymentFailure   Boolean                      @default(false)
-  cardBrand            String
   user                 User                         @relation(fields: [userId], references: [id])
 }
 

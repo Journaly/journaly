@@ -14,7 +14,6 @@ import stripe, {
   getOrCreateStripeCustomer,
   paymentErrorWrapper
 } from '@/nexus/utils/stripe'
-import Stripe from 'stripe'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
@@ -23,9 +22,8 @@ const MembershipSubscription = objectType({
     t.model.period()
     t.model.userId()
     t.model.expiresAt()
+    t.model.nextBillingDate()
     t.model.cancelAtPeriodEnd()
-    t.model.lastFourCardNumbers()
-    t.model.cardBrand()
     t.boolean('isActive', {
       resolve: async (parent, _args, _ctx, _info) => {
         if (parent.expiresAt && parent.expiresAt < new Date(Date.now())) return false
@@ -47,6 +45,8 @@ const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
 }
 
 const setPaymentMethod = async (
+  userId: number,
+  db: PrismaClient,
   customerId: string,
   paymentMethodId: string,
 ) => {
@@ -57,6 +57,7 @@ const setPaymentMethod = async (
   const stripePaymentMethod = await stripe.paymentMethods.attach(paymentMethodId, {
     customer: customer.id,
   })
+
   if (!stripePaymentMethod.card) throw new Error("Unable to retrieve payment method")
 
   await stripe.customers.update(customer.id, {
@@ -64,25 +65,18 @@ const setPaymentMethod = async (
       default_payment_method: stripePaymentMethod.id,
     },
   })
-  return stripePaymentMethod
-}
-// TODO: DB Cleanup - add customer payment info to User model & remove from Subscription.
-// Merge this fn with setPaymentMethod
-const updateSubscriptionWithPaymentMethod = (
-  userId: number,
-  db: PrismaClient,
-  stripePaymentMethod: Stripe.PaymentMethod,
-) => {
-  if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
-  return db.membershipSubscription.update({
+
+  await db.user.update({
     where: {
-      userId,
+      id: userId,
     },
     data: {
       lastFourCardNumbers: stripePaymentMethod.card.last4,
       cardBrand: stripePaymentMethod.card.brand,
     },
   })
+
+  return stripePaymentMethod
 }
 
 const setPlan = async (
@@ -120,6 +114,7 @@ const setPlan = async (
     data: {
       period: subscriptionPeriod,
       expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+      nextBillingDate: subscriptionUpdated.cancel_at_period_end ? null : new Date(subscriptionUpdated.current_period_end * 1000),
       stripeSubscription: subscriptionUpdated as unknown as Prisma.InputJsonValue,
       cancelAtPeriodEnd,
     },
@@ -155,7 +150,7 @@ const MembershipSubscriptionMutations = extendType({
         
         const customerId = await getOrCreateStripeCustomer(user, ctx.db)
 
-        const stripePaymentMethod = await setPaymentMethod(customerId, args.paymentMethodId)
+        const stripePaymentMethod = await setPaymentMethod(userId, ctx.db, customerId, args.paymentMethodId)
         if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
         if (!user.membershipSubscription) {
 
@@ -183,21 +178,20 @@ const MembershipSubscriptionMutations = extendType({
               period: args.period,
               // Give 2 days grace period
               expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+              nextBillingDate: new Date(stripeSubscription.current_period_end * 1000),
               // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
               stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
               stripeSubscriptionId: stripeSubscription.id,
-              lastFourCardNumbers: stripePaymentMethod.card.last4,
-              cardBrand: stripePaymentMethod.card.brand,
               user: {
                 connect: {
                   id: userId,
-                }
+                }, 
               }
             },
           })
+
           return membershipSubscription
         } else {
-          await updateSubscriptionWithPaymentMethod(userId, ctx.db, stripePaymentMethod)
           const membershipSubscription = await setPlan(
             userId,
             ctx.db,
@@ -235,7 +229,7 @@ const MembershipSubscriptionMutations = extendType({
           throw new Error("User has no subscription to cancel")
         }
 
-        await stripe.subscriptions.update(user.membershipSubscription.stripeSubscriptionId, {
+        const updatedSubscription = await stripe.subscriptions.update(user.membershipSubscription.stripeSubscriptionId, {
           cancel_at_period_end: args.cancelAtPeriodEnd,
         })
 
@@ -246,6 +240,7 @@ const MembershipSubscriptionMutations = extendType({
           },
           data: {
             cancelAtPeriodEnd: args.cancelAtPeriodEnd,
+            nextBillingDate: args.cancelAtPeriodEnd ? null : new Date(updatedSubscription.current_period_end * 1000),
           }
         })
       }),
@@ -311,11 +306,13 @@ const MembershipSubscriptionMutations = extendType({
           throw new Error("User has no subscription to update")
         }
 
-        const paymentMethod = await setPaymentMethod(
+        await setPaymentMethod(
+          userId,
+          ctx.db,
           user.membershipSubscription.stripeSubscriptionId,
           args.paymentMethodId,
         )
-        return updateSubscriptionWithPaymentMethod(userId, ctx.db, paymentMethod)
+        return user.membershipSubscription
       }),
     })
   }

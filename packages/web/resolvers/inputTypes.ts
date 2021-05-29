@@ -24,13 +24,12 @@ export const EditorNode = inputObjectType({
   },
 })
 
-export const ImageInput = inputObjectType({
-  name: 'ImageInput',
+export const HeadlineImageInput = inputObjectType({
+  name: 'HeadlineImageInput',
   definition(t) {
     t.string('smallSize', { nullable: false })
     t.string('largeSize', { nullable: false })
-    t.field('imageRole', { type: 'ImageRole', nullable: false })
   },
 })
 
-export default [EditorNode, ImageInput]
+export default [EditorNode, HeadlineImageInput]

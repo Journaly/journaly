@@ -116,7 +116,8 @@ model Post {
   publishedLanguageLevel   LanguageLevel             @default(BEGINNER)
   author                   User                      @relation(fields: [authorId], references: [id])
   language                 Language                  @relation(fields: [languageId], references: [id])
-  images                   Image[]
+  headlineImage            HeadlineImage             @relation(fields: [headlineImageId], references: [id])
+  headlineImageId          Int                       @unique
   PendingNotification      PendingNotification[]
   postComments             PostComment[]
   postCommentSubscriptions PostCommentSubscription[]
@@ -251,13 +252,11 @@ model Thread {
   subscriptions      ThreadSubscription[]
 }
 
-model Image {
-  id        Int       @id @default(autoincrement())
+model HeadlineImage {
+  id        Int    @id @default(autoincrement())
   smallSize String
   largeSize String
-  imageRole ImageRole
-  postId    Int?
-  post      Post?     @relation(fields: [postId], references: [id])
+  Post      Post[]
 }
 
 model Prompt {
@@ -375,11 +374,6 @@ enum UserRole {
 enum PostStatus {
   DRAFT
   PUBLISHED
-}
-
-enum ImageRole {
-  HEADLINE
-  INLINE
 }
 
 enum UILanguage {

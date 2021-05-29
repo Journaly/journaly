@@ -76,8 +76,7 @@ const EditPostPage: NextPage = () => {
       return
     }
 
-    const { title, languageId, topicIds, image, body, clear } = dataRef.current
-    const images = image ? [image] : []
+    const { title, languageId, topicIds, headlineImage, body, clear } = dataRef.current
 
     let postId: number
     try {
@@ -90,7 +89,7 @@ const EditPostPage: NextPage = () => {
           title,
           languageId,
           topicIds,
-          images,
+          headlineImage,
         },
       })
 

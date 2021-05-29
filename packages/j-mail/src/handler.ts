@@ -2,7 +2,6 @@ import nodemailer from 'nodemailer'
 import { Handler, SQSHandler } from 'aws-lambda'
 
 import {
-  ImageRole,
   NotificationType,
   User,
 } from '@journaly/j-db-client'
@@ -80,7 +79,7 @@ const getDataForUpdateEmail = async (
           notificationDate: note.createdAt,
           postComment: note.postComment,
           post: note.postComment.post,
-          image: note.postComment.post.images.find((image) => image.imageRole === ImageRole.HEADLINE)?.smallSize || 'https://dlke4x4hpr6qb.cloudfront.net/sample-post-img.jpg',
+          headlineImage: note.postComment.post.headlineImage,
           commentAuthor: note.postComment.author.handle,
         })
       }
@@ -92,7 +91,7 @@ const getDataForUpdateEmail = async (
           comment: note.comment,
           thread: note.comment.thread,
           post: note.comment.thread.post,
-          image: note.comment.thread.post.images.find((image) => image.imageRole === ImageRole.HEADLINE)?.smallSize || 'https://dlke4x4hpr6qb.cloudfront.net/sample-post-img.jpg',
+          headlineImage: note.comment.thread.post.headlineImage,
           commentAuthor: note.comment.author.handle,
         })
       }

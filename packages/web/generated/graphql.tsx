@@ -15,10 +15,9 @@ export type Scalars = {
   DateTime: any
 }
 
-export type Image = {
-  __typename?: 'Image'
+export type HeadlineImage = {
+  __typename?: 'HeadlineImage'
   id: Scalars['Int']
-  imageRole: ImageRole
   smallSize: Scalars['String']
   largeSize: Scalars['String']
 }
@@ -58,10 +57,9 @@ export type EditorNode = {
   children?: Maybe<Array<EditorNode>>
 }
 
-export type ImageInput = {
+export type HeadlineImageInput = {
   smallSize: Scalars['String']
   largeSize: Scalars['String']
-  imageRole: ImageRole
 }
 
 export type Thread = {
@@ -120,7 +118,7 @@ export type Post = {
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
   bodySrc: Scalars['String']
-  images: Array<Image>
+  headlineImage: HeadlineImage
   publishedAt?: Maybe<Scalars['DateTime']>
   commentCount: Scalars['Int']
 }
@@ -262,11 +260,6 @@ export type MembershipSubscription = {
   nextBillingDate?: Maybe<Scalars['DateTime']>
   cancelAtPeriodEnd: Scalars['Boolean']
   isActive: Scalars['Boolean']
-}
-
-export enum ImageRole {
-  Headline = 'HEADLINE',
-  Inline = 'INLINE',
 }
 
 export enum UiLanguage {
@@ -443,7 +436,7 @@ export type MutationCreatePostArgs = {
   languageId: Scalars['Int']
   topicIds?: Maybe<Array<Scalars['Int']>>
   status: PostStatus
-  images?: Maybe<Array<ImageInput>>
+  headlineImage: HeadlineImageInput
 }
 
 export type MutationUpdatePostArgs = {
@@ -453,7 +446,7 @@ export type MutationUpdatePostArgs = {
   topicIds?: Maybe<Array<Scalars['Int']>>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
-  images?: Maybe<Array<ImageInput>>
+  headlineImage: HeadlineImageInput
 }
 
 export type MutationDeletePostArgs = {
@@ -713,8 +706,9 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
     author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
     postComments: Array<{ __typename?: 'PostComment' } & PostCommentFragmentFragment>
-    images: Array<
-      { __typename?: 'Image' } & Pick<Image, 'id' | 'smallSize' | 'largeSize' | 'imageRole'>
+    headlineImage: { __typename?: 'HeadlineImage' } & Pick<
+      HeadlineImage,
+      'id' | 'smallSize' | 'largeSize'
     >
   }
 
@@ -736,7 +730,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
   | 'commentCount'
   | 'status'
 > & {
-    images: Array<{ __typename?: 'Image' } & Pick<Image, 'smallSize'>>
+    headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
     author: { __typename?: 'User' } & AuthorFragmentFragment
     language: { __typename?: 'Language' } & LanguageFragmentFragment
@@ -907,7 +901,7 @@ export type CreatePostMutationVariables = Exact<{
   languageId: Scalars['Int']
   topicIds?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
   status: PostStatus
-  images?: Maybe<Array<ImageInput> | ImageInput>
+  headlineImage: HeadlineImageInput
 }>
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
@@ -931,8 +925,9 @@ export type EditPostQuery = { __typename?: 'Query' } & {
   postById: { __typename?: 'Post' } & Pick<Post, 'title' | 'bodySrc' | 'updatedAt'> & {
       author: { __typename?: 'User' } & Pick<User, 'id'>
       language: { __typename?: 'Language' } & Pick<Language, 'id'>
-      images: Array<
-        { __typename?: 'Image' } & Pick<Image, 'id' | 'largeSize' | 'smallSize' | 'imageRole'>
+      headlineImage: { __typename?: 'HeadlineImage' } & Pick<
+        HeadlineImage,
+        'id' | 'largeSize' | 'smallSize'
       >
       postTopics: Array<
         { __typename?: 'PostTopic' } & { topic: { __typename?: 'Topic' } & TopicFragmentFragment }
@@ -1009,7 +1004,7 @@ export type UpdatePostMutationVariables = Exact<{
   topicIds?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
   body?: Maybe<Array<EditorNode> | EditorNode>
   status?: Maybe<PostStatus>
-  images?: Maybe<Array<ImageInput> | ImageInput>
+  headlineImage: HeadlineImageInput
 }>
 
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
@@ -1371,11 +1366,10 @@ export const PostFragmentFragmentDoc = gql`
     postComments(orderBy: { createdAt: asc }) {
       ...PostCommentFragment
     }
-    images {
+    headlineImage {
       id
       smallSize
       largeSize
-      imageRole
     }
   }
   ${AuthorWithLanguagesFragmentFragmentDoc}
@@ -1423,7 +1417,7 @@ export const PostCardFragmentFragmentDoc = gql`
     publishedLanguageLevel
     commentCount
     status
-    images {
+    headlineImage {
       smallSize
     }
     likes {
@@ -2465,7 +2459,7 @@ export const CreatePostDocument = gql`
     $languageId: Int!
     $topicIds: [Int!]
     $status: PostStatus!
-    $images: [ImageInput!]
+    $headlineImage: HeadlineImageInput!
   ) {
     createPost(
       title: $title
@@ -2473,7 +2467,7 @@ export const CreatePostDocument = gql`
       languageId: $languageId
       topicIds: $topicIds
       status: $status
-      images: $images
+      headlineImage: $headlineImage
     ) {
       ...PostCardFragment
     }
@@ -2503,7 +2497,7 @@ export type CreatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      languageId: // value for 'languageId'
  *      topicIds: // value for 'topicIds'
  *      status: // value for 'status'
- *      images: // value for 'images'
+ *      headlineImage: // value for 'headlineImage'
  *   },
  * });
  */
@@ -2582,11 +2576,10 @@ export const EditPostDocument = gql`
       language {
         id
       }
-      images {
+      headlineImage {
         id
         largeSize
         smallSize
-        imageRole
       }
       postTopics {
         topic {
@@ -2946,7 +2939,7 @@ export const UpdatePostDocument = gql`
     $topicIds: [Int!]
     $body: [EditorNode!]
     $status: PostStatus
-    $images: [ImageInput!]
+    $headlineImage: HeadlineImageInput!
   ) {
     updatePost(
       postId: $postId
@@ -2954,7 +2947,7 @@ export const UpdatePostDocument = gql`
       title: $title
       languageId: $languageId
       status: $status
-      images: $images
+      headlineImage: $headlineImage
       topicIds: $topicIds
     ) {
       ...PostFragment
@@ -2986,7 +2979,7 @@ export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      topicIds: // value for 'topicIds'
  *      body: // value for 'body'
  *      status: // value for 'status'
- *      images: // value for 'images'
+ *      headlineImage: // value for 'headlineImage'
  *   },
  * });
  */

@@ -130,11 +130,10 @@ fragment PostFragment on Post {
   postComments(orderBy: { createdAt: asc }) {
     ...PostCommentFragment
   }
-  images {
+  headlineImage {
     id
     smallSize
     largeSize
-    imageRole
   }
 }
 
@@ -161,7 +160,7 @@ fragment PostCardFragment on Post {
   publishedLanguageLevel
   commentCount
   status
-  images {
+  headlineImage {
     smallSize
   }
   likes {

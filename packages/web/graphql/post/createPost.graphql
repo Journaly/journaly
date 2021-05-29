@@ -4,7 +4,7 @@ mutation createPost(
   $languageId: Int!
   $topicIds: [Int!]
   $status: PostStatus!
-  $images: [ImageInput!]
+  $headlineImage: HeadlineImageInput!
 ) {
   createPost(
     title: $title
@@ -12,7 +12,7 @@ mutation createPost(
     languageId: $languageId
     topicIds: $topicIds
     status: $status
-    images: $images
+    headlineImage: $headlineImage
   ) {
     ...PostCardFragment
   }

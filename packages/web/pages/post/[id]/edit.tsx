@@ -13,7 +13,7 @@ import PostEditor, {
 } from '@/components/PostEditor'
 import theme from '@/theme'
 import Button, { ButtonVariant } from '@/components/Button'
-import { ImageRole, useEditPostQuery, useUpdatePostMutation } from '@/generated/graphql'
+import { useEditPostQuery, useUpdatePostMutation } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import useUILanguage from '@/hooks/useUILanguage'
 import useAuthCheck from '@/hooks/useAuthCheck'
@@ -46,19 +46,17 @@ const EditPostPage: NextPage = () => {
         title,
         bodySrc,
         language: { id: languageId },
-        images,
+        headlineImage,
         postTopics,
         updatedAt,
       } = postById
-
-      const image = images.find(({ imageRole }) => imageRole === ImageRole.Headline) || null
 
       setInitialData({
         body: JSON.parse(bodySrc) as Descendant[],
         topicIds: postTopics.map((x) => x.topic.id),
         title,
         languageId,
-        image,
+        headlineImage,
         timestamp: Date.parse(updatedAt),
       })
     }

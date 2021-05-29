@@ -15,8 +15,7 @@ import {
   CurrentUserFragmentFragment as UserType,
   TopicFragmentFragment as TopicType,
   PostStatus as PostStatusType,
-  ImageInput,
-  ImageRole,
+  HeadlineImageInput,
 } from '@/generated/graphql'
 import { languageNameWithDialect } from '@/utils/languages'
 import { useTranslation } from '@/config/i18n'
@@ -25,7 +24,7 @@ type BasePostData = {
   title: string
   languageId: number
   topicIds: number[]
-  image?: ImageInput | null
+  headlineImage: HeadlineImageInput | null
   body: Descendant[]
 }
 
@@ -67,27 +66,22 @@ const defaultImages = [
   {
     smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
     largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-large',
-    imageRole: ImageRole.Headline,
   },
   {
     smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-small',
     largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-large',
-    imageRole: ImageRole.Headline,
   },
   {
     smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-small',
     largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-large',
-    imageRole: ImageRole.Headline,
   },
   {
     smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-small',
     largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-large',
-    imageRole: ImageRole.Headline,
   },
   {
     smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-small',
     largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-large',
-    imageRole: ImageRole.Headline,
   },
 ]
 
@@ -171,14 +165,13 @@ const PostEditor: React.FC<PostEditorProps> = ({
       : {
           largeSize: image.finalUrlLarge,
           smallSize: image.finalUrlSmall,
-          imageRole: ImageRole.Headline,
         }
 
     dataRef.current = {
       title,
       body,
       clear,
-      image: returnImage,
+      headlineImage: returnImage,
       languageId: langId,
       topicIds: selectedTopics,
     }

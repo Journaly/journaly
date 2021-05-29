@@ -375,7 +375,7 @@ const PostMutations = extendType({
         headlineImage: HeadlineImageInput.asArg(),
       },
       resolve: async (_parent, args, ctx) => {
-        const { title, body, languageId, status, images } = args
+        const { title, body, languageId, status, headlineImage } = args
         const { userId } = ctx.request
         const isPublished = status === 'PUBLISHED'
 

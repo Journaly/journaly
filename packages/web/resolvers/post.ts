@@ -112,7 +112,7 @@ const Post = objectType({
     t.model.createdAt()
     t.model.updatedAt()
     t.model.bodySrc()
-    t.model.images({ pagination: false })
+    t.model.headlineImage()
     t.model.publishedAt()
     t.int('commentCount', {
       resolve: async (parent, _args, ctx, _info) => {

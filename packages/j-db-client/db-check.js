@@ -5,12 +5,12 @@ const readline = require('readline')
 // Shamelessly copy pasted off of SO
 const url2obj = (url) => {
   const pattern = /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/
-  const matches =  url.match(pattern)
+  const matches = url.match(pattern)
   const params = {}
   if (matches[5] != undefined) {
     matches[5].split('&').map((x) => {
       var a = x.split('=')
-      params[a[0]]=a[1]
+      params[a[0]] = a[1]
     })
   }
 
@@ -21,17 +21,17 @@ const url2obj = (url) => {
     host: matches[3],
     hostname: matches[3] != undefined ? matches[3].split(/:(?=\d+$)/)[0] : undefined,
     port: matches[3] != undefined ? matches[3].split(/:(?=\d+$)/)[1] : undefined,
-    segments : matches[4] != undefined ? matches[4].split('/') : undefined,
-    params: params 
+    segments: matches[4] != undefined ? matches[4].split('/') : undefined,
+    params: params,
   }
 }
 
 const { hostname } = url2obj(process.env.DATABASE_URL)
 
-if (!(hostname === 'localhost' || hostname === '127.0.0.1')) {
+if (!(hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'journaly_db')) {
   const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   })
 
   rl.question(
@@ -43,6 +43,6 @@ if (!(hostname === 'localhost' || hostname === '127.0.0.1')) {
       }
 
       rl.close()
-    }
+    },
   )
 }

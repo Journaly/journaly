@@ -176,6 +176,8 @@ export type User = {
   languages: Array<LanguageRelation>
   following: Array<User>
   followedBy: Array<User>
+  lastFourCardNumbers?: Maybe<Scalars['String']>
+  cardBrand?: Maybe<Scalars['String']>
   postsWrittenCount: Scalars['Int']
   languagesPostedInCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
@@ -257,9 +259,8 @@ export type MembershipSubscription = {
   period: MembershipSubscriptionPeriod
   userId: Scalars['Int']
   expiresAt?: Maybe<Scalars['DateTime']>
+  nextBillingDate?: Maybe<Scalars['DateTime']>
   cancelAtPeriodEnd: Scalars['Boolean']
-  lastFourCardNumbers: Scalars['String']
-  cardBrand: Scalars['String']
   isActive: Scalars['Boolean']
 }
 
@@ -888,17 +889,14 @@ export type SubscriptionSettingsPageQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithSubscriptionFragmentFragment>
 }
 
-export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<User, 'id'> & {
+export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<
+  User,
+  'id' | 'lastFourCardNumbers' | 'cardBrand'
+> & {
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
         MembershipSubscription,
-        | 'id'
-        | 'period'
-        | 'expiresAt'
-        | 'cancelAtPeriodEnd'
-        | 'lastFourCardNumbers'
-        | 'cardBrand'
-        | 'isActive'
+        'id' | 'period' | 'expiresAt' | 'cancelAtPeriodEnd' | 'isActive'
       >
     >
   }
@@ -1487,13 +1485,13 @@ export const ProfileUserFragmentFragmentDoc = gql`
 export const UserWithSubscriptionFragmentFragmentDoc = gql`
   fragment UserWithSubscriptionFragment on User {
     id
+    lastFourCardNumbers
+    cardBrand
     membershipSubscription {
       id
       period
       expiresAt
       cancelAtPeriodEnd
-      lastFourCardNumbers
-      cardBrand
       isActive
     }
   }

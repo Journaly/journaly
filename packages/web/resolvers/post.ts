@@ -372,7 +372,7 @@ const PostMutations = extendType({
         languageId: intArg({ required: true }),
         topicIds: intArg({ list: true, required: false }),
         status: arg({ type: 'PostStatus', required: true }),
-        headlineImage: HeadlineImageInput.asArg(),
+        headlineImage: HeadlineImageInput.asArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { title, body, languageId, status, headlineImage } = args
@@ -408,21 +408,15 @@ const PostMutations = extendType({
               create: [
                 {
                   user: { connect: { id: userId } },
-                }
+                },
               ]
             },
-            ...processEditorDocument(body),
-          },
-        })
-
-        await ctx.db.image.create({
-          data: {
-            ...headlineImage,
-            post: {
-              connect: {
-                id: post.id,
-              },
+            headlineImage: {
+              create: {
+                ...headlineImage,
+              }
             },
+            ...processEditorDocument(body),
           },
         })
 

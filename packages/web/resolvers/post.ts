@@ -595,6 +595,7 @@ const PostMutations = extendType({
           select: {
             id: true,
             authorId: true,
+            headlineImage: true,
           },
         })
 
@@ -657,13 +658,6 @@ const PostMutations = extendType({
             },
           }),
           ctx.db.postLike.deleteMany({
-            where: {
-              post: {
-                id: postId,
-              },
-            },
-          }),
-          ctx.db.image.deleteMany({
             where: {
               post: {
                 id: postId,

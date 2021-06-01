@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useMemo } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
@@ -27,7 +27,10 @@ import useUILanguage from '@/hooks/useUILanguage'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
 
 type NewPostPageProps = {
-  defaultImage: any
+  defaultImage: {
+    smallSize: string
+    largeSize: string
+  }
 }
 
 const defaultImages = [
@@ -59,19 +62,22 @@ const selectDefaultImage = () => {
 }
 
 const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
-  const initialData: InputPostData = {
-    title: '',
-    languageId: -1,
-    topicIds: [],
-    headlineImage: defaultImage,
-    body: [
-      {
-        type: 'paragraph',
-        children: [{ text: '' }],
-      },
-    ],
-    timestamp: 0,
-  }
+  const initialData: InputPostData = useMemo(() => (
+    {
+      title: '',
+      languageId: -1,
+      topicIds: [],
+      headlineImage: defaultImage,
+      body: [
+        {
+          type: 'paragraph',
+          children: [{ text: '' }],
+        },
+      ],
+      timestamp: 0,
+    }),
+    [defaultImage])
+  
   const uiLanguage = useUILanguage()
   const { data: { currentUser, topics } = {} } = useNewPostQuery({
     variables: { uiLanguage },

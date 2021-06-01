@@ -470,6 +470,7 @@ const PostMutations = extendType({
             },
             include: {
               threads: true,
+              headlineImage: true,
             },
           }),
         ])
@@ -533,16 +534,18 @@ const PostMutations = extendType({
         }
 
         if (args.headlineImage) {
-          await ctx.db.headlineImage.create({
-            data: {
-              ...headlineImage,
-              post: {
-                connect: {
-                  id: args.postId,
+          if (args.headlineImage.smallSize !== originalPost.headlineImage.smallSize) {
+            await ctx.db.headlineImage.create({
+              data: {
+                ...headlineImage,
+                post: {
+                  connect: {
+                    id: args.postId,
+                  },
                 },
               },
-            },
-          })
+            })
+          }
         }
 
         if (args.topicIds) {

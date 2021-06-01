@@ -539,12 +539,6 @@ const PostMutations = extendType({
         }
 
         if (args.headlineImage) {
-          await ctx.db.image.deleteMany({
-            where: {
-              postId: args.postId,
-            },
-          })
-
           await ctx.db.headlineImage.create({
             data: {
               ...headlineImage,

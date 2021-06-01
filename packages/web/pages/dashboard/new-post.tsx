@@ -26,6 +26,10 @@ import { useTranslation } from '@/config/i18n'
 import useUILanguage from '@/hooks/useUILanguage'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
 
+type NewPostPageProps = {
+  defaultImage: any
+}
+
 const defaultImages = [
   {
     smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
@@ -54,21 +58,20 @@ const selectDefaultImage = () => {
   return defaultImages[index]
 }
 
-const initialData: InputPostData = {
-  title: '',
-  languageId: -1,
-  topicIds: [],
-  headlineImage: selectDefaultImage(),
-  body: [
-    {
-      type: 'paragraph',
-      children: [{ text: '' }],
-    },
-  ],
-  timestamp: 0,
-}
-
-const NewPostPage: NextPage = () => {
+const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
+  const initialData: InputPostData = {
+    title: '',
+    languageId: -1,
+    topicIds: [],
+    headlineImage: defaultImage,
+    body: [
+      {
+        type: 'paragraph',
+        children: [{ text: '' }],
+      },
+    ],
+    timestamp: 0,
+  }
   const uiLanguage = useUILanguage()
   const { data: { currentUser, topics } = {} } = useNewPostQuery({
     variables: { uiLanguage },
@@ -252,6 +255,7 @@ const NewPostPage: NextPage = () => {
 }
 
 NewPostPage.getInitialProps = async () => ({
+  defaultImage: selectDefaultImage(),
   namespacesRequired: ['common', 'post'],
 })
 

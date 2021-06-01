@@ -4,8 +4,8 @@
   "description": "An email notification queueing service.",
   "main": "index.js",
   "scripts": {
-    "deploy:stage": "sls deploy --stage stage",
-    "deploy:prod": "sls deploy --stage prod",
+    "deploy:stage": "npm run prisma:generate && sls deploy --stage stage",
+    "deploy:prod": "npm run prisma:generate && sls deploy --stage prod",
     "scenarios": "ts-node email-scenarios/index.ts",
     "type-check": "tsc",
     "prisma:generate": "npm explore '@journaly/j-db-client' -- npm run prisma:generate"
@@ -27,9 +27,10 @@
     "@types/aws-lambda": "^8.10.70",
     "@types/node": "^14.14.20",
     "@types/pug": "^2.0.4",
+    "prisma": "^2.21.0",
     "serverless-plugin-typescript": "^1.1.9",
     "ts-node": "^9.1.1",
-    "typescript": "3.8.3"
+    "typescript": "4.2.4"
   },
   "dependencies": {
     "@journaly/j-db-client": "^12.0.1",

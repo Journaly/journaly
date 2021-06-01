@@ -161,6 +161,7 @@ const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
           justify-content: center;
           padding: 15px 0;
           border-bottom: 2px solid #eee;
+          z-index: 1;
         }
 
         .is-fixed .editor-toolbar {

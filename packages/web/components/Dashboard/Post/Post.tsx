@@ -16,8 +16,6 @@ import {
   useCreateThreadMutation,
   useUpdatePostMutation,
   useDeletePostMutation,
-  Image as ImageType,
-  ImageRole,
   Post as PostModel,
 } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
@@ -485,10 +483,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           publishDate={post.publishedAt ? post.publishedAt : post.createdAt}
           publishedLanguageLevel={post.publishedLanguageLevel}
           authorName={post.author.handle}
-          postImage={
-            (post.images || []).find((i: ImageType) => i.imageRole === ImageRole.Headline)
-              ?.largeSize || '/images/samples/sample-post-img.jpg'
-          }
+          postImage={post.headlineImage.largeSize}
           language={post.language}
           topics={post.postTopics.map(({ topic }) => topic)}
         />

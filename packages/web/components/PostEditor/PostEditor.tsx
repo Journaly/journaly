@@ -15,8 +15,6 @@ import {
   CurrentUserFragmentFragment as UserType,
   TopicFragmentFragment as TopicType,
   PostStatus as PostStatusType,
-  ImageInput,
-  ImageRole,
 } from '@/generated/graphql'
 import { languageNameWithDialect } from '@/utils/languages'
 import { useTranslation } from '@/config/i18n'
@@ -25,7 +23,10 @@ type BasePostData = {
   title: string
   languageId: number
   topicIds: number[]
-  image?: ImageInput | null
+  headlineImage: {
+    smallSize: string
+    largeSize: string
+  }
   body: Descendant[]
 }
 
@@ -63,8 +64,6 @@ const validatePostData: validatePostDataSignature = (data, t) => {
   return [true, '']
 }
 
-const DEFAULT_IMAGE_URL = '/images/samples/sample-post-img.jpg'
-
 const PostEditor: React.FC<PostEditorProps> = ({
   currentUser,
   autosaveKey,
@@ -101,7 +100,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
   })
 
   const [image, uploadingImage, onFileInputChange, resetImage] = usePostImageUpload()
-  const postImage = image?.finalUrlLarge || initialData.image?.largeSize || DEFAULT_IMAGE_URL
+  const postImage = image?.finalUrlLarge || initialData.headlineImage.largeSize
 
   const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
   const formattedTopicOptions = (topics || []).map(({ name, id }) => ({
@@ -134,18 +133,17 @@ const PostEditor: React.FC<PostEditorProps> = ({
     }
 
     const returnImage = !image
-      ? null
+      ? initialData.headlineImage
       : {
           largeSize: image.finalUrlLarge,
           smallSize: image.finalUrlSmall,
-          imageRole: ImageRole.Headline,
         }
 
     dataRef.current = {
       title,
       body,
       clear,
-      image: returnImage,
+      headlineImage: returnImage,
       languageId: langId,
       topicIds: selectedTopics,
     }

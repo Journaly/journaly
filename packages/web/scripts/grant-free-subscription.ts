@@ -33,6 +33,16 @@ const handler = async (userId: number, months: number | undefined) => {
       : undefined
   })
 
+  await db.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      lastFourCardNumbers: 'NONE',
+      cardBrand: 'visa',
+    },
+  })
+
   await db.membershipSubscription.create({
     data: {
       period: MembershipSubscriptionPeriod.MONTHLY,

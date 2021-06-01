@@ -5,7 +5,7 @@ import { nexusPrisma } from 'nexus-plugin-prisma'
 
 import CommentTypes from './comment'
 import TopicTypes from './topic'
-import ImageTypes from './image'
+import ImageTypes from './headlineImage'
 import InputTypes from './inputTypes'
 import PostTypes from './post'
 import UserTypes from './user'

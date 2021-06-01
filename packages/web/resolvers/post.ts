@@ -24,7 +24,8 @@ import {
   PrismaClient,
   LanguageRelation,
 } from '@journaly/j-db-client'
-import { EditorNode, ImageInput } from './inputTypes'
+import { EditorNode, HeadlineImageInput } from './inputTypes'
+import headlineImage from './headlineImage'
 
 
 const assignPostCountBadges = async (
@@ -112,7 +113,7 @@ const Post = objectType({
     t.model.createdAt()
     t.model.updatedAt()
     t.model.bodySrc()
-    t.model.images({ pagination: false })
+    t.model.headlineImage()
     t.model.publishedAt()
     t.int('commentCount', {
       resolve: async (parent, _args, ctx, _info) => {
@@ -371,10 +372,10 @@ const PostMutations = extendType({
         languageId: intArg({ required: true }),
         topicIds: intArg({ list: true, required: false }),
         status: arg({ type: 'PostStatus', required: true }),
-        images: ImageInput.asArg({ list: true, nullable: true }),
+        headlineImage: HeadlineImageInput.asArg(),
       },
       resolve: async (_parent, args, ctx) => {
-        const { title, body, languageId, status, images } = args
+        const { title, body, languageId, status, headlineImage } = args
         const { userId } = ctx.request
         const isPublished = status === 'PUBLISHED'
 
@@ -414,27 +415,16 @@ const PostMutations = extendType({
           },
         })
 
-        if (images) {
-          const insertPromises = []
-
-          for (let image of images) {
-            if (image.imageRole === 'HEADLINE') {
-              insertPromises.push(
-                ctx.db.image.create({
-                  data: {
-                    ...image,
-                    post: {
-                      connect: {
-                        id: post.id,
-                      },
-                    },
-                  },
-                }),
-              )
-            }
-          }
-          await Promise.all(insertPromises)
-        }
+        await ctx.db.image.create({
+          data: {
+            ...headlineImage,
+            post: {
+              connect: {
+                id: post.id,
+              },
+            },
+          },
+        })
 
         if (args.topicIds) {
           const insertPromises = args.topicIds.map((topicId) => {
@@ -464,7 +454,7 @@ const PostMutations = extendType({
         topicIds: intArg({ list: true, required: false }),
         body: EditorNode.asArg({ list: true, required: false }),
         status: arg({ type: 'PostStatus', required: false }),
-        images: ImageInput.asArg({ list: true, nullable: true }),
+        headlineImage: HeadlineImageInput.asArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
         // Check user can actually do this
@@ -548,28 +538,17 @@ const PostMutations = extendType({
           data.publishedAt = new Date().toISOString()
         }
 
-        if (args.images) {
-          const headlineImage = args.images.find((i) => i.imageRole === 'HEADLINE')
-
-          if (headlineImage) {
-            await ctx.db.image.deleteMany({
-              where: {
-                postId: args.postId,
-                imageRole: 'HEADLINE',
-              },
-            })
-
-            await ctx.db.image.create({
-              data: {
-                ...headlineImage,
-                post: {
-                  connect: {
-                    id: args.postId,
-                  },
+        if (args.headlineImage) {
+          await ctx.db.headlineImage.create({
+            data: {
+              ...headlineImage,
+              post: {
+                connect: {
+                  id: args.postId,
                 },
               },
-            })
-          }
+            },
+          })
         }
 
         if (args.topicIds) {

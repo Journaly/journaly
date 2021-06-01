@@ -9,11 +9,10 @@ query editPost($id: Int!, $uiLanguage: UILanguage!) {
     language {
       id
     }
-    images {
+    headlineImage {
       id
       largeSize
       smallSize
-      imageRole
     }
     postTopics {
       topic {

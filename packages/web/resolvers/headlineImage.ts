@@ -1,13 +1,12 @@
 import { objectType } from 'nexus'
 
-const Image = objectType({
-  name: 'Image',
+const HeadlineImage = objectType({
+  name: 'HeadlineImage',
   definition(t) {
     t.model.id()
-    t.model.imageRole()
     t.model.smallSize()
     t.model.largeSize()
   },
 })
 
-export default [Image]
+export default [HeadlineImage]

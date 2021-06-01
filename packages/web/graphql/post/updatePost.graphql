@@ -5,7 +5,7 @@ mutation updatePost(
   $topicIds: [Int!]
   $body: [EditorNode!]
   $status: PostStatus
-  $images: [ImageInput!]
+  $headlineImage: HeadlineImageInput
 ) {
   updatePost(
     postId: $postId
@@ -13,7 +13,7 @@ mutation updatePost(
     title: $title
     languageId: $languageId
     status: $status
-    images: $images
+    headlineImage: $headlineImage
     topicIds: $topicIds
   ) {
     ...PostFragment

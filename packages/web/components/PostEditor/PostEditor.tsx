@@ -24,7 +24,10 @@ type BasePostData = {
   title: string
   languageId: number
   topicIds: number[]
-  headlineImage: HeadlineImageInput
+  headlineImage: {
+    smallSize: string
+    largeSize: string
+  }
   body: Descendant[]
 }
 

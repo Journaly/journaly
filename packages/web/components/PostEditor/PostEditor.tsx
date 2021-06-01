@@ -15,7 +15,6 @@ import {
   CurrentUserFragmentFragment as UserType,
   TopicFragmentFragment as TopicType,
   PostStatus as PostStatusType,
-  HeadlineImageInput,
 } from '@/generated/graphql'
 import { languageNameWithDialect } from '@/utils/languages'
 import { useTranslation } from '@/config/i18n'

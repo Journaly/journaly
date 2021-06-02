@@ -25,8 +25,6 @@ import {
   LanguageRelation,
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
-import headlineImage from './headlineImage'
-
 
 const assignPostCountBadges = async (
   db: PrismaClient,
@@ -372,7 +370,7 @@ const PostMutations = extendType({
         languageId: intArg({ required: true }),
         topicIds: intArg({ list: true, required: false }),
         status: arg({ type: 'PostStatus', required: true }),
-        headlineImage: HeadlineImageInput.asArg(),
+        headlineImage: HeadlineImageInput.asArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { title, body, languageId, status, headlineImage } = args
@@ -408,21 +406,15 @@ const PostMutations = extendType({
               create: [
                 {
                   user: { connect: { id: userId } },
-                }
+                },
               ]
             },
-            ...processEditorDocument(body),
-          },
-        })
-
-        await ctx.db.image.create({
-          data: {
-            ...headlineImage,
-            post: {
-              connect: {
-                id: post.id,
-              },
+            headlineImage: {
+              create: {
+                ...headlineImage,
+              }
             },
+            ...processEditorDocument(body),
           },
         })
 
@@ -454,7 +446,7 @@ const PostMutations = extendType({
         topicIds: intArg({ list: true, required: false }),
         body: EditorNode.asArg({ list: true, required: false }),
         status: arg({ type: 'PostStatus', required: false }),
-        headlineImage: HeadlineImageInput.asArg({ required: false }),
+        headlineImage: HeadlineImageInput.asArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         // Check user can actually do this
@@ -476,6 +468,7 @@ const PostMutations = extendType({
             },
             include: {
               threads: true,
+              headlineImage: true,
             },
           }),
         ])
@@ -538,17 +531,16 @@ const PostMutations = extendType({
           data.publishedAt = new Date().toISOString()
         }
 
-        if (args.headlineImage) {
-          await ctx.db.headlineImage.create({
+        if (args.headlineImage.smallSize !== originalPost.headlineImage.smallSize) {
+          const headlineImage = await ctx.db.headlineImage.create({
             data: {
-              ...headlineImage,
-              post: {
-                connect: {
-                  id: args.postId,
-                },
-              },
-            },
+              smallSize: args.headlineImage.smallSize,
+              largeSize: args.headlineImage.largeSize,
+            }
           })
+          data.headlineImage = {
+            connect: { id: headlineImage.id }
+          }
         }
 
         if (args.topicIds) {
@@ -567,7 +559,6 @@ const PostMutations = extendType({
 
           await Promise.all(insertPromises)
         }
-
 
         const post = await ctx.db.post.update({
           where: { id: args.postId },
@@ -598,6 +589,7 @@ const PostMutations = extendType({
           select: {
             id: true,
             authorId: true,
+            headlineImage: true,
           },
         })
 
@@ -660,13 +652,6 @@ const PostMutations = extendType({
             },
           }),
           ctx.db.postLike.deleteMany({
-            where: {
-              post: {
-                id: postId,
-              },
-            },
-          }),
-          ctx.db.image.deleteMany({
             where: {
               post: {
                 id: postId,

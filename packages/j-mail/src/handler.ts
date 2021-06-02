@@ -79,7 +79,7 @@ const getDataForUpdateEmail = async (
           notificationDate: note.createdAt,
           postComment: note.postComment,
           post: note.postComment.post,
-          headlineImage: note.postComment.post.headlineImage.smallSize,
+          headlineImage: note.postComment.post.headlineImage,
           commentAuthor: note.postComment.author.handle,
         })
       }
@@ -91,7 +91,7 @@ const getDataForUpdateEmail = async (
           comment: note.comment,
           thread: note.comment.thread,
           post: note.comment.thread.post,
-          headlineImage: note.comment.thread.post.headlineImage.smallSize,
+          headlineImage: note.comment.thread.post.headlineImage,
           commentAuthor: note.comment.author.handle,
         })
       }

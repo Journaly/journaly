@@ -464,11 +464,6 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
       variables: {
         postId: post.id,
         status,
-        // headlineImage is required now but the resolver will see it hasn't changed and do nothing
-        headlineImage: {
-          smallSize: post.headlineImage.smallSize,
-          largeSize: post.headlineImage.largeSize,
-        },
       },
     })
   }

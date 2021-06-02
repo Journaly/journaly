@@ -5,7 +5,7 @@ mutation updatePost(
   $topicIds: [Int!]
   $body: [EditorNode!]
   $status: PostStatus
-  $headlineImage: HeadlineImageInput
+  $headlineImage: HeadlineImageInput!
 ) {
   updatePost(
     postId: $postId

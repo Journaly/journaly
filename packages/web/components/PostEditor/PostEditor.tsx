@@ -132,12 +132,13 @@ const PostEditor: React.FC<PostEditorProps> = ({
       resetLangId()
     }
 
-    const returnImage = !image
-      ? initialData.headlineImage
-      : {
-          largeSize: image.finalUrlLarge,
-          smallSize: image.finalUrlSmall,
-        }
+    const returnImage = !image ? {
+        largeSize: initialData.headlineImage.largeSize,
+        smallSize: initialData.headlineImage.smallSize,
+      } : {
+        largeSize: image.finalUrlLarge,
+        smallSize: image.finalUrlSmall,
+      }
 
     dataRef.current = {
       title,

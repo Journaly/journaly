@@ -23,8 +23,8 @@ export type EmailParams = {
 }
 
 export type ValidatedNotification = 
-  | { type: 'POST_COMMENT', notificationDate: Date, postComment: PostComment, post: Post, headlineImage: string, commentAuthor: string, }
-  | { type: 'THREAD_COMMENT', notificationDate: Date, comment: Comment, thread: Thread, post: Post, headlineImage: string, commentAuthor: string, }
+  | { type: 'POST_COMMENT', notificationDate: Date, postComment: PostComment, post: Post, image: string, commentAuthor: string, }
+  | { type: 'THREAD_COMMENT', notificationDate: Date, comment: Comment, thread: Thread, post: Post, image: string, commentAuthor: string, }
 
 export type DataForUpdateEmail = {
   user: User,

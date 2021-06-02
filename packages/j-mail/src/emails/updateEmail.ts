@@ -18,7 +18,7 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
     case ('POST_COMMENT'): {
       return `
         <div>
-          <img src="${note.headlineImage}" style="
+          <img src="${note.image}" style="
             display: block;
             width: 100%;
             height: 150px;
@@ -50,7 +50,7 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
     case ('THREAD_COMMENT'): {
       return `
         <div>
-          <img src="${note.headlineImage}" style="
+          <img src="${note.image}" style="
             display: block;
             width: 100%;
             height: 150px;

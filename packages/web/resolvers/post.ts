@@ -25,8 +25,6 @@ import {
   LanguageRelation,
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
-import headlineImage from './headlineImage'
-
 
 const assignPostCountBadges = async (
   db: PrismaClient,
@@ -448,7 +446,7 @@ const PostMutations = extendType({
         topicIds: intArg({ list: true, required: false }),
         body: EditorNode.asArg({ list: true, required: false }),
         status: arg({ type: 'PostStatus', required: false }),
-        headlineImage: HeadlineImageInput.asArg({ required: false }),
+        headlineImage: HeadlineImageInput.asArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         // Check user can actually do this
@@ -533,18 +531,15 @@ const PostMutations = extendType({
           data.publishedAt = new Date().toISOString()
         }
 
-        if (args.headlineImage) {
-          if (args.headlineImage.smallSize !== originalPost.headlineImage.smallSize) {
-            await ctx.db.headlineImage.create({
-              data: {
-                ...headlineImage,
-                post: {
-                  connect: {
-                    id: args.postId,
-                  },
-                },
-              },
-            })
+        if (args.headlineImage.smallSize !== originalPost.headlineImage.smallSize) {
+          const headlineImage = await ctx.db.headlineImage.create({
+            data: {
+              smallSize: args.headlineImage.smallSize,
+              largeSize: args.headlineImage.largeSize,
+            }
+          })
+          data.headlineImage = {
+            connect: { id: headlineImage.id }
           }
         }
 
@@ -566,6 +561,7 @@ const PostMutations = extendType({
         }
 
 
+        console.log('data', data)
         const post = await ctx.db.post.update({
           where: { id: args.postId },
           data,

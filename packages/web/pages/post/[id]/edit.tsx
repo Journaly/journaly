@@ -36,8 +36,6 @@ const EditPostPage: NextPage = () => {
   const [updatePost] = useUpdatePostMutation()
   const uploadInlineImages = useUploadInlineImages()
 
-  const initialHeadlineImage = initialData?.headlineImage
-
   useAuthCheck(() => {
     return currentUser!.id === postById!.author.id
   }, !!(currentUser && postById))
@@ -83,7 +81,6 @@ const EditPostPage: NextPage = () => {
     let postId: number
     try {
       const modifiedBody = await uploadInlineImages(body)
-      const modifiedHeadlineImage = headlineImage.smallSize === initialHeadlineImage?.smallSize
 
       const { data } = await updatePost({
         variables: {
@@ -92,7 +89,7 @@ const EditPostPage: NextPage = () => {
           title,
           languageId,
           topicIds,
-          headlineImage: modifiedHeadlineImage ? headlineImage : null,
+          headlineImage,
         },
       })
 

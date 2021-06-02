@@ -446,7 +446,7 @@ export type MutationUpdatePostArgs = {
   topicIds?: Maybe<Array<Scalars['Int']>>
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
-  headlineImage?: Maybe<HeadlineImageInput>
+  headlineImage: HeadlineImageInput
 }
 
 export type MutationDeletePostArgs = {
@@ -730,7 +730,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
   | 'commentCount'
   | 'status'
 > & {
-    headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
+    headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'id' | 'smallSize'>
     likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
     author: { __typename?: 'User' } & AuthorFragmentFragment
     language: { __typename?: 'Language' } & LanguageFragmentFragment
@@ -1004,7 +1004,7 @@ export type UpdatePostMutationVariables = Exact<{
   topicIds?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
   body?: Maybe<Array<EditorNode> | EditorNode>
   status?: Maybe<PostStatus>
-  headlineImage?: Maybe<HeadlineImageInput>
+  headlineImage: HeadlineImageInput
 }>
 
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
@@ -1418,6 +1418,7 @@ export const PostCardFragmentFragmentDoc = gql`
     commentCount
     status
     headlineImage {
+      id
       smallSize
     }
     likes {
@@ -2939,7 +2940,7 @@ export const UpdatePostDocument = gql`
     $topicIds: [Int!]
     $body: [EditorNode!]
     $status: PostStatus
-    $headlineImage: HeadlineImageInput
+    $headlineImage: HeadlineImageInput!
   ) {
     updatePost(
       postId: $postId

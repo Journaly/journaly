@@ -42,6 +42,7 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
 
       .${parentClassName} img {
         max-width: 100%;
+        max-height: 75vh;
         margin: 0 auto;
         display: block;
       }

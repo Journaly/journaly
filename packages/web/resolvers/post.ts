@@ -560,8 +560,6 @@ const PostMutations = extendType({
           await Promise.all(insertPromises)
         }
 
-
-        console.log('data', data)
         const post = await ctx.db.post.update({
           where: { id: args.postId },
           data,

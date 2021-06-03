@@ -24,7 +24,7 @@ const PostPage: NextPage = () => {
   const outdatedThreads = post ? post.threads.filter((post) => post.archived) : []
 
   return (
-    <DashboardLayout>
+    <DashboardLayout pad="aboveMobile">
       <LoadingWrapper loading={loading} error={error}>
         <div className="post-page-wrapper">
           {post && post.postComments && (

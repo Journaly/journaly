@@ -30,13 +30,13 @@ const MyFeedPage: NextPage<InitialProps> = ({ initialSearchFilters }) => {
 MyFeedPage.getInitialProps = async (ctx) => {
   let initialSearchFilters
   if (typeof window !== 'undefined') {
-    initialSearchFilters = JSON.parse(cookie.parse(document.cookie).default_search_fitlers) as InitialSearchFilters
+    const defaultSearchFilters = JSON.parse(cookie.parse(document.cookie).default_search_filters)
+    initialSearchFilters = defaultSearchFilters ? defaultSearchFilters as InitialSearchFilters : null
   } else {
     // TODO: double check this choice
     const request = ctx.req as Request
-    const defaultSearchFilters = request.cookies.default_search_fitlers
-    console.log(defaultSearchFilters)
-    initialSearchFilters = defaultSearchFilters ? JSON.parse(defaultSearchFilters) as InitialSearchFilters : null
+    const defaultSearchFilters = JSON.parse(request.cookies.default_search_filters)
+    initialSearchFilters = defaultSearchFilters ? defaultSearchFilters as InitialSearchFilters : null
   }
   return {
     namespacesRequired: ['common', 'settings', 'my-feed'],

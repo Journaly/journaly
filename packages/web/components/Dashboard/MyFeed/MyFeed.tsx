@@ -39,7 +39,9 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   const { t } = useTranslation('my-feed')
 
   const [search, setSearchState] = useState('')
-  const [selectedTopicsFilters, setSelectedTopicsFilters] = useState<number[]>([])
+  const [selectedTopicsFilters, setSelectedTopicsFilters] = useState<number[]>(
+    initialSearchFilters?.topics.length > 0 ? initialSearchFilters.topics : []
+  )
 
   // Fetch languages that have at least 1 post
   const { data: languagesData } = useLanguagesQuery({
@@ -56,9 +58,9 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
       .map((lr) => lr.language.id) || [],
   )
 
-  const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>([
-    ...initialSearchFilters ? initialSearchFilters.languages : userLanguages.values(),
-  ])
+  const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>(
+    initialSearchFilters?.languages?.length > 0 ? initialSearchFilters.languages : [],
+  )
 
   const isUserLanguagesFilterActive = _.isEqual(
     Array.from(userLanguages.values()),
@@ -142,7 +144,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
       languages: selectedLanguageFilters,
       topics: selectedTopicsFilters,
     }
-    document.cookie = `default_search_filters=${JSON.stringify({searchFilters})};`
+    document.cookie = `default_search_filters=${JSON.stringify(searchFilters)};`
   }, [selectedLanguageFilters, selectedTopicsFilters])
 
   return (

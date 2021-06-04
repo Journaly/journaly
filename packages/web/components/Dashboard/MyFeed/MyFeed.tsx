@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
@@ -25,11 +25,17 @@ import FeedHeader from './FeedHeader'
 
 const NUM_POSTS_PER_PAGE = 9
 
-type Props = {
-  currentUser: UserType
+export type InitialSearchFilters = {
+  languages: number[],
+  topics: number[],
 }
 
-const MyFeed: React.FC<Props> = ({ currentUser }) => {
+type Props = {
+  currentUser: UserType
+  initialSearchFilters: InitialSearchFilters | null
+}
+
+const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   const { t } = useTranslation('my-feed')
 
   const [search, setSearchState] = useState('')
@@ -51,7 +57,7 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
   )
 
   const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>([
-    ...userLanguages.values(),
+    ...initialSearchFilters ? initialSearchFilters.languages : userLanguages.values(),
   ])
 
   const isUserLanguagesFilterActive = _.isEqual(
@@ -130,6 +136,14 @@ const MyFeed: React.FC<Props> = ({ currentUser }) => {
     },
     [selectedLanguageFilters],
   )
+
+  useEffect(() => {
+    const searchFilters = {
+      languages: selectedLanguageFilters,
+      topics: selectedTopicsFilters,
+    }
+    document.cookie = `default_search_filters=${JSON.stringify({searchFilters})};`
+  }, [selectedLanguageFilters, selectedTopicsFilters])
 
   return (
     <div className="my-feed-wrapper">

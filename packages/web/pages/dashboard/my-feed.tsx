@@ -1,21 +1,25 @@
 import React from 'react'
 import { NextPage } from 'next'
+import cookie from 'cookie'
 import { withApollo } from '@/lib/apollo'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import MyFeed from '@/components/Dashboard/MyFeed'
 import AuthGate from '@/components/AuthGate'
 import WelcomeModal from '@/components/Modals/WelcomeModal'
+import { InitialSearchFilters } from '@/components/Dashboard/MyFeed/MyFeed'
+import { Request } from 'express'
 
 interface InitialProps {
   namespacesRequired: string[]
+  initialSearchFilters: InitialSearchFilters | null
 }
 
-const MyFeedPage: NextPage<InitialProps> = () => {
+const MyFeedPage: NextPage<InitialProps> = ({ initialSearchFilters }) => {
   return (
     <AuthGate>
       {(currentUser) => (
         <DashboardLayout>
-          <MyFeed currentUser={currentUser} />
+          <MyFeed currentUser={currentUser} initialSearchFilters={initialSearchFilters} />
           <WelcomeModal />
         </DashboardLayout>
       )}
@@ -23,8 +27,22 @@ const MyFeedPage: NextPage<InitialProps> = () => {
   )
 }
 
-MyFeedPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'settings', 'my-feed'],
-})
+MyFeedPage.getInitialProps = async (ctx) => {
+  let initialSearchFilters
+  if (typeof window !== 'undefined') {
+    initialSearchFilters = JSON.parse(cookie.parse(document.cookie).default_search_fitlers) as InitialSearchFilters
+  } else {
+    // TODO: double check this choice
+    const request = ctx.req as Request
+    const defaultSearchFilters = request.cookies.default_search_fitlers
+    console.log(defaultSearchFilters)
+    initialSearchFilters = defaultSearchFilters ? JSON.parse(defaultSearchFilters) as InitialSearchFilters : null
+  }
+  return {
+    namespacesRequired: ['common', 'settings', 'my-feed'],
+    initialSearchFilters,
+  }
+}
+
 
 export default withApollo(MyFeedPage)

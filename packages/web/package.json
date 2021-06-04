@@ -43,7 +43,6 @@
     "@stripe/react-stripe-js": "^1.2.2",
     "@stripe/stripe-js": "^1.12.1",
     "@types/bcryptjs": "^2.4.2",
-    "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.6",
     "@types/diff": "^4.0.2",
     "@types/escape-html": "^1.0.0",

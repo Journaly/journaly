@@ -40,7 +40,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
 
   const [search, setSearchState] = useState('')
   const [selectedTopicsFilters, setSelectedTopicsFilters] = useState<number[]>(
-    initialSearchFilters?.topics.length > 0 ? initialSearchFilters.topics : []
+    initialSearchFilters?.topics || []
   )
 
   // Fetch languages that have at least 1 post
@@ -59,7 +59,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   )
 
   const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>(
-    initialSearchFilters?.languages?.length > 0 ? initialSearchFilters.languages : [],
+    initialSearchFilters?.languages || [],
   )
 
   const isUserLanguagesFilterActive = _.isEqual(

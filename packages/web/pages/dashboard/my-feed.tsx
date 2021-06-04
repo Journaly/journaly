@@ -28,15 +28,22 @@ const MyFeedPage: NextPage<InitialProps> = ({ initialSearchFilters }) => {
 }
 
 MyFeedPage.getInitialProps = async (ctx) => {
-  let initialSearchFilters
+  let initialSearchFilters = null
   if (typeof window !== 'undefined') {
-    const defaultSearchFilters = JSON.parse(cookie.parse(document.cookie).default_search_filters)
-    initialSearchFilters = defaultSearchFilters ? defaultSearchFilters as InitialSearchFilters : null
+    try {
+      const defaultSearchFilters = cookie.parse(document.cookie).default_search_filters
+      initialSearchFilters = defaultSearchFilters ? JSON.parse(defaultSearchFilters) as InitialSearchFilters : null
+    } catch (e) {
+      console.log('Error parsing default_search_filters cookie', e)
+    }
   } else {
-    // TODO: double check this choice
-    const request = ctx.req as Request
-    const defaultSearchFilters = JSON.parse(request.cookies.default_search_filters)
-    initialSearchFilters = defaultSearchFilters ? defaultSearchFilters as InitialSearchFilters : null
+    try {
+      const request = ctx.req as Request
+      const defaultSearchFilters = request.cookies.default_search_filters
+      initialSearchFilters = defaultSearchFilters ? JSON.parse(defaultSearchFilters) as InitialSearchFilters : null
+    } catch (e) {
+      console.log('Error parsing default_search_filters cookie', e)
+    }
   }
   return {
     namespacesRequired: ['common', 'settings', 'my-feed'],

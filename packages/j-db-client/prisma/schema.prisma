@@ -182,12 +182,13 @@ model PostTopic {
 }
 
 model PostClap {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
   postId    Int
   authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
-  post      Post     @relation(fields: [postId], references: [id])
+  author    User      @relation(fields: [authorId], references: [id])
+  post      Post      @relation(fields: [postId], references: [id])
+  PendingNotification PendingNotification[]
 
   @@unique([authorId, postId])
 }
@@ -351,10 +352,12 @@ model PendingNotification {
   commentThanksId     Int?
   postCommentId       Int?
   commentId           Int?
+  postClapId          Int?
   comment             Comment?           @relation(fields: [commentId], references: [id])
   commentThanks       CommentThanks?     @relation(fields: [commentThanksId], references: [id])
   postComment         PostComment?       @relation(fields: [postCommentId], references: [id])
   postCommentThanks   PostCommentThanks? @relation(fields: [postCommentThanksId], references: [id])
+  postClap            PostClap?          @relation(fields: [postClapId], references: [id])
   post                Post?              @relation(fields: [postId], references: [id])
   user                User               @relation(fields: [userId], references: [id])
 }

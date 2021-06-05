@@ -4,12 +4,14 @@ interface SVGRProps {
   title?: string;
   titleId?: string;
   clapped?: boolean
+  width?: number
 }
 
 function ClapIcon({
   title,
   titleId,
   clapped = false,
+  width = 18,
   ...props
 }: React.SVGProps<SVGSVGElement> & SVGRProps) {
   return (
@@ -17,7 +19,7 @@ function ClapIcon({
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 297.221 297.221"
       aria-labelledby={titleId}
-      width={18}
+      width={width}
       {...props}
     >
       {title ? <title id={titleId}>{title}</title> : null}

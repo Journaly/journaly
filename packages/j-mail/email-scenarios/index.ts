@@ -67,6 +67,7 @@ const scenarios = {
         }
       ],
       "thanksCount": 21,
+      "clapCount": 35,
     }
   },
   'update:own-only': {
@@ -293,6 +294,7 @@ const scenarios = {
       ],
       "other": [],
       "thanksCount": 21,
+      "clapCount": 35,
     }
   },
   'update:kitchen-sink': {
@@ -569,6 +571,7 @@ const scenarios = {
         }
       ],
       "thanksCount": 49,
+      "clapCount": 67,
     }
   }
 }

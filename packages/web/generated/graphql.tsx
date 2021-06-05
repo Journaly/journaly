@@ -742,7 +742,11 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
       HeadlineImage,
       'id' | 'smallSize' | 'largeSize'
     >
-    claps: Array<{ __typename?: 'PostClap' } & Pick<PostClap, 'id'>>
+    claps: Array<
+      { __typename?: 'PostClap' } & Pick<PostClap, 'id'> & {
+          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+        }
+    >
   }
 
 export type PostWithTopicsFragmentFragment = { __typename?: 'Post' } & {
@@ -1415,6 +1419,11 @@ export const PostFragmentFragmentDoc = gql`
     }
     claps {
       id
+      author {
+        id
+        name
+        handle
+      }
     }
   }
   ${AuthorWithLanguagesFragmentFragmentDoc}

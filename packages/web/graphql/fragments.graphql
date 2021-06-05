@@ -144,6 +144,11 @@ fragment PostFragment on Post {
   }
   claps {
     id
+    author {
+      id
+      name
+      handle
+    }
   }
 }
 

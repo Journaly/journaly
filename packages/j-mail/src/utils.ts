@@ -32,6 +32,7 @@ export type DataForUpdateEmail = {
   own: ValidatedNotification[],
   other: ValidatedNotification[],
   thanksCount: number,
+  clapCount: number
 }
 
 const cacheFn = <T>(create: () => T): () => T => {

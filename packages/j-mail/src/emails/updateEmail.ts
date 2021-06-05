@@ -168,8 +168,14 @@ const updateEmail = (data: DataForUpdateEmail) => {
         font-weight: 400;
         font-size: 10px;
       ">
-        ${data.thanksCount > 0 ? (
-          `<p style="font-size: 14px;">You also received <span style="font-weight: 600;">${data.thanksCount}</span> thanks for feedback you gave to fellow community members!</p>`
+        ${data.thanksCount > 0 || data.clapCount > 0 ? (
+          `<p style="font-size: 14px;">You also received:
+            <ul>
+              <li><span style="font-weight: 600;">${data.thanksCount} thanks</span> for feedback you gave to fellow community members</li>
+              <li><span style="font-weight: 600;">${data.clapCount} claps</span> for your own posts</li>
+            </ul>
+            Amazing work! 👏🏼
+          </p>`
         ) : ''}
         <p style="font-size: 14px;">Keep up all the great work and thank you for contributing to the community!</p>
         <p style="font-size: 14px; font-weight: 600;">Robin @ Journaly</p>

@@ -8,7 +8,7 @@ import {
   PostCardFragmentFragment as PostCardType,
 } from '@/generated/graphql'
 import LineClamp from '@/components/LineClamp'
-import LikeIcon from '@/components/Icons/LikeIcon'
+import ClapIcon from '@/components/Icons/ClapIcon'
 import CommentIcon from '@/components/Icons/CommentIcon'
 import theme from '@/theme'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
@@ -36,7 +36,7 @@ const PostCard: React.FC<Props> = ({
     excerpt,
     readTime,
     headlineImage,
-    likes,
+    claps,
     commentCount,
     author: { handle, name, profileImage },
     createdAt,
@@ -83,8 +83,8 @@ const PostCard: React.FC<Props> = ({
                 {isPublished && (
                   <div className="post-stats">
                     <div className="post-stat">
-                      <LikeIcon filled={likes.length > 0} />
-                      <span>{likes.length}</span>
+                      <ClapIcon clapped />
+                      <span>{claps.length}</span>
                     </div>
                     <div className="post-stat">
                       <CommentIcon />

@@ -97,7 +97,7 @@ const Post = objectType({
     t.model.readTime()
     t.model.author()
     t.model.status()
-    t.model.likes({ pagination: false })
+    t.model.claps({ pagination: false })
     t.model.threads({ pagination: false })
     t.model.postTopics({ type: 'PostTopic', pagination: false })
     t.model.postComments({
@@ -651,7 +651,7 @@ const PostMutations = extendType({
               },
             },
           }),
-          ctx.db.postLike.deleteMany({
+          ctx.db.postClap.deleteMany({
             where: {
               post: {
                 id: postId,

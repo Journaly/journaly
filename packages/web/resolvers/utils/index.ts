@@ -9,6 +9,7 @@ import {
   Post,
   PostComment,
   CommentThanks,
+  PostClap,
 } from '@journaly/j-db-client'
 
 
@@ -313,6 +314,7 @@ type NotificationCreationType =
   | { type: 'THREAD_COMMENT'; comment: Comment }
   | { type: 'POST_COMMENT'; postComment: PostComment }
   | { type: 'THREAD_COMMENT_THANKS'; commentThanks: CommentThanks }
+  | { type: 'POST_CLAP'; postClap: PostClap }
 
 export const createNotification = (
   db: PrismaClient,
@@ -335,6 +337,10 @@ export const createNotification = (
     }
     case 'THREAD_COMMENT_THANKS': {
       data.commentThanks = { connect: { id: note.commentThanks.id } }
+      break
+    }
+    case 'POST_CLAP': {
+      data.postClap = { connect: { id: note.postClap.id } }
       break
     }
     /*

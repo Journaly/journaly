@@ -109,7 +109,7 @@ export type Post = {
   readTime: Scalars['Int']
   author: User
   status: PostStatus
-  likes: Array<PostLike>
+  claps: Array<PostClap>
   threads: Array<Thread>
   postTopics: Array<PostTopic>
   postComments: Array<PostComment>
@@ -238,9 +238,11 @@ export type SocialMedia = {
   website: Scalars['String']
 }
 
-export type PostLike = {
-  __typename?: 'PostLike'
+export type PostClap = {
+  __typename?: 'PostClap'
   id: Scalars['Int']
+  author: User
+  post: Post
 }
 
 export type CommentThanks = {
@@ -383,6 +385,8 @@ export type Mutation = {
   addLanguageRelation: LanguageRelation
   removeLanguageRelation: LanguageRelation
   updateSocialMedia: SocialMedia
+  createPostClap: PostClap
+  deletePostClap: PostClap
   createCommentThanks: CommentThanks
   deleteCommentThanks: CommentThanks
   purchaseMembershipSubscription: MembershipSubscription
@@ -511,6 +515,14 @@ export type MutationUpdateSocialMediaArgs = {
   instagram?: Maybe<Scalars['String']>
   youtube?: Maybe<Scalars['String']>
   website?: Maybe<Scalars['String']>
+}
+
+export type MutationCreatePostClapArgs = {
+  postId: Scalars['Int']
+}
+
+export type MutationDeletePostClapArgs = {
+  postClapId: Scalars['Int']
 }
 
 export type MutationCreateCommentThanksArgs = {
@@ -731,7 +743,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
   | 'status'
 > & {
     headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'id' | 'smallSize'>
-    likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
+    claps: Array<{ __typename?: 'PostClap' } & Pick<PostClap, 'id'>>
     author: { __typename?: 'User' } & AuthorFragmentFragment
     language: { __typename?: 'Language' } & LanguageFragmentFragment
   }
@@ -1421,7 +1433,7 @@ export const PostCardFragmentFragmentDoc = gql`
       id
       smallSize
     }
-    likes {
+    claps {
       id
     }
     author {

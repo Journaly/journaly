@@ -164,7 +164,7 @@ fragment PostCardFragment on Post {
     id
     smallSize
   }
-  likes {
+  claps {
     id
   }
   author {

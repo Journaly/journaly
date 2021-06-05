@@ -574,49 +574,52 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         <div className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
         </div>
-        {currentUser && post.author.id === currentUser.id && (
           <div className="post-controls">
             <div className="clap-container">
               <Button
                 variant={ButtonVariant.Icon}
                 onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
                 loading={isLoadingPostClap}
+                disabled={currentUser?.id === post.author.id}
               >
-                <ClapIcon clapped={hasClappedPost} />
+                <ClapIcon width={24} clapped={hasClappedPost} />
               </Button>
               <span>{post.claps.length}</span>
             </div>
             <div className="post-action-container">
-              <Button
-                type="button"
-                variant={ButtonVariant.Secondary}
-                onClick={() => {
-                  Router.push('/post/[id]/edit', `/post/${post.id}/edit`)
-                }}
-              >
-                {t('editPostAction')}
-              </Button>
-              {post.status === 'DRAFT' && (
+            {currentUser && post.author.id === currentUser.id && (
+              <>
                 <Button
                   type="button"
                   variant={ButtonVariant.Secondary}
-                  onClick={setPostStatus(PostStatus.Published)}
+                  onClick={() => {
+                    Router.push('/post/[id]/edit', `/post/${post.id}/edit`)
+                  }}
                 >
-                  {t('publishDraft')}
+                  {t('editPostAction')}
                 </Button>
-              )}
-              <Button
-                type="button"
-                variant={ButtonVariant.DestructiveSecondary}
-                onClick={(): void => {
-                  setDisplayDeleteModal(true)
-                }}
-              >
-                {t('deletePostAction')}
-              </Button>
+                {post.status === 'DRAFT' && (
+                  <Button
+                    type="button"
+                    variant={ButtonVariant.Secondary}
+                    onClick={setPostStatus(PostStatus.Published)}
+                  >
+                    {t('publishDraft')}
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  variant={ButtonVariant.DestructiveSecondary}
+                  onClick={(): void => {
+                    setDisplayDeleteModal(true)
+                  }}
+                >
+                  {t('deletePostAction')}
+                </Button>
+              </>
+            )}
             </div>
           </div>
-        )}
       </div>
       <CommentSelectionButton
         onClick={createThreadHandler}

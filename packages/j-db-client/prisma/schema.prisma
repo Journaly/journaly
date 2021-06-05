@@ -35,7 +35,7 @@ model User {
   postComments                  PostComment[]
   postCommentSubscriptions      PostCommentSubscription[]
   postCommentThanks             PostCommentThanks[]
-  postLikes                     PostLike[]
+  postClaps                     PostClap[]
   socialMedia                   SocialMedia?
   threadSubscriptions           ThreadSubscription[]
   badges                        UserBadge[]
@@ -123,7 +123,7 @@ model Post {
   PendingNotification      PendingNotification[]
   postComments             PostComment[]
   postCommentSubscriptions PostCommentSubscription[]
-  likes                    PostLike[]
+  claps                    PostClap[]
   postTopics               PostTopic[]
   threads                  Thread[]
 }
@@ -181,7 +181,7 @@ model PostTopic {
   @@unique([postId, topicId])
 }
 
-model PostLike {
+model PostClap {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   postId    Int

@@ -91,6 +91,13 @@ fragment CommentThanksFragment on CommentThanks {
   }
 }
 
+fragment PostClapFragment on PostClap {
+  id
+  author {
+    ...AuthorFragment
+  }
+}
+
 fragment PostCommentFragment on PostComment {
   id
   body
@@ -135,6 +142,14 @@ fragment PostFragment on Post {
     smallSize
     largeSize
   }
+  claps {
+    id
+    author {
+      id
+      name
+      handle
+    }
+  }
 }
 
 fragment PostWithTopicsFragment on Post {
@@ -164,7 +179,7 @@ fragment PostCardFragment on Post {
     id
     smallSize
   }
-  likes {
+  claps {
     id
   }
   author {

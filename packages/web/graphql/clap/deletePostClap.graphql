@@ -1,0 +1,5 @@
+mutation deletePostClap($postClapId: Int!) {
+  deletePostClap(postClapId: $postClapId) {
+    id
+  }
+}

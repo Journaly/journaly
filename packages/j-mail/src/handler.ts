@@ -31,6 +31,7 @@ const getDataForUpdateEmail = async (
   const validated: ValidatedNotification[] = []
   let lastNotificationDate = new Date(0)
   let thanksCount = 0
+  let clapCount = 0
 
   const user = (await prisma.user.findUnique({ where: { id: userId } })) as User
   const notes = await prisma.pendingNotification.findMany({
@@ -64,6 +65,7 @@ const getDataForUpdateEmail = async (
         },
       },
       commentThanks: true,
+      postClap: true,
     }
   })
 
@@ -97,6 +99,8 @@ const getDataForUpdateEmail = async (
       }
     } else if (note.type === NotificationType.THREAD_COMMENT_THANKS) {
       thanksCount++
+    } else if (note.type === NotificationType.POST_CLAP) {
+      clapCount++
     }
   })
 
@@ -106,6 +110,7 @@ const getDataForUpdateEmail = async (
     own: validated.filter(({ post }) => post.authorId === userId),
     other: validated.filter(({ post }) => post.authorId !== userId),
     thanksCount,
+    clapCount,
   }
 }
 

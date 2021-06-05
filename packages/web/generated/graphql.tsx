@@ -109,7 +109,7 @@ export type Post = {
   readTime: Scalars['Int']
   author: User
   status: PostStatus
-  likes: Array<PostLike>
+  claps: Array<PostClap>
   threads: Array<Thread>
   postTopics: Array<PostTopic>
   postComments: Array<PostComment>
@@ -238,9 +238,11 @@ export type SocialMedia = {
   website: Scalars['String']
 }
 
-export type PostLike = {
-  __typename?: 'PostLike'
+export type PostClap = {
+  __typename?: 'PostClap'
   id: Scalars['Int']
+  author: User
+  post: Post
 }
 
 export type CommentThanks = {
@@ -383,6 +385,8 @@ export type Mutation = {
   addLanguageRelation: LanguageRelation
   removeLanguageRelation: LanguageRelation
   updateSocialMedia: SocialMedia
+  createPostClap: PostClap
+  deletePostClap: PostClap
   createCommentThanks: CommentThanks
   deleteCommentThanks: CommentThanks
   purchaseMembershipSubscription: MembershipSubscription
@@ -513,6 +517,14 @@ export type MutationUpdateSocialMediaArgs = {
   website?: Maybe<Scalars['String']>
 }
 
+export type MutationCreatePostClapArgs = {
+  postId: Scalars['Int']
+}
+
+export type MutationDeletePostClapArgs = {
+  postClapId: Scalars['Int']
+}
+
 export type MutationCreateCommentThanksArgs = {
   commentId: Scalars['Int']
 }
@@ -536,6 +548,22 @@ export type MutationUpdateSubscriptionPlanArgs = {
 
 export type MutationUpdateSubscriptionPaymentMethodArgs = {
   paymentMethodId: Scalars['String']
+}
+
+export type CreatePostClapMutationVariables = Exact<{
+  postId: Scalars['Int']
+}>
+
+export type CreatePostClapMutation = { __typename?: 'Mutation' } & {
+  createPostClap: { __typename?: 'PostClap' } & PostClapFragmentFragment
+}
+
+export type DeletePostClapMutationVariables = Exact<{
+  postClapId: Scalars['Int']
+}>
+
+export type DeletePostClapMutation = { __typename?: 'Mutation' } & {
+  deletePostClap: { __typename?: 'PostClap' } & Pick<PostClap, 'id'>
 }
 
 export type CreateCommentMutationVariables = Exact<{
@@ -681,6 +709,10 @@ export type CommentThanksFragmentFragment = { __typename?: 'CommentThanks' } & P
   'id'
 > & { author: { __typename?: 'User' } & AuthorFragmentFragment }
 
+export type PostClapFragmentFragment = { __typename?: 'PostClap' } & Pick<PostClap, 'id'> & {
+    author: { __typename?: 'User' } & AuthorFragmentFragment
+  }
+
 export type PostCommentFragmentFragment = { __typename?: 'PostComment' } & Pick<
   PostComment,
   'id' | 'body' | 'createdAt'
@@ -710,6 +742,11 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
       HeadlineImage,
       'id' | 'smallSize' | 'largeSize'
     >
+    claps: Array<
+      { __typename?: 'PostClap' } & Pick<PostClap, 'id'> & {
+          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+        }
+    >
   }
 
 export type PostWithTopicsFragmentFragment = { __typename?: 'Post' } & {
@@ -731,7 +768,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
   | 'status'
 > & {
     headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'id' | 'smallSize'>
-    likes: Array<{ __typename?: 'PostLike' } & Pick<PostLike, 'id'>>
+    claps: Array<{ __typename?: 'PostClap' } & Pick<PostClap, 'id'>>
     author: { __typename?: 'User' } & AuthorFragmentFragment
     language: { __typename?: 'Language' } & LanguageFragmentFragment
   }
@@ -1282,6 +1319,15 @@ export const CommentThanksFragmentFragmentDoc = gql`
   }
   ${AuthorFragmentFragmentDoc}
 `
+export const PostClapFragmentFragmentDoc = gql`
+  fragment PostClapFragment on PostClap {
+    id
+    author {
+      ...AuthorFragment
+    }
+  }
+  ${AuthorFragmentFragmentDoc}
+`
 export const AuthorWithStatsFragmentFragmentDoc = gql`
   fragment AuthorWithStatsFragment on User {
     ...AuthorFragment
@@ -1371,6 +1417,14 @@ export const PostFragmentFragmentDoc = gql`
       smallSize
       largeSize
     }
+    claps {
+      id
+      author {
+        id
+        name
+        handle
+      }
+    }
   }
   ${AuthorWithLanguagesFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
@@ -1421,7 +1475,7 @@ export const PostCardFragmentFragmentDoc = gql`
       id
       smallSize
     }
-    likes {
+    claps {
       id
     }
     author {
@@ -1491,6 +1545,99 @@ export const UserWithSubscriptionFragmentFragmentDoc = gql`
     }
   }
 `
+export const CreatePostClapDocument = gql`
+  mutation createPostClap($postId: Int!) {
+    createPostClap(postId: $postId) {
+      ...PostClapFragment
+    }
+  }
+  ${PostClapFragmentFragmentDoc}
+`
+export type CreatePostClapMutationFn = ApolloReactCommon.MutationFunction<
+  CreatePostClapMutation,
+  CreatePostClapMutationVariables
+>
+
+/**
+ * __useCreatePostClapMutation__
+ *
+ * To run a mutation, you first call `useCreatePostClapMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostClapMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostClapMutation, { data, loading, error }] = useCreatePostClapMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useCreatePostClapMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreatePostClapMutation,
+    CreatePostClapMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<CreatePostClapMutation, CreatePostClapMutationVariables>(
+    CreatePostClapDocument,
+    baseOptions,
+  )
+}
+export type CreatePostClapMutationHookResult = ReturnType<typeof useCreatePostClapMutation>
+export type CreatePostClapMutationResult = ApolloReactCommon.MutationResult<CreatePostClapMutation>
+export type CreatePostClapMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreatePostClapMutation,
+  CreatePostClapMutationVariables
+>
+export const DeletePostClapDocument = gql`
+  mutation deletePostClap($postClapId: Int!) {
+    deletePostClap(postClapId: $postClapId) {
+      id
+    }
+  }
+`
+export type DeletePostClapMutationFn = ApolloReactCommon.MutationFunction<
+  DeletePostClapMutation,
+  DeletePostClapMutationVariables
+>
+
+/**
+ * __useDeletePostClapMutation__
+ *
+ * To run a mutation, you first call `useDeletePostClapMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePostClapMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePostClapMutation, { data, loading, error }] = useDeletePostClapMutation({
+ *   variables: {
+ *      postClapId: // value for 'postClapId'
+ *   },
+ * });
+ */
+export function useDeletePostClapMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeletePostClapMutation,
+    DeletePostClapMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<DeletePostClapMutation, DeletePostClapMutationVariables>(
+    DeletePostClapDocument,
+    baseOptions,
+  )
+}
+export type DeletePostClapMutationHookResult = ReturnType<typeof useDeletePostClapMutation>
+export type DeletePostClapMutationResult = ApolloReactCommon.MutationResult<DeletePostClapMutation>
+export type DeletePostClapMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeletePostClapMutation,
+  DeletePostClapMutationVariables
+>
 export const CreateCommentDocument = gql`
   mutation createComment($body: String!, $threadId: Int!) {
     createComment(body: $body, threadId: $threadId) {

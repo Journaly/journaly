@@ -397,6 +397,7 @@ enum NotificationType {
   THREAD_COMMENT_THANKS
   POST_COMMENT_THANKS
   NEW_POST
+  POST_CLAP
 }
 
 enum MembershipSubscriptionPeriod {

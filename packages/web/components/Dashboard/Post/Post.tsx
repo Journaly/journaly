@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 
@@ -17,6 +17,9 @@ import {
   useUpdatePostMutation,
   useDeletePostMutation,
   Post as PostModel,
+  useCreatePostClapMutation,
+  useDeletePostClapMutation,
+  PostClap,
 } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
@@ -28,6 +31,8 @@ import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 
 import {getCoords} from './helpers'
+import ClapIcon from '@/components/Icons/ClapIcon'
+import { generateNegativeRandomNumber } from '@/utils/number'
 
 interface IPostProps {
   post: PostType
@@ -289,6 +294,80 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
     },
   })
 
+  const [createPostClap, createPostClapResult] = useCreatePostClapMutation({
+    update(cache, { data }) {
+      if (data?.createPostClap) {
+        cache.modify({
+          id: `${post.__typename}:${post.id}`,
+          fields: {
+            claps: (existingClaps: PostClap[] = []) => {
+              return [...existingClaps, data.createPostClap]
+            },
+          },
+        })
+      }
+    },
+    onError: (error) => toast.error(error),
+  })
+
+  const createNewPostClap = () => {
+    createPostClap({
+      variables: { postId: post.id },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        createPostClap: {
+          __typename: 'PostClap',
+          id: generateNegativeRandomNumber(),
+          author: {
+            __typename: 'User',
+            handle: currentUser!.handle,
+            name: currentUser?.name,
+            profileImage: currentUser?.profileImage,
+            id: currentUser!.id,
+          },
+        },
+      },
+    })
+  }
+
+  const [deletePostClap, deletePostClapResult] = useDeletePostClapMutation({
+    update(cache, { data }) {
+      if (data?.deletePostClap) {
+        cache.modify({
+          id: `${post.__typename}:${post.id}`,
+          fields: {
+            claps: (existingClaps: PostClap[] = []) => {
+              return existingClaps.filter(
+                (existingClap) => data.deletePostClap.id !== existingClap.id,
+              )
+            },
+          },
+        })
+        cache.evict({ id: `${data.deletePostClap.__typename}:${data.deletePostClap.id}` })
+      }
+    },
+    onError: (error) => toast.error(error),
+  })
+
+  const deleteExistingPostClap = () => {
+    const currentPostClap = post.claps.find(
+      (clap) => clap.author.id === currentUser?.id,
+    )
+    if (currentPostClap) {
+      deletePostClap({
+        variables: {
+          postClapId: currentPostClap.id
+        }
+      })
+    }
+  }
+
+  const isLoadingPostClap = createPostClapResult.loading || deletePostClapResult.loading
+
+  const hasClappedPost = useMemo(() => {
+    return post.claps.find((clap) => clap.author.id === currentUser?.id) !== undefined
+  }, [post.claps, currentUser?.id])
+
   React.useEffect(() => {
     if (!selectableRef.current) {
       return
@@ -495,10 +574,19 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         <div className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
         </div>
-
         {currentUser && post.author.id === currentUser.id && (
           <div className="post-controls">
-            <>
+            <div className="clap-container">
+              <Button
+                variant={ButtonVariant.Icon}
+                onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
+                loading={isLoadingPostClap}
+              >
+                <ClapIcon clapped={hasClappedPost} />
+              </Button>
+              <span>{post.claps.length}</span>
+            </div>
+            <div className="post-action-container">
               <Button
                 type="button"
                 variant={ButtonVariant.Secondary}
@@ -526,7 +614,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
               >
                 {t('deletePostAction')}
               </Button>
-            </>
+            </div>
           </div>
         )}
       </div>
@@ -640,10 +728,23 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           margin-bottom: 20px;
 
           display: flex;
+          width: 100%;
+          justify-content: space-between;
         }
 
         .post-controls > :global(button) {
           margin-left: 5px;
+        }
+
+        .post-action-container {
+          display: flex;
+          gap: 10px;
+        }
+
+        .clap-container {
+          display: flex;
+          align-items: center;
+          gap: 5px;
         }
       `}</style>
     </div>

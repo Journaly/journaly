@@ -321,8 +321,8 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           author: {
             __typename: 'User',
             handle: currentUser!.handle,
-            name: currentUser?.name,
-            profileImage: currentUser?.profileImage,
+            name: currentUser!.name,
+            profileImage: currentUser!.profileImage,
             id: currentUser!.id,
           },
         },
@@ -580,7 +580,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
                 variant={ButtonVariant.Icon}
                 onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
                 loading={isLoadingPostClap}
-                disabled={currentUser?.id === post.author.id}
+                disabled={currentUser?.id === post.author.id || !currentUser}
               >
                 <ClapIcon width={24} clapped={hasClappedPost} />
               </Button>

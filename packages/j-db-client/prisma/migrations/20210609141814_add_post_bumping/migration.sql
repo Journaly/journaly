@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Post" ADD COLUMN     "bumpedAt" TIMESTAMP(3),
+ADD COLUMN     "bumpCount" INTEGER NOT NULL DEFAULT 0;

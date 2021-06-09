@@ -740,6 +740,8 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   | 'readTime'
   | 'createdAt'
   | 'publishedAt'
+  | 'bumpedAt'
+  | 'bumpCount'
   | 'publishedLanguageLevel'
 > & {
     author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
@@ -1417,6 +1419,8 @@ export const PostFragmentFragmentDoc = gql`
     readTime
     createdAt
     publishedAt
+    bumpedAt
+    bumpCount
     publishedLanguageLevel
     author {
       ...AuthorWithLanguagesFragment

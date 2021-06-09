@@ -23,6 +23,7 @@ import {
   BadgeType,
   PrismaClient,
   LanguageRelation,
+  UserRole,
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
@@ -786,7 +787,10 @@ const PostMutations = extendType({
 
         hasAuthorPermissions(post, currentUser)
 
-        if (!currentUser.membershipSubscription || currentUser.membershipSubscription.expiresAt < new Date()) {
+        const canBump = (currentUser.membershipSubscription && currentUser.membershipSubscription.expiresAt < new Date())
+          || currentUser.userRole === (UserRole.ADMIN || UserRole.MODERATOR)
+
+        if (!canBump) {
           throw new Error("Only Journaly Premium members can access this feature")
         }
 

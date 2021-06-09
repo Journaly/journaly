@@ -127,6 +127,8 @@ fragment PostFragment on Post {
   readTime
   createdAt
   publishedAt
+  bumpedAt
+  bumpCount
   publishedLanguageLevel
   author {
     ...AuthorWithLanguagesFragment

@@ -374,6 +374,7 @@ export type Mutation = {
   deletePost: Post
   initiatePostImageUpload: InitiatePostImageUploadResponse
   initiateInlinePostImageUpload: InitiateInlinePostImageUploadResponse
+  bumpPost: Post
   createUser: User
   updateUser: User
   initiateAvatarImageUpload: InitiateAvatarImageUploadResponse
@@ -453,10 +454,13 @@ export type MutationUpdatePostArgs = {
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
   headlineImage: HeadlineImageInput
-  bumpPost?: Maybe<Scalars['Boolean']>
 }
 
 export type MutationDeletePostArgs = {
+  postId: Scalars['Int']
+}
+
+export type MutationBumpPostArgs = {
   postId: Scalars['Int']
 }
 
@@ -935,6 +939,14 @@ export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pic
     >
   }
 
+export type BumpPostMutationVariables = Exact<{
+  postId: Scalars['Int']
+}>
+
+export type BumpPostMutation = { __typename?: 'Mutation' } & {
+  bumpPost: { __typename?: 'Post' } & Pick<Post, 'id'>
+}
+
 export type CreatePostMutationVariables = Exact<{
   title: Scalars['String']
   body: Array<EditorNode> | EditorNode
@@ -1045,7 +1057,6 @@ export type UpdatePostMutationVariables = Exact<{
   body?: Maybe<Array<EditorNode> | EditorNode>
   status?: Maybe<PostStatus>
   headlineImage: HeadlineImageInput
-  bumpPost?: Maybe<Scalars['Boolean']>
 }>
 
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
@@ -2604,6 +2615,49 @@ export type SubscriptionSettingsPageQueryResult = ApolloReactCommon.QueryResult<
   SubscriptionSettingsPageQuery,
   SubscriptionSettingsPageQueryVariables
 >
+export const BumpPostDocument = gql`
+  mutation bumpPost($postId: Int!) {
+    bumpPost(postId: $postId) {
+      id
+    }
+  }
+`
+export type BumpPostMutationFn = ApolloReactCommon.MutationFunction<
+  BumpPostMutation,
+  BumpPostMutationVariables
+>
+
+/**
+ * __useBumpPostMutation__
+ *
+ * To run a mutation, you first call `useBumpPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBumpPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bumpPostMutation, { data, loading, error }] = useBumpPostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useBumpPostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<BumpPostMutation, BumpPostMutationVariables>,
+) {
+  return ApolloReactHooks.useMutation<BumpPostMutation, BumpPostMutationVariables>(
+    BumpPostDocument,
+    baseOptions,
+  )
+}
+export type BumpPostMutationHookResult = ReturnType<typeof useBumpPostMutation>
+export type BumpPostMutationResult = ApolloReactCommon.MutationResult<BumpPostMutation>
+export type BumpPostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  BumpPostMutation,
+  BumpPostMutationVariables
+>
 export const CreatePostDocument = gql`
   mutation createPost(
     $title: String!
@@ -3092,7 +3146,6 @@ export const UpdatePostDocument = gql`
     $body: [EditorNode!]
     $status: PostStatus
     $headlineImage: HeadlineImageInput!
-    $bumpPost: Boolean
   ) {
     updatePost(
       postId: $postId
@@ -3102,7 +3155,6 @@ export const UpdatePostDocument = gql`
       status: $status
       headlineImage: $headlineImage
       topicIds: $topicIds
-      bumpPost: $bumpPost
     ) {
       ...PostFragment
     }
@@ -3134,7 +3186,6 @@ export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      body: // value for 'body'
  *      status: // value for 'status'
  *      headlineImage: // value for 'headlineImage'
- *      bumpPost: // value for 'bumpPost'
  *   },
  * });
  */

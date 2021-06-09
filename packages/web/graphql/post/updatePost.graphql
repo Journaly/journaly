@@ -6,6 +6,7 @@ mutation updatePost(
   $body: [EditorNode!]
   $status: PostStatus
   $headlineImage: HeadlineImageInput!
+  $bumpPost: Boolean
 ) {
   updatePost(
     postId: $postId
@@ -15,6 +16,7 @@ mutation updatePost(
     status: $status
     headlineImage: $headlineImage
     topicIds: $topicIds
+    bumpPost: $bumpPost
   ) {
     ...PostFragment
   }

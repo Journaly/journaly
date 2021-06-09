@@ -120,6 +120,8 @@ export type Post = {
   bodySrc: Scalars['String']
   headlineImage: HeadlineImage
   publishedAt?: Maybe<Scalars['DateTime']>
+  bumpedAt?: Maybe<Scalars['DateTime']>
+  bumpCount: Scalars['Int']
   commentCount: Scalars['Int']
 }
 
@@ -451,6 +453,7 @@ export type MutationUpdatePostArgs = {
   body?: Maybe<Array<EditorNode>>
   status?: Maybe<PostStatus>
   headlineImage: HeadlineImageInput
+  bumpPost?: Maybe<Scalars['Boolean']>
 }
 
 export type MutationDeletePostArgs = {
@@ -1042,6 +1045,7 @@ export type UpdatePostMutationVariables = Exact<{
   body?: Maybe<Array<EditorNode> | EditorNode>
   status?: Maybe<PostStatus>
   headlineImage: HeadlineImageInput
+  bumpPost?: Maybe<Scalars['Boolean']>
 }>
 
 export type UpdatePostMutation = { __typename?: 'Mutation' } & {
@@ -3088,6 +3092,7 @@ export const UpdatePostDocument = gql`
     $body: [EditorNode!]
     $status: PostStatus
     $headlineImage: HeadlineImageInput!
+    $bumpPost: Boolean
   ) {
     updatePost(
       postId: $postId
@@ -3097,6 +3102,7 @@ export const UpdatePostDocument = gql`
       status: $status
       headlineImage: $headlineImage
       topicIds: $topicIds
+      bumpPost: $bumpPost
     ) {
       ...PostFragment
     }
@@ -3128,6 +3134,7 @@ export type UpdatePostMutationFn = ApolloReactCommon.MutationFunction<
  *      body: // value for 'body'
  *      status: // value for 'status'
  *      headlineImage: // value for 'headlineImage'
+ *      bumpPost: // value for 'bumpPost'
  *   },
  * });
  */

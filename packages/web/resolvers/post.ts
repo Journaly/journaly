@@ -450,7 +450,6 @@ const PostMutations = extendType({
         body: EditorNode.asArg({ list: true, required: false }),
         status: arg({ type: 'PostStatus', required: false }),
         headlineImage: HeadlineImageInput.asArg({ required: true }),
-        bumpPost: booleanArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
         // Check user can actually do this
@@ -497,19 +496,6 @@ const PostMutations = extendType({
           data.status = args.status
         }
 
-        if (args.bumpPost) {
-          if (!currentUser.membershipSubscription || currentUser.membershipSubscription.expiresAt < new Date().toISOString()) {
-            throw new Error("Only Journaly Premium members can access this feature")
-          }
-
-          if (originalPost.bumpCount >= POST_BUMP_LIMIT) {
-            throw new Error("You've already reached your limit for bumping this post")
-          }
-
-          data.bumpedAt = new Date().toISOString()
-          data.bumpCount = originalPost.bumpCount++
-        }
-
         if (args.body) {
           data = { ...data, ...processEditorDocument(args.body) }
 
@@ -546,8 +532,8 @@ const PostMutations = extendType({
         data.publishedLanguageLevel = userLanguageLevel
         
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
-          data.publishedAt = new Date().toISOString()
-          data.bumpedAt = new Date().toISOString()
+          data.publishedAt = new Date()
+          data.bumpedAt = new Date()
         }
 
         if (args.headlineImage.smallSize !== originalPost.headlineImage.smallSize) {
@@ -768,6 +754,55 @@ const PostMutations = extendType({
           checkUrl: `https://${transformBucket}.s3.us-east-2.amazonaws.com/inline-post-image/${uuid}-default`,
           finalUrl: `https://${cdnDomain}/inline-post-image/${uuid}-default`,
         }
+      }
+    }),
+    t.field('bumpPost', {
+      type: 'Post',
+      args: {
+        postId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new NotAuthorizedError()
+
+        const [currentUser, post] = await Promise.all([
+          ctx.db.user.findUnique({
+            where: {
+              id: userId,
+            },
+            include: {
+              membershipSubscription: true,
+            }
+          }),
+          ctx.db.post.findUnique({
+            where: {
+              id: args.postId,
+            },
+          }),
+        ])
+
+        if (!currentUser) throw new NotFoundError('User')
+        if (!post) throw new NotFoundError('Post')
+
+        hasAuthorPermissions(post, currentUser)
+
+        if (!currentUser.membershipSubscription || currentUser.membershipSubscription.expiresAt < new Date()) {
+          throw new Error("Only Journaly Premium members can access this feature")
+        }
+
+        if (post.bumpCount >= POST_BUMP_LIMIT) {
+          throw new Error("You've already reached your limit for bumping this post")
+        }
+
+        return ctx.db.post.update({
+          where: {
+            id: args.postId,
+          },
+          data: {
+            bumpedAt: new Date(),
+            bumpCount: post.bumpCount + 1,
+          },
+        })
       }
     })
   },

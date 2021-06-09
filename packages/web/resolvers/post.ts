@@ -25,6 +25,7 @@ import {
   LanguageRelation,
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
+import { POST_BUMP_LIMIT } from '../constants'
 
 const assignPostCountBadges = async (
   db: PrismaClient,
@@ -113,6 +114,8 @@ const Post = objectType({
     t.model.bodySrc()
     t.model.headlineImage()
     t.model.publishedAt()
+    t.model.bumpedAt()
+    t.model.bumpCount()
     t.int('commentCount', {
       resolve: async (parent, _args, ctx, _info) => {
         const [threadCommentCount, postCommentCount] = await Promise.all([
@@ -345,7 +348,7 @@ const PostQueries = extendType({
           skip: args.skip,
           take: args.first,
           orderBy: {
-            publishedAt: 'desc',
+            bumpedAt: 'desc',
           },
         })
 
@@ -447,6 +450,7 @@ const PostMutations = extendType({
         body: EditorNode.asArg({ list: true, required: false }),
         status: arg({ type: 'PostStatus', required: false }),
         headlineImage: HeadlineImageInput.asArg({ required: true }),
+        bumpPost: booleanArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
         // Check user can actually do this
@@ -460,6 +464,7 @@ const PostMutations = extendType({
             },
             include: {
               languages: true,
+              membershipSubscription: true,
             }
           }),
           ctx.db.post.findUnique({
@@ -490,6 +495,19 @@ const PostMutations = extendType({
 
         if (args.status) {
           data.status = args.status
+        }
+
+        if (args.bumpPost) {
+          if (!currentUser.membershipSubscription || currentUser.membershipSubscription.expiresAt < new Date().toISOString()) {
+            throw new Error("Only Journaly Premium members can access this feature")
+          }
+
+          if (originalPost.bumpCount >= POST_BUMP_LIMIT) {
+            throw new Error("You've already reached your limit for bumping this post")
+          }
+
+          data.bumpedAt = new Date().toISOString()
+          data.bumpCount = originalPost.bumpCount++
         }
 
         if (args.body) {
@@ -529,6 +547,7 @@ const PostMutations = extendType({
         
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
           data.publishedAt = new Date().toISOString()
+          data.bumpedAt = new Date().toISOString()
         }
 
         if (args.headlineImage.smallSize !== originalPost.headlineImage.smallSize) {

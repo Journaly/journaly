@@ -4,7 +4,8 @@
   "description": "A foreign language journaling platform for exchanging feedback with native or advanced speakers and building community around shared interests and languages.",
   "main": "index.js",
   "scripts": {
-    "cypress:open": "npx cypress open"
+    "cypress:open": "npx cypress open",
+    "cypress:test": "npx cypress run --reporter json"
   },
   "repository": {
     "type": "git",

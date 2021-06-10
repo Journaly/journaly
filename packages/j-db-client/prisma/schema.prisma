@@ -115,6 +115,8 @@ model Post {
   longitude                Decimal?
   latitude                 Decimal?
   publishedAt              DateTime?
+  bumpedAt                 DateTime?
+  bumpCount                Int                       @default(0)
   publishedLanguageLevel   LanguageLevel             @default(BEGINNER)
   author                   User                      @relation(fields: [authorId], references: [id])
   language                 Language                  @relation(fields: [languageId], references: [id])

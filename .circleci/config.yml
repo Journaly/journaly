@@ -32,11 +32,12 @@ jobs:
             - ~/.cache
             - ./packages/web/.next/cache
   run-e2e-tests:
+    executor: node/default
     docker:
       - image: cypress/base:8
         environment:
           TERM: xterm
-    executor: node/default
+    working_directory: ./
     steps:
       - checkout
       - node/install:

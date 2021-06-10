@@ -91,7 +91,7 @@ workflows:
   main:
     jobs:
       - build
-      - test
+      - run-e2e-tests
       - update-translations-site:
           filters:
             branches:

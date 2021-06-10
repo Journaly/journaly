@@ -1,0 +1,5 @@
+mutation bumpPost($postId: Int!) {
+  bumpPost(postId: $postId) {
+    id
+  }
+}

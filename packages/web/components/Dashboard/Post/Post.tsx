@@ -10,7 +10,7 @@ import {
 } from '@/utils'
 import {
   PostWithTopicsFragmentFragment as PostType,
-  UserFragmentFragment as UserType,
+  CurrentUserFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
   PostStatus,
   useCreateThreadMutation,
@@ -20,6 +20,8 @@ import {
   useCreatePostClapMutation,
   useDeletePostClapMutation,
   PostClap,
+  useBumpPostMutation,
+  UserRole,
 } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
@@ -33,6 +35,7 @@ import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 import {getCoords} from './helpers'
 import ClapIcon from '@/components/Icons/ClapIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
+import { POST_BUMP_LIMIT } from '../../../constants'
 
 interface IPostProps {
   post: PostType
@@ -553,6 +556,27 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
   }
 
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
+
+  const handleBumpPost = () => {
+    if (post.bumpCount >= POST_BUMP_LIMIT) {
+      toast.error(t('postBumpLimitError'))
+      return
+    }
+    bumpPost()
+  }
+
+  const [bumpPost] = useBumpPostMutation({
+    variables: { postId: post.id },
+    onCompleted: () => {
+      toast.success(t(
+        'bumpPostSuccess',
+        {
+          numRemaining: POST_BUMP_LIMIT - (post.bumpCount + 1),
+        }))
+      Router.push('/dashboard/my-feed')
+    },
+  })
+
   return (
     <div className="post-container">
       <Head>
@@ -589,6 +613,15 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
             <div className="post-action-container">
             {currentUser && post.author.id === currentUser.id && (
               <>
+                {currentUser.membershipSubscription?.isActive || currentUser.userRole === (UserRole.Admin || UserRole.Moderator) && (
+                  <Button
+                    type="button"
+                    variant={ButtonVariant.Secondary}
+                    onClick={handleBumpPost}
+                  >
+                    {t('bumpPostAction')}
+                  </Button>
+                )}
                 <Button
                   type="button"
                   variant={ButtonVariant.Secondary}

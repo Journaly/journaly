@@ -5,6 +5,9 @@
  */
 module.exports = (on, config) => {
   require('@cypress/code-coverage/task')(on, config)
+  const dotenvPlugin = require('cypress-dotenv')
+  config = dotenvPlugin(config)
+
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
 
@@ -14,3 +17,5 @@ module.exports = (on, config) => {
   // with the any changed environment variables
   return config
 }
+
+// TODO: Look into instrumenting app with instanbul.js

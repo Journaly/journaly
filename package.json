@@ -17,6 +17,11 @@
   },
   "homepage": "https://github.com/Journaly/journaly#readme",
   "devDependencies": {
-    "cypress": "^4.9.0"
+    "@cypress/code-coverage": "^3.9.6",
+    "cypress": "^6.2.1",
+    "cypress-dark": "^1.7.14",
+    "cypress-dotenv": "^1.2.2",
+    "cypress-plugin-stripe-elements": "^1.0.1",
+    "dotenv": "^10.0.0"
   }
 }

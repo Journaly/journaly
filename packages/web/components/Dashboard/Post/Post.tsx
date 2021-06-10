@@ -568,7 +568,11 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
   const [bumpPost] = useBumpPostMutation({
     variables: { postId: post.id },
     onCompleted: () => {
-      toast.success(`${t('bumpPostSuccess')} ${POST_BUMP_LIMIT - (post.bumpCount + 1)}`)
+      toast.success(t(
+        'bumpPostSuccess',
+        {
+          numRemaining: POST_BUMP_LIMIT - (post.bumpCount + 1),
+        }))
       Router.push('/dashboard/my-feed')
     },
   })

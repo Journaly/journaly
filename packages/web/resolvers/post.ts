@@ -404,7 +404,8 @@ const PostMutations = extendType({
             author: { connect: { id: userId } },
             title,
             status,
-            publishedAt: isPublished ? new Date().toISOString() : null,
+            publishedAt: isPublished ? new Date() : null,
+            bumpedAt: isPublished ? new Date() : null,
             publishedLanguageLevel: userLanguageLevel,
             postCommentSubscriptions: {
               create: [

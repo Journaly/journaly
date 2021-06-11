@@ -578,9 +578,9 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
   })
 
   const canAttemptBump = (
-      currentUser.membershipSubscription?.isActive
-      || currentUser.userRole === UserRole.Admin
-      || currentUser.userRole === UserRole.Moderator
+      currentUser?.membershipSubscription?.isActive
+      || currentUser?.userRole === UserRole.Admin
+      || currentUser?.userRole === UserRole.Moderator
     ) && post.status === 'PUBLISHED'
 
   return (

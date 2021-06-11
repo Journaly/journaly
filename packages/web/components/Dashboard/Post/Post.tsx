@@ -577,6 +577,12 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
     },
   })
 
+  const canAttemptBump = (
+      currentUser?.membershipSubscription?.isActive
+      || currentUser?.userRole === UserRole.Admin
+      || currentUser?.userRole === UserRole.Moderator
+    ) && post.status === 'PUBLISHED'
+
   return (
     <div className="post-container">
       <Head>
@@ -613,7 +619,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
             <div className="post-action-container">
             {currentUser && post.author.id === currentUser.id && (
               <>
-                {currentUser.membershipSubscription?.isActive || currentUser.userRole === (UserRole.Admin || UserRole.Moderator) && (
+                {canAttemptBump && (
                   <Button
                     type="button"
                     variant={ButtonVariant.Secondary}
@@ -718,7 +724,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           display: grid;
           grid-column-gap: 10px;
           grid-template-columns: 10px 1fr 10px;
-          grid-auto-rows: max-content 1fr 40px;
+          grid-auto-rows: max-content 1fr auto;
           background-color: ${theme.colors.white};
         }
 
@@ -775,6 +781,22 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         .post-action-container {
           display: flex;
           gap: 10px;
+        }
+
+        @media (max-width: ${theme.breakpoints.SM}) {
+          .post-controls {
+            flex-direction: column;
+          }
+
+          .post-action-container {
+            padding-top: 10px;
+            flex-direction: column;
+            gap: 5px;
+          }
+
+          .post-action-container > :global(button) {
+            align-self: stretch;
+          }
         }
 
         .clap-container {

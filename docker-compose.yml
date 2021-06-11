@@ -16,8 +16,7 @@ services:
     image: 'journaly:latest'
     depends_on: [journaly_db]
     build: .
-    #command: 'npm -prefix ../j-db-client run reseed-db'
-    command: 'npm run dev'
+    command: bash -c "npm -prefix ../j-db-client run migrate:apply && npm run dev"
     ports: 
       - "3000:3000"
 

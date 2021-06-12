@@ -51,7 +51,7 @@ const PostComment = objectType({
   },
 })
 
-const PostMutations = extendType({
+const CommentMutations = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('createThread', {
@@ -468,5 +468,5 @@ export default [
   Thread,
   Comment,
   PostComment,
-  PostMutations,
+  CommentMutations,
 ]

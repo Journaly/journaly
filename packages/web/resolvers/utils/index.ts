@@ -353,17 +353,19 @@ export const createNotification = (
   return db.pendingNotification.create({ data })
 }
 
-export const assignBadge = (
+export const assignBadge = async (
   db: PrismaClient,
   userId: number,
   badge: BadgeType,
 ): Promise<void> => {
-  return db.userBadge.createMany({
+  await db.userBadge.createMany({
     data: [
       { type: badge, userId, }
     ],
     skipDuplicates: true
   })
+
+  return
 }
 
 export * from './email'

@@ -108,6 +108,10 @@ const getBadgeName = (badgeType: BadgeType): string => {
       return '100 Posts'
     case BadgeType.CODE_CONTRIBUTOR:
       return 'Code Contributor'
+    case BadgeType.NECROMANCER:
+      return 'Necromancer'
+    case BadgeType.ODRADEK:
+      return 'Odradek'
   }
 
   return assertUnreachable(badgeType)

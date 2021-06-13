@@ -15,6 +15,7 @@ import {
 import {
   hasAuthorPermissions,
   createNotification,
+  assignBadge,
 } from './utils'
 import { NotFoundError } from './errors'
 
@@ -229,15 +230,11 @@ const CommentMutations = extendType({
           thread.post.author.id !== userId &&
           isPast(add(thread.post.createdAt, { weeks: 1 }))
         ) {
-          await ctx.db.userBadge.createMany({
-            data: [
-              {
-                type: BadgeType.NECROMANCER, 
-                userId,
-              }
-            ],
-            skipDuplicates: true
-          })
+          await assignBadge(
+            ctx.db,
+            userId,
+            BadgeType.NECROMANCER
+          )
         }
 
         return comment

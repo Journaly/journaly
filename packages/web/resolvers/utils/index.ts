@@ -10,6 +10,7 @@ import {
   PostComment,
   CommentThanks,
   PostClap,
+  BadgeType,
 } from '@journaly/j-db-client'
 
 
@@ -350,6 +351,19 @@ export const createNotification = (
   }
 
   return db.pendingNotification.create({ data })
+}
+
+export const assignBadge = (
+  db: PrismaClient,
+  userId: number,
+  badge: BadgeType,
+): Promise<void> => {
+  return db.userBadge.createMany({
+    data: [
+      { type: badge, userId, }
+    ],
+    skipDuplicates: true
+  })
 }
 
 export * from './email'

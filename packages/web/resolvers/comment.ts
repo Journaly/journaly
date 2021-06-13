@@ -4,8 +4,13 @@ import {
   objectType,
   extendType,
 } from 'nexus'
+import { add, isPast } from 'date-fns'
 
-import { User, NotificationType } from '@journaly/j-db-client'
+import {
+  User,
+  NotificationType,
+  BadgeType,
+} from '@journaly/j-db-client'
 
 import {
   hasAuthorPermissions,
@@ -218,6 +223,22 @@ const CommentMutations = extendType({
         })
 
         await Promise.all(promises)
+
+        // Check to see if we should assign a badge
+        if (
+          thread.post.author.id !== userId &&
+          isPast(add(thread.post.createdAt, { weeks: 1 }))
+        ) {
+          await ctx.db.userBadge.createMany({
+            data: [
+              {
+                type: BadgeType.NECROMANCER, 
+                userId,
+              }
+            ],
+            skipDuplicates: true
+          })
+        }
 
         return comment
       },

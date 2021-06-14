@@ -63,7 +63,7 @@ const LoginForm: React.FC = () => {
                 message: `${t('emailValidationErrorMessage')}`,
               },
             })}
-            data-test="email"
+            data-testid="email"
           />
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>
@@ -77,7 +77,7 @@ const LoginForm: React.FC = () => {
               required: `${t('passwordRequiredErrorMessage')}`,
               minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
             })}
-            data-test="password"
+            data-testid="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>

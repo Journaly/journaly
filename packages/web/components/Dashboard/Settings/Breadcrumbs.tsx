@@ -15,7 +15,7 @@ const Breadcrumbs: React.FC = () => {
   }
 
   return (
-    <h1 className="breadcrumbs">
+    <h1 className="breadcrumbs" data-testid="settiings-breadcrumbs">
       <span>
         {t('breadcrumbs.settings')}
         <span className="separator">&gt;</span>

@@ -1,8 +1,10 @@
+import "cypress-localstorage-commands"
+
 // -- This is a parent command --
 // Cypress.Commands.add("login", (email, password) => { ... })
 Cypress.Commands.add('login', () => {
-  cy.get('[data-test=email]').type('j@n.com')
-  cy.get('[data-test=password]').type('password{enter}')
+  cy.get('[data-testid=email]').type('j@n.com')
+  cy.get('[data-testid=password]').type('password{enter}')
   cy.url().should('include', '/dashboard/my-feed')
 })
 
@@ -24,9 +26,9 @@ Cypress.Commands.add('login', () => {
 // })
 
 Cypress.Commands.add('signup', () => {
-  cy.get('[data-test=display-name]').type('smartest_man_in_westeros_91')
-  cy.get('[data-test=email]').type('tyri@n.com')
-  cy.get('[data-test=password]').type('password{enter}')
+  cy.get('[data-testid=display-name]').type('smartest_man_in_westeros_91')
+  cy.get('[data-testid=email]').type('tyri@n.com')
+  cy.get('[data-testid=password]').type('password{enter}')
   cy.url().should('include', '/dashboard/my-feed')
 })
 

@@ -12,6 +12,18 @@ describe('Runs the app and makes sure everything is up', () => {
     cy.visit('/dashboard/my-feed')
     cy.get('[data-testid=my-feed-header]')
   })
+  it('Loads a post', () => {
+    cy.visit('/dashboard/my-feed')
+    cy.get('[data-testid=my-feed-post-card]')
+      .first()
+      .then(($post) => {
+        const postUrl = $post.attr("href")
+        cy.get('[data-testid=my-feed-post-card]')
+          .first()
+          .click()
+        cy.url().should('include', postUrl)
+      })
+  })
   it('Navigates to the My Posts page', () => {
     cy.visit('/dashboard/my-feed')
     cy.get('[data-testid=my-posts-nav-link]').click()

@@ -187,7 +187,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             <Button
               type="submit"
               variant={ButtonVariant.Primary}
-              data-test="post-submit"
+              data-testid="post-submit"
               loading={saving}
               onClick={handlePublishClick}
             >
@@ -197,7 +197,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             <Button
               type="submit"
               variant={ButtonVariant.Secondary}
-              data-test="post-draft"
+              data-testid="post-draft"
               loading={saving}
               onClick={handleDraftClick}
             >

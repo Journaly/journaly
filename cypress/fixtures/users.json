@@ -1,0 +1,52 @@
+{
+  "users": [
+    {
+      "id": 9,
+      "name": "Robin MacPherson",
+      "email": "robin@journaly.com",
+      "handle": "robin",
+      "userRole": "ADMIN",
+      "bio": null,
+      "createdAt": "2020-07-29T04:07:56.139Z",
+      "updatedAt": "2021-06-01T17:17:30.284Z",
+      "profileImage": "https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/4613c5cf-0b4b-411f-8eea-07dd35ac428d-large",
+      "city": null,
+      "country": null,
+      "stripeCustomerId": "cus_JDWRVEMoH9bADS",
+      "moosendSubscriberId": null,
+      "lastFourCardNumbers": null,
+      "cardBrand": null,
+      "auth": {
+        "id": 9,
+        "userId": 9,
+        "password": "$2a$10$1xYAYpsixYF82WfEvYNDoe2/azj94DokQziCA2lO/5gejrsEKHlqW",
+        "resetToken": null,
+        "resetTokenExpiry": null
+      }
+    },
+    {
+      "id": 6088,
+      "name": null,
+      "email": "j@n.com",
+      "handle": "jsnow",
+      "userRole": "USER",
+      "bio": null,
+      "createdAt": "2021-06-14T10:43:32.756Z",
+      "updatedAt": "2021-06-14T10:43:32.757Z",
+      "profileImage": null,
+      "city": null,
+      "country": null,
+      "stripeCustomerId": null,
+      "moosendSubscriberId": null,
+      "lastFourCardNumbers": null,
+      "cardBrand": null,
+      "auth": {
+        "id": 2,
+        "userId": 6088,
+        "password": "$2a$10$1UDD5j306CVQ2agXC.CCL.CXCSMvmCohXz.eNCCIowRyv15IetKgC",
+        "resetToken": null,
+        "resetTokenExpiry": null
+      }
+    }
+  ]
+}

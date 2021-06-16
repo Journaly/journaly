@@ -1,0 +1,249 @@
+{
+  "__typename": "PostPage",
+  "posts": [
+    {
+      "__typename": "Post",
+      "id": 9,
+      "title": "我開始看我的第一本中文書",
+      "body": "<p >一般，我非常喜歡看書！可是，看外語的書是這麼特別的感覺！</p><p ></p><h2 >我第一本的中文書</h2><p ></p><p >昨天早上，我開始了看我的底本中文書。不是 “正常“ 的書。這本書是只用300個漢字被寫的，可是這麼好了！書叫 “安末“， 是一個適應。本來的故事叫 “Emma“ 的 Jane Austin。對我來說，不是很容易，可是也不是很難。這麼正確的！</p><p ></p><p >我記得我的看法語的書的經驗，我很固執！我一直試試看給母語人的小說，可是這麼難～！我學日文的時候也一樣。</p><p >所以，我很開心有這些簡單的中文故事。</p><p ></p><h2 >培養看書的日常的習慣</h2><p ></p><p >昨天，吃午飯的時候，我很想看有點多故事，我讀完第一章。今天早上，我做了一杯咖啡，一邊喝咖啡一邊看第二章。我很喜歡這個感覺，很想培養看書的日常的習慣！</p>",
+      "excerpt": "一般，我非常喜歡看書！可是，看外語的書是這麼特別的感覺！ 昨天早上，我開始了看我的底本中文書。不是 “正常“ 的書。這本書是只用300個漢字被寫的，可是這麼好了！書叫 “安末“， 是一個適應。本來的故事叫 “Emma“ 的 Jane Austin。對我來說，不是很容易，可是也不是很難。這麼正確的！ 我記得我的看法語的書的經驗，我很固執！我一直試試看給母語人的小說，可是這麼難～！我學日文的時候也一樣",
+      "readTime": 0,
+      "createdAt": "2020-07-30T16:29:57.074Z",
+      "publishedAt": "2020-07-30T16:29:57.074Z",
+      "publishedLanguageLevel": "INTERMEDIATE",
+      "commentCount": 24,
+      "status": "PUBLISHED",
+      "headlineImage": {
+        "__typename": "HeadlineImage",
+        "id": 4992,
+        "smallSize": "https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small"
+      },
+      "claps": [{ "__typename": "PostClap", "id": 4 }],
+      "author": {
+        "__typename": "User",
+        "id": 9,
+        "name": "Robin MacPherson",
+        "handle": "robin",
+        "profileImage": "https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/4613c5cf-0b4b-411f-8eea-07dd35ac428d-large"
+      },
+      "language": { "__typename": "Language", "id": 8, "name": "中文", "dialect": null }
+    },
+    {
+      "__typename": "Post",
+      "id": 5837,
+      "title": "Estudar Sete Linguas ao Mesmo Tempo??",
+      "body": "<p >Temo que estou aprendendo demasiadas linguas ao mesmo tempo. En concreto, agora mesmo estudo sete linguas todos os días: galego, chino, ruso, alemán, xaponés, húngaro e támil. Eu sei que é unha loucura, mais non me atrevo a abandonar ningunha delas! Teño razóns por querer aprender cada unha. E por agora, teño o tempo libre para facelo. </p><p ></p><p >Mais o certo é que co programa de aprendizaxe que estou seguindo agora, non teño tempo para moito máis na miña vida. Eu tento limitar os meus estudos ás horas da mañá e deixar a tarde libre para facer outras cousas, mais case nunca consígoo.</p><p ></p><p ><strong>Obxectivo: Acadar un Nivel Avanzado</strong></p><p ></p><p >Galego é o meu foco primario, así que ademais de meu tempo de estudo pola mañá, tamén mergullo en contidos en galego durante o resto do día na medida que sexa posible. Namentres corro ou lavo a louza, escoito falangullos en galego. E pola noite antes de deitarme, miro programas de televisión e leo libros en galego.</p><p ></p><p >Con respecto ás outras seis linguas, dedico entre 15 e 30 minutos por día a cada unha. Xa falo o chino e o xaponés a un nivel intermedio, e por agora tento só mantelos a máis ou menos o mesmo nivel. No futuro, despois de acadar un nivel bastante avanzado en galego (C1 ou por aí), o chino e despois o ruso serán os meus novos focos. </p><p ></p><p >Entón mergullarei en contidos chinos durante meu tempo libre ata alcanzar un nivel avanzado de chino. No pasado, eu pensaba que tivese xa alcanzado este nivel, mais enganeime. Mesmo que eu sempre era a mellor alumna da clase e superei o exame HSK 6 (o máis alto de todos os seis niveis), tanto a miña comprensión como a miña habilidade de expresarme eran moito por baixo do que eu acadara nas linguas románicas que estudara.</p><p ></p><p >Esta vez, meu obxectivo non é de superar ningún exame, porque non coido que os exames deste tipo sexan unha boa maneira de medir habilidades nunha lingua. En vez disto, meu obxectivo será de poder ler un libro en chino o mirar un programa de televisión en chino como un divertimento. Quero poder consumir contidos en chino como unha maneira de relaxarme, como xa fago agora en galego.</p><p ></p><p >E entón, continuarei o mesmo proceso co ruso, e despois co xaponés. Eu sei que este proceso vai demorar anos, mais son moi resolta e creo que podo facelo. A idea é que, unha vez que acado un nivel suficientemente avanzado nestas linguas, xa non será preciso estudalos todos os días. Isto é o caso co francés ou o castelán, por exemplo. Non fago ningún esforzo por practicar estas linguas, mais mesmo así non as esquezo, porque xa as falo a un nivel avanzado. Pola contra, cando parei de estudar o chino, esquecín moito.</p><p ></p><p ><strong>Obxectivo Non Determinado</strong></p><p ></p><p >Ao respecto ás outras tres linguas que estou estudando agora - o húngaro, o támil e o alemán - non sei se vou continuar con elas ata acadar esta mesma nivel. No caso do húngaro e do támil, probablemente non. Empecei a aprendelos porque teño viaxes a Hungría e a Sri Lanka planeadas, e sempre gústame aprender un pouco da lingua local de meu destino. Mais é moi posible que mesmo despois desas viaxes non vou querer parar. Xa veremos.</p><p ></p><p >No que concirne o alemán, case non foi unha decisión consciente da miña parte aprendela, a verdade. As miñas razóns por querer aprender o alemán son ben máis tenues cas miñas razóns por aprender as outras linguas do que xa falei. O certo é que non me sinto moi atraída nin polos sons da lingua nin pola cultura (pido desculpas aos meus amigos e lectores alemáns!!). </p><p ></p><p >Pero son de descendencia alemá, e teño parentes en Alemaña con quen gustaríame comunicar. Outro factor é que hai tantos recursos excelentes para aprender alemán, os cales non son dispoñibles para outras linguas coma o húngaro ou o támil. De maneira que empecei a empregar algúns recursos só por curiosidade, e foron tan divertidos que non quería parar. </p><p ></p><p >Aínda non dixen ao meu marido que estou aprendendo alemán. Vou gardar o segredo o máis tempo posible, e sorprendelo un día cando teña a oportunidade de falar. Probablemente non é unha boa razón por aprender unha lingua, mais sería moi chistoso!</p><p ></p>",
+      "excerpt": "Temo que estou aprendendo demasiadas linguas ao mesmo tempo. En concreto, agora mesmo estudo sete linguas todos os días: galego, chino, ruso, alemán, xaponés, húngaro e támil. Eu sei que é unha",
+      "readTime": 4,
+      "createdAt": "2021-03-18T16:21:41.991Z",
+      "publishedAt": "2021-03-18T18:09:11.810Z",
+      "publishedLanguageLevel": "ADVANCED",
+      "commentCount": 0,
+      "status": "PUBLISHED",
+      "headlineImage": {
+        "__typename": "HeadlineImage",
+        "id": 2734,
+        "smallSize": "https://d2ieewwzq5w1x7.cloudfront.net/post-image/78f6ee4d-8d6d-4976-9b7f-94e0d2743239-small"
+      },
+      "claps": [],
+      "author": {
+        "__typename": "User",
+        "id": 186,
+        "name": "Wendy",
+        "handle": "nomadicvegan",
+        "profileImage": "https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/da069889-22f6-4fe9-89b8-e2ee3198245e-large"
+      },
+      "language": { "__typename": "Language", "id": 97, "name": "Galego", "dialect": null }
+    },
+    {
+      "__typename": "Post",
+      "id": 5840,
+      "title": "Bør barn begynne i barnehagen når de ett år gamle?",
+      "body": "<p >I nåtidens Norge alle famillier har rett til barnehageplass. De fleste av dem utnytter det som fører til at rundt 84 prosent av barna begynner i barnehagen når de er ett år gamle. Der tilbringer barna tiden med hverandre, og blir opptatt av  varierte aktiviteter som tilbys av voksne. Når det er sagt, finnes det fremdeles mange som går glipp av barnehagen, og akkurat det vekker en stor bekymring i samfunnet.</p><p >Jeg mener at alle barn bør begynne i barnahagen når de blir ett år gamle. For det første, de får mye glede av å være med andre barn fordi de har flere muligheter blant annet til å leke, synge eller tegne sammen. For det andre, der kan de bruke tid til å kommunisere med jevnaldrende, og nettopp det er med å utvikle såkalte sosiale antenner. Sist, men ikke minst, de fleste forskere er enige i at de første årene er de viktigste når det kommer til barns utvikling, spesielt med tanke på sosiale og kognitive evner. Jo mer man klarer å aktivere hjernen ved å øke nysgjerrigheten med ulike aktiviteter, jo bedre er det for barnas helse og utvikling.</p><p >På den andre siden, det er fortsatt en god del famillier som holder barna sine hjemme av forskjellige grunner. Som regel sies det at barnehagen er for dyr, de ikke har råd til det, og dermed har ikke noe annet valg enn å oppdrage barna hjemme. Det er kanskje ikke en stor feil, spesielt hvis man er flink til å oppdrage barna sine alene. Men jeg mener likevel at det å sende dem i barnehagen som snart som mulig er mye bedre for de får rikere og mer varierte tilbudet på ulike aktiviteter.</p><p >Avslutningsvis, jeg mener at det er fint at de fleste av barna begynner i barnehagen når de er ett år gamle, og etter min syn alle famillien bør benytte den retten.</p><p ></p><p ><em>Denne stilen er en del av min forberedelse til skriftlig delen av B2 norskprøven og ble skrivet i løpet av 90 minutter.</em></p>",
+      "excerpt": "I nåtidens Norge alle famillier har rett til barnehageplass. De fleste av dem utnytter det som fører til at rundt 84 prosent av barna begynner i barnehagen når de er ett år gamle. Der tilbringer",
+      "readTime": 2,
+      "createdAt": "2021-03-18T17:38:05.458Z",
+      "publishedAt": "2021-03-18T17:38:05.454Z",
+      "publishedLanguageLevel": "INTERMEDIATE",
+      "commentCount": 0,
+      "status": "PUBLISHED",
+      "headlineImage": {
+        "__typename": "HeadlineImage",
+        "id": 2735,
+        "smallSize": "https://d2ieewwzq5w1x7.cloudfront.net/post-image/0c0baf0c-6c9c-452c-ad51-48b050bd8c94-small"
+      },
+      "claps": [{ "__typename": "PostClap", "id": 5 }],
+      "author": {
+        "__typename": "User",
+        "id": 6072,
+        "name": "Gytis",
+        "handle": "Gytis",
+        "profileImage": "https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/5f02706e-8610-4f3b-95b1-0c750887526c-large"
+      },
+      "language": { "__typename": "Language", "id": 25, "name": "Norwegian", "dialect": null }
+    },
+    {
+      "__typename": "Post",
+      "id": 5839,
+      "title": "About data on crime",
+      "body": "<p >2019 European data of Crime and Criminal Justice must be published soon. There are different collections of data: offences (police data), intentional homicide and sexual offences,  persons in the crime systems (suspected, prosecuted, convicted), court processes, prisoners.</p><p ></p><p >All data are published with different breakdowns. </p><p ></p><p >Crimes are categorized with the International Classification for Statistical Purposes, that is a classification developed by the United Nations Office for Crime and Drugs and spread in several countries with the auspicious that it will be even more embedded in the judiciary systems. </p><p ></p><p >I expect still some problems in the accounting methodologies, due to the differences in judiciary sistems and due to the fact that the case management systems are made for administrative purposes and not for statistical ones. </p><p ></p><p >For example If I look to Italian data, I see the lowest ratio of crime per inhabitants or a low ratio of persons convicted but on the other side I see a very high ratio of judicial criminal procedings per inhabitants. This fatct can imply different account methodologies in same variables. To overcome this problem a solution could be to make clusters of countries who have the same accounting methodologies and to compare only countries into the clusters. </p>",
+      "excerpt": "2019 European data of Crime and Criminal Justice must be published soon. There are different collections of data: offences (police data), intentional homicide and sexual offences, persons in the",
+      "readTime": 1,
+      "createdAt": "2021-03-18T17:06:47.413Z",
+      "publishedAt": "2021-03-18T17:06:47.410Z",
+      "publishedLanguageLevel": "INTERMEDIATE",
+      "commentCount": 0,
+      "status": "PUBLISHED",
+      "headlineImage": {
+        "__typename": "HeadlineImage",
+        "id": 2733,
+        "smallSize": "https://d2ieewwzq5w1x7.cloudfront.net/post-image/26df0bcc-e3f8-4d65-b2fa-d803c3225558-small"
+      },
+      "claps": [],
+      "author": {
+        "__typename": "User",
+        "id": 5650,
+        "name": "",
+        "handle": "Naima",
+        "profileImage": null
+      },
+      "language": { "__typename": "Language", "id": 7, "name": "English", "dialect": null }
+    },
+    {
+      "__typename": "Post",
+      "id": 5838,
+      "title": "Public Works Are Still Of Current Events",
+      "body": "<p >Hi all!</p><p ></p><p >Today I&#39;d like talking about public works. I noticed there has been a lot of projects resulted since last year. So, I think they are still of current events. In spite of the pandemia, I&#39;ve seen that public works hasn&#39;t stopped.</p><p ></p><p >The other day, I came back to a city that I haven&#39;t ever seen for several months perhaps one year and the landscape has really changed. That was like if I discovered a new city for the first time.</p><p ></p><p >There were new buildings and new appartments I&#39;d guess. The thing that surprised me the most was roads. They have been redefined in order to let bus get through. In fact, there is another way now only reserved for buses that it didn&#39;t exist before.</p><p ></p><p >Once projects are ended, it&#39;s good because I think it will allow to fluidize traffic and maybe avoid traffic jam. However, when public works are in progress, that slows down. Therefore, a lot of traffic jams ensue. But that&#39;s the prize to pay.</p><p ></p><p >When constructions are big, you may notice construction machines and sometimes site cranes. They are huge. That&#39;s really impressive. They are able to raise a lot of weight. That&#39;s why they are used instead of backhoe loaders. The other reason might be due to the height.</p><p ></p><p >That&#39;s all for this post. Thanks for reading this.</p>",
+      "excerpt": "Hi all! Today I'd like talking about public works. I noticed there has been a lot of projects resulted since last year. So, I think they are still of current events. In spite of the pandemia, I've",
+      "readTime": 1,
+      "createdAt": "2021-03-18T16:28:44.807Z",
+      "publishedAt": "2021-03-18T16:34:29.257Z",
+      "publishedLanguageLevel": "INTERMEDIATE",
+      "commentCount": 23,
+      "status": "PUBLISHED",
+      "headlineImage": {
+        "__typename": "HeadlineImage",
+        "id": 2732,
+        "smallSize": "https://d2ieewwzq5w1x7.cloudfront.net/post-image/a388b15a-6bb6-4ffd-b6e3-a92fdfbb7568-small"
+      },
+      "claps": [],
+      "author": {
+        "__typename": "User",
+        "id": 1259,
+        "name": null,
+        "handle": "Michael33",
+        "profileImage": "https://res.cloudinary.com/journaly/image/upload/v1609498827/journaly/pnm4i4lgwqpavcuy2j4c.jpg"
+      },
+      "language": { "__typename": "Language", "id": 7, "name": "English", "dialect": null }
+    },
+    {
+      "__typename": "Post",
+      "id": 5786,
+      "title": "Nový jazyk - nový človek",
+      "body": "<p ></p><p >Toto je môj úplne prvý post po slovensky. Zvičájne sa mi nepáčia posty, ktoré sa začínajú slovami &quot;Ja som blablabla a učím sa po slovensky&quot;. Preto som sa rozhodol napísať o tom, <em>prečo</em> sa učím po slovensky. </p><p ></p><p >Každý večer, keď idem spať, veľmi rád pozerám videá v cudzích jazykoch. Pred dvoma mesiacmi som pozeral video s niekoľkými chlapmi, ktorí išli do sauny, ktorá sa nachádza uprostred lesa na Slovensku. Na moje prekvapenie som pochopil asi 50% všetkého, čo jeden z nich hovoril. (Ostatní dvaja sa rozprávali, akoby mali v ústach zemiak, a veľmi rýchlo.)  Fakt, že už viem po rusky mi pomohol, som si istý. Vždy som sa chcel naučiť ďalší slovanský jazyk a tento sa ľahko vyslovuje a rozumie.</p><p ></p><p >Hneď som si kúpil knihu a už na druhý deň som začal študovať slovenčinu. V tom čase som sa tiež rozhodol, že sa nebudem snažiť rozprávať po slovensky prvé dva mesiace, lebo som niekde čítal, že je lepšie počúvať a čítať nový jazyk a potom rozprávať, ako dieťa. Preto teraz tiež čítam Hobit po slovensky a každý deň počúvam podcast kým sa v parku prechádzam.</p><p ></p><p >Mimochodom, ten chalan, ktorý vo videu hovoril tak pekne, nebol nikto iný ako PPPeter - možno ho poznáte 😉 </p><p ></p><p ></p>",
+      "excerpt": " Toto je môj úplne prvý post po slovensky. Zvičájne sa mi nepáčia posty, ktoré sa začínajú slovami \"Ja som blablabla a učím sa po slovensky\". Preto som sa rozhodol napísať o tom, prečo sa učím po",
+      "readTime": 1,
+      "createdAt": "2021-03-17T20:48:51.114Z",
+      "publishedAt": "2021-03-18T15:03:01.207Z",
+      "publishedLanguageLevel": "BEGINNER",
+      "commentCount": 0,
+      "status": "PUBLISHED",
+      "headlineImage": {
+        "__typename": "HeadlineImage",
+        "id": 2731,
+        "smallSize": "https://d2ieewwzq5w1x7.cloudfront.net/post-image/32f73a22-63e4-4d5b-b891-fa1c4610afbd-small"
+      },
+      "claps": [],
+      "author": {
+        "__typename": "User",
+        "id": 1392,
+        "name": "",
+        "handle": "CocoPop",
+        "profileImage": "https://res.cloudinary.com/journaly/image/upload/v1610809641/journaly/wac4gfwsia2or6kolfqm.png"
+      },
+      "language": { "__typename": "Language", "id": 91, "name": "Slovenčina", "dialect": null }
+    },
+    {
+      "__typename": "Post",
+      "id": 5836,
+      "title": "Haluatko pelata peliä?",
+      "body": "<p >Hei! Mun nimi on Cassandra ja asun Yhdysvalloissa. Aloin opiskella suomea noin neljä vuotta sitten. En opiskellut usein alussa. Otin monia taukoja. 2019, paransin enemmän kuin muita vuosia koska mä kuuntelin ännitteitä, kirjoitin päiväkirjassani, jä opiskelin kielioppia että mä tein väärin. 2020ssa, talvella, aloin lukea mun ensimmäistä suomenkielen kirjaa.\n\nSilti, hyödyllisemmin asia jonka mä tein oli oppia pelata lautapelejä suomeksi. Mun puolisoni on suomalainen ja puhuu suomea ja englantia. Hän auttoi minua luetteloida ja kääntää lauseita, verbejä, ja substantiivia että mä tarvitsen pelata peliä hänen kanssa.\n\nHyödyllisin peli oli Pandemic koska pelaajat keskustelevat usein ja käytävät samanlaisia lauseita. Mun Pandemic on minun tabletissa. Pelissä, pelaajat työskentelevät yhdessä pysäyttää virusta ennen kuin liaan monia taudin purkauksia tapahtuu. Lauset on kuin &quot;Kuinka monta punaista korttia sinulla on?&quot;, &quot;Voin antaa sinulle punainen kortin&quot;, &quot;Me voimme tavata Virossa&quot;, &quot;Meidän täytyy mennä Sao Paulo&quot; ja muita lausetta matkustamisesta, väristä, ottamisesta, antamisesta, omaamisesta, ja muista alkuperäisestä toimista.\n\nEn ole pelaanut peliä pitkään, mutta se on hyvä muisto. Joskus oli liian väsynyt pelata. Haluan pelata netissä toisten suomalaisten kanssa.</p>",
+      "excerpt": "Hei! Mun nimi on Cassandra ja asun Yhdysvalloissa. Aloin opiskella suomea noin neljä vuotta sitten. En opiskellut usein alussa. Otin monia taukoja. 2019, paransin enemmän kuin muita vuosia koska mä",
+      "readTime": 1,
+      "createdAt": "2021-03-18T13:50:51.684Z",
+      "publishedAt": "2021-03-18T13:50:51.622Z",
+      "publishedLanguageLevel": "INTERMEDIATE",
+      "commentCount": 0,
+      "status": "PUBLISHED",
+      "headlineImage": {
+        "__typename": "HeadlineImage",
+        "id": 5425,
+        "smallSize": "https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small"
+      },
+      "claps": [],
+      "author": {
+        "__typename": "User",
+        "id": 5874,
+        "name": "",
+        "handle": "CassLovesBooks",
+        "profileImage": "https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/9618f086-13e6-4a0c-875a-7a64749ac798-large"
+      },
+      "language": { "__typename": "Language", "id": 27, "name": "Finnish", "dialect": null }
+    },
+    {
+      "__typename": "Post",
+      "id": 5834,
+      "title": "Mi experiencia con la idioma Francés",
+      "body": "<p >En este momento yo aprendido FraFrancés.Micés.Francés. i encencaencaencencanta la ido ma y quiero hablar con mi madre. Yo practico Francés usando journaly, duolingduolingo, y corre Brezak French. co</p>",
+      "excerpt": "En este momento yo aprendido FraFrancés.Micés.Francés. i encencaencaencencanta la ido ma y quiero hablar con mi madre. Yo practico Francés usando journaly, duolingduolingo, y corre Brezak French. co",
+      "readTime": 0,
+      "createdAt": "2021-03-18T13:04:06.672Z",
+      "publishedAt": "2021-03-18T13:04:06.668Z",
+      "publishedLanguageLevel": "INTERMEDIATE",
+      "commentCount": 2,
+      "status": "PUBLISHED",
+      "headlineImage": {
+        "__typename": "HeadlineImage",
+        "id": 5404,
+        "smallSize": "https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small"
+      },
+      "claps": [],
+      "author": {
+        "__typename": "User",
+        "id": 1868,
+        "name": "Livvy",
+        "handle": "Livvy-bird",
+        "profileImage": null
+      },
+      "language": { "__typename": "Language", "id": 11, "name": "Español", "dialect": null }
+    },
+    {
+      "__typename": "Post",
+      "id": 5833,
+      "title": "Reading Experiences",
+      "body": "<p ><strong>Reading Experiences</strong></p><p ></p><p >At the moment I&#39;ve read 19% of the book &quot;The Shadow of the Wind&quot; and  I&#39;d like to share my experiences with you.</p><p >When I started, my strategy was to read every chapter first in Italian (this is the real work, because I&#39;m only a low B1 there) and then in English (which is easier for me) and to listen to the audio in Italian afterwards. Doing it this way just took ages. I rather often checked Italian words and then realized that  I actually already knew them.</p><p >Now this week I changed the order and I am reading English first. The funny thing is, after knowing where the story goes, I don&#39;t have to check as many Italian words. It&#39;s as if the words I already know are now there. I still check every word I don&#39;t know, but now the words I check really are new words. So this way it&#39;s faster and I think, as far as learning is concerned, it might not be worse. </p><p >Another thing I realized is that I quite like it to listen to the audiobook while reading the book. This was surprising for me, because I&#39;ve never liked audiobooks. I can&#39;t listen to them while I do something else. It&#39;s as if I have a one-task-mind and if I try to do two things at the same time I have to switch between tasks and this is rather exhausting. But to listen to the audio while reading the text in the same language (which is no double input, but only twice the same input in a different format) is something I really like. </p><p >As far as reading is concerned I&#39;m normally a bit impatient. I like to jump into a story and then to be in a constant reading flow. So this slow pace with looking-up interruptions and reading the same text multiple times is a new experience. I had feared I just could not gather enough patience to really do it, but the longer I keep doing it, the more I get used to it. </p><p >So there is hope that I might finish this book some day.</p>",
+      "excerpt": "Reading Experiences At the moment I've read 19% of the book \"The Shadow of the Wind\" and I'd like to share my experiences with you. When I started, my strategy was to read every chapter first in",
+      "readTime": 2,
+      "createdAt": "2021-03-18T11:51:56.328Z",
+      "publishedAt": "2021-03-18T12:02:22.121Z",
+      "publishedLanguageLevel": "ADVANCED",
+      "commentCount": 41,
+      "status": "PUBLISHED",
+      "headlineImage": {
+        "__typename": "HeadlineImage",
+        "id": 2730,
+        "smallSize": "https://d2ieewwzq5w1x7.cloudfront.net/post-image/c0d609c1-0f63-4f9a-99de-bee37c160907-small"
+      },
+      "claps": [],
+      "author": {
+        "__typename": "User",
+        "id": 2121,
+        "name": "",
+        "handle": "CloudyDe",
+        "profileImage": "https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/8ed23f47-e59d-4cbe-b4ee-e84045ecae4e-large"
+      },
+      "language": { "__typename": "Language", "id": 7, "name": "English", "dialect": null }
+    }
+  ],
+  "count": 4937
+}

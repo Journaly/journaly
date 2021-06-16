@@ -1,0 +1,16 @@
+{
+  "data": {
+    "loginUser": {
+      "id": 9,
+      "name": "Robin MacPherson",
+      "handle": "robin",
+      "email": null,
+      "bio": null,
+      "userRole": "ADMIN",
+      "profileImage": "https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/4613c5cf-0b4b-411f-8eea-07dd35ac428d-large",
+      "city": null,
+      "country": null,
+      "__typename": "User"
+    }
+  }
+}

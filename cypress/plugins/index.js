@@ -3,10 +3,10 @@
 /**
  * @type {Cypress.PluginConfig}
  */
+const dotenvPlugin = require('cypress-dotenv')
 module.exports = (on, config) => {
-  require('@cypress/code-coverage/task')(on, config)
-  const dotenvPlugin = require('cypress-dotenv')
   config = dotenvPlugin(config)
+  require('@cypress/code-coverage/task')(on, config)
 
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config

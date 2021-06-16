@@ -1,5 +1,6 @@
 {
-    "baseUrl": "http://localhost:3000",
-    "theme": "dark",
-    "darkMediaQuery": true
+  "baseUrl": "http://localhost:3000",
+  "theme": "dark",
+  "darkMediaQuery": true,
+  "video": false
 }

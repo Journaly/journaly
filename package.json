@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "cypress:open": "cypress open",
-    "cypress:test": "cypress run --reporter json"
+    "cypress:test": "cypress run --headless"
   },
   "repository": {
     "type": "git",

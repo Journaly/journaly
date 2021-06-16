@@ -44,7 +44,7 @@ const TabToggle: React.FC<Props> = (props) => {
               }
             }}
             tabIndex={0}
-            data-test={`tab-${key}`}
+            data-testid={`tab-${key}`}
           >
             {text}
           </div>

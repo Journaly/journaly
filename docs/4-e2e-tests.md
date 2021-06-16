@@ -8,14 +8,14 @@ If you're curious about how Cypress is different from other e2e frameworks and w
 
 We also try to follow Cypress [Best Practices](https://docs.cypress.io/guides/references/best-practices.html). Here are a few important ones.
 
-### Use `data-test` attributes for selecting elements
+### Use `data-testid` attributes for selecting elements
 
 This is the best choice in selecting elements because querying by class
 names, HTML attributes, or text can cause tests to fail if any of those
 values change.
 
 ```js
-cy.get('[data-test=submit]').click()
+cy.get('[data-testid=submit]').click()
 ```
 
 If, on the other hand, you want the test to fail if the _text_ of the element changes, then use `cy.contains()`. For example, if your submit button can say either `Submit` or `Save`, and the test should pass or fail based on that text, it is better to use `cy.contains('Submit')` or `cy.contains('Save')`.

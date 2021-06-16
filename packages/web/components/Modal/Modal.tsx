@@ -71,7 +71,7 @@ const Modal: React.FC<Props> = (props) => {
           aria-modal="true"
           aria-labelledby={ariaLabelledBy}
           aria-describedby={ariaDescribedBy}
-          data-test="modal"
+          data-testid="modal"
           onClick={(event: React.MouseEvent) => event.stopPropagation()}
           onSubmit={onFormSubmit}
         >

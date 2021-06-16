@@ -19,6 +19,8 @@ describe('Checks user can log in', () => {
 
 describe('Runs the app and checks all core functionality for loggedd in user', () => {
   beforeEach(() => {
+    // TODO: Intercept these calls so that we aren't making API calls
+    // every time we log in for each test
     // cy.intercept('http://localhost:3000/api/graphql', {
     //   fixture: 'login',
     // })
@@ -58,6 +60,12 @@ describe('Runs the app and checks all core functionality for loggedd in user', (
 })
 
 describe('Runs app and checks sign up functionality', () => {
-  // cy.visit('/dashboard/signup')
-  // cy.signup()
+  it.only('Signs up', () => {
+    cy.visit('/dashboard/signup')
+    // TODO: figure out how we want to handle this
+    cy.signup('123', '1@23.com', 'password')
+    cy.setLocalStorage('welcome-modal-july-2020', 'seen')
+    cy.visit('/dashboard/my-feed')
+    cy.get('[data-testid=my-feed-header]').should('exist')
+  })
 })

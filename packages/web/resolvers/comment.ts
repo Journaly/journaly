@@ -4,12 +4,18 @@ import {
   objectType,
   extendType,
 } from 'nexus'
+import { add, isPast } from 'date-fns'
 
-import { User, NotificationType } from '@journaly/j-db-client'
+import {
+  User,
+  NotificationType,
+  BadgeType,
+} from '@journaly/j-db-client'
 
 import {
   hasAuthorPermissions,
   createNotification,
+  assignBadge,
 } from './utils'
 import { NotFoundError } from './errors'
 
@@ -51,7 +57,7 @@ const PostComment = objectType({
   },
 })
 
-const PostMutations = extendType({
+const CommentMutations = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('createThread', {
@@ -218,6 +224,18 @@ const PostMutations = extendType({
         })
 
         await Promise.all(promises)
+
+        // Check to see if we should assign a badge
+        if (
+          thread.post.author.id !== userId &&
+          isPast(add(thread.post.createdAt, { weeks: 1 }))
+        ) {
+          await assignBadge(
+            ctx.db,
+            userId,
+            BadgeType.NECROMANCER
+          )
+        }
 
         return comment
       },
@@ -468,5 +486,5 @@ export default [
   Thread,
   Comment,
   PostComment,
-  PostMutations,
+  CommentMutations,
 ]

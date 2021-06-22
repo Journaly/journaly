@@ -53,6 +53,14 @@
     "ONEHUNDRED_POSTS": {
       "title": "100 Posts",
       "description": "Published 100 posts. Talk about sticking with it!"
+    },
+    "NECROMANCER": {
+      "title": "Necromancer",
+      "description": "Gave new feedback on a post that's over a week old."
+    },
+    "ODRADEK": {
+      "title": "Odradek",
+      "description": "Did something that has no apparent function."
     }
   },
   "emptyMessage": "Empty...",

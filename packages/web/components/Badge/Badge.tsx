@@ -24,6 +24,10 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
       return 'badge.ONEHUNDRED_POSTS'
     case BadgeType.CodeContributor:
       return 'badge.CODE_CONTRIBUTOR'
+    case BadgeType.Necromancer:
+      return 'badge.NECROMANCER'
+    case BadgeType.Odradek:
+      return 'badge.ODRADEK'
   }
 
   return assertUnreachable(badgeType)

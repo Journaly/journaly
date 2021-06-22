@@ -9,6 +9,7 @@ import {
 
 import {
   processEditorDocument,
+  assignBadge,
   updatedThreadPositions,
   hasAuthorPermissions,
   NodeType,
@@ -527,6 +528,14 @@ const PostMutations = extendType({
               })
             }
           }))
+
+          if (data.body === originalPost.body) {
+            await assignBadge(
+              ctx.db,
+              userId,
+              BadgeType.ODRADEK
+            )
+          }
         }
 
         const languageId = args.languageId  || originalPost.languageId

@@ -394,6 +394,8 @@ enum BadgeType {
   ONEHUNDRED_POSTS
   TEN_POSTS
   CODE_CONTRIBUTOR
+  ODRADEK
+  NECROMANCER
 }
 
 enum NotificationType {

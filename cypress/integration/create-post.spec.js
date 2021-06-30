@@ -23,4 +23,16 @@ describe('New post flow', () => {
     cy.get('[data-testid=post-submit]').click()
     cy.get('[data-testid=new-post-error]').contains('noLanguageError')
   })
+  it('User creates a draft post', () => {
+    // TODO: Write test
+  })
+  it('User creates a post without language selection', () => {
+    // TODO: Write test
+  })
+  it('User creates a post with topics', () => {
+    // TODO: Write test
+  })
+  it('User publishes draft', () => {
+    // TODO: Write test
+  })
 })

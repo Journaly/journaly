@@ -3,4 +3,3 @@ import './commands'
 
 // Plugins
 import 'cypress-dark'
-import '@cypress/code-coverage/support'

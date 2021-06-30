@@ -8,9 +8,7 @@ another user at the call site if needed
  * We deliberately use `cy.request()` as Cypress recommends building up state
 programmatically and not in the UI
  */
-Cypress.Commands.add(
-  'login',
-  (email = 'j@n.com', password = 'password') => {
+Cypress.Commands.add('login', (email = 'j@n.com', password = 'password') => {
   cy.request({
     method: 'POST',
     url: 'http://localhost:3000/api/graphql',
@@ -22,8 +20,8 @@ Cypress.Commands.add(
     },
   }).then((res) => {
     Cypress.log({
-      name: "Logged in",
-      message: res.body
+      name: 'Logged in',
+      message: res.body,
     })
   })
 })

@@ -205,7 +205,11 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             </Button>
           </div>
 
-          {errorMessage && <span className="error-message">{errorMessage}</span>}
+          {errorMessage && (
+            <span className="error-message" data-testid="new-post-error">
+              {errorMessage}
+            </span>
+          )}
 
           <style jsx>{`
             display: flex;
@@ -215,7 +219,6 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             @media (${navConstants.mobileNavOnly}) {
               margin: 0;
             }
-
 
             h1 {
               margin: 50px auto;

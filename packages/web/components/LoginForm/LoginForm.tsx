@@ -81,7 +81,9 @@ const LoginForm: React.FC = () => {
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>
-        <Button type="submit">{t('login.submitButtonText')}</Button>
+        <Button type="submit" dataTestId="login-button">
+          {t('login.submitButtonText')}
+        </Button>
       </fieldset>
       <em>
         {t('goToSignupText')}
@@ -188,7 +190,7 @@ const LoginForm: React.FC = () => {
         :global(.form-error) {
           margin-bottom: 24px;
         }
-        :global(input[name="${fieldErrorName}"]) {
+        :global(input[name='${fieldErrorName}']) {
           border-color: ${theme.colors.red};
         }
       `}</style>

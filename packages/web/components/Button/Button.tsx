@@ -35,6 +35,7 @@ type Props = {
   type?: Type
   variant?: ButtonVariant
   style?: CSS.Properties | undefined
+  dataTestId?: string
 }
 
 const Button: React.FC<Props> = (props) => {
@@ -47,6 +48,7 @@ const Button: React.FC<Props> = (props) => {
     variant = ButtonVariant.Primary,
     type = 'button',
     className = '',
+    dataTestId,
     ...otherProps
   } = props
 
@@ -71,6 +73,7 @@ const Button: React.FC<Props> = (props) => {
       disabled={loading || disabled}
       aria-busy={loading}
       type={type}
+      data-testid={dataTestId}
       {...otherProps}
     >
       {variant === ButtonVariant.Icon ? children : <span className="button-text">{children}</span>}

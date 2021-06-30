@@ -6,10 +6,10 @@ describe('New post flow', () => {
     cy.visit('/dashboard/new-post')
     cy.get('[data-testid=post-title]').type(postTitle)
     // Will fail until DB situation is figured out
-    //cy.get('[data-testid=post-language-select]').select('7')
+    cy.get('[data-testid=post-language-select]').select('7')
     cy.get('[data-testid=post-body]').type('Ramsay really is a bastard.')
     // Will fail until DB situation is figured out
-    // cy.get('[data-testid=post-submit]').click()
+    cy.get('[data-testid=post-submit]').click()
     cy.url().should('include', '/post/')
     cy.contains('h1', postTitle)
   })

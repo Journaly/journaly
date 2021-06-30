@@ -90,6 +90,7 @@ const JournalyEditor = ({
                 })
               },
             ]}
+            data-testid="post-body"
           />
         </Slate>
       </div>

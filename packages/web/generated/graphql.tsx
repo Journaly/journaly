@@ -907,7 +907,7 @@ export type PostPageQueryVariables = Exact<{
 
 export type PostPageQuery = { __typename?: 'Query' } & {
   postById: { __typename?: 'Post' } & PostWithTopicsFragmentFragment
-  currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
+  currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
 export type ProfilePageQueryVariables = Exact<{
@@ -2464,11 +2464,11 @@ export const PostPageDocument = gql`
       ...PostWithTopicsFragment
     }
     currentUser {
-      ...UserWithLanguagesFragment
+      ...CurrentUserFragment
     }
   }
   ${PostWithTopicsFragmentFragmentDoc}
-  ${UserWithLanguagesFragmentFragmentDoc}
+  ${CurrentUserFragmentFragmentDoc}
 `
 
 /**

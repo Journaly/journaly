@@ -797,8 +797,8 @@ const PostMutations = extendType({
 
         hasAuthorPermissions(post, currentUser)
 
-        const canBump = (currentUser.membershipSubscription && currentUser.membershipSubscription.expiresAt < new Date())
-          || currentUser.userRole === (UserRole.ADMIN || UserRole.MODERATOR)
+        const canBump = (currentUser.membershipSubscription && currentUser.membershipSubscription.expiresAt > new Date())
+          || currentUser.userRole === UserRole.ADMIN || currentUser.userRole === UserRole.MODERATOR
 
         if (!canBump) {
           throw new Error("Only Journaly Premium members can access this feature")

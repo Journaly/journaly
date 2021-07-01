@@ -88,19 +88,19 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             </div>
             <div className="nav-bottom">
               <NavLink href="/dashboard/my-feed">
-                <a className="nav-link" onClick={handleCollapse}>
+                <a className="nav-link" onClick={handleCollapse} data-testid="my-feed-nav-link">
                   <FeedIcon aria-hidden="true" />
                   <span className="nav-link-text">{t('dashboardNav.myFeed')}</span>
                 </a>
               </NavLink>
               <NavLink href="/dashboard/my-posts">
-                <a className="nav-link" onClick={handleCollapse}>
+                <a className="nav-link" onClick={handleCollapse} data-testid="my-posts-nav-link">
                   <FeedIcon aria-hidden="true" />
                   <span className="nav-link-text">{t('dashboardNav.myPosts')}</span>
                 </a>
               </NavLink>
               <NavLink href="/dashboard/new-post">
-                <a className="nav-link" onClick={handleCollapse}>
+                <a className="nav-link" onClick={handleCollapse} data-testid="new-post-nav-link">
                   <img src="/images/icons/new-post-icon.svg" alt="" />
                   <span className="nav-link-text">{t('dashboardNav.newPost')}</span>
                 </a>
@@ -109,13 +109,13 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               <hr />
 
               <NavLink href="/dashboard/settings/profile">
-                <a className="nav-link" onClick={handleCollapse}>
+                <a className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
                   <img src="/images/icons/settings-icon.svg" alt="" />
                   <span className="nav-link-text">{t('dashboardNav.settings')}</span>
                 </a>
               </NavLink>
 
-              <a role="button" className="log-out nav-link" onClick={handleLogOut}>
+              <a role="button" className="log-out nav-link" onClick={handleLogOut} data-testid="log-out-nav-link">
                 <img src="/images/icons/logout-icon.svg" alt="Log out" />
                 <span className="nav-link-text">{t('dashboardNav.logOut')}</span>
               </a>
@@ -125,7 +125,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         
         <div className="nav-support">
           { currentUser && (
-            <span role="button" className="help-btn" onClick={() => setShouldShowModal(true)}>
+            <span role="button" className="help-btn" onClick={() => setShouldShowModal(true)} data-testid="help-nav-link">
               <HelpIcon width={30} height={30} />
             </span>
           )}

@@ -29,11 +29,11 @@ const FeedHeader: React.FC<Props> = ({ currentUser }) => {
   return (
     <>
       {rightToLeftLanguages.includes(greetingLanguage) ? (
-        <h1>
+        <h1 data-testid="my-feed-header">
           !{currentUser.name || currentUser.handle} {greetings[greetingLanguage]}
         </h1>
       ) : (
-        <h1>
+        <h1 data-testid="my-feed-header">
           {greetings[greetingLanguage]} {currentUser.name || currentUser.handle}!
         </h1>
       )}

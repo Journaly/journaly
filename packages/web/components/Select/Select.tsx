@@ -25,6 +25,7 @@ type Props<T extends OptionValue> = {
   id?: string
   name?: string
   className?: string
+  dataTestId?: string
 }
 
 /*
@@ -64,6 +65,7 @@ const SelectBase = <T extends OptionValue>(
     id,
     name,
     className,
+    dataTestId,
   }: Props<T>,
   ref: Ref<HTMLSelectElement>,
 ) => {
@@ -83,6 +85,7 @@ const SelectBase = <T extends OptionValue>(
         onChange={handleChange}
         disabled={loading || disabled}
         aria-busy={loading}
+        data-testid={dataTestId}
       >
         <option value="" key={-1}>
           {placeholder}

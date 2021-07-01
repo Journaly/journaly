@@ -31,6 +31,34 @@ jobs:
             - ~/.npm
             - ~/.cache
             - ./packages/web/.next/cache
+  # run-e2e-tests:
+  #   executor: node/default
+  #   docker:
+  #     - image: cypress/base:12
+  #       environment:
+  #         TERM: xterm
+  #   working_directory: ~/repo
+  #   steps:
+  #     - checkout
+  #     - node/install:
+  #         node-version: 14.15.4
+  #         npm-version: 6.14.10
+  #     - restore_cache:
+  #         keys:
+  #           - node-deps-v3-{{ checksum "packages/web/package-lock.json" }}
+  #     - run: 
+  #         name: Installing NPM packages
+  #         command: cd packages/web && npm ci
+  #     - run:
+  #         name: Starting dev server
+  #         command: cd packages/web && npm run dev
+  #         background: true
+  #     - run:
+  #         name: Running E2E tests
+  #         command: npm run cypress:test
+
+
+
   update-translations-site:
     executor: node/default
     steps:
@@ -64,6 +92,7 @@ workflows:
   main:
     jobs:
       - build
+      # - run-e2e-tests
       - update-translations-site:
           filters:
             branches:

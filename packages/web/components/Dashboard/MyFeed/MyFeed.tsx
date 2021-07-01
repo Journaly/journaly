@@ -203,7 +203,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
         </div>
       </div>
       <LoadingWrapper loading={loading} error={error}>
-        <div className="my-feed-container">
+        <div className="my-feed-container" data-testid="my-feed-container">
           {posts && posts.length > 0 ? (
             posts.map((post) => <PostCard key={post.id} post={post} stacked avatar />)
           ) : (

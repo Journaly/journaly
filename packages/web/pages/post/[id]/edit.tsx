@@ -143,7 +143,7 @@ const EditPostPage: NextPage = () => {
             <Button
               type="submit"
               variant={ButtonVariant.Primary}
-              data-test="post-submit"
+              data-testid="post-submit"
               loading={saving}
               onClick={onSaveClick}
             >

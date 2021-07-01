@@ -49,6 +49,7 @@ const WelcomeModal: React.FC = () => {
       }
       footer={<Button onClick={handleClose}>Done</Button>}
       onClose={handleClose}
+      dataTestId="welcome-modal"
     />
   ) : null
 }

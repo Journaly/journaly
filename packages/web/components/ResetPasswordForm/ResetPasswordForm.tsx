@@ -60,7 +60,7 @@ const ResetPasswordForm: React.FC<Props> = ({ resetToken }) => {
               required: `${t('passwordRequiredErrorMessage')}`,
               minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
             })}
-            data-test="password"
+            data-testid="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>
@@ -74,7 +74,7 @@ const ResetPasswordForm: React.FC<Props> = ({ resetToken }) => {
               required: `${t('confirmPasswordRequiredErrorMessage')}`,
               minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
             })}
-            data-test="confirm-password"
+            data-testid="confirm-password"
           />
           <ErrorMessage errors={errors} name="confirmPassword" as="p" />
         </label>

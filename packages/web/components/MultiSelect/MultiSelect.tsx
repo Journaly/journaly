@@ -14,6 +14,7 @@ type Props<T extends OptionValue> = {
   onAdd?: (value: T) => void
   onRemove?: (value: T) => void
   disabled?: boolean
+  dataTestId?: string
 }
 
 /*
@@ -58,6 +59,7 @@ const MultiSelect = <T extends OptionValue>({
   onAdd = () => {},
   onRemove = () => {},
   disabled = false,
+  dataTestId,
 }: Props<T>) => {
   const availableOptions: Option<T>[] = []
   const selectedOptions: Option<T>[] = []
@@ -89,6 +91,7 @@ const MultiSelect = <T extends OptionValue>({
         className="select-field"
         onChange={(value) => onAdd(value)}
         disabled={disabled}
+        dataTestId={dataTestId}
       />
 
       <style jsx>{`

@@ -4,7 +4,8 @@
   "description": "A foreign language journaling platform for exchanging feedback with native or advanced speakers and building community around shared interests and languages.",
   "main": "index.js",
   "scripts": {
-    "cypress:open": "npx cypress open"
+    "cypress:open": "cypress open",
+    "cypress:test": "cypress run --headless"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,12 @@
   },
   "homepage": "https://github.com/Journaly/journaly#readme",
   "devDependencies": {
-    "cypress": "^4.9.0"
+    "cypress": "^7.6.0",
+    "cypress-dark": "^1.7.14",
+    "cypress-dotenv": "^1.2.2",
+    "cypress-localstorage-commands": "^1.4.5",
+    "cypress-log-to-output": "^1.1.2",
+    "cypress-plugin-stripe-elements": "^1.0.1",
+    "dotenv": "^10.0.0"
   }
 }

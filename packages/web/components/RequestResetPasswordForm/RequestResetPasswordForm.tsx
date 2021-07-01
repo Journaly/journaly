@@ -59,7 +59,7 @@ const RequestResetPasswordForm: React.FC = () => {
                 message: `${t('emailValidationErrorMessage')}`,
               },
             })}
-            data-test="email"
+            data-testid="email"
           />
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>

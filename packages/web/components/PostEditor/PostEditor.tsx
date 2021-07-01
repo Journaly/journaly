@@ -166,6 +166,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         autoComplete="off"
         dir="auto"
         disabled={disabled}
+        data-testid="post-title"
       />
 
       <label htmlFor="post-language">{t('languageLabel')}</label>
@@ -176,6 +177,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         onChange={(value) => setLangId(parseInt(value, 10))}
         placeholder={t('languageSelectPlaceholder')}
         disabled={disabled}
+        dataTestId="post-language-select"
       />
 
       <label htmlFor="post-topics">{t('topicsLabel')}</label>
@@ -187,6 +189,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
         onRemove={removeTopic}
         placeholder={t('topicSelectPlaceholder')}
         disabled={disabled || selectedTopics.length >= 5}
+        dataTestId="post-topics-select"
       />
 
       <div className="header-preview-container">

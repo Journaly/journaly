@@ -1,1 +1,7 @@
-{ "baseUrl": "http://localhost:3000" }
+{
+  "baseUrl": "http://localhost:3000",
+  "theme": "dark",
+  "darkMediaQuery": true,
+  "video": false,
+  "screenshotOnRunFailure": false
+}

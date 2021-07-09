@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  journaly_db:
+    image: "postgres"
+    environment:
+      POSTGRES_USER: "developer"
+      POSTGRES_PASSWORD: "journaly"
+      POSTGRES_DB: "journaly_db"
+    volumes:
+      - journaly_db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  
+  journaly:
+    image: 'journaly:latest'
+    depends_on: [journaly_db]
+    build: .
+    command: bash -c "npm -prefix ../j-db-client run migrate:apply && npm run dev"
+    ports: 
+      - "3000:3000"
+
+volumes:
+  journaly_db:

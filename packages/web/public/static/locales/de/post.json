@@ -19,6 +19,7 @@
   "languageLabel": "Sprache",
   "topicsLabel": "Themen",
   "save": "Speichern",
+  "cancel": "Stornieren",
   "finishAction": "Beitrag vervollständigen",
   "noLanguageError": "Bitte eine Sprache auswählen.",
   "emptyTitleError": "Bitte einen Titel eingeben.",
@@ -27,6 +28,10 @@
   "deleteModal": {
     "title": "Beitrag löschen",
     "body": "Bist du sicher, dass du diesen Beitrag löschen möchtest?"
+  },
+  "cancelModal": {
+    "title": "Bearbeiten des Beitrags abbrechen",
+    "body": "Möchten Sie die Bearbeitung dieses Beitrags wirklich abbrechen? Nicht gespeicherter Fortschritt geht verloren."
   },
   "enterUrlPrompt": "Gib die URL des Links ein",
   "websitePatternError": "Ungültiger Webseiten-Link, z. B. DeineDomain.com oder DeineSubdomain.domain.com"

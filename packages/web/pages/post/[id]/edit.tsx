@@ -15,6 +15,7 @@ import theme from '@/theme'
 import Button, { ButtonVariant } from '@/components/Button'
 import { useEditPostQuery, useUpdatePostMutation } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
+import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 import useUILanguage from '@/hooks/useUILanguage'
 import useAuthCheck from '@/hooks/useAuthCheck'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
@@ -26,6 +27,7 @@ const EditPostPage: NextPage = () => {
   const { t } = useTranslation('post')
   const [saving, setSaving] = React.useState<boolean>(false)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [displayCancelModal, setDisplayCancelModal] = React.useState<boolean>(false)
   const uiLanguage = useUILanguage()
 
   const { data: { currentUser, topics, postById } = {} } = useEditPostQuery({
@@ -108,19 +110,15 @@ const EditPostPage: NextPage = () => {
     clear()
     setSaving(false)
     router.push({ pathname: `/post/${postId}` })
-  }, [
-    setSaving,
-    setErrorMessage,
-    dataRef,
-    uploadInlineImages,
-    updatePost,
-    router,
-  ])
+  }, [setSaving, setErrorMessage, dataRef, uploadInlineImages, updatePost, router])
 
-  const onSaveClick = React.useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    savePost()
-  }, [savePost])
+  const onSaveClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      savePost()
+    },
+    [savePost],
+  )
 
   return (
     <AuthGate>
@@ -149,8 +147,30 @@ const EditPostPage: NextPage = () => {
             >
               {t('save')}
             </Button>
+            <Button
+              type="button"
+              variant={ButtonVariant.Secondary}
+              data-test="post-cancel"
+              onClick={(): void => {
+                setDisplayCancelModal(true)
+              }}
+            >
+              {t('cancel')}
+            </Button>
           </div>
           {errorMessage && <span className="error-message">{errorMessage}</span>}
+          <ConfirmationModal
+            onConfirm={(): void => {
+              //TODO Restore our auto-save local storage to the previous state
+              setDisplayCancelModal(false)
+            }}
+            onCancel={(): void => {
+              setDisplayCancelModal(false)
+            }}
+            title={t('cancelModal.title')}
+            body={t('cancelModal.body')}
+            show={displayCancelModal}
+          />
           <style jsx>{`
             #edit-post {
               display: flex;

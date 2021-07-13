@@ -39,7 +39,7 @@ type InputPostData = BasePostData & {
 }
 
 type PostEditorProps = {
-  currentUser: UserType,
+  currentUser: UserType
   autosaveKey: string
   dataRef: React.MutableRefObject<OutputPostData | undefined>
   initialData: InputPostData
@@ -132,13 +132,15 @@ const PostEditor: React.FC<PostEditorProps> = ({
       resetLangId()
     }
 
-    const returnImage = !image ? {
-        largeSize: initialData.headlineImage.largeSize,
-        smallSize: initialData.headlineImage.smallSize,
-      } : {
-        largeSize: image.finalUrlLarge,
-        smallSize: image.finalUrlSmall,
-      }
+    const returnImage = !image
+      ? {
+          largeSize: initialData.headlineImage.largeSize,
+          smallSize: initialData.headlineImage.smallSize,
+        }
+      : {
+          largeSize: image.finalUrlLarge,
+          smallSize: image.finalUrlSmall,
+        }
 
     dataRef.current = {
       title,
@@ -174,7 +176,11 @@ const PostEditor: React.FC<PostEditorProps> = ({
         options={userLanguages}
         value={langId ? langId.toString() : ''}
         onChange={(value) => setLangId(parseInt(value, 10))}
-        placeholder={t('languageSelectPlaceholder')}
+        placeholder={
+          userLanguages.length > 0
+            ? t('languageSelectPlaceholder')
+            : t('languageSelectSettingsPlaceholder')
+        }
         disabled={disabled}
       />
 

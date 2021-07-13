@@ -2,6 +2,7 @@
   "header": "Let's write a post",
   "titlePlaceholder": "The Greatest Story Never Told...",
   "languageSelectPlaceholder": "Select language",
+  "languageSelectSettingsPlaceholder": "Select your first language in settings",
   "topicSelectPlaceholder": "Select up to five topics",
   "uploadImageButtonText": "Upload Image",
   "draft": "draft",

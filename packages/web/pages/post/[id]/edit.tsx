@@ -42,6 +42,18 @@ const EditPostPage: NextPage = () => {
     return currentUser!.id === postById!.author.id
   }, !!(currentUser && postById))
 
+  const handleCancelConfirm = () => {
+    if (!dataRef.current) {
+      return
+    }
+
+    const { clear, resetIntialPostValues } = dataRef.current
+
+    clear()
+    resetIntialPostValues()
+    setDisplayCancelModal(false)
+  }
+
   React.useEffect(() => {
     if (postById) {
       const {
@@ -160,10 +172,7 @@ const EditPostPage: NextPage = () => {
           </div>
           {errorMessage && <span className="error-message">{errorMessage}</span>}
           <ConfirmationModal
-            onConfirm={(): void => {
-              //TODO Restore our auto-save local storage to the previous state
-              setDisplayCancelModal(false)
-            }}
+            onConfirm={handleCancelConfirm}
             onCancel={(): void => {
               setDisplayCancelModal(false)
             }}

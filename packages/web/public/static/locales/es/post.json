@@ -2,6 +2,7 @@
   "header": "Vamos a escribir una publicación",
   "titlePlaceholder": "La gran historia jamás contada...",
   "languageSelectPlaceholder": "Seleccione un idioma",
+  "languageSelectSettingsPlaceholder": "Seleccione su primer idioma en la configuración",
   "topicSelectPlaceholder": "Seleccione hasta cinco temas",
   "uploadImageButtonText": "Subir imagen",
   "draft": "borrador",

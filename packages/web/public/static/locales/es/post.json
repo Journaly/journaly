@@ -19,6 +19,7 @@
   "languageLabel": "Idioma",
   "topicsLabel": "Temas",
   "save": "Guardar",
+  "cancel": "Cancelar",
   "finishAction": "Acabar publicación",
   "noLanguageError": "Por favor seleccione un idioma.",
   "emptyTitleError": "Por favor incerte un título.",
@@ -27,6 +28,10 @@
   "deleteModal": {
     "title": "Eliminar publicación",
     "body": "¿Está seguro de que quiere eliminar esta publicación?"
+  },
+  "cancelModal": {
+    "title": "Cancelar la edición de la publicación",
+    "body": "¿Estás seguro de que deseas cancelar la edición de esta publicación? El progreso no guardado se perderá."
   },
   "enterUrlPrompt": "Incerte el URL del enlace:",
   "websitePatternError": "URL de página web invalido. ej: dominio.com or sub.dominio.com"

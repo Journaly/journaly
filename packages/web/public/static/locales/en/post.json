@@ -22,6 +22,7 @@
   "languageLabel": "Language",
   "topicsLabel": "Topics",
   "save": "Save",
+  "cancel": "Cancel",
   "finishAction": "Finish post",
   "noLanguageError": "Please select a language.",
   "emptyTitleError": "Please specify a non-empty title.",
@@ -31,6 +32,10 @@
   "deleteModal": {
     "title": "Delete Post",
     "body": "Are you sure you want to delete this post?"
+  },
+  "cancelModal": {
+    "title": "Cancel editing post",
+    "body": "Are you sure you want to cancel editing this post? Unsaved progress will be lost."
   },
   "enterUrlPrompt": "Enter the URL of the link:",
   "websitePatternError": "Invalid website url. e.g. domain.com or sub.domain.com"

@@ -65,7 +65,7 @@ const SignupForm: React.FC = () => {
               },
               minLength: { value: 3, message: `${t('handleMinimumErrorMessage')}` },
             })}
-            data-test="display-name"
+            data-testid="handle"
           />
           <ErrorMessage errors={errors} name="handle" as="p" />
         </label>
@@ -82,7 +82,7 @@ const SignupForm: React.FC = () => {
                 message: `${t('emailValidationErrorMessage')}`,
               },
             })}
-            data-test="email"
+            data-testid="email"
           />
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>
@@ -96,12 +96,14 @@ const SignupForm: React.FC = () => {
               required: `${t('passwordRequiredErrorMessage')}`,
               minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
             })}
-            data-test="password"
+            data-testid="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>
 
-        <Button type="submit">{t('signup.submitButtonText')}</Button>
+        <Button type="submit" dataTestId="signup-button">
+          {t('signup.submitButtonText')}
+        </Button>
       </fieldset>
       <em>
         {t('signup.goToLoginText')}
@@ -201,7 +203,7 @@ const SignupForm: React.FC = () => {
         :global(.form-error) {
           margin-bottom: 24px;
         }
-        :global(input[name="${fieldErrorName}"]) {
+        :global(input[name='${fieldErrorName}']) {
           border-color: ${theme.colors.red};
         }
 

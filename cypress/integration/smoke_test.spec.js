@@ -1,24 +1,7 @@
-describe('Runs the app and makes sure everything is up', () => {
-  beforeEach(() => {
-    cy.visit('/dashboard/login')
-    cy.login()
-  })
-  it('Visits the landing page', () => {
+describe('Checks the site is up', () => {
+  it('Visits landing page and makes sure site loads', () => {
     cy.visit('/')
-    cy.contains('Journaly')
-  })
-  it('Visits the My Feed page', () => {
-    cy.visit('/dashboard/my-feed')
-    cy.contains('h1', 'My Feed')
-  })
-  it('Navigates to the My Posts page', () => {
-    cy.visit('/dashboard/my-feed')
-    cy.get('.nav-link').contains('My Posts').click()
-    cy.contains('h1', 'My Posts')
-  })
-  it('Navigates to the Settings page', () => {
-    cy.visit('/dashboard/my-feed')
-    cy.get('.nav-link').contains('Settings').click()
-    cy.contains('h1', 'Settings')
+    cy.get('[data-testid=landing-elevator-pitch]')
+      .should('exist')
   })
 })

@@ -32,7 +32,7 @@ const MyPostsPage: NextPage = () => {
       {(currentUser) => (
         <DashboardLayout>
           <div className="my-posts-page">
-            <h1 className="my-posts-title">{t('pageTitle')}</h1>
+            <h1 className="my-posts-title" data-testid="my-posts-header">{t('pageTitle')}</h1>
             <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
             <div className="posts-wrapper">
               <MyPosts status={activeKey} currentUser={currentUser} />

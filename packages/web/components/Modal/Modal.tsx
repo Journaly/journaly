@@ -18,6 +18,7 @@ type Props = {
   triggerElementId?: string
   maxWidth?: string
   maxHeight?: string
+  dataTestId?: string
 }
 
 type ModalContentProps = {
@@ -47,6 +48,7 @@ const Modal: React.FC<Props> = (props) => {
     triggerElementId = '',
     maxWidth = modalConstants.modalBreakpoint,
     maxHeight = '100%',
+    dataTestId,
   } = props
 
   useFocusTrap({
@@ -62,7 +64,7 @@ const Modal: React.FC<Props> = (props) => {
   }
 
   return ReactDOM.createPortal(
-    <div className="modal-container" onClick={onClose}>
+    <div className="modal-container" onClick={onClose} data-testid={dataTestId}>
       <div className="modal-wrapper">
         <ModalContent
           type={onFormSubmit ? 'form' : 'div'}
@@ -71,7 +73,7 @@ const Modal: React.FC<Props> = (props) => {
           aria-modal="true"
           aria-labelledby={ariaLabelledBy}
           aria-describedby={ariaDescribedBy}
-          data-test="modal"
+          data-testid="modal"
           onClick={(event: React.MouseEvent) => event.stopPropagation()}
           onSubmit={onFormSubmit}
         >

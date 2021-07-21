@@ -63,7 +63,7 @@ const LoginForm: React.FC = () => {
                 message: `${t('emailValidationErrorMessage')}`,
               },
             })}
-            data-test="email"
+            data-testid="email"
           />
           <ErrorMessage errors={errors} name="email" as="p" />
         </label>
@@ -77,11 +77,13 @@ const LoginForm: React.FC = () => {
               required: `${t('passwordRequiredErrorMessage')}`,
               minLength: { value: 6, message: `${t('passwordMinimumErrorMessage')}` },
             })}
-            data-test="password"
+            data-testid="password"
           />
           <ErrorMessage errors={errors} name="password" as="p" />
         </label>
-        <Button type="submit">{t('login.submitButtonText')}</Button>
+        <Button type="submit" dataTestId="login-button">
+          {t('login.submitButtonText')}
+        </Button>
       </fieldset>
       <em>
         {t('goToSignupText')}
@@ -188,7 +190,7 @@ const LoginForm: React.FC = () => {
         :global(.form-error) {
           margin-bottom: 24px;
         }
-        :global(input[name="${fieldErrorName}"]) {
+        :global(input[name='${fieldErrorName}']) {
           border-color: ${theme.colors.red};
         }
       `}</style>

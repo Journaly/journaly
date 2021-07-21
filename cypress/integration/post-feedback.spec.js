@@ -1,6 +1,5 @@
 describe('Inline Feedback Comments', () => {
   beforeEach(() => {
-    cy.visit('/dashboard/login')
     cy.login()
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
     cy.visit('/dashboard/post/1')

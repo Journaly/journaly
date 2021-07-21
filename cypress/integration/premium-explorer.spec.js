@@ -5,7 +5,6 @@
 
 describe('Subscribe to Premium', () => {
   beforeEach(() => {
-    cy.visit('/dashboard/login')
     cy.login()
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
     cy.visit('/dashboard/settings/subscription')
@@ -26,7 +25,6 @@ describe('Subscribe to Premium', () => {
 
 describe('Post Bumping', () => {
   beforeEach(() => {
-    cy.visit('/dashboard/login')
     cy.login()
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
   })

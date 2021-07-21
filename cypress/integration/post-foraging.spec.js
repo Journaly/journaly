@@ -1,6 +1,5 @@
 describe('Checks My Feed works as expected', () => {
   beforeEach(() => {
-    cy.visit('/dashboard/login')
     cy.login()
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
   })

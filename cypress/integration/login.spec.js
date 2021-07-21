@@ -23,7 +23,6 @@ describe('User logs in', () => {
   it('User successfully logs in and is redirected "My Feed" page', () => {
     cy.get('[data-testid=email]').type('j@n.com')
     cy.get('[data-testid=password]').type('password{enter}')
-    cy.setLocalStorage('welcome-modal-july-2020', 'seen')
     cy.get('[data-testid=my-feed-header]').should('exist')
   })
 })

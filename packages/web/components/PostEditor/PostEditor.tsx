@@ -39,7 +39,7 @@ type InputPostData = BasePostData & {
 }
 
 type PostEditorProps = {
-  currentUser: UserType
+  currentUser: UserType,
   autosaveKey: string
   dataRef: React.MutableRefObject<OutputPostData | undefined>
   initialData: InputPostData
@@ -132,15 +132,13 @@ const PostEditor: React.FC<PostEditorProps> = ({
       resetLangId()
     }
 
-    const returnImage = !image
-      ? {
-          largeSize: initialData.headlineImage.largeSize,
-          smallSize: initialData.headlineImage.smallSize,
-        }
-      : {
-          largeSize: image.finalUrlLarge,
-          smallSize: image.finalUrlSmall,
-        }
+    const returnImage = !image ? {
+        largeSize: initialData.headlineImage.largeSize,
+        smallSize: initialData.headlineImage.smallSize,
+      } : {
+        largeSize: image.finalUrlLarge,
+        smallSize: image.finalUrlSmall,
+      }
 
     dataRef.current = {
       title,

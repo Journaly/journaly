@@ -122,15 +122,19 @@ const EditPostPage: NextPage = () => {
     clear()
     setSaving(false)
     router.push({ pathname: `/post/${postId}` })
-  }, [setSaving, setErrorMessage, dataRef, uploadInlineImages, updatePost, router])
+  }, [
+    setSaving, 
+    setErrorMessage, 
+    dataRef, 
+    uploadInlineImages, 
+    updatePost, 
+    router,
+  ])
 
-  const onSaveClick = React.useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault()
-      savePost()
-    },
-    [savePost],
-  )
+  const onSaveClick = React.useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    savePost()
+  }, [savePost])
 
   return (
     <AuthGate>

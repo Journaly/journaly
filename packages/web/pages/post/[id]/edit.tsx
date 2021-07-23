@@ -123,11 +123,11 @@ const EditPostPage: NextPage = () => {
     setSaving(false)
     router.push({ pathname: `/post/${postId}` })
   }, [
-    setSaving, 
-    setErrorMessage, 
-    dataRef, 
-    uploadInlineImages, 
-    updatePost, 
+    setSaving,
+    setErrorMessage,
+    dataRef,
+    uploadInlineImages,
+    updatePost,
     router,
   ])
 

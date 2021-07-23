@@ -118,6 +118,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
     setTitle(initialData.title)
     setLangId(initialData.languageId)
     setBody(initialData.body)
+    setSelectedTopics(initialData.topicIds)
   }, [initialData])
 
   React.useEffect(() => {

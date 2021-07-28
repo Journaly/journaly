@@ -52,6 +52,7 @@ const EditPostPage: NextPage = () => {
     clear()
     resetIntialPostValues()
     setDisplayCancelModal(false)
+    router.push({ pathname: `/post/${id}` })
   }
 
   React.useEffect(() => {

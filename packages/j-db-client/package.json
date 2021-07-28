@@ -1,16 +1,17 @@
 {
   "name": "@journaly/j-db-client",
-  "version": "13.4.0",
+  "version": "13.5.0",
   "description": "Journaly's internal database client.",
   "main": "dist/index",
   "scripts": {
     "build": "tsc",
+    "prisma": "prisma",
     "migrate:create": "node db-check.js && prisma migrate dev --create-only",
     "migrate:apply": "node db-check.js && prisma migrate dev",
     "migrate:deploy": "node db-check.js && prisma migrate deploy",
     "migrate:fake-initial": "node db-check.js && prisma migrate resolve --applied 20210507181000_re_init",
-    "db:snapshot": "node db-check.js && pg_dump $DATABASE_URL > snapshot.sql",
-    "db:restore": "node db-check.js && npm run empty-db && cat snapshot.sql | psql $DATABASE_URL",
+    "db:snapshot": "node db-check.js && pg_dump $DATABASE_URL > ${SNAPSHOT_FILE:-snapshot.sql}",
+    "db:restore": "node db-check.js && npm run empty-db && cat ${SNAPSHOT_FILE:-snapshot.sql} | psql $DATABASE_URL",
     "empty-db": "node db-check.js && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
     "prisma:generate": "prisma generate"
   },

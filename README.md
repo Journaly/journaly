@@ -32,14 +32,14 @@ Here is an overview of the project setup:
 
 ```
 |-- journaly/
-|---- docs/
-|---- cypress/
-|---- packages/
-|------ web/ # Our core application that users engage with on the web
-|------ j-mail/ # An application handling transactional email via a messaging queue and scheduled jobs against the DB
-|------ j-db-client/ # A database client that can be imported into any service to interact with the db
-|-------- schema.prisma # our database schema
-|-------- migrations/
+  |-- docs/
+  |-- cypress/
+  |-- packages/
+    |-- web/ # Our core application that users engage with on the web
+    |-- j-mail/ # An application handling transactional email via a messaging queue and scheduled jobs against the DB
+    |-- j-db-client/ # A database client that can be imported into any service to interact with the db
+      |-- schema.prisma # our database schema
+      |-- migrations/
 ```
 
 More detailed documentation can be found within each directory (WIP).
@@ -60,16 +60,15 @@ More detailed documentation can be found within each directory (WIP).
 #### Setting Up Your Local DB Instance
 
 1. Install Postgres
-
-- For Mac users, we recommend using Homebrew. Linux users will probably want to use your distro's postgres package manager
+   - For Mac users, we recommend using Homebrew. Linux users will probably want to use your distro's postgres package manager
   _Note that this set your Postgres DB to run when your computer starts up and will stay running in the background_.
 
-  ```bash
-  $ brew install postgres
-  $ brew services start postgresql
-  ```
+      ```bash
+      $ brew install postgres
+      $ brew services start postgresql
+      ```
 
-- Windows users should download and install Postgres from [postgresql.org](https://www.postgresql.org/download/windows/).
+   - Windows users should download and install Postgres from [postgresql.org](https://www.postgresql.org/download/windows/).
 
 1. Start up your Postgres shell and create your user
 
@@ -85,23 +84,36 @@ More detailed documentation can be found within each directory (WIP).
    $ alter user <your_username> with superuser;
    ```
 
-1. Update your `.env` file with your new postgres username & password. Copy and paste your root `.env` into `j-db-client/prisma/.env`. You should end up with two of the same file, one in root and the other in `j-db-client`.
+1. Update your `.env` file with your new postgres username & password.
+1. Set the env var `DATABASE_URL` to be the value in your `.env` file (the server will consult the `.env` file but for standalone scripts, you must set the environment variable). This looks like: `export DATABASE_URL='postgresql://<user>:<password>@localhost:5432/<db_name>'`
 
-1. Finally, from the `packages/j-db-client` directory, apply database migrations to your new database instance:
+1. Seed the database with `npm run db:seed`
+
+1. Finally apply database migrations to your new database instance:
 
    ```bash
-   $ npm run migrate:up
+   $ npm run migrate:apply
    ```
 
    You've got a local Journaly PostgreSQL DB, woohoo! 🎉
 
 #### Useful Commands For Working With Your DB
 
-**NOTE: All DB commands/scripts are run from within the `packages/j-db-client` directory. Detailed documentation can be found [here](./packages/j-db-client)**
-
 - Start up your psql `journaly_db` shell: `psql <your_db_url>`
-- Wipe out the database, and reinsert the seed data: `npm run reseed-db`
+- Take a snapshot of the DB's current state: `npm run db:snapshot` (creates `snapshot.sql`)
+- Restore your database to exactly the state captured in `snapshot.sql`: `npm run db:restore`
 - Update the generated GQL queries/mutations for use on the front end: `npm run codegen`
+
+#### Test Data
+
+The seed script contains a handful of test users and posts to cut down on data creation efforts. Here are some users you can log in as:
+
+| ID | Email | Password | Description |
+|----|-------|----------|-------------|
+| 1 | robert@baratheon.net | password | Administrator account |
+| 2 | jon@arryn.net | password | Moderator account |
+| 3 | j@n.com | password | Standard user with indefinite premium subscription and posts. Kind of our "kitchen sink" account. |
+| 4 | gold@gold.gold | password | Standard user with comments and posts, no premium subscription. |
 
 ### Running Journaly
 
@@ -163,3 +175,4 @@ Please read our [contributing guide](./docs/contributing-guide.md) to get starte
 ### Translations
 
 If you'd like to help translate Journaly into your native language, we'd love to have your help! Head over to the [translations site](http://translations-website.s3-website.us-east-2.amazonaws.com/) to get started.
+

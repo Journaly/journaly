@@ -15,6 +15,7 @@ import theme from '@/theme'
 import Button, { ButtonVariant } from '@/components/Button'
 import { useEditPostQuery, useUpdatePostMutation } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
+import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 import useUILanguage from '@/hooks/useUILanguage'
 import useAuthCheck from '@/hooks/useAuthCheck'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
@@ -26,6 +27,7 @@ const EditPostPage: NextPage = () => {
   const { t } = useTranslation('post')
   const [saving, setSaving] = React.useState<boolean>(false)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [displayCancelModal, setDisplayCancelModal] = React.useState<boolean>(false)
   const uiLanguage = useUILanguage()
 
   const { data: { currentUser, topics, postById } = {} } = useEditPostQuery({
@@ -39,6 +41,19 @@ const EditPostPage: NextPage = () => {
   useAuthCheck(() => {
     return currentUser!.id === postById!.author.id
   }, !!(currentUser && postById))
+
+  const handleCancelConfirm = () => {
+    if (!dataRef.current) {
+      return
+    }
+
+    const { clear, resetIntialPostValues } = dataRef.current
+
+    clear()
+    resetIntialPostValues()
+    setDisplayCancelModal(false)
+    router.push({ pathname: `/post/${id}` })
+  }
 
   React.useEffect(() => {
     if (postById) {
@@ -149,8 +164,27 @@ const EditPostPage: NextPage = () => {
             >
               {t('save')}
             </Button>
+            <Button
+              type="button"
+              variant={ButtonVariant.Secondary}
+              data-test="post-cancel"
+              onClick={(): void => {
+                setDisplayCancelModal(true)
+              }}
+            >
+              {t('cancel')}
+            </Button>
           </div>
           {errorMessage && <span className="error-message">{errorMessage}</span>}
+          <ConfirmationModal
+            onConfirm={handleCancelConfirm}
+            onCancel={(): void => {
+              setDisplayCancelModal(false)
+            }}
+            title={t('cancelModal.title')}
+            body={t('cancelModal.body')}
+            show={displayCancelModal}
+          />
           <style jsx>{`
             #edit-post {
               display: flex;

@@ -251,6 +251,14 @@ const PostQueries = extendType({
           description: 'Author IDs to filter posts by. No value means all languages.',
           required: false,
         }),
+        needsFeedback: booleanArg({
+          description: 'If true, return only posts with 0 comments.',
+          required: false,
+        }),
+        hasInteracted: booleanArg({
+          description: 'If true, return only posts that the user has commented on in any way',
+          required: false,
+        }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -328,6 +336,46 @@ const PostQueries = extendType({
                 some: { id: currentUser.id },
               },
             },
+          })
+        }
+
+        if (args.needsFeedback) {
+          filterClauses.push({
+            AND: [
+              {
+                threads: {
+                  none: {},
+                },
+              },
+              {
+                postComments: {
+                  none: {},
+                },
+              },
+            ],
+          })
+        }
+
+        if (currentUser && args.hasInteracted) {
+          filterClauses.push({
+            OR: [
+              {
+                threads: {
+                  comments: {
+                    some: {
+                      authorId: currentUser.id,
+                    },
+                  },
+                },
+              },
+              {
+                postComments: {
+                  some: {
+                    authorId: currentUser.id,
+                  },
+                },
+              },
+            ],
           })
         }
 

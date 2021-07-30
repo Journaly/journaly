@@ -87,7 +87,13 @@ More detailed documentation can be found within each directory (WIP).
 1. Update your `.env` file with your new postgres username & password.
 1. Set the env var `DATABASE_URL` to be the value in your `.env` file (the server will consult the `.env` file but for standalone scripts, you must set the environment variable). This looks like: `export DATABASE_URL='postgresql://<user>:<password>@localhost:5432/<db_name>'`
 
-1. Seed the database with `npm run db:seed`
+1. Seed the database with:
+
+   ```
+   $ npm run db:seed
+   ```
+
+   BOOM! You now have some users, along with a wee selection of posts :)
 
 1. Finally apply database migrations to your new database instance:
 
@@ -117,10 +123,7 @@ The seed script contains a handful of test users and posts to cut down on data c
 
 ### Running Journaly
 
-1. To run the entire app in local development mode, simply run `npm run dev` from the root of the project!
-1. Let's seed that baby DB! From the root of the repo, run `npm run reseed-db`
-
-BOOM! You now have some users, along with a wee selection of posts :)
+To run the entire app in local development mode, simply run `npm run dev` from the root of the project!
 
 **NOTE: the playground is currently not working, we are working on fixing this. This doesn't impact your ability to work on the project**
 

@@ -14,7 +14,7 @@ Some major reasons for this are:
 - Writing is relatively _effortful_ and practicing it consistently requires building a habit around it.
 - It is hard to find people to give you feedback.
 - Even once finding someone, figuring out how best to give someone feedback isn't obvious and takes a lot of effort.
-- Once you get feedback from soneone, it isn't easy to actually apply, store, organize, and keep track of it over time.
+- Once you get feedback from someone, it isn't easy to actually apply, store, organize, and keep track of it over time.
 
 **Journaly is about striving to build excellent software with beautiful, simple, and intuitive User Interface & User Experience Design that solves each of the above problems for our users:**
 

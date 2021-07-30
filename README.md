@@ -123,7 +123,7 @@ The seed script contains a handful of test users and posts to cut down on data c
 
 ### Running Journaly
 
-To run the entire app in local development mode, simply run `npm run dev` from the root of the project!
+To run the entire app in local development mode, simply run `npm run dev` from the `packages/web` directory!
 
 **NOTE: the playground is currently not working, we are working on fixing this. This doesn't impact your ability to work on the project**
 

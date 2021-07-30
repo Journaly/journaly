@@ -9,8 +9,15 @@ import ExternalLink from '@/components/ExternalLink'
 import { sanitize } from '@/utils'
 import { languageNameWithDialect } from '@/utils/languages'
 import theme from '@/theme'
-import { LanguageLevel, ProfileUserFragmentFragment } from '@/generated/graphql'
+import {
+  useFollowingUsersQuery,
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+  LanguageLevel,
+  ProfileUserFragmentFragment
+} from '@/generated/graphql'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
+import Button, { ButtonVariant } from '@/components/Button'
 
 type Props = {
   user: ProfileUserFragmentFragment
@@ -40,6 +47,39 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
   const location = `${user.city && user.city}${user.city && user.country && ', '}${
     user.country && user.country
   }`
+
+  const { data: { currentUser } = {}, refetch } = useFollowingUsersQuery()
+
+  const hasFollowedAuthor =
+    currentUser && currentUser.following.find((u) => u.id === user.id) !== undefined
+
+  const [followUserMutation, { loading: followLoading }] = useFollowUserMutation({
+    onCompleted: () => {
+      refetch()
+    },
+  })
+
+  const handleFollowUser = () => {
+    followUserMutation({
+      variables: {
+        followedUserId: user.id,
+      },
+    })
+  }
+
+  const [unfollowUserMutation, { loading: unfollowLoading }] = useUnfollowUserMutation({
+    onCompleted: () => {
+      refetch()
+    },
+  })
+
+  const handleUnfollowUser = () => {
+    unfollowUserMutation({
+      variables: {
+        followedUserId: user.id,
+      },
+    })
+  }
 
   return (
     <div className="profile-card">
@@ -88,6 +128,17 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
             </li>
           ))}
         </ul>
+
+        { currentUser && currentUser.id !== user.id &&
+          <Button
+            className="follow-btn"
+            variant={ButtonVariant.Primary}
+            onClick={hasFollowedAuthor ? handleUnfollowUser : handleFollowUser}
+            loading={followLoading || unfollowLoading}
+          >
+            {hasFollowedAuthor ? t('Unfollow') : t('Follow')}
+          </Button>
+        }
       </div>
 
       <div className="profile-footer">
@@ -169,6 +220,9 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         .profile-body {
           margin: 50px 0;
           text-align: center;
+        }
+        .profile-body :global(.follow-btn) {
+          margin: 20px auto;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-body {

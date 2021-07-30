@@ -26,7 +26,7 @@
     "type-check": "tsc",
     "db:snapshot": "SNAPSHOT_FILE=$(pwd)/snapshot.sql npm explore '@journaly/j-db-client' -- npm run db:snapshot",
     "db:restore": "SNAPSHOT_FILE=$(pwd)/snapshot.sql npm explore '@journaly/j-db-client' -- npm run db:restore",
-    "db:seed": "SNAPSHOT_FILE=$(pwd)/seed.sql npm run db:restore",
+    "db:seed": "SNAPSHOT_FILE=$(pwd)/seed.sql npm explore '@journaly/j-db-client' -- npm run db:restore",
     "prisma:generate": "npm explore '@journaly/j-db-client' -- npm run prisma:generate",
     "migrate:apply": "npm explore '@journaly/j-db-client' -- npm run migrate:apply",
     "migrate:create": "npm explore '@journaly/j-db-client' -- npm run migrate:create",

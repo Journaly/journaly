@@ -185,27 +185,37 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         </div>
       </div>
       {canEdit && !isEditMode && (
-        <div className="edit-block">
-          <span
-            role="button"
-            className="edit-btn"
-            onClick={() => {
-              setIsEditMode(true)
-              setUpdatingCommentBody(comment.body)
-              setTimeout(() => {
-                const el = editTextarea.current
-                if (el) {
-                  el.focus()
-                  el.setSelectionRange(el.value.length, el.value.length)
-                }
-              }, 0)
-            }}
-          >
-            <EditIcon size={24} />
-          </span>
-          <span role="button" className="delete-btn" onClick={deleteExistingComment}>
-            <DeleteIcon size={24} />
-          </span>
+        <div className="edit-thanks-block">
+          {numThanks > 0 && (
+            <div className="thanks-block">
+              <span>
+                <LikeIcon filled={true} />
+              </span>
+              <span className="thanks-count">{numThanks}</span>
+            </div>
+          )}
+          <div className="edit-block">
+            <span
+              role="button"
+              className="edit-btn"
+              onClick={() => {
+                setIsEditMode(true)
+                setUpdatingCommentBody(comment.body)
+                setTimeout(() => {
+                  const el = editTextarea.current
+                  if (el) {
+                    el.focus()
+                    el.setSelectionRange(el.value.length, el.value.length)
+                  }
+                }, 0)
+              }}
+            >
+              <EditIcon size={24} />
+            </span>
+            <span role="button" className="delete-btn" onClick={deleteExistingComment}>
+              <DeleteIcon size={24} />
+            </span>
+          </div>
         </div>
       )}
       {canEdit && isEditMode && (
@@ -237,7 +247,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
       {!canEdit && currentUser?.id && (
         <div className={classNames('edit-block', { progress: isLoadingCommentThanks })}>
           <span
-            className="like-btn"
+            className="like-btn-clickable"
             onClick={hasThankedComment ? deleteExistingCommentThanks : createNewCommentThanks}
             role="button"
           >
@@ -313,15 +323,27 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           word-wrap: break-word;
         }
 
-        .edit-block {
+        .edit-thanks-block {
           display: flex;
+          flex-direction: column;
           margin-left: 10px;
         }
 
-        .edit-block span {
+        .edit-block {
+          display: flex;
+          margin: auto 0 auto 10px;
+        }
+
+        .edit-block span,
+        .thanks-block span {
           margin-right: 5px;
           display: flex;
           align-items: center;
+        }
+
+        .thanks-block {
+          display: flex;
+          margin: 0 0 10px auto;
         }
 
         .edit-btn :global(svg:hover) {
@@ -332,13 +354,13 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           cursor: pointer;
           fill: ${theme.colors.red};
         }
-        .like-btn :global(svg:hover) {
+        .like-btn-clickable :global(svg:hover) {
           cursor: pointer;
         }
         .progress {
           cursor: progress;
         }
-        .progress > .like-btn {
+        .progress > .like-btn-clickable {
           pointer-events: none;
         }
 

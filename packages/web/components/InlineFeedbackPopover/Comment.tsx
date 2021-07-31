@@ -186,14 +186,15 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
       </div>
       {canEdit && !isEditMode && (
         <div className="edit-thanks-block">
-          {numThanks > 0 && (
-            <div className="thanks-block">
-              <span>
-                <LikeIcon filled={true} />
-              </span>
-              <span className="thanks-count">{numThanks}</span>
-            </div>
-          )}
+          <div className="thanks-block">
+            <span>
+              <LikeIcon 
+                filled={numThanks > 0}
+                title={t('numUsersGaveThanks', {numThanks})}
+              />
+            </span>
+            <span className="thanks-count">{numThanks}</span>
+          </div>
           <div className="edit-block">
             <span
               role="button"

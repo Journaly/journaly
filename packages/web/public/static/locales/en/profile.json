@@ -26,5 +26,7 @@
   "statsTitle": "Stats",
   "postsTitle": "Recent Posts",
   "emptyPosts": "{{user}} hasn't written any posts yet.",
-  "loggedInUserEmptyPosts": "You have no recent posts. <1>Write a new post</1>!"
+  "loggedInUserEmptyPosts": "You have no recent posts. <1>Write a new post</1>!",
+  "follow": "Follow",
+  "unfollow": "Unfollow"
 }

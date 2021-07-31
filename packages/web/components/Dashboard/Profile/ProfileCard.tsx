@@ -136,7 +136,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
             onClick={hasFollowedAuthor ? handleUnfollowUser : handleFollowUser}
             loading={followLoading || unfollowLoading}
           >
-            {hasFollowedAuthor ? t('Unfollow') : t('Follow')}
+            {hasFollowedAuthor ? t('unfollow') : t('follow')}
           </Button>
         }
       </div>

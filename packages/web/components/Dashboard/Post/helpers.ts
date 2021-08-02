@@ -28,41 +28,37 @@ export const getUsersClappedText = (claps: Array<
     author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
   }
 >, currentUserId: number | undefined) => {
-  // JonSnow clapped for this post.
-  // JonSnow and Arya Stark clapped for this post.
-  // JonSnow, Arya Stark, and 1 others clapped for this post.
-  // current user -> You && move to front
   const { t } = useTranslation('post')
 
-  const containsCurrentUser = claps.some((clap) => {
-    return clap.author.id === currentUserId
-  })
-
-  console.log(claps)
+  const containsCurrentUser = claps.some(
+    (clap) => clap.author.id === currentUserId)
 
   let usersClapped = claps
     .filter((clap) => clap.author.id !== currentUserId)
-    .map((clap) => {
-      return clap.author.name ? clap.author.name : clap.author.handle
-    })
-
-  console.log(usersClapped)
+    .map((clap) => clap.author.name ? clap.author.name : clap.author.handle)
 
   if (containsCurrentUser) {
-    usersClapped = [t('You'), ...usersClapped]
+    usersClapped = [t('claps.currentUserPronoun'), ...usersClapped]
   }
 
   if (usersClapped.length == 0) {
-    return t('0 users clapped for this post.')
+    return t('claps.noUsersClapped')
   }
   else if (usersClapped.length == 1) {
-    return t(`${usersClapped[0]} clapped for this post.`)
+    return t('claps.oneUserClapped', { name1: usersClapped[0] })
   }
   else if (usersClapped.length == 2) {
-    return t(`${usersClapped[0]} and ${usersClapped[1]} clapped for this post.`)
+    return t('claps.twoUsersClapped', {
+      name1: usersClapped[0],
+      name2: usersClapped[1]
+    })
   }
   else /* usersClapped.length > 2 */ {
     const numOthersClapped = usersClapped.length - 2
-    return t(`${usersClapped[0]}, ${usersClapped[1]}, and ${numOthersClapped} others clapped for this post.`)
+    return t('claps.manyUsersClapped', {
+      name1: usersClapped[0],
+      name2: usersClapped[1],
+      numOthers: numOthersClapped
+    })
   }
 }

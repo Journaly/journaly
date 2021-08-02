@@ -23,6 +23,13 @@ export const getCoords = (htmlElement: HTMLElement) => {
   return { y: Math.round(top), x: Math.round(left) }
 }
 
+/**
+ * Generate the text to show for claps on a specific post.
+ * 
+ * @param claps The array of PostClap objects containing their author
+ * @param currentUserId The id of the current user
+ * @returns string The text to show
+ */
 export const getUsersClappedText = (claps: Array<
   { __typename?: 'PostClap' } & Pick<PostClap, 'id'> & {
     author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>

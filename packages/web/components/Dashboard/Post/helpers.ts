@@ -1,4 +1,4 @@
-import { PostClap, User } from '@/generated/graphql'
+import { PostClapFragmentFragment as PostClapType } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
 
 /**
@@ -30,11 +30,10 @@ export const getCoords = (htmlElement: HTMLElement) => {
  * @param currentUserId The id of the current user
  * @returns string The text to show
  */
-export const getUsersClappedText = (claps: Array<
-  { __typename?: 'PostClap' } & Pick<PostClap, 'id'> & {
-    author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
-  }
->, currentUserId: number | undefined) => {
+export const getUsersClappedText = (
+  claps: Array<PostClapType>,
+  currentUserId: number | undefined) => {
+
   const { t } = useTranslation('post')
 
   const containsCurrentUser = claps.some(

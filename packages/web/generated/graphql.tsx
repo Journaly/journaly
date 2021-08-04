@@ -304,6 +304,8 @@ export enum BadgeType {
   OnehundredPosts = 'ONEHUNDRED_POSTS',
   TenPosts = 'TEN_POSTS',
   CodeContributor = 'CODE_CONTRIBUTOR',
+  Odradek = 'ODRADEK',
+  Necromancer = 'NECROMANCER',
 }
 
 export enum MembershipSubscriptionPeriod {

@@ -596,7 +596,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           postStatus={post.status}
           publishDate={post.publishedAt ? post.publishedAt : post.createdAt}
           publishedLanguageLevel={post.publishedLanguageLevel}
-          authorName={post.author.handle}
+          authorName={post.author.name ? post.author.name : post.author.handle}
           postImage={post.headlineImage.largeSize}
           language={post.language}
           topics={post.postTopics.map(({ topic }) => topic)}

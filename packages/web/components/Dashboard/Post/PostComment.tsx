@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
+import Markdown from 'react-markdown'
 
 import {
   useUpdatePostCommentMutation,
@@ -104,7 +105,9 @@ const PostComment: React.FC<PostCommentProps> = ({
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <p className="comment-body">{comment.body}</p>
+            <Markdown className="comment-body">
+              {comment.body}
+            </Markdown>
           )}
         </div>
       </div>
@@ -214,6 +217,37 @@ const PostComment: React.FC<PostCommentProps> = ({
         .comment-body {
           white-space: pre-line;
           word-wrap: break-word;
+        }
+
+        :global(.comment-body h1) {
+          font-size: 1.5em;
+          font-weight: bold;
+          margin: 0.67em 0 0.67em 0;
+        }
+
+        :global(.comment-body h2),
+        :global(.comment-body h3),
+        :global(.comment-body h4) {
+          font-size: 1.2em;
+          font-weight: bold;
+          margin: 0.5em 0 0.5em 0;
+        }
+
+        :global(.comment-body li) {
+          list-style: inside;
+          list-style-type: disc;
+          margin-left: 20px;
+        }
+
+        :global(.comment-body code) {
+          background-color: #eee;
+          font-family: monospace;
+          padding: 2px;
+        }
+
+        :global(.comment-body blockquote) {
+          border-left: 2px solid #4391C9;
+          padding-left: 5px;
         }
 
         .body-block :global(p) {

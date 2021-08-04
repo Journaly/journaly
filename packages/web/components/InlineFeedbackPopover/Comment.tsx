@@ -2,6 +2,7 @@ import React, { useState, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
 import classNames from 'classnames'
+import Markdown from 'react-markdown'
 
 import {
   useUpdateCommentMutation,
@@ -180,7 +181,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <p className="comment-body">{comment.body}</p>
+            <Markdown className="comment-body">{comment.body}</Markdown>
           )}
         </div>
       </div>

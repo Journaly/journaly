@@ -76,6 +76,7 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-hook-form": "^5.7.2",
+    "react-markdown": "^6.0.3",
     "react-toastify": "^6.0.8",
     "reactjs-popup": "^2.0.4",
     "slate": "https://journaly-hosted-packages.s3.us-east-2.amazonaws.com/slate-v0.62.0.tgz",

@@ -4,7 +4,7 @@
   "save": "Save",
   "cancel": "Cancel",
   "submit": "Submit",
-  "addCommentPlaceholder": "Add a comment...",
+  "addCommentPlaceholder": "Add a Markdown comment...",
   "noCommentsYetMessage": "No comments... yet!",
   "tabGeneralKey": "General",
   "tabOutdatedKey": "Outdated",

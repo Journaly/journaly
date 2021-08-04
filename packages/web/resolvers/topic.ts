@@ -10,6 +10,15 @@ const TopicTranslation = objectType({
   },
 })
 
+const UserInterest = objectType({
+  name: 'UserInterest',
+  definition(t) {
+    t.model.id()
+    t.model.user()
+    t.model.topic()
+  }
+})
+
 const Topic = objectType({
   name: 'Topic',
   sourceType: 'prisma.Topic',
@@ -97,4 +106,68 @@ const TopicQueries = extendType({
   },
 })
 
-export default [TopicTranslation, Topic, TopicQueries]
+const TopicMutations = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.field('addUserInterest', {
+      type: 'UserInterest',
+      args: {
+        topicId: intArg({ required: true })
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to add a user interest.')
+        }
+
+        const topic = await ctx.db.topic.findUnique({
+          where: { id: args.topicId },
+        })
+
+        if (!topic) {
+          throw new Error(`Unable to find language with id "${args.topicId}".`)
+        }
+
+        return ctx.db.userInterest.create({
+          data: {
+            user: { connect: { id: userId } },
+            topic: { connect: { id: args.topicId } },
+          }
+        })
+      },
+    })
+    t.field('removeUserInterest', {
+      type: 'UserInterest',
+      args: {
+        topicId: intArg({ required: true })
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to add a user interest.')
+        }
+
+        const interestFilter = {
+          where: {
+            userId_topicId: {
+              topicId: args.topicId,
+              userId,
+            },
+          },
+        }
+
+        const userInterest = await ctx.db.userInterest.findUnique(interestFilter)
+
+        if (!userInterest) {
+          throw new Error(`Unable to find user interest.`)
+        }
+
+        return ctx.db.userInterest.delete(interestFilter)
+      },
+    })
+  }
+})
+
+export default [TopicTranslation, UserInterest, Topic, TopicQueries, TopicMutations]

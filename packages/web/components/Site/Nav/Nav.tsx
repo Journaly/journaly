@@ -1,4 +1,5 @@
 import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
+import useUILanguage from '@/hooks/useUILanguage'
 import { useTranslation } from '@/config/i18n'
 import { width, darkGrey } from '@/utils'
 import NavLink from '@/components/NavLink'
@@ -6,7 +7,11 @@ import Logo from '@/components/Logo'
 
 const Nav = () => {
   const { t } = useTranslation('common')
-  const { data } = useCurrentUserQuery()
+
+  const uiLanguage = useUILanguage()
+  const { data } = useCurrentUserQuery({
+    variables: { uiLanguage }
+  })
   const currentUser = data?.currentUser as UserType
 
   return (

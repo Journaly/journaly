@@ -1,7 +1,8 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import LoadingWrapper from '@/components/LoadingWrapper'
 import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
+import useUILanguage from '@/hooks/useUILanguage'
+import LoadingWrapper from '@/components/LoadingWrapper'
 
 /**
  * Checks that the user is logged in.
@@ -32,7 +33,10 @@ type Props = {
 
 const AuthGate: React.FC<Props> = ({ children }) => {
   const router = useRouter()
-  const { data, loading, error } = useCurrentUserQuery()
+  const uiLanguage = useUILanguage()
+  const { data, loading, error } = useCurrentUserQuery({
+    variables: { uiLanguage }
+  })
 
   const currentUser = data?.currentUser as UserType
 

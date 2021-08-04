@@ -361,9 +361,11 @@ const PostQueries = extendType({
             OR: [
               {
                 threads: {
-                  comments: {
-                    some: {
-                      authorId: currentUser.id,
+                  some: {
+                    comments: {
+                      some: {
+                        authorId: currentUser.id,
+                      },
                     },
                   },
                 },

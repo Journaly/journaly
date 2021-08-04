@@ -110,7 +110,13 @@ const PostComment: React.FC<PostCommentProps> = ({
       </div>
       {canEdit && !isEditMode && (
         <div className="edit-block">
-          <span className="edit-btn" onClick={() => setIsEditMode(true)}>
+          <span 
+            className="edit-btn" 
+            onClick={() => {
+              setIsEditMode(true)
+              setUpdatingCommentBody(comment.body)
+            }}
+          >
             <EditIcon size={24} />
           </span>
           <span className="delete-btn" onClick={deleteExistingComment}>

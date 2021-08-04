@@ -105,9 +105,7 @@ const PostComment: React.FC<PostCommentProps> = ({
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <Markdown className="comment-body">
-              {comment.body}
-            </Markdown>
+            <Markdown className="comment-body">{comment.body}</Markdown>
           )}
         </div>
       </div>

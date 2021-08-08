@@ -217,17 +217,13 @@ const PostComment: React.FC<PostCommentProps> = ({
           word-wrap: break-word;
         }
 
-        :global(.comment-body h1) {
-          font-size: 1.5em;
-          font-weight: 600;
-          margin: 0.67em 0 0.67em 0;
-        }
-
+        :global(.comment-body h1),
         :global(.comment-body h2),
         :global(.comment-body h3),
         :global(.comment-body h4) {
+          font-family: inherit;
           font-size: 1.2em;
-          font-weight: bold;
+          font-weight: 600;
           margin: 0.5em 0 0.5em 0;
         }
 

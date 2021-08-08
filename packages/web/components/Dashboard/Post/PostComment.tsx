@@ -219,7 +219,7 @@ const PostComment: React.FC<PostCommentProps> = ({
 
         :global(.comment-body h1) {
           font-size: 1.5em;
-          font-weight: bold;
+          font-weight: 600;
           margin: 0.67em 0 0.67em 0;
         }
 
@@ -244,7 +244,7 @@ const PostComment: React.FC<PostCommentProps> = ({
         }
 
         :global(.comment-body blockquote) {
-          border-left: 2px solid #4391C9;
+          border-left: 2px solid ${theme.colors.blueLight};
           padding-left: 5px;
         }
 

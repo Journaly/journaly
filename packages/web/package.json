@@ -129,7 +129,7 @@
     "pretty-quick": "^2.0.1",
     "prisma": "2.21.0",
     "prompts": "^2.3.2",
-    "typescript": "4.2.4",
+    "typescript": "4.3.2",
     "yargs": "^16.2.0"
   }
 }

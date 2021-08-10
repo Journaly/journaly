@@ -1,6 +1,7 @@
 let config = {
   target: 'serverless',
   productionBrowserSourceMaps: true,
+  webpack5: false,
 }
 
 if (process.env.ANALYZE === '1') {

@@ -5,6 +5,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
+    'next',
   ],
   parserOptions: {
     ecmaVersion: 2018,
@@ -14,7 +15,7 @@ module.exports = {
     },
   },
   rules: {
-    "@typescript-eslint/explicit-function-return-type": "off",
+    '@typescript-eslint/explicit-function-return-type': 'off',
   },
   settings: {
     react: {

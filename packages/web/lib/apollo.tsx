@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
 import fetch from 'isomorphic-unfetch'
 import { NextPage } from 'next'
@@ -13,7 +12,7 @@ type JournalySSRContextType = {
 }
 
 const JournalySSRContext = React.createContext<JournalySSRContextType>({
-  redirectTarget: null
+  redirectTarget: null,
 })
 JournalySSRContext.displayName = 'JournalySSRContext'
 
@@ -25,7 +24,6 @@ interface WithApolloProps extends WithApolloInitialProps {
   apolloClient?: ApolloClient<ApolloClientCache>
   ssrContext: JournalySSRContextType
 }
-
 
 /**
  * Creates and provides the apolloContext
@@ -42,12 +40,7 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
   const WithApollo: NextPage<
     PageProps & WithApolloProps,
     PageInitialProps & WithApolloInitialProps
-  > = ({
-    apolloClient,
-    apolloState,
-    ssrContext,
-    ...pageProps
-  }) => {
+  > = ({ apolloClient, apolloState, ssrContext, ...pageProps }) => {
     const client = apolloClient || initApolloClient(apolloState)
     return (
       <JournalySSRContext.Provider value={ssrContext}>
@@ -122,13 +115,9 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
           }
 
           if (ssrContext.redirectTarget && ctx?.res) {
-            (ctx.res as any).redirect(ssrContext.redirectTarget)
+            ;(ctx.res as any).redirect(ssrContext.redirectTarget)
             return pageProps
           }
-
-          // getDataFromTree does not call componentWillUnmount
-          // head side effect therefore need to be cleared manually
-          Head.rewind()
         }
       }
 
@@ -204,6 +193,4 @@ function createApolloClient(initialState: ApolloClientCache = {}, headers = {}) 
   })
 }
 
-export {
-  JournalySSRContext
-}
+export { JournalySSRContext }

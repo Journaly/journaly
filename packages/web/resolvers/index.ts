@@ -16,6 +16,7 @@ import ThanksTypes from './thanks'
 import SubscriptionTypes from './subscription'
 
 const reflectionRun = !!parseInt(process.env.NEXUS_REFLECTION || '0')
+console.log('ALWAYS REFLECT ON YOUR NEXUS', process.env.NEXUS_REFLECTION)
 
 const schemaOpts: any = {
   typegenAutoConfig: {
@@ -26,10 +27,10 @@ const schemaOpts: any = {
       },
       {
         source: require.resolve('./context'),
-        alias: 'ContextModule'
-      }
+        alias: 'ContextModule',
+      },
     ],
-    contextType: 'ContextModule.Context'
+    contextType: 'ContextModule.Context',
   },
   nonNullDefaults: {
     output: true,
@@ -52,18 +53,20 @@ const schemaOpts: any = {
     nexusPrisma({
       shouldGenerateArtifacts: reflectionRun,
     }),
-    declarativeWrappingPlugin()
-  ]
+    declarativeWrappingPlugin(),
+  ],
 }
 
 if (reflectionRun) {
+  console.log('IF? That is the question')
   schemaOpts.shouldExitAfterGenerateArtifacts = true
   schemaOpts.outputs = {
     typegen: path.join(__dirname, '../node_modules/@types/typegen-nexus/index.d.ts'),
     schema: path.join(__dirname, './api.graphql'),
   }
+  console.log('TYPEGEN', schemaOpts.outputs.typegen)
 }
 
 const schema = makeSchema(schemaOpts)
-
+console.log('Schema got it made...')
 export { schema }

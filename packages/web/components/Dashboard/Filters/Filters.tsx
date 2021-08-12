@@ -18,6 +18,7 @@ type Props = {
 
 const Filters: React.FC<Props> = ({ currentUser, initialSearchFilters, resetPagination }) => {
   const { t } = useTranslation('my-feed')
+  const [showAdvancedFilters, setShowAdvancedFilters] = useToggle()
   const [search, setSearchState] = useState('')
   const onSearchChange = useCallback((val): void => setSearchState(val), [])
 

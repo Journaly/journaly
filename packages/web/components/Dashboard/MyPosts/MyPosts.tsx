@@ -10,6 +10,7 @@ import TranslationLink from '@/components/TranslationLink'
 import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import PostCard from '../PostCard'
 import theme from '@/theme'
+import Filters from '../Filters'
 
 type Props = {
   currentUser: UserType
@@ -31,6 +32,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
 
   return (
     <div className="my-posts-container">
+      <Filters currentUser={currentUser} initialSearchFilters={null} resetPagination={() => {}} />
       {error && <p>There was an error retrieving your posts.</p>}
 
       {loading && <LoadingSpinner size={60} />}

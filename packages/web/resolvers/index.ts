@@ -49,6 +49,7 @@ const schemaOpts: any = {
     ...ThanksTypes,
     ...SubscriptionTypes,
   ],
+  shouldGenerateArtifacts: reflectionRun,
   plugins: [
     nexusPrisma({
       shouldGenerateArtifacts: reflectionRun,

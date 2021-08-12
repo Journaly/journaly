@@ -5,6 +5,8 @@ query feed(
   $languages: [Int!]
   $topics: [Int!]
   $followedAuthors: Boolean
+  $needsFeedback: Boolean
+  $hasInteracted: Boolean
 ) {
   feed(
     first: $first
@@ -13,6 +15,8 @@ query feed(
     languages: $languages
     topics: $topics
     followedAuthors: $followedAuthors
+    needsFeedback: $needsFeedback
+    hasInteracted: $hasInteracted
   ) {
     posts {
       ...PostCardFragment

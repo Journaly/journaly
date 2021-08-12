@@ -26,10 +26,10 @@ const schemaOpts: any = {
       },
       {
         source: require.resolve('./context'),
-        alias: 'ContextModule'
-      }
+        alias: 'ContextModule',
+      },
     ],
-    contextType: 'ContextModule.Context'
+    contextType: 'ContextModule.Context',
   },
   nonNullDefaults: {
     output: true,
@@ -48,12 +48,13 @@ const schemaOpts: any = {
     ...ThanksTypes,
     ...SubscriptionTypes,
   ],
+  shouldGenerateArtifacts: reflectionRun,
   plugins: [
     nexusPrisma({
       shouldGenerateArtifacts: reflectionRun,
     }),
-    declarativeWrappingPlugin()
-  ]
+    declarativeWrappingPlugin(),
+  ],
 }
 
 if (reflectionRun) {
@@ -65,5 +66,4 @@ if (reflectionRun) {
 }
 
 const schema = makeSchema(schemaOpts)
-
 export { schema }

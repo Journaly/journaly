@@ -80,8 +80,12 @@ const handler = async (req: any, res: any) => {
   try {
     if (event.type === 'invoice.paid') {
       const stripeInvoice = event.data.object as Stripe.Invoice
-      const subscriptionLine = stripeInvoice.lines.data.find((item: any) => item.type === 'subscription')
-      let customerId: string = (typeof stripeInvoice.customer === 'string') ? stripeInvoice.customer : stripeInvoice.customer.id
+      const stripeInvoiceCustomer = stripeInvoice.customer as Stripe.Customer
+      const subscriptionLine = stripeInvoice.lines.data.find(
+        (item: any) => item.type === 'subscription',
+      )
+      let customerId: string =
+        typeof stripeInvoiceCustomer === 'string' ? stripeInvoiceCustomer : stripeInvoiceCustomer.id
 
       if (!subscriptionLine?.price) {
         throw new Error("Subscription line missing")

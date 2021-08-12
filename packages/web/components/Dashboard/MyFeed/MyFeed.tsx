@@ -26,8 +26,10 @@ import FeedHeader from './FeedHeader'
 const NUM_POSTS_PER_PAGE = 9
 
 export type InitialSearchFilters = {
-  languages: number[],
-  topics: number[],
+  languages: number[]
+  topics: number[]
+  needsFeedback: boolean
+  hasInteracted: boolean
 }
 
 type Props = {
@@ -40,7 +42,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
 
   const [search, setSearchState] = useState('')
   const [selectedTopicsFilters, setSelectedTopicsFilters] = useState<number[]>(
-    initialSearchFilters?.topics || []
+    initialSearchFilters?.topics || [],
   )
 
   // Fetch languages that have at least 1 post
@@ -68,6 +70,12 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   )
 
   const [followedAuthorsFilter, toggleFollowedAuthorsFilter] = useToggle()
+  const [needsFeedbackFilter, toggleNeedsFeedbackFilter] = useToggle(
+    initialSearchFilters?.needsFeedback || false,
+  )
+  const [hasInteractedFilter, toggleHasInteractedFilter] = useToggle(
+    initialSearchFilters?.hasInteracted || false,
+  )
 
   const uiLanguage = useUILanguage()
   const { data: { topics } = {} } = useTopicsQuery({
@@ -88,8 +96,10 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
       languages: selectedLanguageFilters.length ? selectedLanguageFilters : null,
       followedAuthors: followedAuthorsFilter,
-      search: search,
+      search,
       topics: selectedTopicsFilters,
+      needsFeedback: needsFeedbackFilter,
+      hasInteracted: hasInteractedFilter,
     },
   })
 
@@ -143,9 +153,11 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
     const searchFilters = {
       languages: selectedLanguageFilters,
       topics: selectedTopicsFilters,
+      needsFeedback: needsFeedbackFilter,
+      hasInteracted: hasInteractedFilter,
     }
     document.cookie = `default_search_filters=${JSON.stringify(searchFilters)};`
-  }, [selectedLanguageFilters, selectedTopicsFilters])
+  }, [selectedLanguageFilters, selectedTopicsFilters, needsFeedbackFilter, hasInteractedFilter])
 
   return (
     <div className="my-feed-wrapper">
@@ -171,34 +183,55 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
             onRemove={onLanguageRemove}
           />
 
-          <div className="filter-actions">
-            <Button
-              variant={ButtonVariant.Link}
-              className="filter-action-btn"
-              onClick={() => {
-                setSelectedLanguageFilters([])
-                setSelectedTopicsFilters([])
-                setSearchState('')
-              }}
-            >
-              {t('clearFilters')}
-            </Button>
-            <Button
-              variant={ButtonVariant.Link}
-              className={`filter-action-btn ${isUserLanguagesFilterActive ? 'active' : ''}`}
-              onClick={() => {
-                setSelectedLanguageFilters([...userLanguages.values()])
-              }}
-            >
-              {t('myLanguages')}
-            </Button>
-            <Button
-              variant={ButtonVariant.Link}
-              className={`filter-action-btn ${followedAuthorsFilter ? 'active' : ''}`}
-              onClick={toggleFollowedAuthorsFilter}
-            >
-              {t('followedUsers')}
-            </Button>
+          <div className="filter-action-container">
+            <div className="filter-actions">
+              <Button
+                variant={ButtonVariant.Link}
+                className="filter-action-btn"
+                onClick={() => {
+                  setSelectedLanguageFilters([])
+                  setSelectedTopicsFilters([])
+                  setSearchState('')
+                  followedAuthorsFilter && toggleFollowedAuthorsFilter()
+                  needsFeedbackFilter && toggleNeedsFeedbackFilter()
+                  hasInteractedFilter && toggleHasInteractedFilter()
+                }}
+              >
+                {t('clearFilters')}
+              </Button>
+              <Button
+                variant={ButtonVariant.Link}
+                className={`filter-action-btn ${isUserLanguagesFilterActive ? 'active' : ''}`}
+                onClick={() => {
+                  setSelectedLanguageFilters([...userLanguages.values()])
+                }}
+              >
+                {t('myLanguages')}
+              </Button>
+              <Button
+                variant={ButtonVariant.Link}
+                className={`filter-action-btn ${followedAuthorsFilter ? 'active' : ''}`}
+                onClick={toggleFollowedAuthorsFilter}
+              >
+                {t('followedUsers')}
+              </Button>
+            </div>
+            <div className="filter-actions">
+              <Button
+                variant={ButtonVariant.Link}
+                className={`filter-action-btn ${needsFeedbackFilter ? 'active' : ''}`}
+                onClick={toggleNeedsFeedbackFilter}
+              >
+                {t('needsFeedback')}
+              </Button>
+              <Button
+                variant={ButtonVariant.Link}
+                className={`filter-action-btn ${hasInteractedFilter ? 'active' : ''}`}
+                onClick={toggleHasInteractedFilter}
+              >
+                {t('hasInteracted')}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

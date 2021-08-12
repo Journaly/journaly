@@ -1,7 +1,12 @@
 let config = {
   target: 'serverless',
   productionBrowserSourceMaps: true,
-  webpack5: false,
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push('_http_common', 'bufferutil', 'utf-8-validate')
+    }
+    return config
+  },
 }
 
 if (process.env.ANALYZE === '1') {

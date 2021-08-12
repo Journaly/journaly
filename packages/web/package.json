@@ -15,7 +15,7 @@
   "scripts": {
     "build:nexus": "cross-env NEXUS_REFLECTION=1 ts-node -r tsconfig-paths/register -P tsconfig-base.json -T resolvers/index.ts",
     "build:next": "next build",
-    "build": "npm run prisma:generate && npm run build:nexus && cat node_modules/@types/typegen-nexus/index.d.ts && npm run build:next",
+    "build": "npm run prisma:generate && npm run build:nexus && tree -L 3 -d . && npm run build:next",
     "codegen": "graphql-codegen --config codegen.yml",
     "dev": "node server/index.js",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,md}'",

@@ -18,7 +18,7 @@ type Props = {
 
 const Filters: React.FC<Props> = ({ currentUser, initialSearchFilters, resetPagination }) => {
   const { t } = useTranslation('my-feed')
-  const [showAdvancedFilters, setShowAdvancedFilters] = useToggle()
+  const [showAdvancedFilters, setShowAdvancedFilters] = useToggle(false)
   const [search, setSearchState] = useState('')
   const onSearchChange = useCallback((val): void => setSearchState(val), [])
 
@@ -122,57 +122,59 @@ const Filters: React.FC<Props> = ({ currentUser, initialSearchFilters, resetPagi
           onAdd={onLanguageAdd}
           onRemove={onLanguageRemove}
         />
-
-        <div className="filter-action-container">
-          <div className="filter-actions">
-            <Button
-              variant={ButtonVariant.Link}
-              className="filter-action-btn"
-              onClick={() => {
-                setSelectedLanguageFilters([])
-                setSelectedTopicsFilters([])
-                setSearchState('')
-                followedAuthorsFilter && toggleFollowedAuthorsFilter()
-                needsFeedbackFilter && toggleNeedsFeedbackFilter()
-                hasInteractedFilter && toggleHasInteractedFilter()
-              }}
-            >
-              {t('clearFilters')}
-            </Button>
-            <Button
-              variant={ButtonVariant.Link}
-              className={`filter-action-btn ${isUserLanguagesFilterActive ? 'active' : ''}`}
-              onClick={() => {
-                setSelectedLanguageFilters([...userLanguages.values()])
-              }}
-            >
-              {t('myLanguages')}
-            </Button>
-            <Button
-              variant={ButtonVariant.Link}
-              className={`filter-action-btn ${followedAuthorsFilter ? 'active' : ''}`}
-              onClick={toggleFollowedAuthorsFilter}
-            >
-              {t('followedUsers')}
-            </Button>
+        <Button onClick={setShowAdvancedFilters}>Advanced Filters</Button>
+        {showAdvancedFilters && (
+          <div className="filter-action-container">
+            <div className="filter-actions">
+              <Button
+                variant={ButtonVariant.Link}
+                className="filter-action-btn"
+                onClick={() => {
+                  setSelectedLanguageFilters([])
+                  setSelectedTopicsFilters([])
+                  setSearchState('')
+                  followedAuthorsFilter && toggleFollowedAuthorsFilter()
+                  needsFeedbackFilter && toggleNeedsFeedbackFilter()
+                  hasInteractedFilter && toggleHasInteractedFilter()
+                }}
+              >
+                {t('clearFilters')}
+              </Button>
+              <Button
+                variant={ButtonVariant.Link}
+                className={`filter-action-btn ${isUserLanguagesFilterActive ? 'active' : ''}`}
+                onClick={() => {
+                  setSelectedLanguageFilters([...userLanguages.values()])
+                }}
+              >
+                {t('myLanguages')}
+              </Button>
+              <Button
+                variant={ButtonVariant.Link}
+                className={`filter-action-btn ${followedAuthorsFilter ? 'active' : ''}`}
+                onClick={toggleFollowedAuthorsFilter}
+              >
+                {t('followedUsers')}
+              </Button>
+            </div>
+            <div className="filter-actions">
+              <Button
+                variant={ButtonVariant.Link}
+                className={`filter-action-btn ${needsFeedbackFilter ? 'active' : ''}`}
+                onClick={toggleNeedsFeedbackFilter}
+              >
+                {t('needsFeedback')}
+              </Button>
+              <Button
+                variant={ButtonVariant.Link}
+                className={`filter-action-btn ${hasInteractedFilter ? 'active' : ''}`}
+                onClick={toggleHasInteractedFilter}
+              >
+                {t('hasInteracted')}
+              </Button>
+            </div>
           </div>
-          <div className="filter-actions">
-            <Button
-              variant={ButtonVariant.Link}
-              className={`filter-action-btn ${needsFeedbackFilter ? 'active' : ''}`}
-              onClick={toggleNeedsFeedbackFilter}
-            >
-              {t('needsFeedback')}
-            </Button>
-            <Button
-              variant={ButtonVariant.Link}
-              className={`filter-action-btn ${hasInteractedFilter ? 'active' : ''}`}
-              onClick={toggleHasInteractedFilter}
-            >
-              {t('hasInteracted')}
-            </Button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   )

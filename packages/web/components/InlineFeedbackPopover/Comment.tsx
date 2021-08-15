@@ -181,7 +181,9 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <Markdown className="comment-body">{comment.body}</Markdown>
+            <Markdown className="comment-body" disallowedElements={['img']}>
+              {comment.body}
+            </Markdown>
           )}
         </div>
       </div>
@@ -189,10 +191,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         <div className="edit-thanks-block">
           <div className="thanks-block">
             <span>
-              <LikeIcon 
-                filled={numThanks > 0}
-                title={t('numUsersGaveThanks', {numThanks})}
-              />
+              <LikeIcon filled={numThanks > 0} title={t('numUsersGaveThanks', { numThanks })} />
             </span>
             <span className="thanks-count">{numThanks}</span>
           </div>

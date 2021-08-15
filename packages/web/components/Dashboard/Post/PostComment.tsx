@@ -105,14 +105,16 @@ const PostComment: React.FC<PostCommentProps> = ({
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <Markdown className="comment-body">{comment.body}</Markdown>
+            <Markdown className="comment-body" disallowedElements={['img']}>
+              {comment.body}
+            </Markdown>
           )}
         </div>
       </div>
       {canEdit && !isEditMode && (
         <div className="edit-block">
-          <span 
-            className="edit-btn" 
+          <span
+            className="edit-btn"
             onClick={() => {
               setIsEditMode(true)
               setUpdatingCommentBody(comment.body)

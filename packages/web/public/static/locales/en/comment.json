@@ -4,7 +4,7 @@
   "save": "Save",
   "cancel": "Cancel",
   "submit": "Submit",
-  "addCommentPlaceholder": "Add a comment...",
+  "addCommentPlaceholder": "We now support Markdown in comments! Try using **bold** or *italic*!",
   "noCommentsYetMessage": "No comments... yet!",
   "tabGeneralKey": "General",
   "tabOutdatedKey": "Outdated",

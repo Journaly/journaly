@@ -2,6 +2,7 @@ import React, { useState, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
 import classNames from 'classnames'
+import Markdown from 'react-markdown'
 
 import {
   useUpdateCommentMutation,
@@ -180,7 +181,9 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <p className="comment-body">{comment.body}</p>
+            <Markdown className="comment-body" disallowedElements={['img']}>
+              {comment.body}
+            </Markdown>
           )}
         </div>
       </div>
@@ -188,10 +191,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         <div className="edit-thanks-block">
           <div className="thanks-block">
             <span>
-              <LikeIcon 
-                filled={numThanks > 0}
-                title={t('numUsersGaveThanks', {numThanks})}
-              />
+              <LikeIcon filled={numThanks > 0} title={t('numUsersGaveThanks', { numThanks })} />
             </span>
             <span className="thanks-count">{numThanks}</span>
           </div>

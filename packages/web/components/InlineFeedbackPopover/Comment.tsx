@@ -345,6 +345,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         :global(.comment-body blockquote) {
           border-left: 4px solid ${theme.colors.blueLight};
           padding-left: 5px;
+          background-color: ${theme.colors.gray100};
         }
 
         .edit-thanks-block {

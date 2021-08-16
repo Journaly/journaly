@@ -346,6 +346,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           border-left: 4px solid ${theme.colors.blueLight};
           padding-left: 5px;
           background-color: ${theme.colors.gray100};
+          font-style: italic;
         }
 
         .edit-thanks-block {

@@ -323,6 +323,30 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           word-wrap: break-word;
         }
 
+        :global(.comment-body h1),
+        :global(.comment-body h2),
+        :global(.comment-body h3),
+        :global(.comment-body h4) {
+          font-family: inherit;
+          font-size: 1.2em;
+          font-weight: 600;
+          margin: 0.5em 0 0.5em 0;
+        }
+        :global(.comment-body li) {
+          list-style: inside;
+          list-style-type: disc;
+          margin-left: 20px;
+        }
+        :global(.comment-body code) {
+          background-color: #eee;
+          font-family: monospace;
+          padding: 2px;
+        }
+        :global(.comment-body blockquote) {
+          border-left: 4px solid ${theme.colors.blueLight};
+          padding-left: 5px;
+        }
+
         .edit-thanks-block {
           display: flex;
           flex-direction: column;

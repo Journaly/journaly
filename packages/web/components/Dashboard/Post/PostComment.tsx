@@ -244,8 +244,10 @@ const PostComment: React.FC<PostCommentProps> = ({
           padding: 2px;
         }
         :global(.comment-body blockquote) {
-          border-left: 2px solid ${theme.colors.blueLight};
+          border-left: 4px solid ${theme.colors.blueLight};
           padding-left: 5px;
+          background-color: ${theme.colors.gray100};
+          font-style: italic;
         }
 
         .body-block :global(p) {

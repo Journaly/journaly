@@ -229,7 +229,7 @@ const PostComment: React.FC<PostCommentProps> = ({
           word-wrap: break-word;
         }
 
-        // MarkDown Styles
+        // MarkDown Styles -->
         :global(.comment-body h1),
         :global(.comment-body h2),
         :global(.comment-body h3),
@@ -244,9 +244,12 @@ const PostComment: React.FC<PostCommentProps> = ({
           list-style-type: decimal;
           margin-left: 20px;
         }
-        :global(.comment-body ul > li) {
+        :global(.comment-body ul > li:not(.task-list-item)) {
           list-style: inside;
           list-style-type: disc;
+          margin-left: 20px;
+        }
+        :global(.comment-body ul > li > input[type='checkbox']) {
           margin-left: 20px;
         }
         :global(.comment-body code) {
@@ -268,6 +271,8 @@ const PostComment: React.FC<PostCommentProps> = ({
           cursor: pointer;
           text-decoration: underline;
         }
+
+        // <-- MarkDown Styles
 
         .body-block :global(p) {
           word-wrap: break-word;

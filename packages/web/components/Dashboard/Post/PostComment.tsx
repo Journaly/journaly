@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 import {
   useUpdatePostCommentMutation,
@@ -104,7 +105,11 @@ const PostComment: React.FC<PostCommentProps> = ({
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <Markdown className="comment-body" disallowedElements={['img']}>
+            <Markdown
+              className="comment-body"
+              disallowedElements={['img']}
+              remarkPlugins={[remarkGfm]}
+            >
               {comment.body}
             </Markdown>
           )}
@@ -224,6 +229,7 @@ const PostComment: React.FC<PostCommentProps> = ({
           word-wrap: break-word;
         }
 
+        // MarkDown Styles
         :global(.comment-body h1),
         :global(.comment-body h2),
         :global(.comment-body h3),
@@ -233,7 +239,12 @@ const PostComment: React.FC<PostCommentProps> = ({
           font-weight: 600;
           margin: 0.5em 0 0.5em 0;
         }
-        :global(.comment-body li) {
+        :global(.comment-body ol > li) {
+          list-style: inside;
+          list-style-type: decimal;
+          margin-left: 20px;
+        }
+        :global(.comment-body ul > li) {
           list-style: inside;
           list-style-type: disc;
           margin-left: 20px;
@@ -248,6 +259,14 @@ const PostComment: React.FC<PostCommentProps> = ({
           padding-left: 5px;
           background-color: ${theme.colors.gray100};
           font-style: italic;
+          margin: 5px 0;
+        }
+        :global(.comment-body a) {
+          color: ${theme.colors.blueLight};
+        }
+        :global(.comment-body a:hover) {
+          cursor: pointer;
+          text-decoration: underline;
         }
 
         .body-block :global(p) {

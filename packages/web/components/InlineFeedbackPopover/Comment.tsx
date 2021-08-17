@@ -3,6 +3,9 @@ import Link from 'next/link'
 import { toast } from 'react-toastify'
 import classNames from 'classnames'
 import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+
+// TODO: Update `react-markdown` and `remark-gfm` once Next.js versioning issues are resolved
 
 import {
   useUpdateCommentMutation,
@@ -180,7 +183,11 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <Markdown className="comment-body" disallowedElements={['img']}>
+            <Markdown
+              className="comment-body"
+              disallowedElements={['img']}
+              remarkPlugins={[remarkGfm]}
+            >
               {comment.body}
             </Markdown>
           )}
@@ -323,6 +330,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           word-wrap: break-word;
         }
 
+        // MarkDown Styles
         :global(.comment-body h1),
         :global(.comment-body h2),
         :global(.comment-body h3),
@@ -332,7 +340,12 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           font-weight: 600;
           margin: 0.5em 0 0.5em 0;
         }
-        :global(.comment-body li) {
+        :global(.comment-body ol > li) {
+          list-style: inside;
+          list-style-type: decimal;
+          margin-left: 20px;
+        }
+        :global(.comment-body ul > li) {
           list-style: inside;
           list-style-type: disc;
           margin-left: 20px;
@@ -345,8 +358,16 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         :global(.comment-body blockquote) {
           border-left: 4px solid ${theme.colors.blueLight};
           padding-left: 5px;
+          margin: 5px 0;
           background-color: ${theme.colors.gray100};
           font-style: italic;
+        }
+        :global(.comment-body a) {
+          color: ${theme.colors.blueLight};
+        }
+        :global(.comment-body a:hover) {
+          cursor: pointer;
+          text-decoration: underline;
         }
 
         .edit-thanks-block {

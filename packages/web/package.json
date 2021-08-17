@@ -81,6 +81,7 @@
     "react-markdown": "^6.0.3",
     "react-toastify": "^6.0.8",
     "reactjs-popup": "^2.0.4",
+    "remark-gfm": "^1.0.0",
     "slate": "https://journaly-hosted-packages.s3.us-east-2.amazonaws.com/slate-v0.62.0.tgz",
     "slate-history": "https://journaly-hosted-packages.s3.us-east-2.amazonaws.com/slate-history-v0.62.0.tgz",
     "slate-hyperscript": "https://journaly-hosted-packages.s3.us-east-2.amazonaws.com/slate-hyperscript-v0.62.0.tgz",

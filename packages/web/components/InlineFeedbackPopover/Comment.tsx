@@ -343,12 +343,15 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         :global(.comment-body ol > li) {
           list-style: inside;
           list-style-type: decimal;
-          margin-left: 20px;
+          margin-left: 10px;
         }
-        :global(.comment-body ul > li) {
+        :global(.comment-body ul > li:not(.task-list-item)) {
           list-style: inside;
           list-style-type: disc;
-          margin-left: 20px;
+          margin-left: 10px;
+        }
+        :global(.comment-body ul > li > input[type='checkbox']) {
+          margin: 0 10px;
         }
         :global(.comment-body code) {
           background-color: #eee;

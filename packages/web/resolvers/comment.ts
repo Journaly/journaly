@@ -1,22 +1,9 @@
-import {
-  intArg,
-  stringArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { intArg, stringArg, objectType, extendType } from 'nexus'
 import { add, isPast } from 'date-fns'
 
-import {
-  User,
-  NotificationType,
-  BadgeType,
-} from '@journaly/j-db-client'
+import { User, NotificationType, BadgeType } from '@journaly/j-db-client'
 
-import {
-  hasAuthorPermissions,
-  createNotification,
-  assignBadge,
-} from './utils'
+import { hasAuthorPermissions, createNotification, assignBadge } from './utils'
 import { NotFoundError } from './errors'
 
 const Thread = objectType({
@@ -213,28 +200,19 @@ const CommentMutations = extendType({
             return
           }
 
-          promises.push(createNotification(
-            ctx.db,
-            user,
-            {
+          promises.push(
+            createNotification(ctx.db, user, {
               type: NotificationType.THREAD_COMMENT,
-              comment
-            }
-          ))
+              comment,
+            }),
+          )
         })
 
         await Promise.all(promises)
 
         // Check to see if we should assign a badge
-        if (
-          thread.post.author.id !== userId &&
-          isPast(add(thread.post.createdAt, { weeks: 1 }))
-        ) {
-          await assignBadge(
-            ctx.db,
-            userId,
-            BadgeType.NECROMANCER
-          )
+        if (thread.post.author.id !== userId && isPast(add(thread.post.createdAt, { weeks: 1 }))) {
+          await assignBadge(ctx.db, userId, BadgeType.NECROMANCER)
         }
 
         return comment
@@ -375,8 +353,8 @@ const CommentMutations = extendType({
             userId_postId: {
               userId,
               postId: post.id,
-            }
-          }
+            },
+          },
         })
 
         const promises: Promise<any>[] = []
@@ -386,14 +364,12 @@ const CommentMutations = extendType({
             return
           }
 
-          promises.push(createNotification(
-            ctx.db,
-            user,
-            {
+          promises.push(
+            createNotification(ctx.db, user, {
               type: NotificationType.POST_COMMENT,
-              postComment
-            }
-          ))
+              postComment,
+            }),
+          )
         })
 
         await Promise.all(promises)
@@ -482,9 +458,4 @@ const CommentMutations = extendType({
   },
 })
 
-export default [
-  Thread,
-  Comment,
-  PostComment,
-  CommentMutations,
-]
+export default [Thread, Comment, PostComment, CommentMutations]

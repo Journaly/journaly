@@ -9,9 +9,10 @@ const langCodeToUILangMap: { [key: string]: UILanguage } = {
   es: UILanguage.Spanish,
 }
 
-
 const useUILanguage = () => {
-  const { i18n: { language } } = React.useContext(I18nContext)
+  const {
+    i18n: { language },
+  } = React.useContext(I18nContext)
 
   return langCodeToUILangMap[language] || UILanguage.English
 }

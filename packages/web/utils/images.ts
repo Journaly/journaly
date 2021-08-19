@@ -32,68 +32,58 @@ const blobifyDataUrl = (url: string) => {
   return new Blob([u8arr], { type: mime })
 }
 
-type ImageUploadErrorType = 
-  | 'GET_UPLOAD_DATA_ERROR'
-  | 'UPLOAD_ERROR'
-  | 'PROCESSING_ERROR'
+type ImageUploadErrorType = 'GET_UPLOAD_DATA_ERROR' | 'UPLOAD_ERROR' | 'PROCESSING_ERROR'
 
-type Result<T, E> = 
-  | { failed: false, value: T }
-  | { failed: true, error: E }
+type Result<T, E> = { failed: false; value: T } | { failed: true; error: E }
 
+const uploadFile = async <T extends BaseUploadData>(
+  getUploadData: () => Promise<T | undefined>,
+  file: File,
+): Promise<Result<T, ImageUploadErrorType>> => {
+  let uploadData: T | undefined
+  try {
+    uploadData = await getUploadData()
+  } catch (e) {
+    return { failed: true, error: 'GET_UPLOAD_DATA_ERROR' }
+  }
 
-const uploadFile = async <T extends BaseUploadData>(getUploadData: () => Promise<T | undefined>, file: File): Promise<Result<T, ImageUploadErrorType>>  => {
-    let uploadData: T | undefined
+  if (!uploadData) {
+    return { failed: true, error: 'GET_UPLOAD_DATA_ERROR' }
+  }
+
+  const { uploadUrl, checkUrl } = uploadData
+
+  try {
+    await fetch(uploadUrl, {
+      method: 'PUT',
+      body: file,
+    })
+  } catch (e) {
+    return { failed: true, error: 'UPLOAD_ERROR' }
+  }
+
+  let successful = false
+  for (let i = 0; i < 20; i++) {
+    await wait(500)
+
     try {
-      uploadData = await getUploadData()
-    } catch (e) {
-      return { failed: true, error: 'GET_UPLOAD_DATA_ERROR' }
-    }
-
-    if (!uploadData) {
-      return { failed: true, error: 'GET_UPLOAD_DATA_ERROR'}
-    }
-
-    const { uploadUrl, checkUrl } = uploadData
-
-    try {
-      await fetch(uploadUrl, {
-        method: 'PUT',
-        body: file,
-      })
-    } catch (e) {
-      return { failed: true, error: 'UPLOAD_ERROR' }
-    }
-
-    let successful = false
-    for (let i = 0; i < 20; i++) {
-      await wait(500)
-
-      try {
-        const response = await fetch(`${checkUrl}?t=${i}`, { method: 'HEAD' })
-        if (response.status === 200) {
-          successful = true
-          break
-        }
-      } catch (e) {
-        console.error(e)
+      const response = await fetch(`${checkUrl}?t=${i}`, { method: 'HEAD' })
+      if (response.status === 200) {
+        successful = true
+        break
       }
+    } catch (e) {
+      console.error(e)
     }
+  }
 
-    if (!successful) {
-      return { failed: true, error: 'PROCESSING_ERROR' }
-    }
+  if (!successful) {
+    return { failed: true, error: 'PROCESSING_ERROR' }
+  }
 
-    return { failed: false, value: uploadData}
+  return { failed: false, value: uploadData }
 }
 
-export {
-  uploadFile,
-  blobifyDataUrl,
-}
+export { uploadFile, blobifyDataUrl }
 
-export type {
-  ImageUploadErrorType,
-  BaseUploadData,
-}
-
+export type { ImageUploadErrorType, BaseUploadData }

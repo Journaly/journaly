@@ -7,7 +7,7 @@ import {
 const useAvatarImageUpload: UploadHook<InitiateAvatarImageUploadResponse> = () => {
   const [initiateAvatarImageUpload] = useInitiateAvatarImageUploadMutation()
 
-  const getUploadData = async () =>  {
+  const getUploadData = async () => {
     const resp = await initiateAvatarImageUpload()
 
     return resp?.data?.initiateAvatarImageUpload

@@ -28,21 +28,23 @@ const updateStripeSubscription = async (subscriptionId: string, db: PrismaClient
   if (stripeSubscription.status === 'active') {
     expiresAt += 24 * 60 * 60 * 1000 * 2
   }
-  
+
   await db.membershipSubscription.update({
     where: {
       stripeSubscriptionId: subscriptionId,
     },
     data: {
       expiresAt: new Date(expiresAt),
-      nextBillingDate: stripeSubscription.cancel_at_period_end ? null : new Date(stripeSubscription.current_period_end * 1000),
+      nextBillingDate: stripeSubscription.cancel_at_period_end
+        ? null
+        : new Date(stripeSubscription.current_period_end * 1000),
       stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonObject,
     },
   })
 }
 
 const convertStripePriceToMembershipPeriod = (priceId: string) => {
-  switch(priceId) {
+  switch (priceId) {
     case process.env.STRIPE_MONTHLY_PRICE_ID:
       return MembershipSubscriptionPeriod.MONTHLY
     case process.env.STRIPE_QUARTERLY_PRICE_ID:
@@ -50,7 +52,7 @@ const convertStripePriceToMembershipPeriod = (priceId: string) => {
     case process.env.STRIPE_ANNUAL_PRICE_ID:
       return MembershipSubscriptionPeriod.ANNUALY
   }
-  throw new Error("Price ID does not match one of our valid IDs")
+  throw new Error('Price ID does not match one of our valid IDs')
 }
 
 const handler = async (req: any, res: any) => {
@@ -64,12 +66,8 @@ const handler = async (req: any, res: any) => {
     try {
       event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
     } catch (err) {
-      logPaymentsError(
-        err.message,
-        err,
-        body,
-      )
-  
+      logPaymentsError(err.message, err, body)
+
       res.status(400).send(`Webhook Error: ${err.message}`)
       return
     }
@@ -84,14 +82,14 @@ const handler = async (req: any, res: any) => {
       const subscriptionLine = stripeInvoice.lines.data.find(
         (item: any) => item.type === 'subscription',
       )
-      let customerId: string =
+      const customerId: string =
         typeof stripeInvoiceCustomer === 'string' ? stripeInvoiceCustomer : stripeInvoiceCustomer.id
 
       if (!subscriptionLine?.price) {
-        throw new Error("Subscription line missing")
+        throw new Error('Subscription line missing')
       }
       if (!subscriptionLine.subscription) {
-        throw new Error("Subscription ID not present on subscriptionLine")
+        throw new Error('Subscription ID not present on subscriptionLine')
       }
 
       const userQuery = await db.user.findMany({
@@ -100,7 +98,7 @@ const handler = async (req: any, res: any) => {
         },
         include: {
           membershipSubscription: true,
-        }
+        },
       })
 
       if (userQuery.length !== 1) {
@@ -109,7 +107,7 @@ const handler = async (req: any, res: any) => {
       const currentUser = userQuery[0]
 
       const membershipPeriod = convertStripePriceToMembershipPeriod(subscriptionLine.price.id)
-      if (!membershipPeriod) throw new Error("Unable to resolve a period from invoice object")
+      if (!membershipPeriod) throw new Error('Unable to resolve a period from invoice object')
 
       const invoice = await db.membershipSubscriptionInvoice.create({
         data: {
@@ -121,7 +119,7 @@ const handler = async (req: any, res: any) => {
               id: currentUser.id,
             },
           },
-        }
+        },
       })
 
       for (const item of stripeInvoice.lines.data) {
@@ -148,16 +146,18 @@ const handler = async (req: any, res: any) => {
        * For now we'll just do nothing and allow the subscription to expire
        */
       const stripeInvoice = event.data.object as Stripe.Invoice
-      const subscriptionLine = stripeInvoice.lines.data.find((item: any) => item.type === 'subscription')
+      const subscriptionLine = stripeInvoice.lines.data.find(
+        (item: any) => item.type === 'subscription',
+      )
 
       if (!subscriptionLine) {
-        throw new Error("Subscription line missing")
+        throw new Error('Subscription line missing')
       }
       if (subscriptionLine.type !== 'subscription') {
-        throw new Error("First line item is not a subscription. Something seems wrong here...")
+        throw new Error('First line item is not a subscription. Something seems wrong here...')
       }
       if (!subscriptionLine.subscription) {
-        throw new Error("Subscription ID not present on subscriptionLine")
+        throw new Error('Subscription ID not present on subscriptionLine')
       }
 
       await updateStripeSubscription(subscriptionLine.subscription, db)
@@ -169,11 +169,7 @@ const handler = async (req: any, res: any) => {
     }
     // handle creating a new membershipSubscriptionTransaction when upgrading/downgrading
   } catch (err) {
-    logPaymentsError(
-      err.message,
-      err,
-      event
-    )
+    logPaymentsError(err.message, err, event)
   }
 
   res.status(200).json({

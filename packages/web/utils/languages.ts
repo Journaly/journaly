@@ -1,4 +1,4 @@
-import {LanguageLevel} from '@/generated/graphql'
+import { LanguageLevel } from '@/generated/graphql'
 
 type LanguageName = {
   name: string
@@ -23,4 +23,3 @@ export function languageLevelToNumber(level: LanguageLevel) {
       return 0
   }
 }
-

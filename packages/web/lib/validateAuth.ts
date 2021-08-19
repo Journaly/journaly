@@ -4,10 +4,10 @@ export interface IValues {
   password?: string
 }
 
-export interface IErrors extends IValues {}
+export type IErrors = IValues
 
 export default function validateAuth(values: IValues): IErrors {
-  let errors: IErrors = {}
+  const errors: IErrors = {}
 
   // Email validation errors
   if (!values.email) {

@@ -75,10 +75,7 @@ const sendJmail = (emailParams: EmailParams) => {
   })
 }
 
-const sendPasswordResetTokenEmail = ({
-  user,
-  resetToken,
-}: sendPasswordResetTokenEmailArgs) => {
+const sendPasswordResetTokenEmail = ({ user, resetToken }: sendPasswordResetTokenEmailArgs) => {
   return sendJmail({
     from: 'robin@journaly.com',
     to: user.email,
@@ -132,8 +129,8 @@ const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {
 }
 
 type MoosendSubscriberResponse = {
-  Code: number,
-  Error: string | null,
+  Code: number
+  Error: string | null
   Context: {
     ID: string
   }
@@ -157,18 +154,15 @@ const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
     },
     cache: 'no-cache',
     body: JSON.stringify({
       Name: user.name || user.handle,
       Email: user.email,
-      CustomFields: [
-        `journalyId=${user.id}`,
-        `registrationDate=${user.createdAt.toISOString()}`,
-      ]
-    })
-  }).then(r => r.json())) as MoosendSubscriberResponse
+      CustomFields: [`journalyId=${user.id}`, `registrationDate=${user.createdAt.toISOString()}`],
+    }),
+  }).then((r) => r.json())) as MoosendSubscriberResponse
 
   if (resp['Error']) {
     throw new Error(resp['Error'])
@@ -184,14 +178,9 @@ const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
     // Only update the DB if we created a new subscriber.
     return db.user.update({
       where: { id: user.id },
-      data: { moosendSubscriberId: resp.Context.ID }
+      data: { moosendSubscriberId: resp.Context.ID },
     })
   }
 }
 
-export {
-  sendJmail,
-  sendPasswordResetTokenEmail,
-  sendNewBadgeEmail,
-  subscribeUserToProductUpdates,
-}
+export { sendJmail, sendPasswordResetTokenEmail, sendNewBadgeEmail, subscribeUserToProductUpdates }

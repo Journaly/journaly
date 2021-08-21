@@ -176,31 +176,12 @@ const InitiateInlinePostImageUploadResponse = objectType({
 const PostQueries = extendType({
   type: 'Query',
   definition(t) {
-    t.list.field('posts', {
-      type: 'Post',
-      args: {
-        status: arg({ type: 'PostStatus', required: true }),
-        authorId: intArg({ required: true }),
-      },
-      resolve: async (_parent, args, ctx) => {
-        return ctx.db.post.findMany({
-          where: {
-            author: { id: args.authorId },
-            status: args.status,
-          },
-          orderBy: {
-            publishedAt: 'desc',
-          },
-        })
-      },
-    })
-
     t.field('postById', {
       type: 'Post',
       args: {
         id: intArg({
           description: 'ID of the post to be retreived',
-          required: true
+          required: true,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -222,7 +203,7 @@ const PostQueries = extendType({
       },
     })
 
-    t.field('feed', {
+    t.field('posts', {
       type: 'PostPage',
       args: {
         search: stringArg({
@@ -248,7 +229,7 @@ const PostQueries = extendType({
           required: true,
         }),
         followedAuthors: booleanArg({
-          description: 'Author IDs to filter posts by. No value means all languages.',
+          description: 'Author IDs to filter posts by. No value means all authors.',
           required: false,
         }),
         needsFeedback: booleanArg({
@@ -256,7 +237,22 @@ const PostQueries = extendType({
           required: false,
         }),
         hasInteracted: booleanArg({
-          description: 'If true, return only posts that the user has commented on in any way',
+          description: 'If true, return only posts that the user has commented on in any way.',
+          required: false,
+        }),
+        status: arg({
+          type: 'PostStatus',
+          description: 'The post status, indicating Published or Draft.',
+          required: true,
+        }),
+        authoredOnly: booleanArg({
+          description:
+            'If true, return only posts authored by currentUser. If false, return all posts.',
+          required: true,
+        }),
+        authorId: intArg({
+          description:
+            'Can be provided for usage on a profile page. If not provided, default to currentUser ID',
           required: false,
         }),
       },
@@ -381,6 +377,26 @@ const PostQueries = extendType({
           })
         }
 
+        if (currentUser && args.authoredOnly) {
+          filterClauses.push({
+            author: {
+              id: args.authorId ? args.authorId : currentUser.id,
+            },
+          })
+        }
+
+        if (currentUser && args.status === PostStatus.PUBLISHED) {
+          filterClauses.push({
+            status: PostStatus.PUBLISHED,
+          })
+        }
+
+        if (currentUser && args.status === PostStatus.DRAFT) {
+          filterClauses.push({
+            status: PostStatus.DRAFT,
+          })
+        }
+
         const countQuery = ctx.db.post.count({
           where: {
             AND: filterClauses,
@@ -393,9 +409,6 @@ const PostQueries = extendType({
         const postQuery = ctx.db.post.findMany({
           where: {
             AND: filterClauses,
-            status: {
-              not: 'DRAFT',
-            },
           },
           skip: args.skip,
           take: args.first,

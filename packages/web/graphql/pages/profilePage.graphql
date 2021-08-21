@@ -2,8 +2,11 @@ query profilePage($userId: Int!) {
   userById(id: $userId) {
     ...ProfileUserFragment
   }
-  posts(authorId: $userId, status: PUBLISHED) {
-    ...PostCardFragment
+  posts(first: 5, skip: 5, status: PUBLISHED, authoredOnly: true) {
+    posts {
+      ...PostCardFragment
+    }
+    count
   }
   currentUser {
     ...UserWithLanguagesFragment

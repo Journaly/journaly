@@ -26,6 +26,7 @@ export type PostQueryVarsType =
       hasInteracted: boolean
     }
   | undefined
+  // TODO URGENT: remove this 'undefined'
 
 type Props = {
   currentUser: UserType

@@ -89,6 +89,8 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   const [saving, setSaving] = React.useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState('')
 
+  // TODO URGENT: FIGURE OUT CHANGES IN THIS FILE
+
   const [createPost] = useCreatePostMutation({
     onCompleted: (mutationResult) => {
       dataRef.current?.clear()

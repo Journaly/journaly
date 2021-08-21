@@ -5,19 +5,27 @@ import { User as UserType, useTopicsQuery, useLanguagesQuery } from '@/generated
 import SearchInput from './SearchInput'
 import LanguageSelect from './LanguageSelect'
 import TopicSelect from './TopicSelect'
-import { InitialSearchFilters } from '../MyFeed/MyFeed'
 import useToggle from '@/hooks/useToggle'
 import useUILanguage from '@/hooks/useUILanguage'
 import { useTranslation } from '@/config/i18n'
 
-export type PostQueryVarsType = {
-  languages: postQueryVars.selectedLanguageFilters.length ? postQueryVars.selectedLanguageFilters : null,
-  followedAuthors: postQueryVars.followedAuthorsFilter,
-  search,
-  topics: selectedTopicsFilters,
-  needsFeedback: needsFeedbackFilter,
-  hasInteracted: hasInteractedFilter,
+export type InitialSearchFilters = {
+  languages: number[]
+  topics: number[]
+  needsFeedback: boolean
+  hasInteracted: boolean
 }
+
+export type PostQueryVarsType =
+  | {
+      languages: [] | null
+      followedAuthors: boolean
+      search: string
+      topics: []
+      needsFeedback: boolean
+      hasInteracted: boolean
+    }
+  | undefined
 
 type Props = {
   currentUser: UserType

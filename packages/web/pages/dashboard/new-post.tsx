@@ -103,12 +103,14 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
           query: PostsDocument,
           variables: {
             status: mutationResult.data.createPost.status,
-            authorId: currentUser.id,
+            first: 1,
+            skip: 1,
+            authoredOnly: true,
           },
         })
 
         if (data?.posts) {
-          data.posts.push(mutationResult.data.createPost)
+          data.posts.posts.push(mutationResult.data.createPost)
           cache.writeQuery({ query: PostsDocument, data: data.posts })
         }
       }

@@ -6,7 +6,7 @@ import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import MyFeed from '@/components/Dashboard/MyFeed'
 import AuthGate from '@/components/AuthGate'
 import WelcomeModal from '@/components/Modals/WelcomeModal'
-import { InitialSearchFilters } from '@/components/Dashboard/MyFeed/MyFeed'
+import { InitialSearchFilters } from '@/components/Dashboard/Filters'
 import { Request } from 'express'
 
 interface InitialProps {

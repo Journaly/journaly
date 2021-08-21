@@ -8,20 +8,18 @@ import { useTranslation } from '@/config/i18n'
 
 import PostCard from '../PostCard'
 import Pagination from '@/components/Pagination'
-import { User as UserType, useFeedQuery } from '@/generated/graphql'
+import {
+  User as UserType,
+  usePostsQuery,
+  PostCardFragmentFragment,
+  PostStatus,
+} from '@/generated/graphql'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import FeedHeader from './FeedHeader'
 import Filters from '../Filters'
-import { PostQueryVarsType } from '../Filters'
+import { PostQueryVarsType, InitialSearchFilters } from '../Filters'
 
 const NUM_POSTS_PER_PAGE = 9
-
-export type InitialSearchFilters = {
-  languages: number[]
-  topics: number[]
-  needsFeedback: boolean
-  hasInteracted: boolean
-}
 
 type Props = {
   currentUser: UserType
@@ -41,16 +39,18 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>()
 
   // fetch posts for the feed!
-  const { loading, error, data } = useFeedQuery({
+  const { loading, error, data } = usePostsQuery({
     variables: {
       first: NUM_POSTS_PER_PAGE,
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
+      authoredOnly: false,
+      status: PostStatus.Published,
       ...postQueryVars,
     },
   })
 
-  const posts = data?.feed?.posts
-  const count = data?.feed?.count || 0
+  const posts = data?.posts?.posts
+  const count = data?.posts?.count || 0
   const showPagination = count > NUM_POSTS_PER_PAGE
   const pageTitle = t('pageTitle')
 
@@ -77,7 +77,9 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
       <LoadingWrapper loading={loading} error={error}>
         <div className="my-feed-container" data-testid="my-feed-container">
           {posts && posts.length > 0 ? (
-            posts.map((post) => <PostCard key={post.id} post={post} stacked avatar />)
+            posts.map((post: PostCardFragmentFragment) => (
+              <PostCard key={post.id} post={post} stacked avatar />
+            ))
           ) : (
             <p>{t('noPostsMessage')}</p>
           )}

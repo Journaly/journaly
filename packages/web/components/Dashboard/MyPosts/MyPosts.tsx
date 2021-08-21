@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useRouter } from 'next/router'
 import {
   PostStatus as PostStatusType,
   Post as PostType,
@@ -12,6 +13,8 @@ import PostCard from '../PostCard'
 import theme from '@/theme'
 import Filters, { PostQueryVarsType } from '../Filters'
 
+const NUM_POSTS_PER_PAGE = 10
+
 type Props = {
   currentUser: UserType
   status: PostStatusType
@@ -19,15 +22,24 @@ type Props = {
 
 const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
   const { t } = useTranslation('my-posts')
+  /**
+   * Pagination handling
+   */
+  // Pull query params off the router instance
+  const router = useRouter()
+  const currentPage = router.query.page ? Math.max(1, parseInt(router.query.page as string, 10)) : 1
   const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>()
   const { loading, data, error } = usePostsQuery({
     variables: {
+      first: NUM_POSTS_PER_PAGE,
+      skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
       status,
-      authorId: currentUser.id,
+      authoredOnly: true,
+      ...postQueryVars,
     },
   })
 
-  const posts = (data?.posts as PostType[]) || []
+  const posts = (data?.posts?.posts as PostType[]) || []
   const showPosts = !loading && posts.length > 0
   const showEmptyState = !loading && posts.length === 0
 

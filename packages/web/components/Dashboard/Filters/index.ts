@@ -1,2 +1,2 @@
 export { default } from './Filters'
-export type { PostQueryVarsType } from './Filters'
+export type { PostQueryVarsType, InitialSearchFilters } from './Filters'

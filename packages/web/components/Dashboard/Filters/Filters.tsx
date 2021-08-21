@@ -10,10 +10,21 @@ import useToggle from '@/hooks/useToggle'
 import useUILanguage from '@/hooks/useUILanguage'
 import { useTranslation } from '@/config/i18n'
 
+export type PostQueryVarsType = {
+  languages: postQueryVars.selectedLanguageFilters.length ? postQueryVars.selectedLanguageFilters : null,
+  followedAuthors: postQueryVars.followedAuthorsFilter,
+  search,
+  topics: selectedTopicsFilters,
+  needsFeedback: needsFeedbackFilter,
+  hasInteracted: hasInteractedFilter,
+}
+
 type Props = {
   currentUser: UserType
   initialSearchFilters: InitialSearchFilters | null
   resetPagination: () => void
+  postQueryVars: PostQueryVarsType
+  setPostQueryVars: React.Dispatch<React.SetStateAction<PostQueryVarsType>>
 }
 
 const Filters: React.FC<Props> = ({ currentUser, initialSearchFilters, resetPagination }) => {

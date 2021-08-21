@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
@@ -12,6 +12,7 @@ import { User as UserType, useFeedQuery } from '@/generated/graphql'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import FeedHeader from './FeedHeader'
 import Filters from '../Filters'
+import { PostQueryVarsType } from '../Filters'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -37,17 +38,14 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   const router = useRouter()
   const currentPage = router.query.page ? Math.max(1, parseInt(router.query.page as string, 10)) : 1
 
+  const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>()
+
   // fetch posts for the feed!
   const { loading, error, data } = useFeedQuery({
     variables: {
       first: NUM_POSTS_PER_PAGE,
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
-      languages: selectedLanguageFilters.length ? selectedLanguageFilters : null,
-      followedAuthors: followedAuthorsFilter,
-      search,
-      topics: selectedTopicsFilters,
-      needsFeedback: needsFeedbackFilter,
-      hasInteracted: hasInteractedFilter,
+      ...postQueryVars,
     },
   })
 
@@ -73,6 +71,8 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
         currentUser={currentUser}
         initialSearchFilters={initialSearchFilters}
         resetPagination={resetPagination}
+        postQueryVars={postQueryVars}
+        setPostQueryVars={setPostQueryVars}
       />
       <LoadingWrapper loading={loading} error={error}>
         <div className="my-feed-container" data-testid="my-feed-container">

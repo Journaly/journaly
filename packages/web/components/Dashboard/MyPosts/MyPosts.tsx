@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   PostStatus as PostStatusType,
   Post as PostType,
@@ -10,7 +10,7 @@ import TranslationLink from '@/components/TranslationLink'
 import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import PostCard from '../PostCard'
 import theme from '@/theme'
-import Filters from '../Filters'
+import Filters, { PostQueryVarsType } from '../Filters'
 
 type Props = {
   currentUser: UserType
@@ -19,6 +19,7 @@ type Props = {
 
 const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
   const { t } = useTranslation('my-posts')
+  const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>()
   const { loading, data, error } = usePostsQuery({
     variables: {
       status,
@@ -32,7 +33,13 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
 
   return (
     <div className="my-posts-container">
-      <Filters currentUser={currentUser} initialSearchFilters={null} resetPagination={() => {}} />
+      <Filters
+        currentUser={currentUser}
+        initialSearchFilters={null}
+        resetPagination={() => {}}
+        postQueryVars={postQueryVars}
+        setPostQueryVars={setPostQueryVars}
+      />
       {error && <p>There was an error retrieving your posts.</p>}
 
       {loading && <LoadingSpinner size={60} />}

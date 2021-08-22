@@ -68,6 +68,7 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
     WithApollo.getInitialProps = async (ctx) => {
       await nexti18next.initPromise
       const { AppTree, req } = ctx
+      console.log('ZORKON', req.i18n.services.resourceStore.data)
 
       const headers: any = {}
       if (typeof window === 'undefined' && req) {

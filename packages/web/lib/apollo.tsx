@@ -3,6 +3,8 @@ import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from '@apollo/c
 import fetch from 'isomorphic-unfetch'
 import { NextPage } from 'next'
 
+import nexti18next from '@/config/i18n'
+
 export type ApolloClientCache = any
 
 let apolloClient: ApolloClient<ApolloClientCache> | null = null
@@ -64,6 +66,7 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
 
   if (ssr || PageComponent.getInitialProps) {
     WithApollo.getInitialProps = async (ctx) => {
+      await nexti18next.initPromise
       const { AppTree, req } = ctx
 
       const headers: any = {}

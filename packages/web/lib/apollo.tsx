@@ -85,8 +85,8 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
       }
 
       console.log('LANGZ', (req as any)?.i18n?.languages)
-      console.log('zoop', i18n.services.backendConnector.state)
       i18n.services.backendConnector.on('*', (...args: any[]) => console.log('I18NZ:', ...args))
+      i18n.services.backendConnector.logger = console
       await new Promise<void>((res) => {
         i18n.reloadResources(
           ['en', 'de', 'es'],
@@ -104,6 +104,7 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
           (...args: any[]) => { console.log('RELOADED', args); res() })
       })
       //console.log('ZORKON', (req as any)?.i18n?.services?.resourceStore?.data)
+      console.log('zoop', i18n.services.backendConnector.state)
       console.log('MAK', i18n.isInitialized)
 
       // Only on the server:

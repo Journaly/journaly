@@ -86,7 +86,7 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
 
       console.log('LANGZ', (req as any)?.i18n?.languages)
       console.log('zoop', i18n.services.backendConnector.state)
-      i18n.services.backendConnector.on('*', (...args) => console.log('I18NZ:', ...args))
+      i18n.services.backendConnector.on('*', (...args: any[]) => console.log('I18NZ:', ...args))
       await new Promise<void>((res) => {
         i18n.reloadResources(
           ['en', 'de', 'es'],

@@ -84,7 +84,8 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
         pageProps = await PageComponent.getInitialProps(ctx)
       }
 
-      console.log('ZORKON', (req as any).i18n.services.resourceStore.data)
+      await new Promise<void>((res) => { i18n.reloadResources(undefined, undefined, (...args: any[]) => { console.log('RELOADED', args); res() }) })
+      console.log('ZORKON', (req as any).i18n?.services?.resourceStore?.data)
       console.log('MAK', i18n.isInitialized)
 
       // Only on the server:

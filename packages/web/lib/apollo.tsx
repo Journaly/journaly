@@ -84,9 +84,16 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
         pageProps = await PageComponent.getInitialProps(ctx)
       }
 
+
       console.log('LANGZ', (req as any)?.i18n?.languages)
       i18n.services.backendConnector.on('*', (...args: any[]) => console.log('I18NZ:', ...args))
       i18n.services.backendConnector.logger = console
+      await new Promise<void>((res) => {
+        i18n.services.backendConnector.read('en', 'common', 'read', undefined, undefined, (err: any, data: any) => {
+          console.log('ED:', err, data)
+          res()
+        })
+      })
       await new Promise<void>((res) => {
         i18n.reloadResources(
           ['en', 'de', 'es'],

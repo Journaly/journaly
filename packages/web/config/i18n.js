@@ -21,5 +21,3 @@ module.exports = new NextI18Next({
     'post-author-card',
   ],
 })
-
-module.exports.i18n.on('*', (...args) => console.log('I18N:', ...args))

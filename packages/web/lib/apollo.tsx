@@ -2,7 +2,6 @@ import React from 'react'
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
 import fetch from 'isomorphic-unfetch'
 import { NextPage } from 'next'
-import i18n from 'i18next'
 
 export type ApolloClientCache = any
 
@@ -83,36 +82,6 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
       if (PageComponent.getInitialProps) {
         pageProps = await PageComponent.getInitialProps(ctx)
       }
-
-
-      console.log('LANGZ', (req as any)?.i18n?.languages)
-      i18n.services.backendConnector.on('*', (...args: any[]) => console.log('I18NZ:', ...args))
-      i18n.services.backendConnector.logger = console
-      await new Promise<void>((res) => {
-        i18n.services.backendConnector.read('en', 'common', 'read', undefined, undefined, (err: any, data: any) => {
-          console.log('ED:', err, data)
-          res()
-        })
-      })
-      await new Promise<void>((res) => {
-        i18n.reloadResources(
-          ['en', 'de', 'es'],
-          [
-            'common',
-            'post',
-            'profile',
-            'settings',
-            'authentication',
-            'comment',
-            'my-feed',
-            'my-posts',
-            'post-author-card',
-          ],
-          (...args: any[]) => { console.log('RELOADED', args); res() })
-      })
-      //console.log('ZORKON', (req as any)?.i18n?.services?.resourceStore?.data)
-      console.log('zoop', i18n.services.backendConnector.state)
-      console.log('MAK', i18n.isInitialized)
 
       // Only on the server:
       if (typeof window === 'undefined') {

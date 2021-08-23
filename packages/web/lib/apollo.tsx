@@ -2,6 +2,7 @@ import React from 'react'
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
 import fetch from 'isomorphic-unfetch'
 import { NextPage } from 'next'
+import i18n from 'i18next'
 
 export type ApolloClientCache = any
 
@@ -65,7 +66,6 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
   if (ssr || PageComponent.getInitialProps) {
     WithApollo.getInitialProps = async (ctx) => {
       const { AppTree, req } = ctx
-      console.log('ZORKON', (req as any).i18n.services.resourceStore.data)
 
       const headers: any = {}
       if (typeof window === 'undefined' && req) {
@@ -83,6 +83,9 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
       if (PageComponent.getInitialProps) {
         pageProps = await PageComponent.getInitialProps(ctx)
       }
+
+      console.log('ZORKON', (req as any).i18n.services.resourceStore.data)
+      console.log('MAK', i18n.isInitialized)
 
       // Only on the server:
       if (typeof window === 'undefined') {

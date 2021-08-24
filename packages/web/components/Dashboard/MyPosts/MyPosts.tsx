@@ -11,9 +11,10 @@ import TranslationLink from '@/components/TranslationLink'
 import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import PostCard from '../PostCard'
 import theme from '@/theme'
-import Filters, { PostQueryVarsType } from '../Filters'
+import Filters, { PostQueryVarsType } from '@/components/Dashboard/Filters'
+import Pagination from '@/components/Pagination'
 
-const NUM_POSTS_PER_PAGE = 10
+const NUM_POSTS_PER_PAGE = 4
 
 type Props = {
   currentUser: UserType
@@ -40,8 +41,11 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
   })
 
   const posts = (data?.posts?.posts as PostType[]) || []
+  const count = data?.posts?.count || 0
   const showPosts = !loading && posts.length > 0
+  const showPagination = count > NUM_POSTS_PER_PAGE
   const showEmptyState = !loading && posts.length === 0
+  const pageTitle = t('pageTitle')
 
   return (
     <div className="my-posts-container">
@@ -60,6 +64,14 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
           {posts.map((post) => (
             <PostCard key={post.id} post={post} status={status} />
           ))}
+          {showPagination && (
+            <Pagination
+              currentPage={currentPage}
+              total={count}
+              numPerPage={NUM_POSTS_PER_PAGE}
+              title={pageTitle}
+            />
+          )}
         </div>
       )}
 

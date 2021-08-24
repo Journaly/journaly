@@ -1,3 +1,5 @@
+const CopyPlugin = require("copy-webpack-plugin")
+
 let config = {
   target: 'serverless',
   productionBrowserSourceMaps: true,
@@ -7,6 +9,15 @@ let config = {
     if (isServer) {
       config.externals.push('_http_common', 'bufferutil', 'utf-8-validate')
     }
+
+    // Copy translation files into build so we can find them again in vercel world
+    config.plugins.push(
+      new CopyPlugin({
+        patterns: [{ from: 'public/static/locales', to:  'public/static/locales' }],
+      })
+    )
+
+
     return config
   },
 }

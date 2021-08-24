@@ -49,7 +49,6 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
         currentUser={currentUser}
         initialSearchFilters={null}
         resetPagination={() => {}}
-        postQueryVars={postQueryVars}
         setPostQueryVars={setPostQueryVars}
       />
       {error && <p>There was an error retrieving your posts.</p>}

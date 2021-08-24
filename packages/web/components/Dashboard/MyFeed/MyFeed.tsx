@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
@@ -61,6 +61,21 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
     router.push({ ...router, query: newQuery })
   }
 
+  useEffect(() => {
+    const searchFilters = {
+      languages: postQueryVars?.languages,
+      topics: postQueryVars?.topics,
+      needsFeedback: postQueryVars?.needsFeedback,
+      hasInteracted: postQueryVars?.hasInteracted,
+    }
+    document.cookie = `default_search_filters=${JSON.stringify(searchFilters)};`
+  }, [
+    postQueryVars?.languages,
+    postQueryVars?.topics,
+    postQueryVars?.needsFeedback,
+    postQueryVars?.hasInteracted,
+  ])
+
   return (
     <div className="my-feed-wrapper">
       <Head>
@@ -71,7 +86,6 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
         currentUser={currentUser}
         initialSearchFilters={initialSearchFilters}
         resetPagination={resetPagination}
-        postQueryVars={postQueryVars}
         setPostQueryVars={setPostQueryVars}
       />
       <LoadingWrapper loading={loading} error={error}>

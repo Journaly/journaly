@@ -351,6 +351,8 @@ export type QueryFeedArgs = {
   skip: Scalars['Int']
   first: Scalars['Int']
   followedAuthors?: Maybe<Scalars['Boolean']>
+  needsFeedback?: Maybe<Scalars['Boolean']>
+  hasInteracted?: Maybe<Scalars['Boolean']>
 }
 
 export type QueryUserByIdArgs = {
@@ -1000,6 +1002,8 @@ export type FeedQueryVariables = Exact<{
   languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
   topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
   followedAuthors?: Maybe<Scalars['Boolean']>
+  needsFeedback?: Maybe<Scalars['Boolean']>
+  hasInteracted?: Maybe<Scalars['Boolean']>
 }>
 
 export type FeedQuery = { __typename?: 'Query' } & {
@@ -2857,6 +2861,8 @@ export const FeedDocument = gql`
     $languages: [Int!]
     $topics: [Int!]
     $followedAuthors: Boolean
+    $needsFeedback: Boolean
+    $hasInteracted: Boolean
   ) {
     feed(
       first: $first
@@ -2865,6 +2871,8 @@ export const FeedDocument = gql`
       languages: $languages
       topics: $topics
       followedAuthors: $followedAuthors
+      needsFeedback: $needsFeedback
+      hasInteracted: $hasInteracted
     ) {
       posts {
         ...PostCardFragment
@@ -2893,6 +2901,8 @@ export const FeedDocument = gql`
  *      languages: // value for 'languages'
  *      topics: // value for 'topics'
  *      followedAuthors: // value for 'followedAuthors'
+ *      needsFeedback: // value for 'needsFeedback'
+ *      hasInteracted: // value for 'hasInteracted'
  *   },
  * });
  */

@@ -14,7 +14,7 @@ Some major reasons for this are:
 - Writing is relatively _effortful_ and practicing it consistently requires building a habit around it.
 - It is hard to find people to give you feedback.
 - Even once finding someone, figuring out how best to give someone feedback isn't obvious and takes a lot of effort.
-- Once you get feedback from soneone, it isn't easy to actually apply, store, organize, and keep track of it over time.
+- Once you get feedback from someone, it isn't easy to actually apply, store, organize, and keep track of it over time.
 
 **Journaly is about striving to build excellent software with beautiful, simple, and intuitive User Interface & User Experience Design that solves each of the above problems for our users:**
 
@@ -87,7 +87,13 @@ More detailed documentation can be found within each directory (WIP).
 1. Update your `.env` file with your new postgres username & password.
 1. Set the env var `DATABASE_URL` to be the value in your `.env` file (the server will consult the `.env` file but for standalone scripts, you must set the environment variable). This looks like: `export DATABASE_URL='postgresql://<user>:<password>@localhost:5432/<db_name>'`
 
-1. Seed the database with `npm run db:seed`
+1. Seed the database with:
+
+   ```
+   $ npm run db:seed
+   ```
+
+   BOOM! You now have some users, along with a wee selection of posts :)
 
 1. Finally apply database migrations to your new database instance:
 
@@ -117,10 +123,7 @@ The seed script contains a handful of test users and posts to cut down on data c
 
 ### Running Journaly
 
-1. To run the entire app in local development mode, simply run `npm run dev` from the root of the project!
-1. Let's seed that baby DB! From the root of the repo, run `npm run reseed-db`
-
-BOOM! You now have some users, along with a wee selection of posts :)
+To run the entire app in local development mode, simply run `npm run dev` from the `packages/web` directory!
 
 **NOTE: the playground is currently not working, we are working on fixing this. This doesn't impact your ability to work on the project**
 

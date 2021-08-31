@@ -32,6 +32,7 @@ type BasePostData = {
 
 type OutputPostData = BasePostData & {
   clear: () => void
+  resetIntialPostValues: () => void
 }
 
 type InputPostData = BasePostData & {
@@ -113,6 +114,13 @@ const PostEditor: React.FC<PostEditorProps> = ({
   const postLanguage = languages.find(({ language }) => language.id === langId)?.language
   const postTopics = topics.filter(({ id }) => selectedTopics.indexOf(id) > -1)
 
+  const resetIntialPostValues = React.useCallback(() => {
+    setTitle(initialData.title)
+    setLangId(initialData.languageId)
+    setBody(initialData.body)
+    setSelectedTopics(initialData.topicIds)
+  }, [initialData])
+
   React.useEffect(() => {
     const clear = () => {
       if (!slateRef.current) {
@@ -147,6 +155,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
       headlineImage: returnImage,
       languageId: langId,
       topicIds: selectedTopics,
+      resetIntialPostValues,
     }
   }, [title, langId, image, body, selectedTopics])
 
@@ -201,7 +210,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
           postTitle={title}
           postStatus={PostStatusType.Published}
           publishDate={new Date().toISOString()}
-          authorName={currentUser?.name || 'anonymous'}
+          authorName={currentUser?.name || currentUser?.handle || 'anonymous'}
           postImage={postImage}
           language={postLanguage}
           topics={postTopics}

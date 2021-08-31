@@ -4,6 +4,8 @@
   "clearFilters": "clear filters",
   "myLanguages": "my languages",
   "followedUsers": "followed journalers",
+  "needsFeedback": "needs feedback",
+  "hasInteracted": "commented posts",
   "textSearchPlaceholder": "Search posts",
   "topicSelectPlaceholder": "Topics",
   "languageSelectPlaceholder": "Languages",

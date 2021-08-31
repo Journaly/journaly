@@ -2,6 +2,10 @@ import React, { useState, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
 import classNames from 'classnames'
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+
+// TODO: Update `react-markdown` and `remark-gfm` once Next.js versioning issues are resolved
 
 import {
   useUpdateCommentMutation,
@@ -43,7 +47,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
 
   const [DeleteConfirmationModal, confirmDeletion] = useConfirmationModal({
     title: t('deleteCommentConfirmModalTitle'),
-    body: t('deleteCommentConfirmModalBody')
+    body: t('deleteCommentConfirmModalBody'),
   })
 
   // Check to see if the currentUser has already liked this comment
@@ -71,8 +75,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
   })
 
   const deleteExistingComment = async () => {
-    if (!(await confirmDeletion()))
-      return
+    if (!(await confirmDeletion())) return
 
     deleteComment({
       variables: {
@@ -180,32 +183,46 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
               onChange={(e) => setUpdatingCommentBody(e.target.value)}
             />
           ) : (
-            <p className="comment-body">{comment.body}</p>
+            <Markdown
+              className="comment-body"
+              disallowedElements={['img']}
+              remarkPlugins={[remarkGfm]}
+            >
+              {comment.body}
+            </Markdown>
           )}
         </div>
       </div>
       {canEdit && !isEditMode && (
-        <div className="edit-block">
-          <span
-            role="button"
-            className="edit-btn"
-            onClick={() => {
-              setIsEditMode(true)
-              setUpdatingCommentBody(comment.body)
-              setTimeout(() => {
-                const el = editTextarea.current
-                if (el) {
-                  el.focus()
-                  el.setSelectionRange(el.value.length, el.value.length)
-                }
-              }, 0)
-            }}
-          >
-            <EditIcon size={24} />
-          </span>
-          <span role="button" className="delete-btn" onClick={deleteExistingComment}>
-            <DeleteIcon size={24} />
-          </span>
+        <div className="edit-thanks-block">
+          <div className="thanks-block">
+            <span>
+              <LikeIcon filled={numThanks > 0} title={t('numUsersGaveThanks', { numThanks })} />
+            </span>
+            <span className="thanks-count">{numThanks}</span>
+          </div>
+          <div className="edit-block">
+            <span
+              role="button"
+              className="edit-btn"
+              onClick={() => {
+                setIsEditMode(true)
+                setUpdatingCommentBody(comment.body)
+                setTimeout(() => {
+                  const el = editTextarea.current
+                  if (el) {
+                    el.focus()
+                    el.setSelectionRange(el.value.length, el.value.length)
+                  }
+                }, 0)
+              }}
+            >
+              <EditIcon size={24} />
+            </span>
+            <span role="button" className="delete-btn" onClick={deleteExistingComment}>
+              <DeleteIcon size={24} />
+            </span>
+          </div>
         </div>
       )}
       {canEdit && isEditMode && (
@@ -237,7 +254,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
       {!canEdit && currentUser?.id && (
         <div className={classNames('edit-block', { progress: isLoadingCommentThanks })}>
           <span
-            className="like-btn"
+            className="like-btn-clickable"
             onClick={hasThankedComment ? deleteExistingCommentThanks : createNewCommentThanks}
             role="button"
           >
@@ -313,15 +330,70 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           word-wrap: break-word;
         }
 
-        .edit-block {
+        // MarkDown Styles
+        :global(.comment-body h1),
+        :global(.comment-body h2),
+        :global(.comment-body h3),
+        :global(.comment-body h4) {
+          font-family: inherit;
+          font-size: 1.2em;
+          font-weight: 600;
+          margin: 0.5em 0 0.5em 0;
+        }
+        :global(.comment-body ol > li) {
+          list-style: inside;
+          list-style-type: decimal;
+          margin-left: 10px;
+        }
+        :global(.comment-body ul > li:not(.task-list-item)) {
+          list-style: inside;
+          list-style-type: disc;
+          margin-left: 10px;
+        }
+        :global(.comment-body ul > li > input[type='checkbox']) {
+          margin: 0 10px;
+        }
+        :global(.comment-body code) {
+          background-color: #eee;
+          font-family: monospace;
+          padding: 2px;
+        }
+        :global(.comment-body blockquote) {
+          border-left: 4px solid ${theme.colors.blueLight};
+          padding-left: 5px;
+          margin: 5px 0;
+          background-color: ${theme.colors.gray100};
+          font-style: italic;
+        }
+        :global(.comment-body a) {
+          color: ${theme.colors.blueLight};
+        }
+        :global(.comment-body a:hover) {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+
+        .edit-thanks-block {
           display: flex;
+          flex-direction: column;
           margin-left: 10px;
         }
 
-        .edit-block span {
+        .edit-block {
+          display: flex;
+          margin: auto 0 auto 10px;
+        }
+
+        .edit-block span,
+        .thanks-block span {
           margin-right: 5px;
           display: flex;
           align-items: center;
+        }
+
+        .thanks-block {
+          display: flex;
+          margin: 0 0 10px auto;
         }
 
         .edit-btn :global(svg:hover) {
@@ -332,13 +404,13 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           cursor: pointer;
           fill: ${theme.colors.red};
         }
-        .like-btn :global(svg:hover) {
+        .like-btn-clickable :global(svg:hover) {
           cursor: pointer;
         }
         .progress {
           cursor: progress;
         }
-        .progress > .like-btn {
+        .progress > .like-btn-clickable {
           pointer-events: none;
         }
 

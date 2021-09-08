@@ -2520,7 +2520,7 @@ export const ProfilePageDocument = gql`
     userById(id: $userId) {
       ...ProfileUserFragment
     }
-    posts(first: 10, skip: 0, status: PUBLISHED, authoredOnly: true) {
+    posts(first: 20, skip: 0, status: PUBLISHED, authoredOnly: true) {
       posts {
         ...PostCardFragment
       }

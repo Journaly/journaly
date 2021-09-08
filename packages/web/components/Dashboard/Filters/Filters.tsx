@@ -146,7 +146,7 @@ const Filters: React.FC<Props> = ({
           onRemove={onLanguageRemove}
         />
         <Button variant={ButtonVariant.Link} onClick={setShowAdvancedFilters}>
-          Advanced Filters
+          {t(`${showAdvancedFilters ? 'hideAdvancedFilters' : 'showAdvancedFilters'}`)}
         </Button>
         {showAdvancedFilters && (
           <>

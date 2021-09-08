@@ -9,6 +9,8 @@
   "textSearchPlaceholder": "Search posts",
   "topicSelectPlaceholder": "Topics",
   "languageSelectPlaceholder": "Languages",
+  "showAdvancedFilters": "Show Advanced Filters",
+  "hideAdvancedFilters": "Hide Advanced Filters",
   "pagination": {
     "previous": "Prev",
     "next": "Next",

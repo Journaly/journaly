@@ -123,6 +123,10 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
             margin: 0 auto;
           }
         }
+
+        :global(.pagination-wrapper) {
+          margin: 40px 0;
+        }
       `}</style>
     </div>
   )

@@ -99,6 +99,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
         }
 
         .my-posts {
+          margin-top: 25px;
           display: grid;
           grid-template-columns: 1fr;
           grid-gap: 50px;

@@ -210,6 +210,44 @@ const Filters: React.FC<Props> = ({
           </>
         )}
       </div>
+      <style jsx>{`
+        .my-feed-search {
+          width: 100%;
+          max-width: 700px;
+          margin: 0 auto;
+        }
+
+        .my-feed-search input {
+          border-radius: 5px;
+          height: 50px;
+          box-shadow: 0px 8px 10px #00000029;
+          font-size: 16px;
+          background: white;
+          padding: 10px;
+          width: 100%;
+        }
+
+        .my-feed-select {
+          display: grid;
+          grid-gap: 20px;
+          grid-template-columns: repeat(auto-fit);
+        }
+
+        .filter-actions {
+          text-align: center;
+        }
+        .filter-actions > :global(button) {
+          margin-right: 10px;
+        }
+
+        .filter-actions > :global(.filter-action-btn):hover {
+          font-weight: 600;
+        }
+        .filter-actions > :global(.filter-action-btn.active) {
+          font-weight: 600;
+          text-decoration: underline;
+        }
+      `}</style>
     </div>
   )
 }

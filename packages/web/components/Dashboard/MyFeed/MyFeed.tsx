@@ -117,27 +117,6 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
           width: 100%;
         }
 
-        .my-feed-search {
-          width: 100%;
-          max-width: 700px;
-        }
-
-        .my-feed-search input {
-          border-radius: 5px;
-          height: 50px;
-          box-shadow: 0px 8px 10px #00000029;
-          font-size: 16px;
-          background: white;
-          padding: 10px;
-          width: 100%;
-        }
-
-        .my-feed-select {
-          display: grid;
-          grid-gap: 20px;
-          grid-template-columns: repeat(auto-fit);
-        }
-
         .my-feed-container {
           display: grid;
           grid-gap: 20px;
@@ -160,21 +139,6 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
 
         :global(.pagination-wrapper) {
           margin: 40px 0;
-        }
-
-        .filter-actions {
-          text-align: center;
-        }
-        .filter-actions > :global(button) {
-          margin-right: 10px;
-        }
-
-        .filter-actions > :global(.filter-action-btn):hover {
-          font-weight: 600;
-        }
-        .filter-actions > :global(.filter-action-btn.active) {
-          font-weight: 600;
-          text-decoration: underline;
         }
       `}</style>
     </div>

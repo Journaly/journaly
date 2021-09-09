@@ -25,6 +25,9 @@ fragment UserWithLanguagesFragment on User {
       ...LanguageFragment
     }
   }
+  userInterests {
+    ...UserInterestFragment
+  }
 }
 
 fragment CurrentUserFragment on User {
@@ -222,4 +225,10 @@ fragment PostTopicFragment on PostTopic {
 fragment UserBadgeFragment on UserBadge {
   type
   createdAt
+}
+
+fragment UserInterestFragment on UserInterest {
+  topic {
+    ...TopicFragment
+  }
 }

@@ -1,4 +1,4 @@
-query profilePage($userId: Int!) {
+query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
   userById(id: $userId) {
     ...ProfileUserFragment
   }

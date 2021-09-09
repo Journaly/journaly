@@ -29,6 +29,13 @@ export type TopicTranslation = {
   uiLanguage: UiLanguage
 }
 
+export type UserInterest = {
+  __typename?: 'UserInterest'
+  id: Scalars['Int']
+  user: User
+  topic: Topic
+}
+
 export type Topic = {
   __typename?: 'Topic'
   id: Scalars['Int']
@@ -178,6 +185,7 @@ export type User = {
   followedBy: Array<User>
   lastFourCardNumbers?: Maybe<Scalars['String']>
   cardBrand?: Maybe<Scalars['String']>
+  userInterests: Array<UserInterest>
   postsWrittenCount: Scalars['Int']
   languagesPostedInCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
@@ -365,6 +373,8 @@ export type QueryLanguagesArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation'
+  addUserInterest: UserInterest
+  removeUserInterest: UserInterest
   createThread: Thread
   deleteThread: Thread
   createComment: Comment
@@ -400,6 +410,14 @@ export type Mutation = {
   updateSubscriptionRenewal: MembershipSubscription
   updateSubscriptionPlan: MembershipSubscription
   updateSubscriptionPaymentMethod: MembershipSubscription
+}
+
+export type MutationAddUserInterestArgs = {
+  topicId: Scalars['Int']
+}
+
+export type MutationRemoveUserInterestArgs = {
+  topicId: Scalars['Int']
 }
 
 export type MutationCreateThreadArgs = {
@@ -667,6 +685,7 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
         language: { __typename?: 'Language' } & LanguageFragmentFragment
       }
   >
+  userInterests: Array<{ __typename?: 'UserInterest' } & UserInterestFragmentFragment>
 } & UserFragmentFragment
 
 export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
@@ -814,6 +833,10 @@ export type UserBadgeFragmentFragment = { __typename?: 'UserBadge' } & Pick<
   'type' | 'createdAt'
 >
 
+export type UserInterestFragmentFragment = { __typename?: 'UserInterest' } & {
+  topic: { __typename?: 'Topic' } & TopicFragmentFragment
+}
+
 export type AddLanguageRelationMutationVariables = Exact<{
   languageId: Scalars['Int']
   level: LanguageLevel
@@ -914,6 +937,7 @@ export type PostPageQuery = { __typename?: 'Query' } & {
 
 export type ProfilePageQueryVariables = Exact<{
   userId: Scalars['Int']
+  uiLanguage: UiLanguage
 }>
 
 export type ProfilePageQuery = { __typename?: 'Query' } & {
@@ -1087,6 +1111,24 @@ export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
   deleteCommentThanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'>
 }
 
+export type AddUserInterestMutationVariables = Exact<{
+  topicId: Scalars['Int']
+}>
+
+export type AddUserInterestMutation = { __typename?: 'Mutation' } & {
+  addUserInterest: { __typename?: 'UserInterest' } & {
+    topic: { __typename?: 'Topic' } & Pick<Topic, 'id'>
+  }
+}
+
+export type RemoveUserInterestMutationVariables = Exact<{
+  topicId: Scalars['Int']
+}>
+
+export type RemoveUserInterestMutation = { __typename?: 'Mutation' } & {
+  removeUserInterest: { __typename?: 'UserInterest' } & Pick<UserInterest, 'id'>
+}
+
 export type TopicsQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
   uiLanguage: UiLanguage
@@ -1107,7 +1149,9 @@ export type CreateUserMutation = { __typename?: 'Mutation' } & {
   createUser: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'email'>
 }
 
-export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
+export type CurrentUserQueryVariables = Exact<{
+  uiLanguage: UiLanguage
+}>
 
 export type CurrentUserQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
@@ -1173,16 +1217,24 @@ export type ResetPasswordMutation = { __typename?: 'Mutation' } & {
   resetPassword: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
-export type SettingsFormDataQueryVariables = Exact<{ [key: string]: never }>
+export type SettingsFormDataQueryVariables = Exact<{
+  uiLanguage: UiLanguage
+}>
 
 export type SettingsFormDataQuery = { __typename?: 'Query' } & {
   languages: Array<{ __typename?: 'Language' } & LanguageFragmentFragment>
+  topics: Array<{ __typename?: 'Topic' } & TopicFragmentFragment>
   currentUser?: Maybe<
     { __typename?: 'User' } & Pick<User, 'bio'> & {
         languages: Array<
           { __typename?: 'LanguageRelation' } & Pick<LanguageRelation, 'id' | 'level'> & {
               language: { __typename?: 'Language' } & LanguageFragmentFragment
             }
+        >
+        userInterests: Array<
+          { __typename?: 'UserInterest' } & {
+            topic: { __typename?: 'Topic' } & TopicFragmentFragment
+          }
         >
       } & SocialMediaFragmentFragment
   >
@@ -1232,6 +1284,7 @@ export type UpdateUserMutation = { __typename?: 'Mutation' } & {
 
 export type UserByIdQueryVariables = Exact<{
   id: Scalars['Int']
+  uiLanguage: UiLanguage
 }>
 
 export type UserByIdQuery = { __typename?: 'Query' } & {
@@ -1302,6 +1355,20 @@ export const LanguageFragmentFragmentDoc = gql`
     dialect
   }
 `
+export const TopicFragmentFragmentDoc = gql`
+  fragment TopicFragment on Topic {
+    id
+    name(uiLanguage: $uiLanguage)
+  }
+`
+export const UserInterestFragmentFragmentDoc = gql`
+  fragment UserInterestFragment on UserInterest {
+    topic {
+      ...TopicFragment
+    }
+  }
+  ${TopicFragmentFragmentDoc}
+`
 export const UserWithLanguagesFragmentFragmentDoc = gql`
   fragment UserWithLanguagesFragment on User {
     ...UserFragment
@@ -1312,9 +1379,13 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
         ...LanguageFragment
       }
     }
+    userInterests {
+      ...UserInterestFragment
+    }
   }
   ${UserFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
+  ${UserInterestFragmentFragmentDoc}
 `
 export const CurrentUserFragmentFragmentDoc = gql`
   fragment CurrentUserFragment on User {
@@ -1454,12 +1525,6 @@ export const PostFragmentFragmentDoc = gql`
   ${AuthorWithLanguagesFragmentFragmentDoc}
   ${ThreadFragmentFragmentDoc}
   ${PostCommentFragmentFragmentDoc}
-`
-export const TopicFragmentFragmentDoc = gql`
-  fragment TopicFragment on Topic {
-    id
-    name(uiLanguage: $uiLanguage)
-  }
 `
 export const PostTopicFragmentFragmentDoc = gql`
   fragment PostTopicFragment on PostTopic {
@@ -2515,7 +2580,7 @@ export type PostPageQueryResult = ApolloReactCommon.QueryResult<
   PostPageQueryVariables
 >
 export const ProfilePageDocument = gql`
-  query profilePage($userId: Int!) {
+  query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
     userById(id: $userId) {
       ...ProfileUserFragment
     }
@@ -2544,6 +2609,7 @@ export const ProfilePageDocument = gql`
  * const { data, loading, error } = useProfilePageQuery({
  *   variables: {
  *      userId: // value for 'userId'
+ *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
  */
@@ -3319,6 +3385,100 @@ export type DeleteCommentThanksMutationOptions = ApolloReactCommon.BaseMutationO
   DeleteCommentThanksMutation,
   DeleteCommentThanksMutationVariables
 >
+export const AddUserInterestDocument = gql`
+  mutation addUserInterest($topicId: Int!) {
+    addUserInterest(topicId: $topicId) {
+      topic {
+        id
+      }
+    }
+  }
+`
+export type AddUserInterestMutationFn = ApolloReactCommon.MutationFunction<
+  AddUserInterestMutation,
+  AddUserInterestMutationVariables
+>
+
+/**
+ * __useAddUserInterestMutation__
+ *
+ * To run a mutation, you first call `useAddUserInterestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddUserInterestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addUserInterestMutation, { data, loading, error }] = useAddUserInterestMutation({
+ *   variables: {
+ *      topicId: // value for 'topicId'
+ *   },
+ * });
+ */
+export function useAddUserInterestMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddUserInterestMutation,
+    AddUserInterestMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<AddUserInterestMutation, AddUserInterestMutationVariables>(
+    AddUserInterestDocument,
+    baseOptions,
+  )
+}
+export type AddUserInterestMutationHookResult = ReturnType<typeof useAddUserInterestMutation>
+export type AddUserInterestMutationResult = ApolloReactCommon.MutationResult<AddUserInterestMutation>
+export type AddUserInterestMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddUserInterestMutation,
+  AddUserInterestMutationVariables
+>
+export const RemoveUserInterestDocument = gql`
+  mutation removeUserInterest($topicId: Int!) {
+    removeUserInterest(topicId: $topicId) {
+      id
+    }
+  }
+`
+export type RemoveUserInterestMutationFn = ApolloReactCommon.MutationFunction<
+  RemoveUserInterestMutation,
+  RemoveUserInterestMutationVariables
+>
+
+/**
+ * __useRemoveUserInterestMutation__
+ *
+ * To run a mutation, you first call `useRemoveUserInterestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveUserInterestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeUserInterestMutation, { data, loading, error }] = useRemoveUserInterestMutation({
+ *   variables: {
+ *      topicId: // value for 'topicId'
+ *   },
+ * });
+ */
+export function useRemoveUserInterestMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RemoveUserInterestMutation,
+    RemoveUserInterestMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    RemoveUserInterestMutation,
+    RemoveUserInterestMutationVariables
+  >(RemoveUserInterestDocument, baseOptions)
+}
+export type RemoveUserInterestMutationHookResult = ReturnType<typeof useRemoveUserInterestMutation>
+export type RemoveUserInterestMutationResult = ApolloReactCommon.MutationResult<RemoveUserInterestMutation>
+export type RemoveUserInterestMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RemoveUserInterestMutation,
+  RemoveUserInterestMutationVariables
+>
 export const TopicsDocument = gql`
   query topics($hasPosts: Boolean, $uiLanguage: UILanguage!, $languages: [Int!]) {
     topics(hasPosts: $hasPosts) {
@@ -3413,7 +3573,7 @@ export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateUserMutationVariables
 >
 export const CurrentUserDocument = gql`
-  query currentUser {
+  query currentUser($uiLanguage: UILanguage!) {
     currentUser {
       ...CurrentUserFragment
     }
@@ -3433,6 +3593,7 @@ export const CurrentUserDocument = gql`
  * @example
  * const { data, loading, error } = useCurrentUserQuery({
  *   variables: {
+ *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
  */
@@ -3791,9 +3952,12 @@ export type ResetPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions
   ResetPasswordMutationVariables
 >
 export const SettingsFormDataDocument = gql`
-  query settingsFormData {
+  query settingsFormData($uiLanguage: UILanguage!) {
     languages {
       ...LanguageFragment
+    }
+    topics {
+      ...TopicFragment
     }
     currentUser {
       bio
@@ -3804,10 +3968,16 @@ export const SettingsFormDataDocument = gql`
           ...LanguageFragment
         }
       }
+      userInterests {
+        topic {
+          ...TopicFragment
+        }
+      }
       ...SocialMediaFragment
     }
   }
   ${LanguageFragmentFragmentDoc}
+  ${TopicFragmentFragmentDoc}
   ${SocialMediaFragmentFragmentDoc}
 `
 
@@ -3823,6 +3993,7 @@ export const SettingsFormDataDocument = gql`
  * @example
  * const { data, loading, error } = useSettingsFormDataQuery({
  *   variables: {
+ *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
  */
@@ -4076,7 +4247,7 @@ export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateUserMutationVariables
 >
 export const UserByIdDocument = gql`
-  query userById($id: Int!) {
+  query userById($id: Int!, $uiLanguage: UILanguage!) {
     userById(id: $id) {
       ...UserWithLanguagesFragment
     }
@@ -4097,6 +4268,7 @@ export const UserByIdDocument = gql`
  * const { data, loading, error } = useUserByIdQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
  */

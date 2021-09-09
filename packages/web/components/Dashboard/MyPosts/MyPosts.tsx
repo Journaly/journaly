@@ -29,7 +29,14 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
   // Pull query params off the router instance
   const router = useRouter()
   const currentPage = router.query.page ? Math.max(1, parseInt(router.query.page as string, 10)) : 1
-  const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>()
+  const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>({
+    languages: [],
+    topics: [],
+    followedAuthors: false,
+    needsFeedback: false,
+    hasInteracted: false,
+    search: '',
+  })
   const { loading, data, error } = usePostsQuery({
     variables: {
       first: NUM_POSTS_PER_PAGE,
@@ -47,12 +54,19 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
   const showEmptyState = !loading && posts.length === 0
   const pageTitle = t('pageTitle')
 
+  const resetPagination = (): void => {
+    // filter out page key to reset the url
+    const newQuery = { ...router.query }
+    delete newQuery.page
+    router.push({ ...router, query: newQuery })
+  }
+
   return (
     <div className="my-posts-container">
       <Filters
         currentUser={currentUser}
-        initialSearchFilters={null}
-        resetPagination={() => {}}
+        resetPagination={resetPagination}
+        postQueryVars={postQueryVars}
         setPostQueryVars={setPostQueryVars}
         topicAndLanguageOptions={{
           hasPosts: true,

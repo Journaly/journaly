@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import isEqual from 'lodash/isEqual'
 import Button, { ButtonVariant } from '@/components/Button'
 import { User as UserType, useTopicsQuery, useLanguagesQuery } from '@/generated/graphql'
@@ -16,22 +16,19 @@ export type InitialSearchFilters = {
   hasInteracted: boolean
 }
 
-export type PostQueryVarsType =
-  | {
-      languages: number[] | null
-      topics: number[]
-      followedAuthors: boolean
-      search: string
-      needsFeedback: boolean
-      hasInteracted: boolean
-    }
-  | undefined
-// TODO URGENT: remove this 'undefined'
+export type PostQueryVarsType = {
+  languages: number[]
+  topics: number[]
+  followedAuthors: boolean
+  search: string
+  needsFeedback: boolean
+  hasInteracted: boolean
+}
 
 type Props = {
   currentUser: UserType
-  initialSearchFilters: InitialSearchFilters | null
   resetPagination: () => void
+  postQueryVars: PostQueryVarsType
   setPostQueryVars: React.Dispatch<React.SetStateAction<PostQueryVarsType>>
   topicAndLanguageOptions: {
     hasPosts: boolean
@@ -42,42 +39,70 @@ type Props = {
 
 const Filters: React.FC<Props> = ({
   currentUser,
-  initialSearchFilters,
   resetPagination,
+  postQueryVars,
   setPostQueryVars,
   topicAndLanguageOptions,
   showPostCount = true,
 }) => {
   const { t } = useTranslation('my-feed')
   const [showAdvancedFilters, setShowAdvancedFilters] = useToggle(false)
-  const [search, setSearchState] = useState('')
-  const onSearchChange = useCallback((val): void => setSearchState(val), [])
-
-  const [selectedTopicsFilters, setSelectedTopicsFilters] = useState<number[]>(
-    initialSearchFilters?.topics || [],
+  const onSearchChange = useCallback(
+    (val): void =>
+      setPostQueryVars((prevState) => ({
+        ...prevState,
+        search: val,
+      })),
+    [],
   )
+
   const onTopicAdd = useCallback(
     (id: number): void => {
-      setSelectedTopicsFilters([...selectedTopicsFilters, id])
+      setPostQueryVars((prevState) => ({
+        ...prevState,
+        topics: [...prevState.topics, id],
+      }))
       resetPagination()
     },
-    [selectedTopicsFilters],
+    [resetPagination],
   )
 
   const onTopicRemove = useCallback(
     (id: number): void => {
-      setSelectedTopicsFilters(selectedTopicsFilters.filter((topicId) => topicId !== id))
+      setPostQueryVars((prevState) => ({
+        ...prevState,
+        topics: prevState.topics.filter((topicId) => topicId !== id),
+      }))
       resetPagination()
     },
-    [selectedTopicsFilters],
+    [resetPagination],
+  )
+
+  const onLanguageAdd = useCallback(
+    (id: number): void => {
+      setPostQueryVars((prevState) => ({
+        ...prevState,
+        languages: [...prevState.languages, id],
+      }))
+      resetPagination()
+    },
+    [resetPagination],
+  )
+
+  const onLanguageRemove = useCallback(
+    (id: number): void => {
+      setPostQueryVars((prevState) => ({
+        ...prevState,
+        languages: prevState.languages.filter((languageId) => languageId !== id),
+      }))
+      resetPagination()
+    },
+    [resetPagination],
   )
 
   // Fetch languages that have at least 1 post
   const { data: languagesData } = useLanguagesQuery({
-    variables: {
-      topics: selectedTopicsFilters,
-      ...topicAndLanguageOptions,
-    },
+    variables: topicAndLanguageOptions,
   })
 
   const languageOptionIds = new Set((languagesData?.languages || []).map(({ id }) => id))
@@ -87,74 +112,47 @@ const Filters: React.FC<Props> = ({
       .map((lr) => lr.language.id) || [],
   )
 
-  const [selectedLanguageFilters, setSelectedLanguageFilters] = useState<number[]>(
-    initialSearchFilters?.languages || [],
-  )
-
   const isUserLanguagesFilterActive = isEqual(
     Array.from(userLanguages.values()),
-    selectedLanguageFilters,
+    postQueryVars.languages,
   )
 
-  const onLanguageAdd = useCallback(
-    (id: number): void => {
-      setSelectedLanguageFilters([...selectedLanguageFilters, id])
-      resetPagination()
-    },
-    [selectedLanguageFilters],
-  )
-
-  const onLanguageRemove = useCallback(
-    (id: number): void => {
-      setSelectedLanguageFilters(selectedLanguageFilters.filter((languageId) => languageId !== id))
-      resetPagination()
-    },
-    [selectedLanguageFilters],
-  )
-
-  const [followedAuthorsFilter, toggleFollowedAuthorsFilter] = useToggle()
-  const [needsFeedbackFilter, toggleNeedsFeedbackFilter] = useToggle(
-    initialSearchFilters?.needsFeedback || false,
-  )
-  const [hasInteractedFilter, toggleHasInteractedFilter] = useToggle(
-    initialSearchFilters?.hasInteracted || false,
-  )
+  const toggleFollowedAuthorsFilter = useCallback(() => {
+    setPostQueryVars((prevState) => ({
+      ...prevState,
+      followedAuthors: !prevState.followedAuthors,
+    }))
+  }, [])
+  const toggleNeedsFeedbackFilter = useCallback(() => {
+    setPostQueryVars((prevState) => ({
+      ...prevState,
+      needsFeedback: !prevState.needsFeedback,
+    }))
+  }, [])
+  const toggleHasInteractedFilter = useCallback(() => {
+    setPostQueryVars((prevState) => ({
+      ...prevState,
+      hasInteracted: !prevState.hasInteracted,
+    }))
+  }, [])
 
   const uiLanguage = useUILanguage()
   const { data: { topics } = {} } = useTopicsQuery({
-    variables: { uiLanguage, languages: selectedLanguageFilters, ...topicAndLanguageOptions },
+    variables: { uiLanguage, languages: postQueryVars.languages, ...topicAndLanguageOptions },
   })
 
-  useEffect(() => {
-    setPostQueryVars({
-      languages: selectedLanguageFilters.length ? selectedLanguageFilters : null,
-      topics: selectedTopicsFilters,
-      followedAuthors: followedAuthorsFilter,
-      search,
-      needsFeedback: needsFeedbackFilter,
-      hasInteracted: hasInteractedFilter,
-    })
-  }, [
-    selectedLanguageFilters,
-    selectedTopicsFilters,
-    followedAuthorsFilter,
-    needsFeedbackFilter,
-    hasInteractedFilter,
-    search,
-  ])
-
   const filterCount =
-    selectedTopicsFilters.length +
-    ~~followedAuthorsFilter +
-    ~~needsFeedbackFilter +
-    ~~hasInteractedFilter
+    postQueryVars.topics.length +
+    ~~postQueryVars.followedAuthors +
+    ~~postQueryVars.needsFeedback +
+    ~~postQueryVars.hasInteracted
 
   return (
     <div className="my-feed-search">
       <div className="my-feed-select">
         <LanguageSelect
           languagesData={languagesData}
-          selectedLanguagesIds={selectedLanguageFilters}
+          selectedLanguagesIds={postQueryVars.languages}
           onAdd={onLanguageAdd}
           onRemove={onLanguageRemove}
           showPostCount={showPostCount}
@@ -167,24 +165,30 @@ const Filters: React.FC<Props> = ({
           <>
             <TopicSelect
               topics={topics}
-              selectedTopicsIds={selectedTopicsFilters}
+              selectedTopicsIds={postQueryVars.topics}
               onAdd={onTopicAdd}
               onRemove={onTopicRemove}
               showPostCount={showPostCount}
             />
-            <SearchInput debounceTime={500} defaultValue={search} onChange={onSearchChange} />
+            <SearchInput
+              debounceTime={500}
+              defaultValue={postQueryVars.search}
+              onChange={onSearchChange}
+            />
             <div className="filter-action-container">
               <div className="filter-actions">
                 <Button
                   variant={ButtonVariant.Link}
                   className="filter-action-btn"
                   onClick={() => {
-                    setSelectedLanguageFilters([])
-                    setSelectedTopicsFilters([])
-                    setSearchState('')
-                    followedAuthorsFilter && toggleFollowedAuthorsFilter()
-                    needsFeedbackFilter && toggleNeedsFeedbackFilter()
-                    hasInteractedFilter && toggleHasInteractedFilter()
+                    setPostQueryVars({
+                      languages: [],
+                      topics: [],
+                      search: '',
+                      followedAuthors: false,
+                      needsFeedback: false,
+                      hasInteracted: false,
+                    })
                   }}
                 >
                   {t('clearFilters')}
@@ -193,14 +197,17 @@ const Filters: React.FC<Props> = ({
                   variant={ButtonVariant.Link}
                   className={`filter-action-btn ${isUserLanguagesFilterActive ? 'active' : ''}`}
                   onClick={() => {
-                    setSelectedLanguageFilters([...userLanguages.values()])
+                    setPostQueryVars((prevState) => ({
+                      ...prevState,
+                      selectedLanguageFilters: [...userLanguages.values()],
+                    }))
                   }}
                 >
                   {t('myLanguages')}
                 </Button>
                 <Button
                   variant={ButtonVariant.Link}
-                  className={`filter-action-btn ${followedAuthorsFilter ? 'active' : ''}`}
+                  className={`filter-action-btn ${postQueryVars.followedAuthors ? 'active' : ''}`}
                   onClick={toggleFollowedAuthorsFilter}
                 >
                   {t('followedUsers')}
@@ -209,14 +216,14 @@ const Filters: React.FC<Props> = ({
               <div className="filter-actions">
                 <Button
                   variant={ButtonVariant.Link}
-                  className={`filter-action-btn ${needsFeedbackFilter ? 'active' : ''}`}
+                  className={`filter-action-btn ${postQueryVars.needsFeedback ? 'active' : ''}`}
                   onClick={toggleNeedsFeedbackFilter}
                 >
                   {t('needsFeedback')}
                 </Button>
                 <Button
                   variant={ButtonVariant.Link}
-                  className={`filter-action-btn ${hasInteractedFilter ? 'active' : ''}`}
+                  className={`filter-action-btn ${postQueryVars.hasInteracted ? 'active' : ''}`}
                   onClick={toggleHasInteractedFilter}
                 >
                   {t('hasInteracted')}

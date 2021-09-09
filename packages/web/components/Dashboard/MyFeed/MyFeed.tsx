@@ -36,7 +36,14 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   const router = useRouter()
   const currentPage = router.query.page ? Math.max(1, parseInt(router.query.page as string, 10)) : 1
 
-  const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>()
+  const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>({
+    languages: initialSearchFilters?.languages || [],
+    topics: initialSearchFilters?.topics || [],
+    followedAuthors: false,
+    needsFeedback: initialSearchFilters?.needsFeedback || false,
+    hasInteracted: initialSearchFilters?.hasInteracted || false,
+    search: '',
+  })
 
   // fetch posts for the feed!
   const { loading, error, data } = usePostsQuery({
@@ -84,8 +91,8 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
       <FeedHeader currentUser={currentUser} />
       <Filters
         currentUser={currentUser}
-        initialSearchFilters={initialSearchFilters}
         resetPagination={resetPagination}
+        postQueryVars={postQueryVars}
         setPostQueryVars={setPostQueryVars}
         topicAndLanguageOptions={{
           hasPosts: true,

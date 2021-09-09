@@ -87,7 +87,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
         initialSearchFilters={initialSearchFilters}
         resetPagination={resetPagination}
         setPostQueryVars={setPostQueryVars}
-        topicOptions={{
+        topicAndLanguageOptions={{
           hasPosts: true,
           authoredOnly: false,
         }}

@@ -455,6 +455,7 @@ export type QueryUserByIdArgs = {
 
 export type QueryLanguagesArgs = {
   hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
 }
 
 export type SocialMedia = {
@@ -825,6 +826,7 @@ export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
 
 export type LanguagesQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
   topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
 }>
 
@@ -2107,8 +2109,8 @@ export type AddLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationO
   AddLanguageRelationMutationVariables
 >
 export const LanguagesDocument = gql`
-  query languages($hasPosts: Boolean, $topics: [Int!]) {
-    languages(hasPosts: $hasPosts) {
+  query languages($hasPosts: Boolean, $authoredOnly: Boolean, $topics: [Int!]) {
+    languages(hasPosts: $hasPosts, authoredOnly: $authoredOnly) {
       ...LanguageWithPostCountFragment
     }
   }
@@ -2128,6 +2130,7 @@ export const LanguagesDocument = gql`
  * const { data, loading, error } = useLanguagesQuery({
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
+ *      authoredOnly: // value for 'authoredOnly'
  *      topics: // value for 'topics'
  *   },
  * });

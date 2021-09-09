@@ -22,7 +22,7 @@ const TopicSelect: React.FC<Props> = ({
   const formattedTopicOptions = (topics || []).map(({ name, id, postCount }) => ({
     value: id,
     displayName: `${name} ${
-      showPostCount ? `${postCount} post${(postCount || 0) === 1 ? '' : 's'}` : ''
+      showPostCount ? `(${postCount} post${(postCount || 0) === 1 ? '' : 's'})` : ''
     }`,
     selectedDisplayName: `${name}`,
     disabled: postCount < 1,

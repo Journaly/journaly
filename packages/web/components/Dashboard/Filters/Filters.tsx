@@ -33,7 +33,7 @@ type Props = {
   initialSearchFilters: InitialSearchFilters | null
   resetPagination: () => void
   setPostQueryVars: React.Dispatch<React.SetStateAction<PostQueryVarsType>>
-  topicOptions: {
+  topicAndLanguageOptions: {
     hasPosts: boolean
     authoredOnly: boolean
   }
@@ -45,7 +45,7 @@ const Filters: React.FC<Props> = ({
   initialSearchFilters,
   resetPagination,
   setPostQueryVars,
-  topicOptions,
+  topicAndLanguageOptions,
   showPostCount = true,
 }) => {
   const { t } = useTranslation('my-feed')
@@ -75,8 +75,8 @@ const Filters: React.FC<Props> = ({
   // Fetch languages that have at least 1 post
   const { data: languagesData } = useLanguagesQuery({
     variables: {
-      hasPosts: true,
       topics: selectedTopicsFilters,
+      ...topicAndLanguageOptions,
     },
   })
 
@@ -122,7 +122,7 @@ const Filters: React.FC<Props> = ({
 
   const uiLanguage = useUILanguage()
   const { data: { topics } = {} } = useTopicsQuery({
-    variables: { uiLanguage, languages: selectedLanguageFilters, ...topicOptions },
+    variables: { uiLanguage, languages: selectedLanguageFilters, ...topicAndLanguageOptions },
   })
 
   useEffect(() => {
@@ -157,6 +157,7 @@ const Filters: React.FC<Props> = ({
           selectedLanguagesIds={selectedLanguageFilters}
           onAdd={onLanguageAdd}
           onRemove={onLanguageRemove}
+          showPostCount={showPostCount}
         />
         <Button variant={ButtonVariant.Link} onClick={setShowAdvancedFilters}>
           {t(`${showAdvancedFilters ? 'hideAdvancedFilters' : 'showAdvancedFilters'}`)}{' '}

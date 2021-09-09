@@ -73,15 +73,14 @@ const TopicQueries = extendType({
           required: false,
         }),
         authoredOnly: booleanArg({
-          description:
-            'If true, return only posts authored by currentUser. If false, return all posts.',
+          description: 'If true, return only topics with posts authored by currentUser.',
           required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
-        let filterClauses = []
+        const filterClauses = []
 
         if (args.hasPosts) {
           filterClauses.push({

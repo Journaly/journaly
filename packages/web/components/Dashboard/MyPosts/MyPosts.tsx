@@ -54,7 +54,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
         initialSearchFilters={null}
         resetPagination={() => {}}
         setPostQueryVars={setPostQueryVars}
-        topicOptions={{
+        topicAndLanguageOptions={{
           hasPosts: true,
           authoredOnly: true,
         }}

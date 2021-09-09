@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import _ from 'lodash'
+import isEqual from 'lodash/isEqual'
 import Button, { ButtonVariant } from '@/components/Button'
 import { User as UserType, useTopicsQuery, useLanguagesQuery } from '@/generated/graphql'
 import SearchInput from './SearchInput'
@@ -33,6 +33,11 @@ type Props = {
   initialSearchFilters: InitialSearchFilters | null
   resetPagination: () => void
   setPostQueryVars: React.Dispatch<React.SetStateAction<PostQueryVarsType>>
+  topicOptions: {
+    hasPosts: boolean
+    authoredOnly: boolean
+  }
+  showPostCount?: boolean
 }
 
 const Filters: React.FC<Props> = ({
@@ -40,6 +45,8 @@ const Filters: React.FC<Props> = ({
   initialSearchFilters,
   resetPagination,
   setPostQueryVars,
+  topicOptions,
+  showPostCount = true,
 }) => {
   const { t } = useTranslation('my-feed')
   const [showAdvancedFilters, setShowAdvancedFilters] = useToggle(false)
@@ -84,7 +91,7 @@ const Filters: React.FC<Props> = ({
     initialSearchFilters?.languages || [],
   )
 
-  const isUserLanguagesFilterActive = _.isEqual(
+  const isUserLanguagesFilterActive = isEqual(
     Array.from(userLanguages.values()),
     selectedLanguageFilters,
   )
@@ -115,7 +122,7 @@ const Filters: React.FC<Props> = ({
 
   const uiLanguage = useUILanguage()
   const { data: { topics } = {} } = useTopicsQuery({
-    variables: { uiLanguage, hasPosts: true, languages: selectedLanguageFilters },
+    variables: { uiLanguage, languages: selectedLanguageFilters, ...topicOptions },
   })
 
   useEffect(() => {
@@ -136,6 +143,12 @@ const Filters: React.FC<Props> = ({
     search,
   ])
 
+  const filterCount =
+    selectedTopicsFilters.length +
+    ~~followedAuthorsFilter +
+    ~~needsFeedbackFilter +
+    ~~hasInteractedFilter
+
   return (
     <div className="my-feed-search">
       <div className="my-feed-select">
@@ -146,7 +159,8 @@ const Filters: React.FC<Props> = ({
           onRemove={onLanguageRemove}
         />
         <Button variant={ButtonVariant.Link} onClick={setShowAdvancedFilters}>
-          {t(`${showAdvancedFilters ? 'hideAdvancedFilters' : 'showAdvancedFilters'}`)}
+          {t(`${showAdvancedFilters ? 'hideAdvancedFilters' : 'showAdvancedFilters'}`)}{' '}
+          {filterCount > 0 && `(${filterCount})`}
         </Button>
         {showAdvancedFilters && (
           <>
@@ -155,6 +169,7 @@ const Filters: React.FC<Props> = ({
               selectedTopicsIds={selectedTopicsFilters}
               onAdd={onTopicAdd}
               onRemove={onTopicRemove}
+              showPostCount={showPostCount}
             />
             <SearchInput debounceTime={500} defaultValue={search} onChange={onSearchChange} />
             <div className="filter-action-container">

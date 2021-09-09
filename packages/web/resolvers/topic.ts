@@ -93,7 +93,9 @@ const TopicQueries = extendType({
               },
             },
           })
-        } else if (args.authoredOnly) {
+        }
+
+        if (args.authoredOnly) {
           filterClauses.push({
             postTopics: {
               some: {

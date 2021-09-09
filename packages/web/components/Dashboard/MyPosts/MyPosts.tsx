@@ -54,6 +54,11 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
         initialSearchFilters={null}
         resetPagination={() => {}}
         setPostQueryVars={setPostQueryVars}
+        topicOptions={{
+          hasPosts: true,
+          authoredOnly: true,
+        }}
+        showPostCount={false}
       />
       {error && <p>There was an error retrieving your posts.</p>}
 
@@ -100,9 +105,10 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
 
         .my-posts {
           margin-top: 25px;
-          display: grid;
-          grid-template-columns: 1fr;
-          grid-gap: 50px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 50px;
           animation: 150ms fadeIn ease-in;
         }
 

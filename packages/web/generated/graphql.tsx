@@ -428,6 +428,7 @@ export type Query = {
 
 export type QueryTopicsArgs = {
   hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
 }
 
 export type QueryPostByIdArgs = {
@@ -1081,6 +1082,7 @@ export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
 
 export type TopicsQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
   uiLanguage: UiLanguage
   languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
 }>
@@ -3295,8 +3297,13 @@ export type DeleteCommentThanksMutationOptions = ApolloReactCommon.BaseMutationO
   DeleteCommentThanksMutationVariables
 >
 export const TopicsDocument = gql`
-  query topics($hasPosts: Boolean, $uiLanguage: UILanguage!, $languages: [Int!]) {
-    topics(hasPosts: $hasPosts) {
+  query topics(
+    $hasPosts: Boolean
+    $authoredOnly: Boolean
+    $uiLanguage: UILanguage!
+    $languages: [Int!]
+  ) {
+    topics(hasPosts: $hasPosts, authoredOnly: $authoredOnly) {
       ...TopicWithPostCountFragment
     }
   }
@@ -3316,6 +3323,7 @@ export const TopicsDocument = gql`
  * const { data, loading, error } = useTopicsQuery({
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
+ *      authoredOnly: // value for 'authoredOnly'
  *      uiLanguage: // value for 'uiLanguage'
  *      languages: // value for 'languages'
  *   },

@@ -87,6 +87,10 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
         initialSearchFilters={initialSearchFilters}
         resetPagination={resetPagination}
         setPostQueryVars={setPostQueryVars}
+        topicOptions={{
+          hasPosts: true,
+          authoredOnly: false,
+        }}
       />
       <LoadingWrapper loading={loading} error={error}>
         <div className="my-feed-container" data-testid="my-feed-container">

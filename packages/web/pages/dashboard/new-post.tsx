@@ -108,7 +108,6 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
     onError: (error) => {
       toast.error(error.message)
     },
-    refetchQueries: ['PostsQuery'],
   })
 
   const createNewPost = React.useCallback(

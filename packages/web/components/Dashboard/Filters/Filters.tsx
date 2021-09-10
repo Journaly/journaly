@@ -93,7 +93,6 @@ const Filters: React.FC<Props> = ({
     [resetPagination],
   )
 
-  // Fetch languages that have at least 1 post
   const { data: languagesData } = useLanguagesQuery({
     variables: topicAndLanguageOptions,
   })

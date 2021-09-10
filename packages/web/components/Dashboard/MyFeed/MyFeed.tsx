@@ -77,18 +77,13 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
 
   useEffect(() => {
     const searchFilters = {
-      languages: postQueryVars?.languages,
-      topics: postQueryVars?.topics,
-      needsFeedback: postQueryVars?.needsFeedback,
-      hasInteracted: postQueryVars?.hasInteracted,
+      languages: postQueryVars.languages,
+      topics: postQueryVars.topics,
+      needsFeedback: postQueryVars.needsFeedback,
+      hasInteracted: postQueryVars.hasInteracted,
     }
     document.cookie = `default_search_filters=${JSON.stringify(searchFilters)};`
-  }, [
-    postQueryVars?.languages,
-    postQueryVars?.topics,
-    postQueryVars?.needsFeedback,
-    postQueryVars?.hasInteracted,
-  ])
+  }, [postQueryVars])
 
   return (
     <div className="my-feed-wrapper">

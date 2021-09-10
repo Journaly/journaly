@@ -17,9 +17,6 @@ import {
   useNewPostQuery,
   useCreatePostMutation,
   PostStatus as PostStatusType,
-  PostsQuery,
-  PostsQueryVariables,
-  PostsDocument,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import { useTranslation } from '@/config/i18n'
@@ -35,24 +32,34 @@ type NewPostPageProps = {
 
 const defaultImages = [
   {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-large',
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-large',
   },
   {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-large',
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-large',
   },
   {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-large',
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-large',
   },
   {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-large',
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-large',
   },
   {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-large',
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-large',
   },
 ]
 
@@ -62,8 +69,8 @@ const selectDefaultImage = () => {
 }
 
 const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
-  const initialData: InputPostData = useMemo(() => (
-    {
+  const initialData: InputPostData = useMemo(
+    () => ({
       title: '',
       languageId: -1,
       topicIds: [],
@@ -76,8 +83,9 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
       ],
       timestamp: 0,
     }),
-    [defaultImage])
-  
+    [defaultImage],
+  )
+
   const uiLanguage = useUILanguage()
   const { data: { currentUser, topics } = {} } = useNewPostQuery({
     variables: { uiLanguage },
@@ -89,7 +97,8 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   const [saving, setSaving] = React.useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  // TODO URGENT: FIGURE OUT CHANGES IN THIS FILE
+  // TODO: Address properly handling invalidating the cache on My Feed,
+  // Profile, and My Posts page immediately after publishing a new post
 
   const [createPost] = useCreatePostMutation({
     onCompleted: (mutationResult) => {
@@ -99,76 +108,63 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
     onError: (error) => {
       toast.error(error.message)
     },
-    update: (cache, mutationResult) => {
-      if (currentUser?.id && mutationResult.data?.createPost) {
-        const data = cache.readQuery<PostsQuery, PostsQueryVariables>({
-          query: PostsDocument,
-          variables: {
-            status: mutationResult.data.createPost.status,
-            first: 1,
-            skip: 1,
-            authoredOnly: true,
-          },
-        })
-
-        if (data?.posts) {
-          data.posts.posts.push(mutationResult.data.createPost)
-          cache.writeQuery({ query: PostsDocument, data: data.posts })
-        }
-      }
-    },
+    refetchQueries: ['PostsQuery'],
   })
 
-  const createNewPost = React.useCallback(async (status: PostStatusType) => {
-    if (!(dataRef.current)) {
-      return
-    }
-    setSaving(true)
+  const createNewPost = React.useCallback(
+    async (status: PostStatusType) => {
+      if (!dataRef.current) {
+        return
+      }
+      setSaving(true)
 
-    const [valid, message] = validatePostData(dataRef.current, t)
-    if (!valid) {
-      setSaving(false)
-      setErrorMessage(message)
-      return
-    }
+      const [valid, message] = validatePostData(dataRef.current, t)
+      if (!valid) {
+        setSaving(false)
+        setErrorMessage(message)
+        return
+      }
 
-    const { title, languageId, topicIds, headlineImage, body } = dataRef.current
+      const { title, languageId, topicIds, headlineImage, body } = dataRef.current
 
-    try {
-      const modifiedBody = await uploadInlineImages(body)
-      createPost({
-        variables: {
-          title,
-          status,
-          languageId,
-          topicIds,
-          headlineImage,
-          body: modifiedBody
-        }
-      })
-    } catch (err) {
-      console.error(err)
-      setErrorMessage(t('postSaveError'))
-      return
-    } finally {
-      setSaving(false)
-    }
-  }, [
-    dataRef,
-    uploadInlineImages,
-    setSaving,
-    createPost,
-  ])
+      try {
+        const modifiedBody = await uploadInlineImages(body)
+        createPost({
+          variables: {
+            title,
+            status,
+            languageId,
+            topicIds,
+            headlineImage,
+            body: modifiedBody,
+          },
+        })
+      } catch (err) {
+        console.error(err)
+        setErrorMessage(t('postSaveError'))
+        return
+      } finally {
+        setSaving(false)
+      }
+    },
+    [dataRef, uploadInlineImages, setSaving, createPost],
+  )
 
-  const handlePublishClick = React.useCallback((e) => {
-    e.preventDefault()
-    createNewPost(PostStatusType.Published)
-  }, [createNewPost])
+  const handlePublishClick = React.useCallback(
+    (e) => {
+      e.preventDefault()
+      createNewPost(PostStatusType.Published)
+    },
+    [createNewPost],
+  )
 
-  const handleDraftClick = React.useCallback((e) => {
-    e.preventDefault()
-    createNewPost(PostStatusType.Draft)
-  }, [createNewPost])
+  const handleDraftClick = React.useCallback(
+    (e) => {
+      e.preventDefault()
+      createNewPost(PostStatusType.Draft)
+    },
+    [createNewPost],
+  )
 
   return (
     <AuthGate>

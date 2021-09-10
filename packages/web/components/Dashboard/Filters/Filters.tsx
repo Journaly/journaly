@@ -9,13 +9,6 @@ import useToggle from '@/hooks/useToggle'
 import useUILanguage from '@/hooks/useUILanguage'
 import { useTranslation } from '@/config/i18n'
 
-export type InitialSearchFilters = {
-  languages: number[]
-  topics: number[]
-  needsFeedback: boolean
-  hasInteracted: boolean
-}
-
 export type PostQueryVarsType = {
   languages: number[]
   topics: number[]

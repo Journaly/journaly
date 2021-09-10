@@ -1,13 +1,13 @@
 import React from 'react'
 import { NextPage } from 'next'
 import cookie from 'cookie'
+import { Request } from 'express'
 import { withApollo } from '@/lib/apollo'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import MyFeed from '@/components/Dashboard/MyFeed'
 import AuthGate from '@/components/AuthGate'
 import WelcomeModal from '@/components/Modals/WelcomeModal'
-import { InitialSearchFilters } from '@/components/Dashboard/Filters'
-import { Request } from 'express'
+import { InitialSearchFilters } from '@/components/Dashboard/MyFeed'
 
 interface InitialProps {
   namespacesRequired: string[]

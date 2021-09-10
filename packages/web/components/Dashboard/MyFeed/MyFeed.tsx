@@ -17,13 +17,20 @@ import {
 import LoadingWrapper from '@/components/LoadingWrapper'
 import FeedHeader from './FeedHeader'
 import Filters from '../Filters'
-import { PostQueryVarsType, InitialSearchFilters } from '../Filters'
+import { PostQueryVarsType } from '../Filters'
 
 const NUM_POSTS_PER_PAGE = 9
 
 type Props = {
   currentUser: UserType
   initialSearchFilters: InitialSearchFilters | null
+}
+
+export type InitialSearchFilters = {
+  languages: number[]
+  topics: number[]
+  needsFeedback: boolean
+  hasInteracted: boolean
 }
 
 const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {

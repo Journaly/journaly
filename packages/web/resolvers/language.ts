@@ -56,22 +56,41 @@ const LanguageQueries = extendType({
     t.list.field('languages', {
       type: 'Language',
       args: {
-        hasPosts: booleanArg({ required: false }),
+        hasPosts: booleanArg({
+          description: 'If true, only return languages that have at least one post',
+          required: false,
+        }),
+        authoredOnly: booleanArg({
+          description: 'If true, return only languages with posts authored by currentUser.',
+          required: false,
+        }),
       },
       resolve: async (_parent, args, ctx) => {
-        let filter
+        const { userId } = ctx.request
+
+        const filterClauses = []
+
         if (args.hasPosts) {
-          filter = {
+          filterClauses.push({
             posts: {
               some: { status: PostStatus.PUBLISHED },
             },
-          }
-        } else {
-          filter = undefined
+          })
+        }
+        if (args.authoredOnly) {
+          filterClauses.push({
+            posts: {
+              some: {
+                authorId: userId,
+              },
+            },
+          })
         }
 
         return ctx.db.language.findMany({
-          where: filter,
+          where: {
+            AND: filterClauses,
+          },
           orderBy: {
             name: 'asc',
           },

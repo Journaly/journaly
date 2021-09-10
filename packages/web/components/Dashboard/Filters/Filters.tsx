@@ -191,7 +191,7 @@ const Filters: React.FC<Props> = ({
                   onClick={() => {
                     setPostQueryVars((prevState) => ({
                       ...prevState,
-                      selectedLanguageFilters: [...userLanguages.values()],
+                      languages: [...userLanguages.values()],
                     }))
                   }}
                 >

@@ -14,7 +14,7 @@ import theme from '@/theme'
 import Filters, { PostQueryVarsType } from '@/components/Dashboard/Filters'
 import Pagination from '@/components/Pagination'
 
-const NUM_POSTS_PER_PAGE = 4
+const NUM_POSTS_PER_PAGE = 10
 
 type Props = {
   currentUser: UserType

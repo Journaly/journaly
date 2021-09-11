@@ -18,8 +18,7 @@ const ProfilePage: NextPage<InitialProps> = () => {
 
   const { data, loading, error } = useProfilePageQuery({ variables: { userId } })
 
-  const { userById, currentUser } = data || {}
-  const posts = data?.posts?.posts
+  const { userById, posts, currentUser } = data || {}
 
   return (
     <LoadingWrapper loading={loading} error={error}>

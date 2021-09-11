@@ -5,6 +5,8 @@ import classNames from 'classnames'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+// TODO: Update `react-markdown` and `remark-gfm` once Next.js versioning issues are resolved
+
 import {
   useUpdateCommentMutation,
   useDeleteCommentMutation,

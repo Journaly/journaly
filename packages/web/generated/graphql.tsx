@@ -1044,6 +1044,7 @@ export type PostsQueryVariables = Exact<{
   hasInteracted?: Maybe<Scalars['Boolean']>
   authoredOnly: Scalars['Boolean']
   status: PostStatus
+  authorId?: Maybe<Scalars['Int']>
 }>
 
 export type PostsQuery = { __typename?: 'Query' } & {
@@ -2525,7 +2526,7 @@ export const ProfilePageDocument = gql`
     userById(id: $userId) {
       ...ProfileUserFragment
     }
-    posts(first: 20, skip: 0, status: PUBLISHED, authoredOnly: true) {
+    posts(first: 20, skip: 0, status: PUBLISHED, authoredOnly: true, authorId: $userId) {
       posts {
         ...PostCardFragment
       }
@@ -3071,6 +3072,7 @@ export const PostsDocument = gql`
     $hasInteracted: Boolean
     $authoredOnly: Boolean!
     $status: PostStatus!
+    $authorId: Int
   ) {
     posts(
       first: $first
@@ -3083,6 +3085,7 @@ export const PostsDocument = gql`
       hasInteracted: $hasInteracted
       authoredOnly: $authoredOnly
       status: $status
+      authorId: $authorId
     ) {
       posts {
         ...PostCardFragment
@@ -3115,6 +3118,7 @@ export const PostsDocument = gql`
  *      hasInteracted: // value for 'hasInteracted'
  *      authoredOnly: // value for 'authoredOnly'
  *      status: // value for 'status'
+ *      authorId: // value for 'authorId'
  *   },
  * });
  */

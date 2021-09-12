@@ -332,6 +332,18 @@ const PostQueries = extendType({
           `)
         }
 
+        if (args.authorId) {
+          where.push(Prisma.sql`p."authorId" = ${args.authorId}`)
+        }
+
+        // Only logged in users looking at their own posts may filter on status,
+        // everyone else _must_ see only published posts.
+        if (!currentUser || args.authorId !== currentUser.id) {
+          where.push(Prisma.sql`p."status" = 'PUBLISHED'`)
+        } else if (args.status) {
+          where.push(Prisma.sql`p."status" = ${args.status}`)
+        }
+
         let whereQueryFragment = where[0]
           ? Prisma.sql`WHERE ${where[0]}`
           : Prisma.empty
@@ -344,68 +356,23 @@ const PostQueries = extendType({
           joinQueryFragment = Prisma.sql`${joinQueryFragment}\n${joins[i]}`
         }
 
-        const query = Prisma.sql`
-          SELECT p.* FROM "public"."Post" AS p
+        const queryPred = Prisma.sql`
+          FROM "public"."Post" AS p
           ${joinQueryFragment}
           ${whereQueryFragment}
-          ;
         `
 
-        console.log(query)
+        const [posts, [{ count }]] = await Promise.all([
+          ctx.db.$queryRaw`
+            SELECT p.* ${queryPred}
+            ORDER BY p."bumpedAt" DESC
+            LIMIT ${args.first}
+            OFFSET ${args.skip};
+          `,
+          ctx.db.$queryRaw`SELECT COUNT(*) ${queryPred};`,
+        ])
 
-        const posts = await ctx.db.$queryRaw(query)
-
-        return {
-          posts,
-          count: 42
-        }
-        /*
-        if (currentUser && args.authoredOnly) {
-          filterClauses.push({
-            author: {
-              id: args.authorId ? args.authorId : currentUser.id,
-            },
-          })
-        }
-
-        if (currentUser && args.status === PostStatus.PUBLISHED) {
-          filterClauses.push({
-            status: PostStatus.PUBLISHED,
-          })
-        }
-
-        if (currentUser && args.status === PostStatus.DRAFT) {
-          filterClauses.push({
-            status: PostStatus.DRAFT,
-          })
-        }
-
-        const countQuery = ctx.db.post.count({
-          where: {
-            AND: filterClauses,
-            status: {
-              not: 'DRAFT',
-            },
-          },
-        })
-
-        const postQuery = ctx.db.post.findMany({
-          where: {
-            AND: filterClauses,
-          },
-          skip: args.skip,
-          take: args.first,
-          orderBy: {
-            bumpedAt: 'desc',
-          },
-        })
-
-        const [count, posts] = await Promise.all([countQuery, postQuery])
-        return {
-          count,
-          posts,
-        }
-        */
+        return { posts, count }
       },
     })
   },

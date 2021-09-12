@@ -42,7 +42,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       first: NUM_POSTS_PER_PAGE,
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
       status,
-      authoredOnly: true,
+      authorId: currentUser.id,
       ...postQueryVars,
     },
   })

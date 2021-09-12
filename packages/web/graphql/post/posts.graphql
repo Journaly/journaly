@@ -7,7 +7,7 @@ query posts(
   $followedAuthors: Boolean
   $needsFeedback: Boolean
   $hasInteracted: Boolean
-  $authoredOnly: Boolean!
+  $authorId: Int
   $status: PostStatus!
 ) {
   posts(
@@ -19,7 +19,7 @@ query posts(
     followedAuthors: $followedAuthors
     needsFeedback: $needsFeedback
     hasInteracted: $hasInteracted
-    authoredOnly: $authoredOnly
+    authorId: $authorId
     status: $status
   ) {
     posts {

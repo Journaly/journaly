@@ -24,6 +24,7 @@ import {
   BadgeType,
   PrismaClient,
   LanguageRelation,
+  User,
   UserRole,
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
@@ -242,17 +243,11 @@ const PostQueries = extendType({
         }),
         status: arg({
           type: 'PostStatus',
-          description: 'The post status, indicating Published or Draft.',
-          required: true,
-        }),
-        authoredOnly: booleanArg({
-          description:
-            'If true, return only posts authored by currentUser. If false, return all posts.',
+          description: 'The post status, indicating Published or Draft. Param is ignored unless the current user is specified in `authorId`',
           required: true,
         }),
         authorId: intArg({
-          description:
-            'Can be provided for usage on a profile page. If not provided, default to currentUser ID',
+          description: 'Return posts by a given author.',
           required: false,
         }),
       },
@@ -274,11 +269,11 @@ const PostQueries = extendType({
         const joins = []
         const where = []
 
-        if (args.languages.length) {
+        if (args.languages?.length) {
           where.push(Prisma.sql`p."languageId" IN (${Prisma.join(args.languages)})`)
         }
 
-        if (args.topics.length) {
+        if (args.topics?.length) {
           joins.push(Prisma.sql`
             INNER JOIN (
               SELECT DISTINCT pt."postId"
@@ -298,7 +293,7 @@ const PostQueries = extendType({
         }
 
         if (currentUser && args.followedAuthors) {
-          const followingIds = currentUser.following.map(({ id }) => id)
+          const followingIds = currentUser.following.map((user: User) => user.id)
           where.push(Prisma.sql`p."authorId" IN (${Prisma.join(followingIds)})`)
         }
 

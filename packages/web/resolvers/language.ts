@@ -18,28 +18,10 @@ const Language = objectType({
     t.model.posts({ pagination: false })
     t.model.dialect()
     t.int('postCount', {
-      args: {
-        topics: intArg({
-          description: 'Topics IDs to filter languages. No value means all languages.',
-          required: false,
-          list: true,
-        }),
-      },
-      resolve(parent, args, ctx) {
-        let filter = {}
-        if (args.topics && args.topics.length > 0)
-          filter = {
-            postTopics: {
-              some: {
-                topicId: { in: args.topics },
-              },
-            },
-          }
-
+      resolve(parent, _, ctx) {
         return ctx.db.post.count({
           where: {
             AND: {
-              ...filter,
               languageId: parent.id,
               status: PostStatus.PUBLISHED,
             },

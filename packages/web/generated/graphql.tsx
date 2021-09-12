@@ -116,10 +116,6 @@ export type Language = {
   postCount: Scalars['Int']
 }
 
-export type LanguagePostCountArgs = {
-  topics?: Maybe<Array<Scalars['Int']>>
-}
-
 export enum LanguageLevel {
   Beginner = 'BEGINNER',
   Intermediate = 'INTERMEDIATE',
@@ -445,7 +441,6 @@ export type QueryPostsArgs = {
   needsFeedback?: Maybe<Scalars['Boolean']>
   hasInteracted?: Maybe<Scalars['Boolean']>
   status: PostStatus
-  authoredOnly: Scalars['Boolean']
   authorId?: Maybe<Scalars['Int']>
 }
 
@@ -827,7 +822,6 @@ export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
 export type LanguagesQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
   authoredOnly?: Maybe<Scalars['Boolean']>
-  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
 }>
 
 export type LanguagesQuery = { __typename?: 'Query' } & {
@@ -1042,7 +1036,7 @@ export type PostsQueryVariables = Exact<{
   followedAuthors?: Maybe<Scalars['Boolean']>
   needsFeedback?: Maybe<Scalars['Boolean']>
   hasInteracted?: Maybe<Scalars['Boolean']>
-  authoredOnly: Scalars['Boolean']
+  authorId?: Maybe<Scalars['Int']>
   status: PostStatus
 }>
 
@@ -1512,7 +1506,7 @@ export const PostCardFragmentFragmentDoc = gql`
 export const LanguageWithPostCountFragmentFragmentDoc = gql`
   fragment LanguageWithPostCountFragment on Language {
     ...LanguageFragment
-    postCount(topics: $topics)
+    postCount
   }
   ${LanguageFragmentFragmentDoc}
 `
@@ -2109,7 +2103,7 @@ export type AddLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationO
   AddLanguageRelationMutationVariables
 >
 export const LanguagesDocument = gql`
-  query languages($hasPosts: Boolean, $authoredOnly: Boolean, $topics: [Int!]) {
+  query languages($hasPosts: Boolean, $authoredOnly: Boolean) {
     languages(hasPosts: $hasPosts, authoredOnly: $authoredOnly) {
       ...LanguageWithPostCountFragment
     }
@@ -2131,7 +2125,6 @@ export const LanguagesDocument = gql`
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
  *      authoredOnly: // value for 'authoredOnly'
- *      topics: // value for 'topics'
  *   },
  * });
  */
@@ -2525,7 +2518,7 @@ export const ProfilePageDocument = gql`
     userById(id: $userId) {
       ...ProfileUserFragment
     }
-    posts(first: 20, skip: 0, status: PUBLISHED, authoredOnly: true) {
+    posts(first: 20, skip: 0, status: PUBLISHED, authorId: $userId) {
       posts {
         ...PostCardFragment
       }
@@ -3069,7 +3062,7 @@ export const PostsDocument = gql`
     $followedAuthors: Boolean
     $needsFeedback: Boolean
     $hasInteracted: Boolean
-    $authoredOnly: Boolean!
+    $authorId: Int
     $status: PostStatus!
   ) {
     posts(
@@ -3081,7 +3074,7 @@ export const PostsDocument = gql`
       followedAuthors: $followedAuthors
       needsFeedback: $needsFeedback
       hasInteracted: $hasInteracted
-      authoredOnly: $authoredOnly
+      authorId: $authorId
       status: $status
     ) {
       posts {
@@ -3113,7 +3106,7 @@ export const PostsDocument = gql`
  *      followedAuthors: // value for 'followedAuthors'
  *      needsFeedback: // value for 'needsFeedback'
  *      hasInteracted: // value for 'hasInteracted'
- *      authoredOnly: // value for 'authoredOnly'
+ *      authorId: // value for 'authorId'
  *      status: // value for 'status'
  *   },
  * });

@@ -57,7 +57,6 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
     variables: {
       first: NUM_POSTS_PER_PAGE,
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
-      authoredOnly: false,
       status: PostStatus.Published,
       ...postQueryVars,
     },

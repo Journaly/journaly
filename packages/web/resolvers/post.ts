@@ -268,6 +268,54 @@ const PostQueries = extendType({
           },
         })
 
+        const joins = []
+        const where = []
+
+        if (args.languages.length) {
+          where.push(Prisma.sql`p."languageId" IN (${Prisma.join(args.languages)})`)
+        }
+
+        if (args.needsFeedback) {
+          joins.push(
+            Prisma.sql`LEFT JOIN "PostComment" AS pc ON pc."postId" = p.id`,
+            Prisma.sql`LEFT JOIN "Thread" AS t ON t."postId" = p.id`,
+          )
+          where.push(
+            Prisma.sql`pc.id IS NULL`,
+            Prisma.sql`t.id IS NULL`,
+          )
+        }
+
+        let whereQueryFragment = where[0]
+          ? Prisma.sql`WHERE ${where[0]}`
+          : Prisma.empty
+        for (let i = 1; i < where.length; i++) {
+          whereQueryFragment = Prisma.sql`${whereQueryFragment} AND ${where[i]}`
+        }
+
+        let joinQueryFragment = joins[0] || Prisma.empty
+        for (let i = 1; i < joins.length; i++) {
+          console.log('ZOOOOOO', joins[i])
+          joinQueryFragment = Prisma.sql`${joinQueryFragment}\n${joins[i]}`
+        }
+
+        const query = Prisma.sql`
+          SELECT p.* FROM "public"."Post" AS p
+          ${joinQueryFragment}
+          ${whereQueryFragment}
+          ;
+        `
+
+        console.log(query.sql)
+
+        const posts = await ctx.db.$queryRaw(query)
+        console.log(posts)
+
+        return {
+          posts,
+          count: 42
+        }
+        /*
         const filterClauses = []
         if (!args.first) args.first = 10
         if (args.first > 50) args.first = 50
@@ -422,6 +470,7 @@ const PostQueries = extendType({
           count,
           posts,
         }
+        */
       },
     })
   },

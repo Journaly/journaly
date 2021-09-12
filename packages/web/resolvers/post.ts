@@ -289,6 +289,15 @@ const PostQueries = extendType({
           
         }
 
+        if (args.search) {
+          const likeExpr = `%${args.search}%`
+          where.push(Prisma.sql`
+            p.title ILIKE ${likeExpr}
+            OR p.body ILIKE ${likeExpr}
+
+          `)
+        }
+
         if (args.needsFeedback) {
           joins.push(
             Prisma.sql`LEFT JOIN "PostComment" AS pc ON pc."postId" = p.id`,
@@ -328,24 +337,6 @@ const PostQueries = extendType({
           count: 42
         }
         /*
-        if (args.topics) {
-          const topicFilters = args.topics.map((topic) => {
-            return {
-              postTopics: {
-                some: {
-                  topicId: {
-                    equals: topic,
-                  },
-                },
-              },
-            }
-          })
-
-          filterClauses.push({
-            OR: topicFilters,
-          })
-        }
-
         if (args.search) {
           filterClauses.push({
             OR: [

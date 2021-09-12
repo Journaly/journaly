@@ -268,11 +268,25 @@ const PostQueries = extendType({
           },
         })
 
+        if (!args.first) args.first = 10
+        if (args.first > 50) args.first = 50
+
         const joins = []
         const where = []
 
         if (args.languages.length) {
           where.push(Prisma.sql`p."languageId" IN (${Prisma.join(args.languages)})`)
+        }
+
+        if (args.topics.length) {
+          joins.push(Prisma.sql`
+            INNER JOIN (
+              SELECT DISTINCT pt."postId"
+              FROM "PostTopic" AS pt
+              WHERE pt."topicId" IN (${Prisma.join(args.topics)})
+            ) ptc ON p.id = ptc."postId"
+          `)
+          
         }
 
         if (args.needsFeedback) {
@@ -295,7 +309,6 @@ const PostQueries = extendType({
 
         let joinQueryFragment = joins[0] || Prisma.empty
         for (let i = 1; i < joins.length; i++) {
-          console.log('ZOOOOOO', joins[i])
           joinQueryFragment = Prisma.sql`${joinQueryFragment}\n${joins[i]}`
         }
 
@@ -309,33 +322,12 @@ const PostQueries = extendType({
         console.log(query.sql)
 
         const posts = await ctx.db.$queryRaw(query)
-        console.log(posts)
 
         return {
           posts,
           count: 42
         }
         /*
-        const filterClauses = []
-        if (!args.first) args.first = 10
-        if (args.first > 50) args.first = 50
-
-        if (args.languages) {
-          const languageFilters = args.languages.map((language) => {
-            return {
-              language: {
-                id: {
-                  equals: language,
-                },
-              },
-            }
-          })
-
-          filterClauses.push({
-            OR: languageFilters,
-          })
-        }
-
         if (args.topics) {
           const topicFilters = args.topics.map((topic) => {
             return {

@@ -286,7 +286,6 @@ const PostQueries = extendType({
               WHERE pt."topicId" IN (${Prisma.join(args.topics)})
             ) ptc ON p.id = ptc."postId"
           `)
-          
         }
 
         if (args.search) {
@@ -298,6 +297,11 @@ const PostQueries = extendType({
           `)
         }
 
+        if (currentUser && args.followedAuthors) {
+          const followingIds = currentUser.following.map(({ id }) => id)
+          where.push(Prisma.sql`p."authorId" IN (${Prisma.join(followingIds)})`)
+        }
+
         if (args.needsFeedback) {
           joins.push(
             Prisma.sql`LEFT JOIN "PostComment" AS pc ON pc."postId" = p.id`,
@@ -307,6 +311,25 @@ const PostQueries = extendType({
             Prisma.sql`pc.id IS NULL`,
             Prisma.sql`t.id IS NULL`,
           )
+        }
+
+        if (currentUser && args.hasInteracted) {
+          joins.push(Prisma.sql`
+            INNER JOIN (
+              (
+                SELECT hi_pc."postId" as "postId"
+                FROM "PostComment" AS hi_pc
+                WHERE hi_pc."authorId" = ${currentUser.id}
+              )
+              UNION
+              (
+                SELECT hi_t."postId" as "postId"
+                FROM "Comment" AS hi_c
+                JOIN "Thread" AS hi_t ON hi_c."threadId" = hi_t.id
+                WHERE hi_c."authorId" = ${currentUser.id}
+              )
+            ) "interactedPostIds" ON p.id = "interactedPostIds"."postId"
+          `)
         }
 
         let whereQueryFragment = where[0]
@@ -328,7 +351,7 @@ const PostQueries = extendType({
           ;
         `
 
-        console.log(query.sql)
+        console.log(query)
 
         const posts = await ctx.db.$queryRaw(query)
 
@@ -337,77 +360,6 @@ const PostQueries = extendType({
           count: 42
         }
         /*
-        if (args.search) {
-          filterClauses.push({
-            OR: [
-              {
-                title: {
-                  contains: args.search,
-                  mode: 'insensitive',
-                },
-              },
-              {
-                body: {
-                  contains: args.search,
-                  mode: 'insensitive',
-                },
-              },
-            ],
-          })
-        }
-
-        if (currentUser && args.followedAuthors) {
-          filterClauses.push({
-            author: {
-              followedBy: {
-                some: { id: currentUser.id },
-              },
-            },
-          })
-        }
-
-        if (args.needsFeedback) {
-          filterClauses.push({
-            AND: [
-              {
-                threads: {
-                  none: {},
-                },
-              },
-              {
-                postComments: {
-                  none: {},
-                },
-              },
-            ],
-          })
-        }
-
-        if (currentUser && args.hasInteracted) {
-          filterClauses.push({
-            OR: [
-              {
-                threads: {
-                  some: {
-                    comments: {
-                      some: {
-                        authorId: currentUser.id,
-                      },
-                    },
-                  },
-                },
-              },
-              {
-                postComments: {
-                  some: {
-                    authorId: currentUser.id,
-                  },
-                },
-              },
-            ],
-          })
-        }
-
         if (currentUser && args.authoredOnly) {
           filterClauses.push({
             author: {

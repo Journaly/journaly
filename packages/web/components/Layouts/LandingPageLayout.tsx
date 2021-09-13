@@ -1,15 +1,11 @@
 import { useRouter } from 'next/router'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
-import useUILanguage from '@/hooks/useUILanguage'
 import Nav from '@/components/Site/Nav'
 
 const LandingPageLayout: React.FC = ({ children }) => {
   const router = useRouter()
-  const uiLanguage = useUILanguage()
-  const { data, loading, error } = useCurrentUserQuery({
-    variables: { uiLanguage }
-  })
+  const { data, loading, error } = useCurrentUserQuery()
 
   const currentUser = data?.currentUser as UserType
 

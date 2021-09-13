@@ -1,4 +1,4 @@
-query userById($id: Int!, $uiLanguage: UILanguage!) {
+query userById($id: Int!) {
   userById(id: $id) {
     ...UserWithLanguagesFragment
   }

@@ -1,4 +1,4 @@
-query currentUser($uiLanguage: UILanguage!) {
+query currentUser {
   currentUser {
     ...CurrentUserFragment
   }

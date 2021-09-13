@@ -25,9 +25,6 @@ fragment UserWithLanguagesFragment on User {
       ...LanguageFragment
     }
   }
-  userInterests {
-    ...UserInterestFragment
-  }
 }
 
 fragment CurrentUserFragment on User {

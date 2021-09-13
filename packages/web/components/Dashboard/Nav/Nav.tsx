@@ -11,7 +11,6 @@ import {
   User as UserType,
   CurrentUserDocument,
 } from '@/generated/graphql'
-import useUILanguage from '@/hooks/useUILanguage'
 
 import HamburgerIcon from '../Header/HamburgerIcon'
 import NavLink from '@/components/NavLink'
@@ -29,10 +28,7 @@ interface Props {
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
 
-  const uiLanguage = useUILanguage()
-  const { data, error } = useCurrentUserQuery({
-    variables: { uiLanguage }
-  })
+  const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
     refetchQueries: [
       { query: CurrentUserDocument }

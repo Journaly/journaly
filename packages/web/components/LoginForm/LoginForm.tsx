@@ -5,7 +5,6 @@ import { useForm, ErrorMessage } from 'react-hook-form'
 
 import { useTranslation } from '@/config/i18n'
 import { useLoginUserMutation, CurrentUserDocument, useCurrentUserQuery } from '@/generated/graphql'
-import useUILanguage from '@/hooks/useUILanguage'
 import FormError from '@/components/FormError'
 import Button from '@/components/Button'
 import { brandBlue } from '@/utils'
@@ -22,10 +21,7 @@ const LoginForm: React.FC = () => {
 
   const fieldErrorName = Object.keys(errors)[0] || ''
 
-  const uiLanguage = useUILanguage()
-  const { refetch } = useCurrentUserQuery({
-    variables: { uiLanguage }
-  })
+  const { refetch } = useCurrentUserQuery()
 
   const [loginUser, { loading, error }] = useLoginUserMutation({
     onCompleted: async () => {

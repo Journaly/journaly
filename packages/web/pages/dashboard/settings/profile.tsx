@@ -37,10 +37,10 @@ const ProfileInfo: NextPage = () => {
                     refetch={refetch}
                   />
                   <UILanguageForm />
-                  <BioForm bio={data?.currentUser?.bio || ''} />
+                  <BioForm bio={data.currentUser?.bio || ''} />
                   <InterestsForm
                     topics={data.topics}
-                    userInterests={data?.currentUser?.userInterests}
+                    userInterests={data.currentUser?.userInterests}
                     refetch={refetch}
                   />
                   <SocialForm socialMedia={data.currentUser?.socialMedia} refetch={refetch} />

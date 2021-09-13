@@ -27,7 +27,6 @@ interface Props {
 
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
-
   const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
     refetchQueries: [

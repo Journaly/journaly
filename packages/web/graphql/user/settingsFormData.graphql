@@ -15,9 +15,7 @@ query settingsFormData($uiLanguage: UILanguage!) {
       }
     }
     userInterests {
-      topic {
-        ...TopicFragment
-      }
+      ...UserInterestFragment
     }
     ...SocialMediaFragment
   }

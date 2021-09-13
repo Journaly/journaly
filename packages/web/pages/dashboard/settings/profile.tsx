@@ -40,7 +40,7 @@ const ProfileInfo: NextPage = () => {
                   <BioForm bio={data?.currentUser?.bio || ''} />
                   <InterestsForm
                     topics={data.topics}
-                    userInterests={currentUser.userInterests}
+                    userInterests={data?.currentUser?.userInterests}
                     refetch={refetch}
                   />
                   <SocialForm socialMedia={data.currentUser?.socialMedia} refetch={refetch} />

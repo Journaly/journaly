@@ -1229,11 +1229,7 @@ export type SettingsFormDataQuery = { __typename?: 'Query' } & {
               language: { __typename?: 'Language' } & LanguageFragmentFragment
             }
         >
-        userInterests: Array<
-          { __typename?: 'UserInterest' } & {
-            topic: { __typename?: 'Topic' } & TopicFragmentFragment
-          }
-        >
+        userInterests: Array<{ __typename?: 'UserInterest' } & UserInterestFragmentFragment>
       } & SocialMediaFragmentFragment
   >
 }
@@ -3982,15 +3978,14 @@ export const SettingsFormDataDocument = gql`
         }
       }
       userInterests {
-        topic {
-          ...TopicFragment
-        }
+        ...UserInterestFragment
       }
       ...SocialMediaFragment
     }
   }
   ${LanguageFragmentFragmentDoc}
   ${TopicFragmentFragmentDoc}
+  ${UserInterestFragmentFragmentDoc}
   ${SocialMediaFragmentFragmentDoc}
 `
 

@@ -18,28 +18,10 @@ const Language = objectType({
     t.model.posts({ pagination: false })
     t.model.dialect()
     t.int('postCount', {
-      args: {
-        topics: intArg({
-          description: 'Topics IDs to filter languages. No value means all languages.',
-          required: false,
-          list: true,
-        }),
-      },
-      resolve(parent, args, ctx) {
-        let filter = {}
-        if (args.topics && args.topics.length > 0)
-          filter = {
-            postTopics: {
-              some: {
-                topicId: { in: args.topics },
-              },
-            },
-          }
-
+      resolve(parent, _, ctx) {
         return ctx.db.post.count({
           where: {
             AND: {
-              ...filter,
               languageId: parent.id,
               status: PostStatus.PUBLISHED,
             },
@@ -56,22 +38,41 @@ const LanguageQueries = extendType({
     t.list.field('languages', {
       type: 'Language',
       args: {
-        hasPosts: booleanArg({ required: false }),
+        hasPosts: booleanArg({
+          description: 'If true, only return languages that have at least one post',
+          required: false,
+        }),
+        authoredOnly: booleanArg({
+          description: 'If true, return only languages with posts authored by currentUser.',
+          required: false,
+        }),
       },
       resolve: async (_parent, args, ctx) => {
-        let filter
+        const { userId } = ctx.request
+
+        const filterClauses = []
+
         if (args.hasPosts) {
-          filter = {
+          filterClauses.push({
             posts: {
               some: { status: PostStatus.PUBLISHED },
             },
-          }
-        } else {
-          filter = undefined
+          })
+        }
+        if (args.authoredOnly) {
+          filterClauses.push({
+            posts: {
+              some: {
+                authorId: userId,
+              },
+            },
+          })
         }
 
         return ctx.db.language.findMany({
-          where: filter,
+          where: {
+            AND: filterClauses,
+          },
           orderBy: {
             name: 'asc',
           },

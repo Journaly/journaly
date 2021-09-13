@@ -8,6 +8,7 @@ type Props = {
   selectedLanguagesIds: number[]
   onAdd: (id: number) => void
   onRemove: (id: number) => void
+  showPostCount?: boolean
 }
 
 const LanguageSelect: React.FC<Props> = ({
@@ -15,6 +16,7 @@ const LanguageSelect: React.FC<Props> = ({
   selectedLanguagesIds,
   onAdd,
   onRemove,
+  showPostCount = true,
 }) => {
   const { t } = useTranslation('my-feed')
   const languageOptions = (languagesData?.languages || []).map(
@@ -23,7 +25,9 @@ const LanguageSelect: React.FC<Props> = ({
         typeof dialect === 'string' && dialect.length > 0 ? `${name} - ${dialect}` : `${name}`
       return {
         value: id,
-        displayName: `${languageName} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
+        displayName: `${languageName} ${
+          showPostCount ? `(${postCount} post${(postCount || 0) === 1 ? '' : 's'})` : ''
+        }`,
         selectedDisplayName: languageName,
         disabled: postCount < 1,
       }

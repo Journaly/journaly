@@ -24,6 +24,7 @@ import {
   BadgeType,
   PrismaClient,
   LanguageRelation,
+  User,
   UserRole,
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
@@ -176,31 +177,12 @@ const InitiateInlinePostImageUploadResponse = objectType({
 const PostQueries = extendType({
   type: 'Query',
   definition(t) {
-    t.list.field('posts', {
-      type: 'Post',
-      args: {
-        status: arg({ type: 'PostStatus', required: true }),
-        authorId: intArg({ required: true }),
-      },
-      resolve: async (_parent, args, ctx) => {
-        return ctx.db.post.findMany({
-          where: {
-            author: { id: args.authorId },
-            status: args.status,
-          },
-          orderBy: {
-            publishedAt: 'desc',
-          },
-        })
-      },
-    })
-
     t.field('postById', {
       type: 'Post',
       args: {
         id: intArg({
           description: 'ID of the post to be retreived',
-          required: true
+          required: true,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -222,7 +204,7 @@ const PostQueries = extendType({
       },
     })
 
-    t.field('feed', {
+    t.field('posts', {
       type: 'PostPage',
       args: {
         search: stringArg({
@@ -248,7 +230,7 @@ const PostQueries = extendType({
           required: true,
         }),
         followedAuthors: booleanArg({
-          description: 'Author IDs to filter posts by. No value means all languages.',
+          description: 'Author IDs to filter posts by. No value means all authors.',
           required: false,
         }),
         needsFeedback: booleanArg({
@@ -256,7 +238,16 @@ const PostQueries = extendType({
           required: false,
         }),
         hasInteracted: booleanArg({
-          description: 'If true, return only posts that the user has commented on in any way',
+          description: 'If true, return only posts that the user has commented on in any way.',
+          required: false,
+        }),
+        status: arg({
+          type: 'PostStatus',
+          description: 'The post status, indicating Published or Draft. Param is ignored unless the current user is specified in `authorId`',
+          required: true,
+        }),
+        authorId: intArg({
+          description: 'Return posts by a given author.',
           required: false,
         }),
       },
@@ -272,143 +263,111 @@ const PostQueries = extendType({
           },
         })
 
-        const filterClauses = []
         if (!args.first) args.first = 10
         if (args.first > 50) args.first = 50
 
-        if (args.languages) {
-          const languageFilters = args.languages.map((language) => {
-            return {
-              language: {
-                id: {
-                  equals: language,
-                },
-              },
-            }
-          })
+        const joins = []
+        const where = []
 
-          filterClauses.push({
-            OR: languageFilters,
-          })
+        if (args.languages?.length) {
+          where.push(Prisma.sql`p."languageId" IN (${Prisma.join(args.languages)})`)
         }
 
-        if (args.topics) {
-          const topicFilters = args.topics.map((topic) => {
-            return {
-              postTopics: {
-                some: {
-                  topicId: {
-                    equals: topic,
-                  },
-                },
-              },
-            }
-          })
-
-          filterClauses.push({
-            OR: topicFilters,
-          })
+        if (args.topics?.length) {
+          joins.push(Prisma.sql`
+            INNER JOIN (
+              SELECT DISTINCT pt."postId"
+              FROM "PostTopic" AS pt
+              WHERE pt."topicId" IN (${Prisma.join(args.topics)})
+            ) ptc ON p.id = ptc."postId"
+          `)
         }
 
         if (args.search) {
-          filterClauses.push({
-            OR: [
-              {
-                title: {
-                  contains: args.search,
-                  mode: 'insensitive',
-                },
-              },
-              {
-                body: {
-                  contains: args.search,
-                  mode: 'insensitive',
-                },
-              },
-            ],
-          })
+          const likeExpr = `%${args.search}%`
+          where.push(Prisma.sql`
+            p.title ILIKE ${likeExpr}
+            OR p.body ILIKE ${likeExpr}
+
+          `)
         }
 
         if (currentUser && args.followedAuthors) {
-          filterClauses.push({
-            author: {
-              followedBy: {
-                some: { id: currentUser.id },
-              },
-            },
-          })
+          const followingIds = currentUser.following.map((user: User) => user.id)
+          where.push(Prisma.sql`p."authorId" IN (${Prisma.join(followingIds)})`)
         }
 
         if (args.needsFeedback) {
-          filterClauses.push({
-            AND: [
-              {
-                threads: {
-                  none: {},
-                },
-              },
-              {
-                postComments: {
-                  none: {},
-                },
-              },
-            ],
-          })
+          joins.push(
+            Prisma.sql`LEFT JOIN "PostComment" AS pc ON pc."postId" = p.id`,
+            Prisma.sql`LEFT JOIN "Thread" AS t ON t."postId" = p.id`,
+          )
+          where.push(
+            Prisma.sql`pc.id IS NULL`,
+            Prisma.sql`t.id IS NULL`,
+          )
         }
 
         if (currentUser && args.hasInteracted) {
-          filterClauses.push({
-            OR: [
-              {
-                threads: {
-                  some: {
-                    comments: {
-                      some: {
-                        authorId: currentUser.id,
-                      },
-                    },
-                  },
-                },
-              },
-              {
-                postComments: {
-                  some: {
-                    authorId: currentUser.id,
-                  },
-                },
-              },
-            ],
-          })
+          joins.push(Prisma.sql`
+            INNER JOIN (
+              (
+                SELECT hi_pc."postId" as "postId"
+                FROM "PostComment" AS hi_pc
+                WHERE hi_pc."authorId" = ${currentUser.id}
+              )
+              UNION
+              (
+                SELECT hi_t."postId" as "postId"
+                FROM "Comment" AS hi_c
+                JOIN "Thread" AS hi_t ON hi_c."threadId" = hi_t.id
+                WHERE hi_c."authorId" = ${currentUser.id}
+              )
+            ) "interactedPostIds" ON p.id = "interactedPostIds"."postId"
+          `)
         }
 
-        const countQuery = ctx.db.post.count({
-          where: {
-            AND: filterClauses,
-            status: {
-              not: 'DRAFT',
-            },
-          },
-        })
-
-        const postQuery = ctx.db.post.findMany({
-          where: {
-            AND: filterClauses,
-            status: {
-              not: 'DRAFT',
-            },
-          },
-          skip: args.skip,
-          take: args.first,
-          orderBy: {
-            bumpedAt: 'desc',
-          },
-        })
-
-        const [count, posts] = await Promise.all([countQuery, postQuery])
-        return {
-          count,
-          posts,
+        if (args.authorId) {
+          where.push(Prisma.sql`p."authorId" = ${args.authorId}`)
         }
+
+        // Only logged in users looking at their own posts may filter on status,
+        // everyone else _must_ see only published posts.
+        if (!currentUser || args.authorId !== currentUser.id) {
+          where.push(Prisma.sql`p."status" = 'PUBLISHED'`)
+        } else if (args.status) {
+          where.push(Prisma.sql`p."status" = ${args.status}`)
+        }
+
+        let whereQueryFragment = where[0]
+          ? Prisma.sql`WHERE ${where[0]}`
+          : Prisma.empty
+        for (let i = 1; i < where.length; i++) {
+          whereQueryFragment = Prisma.sql`${whereQueryFragment} AND ${where[i]}`
+        }
+
+        let joinQueryFragment = joins[0] || Prisma.empty
+        for (let i = 1; i < joins.length; i++) {
+          joinQueryFragment = Prisma.sql`${joinQueryFragment}\n${joins[i]}`
+        }
+
+        const queryPred = Prisma.sql`
+          FROM "public"."Post" AS p
+          ${joinQueryFragment}
+          ${whereQueryFragment}
+        `
+
+        const [posts, [{ count }]] = await Promise.all([
+          ctx.db.$queryRaw`
+            SELECT p.* ${queryPred}
+            ORDER BY p."bumpedAt" DESC
+            LIMIT ${args.first}
+            OFFSET ${args.skip};
+          `,
+          ctx.db.$queryRaw`SELECT COUNT(*) ${queryPred};`,
+        ])
+
+        return { posts, count }
       },
     })
   },

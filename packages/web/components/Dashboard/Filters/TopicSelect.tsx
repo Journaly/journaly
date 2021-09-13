@@ -8,13 +8,22 @@ type Props = {
   selectedTopicsIds: number[]
   onAdd: (id: number) => void
   onRemove: (id: number) => void
+  showPostCount?: boolean
 }
 
-const TopicSelect: React.FC<Props> = ({ topics, selectedTopicsIds, onAdd, onRemove }) => {
+const TopicSelect: React.FC<Props> = ({
+  topics,
+  selectedTopicsIds,
+  onAdd,
+  onRemove,
+  showPostCount = true,
+}) => {
   const { t } = useTranslation('my-feed')
   const formattedTopicOptions = (topics || []).map(({ name, id, postCount }) => ({
     value: id,
-    displayName: `${name} (${postCount} post${(postCount || 0) === 1 ? '' : 's'})`,
+    displayName: `${name} ${
+      showPostCount ? `(${postCount} post${(postCount || 0) === 1 ? '' : 's'})` : ''
+    }`,
     selectedDisplayName: `${name}`,
     disabled: postCount < 1,
   }))

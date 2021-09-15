@@ -21,11 +21,17 @@ At some point, we will want this system to be configurable by the user, but in o
 
 ## Product Requirements
 
-...
+- Very easy to access & intuitive to navigate
+- Easy to find but not necessarily distracting
+- Ideally, this should potentially feel like an instantaneous system to users (it should not leave them wondering if something has happened)
+- Should handle notifying users of anything that we think most users would feel is relevant
+  - new feedback comment in a thread they are subscribed to (separate user's posts vs. other users' posts?)
+  - new post comment (same open question as above)
 
 ## Technical Requirements
 
-...
+- Optimize for simplest architecture and lowest potential cost as the system scales
+- Not a separate service/package
 
 ## Technical Design
 
@@ -55,4 +61,5 @@ At some point, we will want this system to be configurable by the user, but in o
 
 ## Future Developments & Improvements
 
-...
+- We could perhaps notify users of new posts from people they follow. In order to be minimally disruptive, perhaps simply "there are 14 new posts from Journalers you follow" just to prompt them to check the feed via our "followed journalers" filter action
+- Once we have Direct Messaging, notificaitons of DMs (grouped as with other notifications in this iteration)

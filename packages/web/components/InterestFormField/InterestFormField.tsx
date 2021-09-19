@@ -12,7 +12,7 @@ import Select from '../Select'
 
 type Props = {
   topics: TopicType[]
-  userInterests: UserInterest[]
+  userInterests?: UserInterest[] | undefined | null
   refetch: () => void
 }
 
@@ -27,13 +27,13 @@ const InterestFormField: React.FC<Props> = ({ topics, userInterests, refetch }) 
     { loading: removingUserInterest },
   ] = useRemoveUserInterestMutation()
 
-  const userInterestOptions = userInterests.map(({topic}) => ({
+  const userInterestOptions = userInterests?.map(({topic}) => ({
     value: topic.id,
     displayName: topic.name || ''
   }))
 
   const topicOptions = topics
-    .filter(({ id }) => !userInterests.find(({ topic }) => topic.id === id))
+    .filter(({ id }) => !userInterests?.find(({ topic }) => topic.id === id))
     .map((topic) => ({
       value: topic.id,
       displayName: topic.name || ''
@@ -57,7 +57,7 @@ const InterestFormField: React.FC<Props> = ({ topics, userInterests, refetch }) 
 
   return (
     <div>
-      <OptionPills selectedOptions={userInterestOptions} onRemove={handleRemoveUserInterest} />
+      <OptionPills selectedOptions={userInterestOptions || []} onRemove={handleRemoveUserInterest} />
 
       <div className="user-interest-select">
         <Select

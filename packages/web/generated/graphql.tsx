@@ -116,10 +116,6 @@ export type Language = {
   postCount: Scalars['Int']
 }
 
-export type LanguagePostCountArgs = {
-  topics?: Maybe<Array<Scalars['Int']>>
-}
-
 export enum LanguageLevel {
   Beginner = 'BEGINNER',
   Intermediate = 'INTERMEDIATE',
@@ -428,9 +424,8 @@ export type PostTopic = {
 export type Query = {
   __typename?: 'Query'
   topics: Array<Topic>
-  posts: Array<Post>
   postById: Post
-  feed: PostPage
+  posts: PostPage
   users: Array<User>
   currentUser?: Maybe<User>
   userById: User
@@ -439,18 +434,14 @@ export type Query = {
 
 export type QueryTopicsArgs = {
   hasPosts?: Maybe<Scalars['Boolean']>
-}
-
-export type QueryPostsArgs = {
-  status: PostStatus
-  authorId: Scalars['Int']
+  authoredOnly?: Maybe<Scalars['Boolean']>
 }
 
 export type QueryPostByIdArgs = {
   id: Scalars['Int']
 }
 
-export type QueryFeedArgs = {
+export type QueryPostsArgs = {
   search?: Maybe<Scalars['String']>
   languages?: Maybe<Array<Scalars['Int']>>
   topics?: Maybe<Array<Scalars['Int']>>
@@ -459,6 +450,8 @@ export type QueryFeedArgs = {
   followedAuthors?: Maybe<Scalars['Boolean']>
   needsFeedback?: Maybe<Scalars['Boolean']>
   hasInteracted?: Maybe<Scalars['Boolean']>
+  status: PostStatus
+  authorId?: Maybe<Scalars['Int']>
 }
 
 export type QueryUserByIdArgs = {
@@ -467,6 +460,7 @@ export type QueryUserByIdArgs = {
 
 export type QueryLanguagesArgs = {
   hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
 }
 
 export type SocialMedia = {
@@ -849,7 +843,7 @@ export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
 
 export type LanguagesQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
-  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
 }>
 
 export type LanguagesQuery = { __typename?: 'Query' } & {
@@ -941,7 +935,9 @@ export type ProfilePageQueryVariables = Exact<{
 
 export type ProfilePageQuery = { __typename?: 'Query' } & {
   userById: { __typename?: 'User' } & ProfileUserFragmentFragment
-  posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+  posts: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
+      posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+    }
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
@@ -1019,23 +1015,6 @@ export type EditPostQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
-export type FeedQueryVariables = Exact<{
-  first: Scalars['Int']
-  skip: Scalars['Int']
-  search?: Maybe<Scalars['String']>
-  languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
-  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
-  followedAuthors?: Maybe<Scalars['Boolean']>
-  needsFeedback?: Maybe<Scalars['Boolean']>
-  hasInteracted?: Maybe<Scalars['Boolean']>
-}>
-
-export type FeedQuery = { __typename?: 'Query' } & {
-  feed: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
-      posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
-    }
-}
-
 export type InitiateInlinePostImageUploadMutationVariables = Exact<{ [key: string]: never }>
 
 export type InitiateInlinePostImageUploadMutation = { __typename?: 'Mutation' } & {
@@ -1073,12 +1052,22 @@ export type PostByIdQuery = { __typename?: 'Query' } & {
 }
 
 export type PostsQueryVariables = Exact<{
-  authorId: Scalars['Int']
+  first: Scalars['Int']
+  skip: Scalars['Int']
+  search?: Maybe<Scalars['String']>
+  languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  followedAuthors?: Maybe<Scalars['Boolean']>
+  needsFeedback?: Maybe<Scalars['Boolean']>
+  hasInteracted?: Maybe<Scalars['Boolean']>
+  authorId?: Maybe<Scalars['Int']>
   status: PostStatus
 }>
 
 export type PostsQuery = { __typename?: 'Query' } & {
-  posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+  posts: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
+      posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+    }
 }
 
 export type UpdatePostMutationVariables = Exact<{
@@ -1131,6 +1120,7 @@ export type RemoveUserInterestMutation = { __typename?: 'Mutation' } & {
 
 export type TopicsQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
   uiLanguage: UiLanguage
   languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
 }>
@@ -1562,7 +1552,7 @@ export const PostCardFragmentFragmentDoc = gql`
 export const LanguageWithPostCountFragmentFragmentDoc = gql`
   fragment LanguageWithPostCountFragment on Language {
     ...LanguageFragment
-    postCount(topics: $topics)
+    postCount
   }
   ${LanguageFragmentFragmentDoc}
 `
@@ -2171,8 +2161,8 @@ export type AddLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationO
   AddLanguageRelationMutationVariables
 >
 export const LanguagesDocument = gql`
-  query languages($hasPosts: Boolean, $topics: [Int!]) {
-    languages(hasPosts: $hasPosts) {
+  query languages($hasPosts: Boolean, $authoredOnly: Boolean) {
+    languages(hasPosts: $hasPosts, authoredOnly: $authoredOnly) {
       ...LanguageWithPostCountFragment
     }
   }
@@ -2192,7 +2182,7 @@ export const LanguagesDocument = gql`
  * const { data, loading, error } = useLanguagesQuery({
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
- *      topics: // value for 'topics'
+ *      authoredOnly: // value for 'authoredOnly'
  *   },
  * });
  */
@@ -2586,8 +2576,11 @@ export const ProfilePageDocument = gql`
     userById(id: $userId) {
       ...ProfileUserFragment
     }
-    posts(authorId: $userId, status: PUBLISHED) {
-      ...PostCardFragment
+    posts(first: 20, skip: 0, status: PUBLISHED, authorId: $userId) {
+      posts {
+        ...PostCardFragment
+      }
+      count
     }
     currentUser {
       ...UserWithLanguagesFragment
@@ -2921,72 +2914,6 @@ export type EditPostQueryResult = ApolloReactCommon.QueryResult<
   EditPostQuery,
   EditPostQueryVariables
 >
-export const FeedDocument = gql`
-  query feed(
-    $first: Int!
-    $skip: Int!
-    $search: String
-    $languages: [Int!]
-    $topics: [Int!]
-    $followedAuthors: Boolean
-    $needsFeedback: Boolean
-    $hasInteracted: Boolean
-  ) {
-    feed(
-      first: $first
-      skip: $skip
-      search: $search
-      languages: $languages
-      topics: $topics
-      followedAuthors: $followedAuthors
-      needsFeedback: $needsFeedback
-      hasInteracted: $hasInteracted
-    ) {
-      posts {
-        ...PostCardFragment
-      }
-      count
-    }
-  }
-  ${PostCardFragmentFragmentDoc}
-`
-
-/**
- * __useFeedQuery__
- *
- * To run a query within a React component, call `useFeedQuery` and pass it any options that fit your needs.
- * When your component renders, `useFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFeedQuery({
- *   variables: {
- *      first: // value for 'first'
- *      skip: // value for 'skip'
- *      search: // value for 'search'
- *      languages: // value for 'languages'
- *      topics: // value for 'topics'
- *      followedAuthors: // value for 'followedAuthors'
- *      needsFeedback: // value for 'needsFeedback'
- *      hasInteracted: // value for 'hasInteracted'
- *   },
- * });
- */
-export function useFeedQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>,
-) {
-  return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions)
-}
-export function useFeedLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>,
-) {
-  return ApolloReactHooks.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions)
-}
-export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
-export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
-export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
 export const InitiateInlinePostImageUploadDocument = gql`
   mutation initiateInlinePostImageUpload {
     initiateInlinePostImageUpload {
@@ -3185,9 +3112,34 @@ export type PostByIdQueryResult = ApolloReactCommon.QueryResult<
   PostByIdQueryVariables
 >
 export const PostsDocument = gql`
-  query posts($authorId: Int!, $status: PostStatus!) {
-    posts(authorId: $authorId, status: $status) {
-      ...PostCardFragment
+  query posts(
+    $first: Int!
+    $skip: Int!
+    $search: String
+    $languages: [Int!]
+    $topics: [Int!]
+    $followedAuthors: Boolean
+    $needsFeedback: Boolean
+    $hasInteracted: Boolean
+    $authorId: Int
+    $status: PostStatus!
+  ) {
+    posts(
+      first: $first
+      skip: $skip
+      search: $search
+      languages: $languages
+      topics: $topics
+      followedAuthors: $followedAuthors
+      needsFeedback: $needsFeedback
+      hasInteracted: $hasInteracted
+      authorId: $authorId
+      status: $status
+    ) {
+      posts {
+        ...PostCardFragment
+      }
+      count
     }
   }
   ${PostCardFragmentFragmentDoc}
@@ -3205,6 +3157,14 @@ export const PostsDocument = gql`
  * @example
  * const { data, loading, error } = usePostsQuery({
  *   variables: {
+ *      first: // value for 'first'
+ *      skip: // value for 'skip'
+ *      search: // value for 'search'
+ *      languages: // value for 'languages'
+ *      topics: // value for 'topics'
+ *      followedAuthors: // value for 'followedAuthors'
+ *      needsFeedback: // value for 'needsFeedback'
+ *      hasInteracted: // value for 'hasInteracted'
  *      authorId: // value for 'authorId'
  *      status: // value for 'status'
  *   },
@@ -3488,8 +3448,13 @@ export type RemoveUserInterestMutationOptions = ApolloReactCommon.BaseMutationOp
   RemoveUserInterestMutationVariables
 >
 export const TopicsDocument = gql`
-  query topics($hasPosts: Boolean, $uiLanguage: UILanguage!, $languages: [Int!]) {
-    topics(hasPosts: $hasPosts) {
+  query topics(
+    $hasPosts: Boolean
+    $authoredOnly: Boolean
+    $uiLanguage: UILanguage!
+    $languages: [Int!]
+  ) {
+    topics(hasPosts: $hasPosts, authoredOnly: $authoredOnly) {
       ...TopicWithPostCountFragment
     }
   }
@@ -3509,6 +3474,7 @@ export const TopicsDocument = gql`
  * const { data, loading, error } = useTopicsQuery({
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
+ *      authoredOnly: // value for 'authoredOnly'
  *      uiLanguage: // value for 'uiLanguage'
  *      languages: // value for 'languages'
  *   },

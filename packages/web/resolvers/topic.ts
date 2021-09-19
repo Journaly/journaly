@@ -77,12 +77,22 @@ const TopicQueries = extendType({
     t.list.field('topics', {
       type: 'Topic',
       args: {
-        hasPosts: booleanArg({ required: false }),
+        hasPosts: booleanArg({
+          description: 'If true, only return topics that have at least one post',
+          required: false,
+        }),
+        authoredOnly: booleanArg({
+          description: 'If true, return only topics with posts authored by currentUser.',
+          required: false,
+        }),
       },
       resolve: async (_parent, args, ctx) => {
-        let filter
+        const { userId } = ctx.request
+
+        const filterClauses = []
+
         if (args.hasPosts) {
-          filter = {
+          filterClauses.push({
             postTopics: {
               some: {
                 post: {
@@ -90,13 +100,25 @@ const TopicQueries = extendType({
                 },
               },
             },
-          }
-        } else {
-          filter = undefined
+          })
+        }
+
+        if (args.authoredOnly) {
+          filterClauses.push({
+            postTopics: {
+              some: {
+                post: {
+                  authorId: userId,
+                },
+              },
+            },
+          })
         }
 
         return ctx.db.topic.findMany({
-          where: filter,
+          where: {
+            AND: filterClauses,
+          },
           orderBy: {
             devName: 'asc',
           },

@@ -179,13 +179,14 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           padding: 30px 25px;
           color: ${theme.colors.white};
           box-shadow: 0px 8px 10px #00000029;
+          overflow-x: hidden;
         }
 
         .profile-card::before {
           content: '';
           position: absolute;
           width: 100%;
-          height: 100%;
+          height: 100vh;
           top: 0;
           left: 0;
           z-index: -1;
@@ -200,7 +201,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           content: '';
           position: absolute;
           width: 100%;
-          height: 100%;
+          height: 100vh;
           top: 0;
           left: 0;
           z-index: -1;

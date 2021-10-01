@@ -119,6 +119,17 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           <BlankAvatarIcon className="blank-avatar-desktop" size={130} />
         )}
 
+        {currentUser && currentUser.id !== user.id && (
+          <Button
+            className="follow-btn"
+            variant={ButtonVariant.Link}
+            onClick={hasFollowedAuthor ? handleUnfollowUser : handleFollowUser}
+            loading={followLoading || unfollowLoading}
+          >
+            {hasFollowedAuthor ? t('unfollow') : t('follow')}
+          </Button>
+        )}
+
         {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
 
         <ul className="badge-list">
@@ -128,17 +139,6 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
             </li>
           ))}
         </ul>
-
-        { currentUser && currentUser.id !== user.id &&
-          <Button
-            className="follow-btn"
-            variant={ButtonVariant.Primary}
-            onClick={hasFollowedAuthor ? handleUnfollowUser : handleFollowUser}
-            loading={followLoading || unfollowLoading}
-          >
-            {hasFollowedAuthor ? t('unfollow') : t('follow')}
-          </Button>
-        }
       </div>
 
       <div className="profile-footer">
@@ -222,7 +222,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           text-align: center;
         }
         .profile-body :global(.follow-btn) {
-          margin: 20px auto;
+          margin: 0 0 20px;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-body {

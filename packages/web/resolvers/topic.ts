@@ -134,7 +134,7 @@ const TopicMutations = extendType({
     t.field('addUserInterest', {
       type: 'UserInterest',
       args: {
-        topicId: intArg({ required: true })
+        topicId: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -148,27 +148,27 @@ const TopicMutations = extendType({
         })
 
         if (!topic) {
-          throw new Error(`Unable to find language with id "${args.topicId}".`)
+          throw new Error(`Unable to find topic with id "${args.topicId}".`)
         }
 
         return ctx.db.userInterest.create({
           data: {
             user: { connect: { id: userId } },
             topic: { connect: { id: args.topicId } },
-          }
+          },
         })
       },
     })
     t.field('removeUserInterest', {
       type: 'UserInterest',
       args: {
-        topicId: intArg({ required: true })
+        topicId: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
         if (!userId) {
-          throw new Error('You must be logged in to add a user interest.')
+          throw new Error('You must be logged in to remove a user interest.')
         }
 
         const interestFilter = {

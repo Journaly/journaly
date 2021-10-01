@@ -57,7 +57,8 @@
     "interests": {
       "legend": "Interests",
       "topicsLabel": "Tell us about the topics you're interested in! This will help us show you posts you'll like and find people with similar interests to you.",
-      "topicsPlaceholder": "Coming soon..."
+      "interestSelectPlaceholder": "Select a topic...",
+      "addInterestButtonText": "Add"
     },
     "social": {
       "legend": "Social",

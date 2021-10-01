@@ -1,6 +1,7 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { withApollo } from '@/lib/apollo'
+import useUILanguage from '@/hooks/useUILanguage'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import DetailsForm from '@/components/Dashboard/Settings/DetailsForm'
@@ -13,7 +14,10 @@ import AuthGate from '@/components/AuthGate'
 import { useSettingsFormDataQuery } from '@/generated/graphql'
 
 const ProfileInfo: NextPage = () => {
-  const { loading, data, refetch } = useSettingsFormDataQuery()
+  const uiLanguage = useUILanguage()
+  const { loading, data, refetch } = useSettingsFormDataQuery({
+    variables: { uiLanguage }
+  })
 
   return (
     <AuthGate>
@@ -22,7 +26,7 @@ const ProfileInfo: NextPage = () => {
         return (
           <SettingsPageLayout>
             <div className="forms-container">
-              {loading || !currentUser ? (
+              {loading || !currentUser || !data.currentUser ? (
                 <LoadingSpinner />
               ) : (
                 <>
@@ -33,8 +37,12 @@ const ProfileInfo: NextPage = () => {
                     refetch={refetch}
                   />
                   <UILanguageForm />
-                  <BioForm bio={data?.currentUser?.bio || ''} />
-                  <InterestsForm />
+                  <BioForm bio={data.currentUser?.bio || ''} />
+                  <InterestsForm
+                    topics={data.topics}
+                    userInterests={data.currentUser?.userInterests}
+                    refetch={refetch}
+                  />
                   <SocialForm socialMedia={data.currentUser?.socialMedia} refetch={refetch} />
                 </>
               )}

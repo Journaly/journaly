@@ -223,3 +223,9 @@ fragment UserBadgeFragment on UserBadge {
   type
   createdAt
 }
+
+fragment UserInterestFragment on UserInterest {
+  topic {
+    ...TopicFragment
+  }
+}

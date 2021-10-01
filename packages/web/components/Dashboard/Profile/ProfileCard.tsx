@@ -179,14 +179,14 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           padding: 30px 25px;
           color: ${theme.colors.white};
           box-shadow: 0px 8px 10px #00000029;
-          overflow-x: hidden;
+          overflow-x: visible;
         }
 
         .profile-card::before {
           content: '';
           position: absolute;
           width: 100%;
-          height: 100vh;
+          height: 100%;
           top: 0;
           left: 0;
           z-index: -1;
@@ -201,7 +201,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           content: '';
           position: absolute;
           width: 100%;
-          height: 100vh;
+          height: 100%;
           top: 0;
           left: 0;
           z-index: -1;
@@ -216,6 +216,9 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           .profile-header {
             align-self: flex-start;
             text-align: left;
+          }
+          .profile-card {
+            overflow-x: hidden;
           }
         }
         .profile-body {
@@ -271,6 +274,12 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           }
           .profile-card :global(.blank-avatar-mobile) {
             display: none;
+          }
+          .profile-card::before {
+            height: 100vh;
+          }
+          .profile-card::after {
+            height: 100vh;
           }
         }
 

@@ -26,7 +26,7 @@ const ProfileInfo: NextPage = () => {
         return (
           <SettingsPageLayout>
             <div className="forms-container">
-              {loading || !currentUser ? (
+              {loading || !currentUser || !data.currentUser ? (
                 <LoadingSpinner />
               ) : (
                 <>

@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   TopicFragmentFragment as TopicType,
-  UserInterest,
+  UserInterestFragmentFragment as UserInterestType,
   useAddUserInterestMutation,
   useRemoveUserInterestMutation,
 } from '@/generated/graphql'
@@ -12,7 +12,7 @@ import Select from '../Select'
 
 type Props = {
   topics: TopicType[]
-  userInterests?: UserInterest[] | undefined | null
+  userInterests?: UserInterestType[] | undefined | null
   refetch: () => void
 }
 

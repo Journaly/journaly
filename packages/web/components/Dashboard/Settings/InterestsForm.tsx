@@ -2,15 +2,15 @@ import React from 'react'
 import { useTranslation } from '@/config/i18n'
 import {
   TopicFragmentFragment as TopicType,
-  UserInterest
+  UserInterestFragmentFragment as UserInterestType,
 } from '@/generated/graphql'
 import InterestFormField from '@/components/InterestFormField'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
 
 type Props = {
-  topics: TopicType[],
-  userInterests: UserInterest[],
+  topics: TopicType[]
+  userInterests: UserInterestType[]
   refetch: () => void
 }
 

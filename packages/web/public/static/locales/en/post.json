@@ -39,5 +39,12 @@
     "body": "Are you sure you want to cancel editing this post? Unsaved progress will be lost."
   },
   "enterUrlPrompt": "Enter the URL of the link:",
-  "websitePatternError": "Invalid website url. e.g. domain.com or sub.domain.com"
+  "websitePatternError": "Invalid website url. e.g. domain.com or sub.domain.com",
+  "claps": {
+    "currentUserPronoun": "You",
+    "noUsersClapped": "No users clapped for this post... yet!",
+    "oneUserClapped": "{{name1}} clapped for this post.",
+    "twoUsersClapped": "{{name1}} and {{name2}} clapped for this post.",
+    "manyUsersClapped": "{{name1}}, {{name2}}, and {{numOthers}} others clapped for this post."
+  }
 }

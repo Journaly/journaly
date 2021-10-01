@@ -1,0 +1,5 @@
+node_modules/
+packages/web/node_modules/
+packages/web/.next/
+packages/web/nexus/api.graphql
+

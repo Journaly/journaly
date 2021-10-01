@@ -15,33 +15,39 @@ export type Scalars = {
   DateTime: any
 }
 
-export type HeadlineImage = {
-  __typename?: 'HeadlineImage'
-  id: Scalars['Int']
-  smallSize: Scalars['String']
-  largeSize: Scalars['String']
+export enum BadgeType {
+  AlphaUser = 'ALPHA_USER',
+  BetaUser = 'BETA_USER',
+  OnehundredPosts = 'ONEHUNDRED_POSTS',
+  TenPosts = 'TEN_POSTS',
+  CodeContributor = 'CODE_CONTRIBUTOR',
+  Odradek = 'ODRADEK',
+  Necromancer = 'NECROMANCER',
 }
 
-export type TopicTranslation = {
-  __typename?: 'TopicTranslation'
+export type Comment = {
+  __typename?: 'Comment'
   id: Scalars['Int']
-  name: Scalars['String']
-  uiLanguage: UiLanguage
+  author: User
+  body: Scalars['String']
+  createdAt: Scalars['DateTime']
+  thanks: Array<CommentThanks>
 }
 
-export type Topic = {
-  __typename?: 'Topic'
+export type CommentThanks = {
+  __typename?: 'CommentThanks'
   id: Scalars['Int']
-  name?: Maybe<Scalars['String']>
+  commentId: Scalars['Int']
+  author: User
+  comment: Comment
+}
+
+export type DatedActivityCount = {
+  __typename?: 'DatedActivityCount'
+  date: Scalars['String']
   postCount: Scalars['Int']
-}
-
-export type TopicNameArgs = {
-  uiLanguage: UiLanguage
-}
-
-export type TopicPostCountArgs = {
-  languages?: Maybe<Array<Scalars['Int']>>
+  threadCommentCount: Scalars['Int']
+  postCommentCount: Scalars['Int']
 }
 
 export type EditorNode = {
@@ -57,82 +63,36 @@ export type EditorNode = {
   children?: Maybe<Array<EditorNode>>
 }
 
+export type HeadlineImage = {
+  __typename?: 'HeadlineImage'
+  id: Scalars['Int']
+  smallSize: Scalars['String']
+  largeSize: Scalars['String']
+}
+
 export type HeadlineImageInput = {
   smallSize: Scalars['String']
   largeSize: Scalars['String']
 }
 
-export type Thread = {
-  __typename?: 'Thread'
-  id: Scalars['Int']
-  archived: Scalars['Boolean']
-  startIndex: Scalars['Int']
-  endIndex: Scalars['Int']
-  highlightedContent: Scalars['String']
-  comments: Array<Comment>
+export type InitiateAvatarImageUploadResponse = {
+  __typename?: 'InitiateAvatarImageUploadResponse'
+  /** URL for the client to PUT an image to */
+  uploadUrl: Scalars['String']
+  /** polling goes here */
+  checkUrl: Scalars['String']
+  /** final url of the transform */
+  finalUrl: Scalars['String']
 }
 
-export type ThreadCommentsArgs = {
-  orderBy: Array<ThreadCommentsOrderByInput>
-}
-
-export type Comment = {
-  __typename?: 'Comment'
-  id: Scalars['Int']
-  author: User
-  body: Scalars['String']
-  createdAt: Scalars['DateTime']
-  thanks: Array<CommentThanks>
-}
-
-export type PostComment = {
-  __typename?: 'PostComment'
-  id: Scalars['Int']
-  author: User
-  body: Scalars['String']
-  createdAt: Scalars['DateTime']
-}
-
-export type PostTopic = {
-  __typename?: 'PostTopic'
-  id: Scalars['Int']
-  post: Post
-  topic: Topic
-}
-
-export type Post = {
-  __typename?: 'Post'
-  id: Scalars['Int']
-  title: Scalars['String']
-  body: Scalars['String']
-  excerpt: Scalars['String']
-  readTime: Scalars['Int']
-  author: User
-  status: PostStatus
-  claps: Array<PostClap>
-  threads: Array<Thread>
-  postTopics: Array<PostTopic>
-  postComments: Array<PostComment>
-  language: Language
-  publishedLanguageLevel: LanguageLevel
-  createdAt: Scalars['DateTime']
-  updatedAt: Scalars['DateTime']
-  bodySrc: Scalars['String']
-  headlineImage: HeadlineImage
-  publishedAt?: Maybe<Scalars['DateTime']>
-  bumpedAt?: Maybe<Scalars['DateTime']>
-  bumpCount: Scalars['Int']
-  commentCount: Scalars['Int']
-}
-
-export type PostPostCommentsArgs = {
-  orderBy: Array<PostPostCommentsOrderByInput>
-}
-
-export type PostPage = {
-  __typename?: 'PostPage'
-  posts: Array<Post>
-  count: Scalars['Int']
+export type InitiateInlinePostImageUploadResponse = {
+  __typename?: 'InitiateInlinePostImageUploadResponse'
+  /** URL for the client to PUT an image to */
+  uploadUrl: Scalars['String']
+  /** polling goes here */
+  checkUrl: Scalars['String']
+  /** final url of the transform */
+  finalUrl: Scalars['String']
 }
 
 export type InitiatePostImageUploadResponse = {
@@ -147,77 +107,6 @@ export type InitiatePostImageUploadResponse = {
   finalUrlSmall: Scalars['String']
 }
 
-export type InitiateInlinePostImageUploadResponse = {
-  __typename?: 'InitiateInlinePostImageUploadResponse'
-  /** URL for the client to PUT an image to */
-  uploadUrl: Scalars['String']
-  /** polling goes here */
-  checkUrl: Scalars['String']
-  /** final url of the transform */
-  finalUrl: Scalars['String']
-}
-
-export type User = {
-  __typename?: 'User'
-  id: Scalars['Int']
-  name?: Maybe<Scalars['String']>
-  email?: Maybe<Scalars['String']>
-  handle: Scalars['String']
-  bio?: Maybe<Scalars['String']>
-  userRole: UserRole
-  city?: Maybe<Scalars['String']>
-  country?: Maybe<Scalars['String']>
-  badges: Array<UserBadge>
-  posts: Array<Post>
-  profileImage?: Maybe<Scalars['String']>
-  createdAt: Scalars['DateTime']
-  membershipSubscription?: Maybe<MembershipSubscription>
-  socialMedia?: Maybe<SocialMedia>
-  languages: Array<LanguageRelation>
-  following: Array<User>
-  followedBy: Array<User>
-  lastFourCardNumbers?: Maybe<Scalars['String']>
-  cardBrand?: Maybe<Scalars['String']>
-  postsWrittenCount: Scalars['Int']
-  languagesPostedInCount: Scalars['Int']
-  thanksReceivedCount: Scalars['Int']
-  threadCommentsCount: Scalars['Int']
-  postCommentsCount: Scalars['Int']
-  activityGraphData: Array<DatedActivityCount>
-}
-
-export type UserBadge = {
-  __typename?: 'UserBadge'
-  id: Scalars['Int']
-  type: BadgeType
-  createdAt: Scalars['DateTime']
-}
-
-export type InitiateAvatarImageUploadResponse = {
-  __typename?: 'InitiateAvatarImageUploadResponse'
-  /** URL for the client to PUT an image to */
-  uploadUrl: Scalars['String']
-  /** polling goes here */
-  checkUrl: Scalars['String']
-  /** final url of the transform */
-  finalUrl: Scalars['String']
-}
-
-export type DatedActivityCount = {
-  __typename?: 'DatedActivityCount'
-  date: Scalars['String']
-  postCount: Scalars['Int']
-  threadCommentCount: Scalars['Int']
-  postCommentCount: Scalars['Int']
-}
-
-export type LanguageRelation = {
-  __typename?: 'LanguageRelation'
-  id: Scalars['Int']
-  language: Language
-  level: LanguageLevel
-}
-
 export type Language = {
   __typename?: 'Language'
   id: Scalars['Int']
@@ -227,32 +116,18 @@ export type Language = {
   postCount: Scalars['Int']
 }
 
-export type LanguagePostCountArgs = {
-  topics?: Maybe<Array<Scalars['Int']>>
+export enum LanguageLevel {
+  Beginner = 'BEGINNER',
+  Intermediate = 'INTERMEDIATE',
+  Advanced = 'ADVANCED',
+  Native = 'NATIVE',
 }
 
-export type SocialMedia = {
-  __typename?: 'SocialMedia'
+export type LanguageRelation = {
+  __typename?: 'LanguageRelation'
   id: Scalars['Int']
-  facebook: Scalars['String']
-  youtube: Scalars['String']
-  instagram: Scalars['String']
-  website: Scalars['String']
-}
-
-export type PostClap = {
-  __typename?: 'PostClap'
-  id: Scalars['Int']
-  author: User
-  post: Post
-}
-
-export type CommentThanks = {
-  __typename?: 'CommentThanks'
-  id: Scalars['Int']
-  commentId: Scalars['Int']
-  author: User
-  comment: Comment
+  language: Language
+  level: LanguageLevel
 }
 
 export type MembershipSubscription = {
@@ -266,99 +141,10 @@ export type MembershipSubscription = {
   isActive: Scalars['Boolean']
 }
 
-export enum UiLanguage {
-  English = 'ENGLISH',
-  German = 'GERMAN',
-  Spanish = 'SPANISH',
-}
-
-export type ThreadCommentsOrderByInput = {
-  createdAt?: Maybe<SortOrder>
-}
-
-export enum PostStatus {
-  Draft = 'DRAFT',
-  Published = 'PUBLISHED',
-}
-
-export type PostPostCommentsOrderByInput = {
-  createdAt?: Maybe<SortOrder>
-}
-
-export enum LanguageLevel {
-  Beginner = 'BEGINNER',
-  Intermediate = 'INTERMEDIATE',
-  Advanced = 'ADVANCED',
-  Native = 'NATIVE',
-}
-
-export enum UserRole {
-  Admin = 'ADMIN',
-  Moderator = 'MODERATOR',
-  User = 'USER',
-}
-
-export enum BadgeType {
-  AlphaUser = 'ALPHA_USER',
-  BetaUser = 'BETA_USER',
-  OnehundredPosts = 'ONEHUNDRED_POSTS',
-  TenPosts = 'TEN_POSTS',
-  CodeContributor = 'CODE_CONTRIBUTOR',
-  Odradek = 'ODRADEK',
-  Necromancer = 'NECROMANCER',
-}
-
 export enum MembershipSubscriptionPeriod {
   Monthly = 'MONTHLY',
   Quarterly = 'QUARTERLY',
   Annualy = 'ANNUALY',
-}
-
-export enum SortOrder {
-  Asc = 'asc',
-  Desc = 'desc',
-}
-
-export type Query = {
-  __typename?: 'Query'
-  topics: Array<Topic>
-  posts: Array<Post>
-  postById: Post
-  feed: PostPage
-  users: Array<User>
-  currentUser?: Maybe<User>
-  userById: User
-  languages: Array<Language>
-}
-
-export type QueryTopicsArgs = {
-  hasPosts?: Maybe<Scalars['Boolean']>
-}
-
-export type QueryPostsArgs = {
-  status: PostStatus
-  authorId: Scalars['Int']
-}
-
-export type QueryPostByIdArgs = {
-  id: Scalars['Int']
-}
-
-export type QueryFeedArgs = {
-  search?: Maybe<Scalars['String']>
-  languages?: Maybe<Array<Scalars['Int']>>
-  topics?: Maybe<Array<Scalars['Int']>>
-  skip: Scalars['Int']
-  first: Scalars['Int']
-  followedAuthors?: Maybe<Scalars['Boolean']>
-}
-
-export type QueryUserByIdArgs = {
-  id: Scalars['Int']
-}
-
-export type QueryLanguagesArgs = {
-  hasPosts?: Maybe<Scalars['Boolean']>
 }
 
 export type Mutation = {
@@ -557,6 +343,216 @@ export type MutationUpdateSubscriptionPlanArgs = {
 
 export type MutationUpdateSubscriptionPaymentMethodArgs = {
   paymentMethodId: Scalars['String']
+}
+
+export type Post = {
+  __typename?: 'Post'
+  id: Scalars['Int']
+  title: Scalars['String']
+  body: Scalars['String']
+  excerpt: Scalars['String']
+  readTime: Scalars['Int']
+  author: User
+  status: PostStatus
+  claps: Array<PostClap>
+  threads: Array<Thread>
+  postTopics: Array<PostTopic>
+  postComments: Array<PostComment>
+  language: Language
+  publishedLanguageLevel: LanguageLevel
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  bodySrc: Scalars['String']
+  headlineImage: HeadlineImage
+  publishedAt?: Maybe<Scalars['DateTime']>
+  bumpedAt?: Maybe<Scalars['DateTime']>
+  bumpCount: Scalars['Int']
+  commentCount: Scalars['Int']
+}
+
+export type PostPostCommentsArgs = {
+  orderBy: Array<PostPostCommentsOrderByInput>
+}
+
+export type PostClap = {
+  __typename?: 'PostClap'
+  id: Scalars['Int']
+  author: User
+  post: Post
+}
+
+export type PostComment = {
+  __typename?: 'PostComment'
+  id: Scalars['Int']
+  author: User
+  body: Scalars['String']
+  createdAt: Scalars['DateTime']
+}
+
+export type PostPage = {
+  __typename?: 'PostPage'
+  posts: Array<Post>
+  count: Scalars['Int']
+}
+
+export type PostPostCommentsOrderByInput = {
+  createdAt?: Maybe<SortOrder>
+}
+
+export enum PostStatus {
+  Draft = 'DRAFT',
+  Published = 'PUBLISHED',
+}
+
+export type PostTopic = {
+  __typename?: 'PostTopic'
+  id: Scalars['Int']
+  post: Post
+  topic: Topic
+}
+
+export type Query = {
+  __typename?: 'Query'
+  topics: Array<Topic>
+  postById: Post
+  posts: PostPage
+  users: Array<User>
+  currentUser?: Maybe<User>
+  userById: User
+  languages: Array<Language>
+}
+
+export type QueryTopicsArgs = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
+}
+
+export type QueryPostByIdArgs = {
+  id: Scalars['Int']
+}
+
+export type QueryPostsArgs = {
+  search?: Maybe<Scalars['String']>
+  languages?: Maybe<Array<Scalars['Int']>>
+  topics?: Maybe<Array<Scalars['Int']>>
+  skip: Scalars['Int']
+  first: Scalars['Int']
+  followedAuthors?: Maybe<Scalars['Boolean']>
+  needsFeedback?: Maybe<Scalars['Boolean']>
+  hasInteracted?: Maybe<Scalars['Boolean']>
+  status: PostStatus
+  authorId?: Maybe<Scalars['Int']>
+}
+
+export type QueryUserByIdArgs = {
+  id: Scalars['Int']
+}
+
+export type QueryLanguagesArgs = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
+}
+
+export type SocialMedia = {
+  __typename?: 'SocialMedia'
+  id: Scalars['Int']
+  facebook: Scalars['String']
+  youtube: Scalars['String']
+  instagram: Scalars['String']
+  website: Scalars['String']
+}
+
+export enum SortOrder {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export type Thread = {
+  __typename?: 'Thread'
+  id: Scalars['Int']
+  archived: Scalars['Boolean']
+  startIndex: Scalars['Int']
+  endIndex: Scalars['Int']
+  highlightedContent: Scalars['String']
+  comments: Array<Comment>
+}
+
+export type ThreadCommentsArgs = {
+  orderBy: Array<ThreadCommentsOrderByInput>
+}
+
+export type ThreadCommentsOrderByInput = {
+  createdAt?: Maybe<SortOrder>
+}
+
+export type Topic = {
+  __typename?: 'Topic'
+  id: Scalars['Int']
+  name?: Maybe<Scalars['String']>
+  postCount: Scalars['Int']
+}
+
+export type TopicNameArgs = {
+  uiLanguage: UiLanguage
+}
+
+export type TopicPostCountArgs = {
+  languages?: Maybe<Array<Scalars['Int']>>
+}
+
+export type TopicTranslation = {
+  __typename?: 'TopicTranslation'
+  id: Scalars['Int']
+  name: Scalars['String']
+  uiLanguage: UiLanguage
+}
+
+export enum UiLanguage {
+  English = 'ENGLISH',
+  German = 'GERMAN',
+  Spanish = 'SPANISH',
+}
+
+export type User = {
+  __typename?: 'User'
+  id: Scalars['Int']
+  name?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
+  handle: Scalars['String']
+  bio?: Maybe<Scalars['String']>
+  userRole: UserRole
+  city?: Maybe<Scalars['String']>
+  country?: Maybe<Scalars['String']>
+  badges: Array<UserBadge>
+  posts: Array<Post>
+  profileImage?: Maybe<Scalars['String']>
+  createdAt: Scalars['DateTime']
+  membershipSubscription?: Maybe<MembershipSubscription>
+  socialMedia?: Maybe<SocialMedia>
+  languages: Array<LanguageRelation>
+  following: Array<User>
+  followedBy: Array<User>
+  lastFourCardNumbers?: Maybe<Scalars['String']>
+  cardBrand?: Maybe<Scalars['String']>
+  postsWrittenCount: Scalars['Int']
+  languagesPostedInCount: Scalars['Int']
+  thanksReceivedCount: Scalars['Int']
+  threadCommentsCount: Scalars['Int']
+  postCommentsCount: Scalars['Int']
+  activityGraphData: Array<DatedActivityCount>
+}
+
+export type UserBadge = {
+  __typename?: 'UserBadge'
+  id: Scalars['Int']
+  type: BadgeType
+  createdAt: Scalars['DateTime']
+}
+
+export enum UserRole {
+  Admin = 'ADMIN',
+  Moderator = 'MODERATOR',
+  User = 'USER',
 }
 
 export type CreatePostClapMutationVariables = Exact<{
@@ -825,7 +821,7 @@ export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
 
 export type LanguagesQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
-  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
 }>
 
 export type LanguagesQuery = { __typename?: 'Query' } & {
@@ -916,7 +912,9 @@ export type ProfilePageQueryVariables = Exact<{
 
 export type ProfilePageQuery = { __typename?: 'Query' } & {
   userById: { __typename?: 'User' } & ProfileUserFragmentFragment
-  posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+  posts: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
+      posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+    }
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
@@ -993,21 +991,6 @@ export type EditPostQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
-export type FeedQueryVariables = Exact<{
-  first: Scalars['Int']
-  skip: Scalars['Int']
-  search?: Maybe<Scalars['String']>
-  languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
-  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
-  followedAuthors?: Maybe<Scalars['Boolean']>
-}>
-
-export type FeedQuery = { __typename?: 'Query' } & {
-  feed: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
-      posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
-    }
-}
-
 export type InitiateInlinePostImageUploadMutationVariables = Exact<{ [key: string]: never }>
 
 export type InitiateInlinePostImageUploadMutation = { __typename?: 'Mutation' } & {
@@ -1045,12 +1028,22 @@ export type PostByIdQuery = { __typename?: 'Query' } & {
 }
 
 export type PostsQueryVariables = Exact<{
-  authorId: Scalars['Int']
+  first: Scalars['Int']
+  skip: Scalars['Int']
+  search?: Maybe<Scalars['String']>
+  languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  followedAuthors?: Maybe<Scalars['Boolean']>
+  needsFeedback?: Maybe<Scalars['Boolean']>
+  hasInteracted?: Maybe<Scalars['Boolean']>
+  authorId?: Maybe<Scalars['Int']>
   status: PostStatus
 }>
 
 export type PostsQuery = { __typename?: 'Query' } & {
-  posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+  posts: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
+      posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+    }
 }
 
 export type UpdatePostMutationVariables = Exact<{
@@ -1085,6 +1078,7 @@ export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
 
 export type TopicsQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
   uiLanguage: UiLanguage
   languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
 }>
@@ -1512,7 +1506,7 @@ export const PostCardFragmentFragmentDoc = gql`
 export const LanguageWithPostCountFragmentFragmentDoc = gql`
   fragment LanguageWithPostCountFragment on Language {
     ...LanguageFragment
-    postCount(topics: $topics)
+    postCount
   }
   ${LanguageFragmentFragmentDoc}
 `
@@ -1754,7 +1748,8 @@ export function useCreatePostCommentMutation(
   >(CreatePostCommentDocument, baseOptions)
 }
 export type CreatePostCommentMutationHookResult = ReturnType<typeof useCreatePostCommentMutation>
-export type CreatePostCommentMutationResult = ApolloReactCommon.MutationResult<CreatePostCommentMutation>
+export type CreatePostCommentMutationResult =
+  ApolloReactCommon.MutationResult<CreatePostCommentMutation>
 export type CreatePostCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreatePostCommentMutation,
   CreatePostCommentMutationVariables
@@ -1906,7 +1901,8 @@ export function useDeletePostCommentMutation(
   >(DeletePostCommentDocument, baseOptions)
 }
 export type DeletePostCommentMutationHookResult = ReturnType<typeof useDeletePostCommentMutation>
-export type DeletePostCommentMutationResult = ApolloReactCommon.MutationResult<DeletePostCommentMutation>
+export type DeletePostCommentMutationResult =
+  ApolloReactCommon.MutationResult<DeletePostCommentMutation>
 export type DeletePostCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   DeletePostCommentMutation,
   DeletePostCommentMutationVariables
@@ -2048,7 +2044,8 @@ export function useUpdatePostCommentMutation(
   >(UpdatePostCommentDocument, baseOptions)
 }
 export type UpdatePostCommentMutationHookResult = ReturnType<typeof useUpdatePostCommentMutation>
-export type UpdatePostCommentMutationResult = ApolloReactCommon.MutationResult<UpdatePostCommentMutation>
+export type UpdatePostCommentMutationResult =
+  ApolloReactCommon.MutationResult<UpdatePostCommentMutation>
 export type UpdatePostCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdatePostCommentMutation,
   UpdatePostCommentMutationVariables
@@ -2099,14 +2096,15 @@ export function useAddLanguageRelationMutation(
 export type AddLanguageRelationMutationHookResult = ReturnType<
   typeof useAddLanguageRelationMutation
 >
-export type AddLanguageRelationMutationResult = ApolloReactCommon.MutationResult<AddLanguageRelationMutation>
+export type AddLanguageRelationMutationResult =
+  ApolloReactCommon.MutationResult<AddLanguageRelationMutation>
 export type AddLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AddLanguageRelationMutation,
   AddLanguageRelationMutationVariables
 >
 export const LanguagesDocument = gql`
-  query languages($hasPosts: Boolean, $topics: [Int!]) {
-    languages(hasPosts: $hasPosts) {
+  query languages($hasPosts: Boolean, $authoredOnly: Boolean) {
+    languages(hasPosts: $hasPosts, authoredOnly: $authoredOnly) {
       ...LanguageWithPostCountFragment
     }
   }
@@ -2126,7 +2124,7 @@ export const LanguagesDocument = gql`
  * const { data, loading, error } = useLanguagesQuery({
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
- *      topics: // value for 'topics'
+ *      authoredOnly: // value for 'authoredOnly'
  *   },
  * });
  */
@@ -2256,7 +2254,8 @@ export function useRemoveLanguageRelationMutation(
 export type RemoveLanguageRelationMutationHookResult = ReturnType<
   typeof useRemoveLanguageRelationMutation
 >
-export type RemoveLanguageRelationMutationResult = ApolloReactCommon.MutationResult<RemoveLanguageRelationMutation>
+export type RemoveLanguageRelationMutationResult =
+  ApolloReactCommon.MutationResult<RemoveLanguageRelationMutation>
 export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RemoveLanguageRelationMutation,
   RemoveLanguageRelationMutationVariables
@@ -2308,7 +2307,8 @@ export function usePurchaseMembershipSubscriptionMutation(
 export type PurchaseMembershipSubscriptionMutationHookResult = ReturnType<
   typeof usePurchaseMembershipSubscriptionMutation
 >
-export type PurchaseMembershipSubscriptionMutationResult = ApolloReactCommon.MutationResult<PurchaseMembershipSubscriptionMutation>
+export type PurchaseMembershipSubscriptionMutationResult =
+  ApolloReactCommon.MutationResult<PurchaseMembershipSubscriptionMutation>
 export type PurchaseMembershipSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
   PurchaseMembershipSubscriptionMutation,
   PurchaseMembershipSubscriptionMutationVariables
@@ -2356,7 +2356,8 @@ export function useUpdateSubscriptionPaymentMethodMutation(
 export type UpdateSubscriptionPaymentMethodMutationHookResult = ReturnType<
   typeof useUpdateSubscriptionPaymentMethodMutation
 >
-export type UpdateSubscriptionPaymentMethodMutationResult = ApolloReactCommon.MutationResult<UpdateSubscriptionPaymentMethodMutation>
+export type UpdateSubscriptionPaymentMethodMutationResult =
+  ApolloReactCommon.MutationResult<UpdateSubscriptionPaymentMethodMutation>
 export type UpdateSubscriptionPaymentMethodMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSubscriptionPaymentMethodMutation,
   UpdateSubscriptionPaymentMethodMutationVariables
@@ -2405,7 +2406,8 @@ export function useUpdateSubscriptionPlanMutation(
 export type UpdateSubscriptionPlanMutationHookResult = ReturnType<
   typeof useUpdateSubscriptionPlanMutation
 >
-export type UpdateSubscriptionPlanMutationResult = ApolloReactCommon.MutationResult<UpdateSubscriptionPlanMutation>
+export type UpdateSubscriptionPlanMutationResult =
+  ApolloReactCommon.MutationResult<UpdateSubscriptionPlanMutation>
 export type UpdateSubscriptionPlanMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSubscriptionPlanMutation,
   UpdateSubscriptionPlanMutationVariables
@@ -2453,7 +2455,8 @@ export function useUpdateSubscriptionRenewalMutation(
 export type UpdateSubscriptionRenewalMutationHookResult = ReturnType<
   typeof useUpdateSubscriptionRenewalMutation
 >
-export type UpdateSubscriptionRenewalMutationResult = ApolloReactCommon.MutationResult<UpdateSubscriptionRenewalMutation>
+export type UpdateSubscriptionRenewalMutationResult =
+  ApolloReactCommon.MutationResult<UpdateSubscriptionRenewalMutation>
 export type UpdateSubscriptionRenewalMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSubscriptionRenewalMutation,
   UpdateSubscriptionRenewalMutationVariables
@@ -2515,8 +2518,11 @@ export const ProfilePageDocument = gql`
     userById(id: $userId) {
       ...ProfileUserFragment
     }
-    posts(authorId: $userId, status: PUBLISHED) {
-      ...PostCardFragment
+    posts(first: 20, skip: 0, status: PUBLISHED, authorId: $userId) {
+      posts {
+        ...PostCardFragment
+      }
+      count
     }
     currentUser {
       ...UserWithLanguagesFragment
@@ -2849,66 +2855,6 @@ export type EditPostQueryResult = ApolloReactCommon.QueryResult<
   EditPostQuery,
   EditPostQueryVariables
 >
-export const FeedDocument = gql`
-  query feed(
-    $first: Int!
-    $skip: Int!
-    $search: String
-    $languages: [Int!]
-    $topics: [Int!]
-    $followedAuthors: Boolean
-  ) {
-    feed(
-      first: $first
-      skip: $skip
-      search: $search
-      languages: $languages
-      topics: $topics
-      followedAuthors: $followedAuthors
-    ) {
-      posts {
-        ...PostCardFragment
-      }
-      count
-    }
-  }
-  ${PostCardFragmentFragmentDoc}
-`
-
-/**
- * __useFeedQuery__
- *
- * To run a query within a React component, call `useFeedQuery` and pass it any options that fit your needs.
- * When your component renders, `useFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFeedQuery({
- *   variables: {
- *      first: // value for 'first'
- *      skip: // value for 'skip'
- *      search: // value for 'search'
- *      languages: // value for 'languages'
- *      topics: // value for 'topics'
- *      followedAuthors: // value for 'followedAuthors'
- *   },
- * });
- */
-export function useFeedQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>,
-) {
-  return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions)
-}
-export function useFeedLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>,
-) {
-  return ApolloReactHooks.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions)
-}
-export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
-export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
-export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
 export const InitiateInlinePostImageUploadDocument = gql`
   mutation initiateInlinePostImageUpload {
     initiateInlinePostImageUpload {
@@ -2953,7 +2899,8 @@ export function useInitiateInlinePostImageUploadMutation(
 export type InitiateInlinePostImageUploadMutationHookResult = ReturnType<
   typeof useInitiateInlinePostImageUploadMutation
 >
-export type InitiateInlinePostImageUploadMutationResult = ApolloReactCommon.MutationResult<InitiateInlinePostImageUploadMutation>
+export type InitiateInlinePostImageUploadMutationResult =
+  ApolloReactCommon.MutationResult<InitiateInlinePostImageUploadMutation>
 export type InitiateInlinePostImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
   InitiateInlinePostImageUploadMutation,
   InitiateInlinePostImageUploadMutationVariables
@@ -3003,7 +2950,8 @@ export function useInitiatePostImageUploadMutation(
 export type InitiatePostImageUploadMutationHookResult = ReturnType<
   typeof useInitiatePostImageUploadMutation
 >
-export type InitiatePostImageUploadMutationResult = ApolloReactCommon.MutationResult<InitiatePostImageUploadMutation>
+export type InitiatePostImageUploadMutationResult =
+  ApolloReactCommon.MutationResult<InitiatePostImageUploadMutation>
 export type InitiatePostImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
   InitiatePostImageUploadMutation,
   InitiatePostImageUploadMutationVariables
@@ -3105,9 +3053,34 @@ export type PostByIdQueryResult = ApolloReactCommon.QueryResult<
   PostByIdQueryVariables
 >
 export const PostsDocument = gql`
-  query posts($authorId: Int!, $status: PostStatus!) {
-    posts(authorId: $authorId, status: $status) {
-      ...PostCardFragment
+  query posts(
+    $first: Int!
+    $skip: Int!
+    $search: String
+    $languages: [Int!]
+    $topics: [Int!]
+    $followedAuthors: Boolean
+    $needsFeedback: Boolean
+    $hasInteracted: Boolean
+    $authorId: Int
+    $status: PostStatus!
+  ) {
+    posts(
+      first: $first
+      skip: $skip
+      search: $search
+      languages: $languages
+      topics: $topics
+      followedAuthors: $followedAuthors
+      needsFeedback: $needsFeedback
+      hasInteracted: $hasInteracted
+      authorId: $authorId
+      status: $status
+    ) {
+      posts {
+        ...PostCardFragment
+      }
+      count
     }
   }
   ${PostCardFragmentFragmentDoc}
@@ -3125,6 +3098,14 @@ export const PostsDocument = gql`
  * @example
  * const { data, loading, error } = usePostsQuery({
  *   variables: {
+ *      first: // value for 'first'
+ *      skip: // value for 'skip'
+ *      search: // value for 'search'
+ *      languages: // value for 'languages'
+ *      topics: // value for 'topics'
+ *      followedAuthors: // value for 'followedAuthors'
+ *      needsFeedback: // value for 'needsFeedback'
+ *      hasInteracted: // value for 'hasInteracted'
  *      authorId: // value for 'authorId'
  *      status: // value for 'status'
  *   },
@@ -3256,7 +3237,8 @@ export function useCreateCommentThanksMutation(
 export type CreateCommentThanksMutationHookResult = ReturnType<
   typeof useCreateCommentThanksMutation
 >
-export type CreateCommentThanksMutationResult = ApolloReactCommon.MutationResult<CreateCommentThanksMutation>
+export type CreateCommentThanksMutationResult =
+  ApolloReactCommon.MutationResult<CreateCommentThanksMutation>
 export type CreateCommentThanksMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateCommentThanksMutation,
   CreateCommentThanksMutationVariables
@@ -3304,14 +3286,20 @@ export function useDeleteCommentThanksMutation(
 export type DeleteCommentThanksMutationHookResult = ReturnType<
   typeof useDeleteCommentThanksMutation
 >
-export type DeleteCommentThanksMutationResult = ApolloReactCommon.MutationResult<DeleteCommentThanksMutation>
+export type DeleteCommentThanksMutationResult =
+  ApolloReactCommon.MutationResult<DeleteCommentThanksMutation>
 export type DeleteCommentThanksMutationOptions = ApolloReactCommon.BaseMutationOptions<
   DeleteCommentThanksMutation,
   DeleteCommentThanksMutationVariables
 >
 export const TopicsDocument = gql`
-  query topics($hasPosts: Boolean, $uiLanguage: UILanguage!, $languages: [Int!]) {
-    topics(hasPosts: $hasPosts) {
+  query topics(
+    $hasPosts: Boolean
+    $authoredOnly: Boolean
+    $uiLanguage: UILanguage!
+    $languages: [Int!]
+  ) {
+    topics(hasPosts: $hasPosts, authoredOnly: $authoredOnly) {
       ...TopicWithPostCountFragment
     }
   }
@@ -3331,6 +3319,7 @@ export const TopicsDocument = gql`
  * const { data, loading, error } = useTopicsQuery({
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
+ *      authoredOnly: // value for 'authoredOnly'
  *      uiLanguage: // value for 'uiLanguage'
  *      languages: // value for 'languages'
  *   },
@@ -3592,7 +3581,8 @@ export function useInitiateAvatarImageUploadMutation(
 export type InitiateAvatarImageUploadMutationHookResult = ReturnType<
   typeof useInitiateAvatarImageUploadMutation
 >
-export type InitiateAvatarImageUploadMutationResult = ApolloReactCommon.MutationResult<InitiateAvatarImageUploadMutation>
+export type InitiateAvatarImageUploadMutationResult =
+  ApolloReactCommon.MutationResult<InitiateAvatarImageUploadMutation>
 export type InitiateAvatarImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
   InitiateAvatarImageUploadMutation,
   InitiateAvatarImageUploadMutationVariables
@@ -3727,7 +3717,8 @@ export function useRequestResetPasswordMutation(
 export type RequestResetPasswordMutationHookResult = ReturnType<
   typeof useRequestResetPasswordMutation
 >
-export type RequestResetPasswordMutationResult = ApolloReactCommon.MutationResult<RequestResetPasswordMutation>
+export type RequestResetPasswordMutationResult =
+  ApolloReactCommon.MutationResult<RequestResetPasswordMutation>
 export type RequestResetPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RequestResetPasswordMutation,
   RequestResetPasswordMutationVariables
@@ -3991,7 +3982,8 @@ export function useUpdateSocialMediaMutation(
   >(UpdateSocialMediaDocument, baseOptions)
 }
 export type UpdateSocialMediaMutationHookResult = ReturnType<typeof useUpdateSocialMediaMutation>
-export type UpdateSocialMediaMutationResult = ApolloReactCommon.MutationResult<UpdateSocialMediaMutation>
+export type UpdateSocialMediaMutationResult =
+  ApolloReactCommon.MutationResult<UpdateSocialMediaMutation>
 export type UpdateSocialMediaMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSocialMediaMutation,
   UpdateSocialMediaMutationVariables

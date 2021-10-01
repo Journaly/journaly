@@ -32,7 +32,7 @@ import { Router, useTranslation } from '@/config/i18n'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 
-import {getCoords} from './helpers'
+import { getCoords, getUsersClappedText } from './helpers'
 import ClapIcon from '@/components/Icons/ClapIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
 import { POST_BUMP_LIMIT } from '../../../constants'
@@ -596,7 +596,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           postStatus={post.status}
           publishDate={post.publishedAt ? post.publishedAt : post.createdAt}
           publishedLanguageLevel={post.publishedLanguageLevel}
-          authorName={post.author.handle}
+          authorName={post.author.name ? post.author.name : post.author.handle}
           postImage={post.headlineImage.largeSize}
           language={post.language}
           topics={post.postTopics.map(({ topic }) => topic)}
@@ -612,7 +612,11 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
                 loading={isLoadingPostClap}
                 disabled={currentUser?.id === post.author.id || !currentUser}
               >
-                <ClapIcon width={24} clapped={hasClappedPost} />
+                <ClapIcon 
+                  width={24} 
+                  clapped={hasClappedPost} 
+                  title={getUsersClappedText(post.claps, currentUser?.id)}
+                />
               </Button>
               <span>{post.claps.length}</span>
             </div>

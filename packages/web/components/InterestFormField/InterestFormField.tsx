@@ -48,6 +48,7 @@ const InterestFormField: React.FC<Props> = ({ topics, userInterests, refetch }) 
       },
     })
     refetch()
+    setSelectedTopicId(-1)
   }
 
   const handleRemoveUserInterest = async (topicId: number) => {

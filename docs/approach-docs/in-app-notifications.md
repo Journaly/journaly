@@ -19,6 +19,7 @@ At some point, we will want this system to be configurable by the user, but in o
 - Instantaneous notifications (web sockets)
 - Building a highly configurable system
 - Not for recommendations (for now)
+- Inline responses to comments
 
 
 ## Product Requirements
@@ -27,11 +28,12 @@ At some point, we will want this system to be configurable by the user, but in o
 - Easy to find but not necessarily distracting
 - Ideally, this should feel like an instantaneous system to users (it should not leave them wondering if something has happened)
 - Should handle notifying users of anything that we think most users would feel is relevant
-  - new feedback comment in a thread they are subscribed to (separate user's posts vs. other users' posts?)
-  - new post comment (same open question as above)
-    - These will be rolled together by post
-  - claps 👏🏼 (also grouped)
+  - Top level Post Notifications always grouped by Post and separated between:
+    - Post Comment
+    - Thread
+    - Claps
   - new followers (click to profile)
+  - (future) DMs grouped as total number unread
 - (opt-in on interaction with toggle) browser notifications
 - Leverage tab title text (or favicon)
 - Link targets
@@ -42,17 +44,21 @@ At some point, we will want this system to be configurable by the user, but in o
   - Mobile: icon in top right > full-screen (overlay)
 - Scrolling
   - no infinite scroll or pagination
-  - set amount TBD (ex: 50 or 100)
-  - user can mark as read > pushes out of list
+  - set amount: 100
+  - user can delete notification from feed with a single click
+    - swipey swipe gesture on phone
   - unread always appear at the top
-
+  
 ## Technical Requirements
 
 - Optimize for simplest architecture and lowest potential cost as the system scales
 - Not a separate service/package
-- 
+- Polling time: 2mins across the board
+- Not SSR
 
 ## Technical Design
+- Caching: Let's not do this for now but if we did in the future, we'd probably want to do it at a layer between GraphQL & the DB
+- 
 
 ### System Architecture
 
@@ -60,19 +66,56 @@ At some point, we will want this system to be configurable by the user, but in o
 
 ### Data Model
 
-...
+- Notification
+  - Type
+    - Threads
+    - PostComments
+    - NewFollower
+    - DirectMessages
+    - Claps
+    - Mention
+  - PostId?
+  - BumpTime
+  - UserId
+
+- ThreadNotification
+  - NotificationId
+  - ThreadId
+  - LatestCommentDate
+- PostCommentNotification
+  - NotificationId
+  - PostCommentId
+- NewFollowerNotification
+  - NotificationId
+  - FollowerId
+- ClapNotification
+  - NotificationId
+  - ClapId
 
 ### Interface/API
 
-...
+- `notifications` query
+- requires auth, returns notifications for current `userId`
+- 
 
 ### Business Logic
 
-...
+- New comment in a new thread
+  - For each subscribed user, we look at notification table
+    - Is there a notification with matching type && post
+      - If no, create new Notification record with Thread type
+        - Always create new Thread Notification
+      - If yes, update existing notification with bumpTime = now
+        - Check if ThreadNotification exists for this thread
+          - If doesn't, then make it
+          - If it does, update it
+- Let's not handle deletion **BUT** check what the hell happens when deleting a Thread (cascade)
+
+
 
 ### Migration Strategy
 
-...
+N/A
 
 ## Implementation Details
 

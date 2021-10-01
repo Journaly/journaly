@@ -180,12 +180,6 @@ const TopicMutations = extendType({
           },
         }
 
-        const userInterest = await ctx.db.userInterest.findUnique(interestFilter)
-
-        if (!userInterest) {
-          throw new Error(`Unable to find user interest.`)
-        }
-
         return ctx.db.userInterest.delete(interestFilter)
       },
     })

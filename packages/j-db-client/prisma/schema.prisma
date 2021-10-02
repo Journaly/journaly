@@ -44,6 +44,8 @@ model User {
   following                     User[]                          @relation("UserFollows", references: [id])
   lastFourCardNumbers           String?
   cardBrand                     String?
+  notifications                 Notification[]
+  newFollowerNotifications      NewFollowerNotification[]
 }
 
 model Auth {
@@ -128,6 +130,7 @@ model Post {
   claps                    PostClap[]
   postTopics               PostTopic[]
   threads                  Thread[]
+  notifications            Notification[]
 }
 
 model Language {
@@ -184,13 +187,14 @@ model PostTopic {
 }
 
 model PostClap {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
+  id        Int         @id @default(autoincrement())
+  createdAt DateTime    @default(now())
   postId    Int
   authorId  Int
-  author    User      @relation(fields: [authorId], references: [id])
-  post      Post      @relation(fields: [postId], references: [id])
-  PendingNotification PendingNotification[]
+  author    User        @relation(fields: [authorId], references: [id])
+  post      Post        @relation(fields: [postId], references: [id])
+  PendingNotification   PendingNotification[]
+  postClapNotifications PostClapNotification[]
 
   @@unique([authorId, postId])
 }
@@ -243,18 +247,20 @@ model PostComment {
   post                Post                  @relation(fields: [postId], references: [id])
   PendingNotification PendingNotification[]
   thanks              PostCommentThanks[]
+  postCommentNotifications PostCommentNotification[]
 }
 
 model Thread {
-  id                 Int                  @id @default(autoincrement())
-  startIndex         Int
-  endIndex           Int
-  highlightedContent String
-  postId             Int
-  archived           Boolean              @default(false)
-  post               Post                 @relation(fields: [postId], references: [id])
-  comments           Comment[]
-  subscriptions      ThreadSubscription[]
+  id                  Int                  @id @default(autoincrement())
+  startIndex          Int
+  endIndex            Int
+  highlightedContent  String
+  postId              Int
+  archived            Boolean              @default(false)
+  post                Post                 @relation(fields: [postId], references: [id])
+  comments            Comment[]
+  subscriptions       ThreadSubscription[]
+  threadNotifications ThreadNotification[]
 }
 
 model HeadlineImage {
@@ -362,6 +368,60 @@ model PendingNotification {
   postClap            PostClap?          @relation(fields: [postClapId], references: [id])
   post                Post?              @relation(fields: [postId], references: [id])
   user                User               @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id                        Int                       @id @default(autoincrement())
+  type                      NotificationType
+  createdAt                 DateTime                  @default(now())
+  bumpedAt                  DateTime?
+  postId                    Int?
+  userId                    Int
+  post                      Post?                     @relation(fields: [postId], references: [id])
+  user                      User                      @relation(fields: [userId], references: [id])
+  threadNotifications       ThreadNotification[]
+  postCommentNotifications  PostCommentNotification[]
+  newFollowerNotifications  NewFollowerNotification[]
+  postClapNotifications     PostClapNotification[]
+}
+
+model ThreadNotification {
+  id              Int            @id @default(autoincrement())
+  notificationId  Int
+  threadId        Int
+  lastCommentAt   DateTime
+  notification    Notification @relation(fields: [notificationId], references: [id])
+  thread          Thread @relation(fields: [threadId], references: [id])
+}
+
+model PostCommentNotification {
+  id              Int            @id @default(autoincrement())
+  notificationId  Int
+  postCommentId   Int
+  lastCommentAt   DateTime
+  notification    Notification @relation(fields: [notificationId], references: [id])
+  postComment     PostComment @relation(fields: [postCommentId], references: [id])
+}
+
+// Figure out disambiguating `followedUser` & `followingUser` relations
+model NewFollowerNotification {
+  id                Int            @id @default(autoincrement())
+  notificationId    Int
+  followedUserId    Int
+  followingUserId   Int
+  notification      Notification @relation(fields: [notificationId], references: [id])
+  followedUser      User @relation(name: "followedUser", fields: [followedUserId], references: [id])
+  followingUser     User @relation(name: "followingUser", fields: [followingUserId], references: [id])
+}
+
+model PostClapNotification {
+  id              Int            @id @default(autoincrement())
+  notificationId  Int
+  postId          Int
+  postClapId      Int
+  lastClapAt      DateTime
+  notification    Notification @relation(fields: [notificationId], references: [id])
+  postClap        PostClap @relation(fields: [postClapId], references: [id])
 }
 
 enum LanguageLevel {

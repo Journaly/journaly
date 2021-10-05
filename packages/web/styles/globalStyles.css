@@ -32,9 +32,14 @@ h6 {
   font-weight: 400;
 }
 
-p {
-  font-size: 16px;
-  line-height: 24px;
+li {
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: 300;
+}
+
+ol, ul {
+  padding-left: 15px;
 }
 
 a {
@@ -51,6 +56,7 @@ a[role="button"] {
 em,
 cite {
   font-style: italic;
+  font-weight: 300;
 }
 
 strong {

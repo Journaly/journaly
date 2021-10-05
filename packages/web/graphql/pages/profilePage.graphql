@@ -1,4 +1,4 @@
-query profilePage($userId: Int!) {
+query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
   userById(id: $userId) {
     ...ProfileUserFragment
   }
@@ -17,6 +17,9 @@ fragment ProfileUserFragment on User {
   ...UserWithLanguagesFragment
   badges {
     ...UserBadgeFragment
+  }
+  userInterests {
+    ...UserInterestFragment
   }
   ...SocialMediaFragment
 }

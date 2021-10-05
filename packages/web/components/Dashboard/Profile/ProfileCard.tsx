@@ -26,9 +26,7 @@ type Props = {
 const ProfileCard: React.FC<Props> = ({ user }) => {
   const { t } = useTranslation('profile')
 
-  const sampleUser = {
-    likes: ['cooking, reading, movies, design'],
-  }
+
 
   const name = user.name || user.handle
   const showSeparator =
@@ -43,6 +41,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
 
   const speaks = speaksList.map(({ language }) => languageNameWithDialect(language))
   const learns = learnsList.map(({ language }) => languageNameWithDialect(language))
+  const likes = user.userInterests.map(({ topic }) => topic.name)
 
   const location = `${user.city && user.city}${user.city && user.country && ', '}${
     user.country && user.country
@@ -100,14 +99,9 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
             <p>
               <span>{t('card.learns')}:</span> {learns.join(', ')}
             </p>
-            {/* {sampleUser.likes.length && (
+            {user.userInterests.length > 0 && (
               <p>
-                <span>{t('card.likes')}:</span> {sampleUser.likes.join(', ')}
-              </p>
-            )} */}
-            {sampleUser.likes.length && (
-              <p>
-                <span>{t('card.likes')}:</span> languages, journaling
+                <span>{t('card.likes')}:</span> {likes.join(', ')}
               </p>
             )}
           </div>

@@ -1,0 +1,5 @@
+mutation removeUserInterest($topicId: Int!) {
+  removeUserInterest(topicId: $topicId) {
+    id
+  }
+}

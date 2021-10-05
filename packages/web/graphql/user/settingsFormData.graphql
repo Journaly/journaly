@@ -1,6 +1,9 @@
-query settingsFormData {
+query settingsFormData($uiLanguage: UILanguage!) {
   languages {
     ...LanguageFragment
+  }
+  topics {
+    ...TopicFragment
   }
   currentUser {
     bio
@@ -10,6 +13,9 @@ query settingsFormData {
       language {
         ...LanguageFragment
       }
+    }
+    userInterests {
+      ...UserInterestFragment
     }
     ...SocialMediaFragment
   }

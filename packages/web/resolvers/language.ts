@@ -136,12 +136,6 @@ const LanguageMutations = extendType({
           },
         }
 
-        const relation = await ctx.db.languageRelation.findUnique(relFilter)
-
-        if (!relation) {
-          throw new Error(`Unable to find language relation.`)
-        }
-
         return ctx.db.languageRelation.delete(relFilter)
       },
     })

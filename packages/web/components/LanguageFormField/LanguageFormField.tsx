@@ -86,6 +86,7 @@ const LanguageFormField: React.FC<Props> = ({ languages, languageRelations, refe
       },
     })
     refetch()
+    setSelectedLangId(-1)
   }
 
   const handleRemoveLanguageRelation = async (languageId: number) => {

@@ -29,7 +29,6 @@
     "db:seed": "SNAPSHOT_FILE=$(pwd)/seed.sql npm explore '@journaly/j-db-client' -- npm run db:restore",
     "prisma:generate": "npm explore '@journaly/j-db-client' -- npm run prisma:generate",
     "migrate:apply": "npm explore '@journaly/j-db-client' -- npm run migrate:apply",
-    "migrate:create": "npm explore '@journaly/j-db-client' -- npm run migrate:create",
     "migrate:deploy": "npm explore '@journaly/j-db-client' -- npm run migrate:deploy",
     "translations:topics:pull": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/pull-topic-translations.mjs",
     "translations:topics:push": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/push-topic-translations.mjs"

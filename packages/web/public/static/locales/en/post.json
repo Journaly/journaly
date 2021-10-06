@@ -16,6 +16,7 @@
   "bumpPostAction": "Bump Post",
   "bumpPostSuccess": "Your post has sucessfully been bumped to the top of the feed! Bumps remaining on this post: {{numRemaining}}",
   "postBumpLimitError": "You have reached the limit for bumping this post",
+  "postBumpingPremiumFeatureExplanation": "is an awesome Premium feature that allows you to 'bump' your post back to the top of the feed to get fresh visibility and receive more feedback! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!",
   "deletePostAction": "Delete Post",
   "deletePostSuccess": "Post successfully deleted!",
   "deletePostError": "There was an error while deleting post.",

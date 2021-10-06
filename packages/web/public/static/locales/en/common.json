@@ -68,7 +68,10 @@
   "e403": "Not Authorized",
   "modal": {
     "confirm": "Confirm",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "acknowledge": "Got it",
+    "goToPremium": "Check Out Premium",
+    "generalPremiumFeatureExplanation": "is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!"
   },
   "imageErrors": {
     "initial": "Error communicating with Journaly server. Please try again later.",

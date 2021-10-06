@@ -27,6 +27,7 @@ import InlineFeedbackPopover from '@/components/InlineFeedbackPopover'
 import { Router, useTranslation } from '@/config/i18n'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
+import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
 import CommentSelectionButton from './CommentSelectionButton'
 
 import {
@@ -94,6 +95,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
   const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
   const [displayDeleteModal, setDisplayDeleteModal] = React.useState(false)
+  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = React.useState(false)
   const [deletePost] = useDeletePostMutation({
     onCompleted: () => {
       toast.success(t('deletePostSuccess'))
@@ -406,6 +408,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         t('bumpPostSuccess', {
           numRemaining: POST_BUMP_LIMIT - (post.bumpCount + 1),
         }),
+      )
       Router.push('/dashboard/my-feed')
     },
   })
@@ -456,15 +459,9 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           <div className="post-action-container">
             {currentUser && post.author.id === currentUser.id && (
               <>
-                {canAttemptBump && (
-                  <Button
-                    type="button"
-                    variant={ButtonVariant.Secondary}
-                    onClick={handleBumpPost}
-                  >
-                    {t('bumpPostAction')}
-                  </Button>
-                )}
+                <Button type="button" variant={ButtonVariant.Secondary} onClick={handleBumpPost}>
+                  {t('bumpPostAction')}
+                </Button>
                 <Button
                   type="button"
                   variant={ButtonVariant.Secondary}
@@ -494,8 +491,8 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
                 </Button>
               </>
             )}
-            </div>
           </div>
+        </div>
       </div>
       <CommentSelectionButton
         onClick={createThreadHandler}
@@ -524,6 +521,18 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         title={t('deleteModal.title')}
         body={t('deleteModal.body')}
         show={displayDeleteModal}
+      />
+      <PremiumFeatureModal
+        featureName="Post Bumping"
+        featureExplanation={t('postBumpingPremiumFeatureExplanation')}
+        onAcknowledge={(): void => {
+          setDisplayPremiumFeatureModal(false)
+        }}
+        onGoToPremium={(): void => {
+          Router.push('/dashboard/settings/subscription')
+          setDisplayPremiumFeatureModal(false)
+        }}
+        show={displayPremiumFeatureModal}
       />
       <PostBodyStyles parentClassName="post-body" />
       <style>{`

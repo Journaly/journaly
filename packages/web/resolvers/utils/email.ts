@@ -11,6 +11,11 @@ type sendPasswordResetTokenEmailArgs = {
   resetToken: string
 }
 
+type sendEmailAddressVerificationEmailArgs = {
+  user: User
+  verificationToken: string
+}
+
 type sendNewBadgeEmailArgs = {
   badgeType: BadgeType
   user: User
@@ -111,10 +116,7 @@ const sendJmail = (emailParams: EmailParams) => {
   })
 }
 
-const sendPasswordResetTokenEmail = ({
-  user,
-  resetToken,
-}: sendPasswordResetTokenEmailArgs) => {
+const sendPasswordResetTokenEmail = ({ user, resetToken }: sendPasswordResetTokenEmailArgs) => {
   return sendJmail({
     from: 'robin@journaly.com',
     to: user.email,
@@ -123,7 +125,6 @@ const sendPasswordResetTokenEmail = ({
       <p>I heard you were having some trouble logging in.</>
       <p>Click <a href="https://${process.env.SITE_DOMAIN}/dashboard/reset-password?resetToken=${resetToken}">here</a> to reset your password!</p>
       <p>Please note that the link will expire in 1 hour.</p>
-      <p>Warmly,</p>
     `),
   })
 }
@@ -168,8 +169,8 @@ const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {
 }
 
 type MoosendSubscriberResponse = {
-  Code: number,
-  Error: string | null,
+  Code: number
+  Error: string | null
   Context: {
     ID: string
   }
@@ -193,18 +194,15 @@ const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
     },
     cache: 'no-cache',
     body: JSON.stringify({
       Name: user.name || user.handle,
       Email: user.email,
-      CustomFields: [
-        `journalyId=${user.id}`,
-        `registrationDate=${user.createdAt.toISOString()}`,
-      ]
-    })
-  }).then(r => r.json())) as MoosendSubscriberResponse
+      CustomFields: [`journalyId=${user.id}`, `registrationDate=${user.createdAt.toISOString()}`],
+    }),
+  }).then((r) => r.json())) as MoosendSubscriberResponse
 
   if (resp['Error']) {
     throw new Error(resp['Error'])
@@ -220,9 +218,24 @@ const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
     // Only update the DB if we created a new subscriber.
     return db.user.update({
       where: { id: user.id },
-      data: { moosendSubscriberId: resp.Context.ID }
+      data: { moosendSubscriberId: resp.Context.ID },
     })
   }
+}
+
+const sendEmailAddressVerificationEmail = ({
+  user,
+  verificationToken,
+}: sendEmailAddressVerificationEmailArgs) => {
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: user.email,
+    subject: "Let's Verify Your Email Address :)",
+    html: makeEmail(`
+      <p>To commplete the sign up process, please click <a href="https://${process.env.SITE_DOMAIN}/dashboard/verify-email-address?verificationToken=${verificationToken}">here</a> to verify your e-mail address :)</p>
+      <p>Please note that the link will expire in 24 hours.</p>
+    `),
+  })
 }
 
 export {
@@ -230,4 +243,5 @@ export {
   sendPasswordResetTokenEmail,
   sendNewBadgeEmail,
   subscribeUserToProductUpdates,
+  sendEmailAddressVerificationEmail,
 }

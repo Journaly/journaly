@@ -14,7 +14,6 @@ const SubscriptionPlanSelect = ({ selectedOption, setSelectedOption}: Subscripti
   const { t } = useTranslation('settings')
   const subscriptionOptions = [
     { value: MembershipSubscriptionPeriod.Monthly, displayName: t('subscription.monthlyPrice') },
-    { value: MembershipSubscriptionPeriod.Quarterly, displayName: t('subscription.quarterlyPrice') },
     { value: MembershipSubscriptionPeriod.Annualy, displayName: t('subscription.annualPrice') },
   ]
 

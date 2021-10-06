@@ -37,8 +37,6 @@ const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
   switch(subType) {
     case MembershipSubscriptionPeriod.MONTHLY:
       return process.env.STRIPE_MONTHLY_PRICE_ID
-    case MembershipSubscriptionPeriod.QUARTERLY:
-      return process.env.STRIPE_QUARTERLY_PRICE_ID
     case MembershipSubscriptionPeriod.ANNUALY:
       return process.env.STRIPE_ANNUAL_PRICE_ID
   }

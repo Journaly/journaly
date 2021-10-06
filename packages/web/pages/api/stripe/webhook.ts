@@ -45,8 +45,6 @@ const convertStripePriceToMembershipPeriod = (priceId: string) => {
   switch(priceId) {
     case process.env.STRIPE_MONTHLY_PRICE_ID:
       return MembershipSubscriptionPeriod.MONTHLY
-    case process.env.STRIPE_QUARTERLY_PRICE_ID:
-      return MembershipSubscriptionPeriod.QUARTERLY
     case process.env.STRIPE_ANNUAL_PRICE_ID:
       return MembershipSubscriptionPeriod.ANNUALY
   }

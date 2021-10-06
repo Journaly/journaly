@@ -28,8 +28,6 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
     switch(subscriptionPlan) {
       case MembershipSubscriptionPeriod.Monthly:
         return t('subscription.monthlyPrice')
-      case MembershipSubscriptionPeriod.Quarterly:
-        return t('subscription.quarterlyPrice')
       case MembershipSubscriptionPeriod.Annualy:
         return t('subscription.annualPrice')
     }

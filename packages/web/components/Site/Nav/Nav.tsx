@@ -21,6 +21,9 @@ const Nav = () => {
           <NavLink href="/blog/introducing-journaly">
             <a className="nav-link">{t('home.nav.blog')}</a>
           </NavLink>
+          <NavLink href="/pricing">
+            <a className="nav-link">{t('home.nav.pricing')}</a>
+          </NavLink>
           {currentUser ? (
             <NavLink href="/dashboard/my-feed">
               <a className="nav-link">{t('home.nav.dashboard')}</a>

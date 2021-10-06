@@ -233,7 +233,6 @@ const sendEmailAddressVerificationEmail = ({
     subject: "Let's Verify Your Email Address :)",
     html: makeEmail(`
       <p>To commplete the sign up process, please click <a href="https://${process.env.SITE_DOMAIN}/dashboard/verify-email-address?verificationToken=${verificationToken}">here</a> to verify your e-mail address :)</p>
-      <p>Please note that the link will expire in 24 hours.</p>
     `),
   })
 }

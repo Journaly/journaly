@@ -15,10 +15,11 @@ import { PostStatus } from '@journaly/j-db-client'
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
   generateThumbbusterUrl,
+  sendEmailAddressVerificationEmail,
   sendPasswordResetTokenEmail,
   subscribeUserToProductUpdates,
 } from './utils'
-import { validateUpdateUserMutationData } from './utils/userValidation'
+import { validateUpdateUserMutationData, validateUserEmailAddress } from './utils/userValidation'
 
 const DatedActivityCount = objectType({
   name: 'DatedActivityCount',
@@ -27,7 +28,7 @@ const DatedActivityCount = objectType({
     t.int('postCount')
     t.int('threadCommentCount')
     t.int('postCommentCount')
-  }
+  },
 })
 
 const User = objectType({
@@ -87,23 +88,23 @@ const User = objectType({
     })
     t.int('languagesPostedInCount', {
       async resolve(parent, _args, ctx, _info) {
-        const q = await (ctx.db.$queryRaw`
+        const q = await ctx.db.$queryRaw`
           SELECT COUNT(DISTINCT "languageId") as count
           FROM "Post"
           WHERE
             "authorId" = ${parent.id}
             AND "status" = 'PUBLISHED'
           ;
-        `)
+        `
 
         return q[0].count
-      }
+      },
     })
     t.int('thanksReceivedCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.commentThanks.count({
           where: {
-            comment: { authorId: parent.id, },
+            comment: { authorId: parent.id },
           },
         })
       },
@@ -195,7 +196,7 @@ const UserBadge = objectType({
     t.model.id()
     t.model.type()
     t.model.createdAt()
-  }
+  },
 })
 
 const UserQueries = extendType({
@@ -265,6 +266,8 @@ const UserMutations = extendType({
         }
 
         const password = await bcrypt.hash(args.password, 10)
+        const randomBytesPromisified = promisify(randomBytes)
+        const emailVerificationToken = (await randomBytesPromisified(20)).toString('hex')
         let user
         try {
           user = await ctx.db.user.create({
@@ -272,7 +275,10 @@ const UserMutations = extendType({
               handle: args.handle,
               email: args.email.toLowerCase(),
               auth: {
-                create: { password },
+                create: {
+                  password,
+                  emailVerificationToken,
+                },
               },
             },
           })
@@ -280,9 +286,11 @@ const UserMutations = extendType({
           // Prisma's error code for unique constraint violation
           if (ex.code === 'P2002') {
             if (ex.meta.target.find((x: string) => x === 'email')) {
-              throw new UserInputError("This email address is already in use. Please try logging in")
+              throw new UserInputError(
+                'This email address is already in use. Please try logging in',
+              )
             } else if (ex.meta.target.find((x: string) => x === 'handle')) {
-              throw new UserInputError("This handle is already in use")
+              throw new UserInputError('This handle is already in use')
             } else {
               throw ex
             }
@@ -292,6 +300,7 @@ const UserMutations = extendType({
         }
 
         await subscribeUserToProductUpdates(user, ctx.db)
+        await sendEmailAddressVerificationEmail({ user, verificationToken: emailVerificationToken })
 
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
         ctx.response.setHeader(

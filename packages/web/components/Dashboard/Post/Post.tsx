@@ -9,9 +9,6 @@ import {
   wait,
 } from '@/utils'
 import {
-  PostWithTopicsFragmentFragment as PostType,
-  CurrentUserFragmentFragment as UserType,
-  ThreadFragmentFragment as ThreadType,
   PostStatus,
   useCreateThreadMutation,
   useUpdatePostMutation,
@@ -26,39 +23,24 @@ import {
 import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
 import PostBodyStyles from '@/components/PostBodyStyles'
-import PencilIcon from '@/components/Icons/PencilIcon'
 import InlineFeedbackPopover from '@/components/InlineFeedbackPopover'
 import { Router, useTranslation } from '@/config/i18n'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
+import CommentSelectionButton from './CommentSelectionButton'
 
-import { getCoords, getUsersClappedText } from './helpers'
+import {
+  getCoords,
+  getUsersClappedText,
+  highlightRange,
+  isSelectionCommentable,
+  buildPreOrderListAndOffsets,
+  isChildOf,
+} from './helpers'
 import ClapIcon from '@/components/Icons/ClapIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
 import { POST_BUMP_LIMIT } from '../../../constants'
-
-interface IPostProps {
-  post: PostType
-  currentUser: UserType | null | undefined
-  refetch: any
-}
-
-// Elements whose boundaries a comment can cross
-const elementWhiteList = new Set(['SPAN', 'EM', 'U', 'STRONG'])
-
-type CommentSelectionButtonProps = {
-  position: {
-    x: string
-    y: string
-  }
-  display: boolean
-  onClick: React.MouseEventHandler
-}
-
-type SelectionState = {
-  bouncing: boolean
-  lastTimeout: number | null
-}
+import { SelectionState, PostProps, PostContentProps, ThreadType } from './types'
 
 const selectionState: SelectionState = {
   bouncing: false,
@@ -92,153 +74,6 @@ const bounceSelection = async () => {
   selectionState.bouncing = false
 }
 
-const CommentSelectionButton = ({ position, display, onClick }: CommentSelectionButtonProps) => {
-  return (
-    <button onMouseDown={onClick} className="comment-btn">
-      <PencilIcon size={24} className="edit-icon" />
-      <style jsx>{`
-        .comment-btn {
-          display: ${display ? 'flex' : 'none'};
-          align-items: center;
-          justify-content: center;
-          padding: 0 0 2px 2px;
-          width: 35px;
-          height: 35px;
-          font-size: 14px;
-          line-height: 1;
-          background-color: ${theme.colors.charcoal};
-          border-radius: 5px;
-          cursor: pointer;
-          position: absolute;
-          top: ${position.y};
-          left: ${position.x};
-          z-index: 10;
-          transition: background-color 0.2s ease-in-out;
-          transform: translateX(-50%);
-        }
-
-        .comment-btn:hover :global(#g-stroke) {
-          stroke: ${theme.colors.blueLight};
-        }
-      `}</style>
-    </button>
-  )
-}
-
-// Construct highlighted text/selection & replace original selection with highlighted construction
-function highlightRange(range: Range, threadId: number): string {
-  const selectedText = range.extractContents()
-  const commentedTextSpan = document.createElement('span')
-  commentedTextSpan.classList.add('thread-highlight')
-  commentedTextSpan.dataset.tid = `${threadId}`
-  commentedTextSpan.appendChild(selectedText)
-  range.insertNode(commentedTextSpan)
-
-  return commentedTextSpan.innerHTML
-}
-
-function buildPreOrderList(rootEl: HTMLElement): (HTMLElement | Node)[] {
-  const preOrderList: (HTMLElement | Node)[] = []
-  const recur = (el: HTMLElement | Node) => {
-    preOrderList.push(el)
-    el.childNodes.forEach(recur)
-  }
-  recur(rootEl)
-  return preOrderList
-}
-
-function buildPostOrderList(el: HTMLElement): (HTMLElement | Node)[] {
-  const postOrderList: (HTMLElement | Node)[] = []
-  const recur = (el: HTMLElement | Node) => {
-    el.childNodes.forEach(recur)
-    postOrderList.push(el)
-  }
-  recur(el)
-  return postOrderList
-}
-
-// Returns boolean to indicate whether selection is valid for a comment
-function isSelectionCommentable(selection: Selection, parentElement: HTMLElement) {
-  if (
-    !selection.anchorNode ||
-    !selection.focusNode ||
-    selection.isCollapsed ||
-    !selection.toString().trim().length ||
-    !isChildOf(selection.anchorNode, parentElement) ||
-    !isChildOf(selection.focusNode, parentElement)
-  ) {
-    return false
-  }
-
-  const nodeList = buildPostOrderList(parentElement)
-  // Index of the element that contains the beginning of the selection
-  let startIdx = nodeList.indexOf(selection.anchorNode)
-  // Index of the element that contains the end of the selection
-  let endIdx = nodeList.indexOf(selection.focusNode)
-
-  // Make sure it's not a backwards selection
-  // If so, reverse it.
-  if (startIdx > endIdx) {
-    ;[startIdx, endIdx] = [endIdx, startIdx]
-  }
-
-  // The nodes that the selection crosses boundaries of
-  const selectedNodes = nodeList.slice(startIdx, endIdx + 1)
-
-  // Check none of the nodes crossed by the selection
-  // are not Text nodes or outisde of the whitelist
-  for (const node of selectedNodes) {
-    if (node.constructor === Text) {
-      continue
-    } else if (elementWhiteList.has((node as HTMLElement).tagName)) {
-      continue
-    } else {
-      // node not in our "whitelist"
-      return false
-    }
-  }
-  return true
-}
-
-function buildPreOrderListAndOffsets(selectableTextArea: HTMLElement) {
-  // a list of every element in the selectableTextArea
-  const preOrderList = buildPreOrderList(selectableTextArea)
-  // a list of integers which are the offsets of the preOrderList elements
-  // this method of creating the Array is more efficient than using Array.push
-  const offsets = new Array(preOrderList.length)
-
-  // Offset of the sum of the length of all the Text Nodes that appear
-  // before the current element in the document
-  let currentOffset = 0
-  for (let i = 0; i < preOrderList.length; i++) {
-    const node = preOrderList[i]
-    offsets[i] = currentOffset
-
-    if (node.constructor === Text) {
-      currentOffset += (node as Text).length
-    }
-  }
-
-  return [preOrderList, offsets]
-}
-
-function isChildOf(el: Node, target: HTMLElement) {
-  let current = el
-  while (current.parentElement) {
-    if (current.parentElement === target) {
-      return true
-    }
-
-    current = current.parentElement
-  }
-
-  return false
-}
-
-type PostContentProps = {
-  body: string
-}
-
 const PostContent = React.memo(
   React.forwardRef<HTMLDivElement, PostContentProps>(({ body }, ref) => {
     // Break this into a memoizable component so we don't have to re-sanitize
@@ -249,7 +84,7 @@ const PostContent = React.memo(
   }),
 )
 
-const Post = ({ post, currentUser, refetch }: IPostProps) => {
+const Post = ({ post, currentUser, refetch }: PostProps) => {
   const { t } = useTranslation('post')
 
   const selectableRef = React.useRef<HTMLDivElement>(null)
@@ -353,14 +188,12 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
   })
 
   const deleteExistingPostClap = () => {
-    const currentPostClap = post.claps.find(
-      (clap) => clap.author.id === currentUser?.id,
-    )
+    const currentPostClap = post.claps.find((clap) => clap.author.id === currentUser?.id)
     if (currentPostClap) {
       deletePostClap({
         variables: {
-          postClapId: currentPostClap.id
-        }
+          postClapId: currentPostClap.id,
+        },
       })
     }
   }
@@ -516,10 +349,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
     // ancestor that is a thread highlight.
     let threadHighlight = null
     let currentElement: HTMLElement | null = e.target as HTMLElement
-    while (
-      currentElement &&
-      currentElement !== e.currentTarget
-    ) {
+    while (currentElement && currentElement !== e.currentTarget) {
       if (currentElement.dataset.tid) {
         threadHighlight = currentElement
         break
@@ -558,30 +388,33 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
 
   const handleBumpPost = () => {
-    if (post.bumpCount >= POST_BUMP_LIMIT) {
-      toast.error(t('postBumpLimitError'))
-      return
+    if (canAttemptBump) {
+      setDisplayPremiumFeatureModal(true)
+    } else {
+      if (post.bumpCount >= POST_BUMP_LIMIT) {
+        toast.error(t('postBumpLimitError'))
+        return
+      }
+      bumpPost()
     }
-    bumpPost()
   }
 
   const [bumpPost] = useBumpPostMutation({
     variables: { postId: post.id },
     onCompleted: () => {
-      toast.success(t(
-        'bumpPostSuccess',
-        {
+      toast.success(
+        t('bumpPostSuccess', {
           numRemaining: POST_BUMP_LIMIT - (post.bumpCount + 1),
-        }))
+        }),
       Router.push('/dashboard/my-feed')
     },
   })
 
-  const canAttemptBump = (
-      currentUser?.membershipSubscription?.isActive
-      || currentUser?.userRole === UserRole.Admin
-      || currentUser?.userRole === UserRole.Moderator
-    ) && post.status === 'PUBLISHED'
+  const canAttemptBump =
+    (currentUser?.membershipSubscription?.isActive ||
+      currentUser?.userRole === UserRole.Admin ||
+      currentUser?.userRole === UserRole.Moderator) &&
+    post.status === 'PUBLISHED'
 
   return (
     <div className="post-container">
@@ -604,23 +437,23 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         <div className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
         </div>
-          <div className="post-controls">
-            <div className="clap-container">
-              <Button
-                variant={ButtonVariant.Icon}
-                onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
-                loading={isLoadingPostClap}
-                disabled={currentUser?.id === post.author.id || !currentUser}
-              >
-                <ClapIcon 
-                  width={24} 
-                  clapped={hasClappedPost} 
-                  title={getUsersClappedText(post.claps, currentUser?.id)}
-                />
-              </Button>
-              <span>{post.claps.length}</span>
-            </div>
-            <div className="post-action-container">
+        <div className="post-controls">
+          <div className="clap-container">
+            <Button
+              variant={ButtonVariant.Icon}
+              onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
+              loading={isLoadingPostClap}
+              disabled={currentUser?.id === post.author.id || !currentUser}
+            >
+              <ClapIcon
+                width={24}
+                clapped={hasClappedPost}
+                title={getUsersClappedText(post.claps, currentUser?.id)}
+              />
+            </Button>
+            <span>{post.claps.length}</span>
+          </div>
+          <div className="post-action-container">
             {currentUser && post.author.id === currentUser.id && (
               <>
                 {canAttemptBump && (

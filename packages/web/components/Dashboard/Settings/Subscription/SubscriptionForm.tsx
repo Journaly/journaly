@@ -14,6 +14,7 @@ import { formatLongDate } from '@/utils'
 import CardOnFile from './CardOnFile'
 import PaymentForm from './PaymentForm'
 import PaymentFormModal from './PaymentFormModal'
+import FeatureComparisonTable from '@/components/FeatureComparisonTable'
 
 type SubscriptionFormProps = {
   user: UserType
@@ -25,7 +26,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
 
   let subscriptionPlan: string | undefined
   const convertSubscriptionPeriodToPrice = (subscriptionPlan: MembershipSubscriptionPeriod) => {
-    switch(subscriptionPlan) {
+    switch (subscriptionPlan) {
       case MembershipSubscriptionPeriod.Monthly:
         return t('subscription.monthlyPrice')
       case MembershipSubscriptionPeriod.Annualy:
@@ -57,11 +58,11 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
 
   const handleCancelSubscription = async () => {
     if (!(await confirmCancellation())) return
-    
+
     updateSubscriptionRenewal({
       variables: {
         cancelAtPeriodEnd: true,
-      }
+      },
     })
   }
 
@@ -78,8 +79,14 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
             text-transform: uppercase;
             font-size: ${theme.typography.paragraphSM}
             font-weight: 600;
-            background-color: ${!user.membershipSubscription?.isActive ? theme.colors.gray100 : theme.colors.greenLight};
-            color: ${!user.membershipSubscription?.isActive ? theme.colors.gray600 : theme.colors.greenDark};
+            background-color: ${
+              !user.membershipSubscription?.isActive
+                ? theme.colors.gray100
+                : theme.colors.greenLight
+            };
+            color: ${
+              !user.membershipSubscription?.isActive ? theme.colors.gray600 : theme.colors.greenDark
+            };
           }
         `}</style>
       </>
@@ -92,60 +99,85 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
         <PaymentFormModal onClose={() => setShowPaymentFormModal(false)} onSuccess={onSuccess} />
       )}
       <div className="page-container">
-        <p className="subscription-copy" style={{ marginBottom: '20px' }}>{t('subscription.premiumGeneralCopy')}</p>
-        <p className="subscription-copy" style={{ marginBottom: '20px' }}>{t('subscription.premiumFeatureCopy')}</p>
-        <p className="subscription-status"><strong>{t('subscription.subscriptionStatus')}</strong> <SubscriptionStatusBadge /></p>
+        <h1>{t('subscription.title')}</h1>
+        <p className="subscription-copy" style={{ marginBottom: '20px' }}>
+          {t('subscription.premiumGeneralCopy')}
+        </p>
+        <div className="feature-table-container">
+          <FeatureComparisonTable />
+        </div>
+        <p className="subscription-copy" style={{ marginBottom: '20px' }}>
+          {t('subscription.premiumFeatureCopy')}
+        </p>
+        <p className="subscription-status">
+          <strong>{t('subscription.subscriptionStatus')}</strong> <SubscriptionStatusBadge />
+        </p>
         {user.membershipSubscription?.isActive && (
           <>
-            <p><strong>{t('subscription.currentPlan')}</strong> {subscriptionPlan}</p>
+            <p>
+              <strong>{t('subscription.currentPlan')}</strong> {subscriptionPlan}
+            </p>
             {user.lastFourCardNumbers && (
               <CardOnFile last4={user.lastFourCardNumbers} onSuccess={onSuccess} />
             )}
             {isCancelling ? (
               <>
-                <p>{t('subscription.subscriptionEndsOn')}<strong style={{ color: theme.colors.red }}> {formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
+                <p>
+                  {t('subscription.subscriptionEndsOn')}
+                  <strong style={{ color: theme.colors.red }}>
+                    {' '}
+                    {formatLongDate(user?.membershipSubscription?.expiresAt)}
+                  </strong>
+                </p>
                 <Button
                   variant={ButtonVariant.Link}
                   onClick={() => {
-                  updateSubscriptionRenewal({
-                    variables: {
-                      cancelAtPeriodEnd: false,
-                    }
-                  })
-              }}>{t('subscription.reactivateSubscription')}</Button>
+                    updateSubscriptionRenewal({
+                      variables: {
+                        cancelAtPeriodEnd: false,
+                      },
+                    })
+                  }}
+                >
+                  {t('subscription.reactivateSubscription')}
+                </Button>
               </>
             ) : (
               <>
-                <p className="subscription-copy"><strong>{t('subscription.nextBillingDate')}</strong> {t('subscription.subscriptionRenewsOn')}<strong> {formatLongDate(user?.membershipSubscription?.expiresAt)}</strong></p>
+                <p className="subscription-copy">
+                  <strong>{t('subscription.nextBillingDate')}</strong>{' '}
+                  {t('subscription.subscriptionRenewsOn')}
+                  <strong> {formatLongDate(user?.membershipSubscription?.expiresAt)}</strong>
+                </p>
               </>
             )}
           </>
         )}
-        {showPaymentForm && (
-          <PaymentForm onSuccess={onSuccess} />
-        )}
-        {user.membershipSubscription?.isActive && !user?.membershipSubscription?.cancelAtPeriodEnd && !showPaymentForm && (
-          <>
-            <Button
-              onClick={() => {
-                setShowPaymentForm(true)
-              }}
-              variant={ButtonVariant.Link}
-            >
-              {t('subscription.changePlan')}
-            </Button>
-            <Button
-              onClick={handleCancelSubscription}
-              variant={ButtonVariant.Link}
-              style={{
-                color: theme.colors.red,
-                marginLeft: '10px',
-              }}
-            >
-              {t('subscription.cancelSubscription')}
-            </Button>
-          </>
-        )}
+        {showPaymentForm && <PaymentForm onSuccess={onSuccess} />}
+        {user.membershipSubscription?.isActive &&
+          !user?.membershipSubscription?.cancelAtPeriodEnd &&
+          !showPaymentForm && (
+            <>
+              <Button
+                onClick={() => {
+                  setShowPaymentForm(true)
+                }}
+                variant={ButtonVariant.Link}
+              >
+                {t('subscription.changePlan')}
+              </Button>
+              <Button
+                onClick={handleCancelSubscription}
+                variant={ButtonVariant.Link}
+                style={{
+                  color: theme.colors.red,
+                  marginLeft: '10px',
+                }}
+              >
+                {t('subscription.cancelSubscription')}
+              </Button>
+            </>
+          )}
       </div>
       <CancelSubscriptionConfirmationModal />
       <style jsx>{`
@@ -156,6 +188,13 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
           box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
         }
 
+        h1 {
+          text-align: center;
+          font-weight: 700;
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
         .membership-renewal-info-container {
           display: flex;
           flex-direction: column;
@@ -163,12 +202,18 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
 
         .subscription-copy {
           margin-bottom: 20px;
+          text-align: center;
         }
 
         .subscription-status {
           margin-bottom: 10px;
         }
 
+        .feature-table-container {
+          display: flex;
+          justify-content: center;
+          margin: 35px 0;
+        }
       `}</style>
     </>
   )

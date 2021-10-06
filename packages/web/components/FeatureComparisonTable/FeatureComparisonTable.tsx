@@ -5,20 +5,24 @@ import CheckmarkCircleIcon from '../Icons/CheckmarkCircleIcon'
 type FeatureProps = {
   name: string
   plan: string
+  status?: string
 }
 
-const Feature = ({ name, plan }: FeatureProps) => {
+const Feature = ({ name, plan, status }: FeatureProps) => {
   const color = plan === 'premium' ? 'white' : 'blue'
   return (
     <li>
       <CheckmarkCircleIcon color={color} />
-      <span>{name}</span>
+      <span className={status === 'coming soon' ? 'coming-soon' : ''}>{name}</span>
       <style jsx>{`
         display: flex;
         align-items: center;
 
         span {
           margin-left: 10px;
+        }
+        .coming-soon {
+          font-style: italic;
         }
       `}</style>
     </li>
@@ -39,8 +43,8 @@ const FeatureComparisonTable = () => {
             <Feature name="Get unlimited feedback" plan="free" />
             <Feature name="Custom post headers" plan="free" />
             <Feature name="Advanced post filtering" plan="free" />
-            <Feature name="Direct Messaging (coming soon)" plan="free" />
-            <Feature name="User Groups (coming soon)" plan="free" />
+            <Feature name="Direct Messaging (coming soon)" plan="free" status="coming soon" />
+            <Feature name="User Groups (coming soon)" plan="free" status="coming soon" />
           </ul>
         </div>
       </div>
@@ -54,10 +58,10 @@ const FeatureComparisonTable = () => {
           <ul>
             <Feature name="Inline images inside posts" plan="premium" />
             <Feature name="Bump posts to top of the feed" plan="premium" />
-            <Feature name="Writing prompts (coming soon)" plan="premium" />
-            <Feature name="Focus Mode (coming soon)" plan="premium" />
-            <Feature name="Post Themes (coming soon)" plan="premium" />
-            <Feature name="Audio posts (coming soon)" plan="premium" />
+            <Feature name="Writing prompts (coming soon)" plan="premium" status="coming soon" />
+            <Feature name="Focus Mode (coming soon)" plan="premium" status="coming soon" />
+            <Feature name="Post Themes (coming soon)" plan="premium" status="coming soon" />
+            <Feature name="Audio posts (coming soon)" plan="premium" status="coming soon" />
           </ul>
         </div>
       </div>
@@ -71,7 +75,7 @@ const FeatureComparisonTable = () => {
           padding: 25px;
         }
         .free {
-          background: ${theme.colors.white};
+          background: ${theme.colors.gray200};
           box-shadow: 0 7px 30px rgba(0, 0, 0, 0.05);
         }
 

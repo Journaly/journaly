@@ -47,12 +47,15 @@ model User {
 }
 
 model Auth {
-  id               Int     @id @default(autoincrement())
-  userId           Int     @unique
-  password         String
-  resetToken       String?
-  resetTokenExpiry Int?
-  user             User    @relation(fields: [userId], references: [id])
+  id                            Int     @id @default(autoincrement())
+  userId                        Int     @unique
+  password                      String
+  resetToken                    String?
+  resetTokenExpiry              Int?
+  emailVerificationToken        String?
+  emailVerificationTokenExpiry  Int?
+  emailVerificationStatus       EmailVerificationStatus @default(PENDING)
+  user                          User    @relation(fields: [userId], references: [id])
 }
 
 model LanguageLearning {
@@ -411,4 +414,9 @@ enum MembershipSubscriptionPeriod {
   MONTHLY
   QUARTERLY
   ANNUALY
+}
+
+enum EmailVerificationStatus {
+  PENDING
+  VERIFIED
 }

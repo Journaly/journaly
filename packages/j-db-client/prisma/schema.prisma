@@ -53,7 +53,6 @@ model Auth {
   resetToken                    String?
   resetTokenExpiry              Int?
   emailVerificationToken        String?
-  emailVerificationTokenExpiry  Int?
   emailVerificationStatus       EmailVerificationStatus @default(PENDING)
   user                          User    @relation(fields: [userId], references: [id])
 }

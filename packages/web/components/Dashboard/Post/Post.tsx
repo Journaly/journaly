@@ -390,7 +390,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
 
   const handleBumpPost = () => {
-    if (canAttemptBump) {
+    if (!canAttemptBump) {
       setDisplayPremiumFeatureModal(true)
     } else {
       if (post.bumpCount >= POST_BUMP_LIMIT) {
@@ -523,7 +523,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         show={displayDeleteModal}
       />
       <PremiumFeatureModal
-        featureName="Post Bumping"
+        featureName={t('postBumpingPremiumFeatureName')}
         featureExplanation={t('postBumpingPremiumFeatureExplanation')}
         onAcknowledge={(): void => {
           setDisplayPremiumFeatureModal(false)

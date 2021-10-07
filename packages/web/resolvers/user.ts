@@ -10,7 +10,7 @@ import { serialize } from 'cookie'
 import { randomBytes } from 'crypto'
 import { promisify } from 'util'
 
-import { PostStatus } from '@journaly/j-db-client'
+import { PostStatus, EmailVerificationStatus } from '@journaly/j-db-client'
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
@@ -75,7 +75,16 @@ const User = objectType({
     t.model.lastFourCardNumbers()
     t.model.cardBrand()
     t.model.userInterests({ type: 'UserInterest', pagination: false })
-
+    t.boolean('emailAddressVerified', {
+      async resolve(parent, _args, ctx, _info) {
+        const auth = await ctx.db.auth.findUnique({
+          where: {
+            userId: parent.id,
+          },
+        })
+        return auth.emailVerificationStatus === EmailVerificationStatus.VERIFIED
+      },
+    })
     t.int('postsWrittenCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.post.count({

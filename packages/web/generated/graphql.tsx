@@ -545,6 +545,7 @@ export type User = {
   lastFourCardNumbers?: Maybe<Scalars['String']>
   cardBrand?: Maybe<Scalars['String']>
   userInterests: Array<UserInterest>
+  emailAddressVerified: Scalars['Boolean']
   postsWrittenCount: Scalars['Int']
   languagesPostedInCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
@@ -664,7 +665,16 @@ export type UpdatePostCommentMutation = { __typename?: 'Mutation' } & {
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'name' | 'handle' | 'email' | 'bio' | 'userRole' | 'profileImage' | 'city' | 'country'
+  | 'id'
+  | 'name'
+  | 'handle'
+  | 'email'
+  | 'bio'
+  | 'userRole'
+  | 'profileImage'
+  | 'city'
+  | 'country'
+  | 'emailAddressVerified'
 >
 
 export type UserWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
@@ -1321,6 +1331,7 @@ export const UserFragmentFragmentDoc = gql`
     profileImage
     city
     country
+    emailAddressVerified
   }
 `
 export const UserWithStatsFragmentFragmentDoc = gql`

@@ -54,10 +54,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   })
 
-  res.status(200).json({
-    verified: true,
-  })
-  res.redirect(200, `/dashboard/my-feed?email-verification=success&id=${updatedUser.id}`)
+  return res.redirect(`/dashboard/my-feed?email-verification=success&id=${updatedUser.id}`)
 }
 
 export default handler

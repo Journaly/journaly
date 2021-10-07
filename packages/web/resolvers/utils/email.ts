@@ -232,7 +232,7 @@ const sendEmailAddressVerificationEmail = ({
     to: user.email,
     subject: "Let's Verify Your Email Address :)",
     html: makeEmail(`
-      <p>To commplete the sign up process, please click <a href="https://${process.env.SITE_DOMAIN}/dashboard/verify-email-address?verificationToken=${verificationToken}">here</a> to verify your e-mail address :)</p>
+      <p>To commplete the sign up process, please click <a href="https://${process.env.SITE_DOMAIN}/api/verify-email-address?verificationToken=${verificationToken}&id=${user.id}">here</a> to verify your e-mail address :)</p>
     `),
   })
 }

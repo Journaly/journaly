@@ -175,6 +175,7 @@ export type Mutation = {
   logout: User
   followUser: User
   unfollowUser: User
+  resendEmailVerificationEmail: User
   addLanguageRelation: LanguageRelation
   removeLanguageRelation: LanguageRelation
   updateSocialMedia: SocialMedia
@@ -1203,6 +1204,12 @@ export type RequestResetPasswordMutationVariables = Exact<{
 
 export type RequestResetPasswordMutation = { __typename?: 'Mutation' } & {
   requestResetPassword: { __typename?: 'User' } & Pick<User, 'id'>
+}
+
+export type ResendEmailVerificationEmailMutationVariables = Exact<{ [key: string]: never }>
+
+export type ResendEmailVerificationEmailMutation = { __typename?: 'Mutation' } & {
+  resendEmailVerificationEmail: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type ResetPasswordMutationVariables = Exact<{
@@ -3888,6 +3895,54 @@ export type RequestResetPasswordMutationResult =
 export type RequestResetPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RequestResetPasswordMutation,
   RequestResetPasswordMutationVariables
+>
+export const ResendEmailVerificationEmailDocument = gql`
+  mutation resendEmailVerificationEmail {
+    resendEmailVerificationEmail {
+      id
+    }
+  }
+`
+export type ResendEmailVerificationEmailMutationFn = ApolloReactCommon.MutationFunction<
+  ResendEmailVerificationEmailMutation,
+  ResendEmailVerificationEmailMutationVariables
+>
+
+/**
+ * __useResendEmailVerificationEmailMutation__
+ *
+ * To run a mutation, you first call `useResendEmailVerificationEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResendEmailVerificationEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resendEmailVerificationEmailMutation, { data, loading, error }] = useResendEmailVerificationEmailMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useResendEmailVerificationEmailMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ResendEmailVerificationEmailMutation,
+    ResendEmailVerificationEmailMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ResendEmailVerificationEmailMutation,
+    ResendEmailVerificationEmailMutationVariables
+  >(ResendEmailVerificationEmailDocument, baseOptions)
+}
+export type ResendEmailVerificationEmailMutationHookResult = ReturnType<
+  typeof useResendEmailVerificationEmailMutation
+>
+export type ResendEmailVerificationEmailMutationResult =
+  ApolloReactCommon.MutationResult<ResendEmailVerificationEmailMutation>
+export type ResendEmailVerificationEmailMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ResendEmailVerificationEmailMutation,
+  ResendEmailVerificationEmailMutationVariables
 >
 export const ResetPasswordDocument = gql`
   mutation resetPassword($resetToken: String!, $password: String!, $confirmPassword: String!) {

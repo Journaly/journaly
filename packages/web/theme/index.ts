@@ -142,7 +142,7 @@ const theme: Theme = {
     `,
     error: `
       color: #c42f14;
-      font-size: 11px;
+      font-size: 12px;
     `,
   },
 }

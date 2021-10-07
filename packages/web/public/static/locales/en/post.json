@@ -50,5 +50,6 @@
     "oneUserClapped": "{{name1}} clapped for this post.",
     "twoUsersClapped": "{{name1}} and {{name2}} clapped for this post.",
     "manyUsersClapped": "{{name1}}, {{name2}}, and {{numOthers}} others clapped for this post."
-  }
+  },
+  "emailVerificationWarning": "Please verify your email address in order to start publishing posts by clicking the link in the email you received after signing up. Go to Settings > Profile Info to resend the verification email"
 }

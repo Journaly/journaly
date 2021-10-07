@@ -638,6 +638,24 @@ const UserMutations = extendType({
         })
       },
     })
+    
+    t.field('resendEmailVerificationEmail', {
+      type: 'User',
+      args: {},
+      resolve: async (_parent, _args, ctx, _info) => {
+        const { userId } = ctx.request
+        const user = await ctx.db.user.findUnique({
+          where: { id: userId },
+          include: { auth: true },
+        })
+        if (!user) throw new Error('User not found')
+        await sendEmailAddressVerificationEmail({
+          user,
+          verificationToken: user.auth.emailverificationToken,
+        })
+        return user
+      },
+    })
   },
 })
 

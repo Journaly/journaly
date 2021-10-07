@@ -156,7 +156,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
         createNewPost(PostStatusType.Published)
       }
       if (!currentUser?.emailAddressVerified) {
-        setErrorMessage('Please verify your email address in order to start publishing posts')
+        setErrorMessage(t('emailVerificationWarning'))
       }
     },
     [createNewPost],
@@ -259,6 +259,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             .error-message {
               ${theme.typography.error}
               text-align: center;
+              margin-top: 20px;
             }
           `}</style>
         </form>

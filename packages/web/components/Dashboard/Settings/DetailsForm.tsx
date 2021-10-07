@@ -7,7 +7,11 @@ import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
 import useAvatarImageUpload from '@/hooks/useAvatarImageUpload'
 import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
-import { User as UserType, useUpdateUserMutation } from '@/generated/graphql'
+import {
+  User as UserType,
+  useResendEmailVerificationEmailMutation,
+  useUpdateUserMutation,
+} from '@/generated/graphql'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import { ApolloError } from '@apollo/client'
 import { toast } from 'react-toastify'
@@ -99,6 +103,20 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
 
   const invalidFields = Object.values(errors)
 
+  const [resendEmailVerificationEmailMutation, { loading: resendingEmailVerification }] =
+    useResendEmailVerificationEmailMutation({
+      onCompleted: () => {
+        toast.success(t('resendEmailVerificationToastSuccess'))
+      },
+      onError: () => {
+        toast.error(t('resendEmailVerificationToastError'))
+      },
+    })
+
+  const handleResendEmailAddressVerification = () => {
+    resendEmailVerificationEmailMutation()
+  }
+
   return (
     <SettingsForm onSubmit={handleSubmit(handleDetailsSubmit)}>
       <SettingsFieldset legend={t('profile.details.legend')}>
@@ -169,9 +187,20 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                 />
               </div>
               <div className="details-form-field">
-                <label className="settings-label" htmlFor="email">
-                  {t('profile.details.emailLabel')}
-                </label>
+                <div className="email-label-container">
+                  <label className="settings-label" htmlFor="email">
+                    {t('profile.details.emailLabel')}
+                  </label>
+                  <p
+                    className={`email-${
+                      currentUser.emailAddressVerified ? 'verified' : 'unverified'
+                    }-badge`}
+                  >
+                    {currentUser.emailAddressVerified
+                      ? t('emailVerifiedBadgeText')
+                      : t('emailUnverifiedBadgeText')}
+                  </p>
+                </div>
                 <input
                   type="text"
                   name="email"
@@ -191,6 +220,18 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                     },
                   })}
                 />
+                {!currentUser.emailAddressVerified && (
+                  <p>
+                    <Button
+                      variant={ButtonVariant.Link}
+                      loading={resendingEmailVerification}
+                      onClick={() => handleResendEmailAddressVerification()}
+                    >
+                      {t('resendEmailVerificationButtonText')}
+                    </Button>{' '}
+                    {t('resendEmailVerificationText')}
+                  </p>
+                )}
               </div>
               <div className="details-form-field">
                 <label className="settings-label" htmlFor="name">
@@ -324,6 +365,21 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
 
         .image-upload-input {
           display: none;
+        }
+
+        .email-verified-badge {
+          font-weight: 700;
+          color: ${theme.colors.greenDark};
+        }
+
+        .email-unverified-badge {
+          font-weight: 700;
+          color: ${theme.colors.red};
+          font-style: italic;
+        }
+        .email-label-container {
+          display: flex;
+          gap: 10px;
         }
       `}</style>
     </SettingsForm>

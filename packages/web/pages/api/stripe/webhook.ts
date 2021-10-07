@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { Prisma, MembershipSubscriptionPeriod, PrismaClient } from '@journaly/j-db-client'
 import Stripe from 'stripe'
 import stripe, { logPaymentsError } from '@/nexus/utils/stripe'
@@ -11,7 +12,7 @@ export const config = {
   },
 }
 
-const webhookPayloadParser = (req: any): Promise<string> => {
+const webhookPayloadParser = (req: NextApiRequest): Promise<string> => {
   return new Promise((res) => {
     const parts: string[] = []
 
@@ -51,7 +52,7 @@ const convertStripePriceToMembershipPeriod = (priceId: string) => {
   throw new Error("Price ID does not match one of our valid IDs")
 }
 
-const handler = async (req: any, res: any) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const db = getClient()
   const sig = req.headers['stripe-signature']
   const body = await webhookPayloadParser(req)

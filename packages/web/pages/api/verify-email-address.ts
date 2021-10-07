@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { EmailVerificationStatus } from '@journaly/j-db-client'
 import { getClient } from '@/nexus/utils'
 
@@ -7,7 +8,7 @@ import { getClient } from '@/nexus/utils'
  * @param res
  */
 
-const handler = async (req: any) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const db = getClient()
   const queryParams = req.query
   const requiredParams = ['verificationToken', 'id']
@@ -24,7 +25,7 @@ const handler = async (req: any) => {
   }
 
   const user = await db.user.findUnique({
-    where: { id: parseInt(queryParams.id) },
+    where: { id: parseInt(queryParams.id as string) },
     include: { auth: true },
   })
 
@@ -53,18 +54,10 @@ const handler = async (req: any) => {
     },
   })
 
-  // // Redirect user to My Feed page
-  // const state = {}
-  // const title = ''
-  // const url = `/dashboard/my-feed?email-verification=success&id=${updatedUser.id}`
-  // if (window) window.history.pushState(state, title, url)
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Success!',
-    }),
-  }
+  res.status(200).json({
+    verified: true,
+  })
+  res.redirect(200, `/dashboard/my-feed?email-verification=success&id=${updatedUser.id}`)
 }
 
 export default handler

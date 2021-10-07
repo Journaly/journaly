@@ -19,7 +19,7 @@ import {
   sendPasswordResetTokenEmail,
   subscribeUserToProductUpdates,
 } from './utils'
-import { validateUpdateUserMutationData, validateUserEmailAddress } from './utils/userValidation'
+import { validateUpdateUserMutationData } from './utils/userValidation'
 
 const DatedActivityCount = objectType({
   name: 'DatedActivityCount',

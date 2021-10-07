@@ -1,8 +1,6 @@
 import { integer } from 'aws-sdk/clients/cloudfront'
 import { InvalidInput, UserInputError } from '../errors'
 import { PrismaClient, User } from '@journaly/j-db-client'
-import { promisify } from 'util'
-import { randomBytes } from 'crypto'
 
 // Nexus non-required args can be null or undefined. We treat them the same.
 type ArgString = string | null | undefined
@@ -79,15 +77,4 @@ export const validateUpdateUserMutationData = async (
     const uniqueCheckResult = await CheckIfUnique(ctx.db, userId, email, handle)
     if (uniqueCheckResult.length > 0) throw new UserInputError('User', uniqueCheckResult)
   }
-}
-
-export const validateUserEmailAddress = async (
-  db: PrismaClient,
-  userId: integer,
-): Promise<void> => {
-  const user = db.user.findUnique({
-    where: {
-      id: userId,
-    },
-  })
 }

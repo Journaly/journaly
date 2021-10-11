@@ -11,7 +11,8 @@ const FeedHeader: React.FC<Props> = ({ currentUser }) => {
   let greetingLanguage = 'English'
 
   if (currentUser.languages.length === 1) {
-    greetingLanguage = currentUser.languages[0].language.name
+    greetingLanguage =
+      currentUser.languages[0].language.devName || currentUser.languages[0].language.name
   }
 
   const learningLanguages = currentUser.languages.filter(
@@ -19,9 +20,9 @@ const FeedHeader: React.FC<Props> = ({ currentUser }) => {
   )
 
   if (learningLanguages.length > 0) {
-    const index = Math.floor(Math.random() * currentUser.languages.length)
+    const index = Math.floor(Math.random() * learningLanguages.length)
     const greetingLanguageKey =
-      learningLanguages[index]?.language.devName || learningLanguages[index].language.name
+      learningLanguages[index].language.devName || learningLanguages[index].language.name
     greetingLanguage = greetings[greetingLanguageKey] ? greetingLanguageKey : 'English'
   }
 

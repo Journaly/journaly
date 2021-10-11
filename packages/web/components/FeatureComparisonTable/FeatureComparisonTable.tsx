@@ -112,6 +112,13 @@ const FeatureComparisonTable = () => {
         .price {
           font-style: italic;
         }
+
+        @media (max-width: 920px) {
+          .container {
+            flex-direction: column;
+            align-items: center;
+          }
+        }
       `}</style>
     </div>
   )

@@ -18,7 +18,7 @@ const Breadcrumbs: React.FC = () => {
     <h1 className="breadcrumbs" data-testid="settiings-breadcrumbs">
       <span>
         {t('breadcrumbs.settings')}
-        <span className="separator">&gt;</span>
+        <span className="separator">&#124;</span>
         {pathToBreadcrumb[lastPathName!]}
       </span>
 
@@ -27,7 +27,7 @@ const Breadcrumbs: React.FC = () => {
           ${theme.typography.headingXL};
         }
         .separator {
-          margin: 0 16px;
+          margin: 0 10px;
         }
       `}</style>
     </h1>

@@ -413,6 +413,7 @@ enum MembershipSubscriptionPeriod {
   MONTHLY
   QUARTERLY
   ANNUALY
+  STUDENT_ANNUALLY
 }
 
 enum EmailVerificationStatus {

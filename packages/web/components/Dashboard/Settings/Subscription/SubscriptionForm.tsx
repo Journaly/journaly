@@ -114,6 +114,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
           onClose={() => setShowPaymentFormModal(false)}
           onSuccess={onSuccess}
           isStudent={isStudent}
+          emailAddressVerified={user.emailAddressVerified}
         />
       )}
       <div className="page-container">
@@ -171,7 +172,13 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
             )}
           </>
         )}
-        {showPaymentForm && <PaymentForm onSuccess={onSuccess} isStudent={isStudent} />}
+        {showPaymentForm && (
+          <PaymentForm
+            onSuccess={onSuccess}
+            isStudent={isStudent}
+            emailAddressVerified={user.emailAddressVerified}
+          />
+        )}
         {user.membershipSubscription?.isActive &&
           !user?.membershipSubscription?.cancelAtPeriodEnd &&
           !showPaymentForm && (

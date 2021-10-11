@@ -18,9 +18,16 @@ const SubscriptionPlanSelect = ({
 }: SubscriptionPlanSelectProps) => {
   const { t } = useTranslation('settings')
   const subscriptionOptions = [
-    { value: MembershipSubscriptionPeriod.Monthly, displayName: t('subscription.monthlyPrice') },
-    { value: MembershipSubscriptionPeriod.Annualy, displayName: t('subscription.annualPrice') },
+    {
+      value: MembershipSubscriptionPeriod.Monthly,
+      displayName: t('subscription.monthlyPrice'),
+    },
+    {
+      value: MembershipSubscriptionPeriod.Annualy,
+      displayName: t('subscription.annualPrice'),
+    },
   ]
+
   if (isStudent) {
     subscriptionOptions.push({
       value: MembershipSubscriptionPeriod.StudentAnnually,

@@ -137,6 +137,7 @@
     "cancellationSuccess": "You have cancelled your subscription",
     "cancellationError": "There was a problem cancelling your subscription",
     "updateCardSuccess": "You have successfully updated the card on file",
-    "updateCardError": "There was a problem updating the card on file"
+    "updateCardError": "There was a problem updating the card on file",
+    "studentEmailVerificationNeededMsg": "Please verify your student email address in order to get the student discount by clicking the link in the email you received after signing up. Go to Settings > Profile Info to resend the verification email"
   }
 }

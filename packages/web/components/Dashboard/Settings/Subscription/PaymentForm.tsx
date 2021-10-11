@@ -15,9 +15,10 @@ import theme from '@/theme'
 type PaymentFormProps = {
   onSuccess: () => void
   isStudent: boolean
+  emailAddressVerified: boolean
 }
 
-const PaymentForm = ({ onSuccess, isStudent }: PaymentFormProps) => {
+const PaymentForm = ({ onSuccess, isStudent, emailAddressVerified }: PaymentFormProps) => {
   const { t } = useTranslation('settings')
   const [stripeError, setStripeError] = useState<StripeError>()
   const [resolverError, setResolverError] = useState<string>()
@@ -76,6 +77,9 @@ const PaymentForm = ({ onSuccess, isStudent }: PaymentFormProps) => {
     nProgress.done()
   }
 
+  const isStudentPendingEmailAddressVerification =
+    selectedOption === MembershipSubscriptionPeriod.StudentAnnually && !emailAddressVerified
+
   return (
     <form onSubmit={handleSubmitPaymentForm} className="payments-form">
       <SubscriptionPlanSelect
@@ -83,6 +87,9 @@ const PaymentForm = ({ onSuccess, isStudent }: PaymentFormProps) => {
         setSelectedOption={setSelectedOption}
         isStudent={isStudent}
       />
+      {isStudentPendingEmailAddressVerification && !emailAddressVerified && (
+        <p className="error">{t('subscription.studentEmailVerificationNeededMsg')}</p>
+      )}
       {stripeError && <p className="error">{stripeError.message}</p>}
       {resolverError && <p className="error">{resolverError}</p>}
       <div className="card-field-container">
@@ -97,7 +104,7 @@ const PaymentForm = ({ onSuccess, isStudent }: PaymentFormProps) => {
           }}
         />
       </div>
-      <Button type="submit" loading={loading}>
+      <Button type="submit" loading={loading} disabled={isStudentPendingEmailAddressVerification}>
         {t('subscription.subscribeCta')}
       </Button>
       <style jsx>{`

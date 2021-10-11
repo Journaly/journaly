@@ -967,7 +967,7 @@ export type SubscriptionSettingsPageQuery = { __typename?: 'Query' } & {
 
 export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'email' | 'lastFourCardNumbers' | 'cardBrand'
+  'id' | 'email' | 'emailAddressVerified' | 'lastFourCardNumbers' | 'cardBrand'
 > & {
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
@@ -1627,6 +1627,7 @@ export const UserWithSubscriptionFragmentFragmentDoc = gql`
   fragment UserWithSubscriptionFragment on User {
     id
     email
+    emailAddressVerified
     lastFourCardNumbers
     cardBrand
     membershipSubscription {

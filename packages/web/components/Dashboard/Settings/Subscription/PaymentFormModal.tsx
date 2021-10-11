@@ -7,16 +7,26 @@ type PaymentFormModalProps = {
   onClose: () => void
   onSuccess: () => void
   isStudent: boolean
+  emailAddressVerified: boolean
 }
 
-const PaymentFormModal: React.FC<PaymentFormModalProps> = ({ onClose, onSuccess, isStudent }) => {
+const PaymentFormModal: React.FC<PaymentFormModalProps> = ({
+  onClose,
+  onSuccess,
+  isStudent,
+  emailAddressVerified,
+}) => {
   const { t } = useTranslation('settings')
   return (
     <Modal
       title={t('subscription.paymentInfo')}
       body={
         <div>
-          <PaymentForm onSuccess={onSuccess} isStudent={isStudent} />
+          <PaymentForm
+            onSuccess={onSuccess}
+            isStudent={isStudent}
+            emailAddressVerified={emailAddressVerified}
+          />
           <style jsx>{`
             div {
               width: 80vw;

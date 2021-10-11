@@ -308,7 +308,6 @@ const UserMutations = extendType({
           }
         }
 
-        await subscribeUserToProductUpdates(user, ctx.db)
         await sendEmailAddressVerificationEmail({ user, verificationToken: emailVerificationToken })
 
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)

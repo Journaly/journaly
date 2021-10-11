@@ -29,15 +29,12 @@ import ToggleMarkButton from './ToggleMarkButton'
 import ToolbarButton from './ToolbarButton'
 import InsertImageButton from './InsertImageButton'
 import { options, isTableActive } from '../helpers'
-import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
-import { useTranslation, Router } from '@/config/i18n'
 
 type ToolbarProps = {
   allowInlineImages: boolean
 }
 
 const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
-  const { t } = useTranslation('post')
   const editor = useSlate()
   const isEditorFocused = useFocused()
   const toolbarRef = useRef<HTMLDivElement>(null)
@@ -68,7 +65,6 @@ const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
       }
     }
   }
-  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = React.useState(false)
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
@@ -90,11 +86,7 @@ const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
         <ToggleMarkButton type="underline">
           <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
         </ToggleMarkButton>
-        <InsertImageButton
-          showPremiumFeatureModal={
-            allowInlineImages ? undefined : () => setDisplayPremiumFeatureModal(true)
-          }
-        >
+        <InsertImageButton allowInlineImages={allowInlineImages}>
           <ImageIcon title="Insert image" />
         </InsertImageButton>
         <ToolbarButton type="link" format="link">
@@ -156,18 +148,6 @@ const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
           tableIcon
         )}
       </div>
-      <PremiumFeatureModal
-        show={displayPremiumFeatureModal}
-        featureName={t('inlineImagesPremiumFeatureName')}
-        featureExplanation={t('inlineImagesPremiumFeatureExplanation')}
-        onAcknowledge={(): void => {
-          setDisplayPremiumFeatureModal(false)
-        }}
-        onGoToPremium={(): void => {
-          Router.push('/dashboard/settings/subscription')
-          setDisplayPremiumFeatureModal(false)
-        }}
-      />
       <style jsx>{`
         .editor-toolbar-container {
           height: ${toolbarHeight}px;

@@ -511,29 +511,30 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         />
       )}
       <ConfirmationModal
-        onConfirm={(): void => {
+        onConfirm={() => {
           deletePost({ variables: { postId: post.id } })
           setDisplayDeleteModal(false)
         }}
-        onCancel={(): void => {
+        onCancel={() => {
           setDisplayDeleteModal(false)
         }}
         title={t('deleteModal.title')}
         body={t('deleteModal.body')}
         show={displayDeleteModal}
       />
-      <PremiumFeatureModal
-        featureName={t('postBumpingPremiumFeatureName')}
-        featureExplanation={t('postBumpingPremiumFeatureExplanation')}
-        onAcknowledge={(): void => {
-          setDisplayPremiumFeatureModal(false)
-        }}
-        onGoToPremium={(): void => {
-          Router.push('/dashboard/settings/subscription')
-          setDisplayPremiumFeatureModal(false)
-        }}
-        show={displayPremiumFeatureModal}
-      />
+      {displayPremiumFeatureModal && (
+        <PremiumFeatureModal
+          featureName={t('postBumpingPremiumFeatureName')}
+          featureExplanation={t('postBumpingPremiumFeatureExplanation')}
+          onAcknowledge={() => {
+            setDisplayPremiumFeatureModal(false)
+          }}
+          onGoToPremium={() => {
+            Router.push('/dashboard/settings/subscription')
+            setDisplayPremiumFeatureModal(false)
+          }}
+        />
+      )}
       <PostBodyStyles parentClassName="post-body" />
       <style>{`
         .thread-highlight {

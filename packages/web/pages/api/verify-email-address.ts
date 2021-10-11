@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { EmailVerificationStatus } from '@journaly/j-db-client'
-import { getClient } from '@/nexus/utils'
+import { getClient, subscribeUserToProductUpdates } from '@/nexus/utils'
 
 /**
  * An API route to handle user email address verification.
@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          message: `Oh no! You are missing the ${param} parametre`,
+          message: `Oh no! You are missing the ${param} parameter`,
         }),
       }
     }
@@ -53,6 +53,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       emailVerificationStatus: EmailVerificationStatus.VERIFIED,
     },
   })
+  await subscribeUserToProductUpdates(user, db)
 
   return res.redirect(`/dashboard/my-feed?email-verification=success&id=${updatedUser.id}`)
 }

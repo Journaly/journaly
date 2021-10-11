@@ -8,11 +8,9 @@ type Props = {
   onGoToPremium: () => void
   featureName?: string
   featureExplanation?: string
-  show: boolean
 }
 
 const PremiumFeatureModal: React.FC<Props> = ({
-  show,
   featureName,
   featureExplanation,
   onAcknowledge,
@@ -20,7 +18,7 @@ const PremiumFeatureModal: React.FC<Props> = ({
 }) => {
   const { t } = useTranslation('common')
 
-  return show ? (
+  return (
     <Modal
       title="Premium Feature"
       body={`${featureName ? featureName : 'This'} ${
@@ -38,7 +36,7 @@ const PremiumFeatureModal: React.FC<Props> = ({
       }
       onClose={onAcknowledge}
     />
-  ) : null
+  )
 }
 
 export default PremiumFeatureModal

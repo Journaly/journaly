@@ -103,7 +103,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
 
   const invalidFields = Object.values(errors)
 
-  const [resendEmailVerificationEmailMutation, { loading: resendingEmailVerification }] =
+  const [resendEmailVerificationEmail, { loading: resendingEmailVerification }] =
     useResendEmailVerificationEmailMutation({
       onCompleted: () => {
         toast.success(t('resendEmailVerificationToastSuccess'))
@@ -112,10 +112,6 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
         toast.error(t('resendEmailVerificationToastError'))
       },
     })
-
-  const handleResendEmailAddressVerification = () => {
-    resendEmailVerificationEmailMutation()
-  }
 
   return (
     <SettingsForm onSubmit={handleSubmit(handleDetailsSubmit)}>
@@ -191,7 +187,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   <label className="settings-label" htmlFor="email">
                     {t('profile.details.emailLabel')}
                   </label>
-                  <p
+                  <span
                     className={`email-${
                       currentUser.emailAddressVerified ? 'verified' : 'unverified'
                     }-badge`}
@@ -199,7 +195,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                     {currentUser.emailAddressVerified
                       ? t('emailVerifiedBadgeText')
                       : t('emailUnverifiedBadgeText')}
-                  </p>
+                  </span>
                 </div>
                 <input
                   type="text"
@@ -225,7 +221,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                     <Button
                       variant={ButtonVariant.Link}
                       loading={resendingEmailVerification}
-                      onClick={() => handleResendEmailAddressVerification()}
+                      onClick={() => resendEmailVerificationEmail()}
                     >
                       {t('resendEmailVerificationButtonText')}
                     </Button>{' '}

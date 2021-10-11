@@ -42,9 +42,13 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
    */
   // Pull query params off the router instance
   const router = useRouter()
-  if (router.query['email-verification'] === 'success') {
-    toast.success("You're email address has been verified!")
-  }
+
+  useEffect(() => {
+    if (router.query['email-verification'] === 'success') {
+      toast.success("You're email address has been verified!")
+    }
+  }, [])
+
   const currentPage = router.query.page ? Math.max(1, parseInt(router.query.page as string, 10)) : 1
 
   const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>({

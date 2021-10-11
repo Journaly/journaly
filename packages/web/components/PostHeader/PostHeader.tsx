@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 import {
   PostStatus,
@@ -18,6 +19,7 @@ type PostHeaderProps = {
   publishDate: string
   publishedLanguageLevel?: LanguageLevel
   authorName: string
+  authorId: number
   postImage: string
   topics?: TopicType[]
   language?: LanguageType
@@ -29,6 +31,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
   postTitle,
   postStatus,
   authorName,
+  authorId,
   publishDate,
   publishedLanguageLevel,
   postImage,
@@ -54,9 +57,14 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           <h1>{postTitle}</h1>
           <p> &mdash; </p>
           <p>
-            {t('postBy')} <em>{authorName}</em>
+            {t('postBy')}{' '}
+            <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${authorId}`}>
+              <a className="author-name" rel="author">
+                {authorName}
+              </a>
+            </Link>
           </p>
-          <p>{formatLongDate(publishDate)}</p>
+          <time>{formatLongDate(publishDate)}</time>
         </div>
 
         <div className="topics-container">
@@ -166,6 +174,10 @@ const PostHeader: React.FC<PostHeaderProps> = ({
 
         p {
           font-size: 14px;
+        }
+
+        .author-name {
+          color: ${theme.colors.white};
         }
 
         @media (min-width: ${theme.breakpoints.MD}) {

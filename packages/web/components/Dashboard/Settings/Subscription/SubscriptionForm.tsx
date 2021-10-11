@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
+const swot = require('swot-node')
 
 import Button, { ButtonVariant } from '@/components/Button'
 import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
@@ -31,6 +32,8 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
         return t('subscription.monthlyPrice')
       case MembershipSubscriptionPeriod.Annualy:
         return t('subscription.annualPrice')
+      case MembershipSubscriptionPeriod.StudentAnnually:
+        return t('subscription.studentPrice')
     }
   }
   if (user.membershipSubscription) {
@@ -40,6 +43,17 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
   const isCancelling = user.membershipSubscription?.cancelAtPeriodEnd
   const [showPaymentForm, setShowPaymentForm] = useState(!user.membershipSubscription?.isActive)
   const [showPaymentFormModal, setShowPaymentFormModal] = useState(false)
+  const [isStudent, setIsStudent] = useState(false)
+
+  useEffect(() => {
+    async function checkForStudentStatus(emailAddress: string) {
+      const result = await swot.isAcademic(emailAddress)
+      setIsStudent(result)
+    }
+    if (user.email) {
+      checkForStudentStatus(user.email)
+    }
+  }, [])
 
   const [updateSubscriptionRenewal] = useUpdateSubscriptionRenewalMutation({
     onCompleted: () => {
@@ -153,7 +167,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
             )}
           </>
         )}
-        {showPaymentForm && <PaymentForm onSuccess={onSuccess} />}
+        {showPaymentForm && <PaymentForm onSuccess={onSuccess} isStudent={isStudent} />}
         {user.membershipSubscription?.isActive &&
           !user?.membershipSubscription?.cancelAtPeriodEnd &&
           !showPaymentForm && (

@@ -14,9 +14,10 @@ import theme from '@/theme'
 
 type PaymentFormProps = {
   onSuccess: () => void
+  isStudent: boolean
 }
 
-const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
+const PaymentForm = ({ onSuccess, isStudent }: PaymentFormProps) => {
   const { t } = useTranslation('settings')
   const [stripeError, setStripeError] = useState<StripeError>()
   const [resolverError, setResolverError] = useState<string>()
@@ -46,7 +47,7 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
       const card = elements.getElement(CardElement)
 
       if (!card) {
-        throw new Error("Card element not found")
+        throw new Error('Card element not found')
       }
 
       const { error, paymentMethod } = await stripe.createPaymentMethod({
@@ -61,7 +62,7 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
       } else {
         setStripeError(undefined)
       }
-  
+
       if (!loading && paymentMethod) {
         await purchaseMembershipSubscription({
           variables: {
@@ -80,6 +81,7 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
       <SubscriptionPlanSelect
         selectedOption={selectedOption}
         setSelectedOption={setSelectedOption}
+        isStudent={isStudent}
       />
       {stripeError && <p className="error">{stripeError.message}</p>}
       {resolverError && <p className="error">{resolverError}</p>}
@@ -93,13 +95,9 @@ const PaymentForm = ({ onSuccess }: PaymentFormProps) => {
               },
             },
           }}
-                  
         />
       </div>
-      <Button
-        type="submit"
-        loading={loading}
-      >
+      <Button type="submit" loading={loading}>
         {t('subscription.subscribeCta')}
       </Button>
       <style jsx>{`

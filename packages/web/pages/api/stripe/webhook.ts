@@ -43,11 +43,13 @@ const updateStripeSubscription = async (subscriptionId: string, db: PrismaClient
 }
 
 const convertStripePriceToMembershipPeriod = (priceId: string) => {
-  switch(priceId) {
+  switch (priceId) {
     case process.env.STRIPE_MONTHLY_PRICE_ID:
       return MembershipSubscriptionPeriod.MONTHLY
     case process.env.STRIPE_ANNUAL_PRICE_ID:
       return MembershipSubscriptionPeriod.ANNUALY
+    case process.env.STRIPE_STUDENT_ANNUAL_PRICE_ID:
+      return MembershipSubscriptionPeriod.STUDENT_ANNUALLY
   }
   throw new Error("Price ID does not match one of our valid IDs")
 }

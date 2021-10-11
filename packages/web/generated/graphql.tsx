@@ -145,6 +145,7 @@ export enum MembershipSubscriptionPeriod {
   Monthly = 'MONTHLY',
   Quarterly = 'QUARTERLY',
   Annualy = 'ANNUALY',
+  StudentAnnually = 'STUDENT_ANNUALLY',
 }
 
 export type Mutation = {
@@ -966,7 +967,7 @@ export type SubscriptionSettingsPageQuery = { __typename?: 'Query' } & {
 
 export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'lastFourCardNumbers' | 'cardBrand'
+  'id' | 'email' | 'lastFourCardNumbers' | 'cardBrand'
 > & {
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
@@ -1625,6 +1626,7 @@ export const ProfileUserFragmentFragmentDoc = gql`
 export const UserWithSubscriptionFragmentFragmentDoc = gql`
   fragment UserWithSubscriptionFragment on User {
     id
+    email
     lastFourCardNumbers
     cardBrand
     membershipSubscription {

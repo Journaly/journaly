@@ -34,11 +34,13 @@ const MembershipSubscription = objectType({
 })
 
 const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
-  switch(subType) {
+  switch (subType) {
     case MembershipSubscriptionPeriod.MONTHLY:
       return process.env.STRIPE_MONTHLY_PRICE_ID
     case MembershipSubscriptionPeriod.ANNUALY:
       return process.env.STRIPE_ANNUAL_PRICE_ID
+    case MembershipSubscriptionPeriod.STUDENT_ANNUALLY:
+      return process.env.STRIPE_STUDENT_ANNUAL_PRICE_ID
   }
 }
 

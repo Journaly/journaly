@@ -206,7 +206,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
         }
 
         .subscription-status {
-          margin-bottom: 10px;
+          margin-bottom: 15px;
         }
 
         .feature-table-container {

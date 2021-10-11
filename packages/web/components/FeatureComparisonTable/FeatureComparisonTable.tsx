@@ -51,8 +51,9 @@ const FeatureComparisonTable = () => {
       <div className="col premium">
         <div className="header">
           <div className="plan">Premium</div>
-          <div className="price">£5/month</div>
-          <div className="price">£42/year (£3.50/month)</div>
+          <div className="price">
+            Only <strong>£3.50/month</strong> paid annually!
+          </div>
         </div>
         <div className="feature-list">
           <ul>
@@ -62,6 +63,7 @@ const FeatureComparisonTable = () => {
             <Feature name="Focus Mode (coming soon)" plan="premium" status="coming soon" />
             <Feature name="Post Themes (coming soon)" plan="premium" status="coming soon" />
             <Feature name="Audio posts (coming soon)" plan="premium" status="coming soon" />
+            <Feature name="Weekly Goals (coming soon)" plan="premium" status="coming soon" />
           </ul>
         </div>
       </div>
@@ -101,11 +103,14 @@ const FeatureComparisonTable = () => {
         }
 
         .free .header {
-          padding: 24px;
+          padding: 12px;
           border-bottom: 1px ${theme.colors.charcoal} solid;
         }
         .premium .header {
           border-bottom: 1px ${theme.colors.white} solid;
+        }
+        .price {
+          font-style: italic;
         }
       `}</style>
     </div>

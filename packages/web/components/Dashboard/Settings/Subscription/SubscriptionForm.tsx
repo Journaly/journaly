@@ -110,7 +110,11 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
   return (
     <>
       {showPaymentFormModal && (
-        <PaymentFormModal onClose={() => setShowPaymentFormModal(false)} onSuccess={onSuccess} />
+        <PaymentFormModal
+          onClose={() => setShowPaymentFormModal(false)}
+          onSuccess={onSuccess}
+          isStudent={isStudent}
+        />
       )}
       <div className="page-container">
         <h1>{t('subscription.title')}</h1>

@@ -178,6 +178,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
 
         .author-name {
           color: ${theme.colors.white};
+          font-style: italic;
         }
 
         @media (min-width: ${theme.breakpoints.MD}) {

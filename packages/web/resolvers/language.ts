@@ -15,6 +15,7 @@ const Language = objectType({
   definition(t) {
     t.model.id()
     t.model.name()
+    t.model.devName()
     t.model.posts({ pagination: false })
     t.model.dialect()
     t.int('postCount', {

@@ -14,7 +14,7 @@ const PricingPage: NextPage = () => {
 }
 
 PricingPage.getInitialProps = async () => ({
-  namespacesRequired: ['common'],
+  namespacesRequired: ['settings'],
 })
 
 export default withApollo(PricingPage)

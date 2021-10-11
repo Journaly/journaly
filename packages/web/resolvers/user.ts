@@ -7,8 +7,6 @@ import {
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
-import { randomBytes } from 'crypto'
-import { promisify } from 'util'
 
 import { PostStatus, EmailVerificationStatus } from '@journaly/j-db-client'
 
@@ -17,9 +15,8 @@ import {
   generateThumbbusterUrl,
   sendEmailAddressVerificationEmail,
   sendPasswordResetTokenEmail,
-  subscribeUserToProductUpdates,
 } from './utils'
-import { validateUpdateUserMutationData } from './utils/userValidation'
+import { generateToken, validateUpdateUserMutationData } from './utils/userValidation'
 
 const DatedActivityCount = objectType({
   name: 'DatedActivityCount',
@@ -275,8 +272,7 @@ const UserMutations = extendType({
         }
 
         const password = await bcrypt.hash(args.password, 10)
-        const randomBytesPromisified = promisify(randomBytes)
-        const emailVerificationToken = (await randomBytesPromisified(20)).toString('hex')
+        const emailVerificationToken = await generateToken()
         let user
         try {
           user = await ctx.db.user.create({
@@ -352,7 +348,18 @@ const UserMutations = extendType({
         })
 
         if (args.email) {
-          await subscribeUserToProductUpdates(user, ctx.db)
+          const emailVerificationToken = await generateToken()
+          await ctx.db.auth.update({
+            where: { userId },
+            date: {
+              emailVerificationToken,
+              emailVerificationStatus: EmailVerificationStatus.PENDING,
+            },
+          })
+          await sendEmailAddressVerificationEmail({
+            user,
+            verificationToken: emailVerificationToken,
+          })
         }
 
         return user
@@ -490,8 +497,7 @@ const UserMutations = extendType({
           throw new Error('User not found')
         }
 
-        const randomBytesPromisified = promisify(randomBytes)
-        const resetToken = (await randomBytesPromisified(20)).toString('hex')
+        const resetToken = await generateToken()
         const resetTokenExpiry = Date.now() + 3600000 // 1 hour from now
 
         await ctx.db.auth.update({
@@ -637,7 +643,7 @@ const UserMutations = extendType({
         })
       },
     })
-    
+
     t.field('resendEmailVerificationEmail', {
       type: 'User',
       args: {},

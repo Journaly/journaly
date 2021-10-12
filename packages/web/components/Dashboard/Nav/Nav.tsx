@@ -18,6 +18,7 @@ import FeedIcon from '@/components/Icons/FeedIcon'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import HelpIcon from '@/components/Icons/HelpIcon'
 import Modal from '@/components/Modal'
+import NotificationsIcon from '@/components/Icons/NotificationsIcon'
 
 interface Props {
   expanded: boolean
@@ -29,9 +30,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
   const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
-    refetchQueries: [
-      { query: CurrentUserDocument }
-    ]
+    refetchQueries: [{ query: CurrentUserDocument }],
   })
   const [shouldShowModal, setShouldShowModal] = useState(false)
 
@@ -41,7 +40,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const navStyles = classNames('nav-wrapper', {
     expanded,
     'disable-large-nav': disableLargeNav,
-    'logged-in': Boolean(currentUser)
+    'logged-in': Boolean(currentUser),
   })
 
   useEffect(() => {
@@ -108,6 +107,16 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
 
               <hr />
 
+              <NavLink href="">
+                <a
+                  className="nav-link"
+                  onClick={handleCollapse}
+                  data-testid="notifications-nav-link"
+                >
+                  <NotificationsIcon aria-hidden="true" />
+                  <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
+                </a>
+              </NavLink>
               <NavLink href="/dashboard/settings/profile">
                 <a className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
                   <img src="/images/icons/settings-icon.svg" alt="" />
@@ -115,17 +124,27 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                 </a>
               </NavLink>
 
-              <a role="button" className="log-out nav-link" onClick={handleLogOut} data-testid="log-out-nav-link">
+              <a
+                role="button"
+                className="log-out nav-link"
+                onClick={handleLogOut}
+                data-testid="log-out-nav-link"
+              >
                 <img src="/images/icons/logout-icon.svg" alt="Log out" />
                 <span className="nav-link-text">{t('dashboardNav.logOut')}</span>
               </a>
             </div>
           </>
         )}
-        
+
         <div className="nav-support">
-          { currentUser && (
-            <span role="button" className="help-btn" onClick={() => setShouldShowModal(true)} data-testid="help-nav-link">
+          {currentUser && (
+            <span
+              role="button"
+              className="help-btn"
+              onClick={() => setShouldShowModal(true)}
+              data-testid="help-nav-link"
+            >
               <HelpIcon width={30} height={30} />
             </span>
           )}
@@ -142,18 +161,35 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             title={t('helpModal.header')}
             body={
               <>
-                <p style={{
-                  marginTop: '25px',
-                }}>{t('helpModal.bodyOne')}</p>
-                <p>{t('helpModal.bodyTwo')}<a href="mailto:hello@journaly.com" style={{
-                  color: theme.colors.blueLight,
-                }}>hello@journaly.com</a>{t('helpModal.bodyThree')}</p>
+                <p
+                  style={{
+                    marginTop: '25px',
+                  }}
+                >
+                  {t('helpModal.bodyOne')}
+                </p>
+                <p>
+                  {t('helpModal.bodyTwo')}
+                  <a
+                    href="mailto:hello@journaly.com"
+                    style={{
+                      color: theme.colors.blueLight,
+                    }}
+                  >
+                    hello@journaly.com
+                  </a>
+                  {t('helpModal.bodyThree')}
+                </p>
               </>
             }
             footer={
-              <p style={{
-                margin: '0 auto',
-              }}>{t('helpModal.footer')}</p>
+              <p
+                style={{
+                  margin: '0 auto',
+                }}
+              >
+                {t('helpModal.footer')}
+              </p>
             }
             onClose={() => setShouldShowModal(false)}
           />
@@ -196,6 +232,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           transform: translateX(-100%);
           transition: transform ${navConstants.transitionDuration}ms linear,
             width ${navConstants.transitionDuration}ms linear;
+          overflow: auto;
         }
 
         .expanded nav {
@@ -205,8 +242,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
 
         .nav-support {
           /* The auto top margin allows the logo to take up enough space, but push itself down */
-          margin: ${ currentUser ? 'auto 0 15px' : 'auto 0'};
-          grid-row-start: ${ currentUser ? 3 : 2 };
+          margin: ${currentUser ? 'auto 0 15px' : 'auto 0'};
+          grid-row-start: ${currentUser ? 3 : 2};
           text-align: center;
           display: flex;
           flex-direction: column;
@@ -317,8 +354,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           transition: margin-left ${navConstants.transitionDuration}ms linear;
         }
 
-
-
         @media (${navConstants.mobileNavOnly}) {
           :global(.mobile-hamburger-icon) {
             position: absolute;
@@ -368,7 +403,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           }
         }
 
-
         @media (${navConstants.skinnyNavToDesktop}) {
           .nav-background {
             display: none;
@@ -397,7 +431,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           .disable-large-nave .nav-top {
             margin-top: 50px;
           }
-
 
           .nav-wrapper:not(.disable-large-nav) .nav-background {
             display: none;

@@ -101,7 +101,7 @@
     "subscribeCta": "Mitglied werden!",
     "subscribeSuccessMessage": "Herzlichen Glückwunsch! Du bist nun ein Journaly-Premium-Mitglied.",
     "subscribeFailureMessage": "Oh nein! Etwas ist schief gelaufen. Bitte versuche es erneut.",
-    "premiumGeneralCopy": "With our premium subscription you get access to awesome features that make the Journaly experience more enjoyable and customisable for the cost of one cup of coffee per month! Here's a nice comparison of the Free vs. Premium experience:",
+    "premiumGeneralCopy": "Mit unserer Premium-Mitgliedschaft hast du für den Preis eines Kaffees pro Monat Zugriff auf grandiose Feature, die dein Journaly-Erlebnis noch besser und individueller machen. Hier ist ein Vergleich zwischen der kostenfreien Version und Journaly Premium:",
     "premiumFeatureCopy": "Your subscription to Premium helps to support the loving and hardworking team behind the scenes and make Journaly a sustainable plaform so that the core experience can remain free and accessible to everyone ❤︎",
     "currentPlan": "Aktuelle Mitgliedschaft",
     "changePlan": "Mitgliedschaft ändern",
@@ -118,7 +118,7 @@
     "freeUser": "Kostenloser Nutzer",
     "monthlyPrice": "1 Monat für £5",
     "annualPrice": "1 Jahr für £42",
-    "studentPrice": "Student Discount: 1 Year / £15",
+    "studentPrice": "Studenten-Rabatt: £15 pro Jahr",
     "paymentInfo": "Zahlungsinformationen",
     "cancelSubscriptionConfirmationTitle": "Deine Premium-Mitgliedschaft kündigen",
     "cancelSubscriptionConfirmationBody": "Bist du dir sicher, dass du deine Mitgliedschaft kündigen möchtest?",
@@ -126,6 +126,6 @@
     "cancellationError": "Beim Kündigen deiner Mitgliedschaft ist ein Fehler aufgetreten.",
     "updateCardSuccess": "Du hast deine Kreditkarten-Daten erfolgreich aktualisiert.",
     "updateCardError": "Beim Aktualisiseren deiner Kreditkartendaten ist ein Fehler aufgetreten",
-    "studentEmailVerificationNeededMsg": "Please verify your student email address in order to get the student discount by clicking the link in the email you received after signing up. Go to Settings > Profile Info to resend the verification email"
+    "studentEmailVerificationNeededMsg": "Um den Studenten-Rabatt zu erhalten, verifiziere bitte deine E-Mail-Adresse, indem du auf den Link klickst, den du nach der Registrierung per E-Mail erhalten hast. Gehe in die Einstellungen > Profil Informationen, um die Verifikations-E-Mail erneut zu senden."
   }
 }

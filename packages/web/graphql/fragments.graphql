@@ -195,6 +195,7 @@ fragment PostCardFragment on Post {
 fragment LanguageFragment on Language {
   id
   name
+  devName
   dialect
 }
 

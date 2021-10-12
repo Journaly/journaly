@@ -2,8 +2,9 @@ import React, { useRef, useState, useMemo } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { withApollo } from '@/lib/apollo'
+import { makeReference } from '@apollo/client'
 
+import { withApollo } from '@/lib/apollo'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import { navConstants } from '@/components/Dashboard/Nav'
 import PostEditor, {
@@ -136,6 +137,19 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             topicIds,
             headlineImage,
             body: modifiedBody,
+          },
+          update(cache, { data }) {
+            if (data?.createPost) {
+              cache.modify({
+                id: cache.identify(makeReference('ROOT_QUERY')),
+                fields: {
+                  posts: (existingPosts) => {
+                    console.log(existingPosts.posts)
+                    return [data.createPost, ...existingPosts.posts]
+                  },
+                },
+              })
+            }
           },
         })
       } catch (err) {

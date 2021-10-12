@@ -64,7 +64,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
               </a>
             </Link>
           </p>
-          <time>{formatLongDate(publishDate)}</time>
+          <time dateTime={publishDate}>{formatLongDate(publishDate)}</time>
         </div>
 
         <div className="topics-container">

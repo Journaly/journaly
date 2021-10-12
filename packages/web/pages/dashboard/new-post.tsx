@@ -144,7 +144,6 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
                 id: cache.identify(makeReference('ROOT_QUERY')),
                 fields: {
                   posts: (existingPosts) => {
-                    console.log(existingPosts.posts)
                     return [data.createPost, ...existingPosts.posts]
                   },
                 },

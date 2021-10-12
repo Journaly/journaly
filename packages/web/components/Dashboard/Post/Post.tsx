@@ -589,6 +589,11 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         <title>
           {post.author.handle} | {post.title}
         </title>
+        <meta name="author" content={post.author.name || post.author.handle } />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://www.journaly.com/post/${post.id}/`} />
+        <meta property="og:image" content={post.headlineImage.largeSize} />
       </Head>
       <div className="post-content">
         <PostHeader
@@ -597,38 +602,35 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           publishDate={post.publishedAt ? post.publishedAt : post.createdAt}
           publishedLanguageLevel={post.publishedLanguageLevel}
           authorName={post.author.name ? post.author.name : post.author.handle}
+          authorId={post.author.id}
           postImage={post.headlineImage.largeSize}
           language={post.language}
           topics={post.postTopics.map(({ topic }) => topic)}
         />
-        <div className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
+        <article className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
-        </div>
-          <div className="post-controls">
-            <div className="clap-container">
-              <Button
-                variant={ButtonVariant.Icon}
-                onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
-                loading={isLoadingPostClap}
-                disabled={currentUser?.id === post.author.id || !currentUser}
-              >
-                <ClapIcon 
-                  width={24} 
-                  clapped={hasClappedPost} 
-                  title={getUsersClappedText(post.claps, currentUser?.id)}
-                />
-              </Button>
-              <span>{post.claps.length}</span>
-            </div>
-            <div className="post-action-container">
+        </article>
+        <div className="post-controls">
+          <div className="clap-container">
+            <Button
+              variant={ButtonVariant.Icon}
+              onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
+              loading={isLoadingPostClap}
+              disabled={currentUser?.id === post.author.id || !currentUser}
+            >
+              <ClapIcon
+                width={24}
+                clapped={hasClappedPost}
+                title={getUsersClappedText(post.claps, currentUser?.id)}
+              />
+            </Button>
+            <span>{post.claps.length}</span>
+          </div>
+          <div className="post-action-container">
             {currentUser && post.author.id === currentUser.id && (
               <>
                 {canAttemptBump && (
-                  <Button
-                    type="button"
-                    variant={ButtonVariant.Secondary}
-                    onClick={handleBumpPost}
-                  >
+                  <Button type="button" variant={ButtonVariant.Secondary} onClick={handleBumpPost}>
                     {t('bumpPostAction')}
                   </Button>
                 )}
@@ -661,8 +663,8 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
                 </Button>
               </>
             )}
-            </div>
           </div>
+        </div>
       </div>
       <CommentSelectionButton
         onClick={createThreadHandler}

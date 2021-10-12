@@ -20,11 +20,19 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
       .${parentClassName} ul {
         list-style-type: disc;
         list-style-position: inside;
+        padding-left: 15px;
       }
 
       .${parentClassName} ol {
         list-style-type: decimal;
         list-style-position: inside;
+        padding-left: 15px;
+      }
+
+      .${parentClassName} li {
+        font-size: 18px;
+        line-height: 24px;
+        font-weight: 300;
       }
 
       .${parentClassName} p {
@@ -49,6 +57,11 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
 
       @media (min-width: ${theme.breakpoints.SM}) {
         .${parentClassName} p {
+          font-size: 20px;
+          line-height: 28px;
+        }
+
+        .${parentClassName} li {
           font-size: 20px;
           line-height: 28px;
         }

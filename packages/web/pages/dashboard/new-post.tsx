@@ -139,7 +139,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             body: modifiedBody,
           },
           update(cache, { data }) {
-            if (data?.createPost) {
+            if (data?.createPost && data.createPost.status === PostStatusType.Published) {
               cache.modify({
                 id: cache.identify(makeReference('ROOT_QUERY')),
                 fields: {

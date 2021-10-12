@@ -101,8 +101,8 @@
     "subscribeCta": "Mitglied werden!",
     "subscribeSuccessMessage": "Herzlichen Glückwunsch! Du bist nun ein Journaly-Premium-Mitglied.",
     "subscribeFailureMessage": "Oh nein! Etwas ist schief gelaufen. Bitte versuche es erneut.",
-    "premiumGeneralCopy": "Mit unserer Premium-Mitgliedschaft hast du Zugriff auf grandiose Feature, die dein Journaly-Erlebnis noch besser und individueller machen. Währenddessen unterstützt du unser liebevolles und hartarbeitendes Team, das wortwörtlich bereits Tausende Stunden investierte, um Journaly bis jetzt komplett kostenlos anzubieten ❤︎",
-    "premiumFeatureCopy": "Aktuell schaltet unsere Premium-Mitgliedschaft das Einfügen von Bildern innerhalb des Textes frei! Weitere interessante Feature werden wir in der Zukunft hinzufügen.",
+    "premiumGeneralCopy": "With our premium subscription you get access to awesome features that make the Journaly experience more enjoyable and customisable for the cost of one cup of coffee per month! Here's a nice comparison of the Free vs. Premium experience:",
+    "premiumFeatureCopy": "Your subscription to Premium helps to support the loving and hardworking team behind the scenes and make Journaly a sustainable plaform so that the core experience can remain free and accessible to everyone ❤︎",
     "currentPlan": "Aktuelle Mitgliedschaft",
     "changePlan": "Mitgliedschaft ändern",
     "cancelSubscription": "Mitgliedschaft kündigen",
@@ -118,12 +118,14 @@
     "freeUser": "Kostenloser Nutzer",
     "monthlyPrice": "1 Monat für £5",
     "annualPrice": "1 Jahr für £42",
+    "studentPrice": "Student Discount: 1 Year / £15",
     "paymentInfo": "Zahlungsinformationen",
     "cancelSubscriptionConfirmationTitle": "Deine Premium-Mitgliedschaft kündigen",
     "cancelSubscriptionConfirmationBody": "Bist du dir sicher, dass du deine Mitgliedschaft kündigen möchtest?",
     "cancellationSuccess": "Du hast deine Mitgliedschaft gekündigt.",
     "cancellationError": "Beim Kündigen deiner Mitgliedschaft ist ein Fehler aufgetreten.",
     "updateCardSuccess": "Du hast deine Kreditkarten-Daten erfolgreich aktualisiert.",
-    "updateCardError": "Beim Aktualisiseren deiner Kreditkartendaten ist ein Fehler aufgetreten"
+    "updateCardError": "Beim Aktualisiseren deiner Kreditkartendaten ist ein Fehler aufgetreten",
+    "studentEmailVerificationNeededMsg": "Please verify your student email address in order to get the student discount by clicking the link in the email you received after signing up. Go to Settings > Profile Info to resend the verification email"
   }
 }

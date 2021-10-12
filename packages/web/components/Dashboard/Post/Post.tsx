@@ -589,7 +589,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         <title>
           {post.author.handle} | {post.title}
         </title>
-        <meta name="author" />
+        <meta name="author" content={post.author.name || post.author.handle } />
         <meta property="og:title" content={post.title} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`https://www.journaly.com/post/${post.id}/`} />

@@ -26,9 +26,9 @@ const TabToggle: React.FC<Props> = (props) => {
   const { activeKey, onToggle, tabs, className, variant = ToggleVariant.Standard } = props
   const tabToggleClasses = classNames('tab-toggle', className)
 
-  if (tabs.length !== 2) {
-    throw new Error('TabToggle must contain 2 and only 2 tabs')
-  }
+  // if (tabs.length !== 2) {
+  //   throw new Error('TabToggle must contain 2 and only 2 tabs')
+  // }
 
   return (
     <div className={`tab-toggle-wrapper ${variant}`}>
@@ -54,7 +54,6 @@ const TabToggle: React.FC<Props> = (props) => {
       </div>
 
       <style jsx>{`
-
         .tab-toggle-wrapper {
           padding: ${spaceUnit}px;
           background: #d5d9dc;
@@ -63,7 +62,7 @@ const TabToggle: React.FC<Props> = (props) => {
         .tab-toggle {
           position: relative;
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: 1fr 1fr ${tabs.length === 3 && '1fr'};
           grid-gap: ${2 * spaceUnit}px;
         }
 

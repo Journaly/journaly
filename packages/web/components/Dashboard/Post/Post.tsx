@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useState, memo, useMemo, useRef, forwardRef, MouseEvent, useEffect } from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 
@@ -14,6 +14,8 @@ import {
   PostClap,
   useBumpPostMutation,
   UserRole,
+  useSavePostMutation,
+  useUnsavePostMutation,
 } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
@@ -37,6 +39,7 @@ import ClapIcon from '@/components/Icons/ClapIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
 import { POST_BUMP_LIMIT } from '../../../constants'
 import { SelectionState, PostProps, PostContentProps, ThreadType } from './types'
+import BookmarkIcon from '@/components/Icons/BookmarkIcon'
 
 const selectionState: SelectionState = {
   bouncing: false,
@@ -70,8 +73,8 @@ const bounceSelection = async () => {
   selectionState.bouncing = false
 }
 
-const PostContent = React.memo(
-  React.forwardRef<HTMLDivElement, PostContentProps>(({ body }, ref) => {
+const PostContent = memo(
+  forwardRef<HTMLDivElement, PostContentProps>(({ body }, ref) => {
     // Break this into a memoizable component so we don't have to re-sanitize
     // and re-render so much
     const sanitizedHTML = sanitize(body)
@@ -83,14 +86,32 @@ const PostContent = React.memo(
 const Post = ({ post, currentUser, refetch }: PostProps) => {
   const { t } = useTranslation('post')
 
-  const selectableRef = React.useRef<HTMLDivElement>(null)
-  const popoverRef = React.useRef<HTMLDivElement>(null)
-  const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
-  const [activeThreadId, setActiveThreadId] = React.useState<number>(-1)
-  const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
-  const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
-  const [displayDeleteModal, setDisplayDeleteModal] = React.useState(false)
-  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = React.useState(false)
+  const selectableRef = useRef<HTMLDivElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
+  const [displayCommentButton, setDisplayCommentButton] = useState(false)
+  const [activeThreadId, setActiveThreadId] = useState<number>(-1)
+  const [commentButtonPosition, setCommentButtonPosition] = useState({ x: '0', y: '0' })
+  const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0, w: 0, h: 0 })
+  const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
+  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
+
+  const hasSavedPost = useMemo(() => {
+    return currentUser?.savedPosts.find((followedPost) => followedPost.id === post.id) !== undefined
+  }, [currentUser?.id])
+  console.log(hasSavedPost)
+
+  const [savePost, { loading: savingPost }] = useSavePostMutation({
+    onCompleted: () => {
+      refetch()
+    },
+  })
+
+  const [unsavePost, { loading: unsavingPost }] = useUnsavePostMutation({
+    onCompleted: () => {
+      refetch()
+    },
+  })
+
   const [deletePost] = useDeletePostMutation({
     onCompleted: () => {
       toast.success(t('deletePostSuccess'))
@@ -201,7 +222,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     return post.claps.find((clap) => clap.author.id === currentUser?.id) !== undefined
   }, [post.claps, currentUser?.id])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!selectableRef.current) {
       return
     }
@@ -241,7 +262,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     })
   }, [post.threads.length])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onSelectionChange = () => {
       const selection = window.getSelection()
 
@@ -296,7 +317,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     }
   }, [selectableRef.current])
 
-  const createThreadHandler = (e: React.MouseEvent) => {
+  const createThreadHandler = (e: MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -337,7 +358,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     }
   }
 
-  const onThreadClick = (e: React.MouseEvent<HTMLSpanElement>) => {
+  const onThreadClick = (e: MouseEvent<HTMLSpanElement>) => {
     if (!e.target) {
       return
     }
@@ -489,6 +510,21 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
                   }}
                 >
                   {t('deletePostAction')}
+                </Button>
+              </>
+            )}
+            {currentUser && !post.author.id === !currentUser.id && (
+              <>
+                <Button
+                  variant={ButtonVariant.Icon}
+                  loading={savingPost || unsavingPost}
+                  onClick={() => {
+                    hasSavedPost
+                      ? unsavePost({ variables: { postId: post.id } })
+                      : savePost({ variables: { postId: post.id } })
+                  }}
+                >
+                  <BookmarkIcon size={28} saved={hasSavedPost} />
                 </Button>
               </>
             )}

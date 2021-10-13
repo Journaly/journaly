@@ -19,6 +19,7 @@ const MyPostsPage: NextPage = () => {
   const tabs: Tab[] = [
     { key: PostStatusType.Published, text: t('publishedTab') },
     { key: PostStatusType.Draft, text: t('draftsTab') },
+    { key: PostStatusType.Published, text: 'Saved' },
   ]
   const [activeKey, setActiveKey] = useState<PostStatusType>(tabs[0].key)
 

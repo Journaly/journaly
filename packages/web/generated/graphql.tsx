@@ -178,6 +178,8 @@ export type Mutation = {
   followUser: User
   unfollowUser: User
   resendEmailVerificationEmail: User
+  savePost: Post
+  unsavePost: Post
   addLanguageRelation: LanguageRelation
   removeLanguageRelation: LanguageRelation
   updateSocialMedia: SocialMedia
@@ -307,6 +309,14 @@ export type MutationFollowUserArgs = {
 
 export type MutationUnfollowUserArgs = {
   followedUserId: Scalars['Int']
+}
+
+export type MutationSavePostArgs = {
+  postId: Scalars['Int']
+}
+
+export type MutationUnsavePostArgs = {
+  postId: Scalars['Int']
 }
 
 export type MutationAddLanguageRelationArgs = {
@@ -538,6 +548,7 @@ export type User = {
   country?: Maybe<Scalars['String']>
   badges: Array<UserBadge>
   posts: Array<Post>
+  savedPosts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
   membershipSubscription?: Maybe<MembershipSubscription>
@@ -695,6 +706,7 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 } & UserFragmentFragment
 
 export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
+  savedPosts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
   membershipSubscription?: Maybe<
     { __typename?: 'MembershipSubscription' } & Pick<MembershipSubscription, 'isActive'>
   >
@@ -1224,6 +1236,14 @@ export type ResetPasswordMutation = { __typename?: 'Mutation' } & {
   resetPassword: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
+export type SavePostMutationVariables = Exact<{
+  postId: Scalars['Int']
+}>
+
+export type SavePostMutation = { __typename?: 'Mutation' } & {
+  savePost: { __typename?: 'Post' } & Pick<Post, 'id'>
+}
+
 export type SettingsFormDataQueryVariables = Exact<{
   uiLanguage: UiLanguage
 }>
@@ -1249,6 +1269,14 @@ export type UnfollowUserMutationVariables = Exact<{
 
 export type UnfollowUserMutation = { __typename?: 'Mutation' } & {
   unfollowUser: { __typename?: 'User' } & Pick<User, 'id'>
+}
+
+export type UnsavePostMutationVariables = Exact<{
+  postId: Scalars['Int']
+}>
+
+export type UnsavePostMutation = { __typename?: 'Mutation' } & {
+  unsavePost: { __typename?: 'Post' } & Pick<Post, 'id'>
 }
 
 export type UpdatePasswordMutationVariables = Exact<{
@@ -1373,15 +1401,6 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
   ${UserFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
 `
-export const CurrentUserFragmentFragmentDoc = gql`
-  fragment CurrentUserFragment on User {
-    ...UserWithLanguagesFragment
-    membershipSubscription {
-      isActive
-    }
-  }
-  ${UserWithLanguagesFragmentFragmentDoc}
-`
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {
     id
@@ -1389,6 +1408,48 @@ export const AuthorFragmentFragmentDoc = gql`
     handle
     profileImage
   }
+`
+export const PostCardFragmentFragmentDoc = gql`
+  fragment PostCardFragment on Post {
+    id
+    title
+    body
+    excerpt
+    readTime
+    createdAt
+    publishedAt
+    publishedLanguageLevel
+    commentCount
+    status
+    headlineImage {
+      id
+      smallSize
+    }
+    claps {
+      id
+    }
+    author {
+      ...AuthorFragment
+    }
+    language {
+      ...LanguageFragment
+    }
+  }
+  ${AuthorFragmentFragmentDoc}
+  ${LanguageFragmentFragmentDoc}
+`
+export const CurrentUserFragmentFragmentDoc = gql`
+  fragment CurrentUserFragment on User {
+    ...UserWithLanguagesFragment
+    savedPosts {
+      ...PostCardFragment
+    }
+    membershipSubscription {
+      isActive
+    }
+  }
+  ${UserWithLanguagesFragmentFragmentDoc}
+  ${PostCardFragmentFragmentDoc}
 `
 export const CommentThanksFragmentFragmentDoc = gql`
   fragment CommentThanksFragment on CommentThanks {
@@ -1540,35 +1601,6 @@ export const PostWithTopicsFragmentFragmentDoc = gql`
   }
   ${PostFragmentFragmentDoc}
   ${PostTopicFragmentFragmentDoc}
-`
-export const PostCardFragmentFragmentDoc = gql`
-  fragment PostCardFragment on Post {
-    id
-    title
-    body
-    excerpt
-    readTime
-    createdAt
-    publishedAt
-    publishedLanguageLevel
-    commentCount
-    status
-    headlineImage {
-      id
-      smallSize
-    }
-    claps {
-      id
-    }
-    author {
-      ...AuthorFragment
-    }
-    language {
-      ...LanguageFragment
-    }
-  }
-  ${AuthorFragmentFragmentDoc}
-  ${LanguageFragmentFragmentDoc}
 `
 export const LanguageWithPostCountFragmentFragmentDoc = gql`
   fragment LanguageWithPostCountFragment on Language {
@@ -3997,6 +4029,49 @@ export type ResetPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions
   ResetPasswordMutation,
   ResetPasswordMutationVariables
 >
+export const SavePostDocument = gql`
+  mutation savePost($postId: Int!) {
+    savePost(postId: $postId) {
+      id
+    }
+  }
+`
+export type SavePostMutationFn = ApolloReactCommon.MutationFunction<
+  SavePostMutation,
+  SavePostMutationVariables
+>
+
+/**
+ * __useSavePostMutation__
+ *
+ * To run a mutation, you first call `useSavePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSavePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [savePostMutation, { data, loading, error }] = useSavePostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useSavePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<SavePostMutation, SavePostMutationVariables>,
+) {
+  return ApolloReactHooks.useMutation<SavePostMutation, SavePostMutationVariables>(
+    SavePostDocument,
+    baseOptions,
+  )
+}
+export type SavePostMutationHookResult = ReturnType<typeof useSavePostMutation>
+export type SavePostMutationResult = ApolloReactCommon.MutationResult<SavePostMutation>
+export type SavePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SavePostMutation,
+  SavePostMutationVariables
+>
 export const SettingsFormDataDocument = gql`
   query settingsFormData($uiLanguage: UILanguage!) {
     languages {
@@ -4115,6 +4190,52 @@ export type UnfollowUserMutationResult = ApolloReactCommon.MutationResult<Unfoll
 export type UnfollowUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UnfollowUserMutation,
   UnfollowUserMutationVariables
+>
+export const UnsavePostDocument = gql`
+  mutation unsavePost($postId: Int!) {
+    unsavePost(postId: $postId) {
+      id
+    }
+  }
+`
+export type UnsavePostMutationFn = ApolloReactCommon.MutationFunction<
+  UnsavePostMutation,
+  UnsavePostMutationVariables
+>
+
+/**
+ * __useUnsavePostMutation__
+ *
+ * To run a mutation, you first call `useUnsavePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnsavePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unsavePostMutation, { data, loading, error }] = useUnsavePostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useUnsavePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UnsavePostMutation,
+    UnsavePostMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<UnsavePostMutation, UnsavePostMutationVariables>(
+    UnsavePostDocument,
+    baseOptions,
+  )
+}
+export type UnsavePostMutationHookResult = ReturnType<typeof useUnsavePostMutation>
+export type UnsavePostMutationResult = ApolloReactCommon.MutationResult<UnsavePostMutation>
+export type UnsavePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UnsavePostMutation,
+  UnsavePostMutationVariables
 >
 export const UpdatePasswordDocument = gql`
   mutation updatePassword($oldPassword: String!, $newPassword: String!) {

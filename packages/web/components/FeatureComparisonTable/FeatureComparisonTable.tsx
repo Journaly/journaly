@@ -41,8 +41,10 @@ const FeatureComparisonTable = () => {
             <Feature name="Write in unlimited languages" plan="free" />
             <Feature name="Write unlimited posts" plan="free" />
             <Feature name="Get unlimited feedback" plan="free" />
-            <Feature name="Custom post headers" plan="free" />
+            <Feature name="Custom post header images" plan="free" />
             <Feature name="Advanced post filtering" plan="free" />
+            <Feature name="Earn Badges for milestones" plan="free" />
+            <Feature name="Unsplash integration (coming soon)" plan="free" status="coming soon" />
             <Feature name="Direct Messaging (coming soon)" plan="free" status="coming soon" />
             <Feature name="User Groups (coming soon)" plan="free" status="coming soon" />
           </ul>
@@ -59,6 +61,8 @@ const FeatureComparisonTable = () => {
           <ul>
             <Feature name="Inline images inside posts" plan="premium" />
             <Feature name="Bump posts to top of the feed" plan="premium" />
+            <Feature name="Support the creators" plan="premium" />
+            <Feature name="Support free language learning" plan="premium" />
             <Feature name="Writing prompts (coming soon)" plan="premium" status="coming soon" />
             <Feature name="Focus Mode (coming soon)" plan="premium" status="coming soon" />
             <Feature name="Post Themes (coming soon)" plan="premium" status="coming soon" />
@@ -72,7 +76,7 @@ const FeatureComparisonTable = () => {
           display: flex;
         }
         .col {
-          width: 300px;
+          width: 320px;
           border-radius: 8px;
           padding: 25px;
         }

@@ -6,5 +6,7 @@
   },
   "postsTitle": "Neueste Beiträge",
   "emptyPosts": "{{user}} hat noch keine Beiträge verfasst.",
-  "loggedInUserEmptyPosts": "Du hast noch keine Beiträge. <1>Schreibe einen Beitrag</1>!"
+  "loggedInUserEmptyPosts": "Du hast noch keine Beiträge. <1>Schreibe einen Beitrag</1>!",
+  "follow": "Folgen",
+  "unfollow": "Nicht mehr folgen"
 }

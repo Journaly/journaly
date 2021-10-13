@@ -6,5 +6,7 @@
   },
   "postsTitle": "Publicaciones recientes",
   "emptyPosts": "{{usuario}} todavía no ha escrito publicaciones.",
-  "loggedInUserEmptyPosts": "No tiene publicaciones recientes. <1>Escriba una nueva publicación</1>!"
+  "loggedInUserEmptyPosts": "No tiene publicaciones recientes. <1>Escriba una nueva publicación</1>!",
+  "follow": "Seguir",
+  "unfollow": "Dejar de seguir"
 }

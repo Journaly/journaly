@@ -111,6 +111,7 @@ export type Language = {
   __typename?: 'Language'
   id: Scalars['Int']
   name: Scalars['String']
+  devName?: Maybe<Scalars['String']>
   posts: Array<Post>
   dialect?: Maybe<Scalars['String']>
   postCount: Scalars['Int']
@@ -812,7 +813,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
 
 export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
   Language,
-  'id' | 'name' | 'dialect'
+  'id' | 'name' | 'devName' | 'dialect'
 >
 
 export type LanguageWithPostCountFragmentFragment = { __typename?: 'Language' } & Pick<
@@ -1354,6 +1355,7 @@ export const LanguageFragmentFragmentDoc = gql`
   fragment LanguageFragment on Language {
     id
     name
+    devName
     dialect
   }
 `

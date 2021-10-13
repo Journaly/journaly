@@ -2,12 +2,7 @@ import React, { useMemo } from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 
-import {
-  findEventTargetParent,
-  sanitize,
-  iOS,
-  wait,
-} from '@/utils'
+import { findEventTargetParent, sanitize, iOS, wait } from '@/utils'
 import {
   PostStatus,
   useCreateThreadMutation,
@@ -425,6 +420,11 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         <title>
           {post.author.handle} | {post.title}
         </title>
+        <meta name="author" content={post.author.name || post.author.handle} />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://www.journaly.com/post/${post.id}/`} />
+        <meta property="og:image" content={post.headlineImage.largeSize} />
       </Head>
       <div className="post-content">
         <PostHeader
@@ -433,13 +433,14 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           publishDate={post.publishedAt ? post.publishedAt : post.createdAt}
           publishedLanguageLevel={post.publishedLanguageLevel}
           authorName={post.author.name ? post.author.name : post.author.handle}
+          authorId={post.author.id}
           postImage={post.headlineImage.largeSize}
           language={post.language}
           topics={post.postTopics.map(({ topic }) => topic)}
         />
-        <div className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
+        <article className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
-        </div>
+        </article>
         <div className="post-controls">
           <div className="clap-container">
             <Button

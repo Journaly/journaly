@@ -9,8 +9,15 @@ import ExternalLink from '@/components/ExternalLink'
 import { sanitize } from '@/utils'
 import { languageNameWithDialect } from '@/utils/languages'
 import theme from '@/theme'
-import { LanguageLevel, ProfileUserFragmentFragment } from '@/generated/graphql'
+import {
+  useFollowingUsersQuery,
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+  LanguageLevel,
+  ProfileUserFragmentFragment
+} from '@/generated/graphql'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
+import Button, { ButtonVariant } from '@/components/Button'
 
 type Props = {
   user: ProfileUserFragmentFragment
@@ -40,97 +47,149 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
     user.country && user.country
   }`
 
+  const { data: { currentUser } = {}, refetch } = useFollowingUsersQuery()
+
+  const hasFollowedAuthor =
+    currentUser && currentUser.following.find((u) => u.id === user.id) !== undefined
+
+  const [followUserMutation, { loading: followLoading }] = useFollowUserMutation({
+    onCompleted: () => {
+      refetch()
+    },
+  })
+
+  const handleFollowUser = () => {
+    followUserMutation({
+      variables: {
+        followedUserId: user.id,
+      },
+    })
+  }
+
+  const [unfollowUserMutation, { loading: unfollowLoading }] = useUnfollowUserMutation({
+    onCompleted: () => {
+      refetch()
+    },
+  })
+
+  const handleUnfollowUser = () => {
+    unfollowUserMutation({
+      variables: {
+        followedUserId: user.id,
+      },
+    })
+  }
+
   return (
     <div className="profile-card">
-      <div className="profile-header">
-        <h1 className="profile-name">{name}</h1>
+      <div className="profile-card-content">
+        <div className="profile-header">
+          <h1 className="profile-name">{name}</h1>
 
-        {profileImage ? (
-          <img className="profile-image-mobile" src={profileImage} />
-        ) : (
-          <BlankAvatarIcon className="blank-avatar-mobile" size={130} />
-        )}
+          {profileImage ? (
+            <img className="profile-image-mobile" src={profileImage} />
+          ) : (
+            <BlankAvatarIcon className="blank-avatar-mobile" size={130} />
+          )}
 
-        <div className="languages-and-interests">
-          <p>
-            <span>{t('card.speaks')}:</span> {speaks.join(', ')}
-          </p>
-          <p>
-            <span>{t('card.learns')}:</span> {learns.join(', ')}
-          </p>
-          {user.userInterests.length > 0 && (
+          <div className="languages-and-interests">
             <p>
-              <span>{t('card.likes')}:</span> {likes.join(', ')}
+              <span>{t('card.speaks')}:</span> {speaks.join(', ')}
             </p>
-          )}
+            <p>
+              <span>{t('card.learns')}:</span> {learns.join(', ')}
+            </p>
+            {user.userInterests.length > 0 && (
+              <p>
+                <span>{t('card.likes')}:</span> {likes.join(', ')}
+              </p>
+            )}
+          </div>
         </div>
-      </div>
 
-      <div className="profile-body">
-        {profileImage ? (
-          <img className="profile-image-desktop" src={profileImage} />
-        ) : (
-          <BlankAvatarIcon className="blank-avatar-desktop" size={130} />
-        )}
-
-        {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
-
-        <ul className="badge-list">
-          {user.badges.map((badge) => (
-            <li key={badge.type}>
-              <Badge badge={badge} />
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="profile-footer">
-        {(user.city || user.country) && (
-          <>
-            <p className="location">{location}</p>
-            {showSeparator && <div className="separator">- -</div>}
-          </>
-        )}
-
-        <div className="social-links">
-          {user.socialMedia?.facebook && (
-            <ExternalLink href={user.socialMedia?.facebook} className="social-link">
-              <FacebookIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
-            </ExternalLink>
+        <div className="profile-body">
+          {profileImage ? (
+            <img className="profile-image-desktop" src={profileImage} />
+          ) : (
+            <BlankAvatarIcon className="blank-avatar-desktop" size={130} />
           )}
-          {user.socialMedia?.instagram && (
-            <ExternalLink href={user.socialMedia?.instagram} className="social-link">
-              <InstagramIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
-            </ExternalLink>
+
+          {currentUser && currentUser.id !== user.id && (
+            <Button
+              className="follow-btn"
+              variant={ButtonVariant.Link}
+              onClick={hasFollowedAuthor ? handleUnfollowUser : handleFollowUser}
+              loading={followLoading || unfollowLoading}
+            >
+              {hasFollowedAuthor ? t('unfollow') : t('follow')}
+            </Button>
           )}
-          {user.socialMedia?.youtube && (
-            <ExternalLink href={user.socialMedia?.youtube} className="social-link">
-              <YoutubeIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
-            </ExternalLink>
+
+          {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
+
+          <ul className="badge-list">
+            {user.badges.map((badge) => (
+              <li key={badge.type}>
+                <Badge badge={badge} />
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="profile-footer">
+          {(user.city || user.country) && (
+            <>
+              <p className="location">{location}</p>
+              {showSeparator && <div className="separator">- -</div>}
+            </>
           )}
-          {user.socialMedia?.website && (
-            <ExternalLink href={user.socialMedia?.website} className="social-link">
-              <GlobeIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
-            </ExternalLink>
-          )}
+
+          <div className="social-links">
+            {user.socialMedia?.facebook && (
+              <ExternalLink href={user.socialMedia?.facebook} className="social-link">
+                <FacebookIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
+              </ExternalLink>
+            )}
+            {user.socialMedia?.instagram && (
+              <ExternalLink href={user.socialMedia?.instagram} className="social-link">
+                <InstagramIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
+              </ExternalLink>
+            )}
+            {user.socialMedia?.youtube && (
+              <ExternalLink href={user.socialMedia?.youtube} className="social-link">
+                <YoutubeIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
+              </ExternalLink>
+            )}
+            {user.socialMedia?.website && (
+              <ExternalLink href={user.socialMedia?.website} className="social-link">
+                <GlobeIcon size={null} style={{ width: '100%', maxWidth: '60px' }} />
+              </ExternalLink>
+            )}
+          </div>
         </div>
       </div>
 
       <style jsx>{`
         .profile-card {
           position: relative;
-          padding: 30px 25px;
           color: ${theme.colors.white};
           box-shadow: 0px 8px 10px #00000029;
+          overflow-x: visible;
         }
 
-        .profile-card::before {
+        .profile-card-content {
+          position: relative;
+          padding: 30px 25px;
+          min-height: 100%;
+        }
+
+        .profile-card-content::before {
           content: '';
           position: absolute;
-          width: 100%;
-          height: 100%;
           top: 0;
+          bottom: 0;
           left: 0;
+          right: 0;
           z-index: -1;
           opacity: 0.75;
           background-image: url('/images/profile/person_using_typewriter.jpg');
@@ -139,13 +198,13 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           background-position: center;
         }
 
-        .profile-card::after {
+        .profile-card-content::after {
           content: '';
           position: absolute;
-          width: 100%;
-          height: 100%;
           top: 0;
+          bottom: 0;
           left: 0;
+          right: 0;
           z-index: -1;
           background: rgba(0, 0, 0, 0.75);
         }
@@ -159,10 +218,16 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
             align-self: flex-start;
             text-align: left;
           }
+          .profile-card {
+            overflow-x: hidden;
+          }
         }
         .profile-body {
           margin: 50px 0;
           text-align: center;
+        }
+        .profile-body :global(.follow-btn) {
+          margin: 0 0 20px;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-body {

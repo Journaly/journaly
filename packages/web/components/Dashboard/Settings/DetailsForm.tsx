@@ -193,8 +193,8 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                     }-badge`}
                   >
                     {currentUser.emailAddressVerified
-                      ? t('emailVerifiedBadgeText')
-                      : t('emailUnverifiedBadgeText')}
+                      ? t('profile.details.emailVerifiedBadgeText')
+                      : t('profile.details.emailUnverifiedBadgeText')}
                   </span>
                 </div>
                 <input

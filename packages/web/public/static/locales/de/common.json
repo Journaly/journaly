@@ -62,9 +62,9 @@
   "modal": {
     "confirm": "Bestätigen",
     "cancel": "Abbrechen",
-    "acknowledge": "Got it",
-    "goToPremium": "Check Out Premium",
-    "generalPremiumFeatureExplanation": "is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!"
+    "acknowledge": "Alles klar",
+    "goToPremium": "Schau dir Premium an",
+    "generalPremiumFeatureExplanation": "ist ein tolles Premium-Feature! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken, oder nutze Journaly weiterhin kostenfrei."
   },
   "imageErrors": {
     "initial": "Fehler bei der Kommunikation mit dem Journaly-Server. Bitte versuche es später erneut.",

@@ -94,6 +94,8 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0, w: 0, h: 0 })
   const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
+  const [premiumFeatureModalName, setPremiumFeatureModalName] = useState()
+  const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
 
   const hasSavedPost = useMemo(() => {
     return currentUser?.savedPosts.find((savedPost) => savedPost.id === post.id) !== undefined
@@ -120,6 +122,16 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       }
     },
   })
+
+  const handleSavePost = () => {
+    if (!canAttempToSavePost) {
+      setPremiumFeatureModalName(t('savePostPremiumFeatureName'))
+      setPremiumFeatureModalExplanation(t('savePostPremiumFeatureExplanation'))
+      setDisplayPremiumFeatureModal(true)
+    } else {
+      savePost({ variables: { postId: post.id } })
+    }
+  }
 
   const [unsavePost, { loading: unsavingPost }] = useUnsavePostMutation({
     onCompleted: () => {
@@ -440,6 +452,8 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
 
   const handleBumpPost = () => {
     if (!canAttemptBump) {
+      setPremiumFeatureModalName(t('postBumpingPremiumFeatureName'))
+      setPremiumFeatureModalExplanation(t('postBumpingPremiumFeatureExplanation'))
       setDisplayPremiumFeatureModal(true)
     } else {
       if (post.bumpCount >= POST_BUMP_LIMIT) {
@@ -467,6 +481,11 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       currentUser?.userRole === UserRole.Admin ||
       currentUser?.userRole === UserRole.Moderator) &&
     post.status === 'PUBLISHED'
+
+  const canAttempToSavePost =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
 
   return (
     <div className="post-container">
@@ -552,9 +571,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
                   variant={ButtonVariant.Icon}
                   loading={savingPost || unsavingPost}
                   onClick={() => {
-                    hasSavedPost
-                      ? unsavePost({ variables: { postId: post.id } })
-                      : savePost({ variables: { postId: post.id } })
+                    hasSavedPost ? unsavePost({ variables: { postId: post.id } }) : handleSavePost()
                   }}
                 >
                   <BookmarkIcon size={28} saved={hasSavedPost} />
@@ -594,13 +611,15 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       />
       {displayPremiumFeatureModal && (
         <PremiumFeatureModal
-          featureName={t('postBumpingPremiumFeatureName')}
-          featureExplanation={t('postBumpingPremiumFeatureExplanation')}
+          featureName={premiumFeatureModalName}
+          featureExplanation={premiumFeatureModalExplanation}
           onAcknowledge={() => {
+            setPremiumFeatureModalName(undefined)
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={() => {
             Router.push('/dashboard/settings/subscription')
+            setPremiumFeatureModalName(undefined)
             setDisplayPremiumFeatureModal(false)
           }}
         />

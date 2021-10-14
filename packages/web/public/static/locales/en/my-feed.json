@@ -8,15 +8,15 @@
   "hasInteracted": "commented posts",
   "textSearchPlaceholder": "Search posts",
   "topicSelectPlaceholder": "Topics",
-  "languageSelectPlaceholder": "Languages",
-  "showAdvancedFilters": "Show Advanced Filters",
-  "hideAdvancedFilters": "Hide Advanced Filters",
-  "savedPosts": "saved posts",
-  "savePostPremiumFeatureName": "Saved Posts",
-  "savePostPremiumFeatureExplanation": "is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!",
+  "languageSelectPlaceholder": "Sprachen",
+  "showAdvancedFilters": "Zeige erweiterte Filter",
+  "hideAdvancedFilters": "erweiterte Filter ausblenden",
+  "savedPosts": "angeheftete Beiträge",
+  "savePostPremiumFeatureName": "Angeheftete Beiträge",
+  "savePostPremiumFeatureExplanation": "ist ein nützliches Premium-Feature, um Beiträge für später anzuheften. Du kannst sie später über die erweiterten Filter der Meine-Feed-Seite erreichen.Klicke unten, um mehr über die Vorteile von Journaly Premium zu erfahren oder nutze Journalys kostenlose Feature weiterhin kostenfrei!",
   "pagination": {
-    "previous": "Prev",
-    "next": "Next",
+    "previous": "vor",
+    "next": "weiter",
     "page": "Page",
     "of": "of"
   }

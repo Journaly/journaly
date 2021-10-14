@@ -96,19 +96,52 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
 
   const hasSavedPost = useMemo(() => {
-    return currentUser?.savedPosts.find((followedPost) => followedPost.id === post.id) !== undefined
-  }, [currentUser?.id])
-  console.log(hasSavedPost)
+    return currentUser?.savedPosts.find((savedPost) => savedPost.id === post.id) !== undefined
+  }, [currentUser?.id, currentUser?.savedPosts])
 
   const [savePost, { loading: savingPost }] = useSavePostMutation({
     onCompleted: () => {
       refetch()
+      toast.success(t('savePostSuccess'))
+    },
+    onError: () => {
+      toast.error(t('savePostError'))
+    },
+    update: (cache, { data }) => {
+      const savedPost = data?.savePost
+      if (savedPost?.id && savedPost?.__typename) {
+        cache.modify({
+          fields: {
+            savedPosts(existingPosts) {
+              return [...existingPosts, savedPost]
+            },
+          },
+        })
+      }
     },
   })
 
   const [unsavePost, { loading: unsavingPost }] = useUnsavePostMutation({
     onCompleted: () => {
       refetch()
+      toast.success(t('unsavePostSuccess'))
+    },
+    onError: () => {
+      toast.error(t('unsavePostError'))
+    },
+    update: (cache, { data }) => {
+      const unsavedPost = data?.unsavePost
+      if (unsavedPost?.id && unsavedPost.__typename) {
+        cache.modify({
+          fields: {
+            savedPosts(existingPosts = []): PostModel[] {
+              return existingPosts.filter(
+                (post: any) => post.__ref !== `${unsavedPost.__typename}:${unsavedPost.id}`,
+              )
+            },
+          },
+        })
+      }
     },
   })
 

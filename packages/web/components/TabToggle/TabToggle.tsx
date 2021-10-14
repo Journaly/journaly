@@ -62,7 +62,7 @@ const TabToggle: React.FC<Props> = (props) => {
         .tab-toggle {
           position: relative;
           display: grid;
-          grid-template-columns: 1fr 1fr ${tabs.length === 3 && '1fr'};
+          grid-template-columns: 1fr 1fr ${tabs.length === 3 ? '1fr' : ''};
           grid-gap: ${2 * spaceUnit}px;
         }
 

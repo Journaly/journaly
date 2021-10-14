@@ -49,5 +49,9 @@
     "twoUsersClapped": "{{name1}} and {{name2}} clapped for this post.",
     "manyUsersClapped": "{{name1}}, {{name2}}, and {{numOthers}} others clapped for this post."
   },
-  "emailVerificationWarning": "Um Beiträge veröffentlichen zu können, verifiziere bitte deine E-Mail-Adresse, indem du auf den Link klickst, den du nach der Registrierung per E-Mail erhalten hast. Gehe in die Einstellungen > Profil Informationen, um die Verifikations-E-Mail erneut zu senden."
+  "emailVerificationWarning": "Um Beiträge veröffentlichen zu können, verifiziere bitte deine E-Mail-Adresse, indem du auf den Link klickst, den du nach der Registrierung per E-Mail erhalten hast. Gehe in die Einstellungen > Profil Informationen, um die Verifikations-E-Mail erneut zu senden.",
+  "savePostSuccess": "Post saved! View your list from the My Posts page",
+  "savePostError": "Something went wrong saving your post",
+  "unsavePostSuccess": "Post removed from your list",
+  "unsavePostError": "Something went wrong removing this post from your list"
 }

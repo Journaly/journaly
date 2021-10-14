@@ -615,11 +615,13 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           featureExplanation={premiumFeatureModalExplanation}
           onAcknowledge={() => {
             setPremiumFeatureModalName(undefined)
+            setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={() => {
             Router.push('/dashboard/settings/subscription')
             setPremiumFeatureModalName(undefined)
+            setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}
         />

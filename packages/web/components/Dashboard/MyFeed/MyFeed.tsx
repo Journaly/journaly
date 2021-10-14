@@ -58,6 +58,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
     needsFeedback: initialSearchFilters?.needsFeedback || false,
     hasInteracted: initialSearchFilters?.hasInteracted || false,
     search: '',
+    savedPosts: false,
   })
 
   // fetch posts for the feed!

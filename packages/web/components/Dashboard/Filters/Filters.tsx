@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import isEqual from 'lodash/isEqual'
 import Button, { ButtonVariant } from '@/components/Button'
 import { User as UserType, useTopicsQuery, useLanguagesQuery } from '@/generated/graphql'
@@ -7,7 +7,8 @@ import LanguageSelect from './LanguageSelect'
 import TopicSelect from './TopicSelect'
 import useToggle from '@/hooks/useToggle'
 import useUILanguage from '@/hooks/useUILanguage'
-import { useTranslation } from '@/config/i18n'
+import { Router, useTranslation } from '@/config/i18n'
+import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
 
 export type PostQueryVarsType = {
   languages: number[]
@@ -16,6 +17,7 @@ export type PostQueryVarsType = {
   search: string
   needsFeedback: boolean
   hasInteracted: boolean
+  savedPosts?: boolean
 }
 
 type Props = {
@@ -40,6 +42,7 @@ const Filters: React.FC<Props> = ({
 }) => {
   const { t } = useTranslation('my-feed')
   const [showAdvancedFilters, setShowAdvancedFilters] = useToggle(false)
+  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const onSearchChange = useCallback(
     (val): void =>
       setPostQueryVars((prevState) => ({
@@ -128,16 +131,29 @@ const Filters: React.FC<Props> = ({
     }))
   }, [])
 
+  const handleToggleSavedPosts = useCallback(() => {
+    if (!currentUser.membershipSubscription?.isActive) {
+      setDisplayPremiumFeatureModal(true)
+    } else {
+      setPostQueryVars((prevState) => ({
+        ...prevState,
+        savedPosts: !prevState.savedPosts,
+      }))
+    }
+  }, [])
+
   const uiLanguage = useUILanguage()
   const { data: { topics } = {} } = useTopicsQuery({
     variables: { uiLanguage, languages: postQueryVars.languages, ...topicAndLanguageOptions },
   })
 
-  const filterCount =
+  let filterCount =
     postQueryVars.topics.length +
     ~~postQueryVars.followedAuthors +
     ~~postQueryVars.needsFeedback +
     ~~postQueryVars.hasInteracted
+
+  if (postQueryVars.savedPosts) filterCount += ~~postQueryVars.savedPosts
 
   return (
     <div className="my-feed-search">
@@ -180,6 +196,7 @@ const Filters: React.FC<Props> = ({
                       followedAuthors: false,
                       needsFeedback: false,
                       hasInteracted: false,
+                      savedPosts: false,
                     })
                   }}
                 >
@@ -220,11 +237,33 @@ const Filters: React.FC<Props> = ({
                 >
                   {t('hasInteracted')}
                 </Button>
+                {postQueryVars.savedPosts && (
+                  <Button
+                    variant={ButtonVariant.Link}
+                    className={`filter-action-btn ${postQueryVars.hasInteracted ? 'active' : ''}`}
+                    onClick={handleToggleSavedPosts}
+                  >
+                    {t('savedPosts')}
+                  </Button>
+                )}
               </div>
             </div>
           </>
         )}
       </div>
+      {displayPremiumFeatureModal && (
+        <PremiumFeatureModal
+          featureName={t('savePostPremiumFeatureName')}
+          featureExplanation={t('savePostPremiumFeatureExplanation')}
+          onAcknowledge={() => {
+            setDisplayPremiumFeatureModal(false)
+          }}
+          onGoToPremium={() => {
+            Router.push('/dashboard/settings/subscription')
+            setDisplayPremiumFeatureModal(false)
+          }}
+        />
+      )}
       <style jsx>{`
         .my-feed-search {
           width: 100%;

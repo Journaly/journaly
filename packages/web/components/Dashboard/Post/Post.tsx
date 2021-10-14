@@ -1,4 +1,4 @@
-import React, { useState, memo, useMemo, useRef, forwardRef, MouseEvent, useEffect } from 'react'
+import React, { useState, memo, useMemo, useRef, forwardRef, useEffect } from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 
@@ -362,7 +362,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     }
   }, [selectableRef.current])
 
-  const createThreadHandler = (e: MouseEvent) => {
+  const createThreadHandler = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -403,7 +403,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     }
   }
 
-  const onThreadClick = (e: MouseEvent<HTMLSpanElement>) => {
+  const onThreadClick = (e: React.MouseEvent<HTMLSpanElement>) => {
     if (!e.target) {
       return
     }

@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import theme from '@/theme'
 
 const About = () => {
@@ -32,14 +31,6 @@ const About = () => {
         make it more enjoyable for you to read and provide feedback on their writing, but could also
         lead to wonderful language exchange partners and, hopefully, friends :)
       </p>
-      <p>
-        Check out{' '}
-        <Link href="/blog/introducing-journaly">
-          <a className="j-link">our first blog post</a>
-        </Link>{' '}
-        for all the details!
-      </p>
-
       <style jsx>{`
         .about-wrapper {
           max-width: 900px;

@@ -223,9 +223,9 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                       loading={resendingEmailVerification}
                       onClick={() => resendEmailVerificationEmail()}
                     >
-                      {t('resendEmailVerificationButtonText')}
+                      {t('profile.details.resendEmailVerificationButtonText')}
                     </Button>{' '}
-                    {t('resendEmailVerificationText')}
+                    {t('profile.details.resendEmailVerificationText')}
                   </p>
                 )}
               </div>

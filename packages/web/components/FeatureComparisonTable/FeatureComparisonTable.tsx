@@ -106,6 +106,11 @@ const FeatureComparisonTable = () => {
               plan="premium"
               status="coming soon"
             />
+            <Feature
+              name={t('subscription.features.privateShareLinks')}
+              plan="premium"
+              status="coming soon"
+            />
           </ul>
         </div>
       </div>

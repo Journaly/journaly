@@ -1,6 +1,7 @@
 {
   "signInPrompt": "Please sign in to continue.",
   "error": "An error occurred on the server",
+  "404": "Oops! The Page you are looking for could not be found",
   "loading": "Loading...",
   "home": {
     "reasonsHeader": "Three Reasons To Use Journaly",

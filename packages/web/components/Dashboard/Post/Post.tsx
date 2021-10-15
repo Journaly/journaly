@@ -96,6 +96,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const [premiumFeatureModalName, setPremiumFeatureModalName] = useState()
   const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
+  const isAuthoredPost = currentUser && post.author.id === currentUser.id
 
   const hasSavedPost = useMemo(() => {
     return currentUser?.savedPosts.find((savedPost) => savedPost.id === post.id) !== undefined
@@ -531,7 +532,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
             <span>{post.claps.length}</span>
           </div>
           <div className="post-action-container">
-            {currentUser && post.author.id === currentUser.id && (
+            {isAuthoredPost && (
               <>
                 <Button type="button" variant={ButtonVariant.Secondary} onClick={handleBumpPost}>
                   {t('bumpPostAction')}
@@ -565,7 +566,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
                 </Button>
               </>
             )}
-            {currentUser && !post.author.id === !currentUser.id && (
+            {!isAuthoredPost && (
               <>
                 <Button
                   variant={ButtonVariant.Icon}
@@ -722,21 +723,21 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         }
 
         @media (max-width: ${theme.breakpoints.SM}) {
-          .post-controls {
-            flex-direction: column;
-          }
-
-          .post-action-container {
-            padding-top: 10px;
-            flex-direction: column;
-            gap: 5px;
-          }
-
+          ${isAuthoredPost &&
+          `.post-controls {
+              flex-direction: column;
+            }
+  
+            .post-action-container {
+              padding-top: 10px;
+              flex-direction: column;
+              gap: 5px;
+            }
+          `}
           .post-action-container > :global(button) {
             align-self: stretch;
           }
         }
-
         .clap-container {
           display: flex;
           align-items: center;

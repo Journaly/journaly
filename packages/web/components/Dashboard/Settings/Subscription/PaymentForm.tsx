@@ -87,7 +87,7 @@ const PaymentForm = ({ onSuccess, isStudent, emailAddressVerified }: PaymentForm
         setSelectedOption={setSelectedOption}
         isStudent={isStudent}
       />
-      {isStudentPendingEmailAddressVerification && !emailAddressVerified && (
+      {isStudentPendingEmailAddressVerification && (
         <p className="error">{t('subscription.studentEmailVerificationNeededMsg')}</p>
       )}
       {stripeError && <p className="error">{stripeError.message}</p>}

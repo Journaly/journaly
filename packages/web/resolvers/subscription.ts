@@ -147,7 +147,10 @@ const MembershipSubscriptionMutations = extendType({
         })
 
         if (!user) throw new Error("User not found")
-        
+        if (args.period === MembershipSubscriptionPeriod.STUDENT_ANNUALLY && !user.isStudent) {
+          throw new Error('You must have a student email address to get the student discount price')
+        }
+
         const customerId = await getOrCreateStripeCustomer(user, ctx.db)
 
         const stripePaymentMethod = await setPaymentMethod(userId, ctx.db, customerId, args.paymentMethodId)

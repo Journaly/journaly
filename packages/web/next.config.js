@@ -10,11 +10,6 @@ let config = {
       config.externals.push('_http_common', 'bufferutil', 'utf-8-validate')
     }
 
-    // Fixes npm packages that depend on `fs` module
-    if (!isServer) {
-      config.resolve.fallback.fs = false
-    }
-
     // Copy translation files into build so we can find them again in vercel world
     config.plugins.push(
       new CopyPlugin({

@@ -44,6 +44,7 @@ model User {
   following                     User[]                          @relation("UserFollows", references: [id])
   lastFourCardNumbers           String?
   cardBrand                     String?
+  isStudent                     Boolean                         @default(false)
 }
 
 model Auth {

@@ -143,8 +143,9 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
               cache.modify({
                 id: cache.identify(makeReference('ROOT_QUERY')),
                 fields: {
-                  posts: (existingPosts) => {
-                    return [data.createPost, ...existingPosts.posts]
+                  posts: () => {
+                    // This simply invalidates the cache for the `posts` query
+                    return undefined
                   },
                 },
               })

@@ -558,8 +558,9 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           cache.modify({
             id: cache.identify(makeReference('ROOT_QUERY')),
             fields: {
-              posts: (existingPosts) => {
-                return [data.updatePost, ...existingPosts.posts]
+              posts: () => {
+                // This simply invalidates the cache for the `posts` query
+                return undefined
               },
             },
           })

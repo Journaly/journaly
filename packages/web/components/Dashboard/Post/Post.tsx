@@ -36,6 +36,7 @@ import { getCoords, getUsersClappedText } from './helpers'
 import ClapIcon from '@/components/Icons/ClapIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
 import { POST_BUMP_LIMIT } from '../../../constants'
+import { makeReference } from '@apollo/client'
 
 interface IPostProps {
   post: PostType
@@ -551,6 +552,19 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
           smallSize: post.headlineImage.smallSize,
           largeSize: post.headlineImage.largeSize,
         },
+      },
+      update(cache, { data }) {
+        if (data?.updatePost) {
+          cache.modify({
+            id: cache.identify(makeReference('ROOT_QUERY')),
+            fields: {
+              posts: () => {
+                // This simply invalidates the cache for the `posts` query
+                return undefined
+              },
+            },
+          })
+        }
       },
     })
   }

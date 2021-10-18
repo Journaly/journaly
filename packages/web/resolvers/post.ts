@@ -772,62 +772,109 @@ const PostMutations = extendType({
           finalUrl: `https://${cdnDomain}/inline-post-image/${uuid}-default`,
         }
       },
-    }),
-      t.field('bumpPost', {
-        type: 'Post',
-        args: {
-          postId: intArg({ required: true }),
-        },
-        resolve: async (_parent, args, ctx) => {
-          const { userId } = ctx.request
-          if (!userId) throw new NotAuthorizedError()
+    })
 
-          const [currentUser, post] = await Promise.all([
-            ctx.db.user.findUnique({
-              where: {
-                id: userId,
-              },
-              include: {
-                membershipSubscription: true,
-              },
-            }),
-            ctx.db.post.findUnique({
-              where: {
-                id: args.postId,
-              },
-            }),
-          ])
+    t.field('bumpPost', {
+      type: 'Post',
+      args: {
+        postId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new NotAuthorizedError()
 
-          if (!currentUser) throw new NotFoundError('User')
-          if (!post) throw new NotFoundError('Post')
-
-          hasAuthorPermissions(post, currentUser)
-
-          const canBump =
-            (currentUser.membershipSubscription &&
-              currentUser.membershipSubscription.expiresAt > new Date()) ||
-            currentUser.userRole === UserRole.ADMIN ||
-            currentUser.userRole === UserRole.MODERATOR
-
-          if (!canBump) {
-            throw new Error('Only Journaly Premium members can access this feature')
-          }
-
-          if (post.bumpCount >= POST_BUMP_LIMIT) {
-            throw new Error("You've already reached your limit for bumping this post")
-          }
-
-          return ctx.db.post.update({
+        const [currentUser, post] = await Promise.all([
+          ctx.db.user.findUnique({
+            where: {
+              id: userId,
+            },
+            include: {
+              membershipSubscription: true,
+            },
+          }),
+          ctx.db.post.findUnique({
             where: {
               id: args.postId,
             },
-            data: {
-              bumpedAt: new Date(),
-              bumpCount: post.bumpCount + 1,
+          }),
+        ])
+
+        if (!currentUser) throw new NotFoundError('User')
+        if (!post) throw new NotFoundError('Post')
+
+        hasAuthorPermissions(post, currentUser)
+
+        const canBump =
+          (currentUser.membershipSubscription &&
+            currentUser.membershipSubscription.expiresAt > new Date()) ||
+          currentUser.userRole === UserRole.ADMIN ||
+          currentUser.userRole === UserRole.MODERATOR
+
+        if (!canBump) {
+          throw new Error('Only Journaly Premium members can access this feature')
+        }
+
+        if (post.bumpCount >= POST_BUMP_LIMIT) {
+          throw new Error("You've already reached your limit for bumping this post")
+        }
+
+        return ctx.db.post.update({
+          where: {
+            id: args.postId,
+          },
+          data: {
+            bumpedAt: new Date(),
+            bumpCount: post.bumpCount + 1,
+          },
+        })
+      },
+    })
+
+    t.field('savePost', {
+      type: 'Post',
+      args: {
+        postId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to save a post')
+        }
+
+        return await ctx.db.user.update({
+          where: { id: userId },
+          data: {
+            savedPosts: {
+              connect: [{ id: args.postId }],
             },
-          })
-        },
-      })
+          },
+        })
+      },
+    })
+
+    t.field('unsavePost', {
+      type: 'Post',
+      args: {
+        postId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to save a post')
+        }
+
+        return await ctx.db.user.update({
+          where: { id: userId },
+          data: {
+            savedPosts: {
+              disconnect: [{ id: args.postId }],
+            },
+          },
+        })
+      },
+    })
   },
 })
 

@@ -677,52 +677,6 @@ const UserMutations = extendType({
         return user
       },
     })
-
-    t.field('savePost', {
-      type: 'Post',
-      args: {
-        postId: intArg({ required: true }),
-      },
-      resolve: async (_parent, args, ctx) => {
-        const { userId } = ctx.request
-
-        if (!userId) {
-          throw new Error('You must be logged in to save a post')
-        }
-
-        return await ctx.db.user.update({
-          where: { id: userId },
-          data: {
-            savedPosts: {
-              connect: [{ id: args.postId }],
-            },
-          },
-        })
-      },
-    })
-
-    t.field('unsavePost', {
-      type: 'Post',
-      args: {
-        postId: intArg({ required: true }),
-      },
-      resolve: async (_parent, args, ctx) => {
-        const { userId } = ctx.request
-
-        if (!userId) {
-          throw new Error('You must be logged in to save a post')
-        }
-
-        return await ctx.db.user.update({
-          where: { id: userId },
-          data: {
-            savedPosts: {
-              disconnect: [{ id: args.postId }],
-            },
-          },
-        })
-      },
-    })
   },
 })
 

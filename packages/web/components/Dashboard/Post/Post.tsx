@@ -539,7 +539,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       />
       {displayPremiumFeatureModal && (
         <PremiumFeatureModal
-          featureName={t('postBumpingPremiumFeatureName')}
           featureExplanation={t('postBumpingPremiumFeatureExplanation')}
           onAcknowledge={() => {
             setDisplayPremiumFeatureModal(false)

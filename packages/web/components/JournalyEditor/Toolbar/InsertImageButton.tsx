@@ -53,7 +53,6 @@ const InsertImageButton = ({ children, allowInlineImages }: InsertImageButtonPro
       <input className="file-input" onChange={handleChange} type="file" ref={fileInput} />
       {displayPremiumFeatureModal && (
         <PremiumFeatureModal
-          featureName={t('inlineImagesPremiumFeatureName')}
           featureExplanation={t('inlineImagesPremiumFeatureExplanation')}
           onAcknowledge={(): void => {
             setDisplayPremiumFeatureModal(false)

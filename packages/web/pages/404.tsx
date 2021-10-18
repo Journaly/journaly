@@ -1,10 +1,6 @@
 import React from 'react'
 import theme from '@/theme'
 
-// I wrote translation entries for this file but it results in
-// warnings since we cannot use getInitialProps on the 404 page,
-// we cannot requireNamespaces. Left translations in `common.js` for now.
-
 const FourOhFourPage = () => {
   return (
     <div className="container">

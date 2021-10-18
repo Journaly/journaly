@@ -31,7 +31,7 @@ fragment UserWithLanguagesFragment on User {
 fragment CurrentUserFragment on User {
   ...UserWithLanguagesFragment
   savedPosts {
-    ...PostCardFragment
+    id
   }
   membershipSubscription {
     isActive

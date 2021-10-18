@@ -10,6 +10,8 @@ import { serialize } from 'cookie'
 
 import { PostStatus, EmailVerificationStatus } from '@journaly/j-db-client'
 
+import swot from 'swot-node'
+
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
   generateThumbbusterUrl,
@@ -57,6 +59,7 @@ const User = objectType({
     t.model.profileImage()
     t.model.createdAt()
     t.model.membershipSubscription()
+    t.model.isStudent()
     t.model.socialMedia({
       type: 'SocialMedia',
       resolve: async (parent, _args, ctx) => {
@@ -271,7 +274,7 @@ const UserMutations = extendType({
         if (!args.handle.match(/^[a-zA-Z0-9_-]+$/)) {
           throw new Error('Invalid handle')
         }
-
+        const isStudent = await swot.isAcademic(args.email)
         const password = await bcrypt.hash(args.password, 10)
         const emailVerificationToken = await generateToken()
         let user
@@ -280,6 +283,7 @@ const UserMutations = extendType({
             data: {
               handle: args.handle,
               email: args.email.toLowerCase(),
+              isStudent,
               auth: {
                 create: {
                   password,
@@ -331,14 +335,25 @@ const UserMutations = extendType({
         country: stringArg({ required: false }),
         city: stringArg({ required: false }),
       },
-      resolve: async (_parent, args, ctx: any) => {
+      resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
         await validateUpdateUserMutationData(args, ctx)
 
+        const preUpdateUser = ctx.db.user.findUnique({
+          where: { id: userId },
+        })
+
+        if (!preUpdateUser) throw new Error('User not found')
+
         const updates = {
           ...args,
+          isStudent: false,
           email: args.email?.toLowerCase(),
+        }
+
+        if (args.email) {
+          updates.isStudent = await swot.isAcademic(args.email)
         }
 
         const user = await ctx.db.user.update({
@@ -348,7 +363,7 @@ const UserMutations = extendType({
           },
         })
 
-        if (args.email) {
+        if (args.email && args.email.toLowerCase() !== preUpdateUser.email) {
           const emailVerificationToken = await generateToken()
           await ctx.db.auth.update({
             where: { userId },

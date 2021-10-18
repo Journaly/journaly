@@ -71,7 +71,8 @@
     "cancel": "Cancel",
     "acknowledge": "Got it",
     "goToPremium": "Check Out Premium",
-    "generalPremiumFeatureExplanation": "is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!"
+    "generalPremiumFeatureExplanation": "{{featureName}} is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!",
+    "unnamedPremiumFeatureExplanation": "This is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!"
   },
   "imageErrors": {
     "initial": "Error communicating with Journaly server. Please try again later.",

@@ -552,6 +552,7 @@ export type User = {
   profileImage?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
   membershipSubscription?: Maybe<MembershipSubscription>
+  isStudent: Scalars['Boolean']
   socialMedia?: Maybe<SocialMedia>
   languages: Array<LanguageRelation>
   following: Array<User>
@@ -980,7 +981,7 @@ export type SubscriptionSettingsPageQuery = { __typename?: 'Query' } & {
 
 export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'email' | 'emailAddressVerified' | 'lastFourCardNumbers' | 'cardBrand'
+  'id' | 'email' | 'emailAddressVerified' | 'isStudent' | 'lastFourCardNumbers' | 'cardBrand'
 > & {
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
@@ -1662,6 +1663,7 @@ export const UserWithSubscriptionFragmentFragmentDoc = gql`
     id
     email
     emailAddressVerified
+    isStudent
     lastFourCardNumbers
     cardBrand
     membershipSubscription {

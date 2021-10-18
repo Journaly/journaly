@@ -1,6 +1,7 @@
 import React, { useState, memo, useMemo, useRef, forwardRef, useEffect } from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
+import { makeReference } from '@apollo/client'
 
 import { findEventTargetParent, sanitize, iOS, wait } from '@/utils'
 import {
@@ -445,6 +446,19 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           smallSize: post.headlineImage.smallSize,
           largeSize: post.headlineImage.largeSize,
         },
+      },
+      update(cache, { data }) {
+        if (data?.updatePost) {
+          cache.modify({
+            id: cache.identify(makeReference('ROOT_QUERY')),
+            fields: {
+              posts: () => {
+                // This simply invalidates the cache for the `posts` query
+                return undefined
+              },
+            },
+          })
+        }
       },
     })
   }

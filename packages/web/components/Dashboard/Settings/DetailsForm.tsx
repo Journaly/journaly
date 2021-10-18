@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from '@/config/i18n'
 import FormError from '@/components/FormError'
@@ -103,7 +103,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
 
   const invalidFields = Object.values(errors)
 
-  const [resendEmailVerificationEmail, { loading: resendingEmailVerification }] =
+  const [resendEmailVerificationEmailMutation, { loading: resendingEmailVerification }] =
     useResendEmailVerificationEmailMutation({
       onCompleted: () => {
         toast.success(t('resendEmailVerificationToastSuccess'))
@@ -112,6 +112,10 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
         toast.error(t('resendEmailVerificationToastError'))
       },
     })
+
+  const resendEmailVerificationEmail = useCallback(() => {
+    resendEmailVerificationEmailMutation()
+  }, [])
 
   return (
     <SettingsForm onSubmit={handleSubmit(handleDetailsSubmit)}>
@@ -217,16 +221,16 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   })}
                 />
                 {!currentUser.emailAddressVerified && (
-                  <p>
+                  <span>
                     <Button
                       variant={ButtonVariant.Link}
                       loading={resendingEmailVerification}
-                      onClick={() => resendEmailVerificationEmail()}
+                      onClick={resendEmailVerificationEmail}
                     >
                       {t('profile.details.resendEmailVerificationButtonText')}
                     </Button>{' '}
-                    {t('profile.details.resendEmailVerificationText')}
-                  </p>
+                    {t('resendEmailVerificationText')}
+                  </span>
                 )}
               </div>
               <div className="details-form-field">

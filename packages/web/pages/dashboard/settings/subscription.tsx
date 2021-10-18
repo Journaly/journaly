@@ -14,13 +14,11 @@ const Subscription: NextPage = () => {
     <AuthGate>
       <>
         <SettingsPageLayout>
-          <>
-            {data?.currentUser && !loading && (
-              <div className="forms-container">
-                <SubscriptionForm user={data.currentUser} onSuccess={refetchUser} />
-              </div>
-            )}
-          </>
+          {data?.currentUser && !loading && (
+            <div className="forms-container">
+              <SubscriptionForm user={data.currentUser} onSuccess={refetchUser} />
+            </div>
+          )}
         </SettingsPageLayout>
         <style jsx>{`
           .forms-container {

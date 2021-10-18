@@ -21,9 +21,12 @@ const PremiumFeatureModal: React.FC<Props> = ({
   return (
     <Modal
       title="Premium Feature"
-      body={`${featureName ? featureName : 'This'} ${
-        featureExplanation ? featureExplanation : t('modal.generalPremiumFeatureExplanation')
-      }`}
+      body={
+        featureExplanation ||
+        (featureName
+          ? t('modal.generalPremiumFeatureExplanation', { featureName })
+          : t('modal.unnamedPremiumFeatureExplanation'))
+      }
       footer={
         <>
           <Button variant={ButtonVariant.Primary} onClick={onAcknowledge}>

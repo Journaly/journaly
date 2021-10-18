@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-const swot = require('swot-node')
 
 import Button, { ButtonVariant } from '@/components/Button'
 import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
@@ -43,17 +42,6 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
   const isCancelling = user.membershipSubscription?.cancelAtPeriodEnd
   const [showPaymentForm, setShowPaymentForm] = useState(!user.membershipSubscription?.isActive)
   const [showPaymentFormModal, setShowPaymentFormModal] = useState(false)
-  const [isStudent, setIsStudent] = useState(false)
-
-  useEffect(() => {
-    async function checkForStudentStatus(emailAddress: string) {
-      const result = await swot.isAcademic(emailAddress)
-      setIsStudent(result)
-    }
-    if (user.email) {
-      checkForStudentStatus(user.email)
-    }
-  }, [])
 
   const [updateSubscriptionRenewal] = useUpdateSubscriptionRenewalMutation({
     onCompleted: () => {
@@ -113,7 +101,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
         <PaymentFormModal
           onClose={() => setShowPaymentFormModal(false)}
           onSuccess={onSuccess}
-          isStudent={isStudent}
+          isStudent={user.isStudent}
           emailAddressVerified={user.emailAddressVerified}
         />
       )}
@@ -175,7 +163,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
         {showPaymentForm && (
           <PaymentForm
             onSuccess={onSuccess}
-            isStudent={isStudent}
+            isStudent={user.isStudent}
             emailAddressVerified={user.emailAddressVerified}
           />
         )}

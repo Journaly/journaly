@@ -27,7 +27,7 @@ const updateStripeSubscription = async (subscriptionId: string, db: PrismaClient
   // If this has been set, subscription has expired
   // Covers both customer.subscription.updated & customer.subscription.deleted
   if (stripeSubscription.ended_at) {
-    expiresAt = stripeSubscription.ended_at
+    expiresAt = stripeSubscription.ended_at * 1000
   } else if (stripeSubscription.status === 'active') {
     // Apply a grace period of 2 days to 'active' subscriptions
     expiresAt += 24 * 60 * 60 * 1000 * 2

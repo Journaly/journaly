@@ -61,16 +61,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let event: Stripe.Event
 
-  if (process.env.NODE_ENV === 'production' && sig) {
+  if (process.env.NODE_ENV === 'production') {
     try {
+      if (!sig) {
+        throw new Error('Missing stripe-signature')
+      }
       event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
-    } catch (err) {
-      logPaymentsError(
-        err.message,
-        err,
-        body,
-      )
-  
+    } catch (err: any) {
+      logPaymentsError(err.message, err, body)
+
       res.status(400).send(`Webhook Error: ${err.message}`)
       return
     }

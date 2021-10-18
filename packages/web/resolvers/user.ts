@@ -339,6 +339,12 @@ const UserMutations = extendType({
 
         await validateUpdateUserMutationData(args, ctx)
 
+        const preUpdateUser = ctx.db.user.findUnique({
+          where: { id: userId },
+        })
+
+        if (!preUpdateUser) throw new Error('User not found')
+
         const updates = {
           ...args,
           isStudent: false,
@@ -356,7 +362,7 @@ const UserMutations = extendType({
           },
         })
 
-        if (args.email) {
+        if (args.email && args.email.toLowerCase() !== preUpdateUser.email) {
           const emailVerificationToken = await generateToken()
           await ctx.db.auth.update({
             where: { userId },

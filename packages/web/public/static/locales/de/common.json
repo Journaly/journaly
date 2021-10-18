@@ -64,7 +64,8 @@
     "cancel": "Abbrechen",
     "acknowledge": "Alles klar",
     "goToPremium": "Schau dir Premium an",
-    "generalPremiumFeatureExplanation": "ist ein tolles Premium-Feature! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken, oder nutze Journaly weiterhin kostenfrei."
+    "generalPremiumFeatureExplanation": "{{featureName}} ist ein tolles Premium-Feature! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken, oder nutze Journaly weiterhin kostenfrei.",
+    "unnamedPremiumFeatureExplanation": "Das ist ein tolles Premium-Feature! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken, oder nutze Journaly weiterhin kostenfrei."
   },
   "imageErrors": {
     "initial": "Fehler bei der Kommunikation mit dem Journaly-Server. Bitte versuche es später erneut.",

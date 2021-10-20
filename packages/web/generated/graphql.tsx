@@ -745,7 +745,7 @@ export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
   'id' | 'body' | 'createdAt'
 > & {
-    author: { __typename?: 'User' } & AuthorFragmentFragment
+    author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
     thanks: Array<
       { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'> & {
           author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
@@ -765,7 +765,7 @@ export type PostClapFragmentFragment = { __typename?: 'PostClap' } & Pick<PostCl
 export type PostCommentFragmentFragment = { __typename?: 'PostComment' } & Pick<
   PostComment,
   'id' | 'body' | 'createdAt'
-> & { author: { __typename?: 'User' } & AuthorFragmentFragment }
+> & { author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment }
 
 export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
   Thread,
@@ -1467,7 +1467,7 @@ export const CommentFragmentFragmentDoc = gql`
     body
     createdAt
     author {
-      ...AuthorFragment
+      ...AuthorWithLanguagesFragment
     }
     thanks {
       id
@@ -1478,7 +1478,7 @@ export const CommentFragmentFragmentDoc = gql`
       }
     }
   }
-  ${AuthorFragmentFragmentDoc}
+  ${AuthorWithLanguagesFragmentFragmentDoc}
 `
 export const ThreadFragmentFragmentDoc = gql`
   fragment ThreadFragment on Thread {
@@ -1499,10 +1499,10 @@ export const PostCommentFragmentFragmentDoc = gql`
     body
     createdAt
     author {
-      ...AuthorFragment
+      ...AuthorWithLanguagesFragment
     }
   }
-  ${AuthorFragmentFragmentDoc}
+  ${AuthorWithLanguagesFragmentFragmentDoc}
 `
 export const PostFragmentFragmentDoc = gql`
   fragment PostFragment on Post {

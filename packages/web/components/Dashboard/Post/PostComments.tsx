@@ -29,6 +29,7 @@ type PostCommentsProps = {
   currentUser: UserType | null
   onUpdateComment: () => void
   onDeleteComment: () => void
+  postLanguageId: number
 }
 
 const PostComments = ({
@@ -38,6 +39,7 @@ const PostComments = ({
   onUpdateComment,
   onDeleteComment,
   currentUser,
+  postLanguageId,
 }: PostCommentsProps) => {
   const uiLanguage = useUILanguage()
   const { t } = useTranslation('comment')
@@ -125,6 +127,7 @@ const PostComments = ({
                     onDeleteComment={onDeleteComment}
                     onUpdateComment={onUpdateComment}
                     key={comment.id}
+                    postLanguageId={postLanguageId}
                   />
                 )
               })}

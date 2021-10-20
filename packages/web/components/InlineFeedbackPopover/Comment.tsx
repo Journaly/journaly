@@ -12,7 +12,8 @@ import {
   useCreateCommentThanksMutation,
   useDeleteCommentThanksMutation,
   CommentThanks,
-  UserFragmentFragment,
+  UserFragmentFragment as UserType,
+  LanguageLevel,
 } from '@/generated/graphql'
 import theme from '@/theme'
 import { useTranslation } from '@/config/i18n'
@@ -29,10 +30,17 @@ type CommentProps = {
   comment: CommentType
   canEdit: boolean
   onUpdateComment(): void
-  currentUser?: UserFragmentFragment | null
+  currentUser?: UserType | null
+  postLanguageId: number
 }
 
-const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProps) => {
+const Comment = ({
+  comment,
+  canEdit,
+  onUpdateComment,
+  currentUser,
+  postLanguageId,
+}: CommentProps) => {
   const { t } = useTranslation('comment')
   const editTextarea = useRef<HTMLTextAreaElement>(null)
   const [isEditMode, setIsEditMode] = useState(false)
@@ -149,12 +157,24 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
   const isLoadingCommentThanks =
     createCommentThanksResult.loading || deleteCommentThanksResult.loading
 
+  const authorHasPostLanguage =
+    comment.author &&
+    comment.author.languages.filter((language) => language.language.id === postLanguageId)
+
+  let isNative = false
+  if (!authorHasPostLanguage || authorHasPostLanguage.length === 0) {
+    isNative = false
+  }
+  if (authorHasPostLanguage && authorHasPostLanguage[0].level === LanguageLevel.Native) {
+    isNative = true
+  }
+
   return (
     <div className="comment">
       <div className="author-body-container">
         <div className="author-block">
           <Link href={`/dashboard/profile/${comment.author.id}`}>
-            <a className="author-info">
+            <a className={`author-info ${isNative && 'is-native'}`}>
               {comment.author.profileImage ? (
                 <img className="profile-image" src={comment.author.profileImage} alt="" />
               ) : (
@@ -290,6 +310,23 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           display: flex;
           flex-direction: column;
           justify-content: center;
+          position: relative;
+        }
+
+        .author-info.is-native::after {
+          position: absolute;
+          content: 'native';
+          color: ${theme.colors.white};
+          font-size: 10px;
+          font-weight: 400;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          top: -5px;
+          border-radius: 5px;
+          height: 12px;
+          background: ${theme.colors.greenDark};
+          padding: 2px;
         }
 
         .profile-image {

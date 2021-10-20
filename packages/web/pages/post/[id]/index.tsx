@@ -38,6 +38,7 @@ const PostPage: NextPage = () => {
                   currentUser={currentUser || null}
                   onUpdateComment={refetch}
                   onDeleteComment={refetch}
+                  postLanguageId={post.language.id}
                 />
                 <PostAuthorCard author={post.author} />
               </div>

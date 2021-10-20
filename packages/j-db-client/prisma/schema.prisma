@@ -235,6 +235,7 @@ model Comment {
   thread              Thread                @relation(fields: [threadId], references: [id])
   thanks              CommentThanks[]
   PendingNotification PendingNotification[]
+  authorLanguageLevel LanguageLevel         @default(BEGINNER)
 }
 
 model PostComment {
@@ -248,6 +249,7 @@ model PostComment {
   post                Post                  @relation(fields: [postId], references: [id])
   PendingNotification PendingNotification[]
   thanks              PostCommentThanks[]
+  authorLanguageLevel LanguageLevel         @default(BEGINNER)
 }
 
 model Thread {

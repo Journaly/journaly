@@ -251,6 +251,10 @@ const PostQueries = extendType({
           description: 'Return posts by a given author.',
           required: false,
         }),
+        savedPosts: booleanArg({
+          description: 'If true, return only posts that the user has saved.',
+          required: false,
+        }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -296,6 +300,13 @@ const PostQueries = extendType({
         if (currentUser && args.followedAuthors) {
           const followingIds = currentUser.following.map((user: User) => user.id)
           where.push(Prisma.sql`p."authorId" IN (${Prisma.join(followingIds)})`)
+        }
+
+        if (currentUser && args.savedPosts) {
+          joins.push(Prisma.sql`
+            INNER JOIN "_UserSavedPosts" as usp
+                    ON usp.
+          `)
         }
 
         if (args.needsFeedback) {

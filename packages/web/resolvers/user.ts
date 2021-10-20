@@ -7,10 +7,8 @@ import {
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
-
+import { isAcademic } from 'swot-node'
 import { PostStatus, EmailVerificationStatus } from '@journaly/j-db-client'
-
-const swot = require('swot-node')
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
@@ -273,7 +271,7 @@ const UserMutations = extendType({
         if (!args.handle.match(/^[a-zA-Z0-9_-]+$/)) {
           throw new Error('Invalid handle')
         }
-        const isStudent = await swot.isAcademic(args.email)
+        const isStudent = await isAcademic(args.email)
         const password = await bcrypt.hash(args.password, 10)
         const emailVerificationToken = await generateToken()
         let user

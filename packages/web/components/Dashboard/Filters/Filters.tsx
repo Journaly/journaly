@@ -253,7 +253,6 @@ const Filters: React.FC<Props> = ({
       </div>
       {displayPremiumFeatureModal && (
         <PremiumFeatureModal
-          featureName={t('savePostPremiumFeatureName')}
           featureExplanation={t('savePostPremiumFeatureExplanation')}
           onAcknowledge={() => {
             setDisplayPremiumFeatureModal(false)

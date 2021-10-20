@@ -54,6 +54,5 @@
   "savePostError": "Something went wrong saving your post",
   "unsavePostSuccess": "Post removed from your list",
   "unsavePostError": "Something went wrong removing this post from your list",
-  "savePostPremiumFeatureName": "Saved Posts",
-  "savePostPremiumFeatureExplanation": "is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!"
+  "savePostPremiumFeatureExplanation": "Saved Posts is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!"
 }

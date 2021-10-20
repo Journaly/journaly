@@ -607,7 +607,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           onUpdateComment={refetch}
           onDeleteThread={refetch}
           ref={popoverRef}
-          postLanguageId={post.language.id}
         />
       )}
       <ConfirmationModal

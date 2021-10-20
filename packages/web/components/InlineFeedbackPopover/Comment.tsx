@@ -13,7 +13,6 @@ import {
   useDeleteCommentThanksMutation,
   CommentThanks,
   UserFragmentFragment as UserType,
-  LanguageLevel,
 } from '@/generated/graphql'
 import theme from '@/theme'
 import { useTranslation } from '@/config/i18n'
@@ -31,16 +30,9 @@ type CommentProps = {
   canEdit: boolean
   onUpdateComment(): void
   currentUser?: UserType | null
-  postLanguageId: number
 }
 
-const Comment = ({
-  comment,
-  canEdit,
-  onUpdateComment,
-  currentUser,
-  postLanguageId,
-}: CommentProps) => {
+const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProps) => {
   const { t } = useTranslation('comment')
   const editTextarea = useRef<HTMLTextAreaElement>(null)
   const [isEditMode, setIsEditMode] = useState(false)
@@ -157,17 +149,7 @@ const Comment = ({
   const isLoadingCommentThanks =
     createCommentThanksResult.loading || deleteCommentThanksResult.loading
 
-  const authorHasPostLanguage =
-    comment.author &&
-    comment.author.languages.filter((language) => language.language.id === postLanguageId)
-
-  let isNative = false
-  if (!authorHasPostLanguage || authorHasPostLanguage.length === 0) {
-    isNative = false
-  }
-  if (authorHasPostLanguage && authorHasPostLanguage[0].level === LanguageLevel.Native) {
-    isNative = true
-  }
+  const isNative = true
 
   return (
     <div className="comment">

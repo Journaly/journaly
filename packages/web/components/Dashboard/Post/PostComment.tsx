@@ -7,7 +7,6 @@ import {
   useUpdatePostCommentMutation,
   useDeletePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
-  LanguageLevel,
 } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
 
@@ -24,7 +23,6 @@ type PostCommentProps = {
   canEdit: boolean
   onUpdateComment: () => void
   onDeleteComment: () => void
-  postLanguageId: number
 }
 
 const PostComment: React.FC<PostCommentProps> = ({
@@ -32,7 +30,6 @@ const PostComment: React.FC<PostCommentProps> = ({
   canEdit,
   onUpdateComment,
   onDeleteComment,
-  postLanguageId,
 }) => {
   const { t } = useTranslation('comment')
 
@@ -77,17 +74,7 @@ const PostComment: React.FC<PostCommentProps> = ({
     })
   }
 
-  const authorHasPostLanguage =
-    comment.author &&
-    comment.author.languages.filter((language) => language.language.id === postLanguageId)
-
-  let isNative = false
-  if (!authorHasPostLanguage || authorHasPostLanguage.length === 0) {
-    isNative = false
-  }
-  if (authorHasPostLanguage && authorHasPostLanguage[0].level === LanguageLevel.Native) {
-    isNative = true
-  }
+  let isNative = true
 
   return (
     <div className="comment">

@@ -15,14 +15,10 @@ type InlineFeedbackPopoverProps = {
   onNewComment: () => void
   onUpdateComment: () => void
   onDeleteThread: () => void
-  postLanguageId: number
 }
 
 const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPopoverProps>(
-  (
-    { target, thread, onNewComment, onUpdateComment, onDeleteThread, currentUser, postLanguageId },
-    ref,
-  ) => {
+  ({ target, thread, onNewComment, onUpdateComment, onDeleteThread, currentUser }, ref) => {
     React.useEffect(() => {
       gtag('event', 'open_thread', { event_label: `thread#${thread.id}` })
     }, [thread.id])
@@ -35,7 +31,6 @@ const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPop
           onUpdateComment={onUpdateComment}
           currentUser={currentUser}
           onDeleteThread={onDeleteThread}
-          postLanguageId={postLanguageId}
         />
       </Popover>
     )

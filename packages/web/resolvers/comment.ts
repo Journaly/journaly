@@ -10,6 +10,8 @@ import {
   User,
   NotificationType,
   BadgeType,
+  LanguageLevel,
+  LanguageRelation,
 } from '@journaly/j-db-client'
 
 import {
@@ -176,9 +178,28 @@ const CommentMutations = extendType({
           throw new NotFoundError('thread')
         }
 
+        const commentAuthor = await ctx.db.user.findUnique({
+          where: { id: userId},
+          include: {
+            languages: true,
+          },
+        })
+
+        const authorHasPostLanguage =
+          commentAuthor &&
+          commentAuthor.languages.filter((language) => language.language.id === thread.post.languageId)
+
+        let authorLanguageLevel
+        if (authorHasPostLanguage.length > 0) {
+          authorLanguageLevel === authorHasPostLanguage.language.level
+        } else {
+          authorLanguageLevel === LanguageLevel.BEGINNER
+        }
+
         const comment = await ctx.db.comment.create({
           data: {
             body: args.body,
+            authorLanguageLevel,
             author: {
               connect: { id: userId },
             },

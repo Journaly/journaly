@@ -20,7 +20,6 @@ type ThreadProps = {
   onUpdateComment: () => void
   onDeleteThread: () => void
   currentUser: UserType | null | undefined
-  postLanguageId: number
 }
 
 const Thread: React.FC<ThreadProps> = ({
@@ -29,7 +28,6 @@ const Thread: React.FC<ThreadProps> = ({
   onUpdateComment,
   onDeleteThread,
   currentUser,
-  postLanguageId,
 }) => {
   const { t } = useTranslation('comment')
 
@@ -85,7 +83,6 @@ const Thread: React.FC<ThreadProps> = ({
                 key={idx}
                 onUpdateComment={onUpdateComment}
                 currentUser={currentUser}
-                postLanguageId={postLanguageId}
               />
             )
           })}

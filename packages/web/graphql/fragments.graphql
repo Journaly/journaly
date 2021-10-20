@@ -76,7 +76,7 @@ fragment CommentFragment on Comment {
   body
   createdAt
   author {
-    ...AuthorWithLanguagesFragment
+    ...AuthorFragment
   }
   thanks {
     id
@@ -107,7 +107,7 @@ fragment PostCommentFragment on PostComment {
   body
   createdAt
   author {
-    ...AuthorWithLanguagesFragment
+    ...AuthorFragment
   }
 }
 

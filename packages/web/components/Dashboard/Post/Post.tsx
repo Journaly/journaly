@@ -95,7 +95,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0, w: 0, h: 0 })
   const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
-  const [premiumFeatureModalName, setPremiumFeatureModalName] = useState()
   const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
   const isAuthoredPost = currentUser && post.author.id === currentUser.id
 
@@ -127,7 +126,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
 
   const handleSavePost = () => {
     if (!canAttempToSavePost) {
-      setPremiumFeatureModalName(t('savePostPremiumFeatureName'))
       setPremiumFeatureModalExplanation(t('savePostPremiumFeatureExplanation'))
       setDisplayPremiumFeatureModal(true)
     } else {
@@ -467,7 +465,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
 
   const handleBumpPost = () => {
     if (!canAttemptBump) {
-      setPremiumFeatureModalName(t('postBumpingPremiumFeatureName'))
       setPremiumFeatureModalExplanation(t('postBumpingPremiumFeatureExplanation'))
       setDisplayPremiumFeatureModal(true)
     } else {
@@ -626,15 +623,13 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       />
       {displayPremiumFeatureModal && (
         <PremiumFeatureModal
-          featureExplanation={t('postBumpingPremiumFeatureExplanation')}
+          featureExplanation={premiumFeatureModalExplanation}
           onAcknowledge={() => {
-            setPremiumFeatureModalName(undefined)
             setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={() => {
             Router.push('/dashboard/settings/subscription')
-            setPremiumFeatureModalName(undefined)
             setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}

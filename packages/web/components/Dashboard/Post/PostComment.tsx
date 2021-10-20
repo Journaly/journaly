@@ -76,7 +76,6 @@ const PostComment: React.FC<PostCommentProps> = ({
   }
 
   const isNative = comment.authorLanguageLevel === LanguageLevel.Native
-  console.log(comment.authorLanguageLevel)
 
   return (
     <div className="comment">

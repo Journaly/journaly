@@ -108,6 +108,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
           hasPosts: true,
           authoredOnly: false,
         }}
+        showSavedPosts={true}
       />
       <LoadingWrapper loading={loading} error={error}>
         <div className="my-feed-container" data-testid="my-feed-container">

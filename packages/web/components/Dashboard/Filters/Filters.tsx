@@ -17,7 +17,7 @@ export type PostQueryVarsType = {
   search: string
   needsFeedback: boolean
   hasInteracted: boolean
-  savedPosts?: boolean
+  savedPosts: boolean
 }
 
 type Props = {
@@ -30,6 +30,7 @@ type Props = {
     authoredOnly: boolean
   }
   showPostCount?: boolean
+  showSavedPosts?: boolean
 }
 
 const Filters: React.FC<Props> = ({
@@ -39,6 +40,7 @@ const Filters: React.FC<Props> = ({
   setPostQueryVars,
   topicAndLanguageOptions,
   showPostCount = true,
+  showSavedPosts = false,
 }) => {
   const { t } = useTranslation('my-feed')
   const [showAdvancedFilters, setShowAdvancedFilters] = useToggle(false)
@@ -237,10 +239,10 @@ const Filters: React.FC<Props> = ({
                 >
                   {t('hasInteracted')}
                 </Button>
-                {postQueryVars.savedPosts && (
+                {showSavedPosts && (
                   <Button
                     variant={ButtonVariant.Link}
-                    className={`filter-action-btn ${postQueryVars.hasInteracted ? 'active' : ''}`}
+                    className={`filter-action-btn ${postQueryVars.savedPosts ? 'active' : ''}`}
                     onClick={handleToggleSavedPosts}
                   >
                     {t('savedPosts')}

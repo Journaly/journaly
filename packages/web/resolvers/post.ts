@@ -412,7 +412,7 @@ const PostMutations = extendType({
           },
         })
 
-        if (!user) throw new Error('User not found')
+        if (!user?.auth) throw new Error('User not found')
 
         if (isPublished && user.auth.emailVerificationStatus !== EmailVerificationStatus.VERIFIED) {
           throw new Error('Please verify your email address in order to begin publishing posts')
@@ -531,7 +531,7 @@ const PostMutations = extendType({
             originalPost.threads,
           )
 
-          await Promise.all(
+          await Promise.all<unknown>(
             newThreadPositions.map(({ id, startIndex, endIndex, archived }) => {
               if (archived) {
                 return new Promise<void>((res) => res())
@@ -813,13 +813,13 @@ const PostMutations = extendType({
         if (!currentUser) throw new NotFoundError('User')
         if (!post) throw new NotFoundError('Post')
 
-        hasAuthorPermissions(post, currentUser)
-
         const canBump =
-          (currentUser.membershipSubscription &&
+          (currentUser.membershipSubscription?.expiresAt &&
             currentUser.membershipSubscription.expiresAt > new Date()) ||
           currentUser.userRole === UserRole.ADMIN ||
           currentUser.userRole === UserRole.MODERATOR
+
+        hasAuthorPermissions(post, currentUser)
 
         if (!canBump) {
           throw new Error('Only Journaly Premium members can access this feature')

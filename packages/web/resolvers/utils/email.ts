@@ -16,6 +16,10 @@ type sendEmailAddressVerificationEmailArgs = {
   verificationToken: string
 }
 
+type sendPremiumWelcomeEmailArgs = {
+  user: User
+}
+
 type sendNewBadgeEmailArgs = {
   badgeType: BadgeType
   user: User
@@ -237,10 +241,25 @@ const sendEmailAddressVerificationEmail = ({
   })
 }
 
+const sendPremiumWelcomeEmail = ({ user }: sendPremiumWelcomeEmailArgs) => {
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: user.email,
+    subject: '🎈 WELCOME To Journaly Premium! 🎉',
+    html: makeEmail(`
+      <p>Hi ${user.name || user.handle}!</p>
+      <p>I am absolutely delighted to be able to WELCOME you to Journaly Premium 🎉 How exciting! I can honestly tell you that, at this early stage, I quite literally jump up and down with every single new Journaly Premium signup and rush to send Ryan a series of excited GIFs.</p>
+      <p>THANK YOU so much for officially being an early adopter and supporter of not just the Journaly platform and its community, but of the tiny Journaly Team and our dreams of a financially sustainable platform.</p>
+      <p>You rock, now go and have some fun with those new, shiny premium features! We'll be adding plenty more in the coming weeks and months.</p>
+    `),
+  })
+}
+
 export {
   sendJmail,
   sendPasswordResetTokenEmail,
   sendNewBadgeEmail,
   subscribeUserToProductUpdates,
   sendEmailAddressVerificationEmail,
+  sendPremiumWelcomeEmail,
 }

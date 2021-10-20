@@ -6,13 +6,7 @@ import {
 } from 'nexus'
 import { add, isPast } from 'date-fns'
 
-import {
-  User,
-  NotificationType,
-  BadgeType,
-  LanguageLevel,
-  LanguageRelation,
-} from '@journaly/j-db-client'
+import { User, NotificationType, BadgeType, LanguageLevel } from '@journaly/j-db-client'
 
 import {
   hasAuthorPermissions,
@@ -187,11 +181,11 @@ const CommentMutations = extendType({
 
         const authorHasPostLanguage =
           commentAuthor &&
-          commentAuthor.languages.filter((language) => language.language.id === thread.post.languageId)
+          commentAuthor.languages.filter((language) => language.languageId === thread.post.languageId)
 
         let authorLanguageLevel
-        if (authorHasPostLanguage.length > 0) {
-          authorLanguageLevel === authorHasPostLanguage.language.level
+        if (authorHasPostLanguage && authorHasPostLanguage.length > 0) {
+          authorLanguageLevel === authorHasPostLanguage[0].level
         } else {
           authorLanguageLevel === LanguageLevel.BEGINNER
         }

@@ -31,6 +31,7 @@ export type Comment = {
   author: User
   body: Scalars['String']
   createdAt: Scalars['DateTime']
+  authorLanguageLevel: LanguageLevel
   thanks: Array<CommentThanks>
 }
 
@@ -167,8 +168,6 @@ export type Mutation = {
   initiatePostImageUpload: InitiatePostImageUploadResponse
   initiateInlinePostImageUpload: InitiateInlinePostImageUploadResponse
   bumpPost: Post
-  savePost: Post
-  unsavePost: Post
   createUser: User
   updateUser: User
   initiateAvatarImageUpload: InitiateAvatarImageUploadResponse
@@ -180,6 +179,8 @@ export type Mutation = {
   followUser: User
   unfollowUser: User
   resendEmailVerificationEmail: User
+  savePost: User
+  unsavePost: User
   addLanguageRelation: LanguageRelation
   removeLanguageRelation: LanguageRelation
   updateSocialMedia: SocialMedia
@@ -267,14 +268,6 @@ export type MutationBumpPostArgs = {
   postId: Scalars['Int']
 }
 
-export type MutationSavePostArgs = {
-  postId: Scalars['Int']
-}
-
-export type MutationUnsavePostArgs = {
-  postId: Scalars['Int']
-}
-
 export type MutationCreateUserArgs = {
   handle: Scalars['String']
   email: Scalars['String']
@@ -317,6 +310,14 @@ export type MutationFollowUserArgs = {
 
 export type MutationUnfollowUserArgs = {
   followedUserId: Scalars['Int']
+}
+
+export type MutationSavePostArgs = {
+  postId: Scalars['Int']
+}
+
+export type MutationUnsavePostArgs = {
+  postId: Scalars['Int']
 }
 
 export type MutationAddLanguageRelationArgs = {
@@ -410,6 +411,7 @@ export type PostComment = {
   author: User
   body: Scalars['String']
   createdAt: Scalars['DateTime']
+  authorLanguageLevel: LanguageLevel
 }
 
 export type PostPage = {
@@ -465,6 +467,7 @@ export type QueryPostsArgs = {
   hasInteracted?: Maybe<Scalars['Boolean']>
   status: PostStatus
   authorId?: Maybe<Scalars['Int']>
+  savedPosts?: Maybe<Scalars['Boolean']>
 }
 
 export type QueryUserByIdArgs = {
@@ -743,7 +746,7 @@ export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
-  'id' | 'body' | 'createdAt'
+  'id' | 'body' | 'createdAt' | 'authorLanguageLevel'
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     thanks: Array<
@@ -764,7 +767,7 @@ export type PostClapFragmentFragment = { __typename?: 'PostClap' } & Pick<PostCl
 
 export type PostCommentFragmentFragment = { __typename?: 'PostComment' } & Pick<
   PostComment,
-  'id' | 'body' | 'createdAt'
+  'id' | 'body' | 'createdAt' | 'authorLanguageLevel'
 > & { author: { __typename?: 'User' } & AuthorFragmentFragment }
 
 export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
@@ -1101,7 +1104,7 @@ export type SavePostMutationVariables = Exact<{
 }>
 
 export type SavePostMutation = { __typename?: 'Mutation' } & {
-  savePost: { __typename?: 'Post' } & Pick<Post, 'id'>
+  savePost: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type UnsavePostMutationVariables = Exact<{
@@ -1109,7 +1112,7 @@ export type UnsavePostMutationVariables = Exact<{
 }>
 
 export type UnsavePostMutation = { __typename?: 'Mutation' } & {
-  unsavePost: { __typename?: 'Post' } & Pick<Post, 'id'>
+  unsavePost: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type UpdatePostMutationVariables = Exact<{
@@ -1466,6 +1469,7 @@ export const CommentFragmentFragmentDoc = gql`
     id
     body
     createdAt
+    authorLanguageLevel
     author {
       ...AuthorFragment
     }
@@ -1498,6 +1502,7 @@ export const PostCommentFragmentFragmentDoc = gql`
     id
     body
     createdAt
+    authorLanguageLevel
     author {
       ...AuthorFragment
     }

@@ -13,6 +13,7 @@ import {
   useDeleteCommentThanksMutation,
   CommentThanks,
   UserFragmentFragment as UserType,
+  LanguageLevel,
 } from '@/generated/graphql'
 import theme from '@/theme'
 import { useTranslation } from '@/config/i18n'
@@ -149,7 +150,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
   const isLoadingCommentThanks =
     createCommentThanksResult.loading || deleteCommentThanksResult.loading
 
-  const isNative = true
+  const isNative = comment.authorLanguageLevel === LanguageLevel.Native
 
   return (
     <div className="comment">

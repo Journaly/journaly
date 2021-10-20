@@ -7,6 +7,7 @@ import {
   useUpdatePostCommentMutation,
   useDeletePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
+  LanguageLevel,
 } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
 
@@ -74,7 +75,8 @@ const PostComment: React.FC<PostCommentProps> = ({
     })
   }
 
-  let isNative = true
+  const isNative = comment.authorLanguageLevel === LanguageLevel.Native
+  console.log(comment.authorLanguageLevel)
 
   return (
     <div className="comment">

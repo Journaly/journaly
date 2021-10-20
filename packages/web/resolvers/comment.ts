@@ -39,6 +39,7 @@ const Comment = objectType({
     t.model.author()
     t.model.body()
     t.model.createdAt()
+    t.model.authorLanguageLevel()
     t.model.thanks({ pagination: false })
   },
 })
@@ -50,6 +51,7 @@ const PostComment = objectType({
     t.model.author()
     t.model.body()
     t.model.createdAt()
+    t.model.authorLanguageLevel()
   },
 })
 
@@ -173,7 +175,7 @@ const CommentMutations = extendType({
         }
 
         const commentAuthor = await ctx.db.user.findUnique({
-          where: { id: userId},
+          where: { id: userId },
           include: {
             languages: true,
           },
@@ -181,14 +183,12 @@ const CommentMutations = extendType({
 
         const authorHasPostLanguage =
           commentAuthor &&
-          commentAuthor.languages.filter((language) => language.languageId === thread.post.languageId)
+          commentAuthor.languages.filter(
+            (language) => language.languageId === thread.post.languageId,
+          )
 
-        let authorLanguageLevel
-        if (authorHasPostLanguage && authorHasPostLanguage.length > 0) {
-          authorLanguageLevel === authorHasPostLanguage[0].level
-        } else {
-          authorLanguageLevel === LanguageLevel.BEGINNER
-        }
+        const authorLanguageLevel =
+          (authorHasPostLanguage && authorHasPostLanguage[0].level) || LanguageLevel.BEGINNER
 
         const comment = await ctx.db.comment.create({
           data: {
@@ -228,28 +228,19 @@ const CommentMutations = extendType({
             return
           }
 
-          promises.push(createNotification(
-            ctx.db,
-            user,
-            {
+          promises.push(
+            createNotification(ctx.db, user, {
               type: NotificationType.THREAD_COMMENT,
-              comment
-            }
-          ))
+              comment,
+            }),
+          )
         })
 
         await Promise.all(promises)
 
         // Check to see if we should assign a badge
-        if (
-          thread.post.author.id !== userId &&
-          isPast(add(thread.post.createdAt, { weeks: 1 }))
-        ) {
-          await assignBadge(
-            ctx.db,
-            userId,
-            BadgeType.NECROMANCER
-          )
+        if (thread.post.author.id !== userId && isPast(add(thread.post.createdAt, { weeks: 1 }))) {
+          await assignBadge(ctx.db, userId, BadgeType.NECROMANCER)
         }
 
         return comment
@@ -363,9 +354,26 @@ const CommentMutations = extendType({
           throw new NotFoundError('post')
         }
 
+        const commentAuthor = await ctx.db.user.findUnique({
+          where: { id: userId },
+          include: {
+            languages: true,
+          },
+        })
+
+        const authorHasPostLanguage =
+          commentAuthor &&
+          commentAuthor.languages.filter(
+            (language) => language.languageId === post.languageId,
+          )
+
+        const authorLanguageLevel =
+          (authorHasPostLanguage && authorHasPostLanguage[0].level) || LanguageLevel.BEGINNER
+
         const postComment = await ctx.db.postComment.create({
           data: {
             body: args.body,
+            authorLanguageLevel,
             author: {
               connect: { id: userId },
             },
@@ -390,8 +398,8 @@ const CommentMutations = extendType({
             userId_postId: {
               userId,
               postId: post.id,
-            }
-          }
+            },
+          },
         })
 
         const promises: Promise<any>[] = []
@@ -401,14 +409,12 @@ const CommentMutations = extendType({
             return
           }
 
-          promises.push(createNotification(
-            ctx.db,
-            user,
-            {
+          promises.push(
+            createNotification(ctx.db, user, {
               type: NotificationType.POST_COMMENT,
-              postComment
-            }
-          ))
+              postComment,
+            }),
+          )
         })
 
         await Promise.all(promises)

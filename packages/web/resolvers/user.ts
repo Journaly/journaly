@@ -10,7 +10,7 @@ import { serialize } from 'cookie'
 
 import { PostStatus, EmailVerificationStatus } from '@journaly/j-db-client'
 
-import swot from 'swot-node'
+const swot = require('swot-node')
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {

@@ -15,8 +15,8 @@
   "savePostPremiumFeatureName": "Angeheftete Beiträge",
   "savePostPremiumFeatureExplanation": "ist ein angenehmes Premium-Feature, dass dir das Anheften von Beiträgen ermöglicht, sodass du diese später einfach wiederfinden und lesen kannst. Die Liste kannst du über die erweiterten Filter der Mein-Feed-Seite erreichen! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken oder nutze all die kostenfreien Feature von Journaly weiterhin kostenlos.",
   "pagination": {
-    "previous": "vor",
-    "next": "weiter",
+    "previous": "Vor",
+    "next": "Weiter",
     "page": "Seite",
     "of": "von"
   }

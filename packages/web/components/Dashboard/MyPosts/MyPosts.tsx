@@ -36,6 +36,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
     needsFeedback: false,
     hasInteracted: false,
     search: '',
+    savedPosts: false,
   })
   const { loading, data, error } = usePostsQuery({
     variables: {

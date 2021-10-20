@@ -7,10 +7,8 @@ import {
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
-
+import { isAcademic } from 'swot-node'
 import { PostStatus, EmailVerificationStatus } from '@journaly/j-db-client'
-
-import swot from 'swot-node'
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
@@ -83,7 +81,7 @@ const User = objectType({
             userId: parent.id,
           },
         })
-        return auth.emailVerificationStatus === EmailVerificationStatus.VERIFIED
+        return auth?.emailVerificationStatus === EmailVerificationStatus.VERIFIED
       },
     })
     t.int('postsWrittenCount', {
@@ -274,7 +272,7 @@ const UserMutations = extendType({
         if (!args.handle.match(/^[a-zA-Z0-9_-]+$/)) {
           throw new Error('Invalid handle')
         }
-        const isStudent = await swot.isAcademic(args.email)
+        const isStudent = await isAcademic(args.email)
         const password = await bcrypt.hash(args.password, 10)
         const emailVerificationToken = await generateToken()
         let user
@@ -340,7 +338,7 @@ const UserMutations = extendType({
 
         await validateUpdateUserMutationData(args, ctx)
 
-        const preUpdateUser = ctx.db.user.findUnique({
+        const preUpdateUser = await ctx.db.user.findUnique({
           where: { id: userId },
         })
 
@@ -348,12 +346,13 @@ const UserMutations = extendType({
 
         const updates = {
           ...args,
+          handle: args.handle || undefined,
           isStudent: false,
           email: args.email?.toLowerCase(),
         }
 
         if (args.email) {
-          updates.isStudent = await swot.isAcademic(args.email)
+          updates.isStudent = await isAcademic(args.email)
         }
 
         const user = await ctx.db.user.update({
@@ -367,7 +366,7 @@ const UserMutations = extendType({
           const emailVerificationToken = await generateToken()
           await ctx.db.auth.update({
             where: { userId },
-            date: {
+            data: {
               emailVerificationToken,
               emailVerificationStatus: EmailVerificationStatus.PENDING,
             },
@@ -669,10 +668,20 @@ const UserMutations = extendType({
           where: { id: userId },
           include: { auth: true },
         })
-        if (!user) throw new Error('User not found')
+        if (!user?.auth) throw new Error('User not found')
+        let verificationToken = user.auth.emailVerificationToken
+        if (!verificationToken) {
+          verificationToken = await generateToken()
+          await ctx.db.auth.update({
+            where: { userId },
+            data: {
+              emailVerificationToken: verificationToken,
+            },
+          })
+        }
         await sendEmailAddressVerificationEmail({
           user,
-          verificationToken: user.auth.emailverificationToken,
+          verificationToken,
         })
         return user
       },

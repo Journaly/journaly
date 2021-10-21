@@ -384,6 +384,7 @@ export type Post = {
   postComments: Array<PostComment>
   language: Language
   publishedLanguageLevel: LanguageLevel
+  privateShareId?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
   bodySrc: Scalars['String']
@@ -427,6 +428,7 @@ export type PostPostCommentsOrderByInput = {
 export enum PostStatus {
   Draft = 'DRAFT',
   Published = 'PUBLISHED',
+  Private = 'PRIVATE',
 }
 
 export type PostTopic = {
@@ -453,7 +455,8 @@ export type QueryTopicsArgs = {
 }
 
 export type QueryPostByIdArgs = {
-  id: Scalars['Int']
+  id?: Maybe<Scalars['Int']>
+  privateShareId?: Maybe<Scalars['String']>
 }
 
 export type QueryPostsArgs = {
@@ -788,6 +791,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   | 'bumpedAt'
   | 'bumpCount'
   | 'publishedLanguageLevel'
+  | 'privateShareId'
 > & {
     author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
@@ -953,6 +957,16 @@ export type PostPageQueryVariables = Exact<{
 }>
 
 export type PostPageQuery = { __typename?: 'Query' } & {
+  postById: { __typename?: 'Post' } & PostWithTopicsFragmentFragment
+  currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
+}
+
+export type PrivatePostPageQueryVariables = Exact<{
+  privateShareId: Scalars['String']
+  uiLanguage: UiLanguage
+}>
+
+export type PrivatePostPageQuery = { __typename?: 'Query' } & {
   postById: { __typename?: 'Post' } & PostWithTopicsFragmentFragment
   currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
@@ -1522,6 +1536,7 @@ export const PostFragmentFragmentDoc = gql`
     bumpedAt
     bumpCount
     publishedLanguageLevel
+    privateShareId
     author {
       ...AuthorWithLanguagesFragment
     }
@@ -2631,6 +2646,64 @@ export type PostPageLazyQueryHookResult = ReturnType<typeof usePostPageLazyQuery
 export type PostPageQueryResult = ApolloReactCommon.QueryResult<
   PostPageQuery,
   PostPageQueryVariables
+>
+export const PrivatePostPageDocument = gql`
+  query privatePostPage($privateShareId: String!, $uiLanguage: UILanguage!) {
+    postById(privateShareId: $privateShareId) {
+      ...PostWithTopicsFragment
+    }
+    currentUser {
+      ...CurrentUserFragment
+    }
+  }
+  ${PostWithTopicsFragmentFragmentDoc}
+  ${CurrentUserFragmentFragmentDoc}
+`
+
+/**
+ * __usePrivatePostPageQuery__
+ *
+ * To run a query within a React component, call `usePrivatePostPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePrivatePostPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePrivatePostPageQuery({
+ *   variables: {
+ *      privateShareId: // value for 'privateShareId'
+ *      uiLanguage: // value for 'uiLanguage'
+ *   },
+ * });
+ */
+export function usePrivatePostPageQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    PrivatePostPageQuery,
+    PrivatePostPageQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<PrivatePostPageQuery, PrivatePostPageQueryVariables>(
+    PrivatePostPageDocument,
+    baseOptions,
+  )
+}
+export function usePrivatePostPageLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PrivatePostPageQuery,
+    PrivatePostPageQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<PrivatePostPageQuery, PrivatePostPageQueryVariables>(
+    PrivatePostPageDocument,
+    baseOptions,
+  )
+}
+export type PrivatePostPageQueryHookResult = ReturnType<typeof usePrivatePostPageQuery>
+export type PrivatePostPageLazyQueryHookResult = ReturnType<typeof usePrivatePostPageLazyQuery>
+export type PrivatePostPageQueryResult = ApolloReactCommon.QueryResult<
+  PrivatePostPageQuery,
+  PrivatePostPageQueryVariables
 >
 export const ProfilePageDocument = gql`
   query profilePage($userId: Int!, $uiLanguage: UILanguage!) {

@@ -136,6 +136,7 @@ fragment PostFragment on Post {
   bumpedAt
   bumpCount
   publishedLanguageLevel
+  privateShareId
   author {
     ...AuthorWithLanguagesFragment
   }

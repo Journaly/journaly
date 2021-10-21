@@ -183,12 +183,9 @@ const CommentMutations = extendType({
 
         const authorHasPostLanguage =
           commentAuthor &&
-          commentAuthor.languages.filter(
-            (language) => language.languageId === thread.post.languageId,
-          )
+          commentAuthor.languages.find((language) => language.languageId === thread.post.languageId)
 
-        const authorLanguageLevel =
-          (authorHasPostLanguage && authorHasPostLanguage[0].level) || LanguageLevel.BEGINNER
+        const authorLanguageLevel = authorHasPostLanguage?.level || LanguageLevel.BEGINNER
 
         const comment = await ctx.db.comment.create({
           data: {
@@ -363,12 +360,9 @@ const CommentMutations = extendType({
 
         const authorHasPostLanguage =
           commentAuthor &&
-          commentAuthor.languages.filter(
-            (language) => language.languageId === post.languageId,
-          )
+          commentAuthor.languages.find((language) => language.languageId === post.languageId)
 
-        const authorLanguageLevel =
-          (authorHasPostLanguage && authorHasPostLanguage[0].level) || LanguageLevel.BEGINNER
+        const authorLanguageLevel = authorHasPostLanguage?.level || LanguageLevel.BEGINNER
 
         const postComment = await ctx.db.postComment.create({
           data: {

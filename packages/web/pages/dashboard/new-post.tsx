@@ -173,7 +173,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
         setErrorMessage(t('emailVerificationWarning'))
       }
     },
-    [createNewPost],
+    [currentUser, createNewPost],
   )
 
   const handleSharePrivatelyClick = React.useCallback(

@@ -17,7 +17,7 @@ import LockIcon from '../Icons/LockIcon'
 type PostHeaderProps = {
   postTitle: string
   postStatus: PostStatus
-  publishDate: string
+  publishDate?: string
   publishedLanguageLevel?: LanguageLevel
   authorName: string
   authorId: number
@@ -71,7 +71,9 @@ const PostHeader: React.FC<PostHeaderProps> = ({
               </a>
             </Link>
           </p>
-          <time dateTime={publishDate}>{formatLongDate(publishDate)}</time>
+          <time dateTime={publishDate}>
+            {formatLongDate(publishDate || new Date().toISOString())}
+          </time>
         </div>
 
         <div className="topics-container">

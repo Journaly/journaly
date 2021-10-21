@@ -326,7 +326,7 @@ const PostQueries = extendType({
         if (currentUser && args.savedPosts) {
           joins.push(Prisma.sql`
             INNER JOIN "_UserSavedPosts" as usp
-                    ON usp."B" = ${currentUser.id}
+                    ON usp."B" = ${currentUser.id} AND usp."A" = p.id
           `)
         }
 

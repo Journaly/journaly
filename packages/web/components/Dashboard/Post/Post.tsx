@@ -110,17 +110,16 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     onError: () => {
       toast.error(t('savePostError'))
     },
-    update: (cache, { data }) => {
-      const savedPost = data?.savePost
-      if (savedPost?.id && savedPost?.__typename) {
-        cache.modify({
-          fields: {
-            savedPosts(existingPosts) {
-              return [...existingPosts, savedPost]
-            },
+    update(cache) {
+      cache.modify({
+        id: cache.identify(makeReference('ROOT_QUERY')),
+        fields: {
+          posts: () => {
+            // This simply invalidates the cache for the `posts` query
+            return undefined
           },
-        })
-      }
+        },
+      })
     },
   })
 

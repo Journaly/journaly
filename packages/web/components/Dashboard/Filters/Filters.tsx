@@ -153,9 +153,8 @@ const Filters: React.FC<Props> = ({
     postQueryVars.topics.length +
     ~~postQueryVars.followedAuthors +
     ~~postQueryVars.needsFeedback +
-    ~~postQueryVars.hasInteracted
-
-  if (postQueryVars.savedPosts) filterCount += ~~postQueryVars.savedPosts
+    ~~postQueryVars.hasInteracted +
+    ~~postQueryVars.savedPosts
 
   return (
     <div className="my-feed-search">

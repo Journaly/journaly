@@ -6,7 +6,9 @@
   "topicSelectPlaceholder": "Select up to five topics",
   "uploadImageButtonText": "Upload Image",
   "draft": "draft",
+  "private": "private",
   "publishDraft": "Publish Draft",
+  "publishPost": "Publish Post",
   "saveDraftCTA": "Save Draft",
   "publishCTA": "Publish!",
   "readTime": "{{minutes}} min. read",
@@ -54,5 +56,7 @@
   "savePostError": "Something went wrong saving your post",
   "unsavePostSuccess": "Post removed from your list",
   "unsavePostError": "Something went wrong removing this post from your list",
-  "savePostPremiumFeatureExplanation": "Saved Posts is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!"
+  "savePostPremiumFeatureExplanation": "Saved Posts is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!",
+  "sharePrivatelyCTA": "Share Privately",
+  "privateShareLinkText": "Your private share link:"
 }

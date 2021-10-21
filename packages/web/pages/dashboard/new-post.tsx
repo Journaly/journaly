@@ -271,6 +271,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
               margin: 0 auto;
               width: 250px;
               justify-content: space-around;
+              gap: 10px;
             }
 
             @media (max-width: ${theme.breakpoints.XS}) {

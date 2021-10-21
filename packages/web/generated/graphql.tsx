@@ -167,8 +167,6 @@ export type Mutation = {
   initiatePostImageUpload: InitiatePostImageUploadResponse
   initiateInlinePostImageUpload: InitiateInlinePostImageUploadResponse
   bumpPost: Post
-  savePost: Post
-  unsavePost: Post
   createUser: User
   updateUser: User
   initiateAvatarImageUpload: InitiateAvatarImageUploadResponse
@@ -180,6 +178,8 @@ export type Mutation = {
   followUser: User
   unfollowUser: User
   resendEmailVerificationEmail: User
+  savePost: User
+  unsavePost: User
   addLanguageRelation: LanguageRelation
   removeLanguageRelation: LanguageRelation
   updateSocialMedia: SocialMedia
@@ -267,14 +267,6 @@ export type MutationBumpPostArgs = {
   postId: Scalars['Int']
 }
 
-export type MutationSavePostArgs = {
-  postId: Scalars['Int']
-}
-
-export type MutationUnsavePostArgs = {
-  postId: Scalars['Int']
-}
-
 export type MutationCreateUserArgs = {
   handle: Scalars['String']
   email: Scalars['String']
@@ -317,6 +309,14 @@ export type MutationFollowUserArgs = {
 
 export type MutationUnfollowUserArgs = {
   followedUserId: Scalars['Int']
+}
+
+export type MutationSavePostArgs = {
+  postId: Scalars['Int']
+}
+
+export type MutationUnsavePostArgs = {
+  postId: Scalars['Int']
 }
 
 export type MutationAddLanguageRelationArgs = {
@@ -425,6 +425,7 @@ export type PostPostCommentsOrderByInput = {
 export enum PostStatus {
   Draft = 'DRAFT',
   Published = 'PUBLISHED',
+  Private = 'PRIVATE',
 }
 
 export type PostTopic = {
@@ -465,6 +466,7 @@ export type QueryPostsArgs = {
   hasInteracted?: Maybe<Scalars['Boolean']>
   status: PostStatus
   authorId?: Maybe<Scalars['Int']>
+  savedPosts?: Maybe<Scalars['Boolean']>
 }
 
 export type QueryUserByIdArgs = {
@@ -1088,6 +1090,7 @@ export type PostsQueryVariables = Exact<{
   hasInteracted?: Maybe<Scalars['Boolean']>
   authorId?: Maybe<Scalars['Int']>
   status: PostStatus
+  savedPosts?: Maybe<Scalars['Boolean']>
 }>
 
 export type PostsQuery = { __typename?: 'Query' } & {
@@ -1101,7 +1104,7 @@ export type SavePostMutationVariables = Exact<{
 }>
 
 export type SavePostMutation = { __typename?: 'Mutation' } & {
-  savePost: { __typename?: 'Post' } & Pick<Post, 'id'>
+  savePost: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type UnsavePostMutationVariables = Exact<{
@@ -1109,7 +1112,7 @@ export type UnsavePostMutationVariables = Exact<{
 }>
 
 export type UnsavePostMutation = { __typename?: 'Mutation' } & {
-  unsavePost: { __typename?: 'Post' } & Pick<Post, 'id'>
+  unsavePost: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type UpdatePostMutationVariables = Exact<{
@@ -3179,6 +3182,7 @@ export const PostsDocument = gql`
     $hasInteracted: Boolean
     $authorId: Int
     $status: PostStatus!
+    $savedPosts: Boolean
   ) {
     posts(
       first: $first
@@ -3191,6 +3195,7 @@ export const PostsDocument = gql`
       hasInteracted: $hasInteracted
       authorId: $authorId
       status: $status
+      savedPosts: $savedPosts
     ) {
       posts {
         ...PostCardFragment
@@ -3223,6 +3228,7 @@ export const PostsDocument = gql`
  *      hasInteracted: // value for 'hasInteracted'
  *      authorId: // value for 'authorId'
  *      status: // value for 'status'
+ *      savedPosts: // value for 'savedPosts'
  *   },
  * });
  */

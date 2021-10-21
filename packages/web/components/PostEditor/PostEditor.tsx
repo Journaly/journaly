@@ -209,7 +209,6 @@ const PostEditor: React.FC<PostEditorProps> = ({
         <PostHeader
           postTitle={title}
           postStatus={PostStatusType.Published}
-          publishDate={new Date().toISOString()}
           authorName={currentUser?.name || currentUser?.handle || 'anonymous'}
           authorId={currentUser.id}
           postImage={postImage}

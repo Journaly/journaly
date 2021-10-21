@@ -19,6 +19,7 @@ import LoadingWrapper from '@/components/LoadingWrapper'
 import FeedHeader from './FeedHeader'
 import Filters from '../Filters'
 import { PostQueryVarsType } from '../Filters'
+import { makeReference, useApolloClient } from '@apollo/client'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -36,6 +37,7 @@ export type InitialSearchFilters = {
 
 const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   const { t } = useTranslation('my-feed')
+  const client = useApolloClient()
 
   /**
    * Pagination handling
@@ -46,6 +48,14 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   useEffect(() => {
     if (router.query['email-verification'] === 'success') {
       toast.success("You're email address has been verified!")
+      client.cache.modify({
+        id: client.cache.identify(makeReference('ROOT_QUERY')),
+        fields: {
+          currentUser: () => {
+            return undefined
+          },
+        },
+      })
     }
   }, [])
 

@@ -10,6 +10,7 @@ import {
   PostPageDocument,
   PostPageQuery,
   PostPageQueryVariables,
+  LanguageLevel,
 } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
 
@@ -90,6 +91,7 @@ const PostComments = ({
         __typename: 'Mutation',
         createPostComment: {
           __typename: 'PostComment',
+          authorLanguageLevel: LanguageLevel.Beginner,
           author: {
             __typename: 'User',
             handle: currentUser!.handle,

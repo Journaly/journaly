@@ -545,9 +545,11 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           <div className="post-action-container">
             {isAuthoredPost && (
               <>
-                <Button type="button" variant={ButtonVariant.Secondary} onClick={handleBumpPost}>
-                  {t('bumpPostAction')}
-                </Button>
+                {post.status === PostStatus.Published && (
+                  <Button type="button" variant={ButtonVariant.Secondary} onClick={handleBumpPost}>
+                    {t('bumpPostAction')}
+                  </Button>
+                )}
                 <Button
                   type="button"
                   variant={ButtonVariant.Secondary}
@@ -557,13 +559,31 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
                 >
                   {t('editPostAction')}
                 </Button>
-                {post.status === 'DRAFT' && (
+                {post.status === PostStatus.Draft && (
+                  <div>
+                    <Button
+                      type="button"
+                      variant={ButtonVariant.Secondary}
+                      onClick={setPostStatus(PostStatus.Published)}
+                    >
+                      {t('publishDraft')}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={ButtonVariant.Secondary}
+                      onClick={setPostStatus(PostStatus.Published)}
+                    >
+                      {t('sharePrivatelyCTA')}
+                    </Button>
+                  </div>
+                )}
+                {post.status === PostStatus.Private && (
                   <Button
                     type="button"
                     variant={ButtonVariant.Secondary}
                     onClick={setPostStatus(PostStatus.Published)}
                   >
-                    {t('publishDraft')}
+                    {t('publishPost')}
                   </Button>
                 )}
                 <Button

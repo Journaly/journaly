@@ -54,6 +54,12 @@ const PrivateShareLink: React.FC<PrivateShareLinkProps> = ({ privateShareId }) =
           border-radius: 5px;
           border: 1px solid ${theme.colors.gray400};
         }
+
+        @media (max-width: ${theme.breakpoints.XS}) {
+          .private-share-link-container {
+            flex-direction: column;
+          }
+        }
       `}</style>
     </div>
   )

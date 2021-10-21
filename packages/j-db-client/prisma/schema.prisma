@@ -133,7 +133,7 @@ model Post {
   postTopics               PostTopic[]
   threads                  Thread[]
   savedUsers               User[]                    @relation("UserSavedPosts", references: [id])
-  privateShareLink         String?
+  privateShareId           String?                   @unique
 }
 
 model Language {

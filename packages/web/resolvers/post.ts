@@ -16,7 +16,9 @@ import {
   sendNewBadgeEmail,
   generateThumbbusterUrl,
   getThumbusterVars,
+  generatePostPrivateShareId,
 } from './utils'
+
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
   Prisma,
@@ -112,6 +114,7 @@ const Post = objectType({
     })
     t.model.language()
     t.model.publishedLanguageLevel()
+    t.model.privateShareId()
     t.model.createdAt()
     t.model.updatedAt()
     t.model.bodySrc()
@@ -182,15 +185,33 @@ const PostQueries = extendType({
       args: {
         id: intArg({
           description: 'ID of the post to be retreived',
-          required: true,
+          required: false,
+        }),
+        privateShareId: stringArg({
+          description: 'Private share ID of the post to be retrived',
+          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
-        const post = await ctx.db.post.findUnique({
-          where: {
-            id: args.id,
-          },
-        })
+        if (!args.id && !args.privateShareId) {
+          throw new Error('A post id or privateShareId must be provided to the postById query')
+        }
+
+        let post
+        if (args.id) {
+          post = await ctx.db.post.findUnique({
+            where: {
+              id: args.id,
+            },
+          })
+        }
+        if (args.privateShareId) {
+          post = await ctx.db.post.findUnique({
+            where: {
+              privateShareId: args.privateShareId,
+            },
+          })
+        }
 
         if (!post) {
           throw new NotFoundError('Post')
@@ -396,7 +417,8 @@ const PostMutations = extendType({
       resolve: async (_parent, args, ctx) => {
         const { title, body, languageId, status, headlineImage } = args
         const { userId } = ctx.request
-        const isPublished = status === 'PUBLISHED'
+        const isPublished = status === PostStatus.PUBLISHED
+        const isPrivate = status === PostStatus.PRIVATE
 
         if (!body) {
           throw new ResolverError('We need a body!', {})
@@ -414,7 +436,10 @@ const PostMutations = extendType({
 
         if (!user?.auth) throw new Error('User not found')
 
-        if (isPublished && user.auth.emailVerificationStatus !== EmailVerificationStatus.VERIFIED) {
+        if (
+          (isPublished || isPrivate) &&
+          user.auth.emailVerificationStatus !== EmailVerificationStatus.VERIFIED
+        ) {
           throw new Error('Please verify your email address in order to begin publishing posts')
         }
 
@@ -422,12 +447,16 @@ const PostMutations = extendType({
           (language: LanguageRelation) => language.languageId === languageId,
         )[0].level
 
+        let privateShareId = null
+        if (isPrivate) privateShareId = generatePostPrivateShareId()
+
         const post = await ctx.db.post.create({
           data: {
             language: { connect: { id: languageId } },
             author: { connect: { id: userId } },
             title,
             status,
+            privateShareId,
             publishedAt: isPublished ? new Date() : null,
             bumpedAt: isPublished ? new Date() : null,
             publishedLanguageLevel: userLanguageLevel,
@@ -519,6 +548,9 @@ const PostMutations = extendType({
         }
 
         if (args.status) {
+          if (args.status === PostStatus.PRIVATE) {
+            data.privateShareId = generatePostPrivateShareId()
+          }
           data.status = args.status
         }
 

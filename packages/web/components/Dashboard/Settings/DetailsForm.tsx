@@ -229,7 +229,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                     >
                       {t('profile.details.resendEmailVerificationButtonText')}
                     </Button>{' '}
-                    {t('resendEmailVerificationText')}
+                    {t('profile.details.resendEmailVerificationText')}
                   </span>
                 )}
               </div>

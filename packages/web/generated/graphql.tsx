@@ -427,6 +427,7 @@ export type PostPostCommentsOrderByInput = {
 export enum PostStatus {
   Draft = 'DRAFT',
   Published = 'PUBLISHED',
+  Private = 'PRIVATE',
 }
 
 export type PostTopic = {
@@ -1091,6 +1092,7 @@ export type PostsQueryVariables = Exact<{
   hasInteracted?: Maybe<Scalars['Boolean']>
   authorId?: Maybe<Scalars['Int']>
   status: PostStatus
+  savedPosts?: Maybe<Scalars['Boolean']>
 }>
 
 export type PostsQuery = { __typename?: 'Query' } & {
@@ -3184,6 +3186,7 @@ export const PostsDocument = gql`
     $hasInteracted: Boolean
     $authorId: Int
     $status: PostStatus!
+    $savedPosts: Boolean
   ) {
     posts(
       first: $first
@@ -3196,6 +3199,7 @@ export const PostsDocument = gql`
       hasInteracted: $hasInteracted
       authorId: $authorId
       status: $status
+      savedPosts: $savedPosts
     ) {
       posts {
         ...PostCardFragment
@@ -3228,6 +3232,7 @@ export const PostsDocument = gql`
  *      hasInteracted: // value for 'hasInteracted'
  *      authorId: // value for 'authorId'
  *      status: // value for 'status'
+ *      savedPosts: // value for 'savedPosts'
  *   },
  * });
  */

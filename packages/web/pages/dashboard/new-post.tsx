@@ -176,6 +176,19 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
     [createNewPost],
   )
 
+  const handleSharePrivatelyClick = React.useCallback(
+    (e) => {
+      e.preventDefault()
+      if (currentUser?.emailAddressVerified) {
+        createNewPost(PostStatusType.Private)
+      }
+      if (!currentUser?.emailAddressVerified) {
+        setErrorMessage(t('emailVerificationWarning'))
+      }
+    },
+    [createNewPost],
+  )
+
   const handleDraftClick = React.useCallback(
     (e) => {
       e.preventDefault()
@@ -211,7 +224,15 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             >
               {t('publishCTA')}
             </Button>
-
+            <Button
+              type="submit"
+              variant={ButtonVariant.Secondary}
+              data-testid="post-share-privately"
+              loading={saving}
+              onClick={handleSharePrivatelyClick}
+            >
+              {t('sharePrivatelyCTA')}
+            </Button>
             <Button
               type="submit"
               variant={ButtonVariant.Secondary}

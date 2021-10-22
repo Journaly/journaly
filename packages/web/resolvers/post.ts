@@ -193,6 +193,8 @@ const PostQueries = extendType({
         }),
       },
       resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
         if (!args.id && !args.privateShareId) {
           throw new Error('A post id or privateShareId must be provided to the postById query')
         }
@@ -203,7 +205,13 @@ const PostQueries = extendType({
             where: {
               id: args.id,
             },
+            include: {
+              author: true,
+            },
           })
+          if (post?.authorId !== userId) {
+            throw new NotAuthorizedError()
+          }
         }
         if (args.privateShareId) {
           post = await ctx.db.post.findUnique({

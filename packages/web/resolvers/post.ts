@@ -379,7 +379,9 @@ const PostQueries = extendType({
           where.push(Prisma.sql`p."status" = 'PUBLISHED'`)
         } else if (args.status) {
           if (args.showPrivatePosts) {
-            where.push(Prisma.sql`p."status" = ${args.status} OR p."status" = 'PRIVATE'`)
+            where.push(
+              Prisma.sql`p."status" = ${args.status} OR p."status" = 'PRIVATE' AND p."authorId" = ${currentUser.id}`,
+            )
           } else {
             where.push(Prisma.sql`p."status" = ${args.status}`)
           }

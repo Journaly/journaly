@@ -251,6 +251,10 @@ const PostQueries = extendType({
           description: 'Return posts by a given author.',
           required: false,
         }),
+        savedPosts: booleanArg({
+          description: 'If true, return only posts that the user has saved.',
+          required: false,
+        }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -296,6 +300,13 @@ const PostQueries = extendType({
         if (currentUser && args.followedAuthors) {
           const followingIds = currentUser.following.map((user: User) => user.id)
           where.push(Prisma.sql`p."authorId" IN (${Prisma.join(followingIds)})`)
+        }
+
+        if (currentUser && args.savedPosts) {
+          joins.push(Prisma.sql`
+            INNER JOIN "_UserSavedPosts" as usp
+                    ON usp."B" = ${currentUser.id} AND usp."A" = p.id
+          `)
         }
 
         if (args.needsFeedback) {
@@ -772,62 +783,63 @@ const PostMutations = extendType({
           finalUrl: `https://${cdnDomain}/inline-post-image/${uuid}-default`,
         }
       },
-    }),
-      t.field('bumpPost', {
-        type: 'Post',
-        args: {
-          postId: intArg({ required: true }),
-        },
-        resolve: async (_parent, args, ctx) => {
-          const { userId } = ctx.request
-          if (!userId) throw new NotAuthorizedError()
+    })
 
-          const [currentUser, post] = await Promise.all([
-            ctx.db.user.findUnique({
-              where: {
-                id: userId,
-              },
-              include: {
-                membershipSubscription: true,
-              },
-            }),
-            ctx.db.post.findUnique({
-              where: {
-                id: args.postId,
-              },
-            }),
-          ])
+    t.field('bumpPost', {
+      type: 'Post',
+      args: {
+        postId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new NotAuthorizedError()
 
-          if (!currentUser) throw new NotFoundError('User')
-          if (!post) throw new NotFoundError('Post')
-
-          hasAuthorPermissions(post, currentUser)
-
-          const canBump =
-            (currentUser.membershipSubscription?.expiresAt &&
-              currentUser.membershipSubscription.expiresAt > new Date()) ||
-            currentUser.userRole === UserRole.ADMIN ||
-            currentUser.userRole === UserRole.MODERATOR
-
-          if (!canBump) {
-            throw new Error('Only Journaly Premium members can access this feature')
-          }
-
-          if (post.bumpCount >= POST_BUMP_LIMIT) {
-            throw new Error("You've already reached your limit for bumping this post")
-          }
-
-          return ctx.db.post.update({
+        const [currentUser, post] = await Promise.all([
+          ctx.db.user.findUnique({
+            where: {
+              id: userId,
+            },
+            include: {
+              membershipSubscription: true,
+            },
+          }),
+          ctx.db.post.findUnique({
             where: {
               id: args.postId,
             },
-            data: {
-              bumpedAt: new Date(),
-              bumpCount: post.bumpCount + 1,
-            },
-          })
-        },
-      })
+          }),
+        ])
+
+        if (!currentUser) throw new NotFoundError('User')
+        if (!post) throw new NotFoundError('Post')
+
+        const canBump =
+          (currentUser.membershipSubscription?.expiresAt &&
+            currentUser.membershipSubscription.expiresAt > new Date()) ||
+          currentUser.userRole === UserRole.ADMIN ||
+          currentUser.userRole === UserRole.MODERATOR
+
+        hasAuthorPermissions(post, currentUser)
+
+        if (!canBump) {
+          throw new Error('Only Journaly Premium members can access this feature')
+        }
+
+        if (post.bumpCount >= POST_BUMP_LIMIT) {
+          throw new Error("You've already reached your limit for bumping this post")
+        }
+
+        return ctx.db.post.update({
+          where: {
+            id: args.postId,
+          },
+          data: {
+            bumpedAt: new Date(),
+            bumpCount: post.bumpCount + 1,
+          },
+        })
+      },
+    })
   },
 })
 

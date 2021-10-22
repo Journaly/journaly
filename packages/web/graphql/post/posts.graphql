@@ -9,6 +9,7 @@ query posts(
   $hasInteracted: Boolean
   $authorId: Int
   $status: PostStatus!
+  $savedPosts: Boolean
 ) {
   posts(
     first: $first
@@ -21,6 +22,7 @@ query posts(
     hasInteracted: $hasInteracted
     authorId: $authorId
     status: $status
+    savedPosts: $savedPosts
   ) {
     posts {
       ...PostCardFragment

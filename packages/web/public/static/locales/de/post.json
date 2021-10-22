@@ -47,5 +47,10 @@
     "twoUsersClapped": "{{name1}} und {{name2}} haben diesem Beitrag applaudiert.",
     "manyUsersClapped": "{{name1}}, {{name2}} und {{numOthers}} weitere Journaler haben diesem Beitrag applaudiert."
   },
-  "emailVerificationWarning": "Um Beiträge veröffentlichen zu können, verifiziere bitte deine E-Mail-Adresse, indem du auf den Link klickst, den du nach der Registrierung per E-Mail erhalten hast. Gehe in die Einstellungen > Profil Informationen, um die Verifikations-E-Mail erneut zu senden."
+  "emailVerificationWarning": "Um Beiträge veröffentlichen zu können, verifiziere bitte deine E-Mail-Adresse, indem du auf den Link klickst, den du nach der Registrierung per E-Mail erhalten hast. Gehe in die Einstellungen > Profil Informationen, um die Verifikations-E-Mail erneut zu senden.",
+  "savePostSuccess": "Beitrag angeheftet! Finde deine angehefteten Beiträge über die erweitere Filter-Funktion.",
+  "savePostError": "Beim Anheften dieses Beitrags ist etwas schief gegangen",
+  "unsavePostSuccess": "Dieser Beitrag wurde von deiner Liste entfernt",
+  "unsavePostError": "Beim Entfernen dieses Beitrags von deiner Liste ist etwas schief gegangen",
+  "savePostPremiumFeatureExplanation": "Angeheftete Beiträge ist ein angenehmes Premium-Feature, dass dir das Anheften von Beiträgen ermöglicht, sodass du diese später einfach wiederfinden und lesen kannst. Die Liste kannst du über die erweiterten Filter der Mein-Feed-Seite erreichen! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken oder nutze all die kostenfreien Feature von Journaly weiterhin kostenlos."
 }

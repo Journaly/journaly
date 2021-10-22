@@ -32,6 +32,7 @@ model User {
   MembershipSubscriptionInvoice MembershipSubscriptionInvoice[]
   PendingNotification           PendingNotification[]
   posts                         Post[]
+  savedPosts                    Post[]                          @relation("UserSavedPosts", references: [id])
   postComments                  PostComment[]
   postCommentSubscriptions      PostCommentSubscription[]
   postCommentThanks             PostCommentThanks[]
@@ -48,14 +49,14 @@ model User {
 }
 
 model Auth {
-  id                            Int     @id @default(autoincrement())
-  userId                        Int     @unique
-  password                      String
-  resetToken                    String?
-  resetTokenExpiry              Int?
-  emailVerificationToken        String?
-  emailVerificationStatus       EmailVerificationStatus @default(PENDING)
-  user                          User    @relation(fields: [userId], references: [id])
+  id                      Int                     @id @default(autoincrement())
+  userId                  Int                     @unique
+  password                String
+  resetToken              String?
+  resetTokenExpiry        Int?
+  emailVerificationToken  String?
+  emailVerificationStatus EmailVerificationStatus @default(PENDING)
+  user                    User                    @relation(fields: [userId], references: [id])
 }
 
 model LanguageLearning {
@@ -131,6 +132,7 @@ model Post {
   claps                    PostClap[]
   postTopics               PostTopic[]
   threads                  Thread[]
+  savedUsers               User[]                    @relation("UserSavedPosts", references: [id])
 }
 
 model Language {
@@ -187,12 +189,12 @@ model PostTopic {
 }
 
 model PostClap {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  postId    Int
-  authorId  Int
-  author    User      @relation(fields: [authorId], references: [id])
-  post      Post      @relation(fields: [postId], references: [id])
+  id                  Int                   @id @default(autoincrement())
+  createdAt           DateTime              @default(now())
+  postId              Int
+  authorId            Int
+  author              User                  @relation(fields: [authorId], references: [id])
+  post                Post                  @relation(fields: [postId], references: [id])
   PendingNotification PendingNotification[]
 
   @@unique([authorId, postId])

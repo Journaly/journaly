@@ -132,6 +132,33 @@
     "cancellationError": "Beim Kündigen deiner Mitgliedschaft ist ein Fehler aufgetreten.",
     "updateCardSuccess": "Du hast deine Kreditkarten-Daten erfolgreich aktualisiert.",
     "updateCardError": "Beim Aktualisiseren deiner Kreditkartendaten ist ein Fehler aufgetreten",
-    "studentEmailVerificationNeededMsg": "Um den Studenten-Rabatt zu erhalten, verifiziere bitte deine E-Mail-Adresse, indem du auf den Link klickst, den du nach der Registrierung per E-Mail erhalten hast. Gehe in die Einstellungen > Profil Informationen, um die Verifikations-E-Mail erneut zu senden."
+    "studentEmailVerificationNeededMsg": "Um den Studenten-Rabatt zu erhalten, verifiziere bitte deine E-Mail-Adresse, indem du auf den Link klickst, den du nach der Registrierung per E-Mail erhalten hast. Gehe in die Einstellungen > Profil Informationen, um die Verifikations-E-Mail erneut zu senden.",
+    "freePlan": "Kostenfrei",
+    "premiumPlan": "Premium",
+    "only": "Nur",
+    "onlyPrice": "3,50 £/Monat",
+    "paidAnnually": "mit einem Jahresabo!",
+    "features": {
+      "unlimitedLanguages": "Schreibe auf unbegrenzt vielen Sprachen",
+      "unlimitedPosts": "Schreibe unbegrenzt viele Beiträge",
+      "unlimitedFeedback": "Erhalte unbegrenzt Feedback",
+      "customHeaderImages": "Personalisiere die Titelbilder von Beiträgen",
+      "advancedFiltering": "Filtere Beiträge mit erweiterten Filtern",
+      "badges": "Erhalte für Meilensteine Abzeichen",
+      "stats": "Verfolge deine Aktivitäten und Statistiken",
+      "unsplashIntegration": "Wähle Bilder von Unsplash (kommt bald)",
+      "directMessaging": "Schreibe Privatnachrichten (kommt bald)",
+      "userGroups": "Tritt Gruppen bei (kommt bald)",
+      "inlineImages": "Integriere Bilder in deinen Text",
+      "postBumping": "Ziehe Beiträge im Feed nach ganz oben",
+      "postSaving": "Hefte deine Lieblingsbeiträge an",
+      "supportTheCreators": "Unterstütze die Macher von Journaly",
+      "supportFreeLearning": "Unterstütze kostenloses Sprachenlernen",
+      "writingPrompts": "Erhalte Schreibideen (kommt bald)",
+      "focusMode": "Nutze den Fokus-Modus (kommt bald)",
+      "postThemes": "Wähle eine Motiv für deinen Beitrag (kommt bald)",
+      "audioPosts": "Erstelle Audio-Beiträge (kommt bald)",
+      "weeklyGoals": "Erreiche wöchentliche Ziele (kommt bald)"
+    }
   }
 }

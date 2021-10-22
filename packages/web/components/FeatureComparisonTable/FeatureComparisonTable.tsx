@@ -1,5 +1,6 @@
 import theme from '@/theme'
 import React from 'react'
+import { useTranslation } from '@/config/i18n'
 import CheckmarkCircleIcon from '../Icons/CheckmarkCircleIcon'
 
 type FeatureProps = {
@@ -30,44 +31,86 @@ const Feature = ({ name, plan, status }: FeatureProps) => {
 }
 
 const FeatureComparisonTable = () => {
+  const { t } = useTranslation('settings')
+
   return (
     <div className="container">
       <div className="col free">
         <div className="header">
-          <div className="plan">Free</div>
+          <div className="plan">{t('subscription.freePlan')}</div>
         </div>
         <div className="feature-list">
           <ul>
-            <Feature name="Write in unlimited languages" plan="free" />
-            <Feature name="Write unlimited posts" plan="free" />
-            <Feature name="Get unlimited feedback" plan="free" />
-            <Feature name="Custom post header images" plan="free" />
-            <Feature name="Advanced post filtering" plan="free" />
-            <Feature name="Earn Badges for milestones" plan="free" />
-            <Feature name="Unsplash integration (coming soon)" plan="free" status="coming soon" />
-            <Feature name="Direct Messaging (coming soon)" plan="free" status="coming soon" />
-            <Feature name="User Groups (coming soon)" plan="free" status="coming soon" />
+            <Feature name={t('subscription.features.unlimitedLanguages')} plan="free" />
+            <Feature name={t('subscription.features.unlimitedPosts')} plan="free" />
+            <Feature name={t('subscription.features.unlimitedFeedback')} plan="free" />
+            <Feature name={t('subscription.features.customHeaderImages')} plan="free" />
+            <Feature name={t('subscription.features.advancedFiltering')} plan="free" />
+            <Feature name={t('subscription.features.badges')} plan="free" />
+            <Feature name={t('subscription.features.stats')} plan="free" />
+            <Feature
+              name={t('subscription.features.unsplashIntegration')}
+              plan="free"
+              status="coming soon"
+            />
+            <Feature
+              name={t('subscription.features.directMessaging')}
+              plan="free"
+              status="coming soon"
+            />
+            <Feature
+              name={t('subscription.features.userGroups')}
+              plan="free"
+              status="coming soon"
+            />
           </ul>
         </div>
       </div>
       <div className="col premium">
         <div className="header">
-          <div className="plan">Premium</div>
+          <div className="plan">{t('subscription.premiumPlan')}</div>
           <div className="price">
-            Only <strong>£3.50/month</strong> paid annually!
+            {t('subscription.only')} <strong>{t('subscription.onlyPrice')}</strong>{' '}
+            {t('subscription.paidAnnually')}
           </div>
         </div>
         <div className="feature-list">
           <ul>
-            <Feature name="Inline images inside posts" plan="premium" />
-            <Feature name="Bump posts to top of the feed" plan="premium" />
-            <Feature name="Support the creators" plan="premium" />
-            <Feature name="Support free language learning" plan="premium" />
-            <Feature name="Writing prompts (coming soon)" plan="premium" status="coming soon" />
-            <Feature name="Focus Mode (coming soon)" plan="premium" status="coming soon" />
-            <Feature name="Post Themes (coming soon)" plan="premium" status="coming soon" />
-            <Feature name="Audio posts (coming soon)" plan="premium" status="coming soon" />
-            <Feature name="Weekly Goals (coming soon)" plan="premium" status="coming soon" />
+            <Feature name={t('subscription.features.inlineImages')} plan="premium" />
+            <Feature name={t('subscription.features.postBumping')} plan="premium" />
+            <Feature name={t('subscription.features.postSaving')} plan="premium" />
+            <Feature name={t('subscription.features.supportTheCreators')} plan="premium" />
+            <Feature name={t('subscription.features.supportFreeLearning')} plan="premium" />
+            <Feature
+              name={t('subscription.features.writingPrompts')}
+              plan="premium"
+              status="coming soon"
+            />
+            <Feature
+              name={t('subscription.features.focusMode')}
+              plan="premium"
+              status="coming soon"
+            />
+            <Feature
+              name={t('subscription.features.postThemes')}
+              plan="premium"
+              status="coming soon"
+            />
+            <Feature
+              name={t('subscription.features.audioPosts')}
+              plan="premium"
+              status="coming soon"
+            />
+            <Feature
+              name={t('subscription.features.weeklyGoals')}
+              plan="premium"
+              status="coming soon"
+            />
+            <Feature
+              name={t('subscription.features.privateShareLinks')}
+              plan="premium"
+              status="coming soon"
+            />
           </ul>
         </div>
       </div>

@@ -14,6 +14,7 @@ import stripe, {
   getOrCreateStripeCustomer,
   paymentErrorWrapper
 } from '@/nexus/utils/stripe'
+import { sendPremiumWelcomeEmail } from './utils'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
@@ -192,6 +193,8 @@ const MembershipSubscriptionMutations = extendType({
               }
             },
           })
+
+          await sendPremiumWelcomeEmail({ user })
 
           return membershipSubscription
         } else {

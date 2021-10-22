@@ -53,6 +53,7 @@ const User = objectType({
     t.model.country()
     t.model.badges({ pagination: false })
     t.model.posts({ pagination: false })
+    t.model.savedPosts({ pagination: false })
     t.model.profileImage()
     t.model.createdAt()
     t.model.membershipSubscription()
@@ -683,6 +684,52 @@ const UserMutations = extendType({
           verificationToken,
         })
         return user
+      },
+    })
+
+    t.field('savePost', {
+      type: 'User',
+      args: {
+        postId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to save a post')
+        }
+
+        return await ctx.db.user.update({
+          where: { id: userId },
+          data: {
+            savedPosts: {
+              connect: [{ id: args.postId }],
+            },
+          },
+        })
+      },
+    })
+
+    t.field('unsavePost', {
+      type: 'User',
+      args: {
+        postId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to save a post')
+        }
+
+        return await ctx.db.user.update({
+          where: { id: userId },
+          data: {
+            savedPosts: {
+              disconnect: [{ id: args.postId }],
+            },
+          },
+        })
       },
     })
   },

@@ -49,5 +49,10 @@
     "twoUsersClapped": "{{name1}} and {{name2}} clapped for this post.",
     "manyUsersClapped": "{{name1}}, {{name2}}, and {{numOthers}} others clapped for this post."
   },
-  "emailVerificationWarning": "Please verify your email address in order to start publishing posts by clicking the link in the email you received after signing up. Go to Settings > Profile Info to resend the verification email"
+  "emailVerificationWarning": "Please verify your email address in order to start publishing posts by clicking the link in the email you received after signing up. Go to Settings > Profile Info to resend the verification email",
+  "savePostSuccess": "Post saved! View your list from the My Feed page's advanced filters",
+  "savePostError": "Something went wrong saving your post",
+  "unsavePostSuccess": "Post removed from your list",
+  "unsavePostError": "Something went wrong removing this post from your list",
+  "savePostPremiumFeatureExplanation": "Saved Posts is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!"
 }

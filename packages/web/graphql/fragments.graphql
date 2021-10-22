@@ -30,6 +30,9 @@ fragment UserWithLanguagesFragment on User {
 
 fragment CurrentUserFragment on User {
   ...UserWithLanguagesFragment
+  savedPosts {
+    id
+  }
   membershipSubscription {
     isActive
   }

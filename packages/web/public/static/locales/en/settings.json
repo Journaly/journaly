@@ -138,6 +138,34 @@
     "cancellationError": "There was a problem cancelling your subscription",
     "updateCardSuccess": "You have successfully updated the card on file",
     "updateCardError": "There was a problem updating the card on file",
-    "studentEmailVerificationNeededMsg": "Please verify your student email address in order to get the student discount by clicking the link in the email you received after signing up. Go to Settings > Profile Info to resend the verification email"
+    "studentEmailVerificationNeededMsg": "Please verify your student email address in order to get the student discount by clicking the link in the email you received after signing up. Go to Settings > Profile Info to resend the verification email",
+    "freePlan": "Free",
+    "premiumPlan": "Premium",
+    "only": "Only",
+    "onlyPrice": "£3.50/month",
+    "paidAnnually": "paid annually!",
+    "features": {
+      "unlimitedLanguages": "Write in unlimited languages",
+      "unlimitedPosts": "Write unlimited posts",
+      "unlimitedFeedback": "Get unlimited feedback",
+      "customHeaderImages": "Custom post header images",
+      "advancedFiltering": "Advanced post filtering",
+      "badges": "Earn Badges for milestones",
+      "stats": "Activity & Stats Tracking",
+      "unsplashIntegration": "Unsplash integration (coming soon)",
+      "directMessaging": "Direct Messaging (coming soon)",
+      "userGroups": "User Groups (coming soon)",
+      "inlineImages": "Inline images inside posts",
+      "postBumping": "Bump posts to top of the feed",
+      "postSaving": "Save your favourite posts",
+      "supportTheCreators": "Support the creators",
+      "supportFreeLearning": "Support free language learning",
+      "writingPrompts": "Writing prompts (coming soon)",
+      "focusMode": "Focus Mode (coming soon)",
+      "postThemes": "Post Themes (coming soon)",
+      "audioPosts": "Audio posts (coming soon)",
+      "weeklyGoals": "Weekly Goals (coming soon)",
+      "privateShareLinks": "Private Share Links (coming soon)"
+    }
   }
 }

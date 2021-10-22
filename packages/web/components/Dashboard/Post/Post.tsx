@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react'
+import React, { useState, memo, useMemo, useRef, forwardRef, useEffect } from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
+import { makeReference } from '@apollo/client'
 
 import { findEventTargetParent, sanitize, iOS, wait } from '@/utils'
 import {
@@ -14,6 +15,8 @@ import {
   PostClap,
   useBumpPostMutation,
   UserRole,
+  useSavePostMutation,
+  useUnsavePostMutation,
 } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
@@ -37,7 +40,7 @@ import ClapIcon from '@/components/Icons/ClapIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
 import { POST_BUMP_LIMIT } from '../../../constants'
 import { SelectionState, PostProps, PostContentProps, ThreadType } from './types'
-import { makeReference } from '@apollo/client'
+import BookmarkIcon from '@/components/Icons/BookmarkIcon'
 
 const selectionState: SelectionState = {
   bouncing: false,
@@ -71,8 +74,8 @@ const bounceSelection = async () => {
   selectionState.bouncing = false
 }
 
-const PostContent = React.memo(
-  React.forwardRef<HTMLDivElement, PostContentProps>(({ body }, ref) => {
+const PostContent = memo(
+  forwardRef<HTMLDivElement, PostContentProps>(({ body }, ref) => {
     // Break this into a memoizable component so we don't have to re-sanitize
     // and re-render so much
     const sanitizedHTML = sanitize(body)
@@ -84,14 +87,75 @@ const PostContent = React.memo(
 const Post = ({ post, currentUser, refetch }: PostProps) => {
   const { t } = useTranslation('post')
 
-  const selectableRef = React.useRef<HTMLDivElement>(null)
-  const popoverRef = React.useRef<HTMLDivElement>(null)
-  const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
-  const [activeThreadId, setActiveThreadId] = React.useState<number>(-1)
-  const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
-  const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
-  const [displayDeleteModal, setDisplayDeleteModal] = React.useState(false)
-  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = React.useState(false)
+  const selectableRef = useRef<HTMLDivElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
+  const [displayCommentButton, setDisplayCommentButton] = useState(false)
+  const [activeThreadId, setActiveThreadId] = useState<number>(-1)
+  const [commentButtonPosition, setCommentButtonPosition] = useState({ x: '0', y: '0' })
+  const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0, w: 0, h: 0 })
+  const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
+  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
+  const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
+  const isAuthoredPost = currentUser && post.author.id === currentUser.id
+
+  const hasSavedPost = useMemo(() => {
+    return currentUser?.savedPosts.find((savedPost) => savedPost.id === post.id) !== undefined
+  }, [currentUser?.id, currentUser?.savedPosts])
+
+  const [savePost, { loading: savingPost }] = useSavePostMutation({
+    onCompleted: () => {
+      refetch()
+      toast.success(t('savePostSuccess'))
+    },
+    onError: () => {
+      toast.error(t('savePostError'))
+    },
+    update(cache) {
+      cache.modify({
+        id: cache.identify(makeReference('ROOT_QUERY')),
+        fields: {
+          posts: () => {
+            // This simply invalidates the cache for the `posts` query
+            return undefined
+          },
+        },
+      })
+    },
+  })
+
+  const handleSavePost = () => {
+    if (!canAttempToSavePost) {
+      setPremiumFeatureModalExplanation(t('savePostPremiumFeatureExplanation'))
+      setDisplayPremiumFeatureModal(true)
+    } else {
+      savePost({ variables: { postId: post.id } })
+    }
+  }
+
+  const [unsavePost, { loading: unsavingPost }] = useUnsavePostMutation({
+    onCompleted: () => {
+      refetch()
+      toast.success(t('unsavePostSuccess'))
+    },
+    onError: () => {
+      toast.error(t('unsavePostError'))
+    },
+    update: (cache, { data }) => {
+      const unsavedPost = data?.unsavePost
+      if (unsavedPost?.id && unsavedPost.__typename) {
+        cache.modify({
+          fields: {
+            savedPosts(existingPosts = []): PostModel[] {
+              return existingPosts.filter(
+                (post: any) => post.__ref !== `${unsavedPost.__typename}:${unsavedPost.id}`,
+              )
+            },
+          },
+        })
+      }
+    },
+  })
+
   const [deletePost] = useDeletePostMutation({
     onCompleted: () => {
       toast.success(t('deletePostSuccess'))
@@ -202,7 +266,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     return post.claps.find((clap) => clap.author.id === currentUser?.id) !== undefined
   }, [post.claps, currentUser?.id])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!selectableRef.current) {
       return
     }
@@ -242,7 +306,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     })
   }, [post.threads.length])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onSelectionChange = () => {
       const selection = window.getSelection()
 
@@ -400,6 +464,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
 
   const handleBumpPost = () => {
     if (!canAttemptBump) {
+      setPremiumFeatureModalExplanation(t('postBumpingPremiumFeatureExplanation'))
       setDisplayPremiumFeatureModal(true)
     } else {
       if (post.bumpCount >= POST_BUMP_LIMIT) {
@@ -427,6 +492,11 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       currentUser?.userRole === UserRole.Admin ||
       currentUser?.userRole === UserRole.Moderator) &&
     post.status === 'PUBLISHED'
+
+  const canAttempToSavePost =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
 
   return (
     <div className="post-container">
@@ -472,7 +542,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
             <span>{post.claps.length}</span>
           </div>
           <div className="post-action-container">
-            {currentUser && post.author.id === currentUser.id && (
+            {isAuthoredPost && (
               <>
                 <Button type="button" variant={ButtonVariant.Secondary} onClick={handleBumpPost}>
                   {t('bumpPostAction')}
@@ -503,6 +573,19 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
                   }}
                 >
                   {t('deletePostAction')}
+                </Button>
+              </>
+            )}
+            {!isAuthoredPost && (
+              <>
+                <Button
+                  variant={ButtonVariant.Icon}
+                  loading={savingPost || unsavingPost}
+                  onClick={() => {
+                    hasSavedPost ? unsavePost({ variables: { postId: post.id } }) : handleSavePost()
+                  }}
+                >
+                  <BookmarkIcon size={28} saved={hasSavedPost} />
                 </Button>
               </>
             )}
@@ -539,12 +622,14 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       />
       {displayPremiumFeatureModal && (
         <PremiumFeatureModal
-          featureExplanation={t('postBumpingPremiumFeatureExplanation')}
+          featureExplanation={premiumFeatureModalExplanation}
           onAcknowledge={() => {
+            setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={() => {
             Router.push('/dashboard/settings/subscription')
+            setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}
         />
@@ -645,21 +730,21 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         }
 
         @media (max-width: ${theme.breakpoints.SM}) {
-          .post-controls {
-            flex-direction: column;
-          }
-
-          .post-action-container {
-            padding-top: 10px;
-            flex-direction: column;
-            gap: 5px;
-          }
-
+          ${isAuthoredPost &&
+          `.post-controls {
+              flex-direction: column;
+            }
+  
+            .post-action-container {
+              padding-top: 10px;
+              flex-direction: column;
+              gap: 5px;
+            }
+          `}
           .post-action-container > :global(button) {
             align-self: stretch;
           }
         }
-
         .clap-container {
           display: flex;
           align-items: center;

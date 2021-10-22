@@ -18,11 +18,13 @@ import {
   useNewPostQuery,
   useCreatePostMutation,
   PostStatus as PostStatusType,
+  UserRole,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation, Router } from '@/config/i18n'
 import useUILanguage from '@/hooks/useUILanguage'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
+import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
 
 type NewPostPageProps = {
   defaultImage: {
@@ -97,6 +99,12 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   const uploadInlineImages = useUploadInlineImages()
   const [saving, setSaving] = React.useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
+
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
 
   // TODO: Address properly handling invalidating the cache on My Feed,
   // Profile, and My Posts page immediately after publishing a new post
@@ -166,11 +174,10 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   const handlePublishClick = React.useCallback(
     (e) => {
       e.preventDefault()
-      if (currentUser?.emailAddressVerified) {
-        createNewPost(PostStatusType.Published)
-      }
       if (!currentUser?.emailAddressVerified) {
         setErrorMessage(t('emailVerificationWarning'))
+      } else {
+        createNewPost(PostStatusType.Published)
       }
     },
     [currentUser, createNewPost],
@@ -179,11 +186,12 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   const handleSharePrivatelyClick = React.useCallback(
     (e) => {
       e.preventDefault()
-      if (currentUser?.emailAddressVerified) {
-        createNewPost(PostStatusType.Private)
+      if (!isPremiumFeatureEligible) {
       }
       if (!currentUser?.emailAddressVerified) {
         setErrorMessage(t('emailVerificationWarning'))
+      } else {
+        createNewPost(PostStatusType.Private)
       }
     },
     [createNewPost],
@@ -248,6 +256,18 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             <span className="error-message" data-testid="new-post-error">
               {errorMessage}
             </span>
+          )}
+          {displayPremiumFeatureModal && (
+            <PremiumFeatureModal
+              featureExplanation={t('privatePublishingPremiumFeatureExplanation')}
+              onAcknowledge={() => {
+                setDisplayPremiumFeatureModal(false)
+              }}
+              onGoToPremium={() => {
+                Router.push('/dashboard/settings/subscription')
+                setDisplayPremiumFeatureModal(false)
+              }}
+            />
           )}
 
           <style jsx>{`

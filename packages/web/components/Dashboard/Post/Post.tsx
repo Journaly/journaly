@@ -97,6 +97,11 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
   const isAuthoredPost = currentUser && post.author.id === currentUser.id
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
+  const canAttemptBump = isPremiumFeatureEligible && post.status === 'PUBLISHED'
 
   const hasSavedPost = useMemo(() => {
     return currentUser?.savedPosts.find((savedPost) => savedPost.id === post.id) !== undefined
@@ -124,7 +129,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   })
 
   const handleSavePost = () => {
-    if (!canAttempToSavePost) {
+    if (!isPremiumFeatureEligible) {
       setPremiumFeatureModalExplanation(t('savePostPremiumFeatureExplanation'))
       setDisplayPremiumFeatureModal(true)
     } else {
@@ -434,6 +439,15 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   }
 
   const setPostStatus = (status: PostStatus) => () => {
+    if (!currentUser?.emailAddressVerified) {
+      toast.error(t('emailVerificationWarning'))
+      return
+    }
+    if (status === PostStatus.Private && !isPremiumFeatureEligible) {
+      setPremiumFeatureModalExplanation(t('privatePublishingPremiumFeatureExplanation'))
+      setDisplayPremiumFeatureModal(true)
+      return
+    }
     updatePost({
       variables: {
         postId: post.id,
@@ -486,17 +500,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       Router.push('/dashboard/my-feed')
     },
   })
-
-  const canAttemptBump =
-    (currentUser?.membershipSubscription?.isActive ||
-      currentUser?.userRole === UserRole.Admin ||
-      currentUser?.userRole === UserRole.Moderator) &&
-    post.status === 'PUBLISHED'
-
-  const canAttempToSavePost =
-    currentUser?.membershipSubscription?.isActive ||
-    currentUser?.userRole === UserRole.Admin ||
-    currentUser?.userRole === UserRole.Moderator
 
   return (
     <div className="post-container">
@@ -570,7 +573,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
                     <Button
                       type="button"
                       variant={ButtonVariant.Secondary}
-                      onClick={setPostStatus(PostStatus.Published)}
+                      onClick={setPostStatus(PostStatus.Private)}
                     >
                       {t('sharePrivatelyCTA')}
                     </Button>

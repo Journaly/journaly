@@ -209,7 +209,7 @@ const PostQueries = extendType({
               author: true,
             },
           })
-          if (post?.authorId !== userId) {
+          if (post?.status === PostStatus.PRIVATE && post?.authorId !== userId) {
             throw new NotAuthorizedError()
           }
         }

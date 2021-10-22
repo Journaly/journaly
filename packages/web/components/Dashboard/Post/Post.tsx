@@ -559,7 +559,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
                   {t('editPostAction')}
                 </Button>
                 {post.status === PostStatus.Draft && (
-                  <div>
+                  <div className="post-action-subcontainer">
                     <Button
                       type="button"
                       variant={ButtonVariant.Secondary}
@@ -744,7 +744,8 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           margin-left: 5px;
         }
 
-        .post-action-container {
+        .post-action-container,
+        .post-action-subcontainer {
           display: flex;
           gap: 10px;
         }
@@ -763,6 +764,9 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           `}
           .post-action-container > :global(button) {
             align-self: stretch;
+          }
+          .post-action-subcontainer > :global(button) {
+            width: 100%;
           }
         }
         .clap-container {

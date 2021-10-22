@@ -31,6 +31,7 @@ export type Comment = {
   author: User
   body: Scalars['String']
   createdAt: Scalars['DateTime']
+  authorLanguageLevel: LanguageLevel
   thanks: Array<CommentThanks>
 }
 
@@ -410,6 +411,7 @@ export type PostComment = {
   author: User
   body: Scalars['String']
   createdAt: Scalars['DateTime']
+  authorLanguageLevel: LanguageLevel
 }
 
 export type PostPage = {
@@ -745,7 +747,7 @@ export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
-  'id' | 'body' | 'createdAt'
+  'id' | 'body' | 'createdAt' | 'authorLanguageLevel'
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     thanks: Array<
@@ -766,7 +768,7 @@ export type PostClapFragmentFragment = { __typename?: 'PostClap' } & Pick<PostCl
 
 export type PostCommentFragmentFragment = { __typename?: 'PostComment' } & Pick<
   PostComment,
-  'id' | 'body' | 'createdAt'
+  'id' | 'body' | 'createdAt' | 'authorLanguageLevel'
 > & { author: { __typename?: 'User' } & AuthorFragmentFragment }
 
 export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
@@ -1469,6 +1471,7 @@ export const CommentFragmentFragmentDoc = gql`
     id
     body
     createdAt
+    authorLanguageLevel
     author {
       ...AuthorFragment
     }
@@ -1501,6 +1504,7 @@ export const PostCommentFragmentFragmentDoc = gql`
     id
     body
     createdAt
+    authorLanguageLevel
     author {
       ...AuthorFragment
     }

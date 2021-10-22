@@ -33,6 +33,7 @@ export type InitialSearchFilters = {
   topics: number[]
   needsFeedback: boolean
   hasInteracted: boolean
+  savedPosts: boolean
 }
 
 const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
@@ -68,7 +69,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
     needsFeedback: initialSearchFilters?.needsFeedback || false,
     hasInteracted: initialSearchFilters?.hasInteracted || false,
     search: '',
-    savedPosts: false,
+    savedPosts: initialSearchFilters?.savedPosts || false,
   })
 
   // fetch posts for the feed!
@@ -99,6 +100,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
       topics: postQueryVars.topics,
       needsFeedback: postQueryVars.needsFeedback,
       hasInteracted: postQueryVars.hasInteracted,
+      savedPosts: postQueryVars.savedPosts,
     }
     document.cookie = `default_search_filters=${JSON.stringify(searchFilters)};`
   }, [postQueryVars])

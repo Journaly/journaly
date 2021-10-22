@@ -18,12 +18,14 @@ const Feature = ({ name, plan, status }: FeatureProps) => {
       <style jsx>{`
         display: flex;
         align-items: center;
+        font-weight: 600;
 
         span {
           margin-left: 10px;
         }
         .coming-soon {
           font-style: italic;
+          font-weight: 400;
         }
       `}</style>
     </li>
@@ -79,6 +81,7 @@ const FeatureComparisonTable = () => {
             <Feature name={t('subscription.features.inlineImages')} plan="premium" />
             <Feature name={t('subscription.features.postBumping')} plan="premium" />
             <Feature name={t('subscription.features.postSaving')} plan="premium" />
+            <Feature name={t('subscription.features.privateShareLinks')} plan="premium" />
             <Feature name={t('subscription.features.supportTheCreators')} plan="premium" />
             <Feature name={t('subscription.features.supportFreeLearning')} plan="premium" />
             <Feature
@@ -103,11 +106,6 @@ const FeatureComparisonTable = () => {
             />
             <Feature
               name={t('subscription.features.weeklyGoals')}
-              plan="premium"
-              status="coming soon"
-            />
-            <Feature
-              name={t('subscription.features.privateShareLinks')}
               plan="premium"
               status="coming soon"
             />

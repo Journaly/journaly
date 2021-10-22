@@ -44,6 +44,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
       status,
       authorId: currentUser.id,
+      showPrivatePosts: true,
       ...postQueryVars,
     },
   })

@@ -10,6 +10,7 @@ query posts(
   $authorId: Int
   $status: PostStatus!
   $savedPosts: Boolean
+  $showPrivatePosts: Boolean
 ) {
   posts(
     first: $first
@@ -23,6 +24,7 @@ query posts(
     authorId: $authorId
     status: $status
     savedPosts: $savedPosts
+    showPrivatePosts: $showPrivatePosts
   ) {
     posts {
       ...PostCardFragment

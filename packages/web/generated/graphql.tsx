@@ -471,6 +471,7 @@ export type QueryPostsArgs = {
   status: PostStatus
   authorId?: Maybe<Scalars['Int']>
   savedPosts?: Maybe<Scalars['Boolean']>
+  showPrivatePosts?: Maybe<Scalars['Boolean']>
 }
 
 export type QueryUserByIdArgs = {
@@ -1106,6 +1107,7 @@ export type PostsQueryVariables = Exact<{
   authorId?: Maybe<Scalars['Int']>
   status: PostStatus
   savedPosts?: Maybe<Scalars['Boolean']>
+  showPrivatePosts?: Maybe<Scalars['Boolean']>
 }>
 
 export type PostsQuery = { __typename?: 'Query' } & {
@@ -3259,6 +3261,7 @@ export const PostsDocument = gql`
     $authorId: Int
     $status: PostStatus!
     $savedPosts: Boolean
+    $showPrivatePosts: Boolean
   ) {
     posts(
       first: $first
@@ -3272,6 +3275,7 @@ export const PostsDocument = gql`
       authorId: $authorId
       status: $status
       savedPosts: $savedPosts
+      showPrivatePosts: $showPrivatePosts
     ) {
       posts {
         ...PostCardFragment
@@ -3305,6 +3309,7 @@ export const PostsDocument = gql`
  *      authorId: // value for 'authorId'
  *      status: // value for 'status'
  *      savedPosts: // value for 'savedPosts'
+ *      showPrivatePosts: // value for 'showPrivatePosts'
  *   },
  * });
  */

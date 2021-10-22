@@ -11,7 +11,8 @@ type PrivateShareLinkProps = {
 
 const PrivateShareLink: React.FC<PrivateShareLinkProps> = ({ privateShareId }) => {
   const { t } = useTranslation('post')
-  const postPrivateShareLink = `https://journaly.com/post/private/${privateShareId}`
+  const origin = 'https://journaly.com'
+  const postPrivateShareLink = `${origin}/post/private/${privateShareId}`
 
   const handleCopyPrivateShareLink = async () => {
     if (navigator) {

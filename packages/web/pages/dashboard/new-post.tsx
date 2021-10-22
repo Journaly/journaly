@@ -187,14 +187,14 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
     (e) => {
       e.preventDefault()
       if (!isPremiumFeatureEligible) {
-      }
-      if (!currentUser?.emailAddressVerified) {
+        setDisplayPremiumFeatureModal(true)
+      } else if (!currentUser?.emailAddressVerified) {
         setErrorMessage(t('emailVerificationWarning'))
       } else {
         createNewPost(PostStatusType.Private)
       }
     },
-    [createNewPost],
+    [currentUser, createNewPost],
   )
 
   const handleDraftClick = React.useCallback(

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import isEqual from 'lodash/isEqual'
 import Button, { ButtonVariant } from '@/components/Button'
-import { User as UserType, useTopicsQuery, useLanguagesQuery } from '@/generated/graphql'
+import { User as UserType, useTopicsQuery, useLanguagesQuery, UserRole } from '@/generated/graphql'
 import SearchInput from './SearchInput'
 import LanguageSelect from './LanguageSelect'
 import TopicSelect from './TopicSelect'
@@ -134,7 +134,7 @@ const Filters: React.FC<Props> = ({
   }, [])
 
   const handleToggleSavedPosts = useCallback(() => {
-    if (!currentUser.membershipSubscription?.isActive) {
+    if (!isPremiumFeatureEligible) {
       setDisplayPremiumFeatureModal(true)
     } else {
       setPostQueryVars((prevState) => ({
@@ -155,6 +155,11 @@ const Filters: React.FC<Props> = ({
     ~~postQueryVars.needsFeedback +
     ~~postQueryVars.hasInteracted +
     ~~postQueryVars.savedPosts
+
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
 
   return (
     <div className="my-feed-search">

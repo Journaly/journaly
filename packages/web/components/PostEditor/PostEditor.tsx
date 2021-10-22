@@ -15,6 +15,7 @@ import {
   CurrentUserFragmentFragment as UserType,
   TopicFragmentFragment as TopicType,
   PostStatus as PostStatusType,
+  UserRole,
 } from '@/generated/graphql'
 import { languageNameWithDialect } from '@/utils/languages'
 import { useTranslation } from '@/config/i18n'
@@ -40,7 +41,7 @@ type InputPostData = BasePostData & {
 }
 
 type PostEditorProps = {
-  currentUser: UserType,
+  currentUser: UserType
   autosaveKey: string
   dataRef: React.MutableRefObject<OutputPostData | undefined>
   initialData: InputPostData
@@ -140,13 +141,15 @@ const PostEditor: React.FC<PostEditorProps> = ({
       resetLangId()
     }
 
-    const returnImage = !image ? {
-        largeSize: initialData.headlineImage.largeSize,
-        smallSize: initialData.headlineImage.smallSize,
-      } : {
-        largeSize: image.finalUrlLarge,
-        smallSize: image.finalUrlSmall,
-      }
+    const returnImage = !image
+      ? {
+          largeSize: initialData.headlineImage.largeSize,
+          smallSize: initialData.headlineImage.smallSize,
+        }
+      : {
+          largeSize: image.finalUrlLarge,
+          smallSize: image.finalUrlSmall,
+        }
 
     dataRef.current = {
       title,
@@ -158,6 +161,11 @@ const PostEditor: React.FC<PostEditorProps> = ({
       resetIntialPostValues,
     }
   }, [title, langId, image, body, selectedTopics])
+
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
 
   return (
     <div className="post-editor">
@@ -239,7 +247,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
           setValue={setBody}
           slateRef={slateRef}
           disabled={disabled}
-          allowInlineImages={!!currentUser.membershipSubscription?.isActive}
+          allowInlineImages={!!isPremiumFeatureEligible}
         />
       </div>
 

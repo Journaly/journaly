@@ -44,7 +44,6 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
       status,
       authorId: currentUser.id,
-      showPrivatePosts: true,
       ...postQueryVars,
     },
   })
@@ -83,7 +82,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       {showPosts && (
         <div className="my-posts">
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} status={status} />
+            <PostCard key={post.id} post={post} />
           ))}
           {showPagination && (
             <Pagination

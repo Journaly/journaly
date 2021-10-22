@@ -284,10 +284,6 @@ const PostQueries = extendType({
           description: 'If true, return only posts that the user has saved.',
           required: false,
         }),
-        showPrivatePosts: booleanArg({
-          description: 'If true, include private posts.',
-          required: false,
-        }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -378,13 +374,7 @@ const PostQueries = extendType({
         if (!currentUser || args.authorId !== currentUser.id) {
           where.push(Prisma.sql`p."status" = 'PUBLISHED'`)
         } else if (args.status) {
-          if (args.showPrivatePosts && args.status === 'PUBLISHED') {
-            where.push(
-              Prisma.sql`p."status" = ${args.status} OR p."status" = 'PRIVATE' AND p."authorId" = ${currentUser.id}`,
-            )
-          } else {
-            where.push(Prisma.sql`p."status" = ${args.status}`)
-          }
+          where.push(Prisma.sql`p."status" = ${args.status}`)
         }
 
         let whereQueryFragment = where[0] ? Prisma.sql`WHERE ${where[0]}` : Prisma.empty

@@ -18,6 +18,7 @@ const MyPostsPage: NextPage = () => {
   const { t } = useTranslation('my-posts')
   const tabs: Tab[] = [
     { key: PostStatusType.Published, text: t('publishedTab') },
+    { key: PostStatusType.Private, text: 'Private' },
     { key: PostStatusType.Draft, text: t('draftsTab') },
   ]
   const [activeKey, setActiveKey] = useState<PostStatusType>(tabs[0].key)

@@ -54,6 +54,11 @@ const Filters: React.FC<Props> = ({
     [],
   )
 
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
+
   const onTopicAdd = useCallback(
     (id: number): void => {
       setPostQueryVars((prevState) => ({
@@ -149,17 +154,12 @@ const Filters: React.FC<Props> = ({
     variables: { uiLanguage, languages: postQueryVars.languages, ...topicAndLanguageOptions },
   })
 
-  let filterCount =
+  const filterCount =
     postQueryVars.topics.length +
     ~~postQueryVars.followedAuthors +
     ~~postQueryVars.needsFeedback +
     ~~postQueryVars.hasInteracted +
     ~~postQueryVars.savedPosts
-
-  const isPremiumFeatureEligible =
-    currentUser?.membershipSubscription?.isActive ||
-    currentUser?.userRole === UserRole.Admin ||
-    currentUser?.userRole === UserRole.Moderator
 
   return (
     <div className="my-feed-search">

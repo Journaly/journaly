@@ -17,19 +17,13 @@ import LockIcon from '@/components/Icons/LockIcon'
 
 type Props = {
   post: PostCardType
-  status?: PostStatusType
   avatar?: boolean
   stacked?: boolean
 }
 
 const postBorderRadius = '5px'
 
-const PostCard: React.FC<Props> = ({
-  post,
-  status = PostStatusType.Published,
-  avatar = false,
-  stacked = false,
-}) => {
+const PostCard: React.FC<Props> = ({ post, avatar = false, stacked = false }) => {
   const { t } = useTranslation('post')
   const {
     id,
@@ -45,8 +39,8 @@ const PostCard: React.FC<Props> = ({
     publishedLanguageLevel,
     language: { name: languageName },
   } = post
-  const isDraft = status === PostStatusType.Draft
-  const isPublished = status === PostStatusType.Published
+  const isDraft = post.status === PostStatusType.Draft
+  const isPublished = post.status === PostStatusType.Published
   const isPrivate = post.status === PostStatusType.Private
   const postCardStyles = classNames('post-card-container', { stacked })
 
@@ -86,24 +80,25 @@ const PostCard: React.FC<Props> = ({
                 </div>
               )}
               <div className="post-data">
-                {isPublished && (
-                  <div className="post-stats">
-                    <div className="post-stat">
-                      <ClapIcon clapped />
-                      <span>{claps.length}</span>
-                    </div>
-                    <div className="post-stat">
-                      <CommentIcon />
-                      <span>{commentCount}</span>
-                    </div>
-                    {isPrivate && (
-                      <div className="private-badge">
-                        <LockIcon size={18} />
-                        {t('private')}
+                {isPublished ||
+                  (isPrivate && (
+                    <div className="post-stats">
+                      <div className="post-stat">
+                        <ClapIcon clapped />
+                        <span>{claps.length}</span>
                       </div>
-                    )}
-                  </div>
-                )}
+                      <div className="post-stat">
+                        <CommentIcon />
+                        <span>{commentCount}</span>
+                      </div>
+                      {isPrivate && (
+                        <div className="private-badge">
+                          <LockIcon size={18} />
+                          {t('private')}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 <div className="post-subtext">
                   {formatShortDate(publishedAt || createdAt)} -{' '}
                   {t('readTime', { minutes: readTime || 1 })}

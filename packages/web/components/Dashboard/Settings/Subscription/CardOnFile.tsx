@@ -17,7 +17,10 @@ const CardOnFile = ({ last4, onSuccess }: CardOnFileProps) => {
   return (
     <>
       {showUpdateCardFormModal && (
-        <UpdateCardFormModal onClose={() => setShowUpdateCardFormModal(false)} onSuccess={onSuccess} />
+        <UpdateCardFormModal
+          onClose={() => setShowUpdateCardFormModal(false)}
+          onSuccess={onSuccess}
+        />
       )}
       <div className="container">
         <p>{t('subscription.cardOnFile')}</p>
@@ -53,14 +56,14 @@ const CardOnFile = ({ last4, onSuccess }: CardOnFileProps) => {
           box-shadow: 0px 8px 10px #00000029;
           align-items: center;
           justify-content: center;
-          margin: 10px 0 15px;
+          margin: 10px 0 25px;
         }
 
         .container > p {
           font-size: ${theme.typography.paragraphSM};
           font-weight: 600;
           text-transform: uppercase;
-          color: ${theme.colors.gray600}; 
+          color: ${theme.colors.gray600};
         }
 
         .number-container {
@@ -71,7 +74,7 @@ const CardOnFile = ({ last4, onSuccess }: CardOnFileProps) => {
           font-size: 20px;
           margin: 0 0 10px;
         }
-        
+
         .divider {
           margin: 0 10px;
         }
@@ -79,7 +82,7 @@ const CardOnFile = ({ last4, onSuccess }: CardOnFileProps) => {
         .card-action-container {
           display: flex;
         }
-    `}</style>
+      `}</style>
     </>
   )
 }

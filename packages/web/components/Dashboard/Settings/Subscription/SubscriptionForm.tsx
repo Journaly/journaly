@@ -120,7 +120,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
           <strong>{t('subscription.subscriptionStatus')}</strong> <SubscriptionStatusBadge />
         </p>
         {user.membershipSubscription?.isActive && (
-          <>
+          <div className="plan-details-container">
             <p>
               <strong>{t('subscription.currentPlan')}</strong> {subscriptionPlan}
             </p>
@@ -158,7 +158,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
                 </p>
               </>
             )}
-          </>
+          </div>
         )}
         {showPaymentForm && (
           <PaymentForm
@@ -170,7 +170,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
         {user.membershipSubscription?.isActive &&
           !user?.membershipSubscription?.cancelAtPeriodEnd &&
           !showPaymentForm && (
-            <>
+            <div className="current-plan-actions">
               <Button
                 onClick={() => {
                   setShowPaymentForm(true)
@@ -189,7 +189,7 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
               >
                 {t('subscription.cancelSubscription')}
               </Button>
-            </>
+            </div>
           )}
       </div>
       <CancelSubscriptionConfirmationModal />
@@ -220,12 +220,22 @@ const SubscriptionForm = ({ user, onSuccess }: SubscriptionFormProps) => {
 
         .subscription-status {
           margin-bottom: 15px;
+          text-align: center;
         }
 
         .feature-table-container {
           display: flex;
           justify-content: center;
           margin: 35px 0;
+        }
+        .current-plan-actions {
+          display: flex;
+          justify-content: center;
+        }
+        .plan-details-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
       `}</style>
     </>

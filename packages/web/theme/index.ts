@@ -60,7 +60,7 @@ const theme: Theme = {
     charcoal: '#313131',
     white: '#ffffff',
     gray100: '#f6f6f6',
-    gray200: '',
+    gray200: '#f0eded',
     gray300: '#ebeae7',
     gray400: '#dadada',
     gray500: '',
@@ -142,7 +142,7 @@ const theme: Theme = {
     `,
     error: `
       color: #c42f14;
-      font-size: 11px;
+      font-size: 12px;
     `,
   },
 }

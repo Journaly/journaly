@@ -54,7 +54,6 @@ const TabToggle: React.FC<Props> = (props) => {
       </div>
 
       <style jsx>{`
-
         .tab-toggle-wrapper {
           padding: ${spaceUnit}px;
           background: #d5d9dc;

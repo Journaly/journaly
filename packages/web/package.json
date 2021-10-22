@@ -29,7 +29,6 @@
     "db:seed": "SNAPSHOT_FILE=$(pwd)/seed.sql npm explore '@journaly/j-db-client' -- npm run db:restore",
     "prisma:generate": "npm explore '@journaly/j-db-client' -- npm run prisma:generate",
     "migrate:apply": "npm explore '@journaly/j-db-client' -- npm run migrate:apply",
-    "migrate:create": "npm explore '@journaly/j-db-client' -- npm run migrate:create",
     "migrate:deploy": "npm explore '@journaly/j-db-client' -- npm run migrate:deploy",
     "translations:topics:pull": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/pull-topic-translations.mjs",
     "translations:topics:push": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/push-topic-translations.mjs"
@@ -40,7 +39,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.12",
     "@apollo/react-ssr": "^4.0.0",
-    "@journaly/j-db-client": "^13.5.0",
+    "@journaly/j-db-client": "^13.10.0",
     "@stripe/react-stripe-js": "^1.2.2",
     "@stripe/stripe-js": "^1.12.1",
     "@types/bcryptjs": "^2.4.2",
@@ -87,6 +86,7 @@
     "slate-hyperscript": "^0.66.0",
     "slate-react": "^0.66.7",
     "stripe": "^8.137.0",
+    "swot-node": "^2.0.173",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
     "uuid": "^8.3.2",

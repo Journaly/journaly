@@ -8,6 +8,7 @@ fragment UserFragment on User {
   profileImage
   city
   country
+  emailAddressVerified
 }
 
 fragment UserWithStatsFragment on User {
@@ -29,6 +30,9 @@ fragment UserWithLanguagesFragment on User {
 
 fragment CurrentUserFragment on User {
   ...UserWithLanguagesFragment
+  savedPosts {
+    id
+  }
   membershipSubscription {
     isActive
   }

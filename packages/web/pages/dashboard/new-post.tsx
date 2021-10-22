@@ -166,9 +166,14 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   const handlePublishClick = React.useCallback(
     (e) => {
       e.preventDefault()
-      createNewPost(PostStatusType.Published)
+      if (currentUser?.emailAddressVerified) {
+        createNewPost(PostStatusType.Published)
+      }
+      if (!currentUser?.emailAddressVerified) {
+        setErrorMessage(t('emailVerificationWarning'))
+      }
     },
-    [createNewPost],
+    [currentUser, createNewPost],
   )
 
   const handleDraftClick = React.useCallback(
@@ -268,6 +273,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             .error-message {
               ${theme.typography.error}
               text-align: center;
+              margin-top: 20px;
             }
           `}</style>
         </form>

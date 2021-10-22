@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { Prisma, MembershipSubscriptionPeriod, PrismaClient } from '@journaly/j-db-client'
 import Stripe from 'stripe'
 import stripe, { logPaymentsError } from '@/nexus/utils/stripe'
@@ -11,7 +12,7 @@ export const config = {
   },
 }
 
-const webhookPayloadParser = (req: any): Promise<string> => {
+const webhookPayloadParser = (req: NextApiRequest): Promise<string> => {
   return new Promise((res) => {
     const parts: string[] = []
 
@@ -51,15 +52,15 @@ const convertStripePriceToMembershipPeriod = (priceId: string) => {
   switch (priceId) {
     case process.env.STRIPE_MONTHLY_PRICE_ID:
       return MembershipSubscriptionPeriod.MONTHLY
-    case process.env.STRIPE_QUARTERLY_PRICE_ID:
-      return MembershipSubscriptionPeriod.QUARTERLY
     case process.env.STRIPE_ANNUAL_PRICE_ID:
       return MembershipSubscriptionPeriod.ANNUALY
+    case process.env.STRIPE_STUDENT_ANNUAL_PRICE_ID:
+      return MembershipSubscriptionPeriod.STUDENT_ANNUALLY
   }
   throw new Error('Price ID does not match one of our valid IDs')
 }
 
-const handler = async (req: any, res: any) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const db = getClient()
   const sig = req.headers['stripe-signature']
   const body = await webhookPayloadParser(req)
@@ -68,8 +69,11 @@ const handler = async (req: any, res: any) => {
 
   if (process.env.NODE_ENV === 'production') {
     try {
+      if (!sig) {
+        throw new Error('Missing stripe-signature')
+      }
       event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
-    } catch (err) {
+    } catch (err: any) {
       logPaymentsError(err.message, err, body)
 
       res.status(400).send(`Webhook Error: ${err.message}`)

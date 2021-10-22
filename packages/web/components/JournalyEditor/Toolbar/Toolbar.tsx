@@ -86,11 +86,9 @@ const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
         <ToggleMarkButton type="underline">
           <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
         </ToggleMarkButton>
-        { allowInlineImages && (
-          <InsertImageButton>
-            <ImageIcon title="Insert image" />
-          </InsertImageButton>
-        )}
+        <InsertImageButton allowInlineImages={allowInlineImages}>
+          <ImageIcon title="Insert image" />
+        </InsertImageButton>
         <ToolbarButton type="link" format="link">
           <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
         </ToolbarButton>
@@ -150,7 +148,6 @@ const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
           tableIcon
         )}
       </div>
-
       <style jsx>{`
         .editor-toolbar-container {
           height: ${toolbarHeight}px;

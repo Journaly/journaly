@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import Link from 'next/link'
 import theme from '@/theme'
 import {
@@ -23,8 +23,9 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
 
   const { data: { currentUser } = {}, refetch } = useFollowingUsersQuery()
 
-  const hasFollowedAuthor =
-    currentUser && currentUser.following.find((user) => user.id === author.id) !== undefined
+  const hasFollowedAuthor = useMemo(() => {
+    return currentUser?.following.find((user) => user.id === author.id) !== undefined
+  }, [currentUser?.following])
 
   const [followUserMutation, { loading: followLoading }] = useFollowUserMutation({
     onCompleted: () => {

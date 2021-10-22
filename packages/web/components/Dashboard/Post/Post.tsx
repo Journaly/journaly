@@ -1,17 +1,10 @@
-import React, { useMemo } from 'react'
+import React, { useState, memo, useMemo, useRef, forwardRef, useEffect } from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
+import { makeReference } from '@apollo/client'
 
+import { findEventTargetParent, sanitize, iOS, wait } from '@/utils'
 import {
-  findEventTargetParent,
-  sanitize,
-  iOS,
-  wait,
-} from '@/utils'
-import {
-  PostWithTopicsFragmentFragment as PostType,
-  CurrentUserFragmentFragment as UserType,
-  ThreadFragmentFragment as ThreadType,
   PostStatus,
   useCreateThreadMutation,
   useUpdatePostMutation,
@@ -22,44 +15,32 @@ import {
   PostClap,
   useBumpPostMutation,
   UserRole,
+  useSavePostMutation,
+  useUnsavePostMutation,
 } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
 import PostBodyStyles from '@/components/PostBodyStyles'
-import PencilIcon from '@/components/Icons/PencilIcon'
 import InlineFeedbackPopover from '@/components/InlineFeedbackPopover'
 import { Router, useTranslation } from '@/config/i18n'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
+import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
+import CommentSelectionButton from './CommentSelectionButton'
 
-import { getCoords, getUsersClappedText } from './helpers'
+import {
+  getCoords,
+  getUsersClappedText,
+  highlightRange,
+  isSelectionCommentable,
+  buildPreOrderListAndOffsets,
+  isChildOf,
+} from './helpers'
 import ClapIcon from '@/components/Icons/ClapIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
 import { POST_BUMP_LIMIT } from '../../../constants'
-import { makeReference } from '@apollo/client'
-
-interface IPostProps {
-  post: PostType
-  currentUser: UserType | null | undefined
-  refetch: any
-}
-
-// Elements whose boundaries a comment can cross
-const elementWhiteList = new Set(['SPAN', 'EM', 'U', 'STRONG'])
-
-type CommentSelectionButtonProps = {
-  position: {
-    x: string
-    y: string
-  }
-  display: boolean
-  onClick: React.MouseEventHandler
-}
-
-type SelectionState = {
-  bouncing: boolean
-  lastTimeout: number | null
-}
+import { SelectionState, PostProps, PostContentProps, ThreadType } from './types'
+import BookmarkIcon from '@/components/Icons/BookmarkIcon'
 
 const selectionState: SelectionState = {
   bouncing: false,
@@ -93,155 +74,8 @@ const bounceSelection = async () => {
   selectionState.bouncing = false
 }
 
-const CommentSelectionButton = ({ position, display, onClick }: CommentSelectionButtonProps) => {
-  return (
-    <button onMouseDown={onClick} className="comment-btn">
-      <PencilIcon size={24} className="edit-icon" />
-      <style jsx>{`
-        .comment-btn {
-          display: ${display ? 'flex' : 'none'};
-          align-items: center;
-          justify-content: center;
-          padding: 0 0 2px 2px;
-          width: 35px;
-          height: 35px;
-          font-size: 14px;
-          line-height: 1;
-          background-color: ${theme.colors.charcoal};
-          border-radius: 5px;
-          cursor: pointer;
-          position: absolute;
-          top: ${position.y};
-          left: ${position.x};
-          z-index: 10;
-          transition: background-color 0.2s ease-in-out;
-          transform: translateX(-50%);
-        }
-
-        .comment-btn:hover :global(#g-stroke) {
-          stroke: ${theme.colors.blueLight};
-        }
-      `}</style>
-    </button>
-  )
-}
-
-// Construct highlighted text/selection & replace original selection with highlighted construction
-function highlightRange(range: Range, threadId: number): string {
-  const selectedText = range.extractContents()
-  const commentedTextSpan = document.createElement('span')
-  commentedTextSpan.classList.add('thread-highlight')
-  commentedTextSpan.dataset.tid = `${threadId}`
-  commentedTextSpan.appendChild(selectedText)
-  range.insertNode(commentedTextSpan)
-
-  return commentedTextSpan.innerHTML
-}
-
-function buildPreOrderList(rootEl: HTMLElement): (HTMLElement | Node)[] {
-  const preOrderList: (HTMLElement | Node)[] = []
-  const recur = (el: HTMLElement | Node) => {
-    preOrderList.push(el)
-    el.childNodes.forEach(recur)
-  }
-  recur(rootEl)
-  return preOrderList
-}
-
-function buildPostOrderList(el: HTMLElement): (HTMLElement | Node)[] {
-  const postOrderList: (HTMLElement | Node)[] = []
-  const recur = (el: HTMLElement | Node) => {
-    el.childNodes.forEach(recur)
-    postOrderList.push(el)
-  }
-  recur(el)
-  return postOrderList
-}
-
-// Returns boolean to indicate whether selection is valid for a comment
-function isSelectionCommentable(selection: Selection, parentElement: HTMLElement) {
-  if (
-    !selection.anchorNode ||
-    !selection.focusNode ||
-    selection.isCollapsed ||
-    !selection.toString().trim().length ||
-    !isChildOf(selection.anchorNode, parentElement) ||
-    !isChildOf(selection.focusNode, parentElement)
-  ) {
-    return false
-  }
-
-  const nodeList = buildPostOrderList(parentElement)
-  // Index of the element that contains the beginning of the selection
-  let startIdx = nodeList.indexOf(selection.anchorNode)
-  // Index of the element that contains the end of the selection
-  let endIdx = nodeList.indexOf(selection.focusNode)
-
-  // Make sure it's not a backwards selection
-  // If so, reverse it.
-  if (startIdx > endIdx) {
-    ;[startIdx, endIdx] = [endIdx, startIdx]
-  }
-
-  // The nodes that the selection crosses boundaries of
-  const selectedNodes = nodeList.slice(startIdx, endIdx + 1)
-
-  // Check none of the nodes crossed by the selection
-  // are not Text nodes or outisde of the whitelist
-  for (const node of selectedNodes) {
-    if (node.constructor === Text) {
-      continue
-    } else if (elementWhiteList.has((node as HTMLElement).tagName)) {
-      continue
-    } else {
-      // node not in our "whitelist"
-      return false
-    }
-  }
-  return true
-}
-
-function buildPreOrderListAndOffsets(selectableTextArea: HTMLElement) {
-  // a list of every element in the selectableTextArea
-  const preOrderList = buildPreOrderList(selectableTextArea)
-  // a list of integers which are the offsets of the preOrderList elements
-  // this method of creating the Array is more efficient than using Array.push
-  const offsets = new Array(preOrderList.length)
-
-  // Offset of the sum of the length of all the Text Nodes that appear
-  // before the current element in the document
-  let currentOffset = 0
-  for (let i = 0; i < preOrderList.length; i++) {
-    const node = preOrderList[i]
-    offsets[i] = currentOffset
-
-    if (node.constructor === Text) {
-      currentOffset += (node as Text).length
-    }
-  }
-
-  return [preOrderList, offsets]
-}
-
-function isChildOf(el: Node, target: HTMLElement) {
-  let current = el
-  while (current.parentElement) {
-    if (current.parentElement === target) {
-      return true
-    }
-
-    current = current.parentElement
-  }
-
-  return false
-}
-
-type PostContentProps = {
-  body: string
-}
-
-const PostContent = React.memo(
-  React.forwardRef<HTMLDivElement, PostContentProps>(({ body }, ref) => {
+const PostContent = memo(
+  forwardRef<HTMLDivElement, PostContentProps>(({ body }, ref) => {
     // Break this into a memoizable component so we don't have to re-sanitize
     // and re-render so much
     const sanitizedHTML = sanitize(body)
@@ -250,16 +84,78 @@ const PostContent = React.memo(
   }),
 )
 
-const Post = ({ post, currentUser, refetch }: IPostProps) => {
+const Post = ({ post, currentUser, refetch }: PostProps) => {
   const { t } = useTranslation('post')
 
-  const selectableRef = React.useRef<HTMLDivElement>(null)
-  const popoverRef = React.useRef<HTMLDivElement>(null)
-  const [displayCommentButton, setDisplayCommentButton] = React.useState(false)
-  const [activeThreadId, setActiveThreadId] = React.useState<number>(-1)
-  const [commentButtonPosition, setCommentButtonPosition] = React.useState({ x: '0', y: '0' })
-  const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0, w: 0, h: 0 })
-  const [displayDeleteModal, setDisplayDeleteModal] = React.useState(false)
+  const selectableRef = useRef<HTMLDivElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
+  const [displayCommentButton, setDisplayCommentButton] = useState(false)
+  const [activeThreadId, setActiveThreadId] = useState<number>(-1)
+  const [commentButtonPosition, setCommentButtonPosition] = useState({ x: '0', y: '0' })
+  const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0, w: 0, h: 0 })
+  const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
+  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
+  const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
+  const isAuthoredPost = currentUser && post.author.id === currentUser.id
+
+  const hasSavedPost = useMemo(() => {
+    return currentUser?.savedPosts.find((savedPost) => savedPost.id === post.id) !== undefined
+  }, [currentUser?.id, currentUser?.savedPosts])
+
+  const [savePost, { loading: savingPost }] = useSavePostMutation({
+    onCompleted: () => {
+      refetch()
+      toast.success(t('savePostSuccess'))
+    },
+    onError: () => {
+      toast.error(t('savePostError'))
+    },
+    update(cache) {
+      cache.modify({
+        id: cache.identify(makeReference('ROOT_QUERY')),
+        fields: {
+          posts: () => {
+            // This simply invalidates the cache for the `posts` query
+            return undefined
+          },
+        },
+      })
+    },
+  })
+
+  const handleSavePost = () => {
+    if (!canAttempToSavePost) {
+      setPremiumFeatureModalExplanation(t('savePostPremiumFeatureExplanation'))
+      setDisplayPremiumFeatureModal(true)
+    } else {
+      savePost({ variables: { postId: post.id } })
+    }
+  }
+
+  const [unsavePost, { loading: unsavingPost }] = useUnsavePostMutation({
+    onCompleted: () => {
+      refetch()
+      toast.success(t('unsavePostSuccess'))
+    },
+    onError: () => {
+      toast.error(t('unsavePostError'))
+    },
+    update: (cache, { data }) => {
+      const unsavedPost = data?.unsavePost
+      if (unsavedPost?.id && unsavedPost.__typename) {
+        cache.modify({
+          fields: {
+            savedPosts(existingPosts = []): PostModel[] {
+              return existingPosts.filter(
+                (post: any) => post.__ref !== `${unsavedPost.__typename}:${unsavedPost.id}`,
+              )
+            },
+          },
+        })
+      }
+    },
+  })
+
   const [deletePost] = useDeletePostMutation({
     onCompleted: () => {
       toast.success(t('deletePostSuccess'))
@@ -354,14 +250,12 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
   })
 
   const deleteExistingPostClap = () => {
-    const currentPostClap = post.claps.find(
-      (clap) => clap.author.id === currentUser?.id,
-    )
+    const currentPostClap = post.claps.find((clap) => clap.author.id === currentUser?.id)
     if (currentPostClap) {
       deletePostClap({
         variables: {
-          postClapId: currentPostClap.id
-        }
+          postClapId: currentPostClap.id,
+        },
       })
     }
   }
@@ -372,7 +266,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
     return post.claps.find((clap) => clap.author.id === currentUser?.id) !== undefined
   }, [post.claps, currentUser?.id])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!selectableRef.current) {
       return
     }
@@ -412,7 +306,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
     })
   }, [post.threads.length])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onSelectionChange = () => {
       const selection = window.getSelection()
 
@@ -517,10 +411,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
     // ancestor that is a thread highlight.
     let threadHighlight = null
     let currentElement: HTMLElement | null = e.target as HTMLElement
-    while (
-      currentElement &&
-      currentElement !== e.currentTarget
-    ) {
+    while (currentElement && currentElement !== e.currentTarget) {
       if (currentElement.dataset.tid) {
         threadHighlight = currentElement
         break
@@ -572,30 +463,40 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
 
   const handleBumpPost = () => {
-    if (post.bumpCount >= POST_BUMP_LIMIT) {
-      toast.error(t('postBumpLimitError'))
-      return
+    if (!canAttemptBump) {
+      setPremiumFeatureModalExplanation(t('postBumpingPremiumFeatureExplanation'))
+      setDisplayPremiumFeatureModal(true)
+    } else {
+      if (post.bumpCount >= POST_BUMP_LIMIT) {
+        toast.error(t('postBumpLimitError'))
+        return
+      }
+      bumpPost()
     }
-    bumpPost()
   }
 
   const [bumpPost] = useBumpPostMutation({
     variables: { postId: post.id },
     onCompleted: () => {
-      toast.success(t(
-        'bumpPostSuccess',
-        {
+      toast.success(
+        t('bumpPostSuccess', {
           numRemaining: POST_BUMP_LIMIT - (post.bumpCount + 1),
-        }))
+        }),
+      )
       Router.push('/dashboard/my-feed')
     },
   })
 
-  const canAttemptBump = (
-      currentUser?.membershipSubscription?.isActive
-      || currentUser?.userRole === UserRole.Admin
-      || currentUser?.userRole === UserRole.Moderator
-    ) && post.status === 'PUBLISHED'
+  const canAttemptBump =
+    (currentUser?.membershipSubscription?.isActive ||
+      currentUser?.userRole === UserRole.Admin ||
+      currentUser?.userRole === UserRole.Moderator) &&
+    post.status === 'PUBLISHED'
+
+  const canAttempToSavePost =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
 
   return (
     <div className="post-container">
@@ -603,7 +504,7 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         <title>
           {post.author.handle} | {post.title}
         </title>
-        <meta name="author" content={post.author.name || post.author.handle } />
+        <meta name="author" content={post.author.name || post.author.handle} />
         <meta property="og:title" content={post.title} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`https://www.journaly.com/post/${post.id}/`} />
@@ -641,13 +542,11 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
             <span>{post.claps.length}</span>
           </div>
           <div className="post-action-container">
-            {currentUser && post.author.id === currentUser.id && (
+            {isAuthoredPost && (
               <>
-                {canAttemptBump && (
-                  <Button type="button" variant={ButtonVariant.Secondary} onClick={handleBumpPost}>
-                    {t('bumpPostAction')}
-                  </Button>
-                )}
+                <Button type="button" variant={ButtonVariant.Secondary} onClick={handleBumpPost}>
+                  {t('bumpPostAction')}
+                </Button>
                 <Button
                   type="button"
                   variant={ButtonVariant.Secondary}
@@ -677,6 +576,19 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
                 </Button>
               </>
             )}
+            {!isAuthoredPost && (
+              <>
+                <Button
+                  variant={ButtonVariant.Icon}
+                  loading={savingPost || unsavingPost}
+                  onClick={() => {
+                    hasSavedPost ? unsavePost({ variables: { postId: post.id } }) : handleSavePost()
+                  }}
+                >
+                  <BookmarkIcon size={28} saved={hasSavedPost} />
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -697,17 +609,31 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         />
       )}
       <ConfirmationModal
-        onConfirm={(): void => {
+        onConfirm={() => {
           deletePost({ variables: { postId: post.id } })
           setDisplayDeleteModal(false)
         }}
-        onCancel={(): void => {
+        onCancel={() => {
           setDisplayDeleteModal(false)
         }}
         title={t('deleteModal.title')}
         body={t('deleteModal.body')}
         show={displayDeleteModal}
       />
+      {displayPremiumFeatureModal && (
+        <PremiumFeatureModal
+          featureExplanation={premiumFeatureModalExplanation}
+          onAcknowledge={() => {
+            setPremiumFeatureModalExplanation(undefined)
+            setDisplayPremiumFeatureModal(false)
+          }}
+          onGoToPremium={() => {
+            Router.push('/dashboard/settings/subscription')
+            setPremiumFeatureModalExplanation(undefined)
+            setDisplayPremiumFeatureModal(false)
+          }}
+        />
+      )}
       <PostBodyStyles parentClassName="post-body" />
       <style>{`
         .thread-highlight {
@@ -804,21 +730,21 @@ const Post = ({ post, currentUser, refetch }: IPostProps) => {
         }
 
         @media (max-width: ${theme.breakpoints.SM}) {
-          .post-controls {
-            flex-direction: column;
-          }
-
-          .post-action-container {
-            padding-top: 10px;
-            flex-direction: column;
-            gap: 5px;
-          }
-
+          ${isAuthoredPost &&
+          `.post-controls {
+              flex-direction: column;
+            }
+  
+            .post-action-container {
+              padding-top: 10px;
+              flex-direction: column;
+              gap: 5px;
+            }
+          `}
           .post-action-container > :global(button) {
             align-self: stretch;
           }
         }
-
         .clap-container {
           display: flex;
           align-items: center;

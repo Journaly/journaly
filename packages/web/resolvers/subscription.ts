@@ -14,6 +14,7 @@ import stripe, {
   getOrCreateStripeCustomer,
   paymentErrorWrapper
 } from '@/nexus/utils/stripe'
+import { sendPremiumWelcomeEmail } from './utils'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
@@ -34,13 +35,13 @@ const MembershipSubscription = objectType({
 })
 
 const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
-  switch(subType) {
+  switch (subType) {
     case MembershipSubscriptionPeriod.MONTHLY:
       return process.env.STRIPE_MONTHLY_PRICE_ID
-    case MembershipSubscriptionPeriod.QUARTERLY:
-      return process.env.STRIPE_QUARTERLY_PRICE_ID
     case MembershipSubscriptionPeriod.ANNUALY:
       return process.env.STRIPE_ANNUAL_PRICE_ID
+    case MembershipSubscriptionPeriod.STUDENT_ANNUALLY:
+      return process.env.STRIPE_STUDENT_ANNUAL_PRICE_ID
   }
 }
 
@@ -147,7 +148,10 @@ const MembershipSubscriptionMutations = extendType({
         })
 
         if (!user) throw new Error("User not found")
-        
+        if (args.period === MembershipSubscriptionPeriod.STUDENT_ANNUALLY && !user.isStudent) {
+          throw new Error('You must have a student email address to get the student discount price')
+        }
+
         const customerId = await getOrCreateStripeCustomer(user, ctx.db)
 
         const stripePaymentMethod = await setPaymentMethod(userId, ctx.db, customerId, args.paymentMethodId)
@@ -189,6 +193,8 @@ const MembershipSubscriptionMutations = extendType({
               }
             },
           })
+
+          await sendPremiumWelcomeEmail({ user })
 
           return membershipSubscription
         } else {

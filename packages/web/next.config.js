@@ -13,10 +13,9 @@ let config = {
     // Copy translation files into build so we can find them again in vercel world
     config.plugins.push(
       new CopyPlugin({
-        patterns: [{ from: 'public/static/locales', to:  'public/static/locales' }],
-      })
+        patterns: [{ from: 'public/static/locales', to: 'public/static/locales' }],
+      }),
     )
-
 
     return config
   },

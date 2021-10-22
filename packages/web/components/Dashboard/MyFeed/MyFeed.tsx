@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
 
 import _ from 'lodash'
 
@@ -18,6 +19,7 @@ import LoadingWrapper from '@/components/LoadingWrapper'
 import FeedHeader from './FeedHeader'
 import Filters from '../Filters'
 import { PostQueryVarsType } from '../Filters'
+import { makeReference, useApolloClient } from '@apollo/client'
 
 const NUM_POSTS_PER_PAGE = 9
 
@@ -35,12 +37,28 @@ export type InitialSearchFilters = {
 
 const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   const { t } = useTranslation('my-feed')
+  const client = useApolloClient()
 
   /**
    * Pagination handling
    */
   // Pull query params off the router instance
   const router = useRouter()
+
+  useEffect(() => {
+    if (router.query['email-verification'] === 'success') {
+      toast.success("You're email address has been verified!")
+      client.cache.modify({
+        id: client.cache.identify(makeReference('ROOT_QUERY')),
+        fields: {
+          currentUser: () => {
+            return undefined
+          },
+        },
+      })
+    }
+  }, [])
+
   const currentPage = router.query.page ? Math.max(1, parseInt(router.query.page as string, 10)) : 1
 
   const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>({
@@ -50,6 +68,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
     needsFeedback: initialSearchFilters?.needsFeedback || false,
     hasInteracted: initialSearchFilters?.hasInteracted || false,
     search: '',
+    savedPosts: false,
   })
 
   // fetch posts for the feed!
@@ -99,6 +118,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
           hasPosts: true,
           authoredOnly: false,
         }}
+        showSavedPosts={true}
       />
       <LoadingWrapper loading={loading} error={error}>
         <div className="my-feed-container" data-testid="my-feed-container">

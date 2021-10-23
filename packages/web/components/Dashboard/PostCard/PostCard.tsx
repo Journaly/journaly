@@ -80,25 +80,24 @@ const PostCard: React.FC<Props> = ({ post, avatar = false, stacked = false }) =>
                 </div>
               )}
               <div className="post-data">
-                {isPublished ||
-                  (isPrivate && (
-                    <div className="post-stats">
-                      <div className="post-stat">
-                        <ClapIcon clapped />
-                        <span>{claps.length}</span>
-                      </div>
-                      <div className="post-stat">
-                        <CommentIcon />
-                        <span>{commentCount}</span>
-                      </div>
-                      {isPrivate && (
-                        <div className="private-badge">
-                          <LockIcon size={18} />
-                          {t('private')}
-                        </div>
-                      )}
+                {(isPublished || isPrivate) && (
+                  <div className="post-stats">
+                    <div className="post-stat">
+                      <ClapIcon clapped />
+                      <span>{claps.length}</span>
                     </div>
-                  ))}
+                    <div className="post-stat">
+                      <CommentIcon />
+                      <span>{commentCount}</span>
+                    </div>
+                    {isPrivate && (
+                      <div className="private-badge">
+                        <LockIcon size={18} />
+                        {t('private')}
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="post-subtext">
                   {formatShortDate(publishedAt || createdAt)} -{' '}
                   {t('readTime', { minutes: readTime || 1 })}

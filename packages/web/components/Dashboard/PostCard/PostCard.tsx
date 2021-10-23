@@ -13,22 +13,17 @@ import CommentIcon from '@/components/Icons/CommentIcon'
 import theme from '@/theme'
 import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import LevelGauge from '@/components/LevelGauge'
+import LockIcon from '@/components/Icons/LockIcon'
 
 type Props = {
   post: PostCardType
-  status?: PostStatusType
   avatar?: boolean
   stacked?: boolean
 }
 
 const postBorderRadius = '5px'
 
-const PostCard: React.FC<Props> = ({
-  post,
-  status = PostStatusType.Published,
-  avatar = false,
-  stacked = false,
-}) => {
+const PostCard: React.FC<Props> = ({ post, avatar = false, stacked = false }) => {
   const { t } = useTranslation('post')
   const {
     id,
@@ -44,15 +39,20 @@ const PostCard: React.FC<Props> = ({
     publishedLanguageLevel,
     language: { name: languageName },
   } = post
-  const isDraft = status === PostStatusType.Draft
-  const isPublished = status === PostStatusType.Published
+  const isDraft = post.status === PostStatusType.Draft
+  const isPublished = post.status === PostStatusType.Published
+  const isPrivate = post.status === PostStatusType.Private
   const postCardStyles = classNames('post-card-container', { stacked })
 
   return (
     <>
       <Link href={'/post/[id]'} as={`/post/${id}`}>
         <a className={postCardStyles} data-testid="my-feed-post-card">
-          <img className="post-image" src={headlineImage.smallSize} alt="headline image" />
+          <img
+            className={`post-image ${isPrivate ? 'private' : ''}`}
+            src={headlineImage.smallSize}
+            alt="headline image"
+          />
           <div className="post-card-details">
             <div className="post-text" dir="auto">
               <h1 className="post-title">
@@ -80,18 +80,25 @@ const PostCard: React.FC<Props> = ({
                 </div>
               )}
               <div className="post-data">
-                {isPublished && (
-                  <div className="post-stats">
-                    <div className="post-stat">
-                      <ClapIcon clapped />
-                      <span>{claps.length}</span>
+                {isPublished ||
+                  (isPrivate && (
+                    <div className="post-stats">
+                      <div className="post-stat">
+                        <ClapIcon clapped />
+                        <span>{claps.length}</span>
+                      </div>
+                      <div className="post-stat">
+                        <CommentIcon />
+                        <span>{commentCount}</span>
+                      </div>
+                      {isPrivate && (
+                        <div className="private-badge">
+                          <LockIcon size={18} />
+                          {t('private')}
+                        </div>
+                      )}
                     </div>
-                    <div className="post-stat">
-                      <CommentIcon />
-                      <span>{commentCount}</span>
-                    </div>
-                  </div>
-                )}
+                  ))}
                 <div className="post-subtext">
                   {formatShortDate(publishedAt || createdAt)} -{' '}
                   {t('readTime', { minutes: readTime || 1 })}
@@ -137,6 +144,7 @@ const PostCard: React.FC<Props> = ({
           object-fit: cover;
           flex-shrink: 0;
         }
+
         @media (min-width: ${theme.breakpoints.MD}) {
           :not(.stacked) .post-image {
             width: 125px;
@@ -279,6 +287,19 @@ const PostCard: React.FC<Props> = ({
             color: ${theme.colors.blue};
             text-transform: uppercase;
           }
+        }
+
+        .private-badge {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+          margin-left: 15px;
+          text-transform: uppercase;
+          border: 2px solid ${theme.colors.blueLight};
+          border-radius: 4px;
+          font-weight: 700;
+          font-size: 12px;
+          padding: 2px 5px 2px 2px;
         }
       `}</style>
     </>

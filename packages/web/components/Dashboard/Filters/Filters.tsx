@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import isEqual from 'lodash/isEqual'
 import Button, { ButtonVariant } from '@/components/Button'
-import { User as UserType, useTopicsQuery, useLanguagesQuery } from '@/generated/graphql'
+import { User as UserType, useTopicsQuery, useLanguagesQuery, UserRole } from '@/generated/graphql'
 import SearchInput from './SearchInput'
 import LanguageSelect from './LanguageSelect'
 import TopicSelect from './TopicSelect'
@@ -53,6 +53,11 @@ const Filters: React.FC<Props> = ({
       })),
     [],
   )
+
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
 
   const onTopicAdd = useCallback(
     (id: number): void => {
@@ -134,7 +139,7 @@ const Filters: React.FC<Props> = ({
   }, [])
 
   const handleToggleSavedPosts = useCallback(() => {
-    if (!currentUser.membershipSubscription?.isActive) {
+    if (!isPremiumFeatureEligible) {
       setDisplayPremiumFeatureModal(true)
     } else {
       setPostQueryVars((prevState) => ({
@@ -149,7 +154,7 @@ const Filters: React.FC<Props> = ({
     variables: { uiLanguage, languages: postQueryVars.languages, ...topicAndLanguageOptions },
   })
 
-  let filterCount =
+  const filterCount =
     postQueryVars.topics.length +
     ~~postQueryVars.followedAuthors +
     ~~postQueryVars.needsFeedback +

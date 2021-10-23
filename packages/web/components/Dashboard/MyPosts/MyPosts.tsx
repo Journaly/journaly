@@ -75,14 +75,18 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
         }}
         showPostCount={false}
       />
-      {error && <p>There was an error retrieving your posts.</p>}
+      {error && (
+        <div className="empty-state-container">
+          <p>There was an error retrieving your posts.</p>
+        </div>
+      )}
 
       {loading && <LoadingSpinner size={60} />}
 
       {showPosts && (
         <div className="my-posts">
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} status={status} />
+            <PostCard key={post.id} post={post} />
           ))}
           {showPagination && (
             <Pagination
@@ -99,11 +103,15 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
         <div>
           {status === PostStatusType.Published ? (
             <Trans i18nKey="publishedEmptyState">
-              You have no published posts. You can either publish a draft or{' '}
-              <TranslationLink href="/dashboard/new-post">create a new post</TranslationLink>.
+              <div className="empty-state-container">
+                You have no published posts. You can either publish a draft or{' '}
+                <TranslationLink href="/dashboard/new-post">create a new post</TranslationLink>.
+              </div>
             </Trans>
           ) : (
-            t('draftEmptyState')
+            <div className="empty-state-container">
+              {t(`${status === PostStatusType.Draft ? 'draft' : 'private'}EmptyState`)}
+            </div>
           )}
         </div>
       )}
@@ -147,6 +155,29 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
 
         :global(.pagination-wrapper) {
           margin: 40px 0;
+        }
+
+        .empty-state-container {
+          max-width: 900px;
+          margin: 20px auto;
+          padding: 50px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          background: ${theme.colors.white};
+          box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+          text-align: center;
+          font-weight: 700;
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
+        p {
+          margin-bottom: 35px;
         }
       `}</style>
     </div>

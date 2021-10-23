@@ -12,6 +12,7 @@ import { formatLongDate } from '@/utils'
 
 import theme from '@/theme'
 import LevelGauge from '@/components/LevelGauge'
+import LockIcon from '../Icons/LockIcon'
 
 type PostHeaderProps = {
   postTitle: string
@@ -50,7 +51,13 @@ const PostHeader: React.FC<PostHeaderProps> = ({
               {publishedLanguageLevel && <LevelGauge level={publishedLanguageLevel} />}
             </div>
           )}
-          {postStatus === 'DRAFT' && <div className="draft badge">{t('draft')}</div>}
+          {postStatus === PostStatus.Draft && <div className="draft badge">{t('draft')}</div>}
+          {postStatus === PostStatus.Private && (
+            <div className="private badge">
+              <LockIcon size={12} />
+              {t('private')}
+            </div>
+          )}
         </div>
 
         <div className="title-and-info">
@@ -102,7 +109,13 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           top: 10px;
         }
 
-        .draft {
+        .badge.private {
+          display: flex;
+          gap: 4px;
+        }
+
+        .draft,
+        .private {
           right: 10px;
         }
 

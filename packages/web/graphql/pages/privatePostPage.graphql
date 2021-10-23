@@ -1,0 +1,8 @@
+query privatePostPage($privateShareId: String!, $uiLanguage: UILanguage!) {
+  postById(privateShareId: $privateShareId) {
+    ...PostWithTopicsFragment
+  }
+  currentUser {
+    ...CurrentUserFragment
+  }
+}

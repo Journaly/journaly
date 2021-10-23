@@ -97,6 +97,11 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
   const isAuthoredPost = currentUser && post.author.id === currentUser.id
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
+  const canAttemptBump = isPremiumFeatureEligible && post.status === 'PUBLISHED'
 
   const hasSavedPost = useMemo(() => {
     return currentUser?.savedPosts.find((savedPost) => savedPost.id === post.id) !== undefined
@@ -124,7 +129,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   })
 
   const handleSavePost = () => {
-    if (!canAttempToSavePost) {
+    if (!isPremiumFeatureEligible) {
       setPremiumFeatureModalExplanation(t('savePostPremiumFeatureExplanation'))
       setDisplayPremiumFeatureModal(true)
     } else {
@@ -434,6 +439,15 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   }
 
   const setPostStatus = (status: PostStatus) => () => {
+    if (!currentUser?.emailAddressVerified) {
+      toast.error(t('emailVerificationWarning'))
+      return
+    }
+    if (status === PostStatus.Private && !isPremiumFeatureEligible) {
+      setPremiumFeatureModalExplanation(t('privatePublishingPremiumFeatureExplanation'))
+      setDisplayPremiumFeatureModal(true)
+      return
+    }
     updatePost({
       variables: {
         postId: post.id,
@@ -487,17 +501,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     },
   })
 
-  const canAttemptBump =
-    (currentUser?.membershipSubscription?.isActive ||
-      currentUser?.userRole === UserRole.Admin ||
-      currentUser?.userRole === UserRole.Moderator) &&
-    post.status === 'PUBLISHED'
-
-  const canAttempToSavePost =
-    currentUser?.membershipSubscription?.isActive ||
-    currentUser?.userRole === UserRole.Admin ||
-    currentUser?.userRole === UserRole.Moderator
-
   return (
     <div className="post-container">
       <Head>
@@ -544,9 +547,11 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           <div className="post-action-container">
             {isAuthoredPost && (
               <>
-                <Button type="button" variant={ButtonVariant.Secondary} onClick={handleBumpPost}>
-                  {t('bumpPostAction')}
-                </Button>
+                {post.status === PostStatus.Published && (
+                  <Button type="button" variant={ButtonVariant.Secondary} onClick={handleBumpPost}>
+                    {t('bumpPostAction')}
+                  </Button>
+                )}
                 <Button
                   type="button"
                   variant={ButtonVariant.Secondary}
@@ -556,13 +561,31 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
                 >
                   {t('editPostAction')}
                 </Button>
-                {post.status === 'DRAFT' && (
+                {post.status === PostStatus.Draft && (
+                  <div className="post-action-subcontainer">
+                    <Button
+                      type="button"
+                      variant={ButtonVariant.Secondary}
+                      onClick={setPostStatus(PostStatus.Published)}
+                    >
+                      {t('publishDraft')}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={ButtonVariant.Secondary}
+                      onClick={setPostStatus(PostStatus.Private)}
+                    >
+                      {t('sharePrivatelyCTA')}
+                    </Button>
+                  </div>
+                )}
+                {post.status === PostStatus.Private && (
                   <Button
                     type="button"
                     variant={ButtonVariant.Secondary}
                     onClick={setPostStatus(PostStatus.Published)}
                   >
-                    {t('publishDraft')}
+                    {t('publishPost')}
                   </Button>
                 )}
                 <Button
@@ -724,7 +747,8 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           margin-left: 5px;
         }
 
-        .post-action-container {
+        .post-action-container,
+        .post-action-subcontainer {
           display: flex;
           gap: 10px;
         }
@@ -743,6 +767,9 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           `}
           .post-action-container > :global(button) {
             align-self: stretch;
+          }
+          .post-action-subcontainer > :global(button) {
+            width: 100%;
           }
         }
         .clap-container {

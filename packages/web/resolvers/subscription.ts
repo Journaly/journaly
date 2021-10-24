@@ -193,21 +193,25 @@ const MembershipSubscriptionMutations = extendType({
             trial_end: trialEnd
           })
   
-          const membershipSubscription = await ctx.db.membershipSubscription.create({
-            data: {
-              period: args.period,
-              // Give 2 days grace period
-              expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
-              nextBillingDate: new Date(stripeSubscription.current_period_end * 1000),
-              // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
-              stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
-              stripeSubscriptionId: stripeSubscription.id,
-              user: {
-                connect: {
-                  id: userId,
-                }, 
-              }
-            },
+          const membershipSubscriptionData = {
+            period: args.period,
+            // Give 2 days grace period
+            expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+            nextBillingDate: new Date(stripeSubscription.current_period_end * 1000),
+            // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
+            stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
+            stripeSubscriptionId: stripeSubscription.id,
+            user: {
+              connect: {
+                id: userId,
+              }, 
+            }
+          }
+
+          const membershipSubscription = await ctx.db.membershipSubscription.upsert({
+            where: { userId },
+            update: membershipSubscriptionData,
+            create: membershipSubscriptionData,
           })
 
           await sendPremiumWelcomeEmail({ user })

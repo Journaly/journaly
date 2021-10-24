@@ -201,17 +201,19 @@ const MembershipSubscriptionMutations = extendType({
             // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
             stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
             stripeSubscriptionId: stripeSubscription.id,
-            user: {
-              connect: {
-                id: userId,
-              }, 
-            }
           }
 
           const membershipSubscription = await ctx.db.membershipSubscription.upsert({
             where: { userId },
             update: membershipSubscriptionData,
-            create: membershipSubscriptionData,
+            create: {
+              ...membershipSubscriptionData,
+              user: {
+                connect: {
+                  id: userId,
+                }, 
+              }
+            }
           })
 
           await sendPremiumWelcomeEmail({ user })

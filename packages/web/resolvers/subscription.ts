@@ -156,7 +156,23 @@ const MembershipSubscriptionMutations = extendType({
 
         const stripePaymentMethod = await setPaymentMethod(userId, ctx.db, customerId, args.paymentMethodId)
         if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
-        if (!user.membershipSubscription) {
+
+        let subscriptionIsFullyExpired = false
+
+        // If we have a subscription record but the subscription has ended
+        // because the billing period dates need to change (also stripe just
+        // won't let us re-activate a supscription that's full canceled)
+        if (user.membershipSubscription) {
+          const stripeSubscription = await stripe.subscriptions.retrieve(
+            user.membershipSubscription.stripeSubscriptionId
+          ) 
+
+          if (stripeSubscription.ended_at) {
+            subscriptionIsFullyExpired = true
+          }
+        }
+
+        if (!user.membershipSubscription || subscriptionIsFullyExpired) {
 
           // If we're in dev or stage, create subscription with a trial period
           // that expires 5 minutes from the current time in order to test

@@ -192,7 +192,7 @@ const MembershipSubscriptionMutations = extendType({
             customer: customerId,
             trial_end: trialEnd
           })
-  
+
           const membershipSubscriptionData = {
             period: args.period,
             // Give 2 days grace period
@@ -202,19 +202,22 @@ const MembershipSubscriptionMutations = extendType({
             stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
             stripeSubscriptionId: stripeSubscription.id,
           }
+  
+          let membershipSubscription
 
-          const membershipSubscription = await ctx.db.membershipSubscription.upsert({
-            where: { userId },
-            update: membershipSubscriptionData,
-            create: {
-              ...membershipSubscriptionData,
-              user: {
-                connect: {
-                  id: userId,
-                }, 
-              }
-            }
-          })
+          if (user.membershipSubscription) {
+            membershipSubscription = await ctx.db.membershipSubscription.update({
+              where: { userId },
+              data: membershipSubscriptionData
+            })
+          } else {
+            membershipSubscription = await ctx.db.membershipSubscription.create({
+              data: {
+                ...membershipSubscriptionData,
+                user: { connect: { id: userId, }, }
+              },
+            })
+          }
 
           await sendPremiumWelcomeEmail({ user })
 

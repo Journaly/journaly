@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
 
@@ -19,6 +19,7 @@ import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import HelpIcon from '@/components/Icons/HelpIcon'
 import Modal from '@/components/Modal'
 import NotificationsIcon from '@/components/Icons/NotificationsIcon'
+import NotificationFeed from '@/components/NotificationFeed'
 
 interface Props {
   expanded: boolean
@@ -28,6 +29,9 @@ interface Props {
 
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
+
+  const notificationFeedRef = useRef<HTMLDivElement>(null)
+  const [showNotificationFeed, setShowNotificationFeed] = useState(false)
   const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
     refetchQueries: [{ query: CurrentUserDocument }],
@@ -54,6 +58,11 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
     if (window.innerWidth < navConstants.mobileBreakpoint) {
       collapse()
     }
+  }
+
+  const handleNotificationClick = () => {
+    console.log('weehoo!')
+    setShowNotificationFeed(true)
   }
 
   const handleLogOut = useCallback(async () => {
@@ -110,7 +119,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               <NavLink href="">
                 <a
                   className="nav-link"
-                  onClick={handleCollapse}
+                  onClick={handleNotificationClick}
                   data-testid="notifications-nav-link"
                 >
                   <NotificationsIcon aria-hidden="true" />
@@ -195,6 +204,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           />
         )}
       </nav>
+      {showNotificationFeed && <NotificationFeed target={} ref={notificationFeedRef} />}
       <style jsx>{`
         .nav-background {
           position: fixed;

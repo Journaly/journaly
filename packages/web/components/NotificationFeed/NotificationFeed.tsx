@@ -1,14 +1,23 @@
 import React from 'react'
+import { UserFragmentFragment as UserType } from '@/generated/graphql'
+import Popover, { DOMOffsetTarget } from '@/components/Popover'
 
-type NotificationFeedProps = {}
+type NotificationFeedProps = {
+  target: DOMOffsetTarget
+  currentUser: UserType | null | undefined
+}
 
-const NotificationFeed: React.FC<NotificationFeedProps> = () => {
+const NotificationFeed: React.forwardRef<HTMLDivElement, NotificationFeedProps>(
+  ({ target },
+  ref
+) => {
   return (
-    <div>
+    <Popover target={target} ref={ref}>
       <div>Notification 1</div>
       <div>Notification 2</div>
-    </div>
+    </Popover>
   )
-}
+},
+)
 
 export default NotificationFeed

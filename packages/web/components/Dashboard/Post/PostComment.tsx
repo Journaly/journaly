@@ -7,7 +7,6 @@ import {
   useUpdatePostCommentMutation,
   useDeletePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
-  LanguageLevel,
 } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
 

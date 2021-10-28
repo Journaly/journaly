@@ -13,7 +13,6 @@ import {
   useDeleteCommentThanksMutation,
   CommentThanks,
   UserFragmentFragment as UserType,
-  LanguageLevel,
 } from '@/generated/graphql'
 import theme from '@/theme'
 import { useTranslation } from '@/config/i18n'

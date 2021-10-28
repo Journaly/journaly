@@ -7,17 +7,16 @@ type NotificationFeedProps = {
   currentUser: UserType | null | undefined
 }
 
-const NotificationFeed: React.forwardRef<HTMLDivElement, NotificationFeedProps>(
-  ({ target },
-  ref
-) => {
-  return (
-    <Popover target={target} ref={ref}>
-      <div>Notification 1</div>
-      <div>Notification 2</div>
-    </Popover>
-  )
-},
+const NotificationFeed = React.forwardRef<HTMLDivElement, NotificationFeedProps>(
+  ({ target, currentUser }, ref) => {
+    console.log('feed open!')
+    return (
+      <Popover target={target} ref={ref}>
+        <div>Notification 1</div>
+        <div>Notification 2</div>
+      </Popover>
+    )
+  },
 )
 
 export default NotificationFeed

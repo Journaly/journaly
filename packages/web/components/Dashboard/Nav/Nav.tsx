@@ -32,6 +32,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
 
   const notificationFeedRef = useRef<HTMLDivElement>(null)
   const [showNotificationFeed, setShowNotificationFeed] = useState(false)
+  const [notificationTarget, setNotificationTarget] = useState({ x: 0, y: 0, w: 0, h: 0 })
   const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
     refetchQueries: [{ query: CurrentUserDocument }],
@@ -204,7 +205,13 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           />
         )}
       </nav>
-      {showNotificationFeed && <NotificationFeed target={} ref={notificationFeedRef} />}
+      {showNotificationFeed && (
+        <NotificationFeed
+          target={notificationTarget}
+          ref={notificationFeedRef}
+          currentUser={currentUser}
+        />
+      )}
       <style jsx>{`
         .nav-background {
           position: fixed;

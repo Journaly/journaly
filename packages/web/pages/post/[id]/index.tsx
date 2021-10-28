@@ -6,11 +6,12 @@ import { withApollo } from '@/lib/apollo'
 import Post from '@/components/Dashboard/Post'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
-import { usePostPageQuery } from '@/generated/graphql'
+import { PostStatus, usePostPageQuery } from '@/generated/graphql'
 import PostAuthorCard from '@/components/Dashboard/Post/PostAuthorCard'
 import PostComments from '@/components/Dashboard/Post/PostComments'
 import useUILanguage from '@/hooks/useUILanguage'
 import theme from '@/theme'
+import PrivateShareLink from '@/components/PrivateShareLink'
 
 const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
@@ -30,6 +31,9 @@ const PostPage: NextPage = () => {
           {post && post.postComments && (
             <>
               <Post post={post} currentUser={currentUser} refetch={refetch} />
+              {post.status === PostStatus.Private && post.privateShareId && (
+                <PrivateShareLink privateShareId={post.privateShareId} />
+              )}
               <div className="post-lower-section">
                 <PostComments
                   postId={post.id}
@@ -54,6 +58,7 @@ const PostPage: NextPage = () => {
               flex-direction: column-reverse;
               justify-content: space-between;
             }
+
             @media (min-width: ${theme.breakpoints.XS}) {
               .post-lower-section {
                 flex-direction: row;

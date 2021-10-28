@@ -6,6 +6,9 @@ query subscriptionSettingsPage {
 
 fragment UserWithSubscriptionFragment on User {
   id
+  email
+  emailAddressVerified
+  isStudent
   lastFourCardNumbers
   cardBrand
   membershipSubscription {

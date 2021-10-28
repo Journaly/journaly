@@ -1,0 +1,5 @@
+mutation unsavePost($postId: Int!) {
+  unsavePost(postId: $postId) {
+    id
+  }
+}

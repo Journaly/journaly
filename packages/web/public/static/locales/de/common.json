@@ -13,7 +13,7 @@
     "testimonialsHeader": "Was Journaler sagen",
     "nav": {
       "about": "Über",
-      "blog": "Blog",
+      "pricing": "Kosten",
       "logIn": "Login",
       "signUp": "Registrieren",
       "dashboard": "Dashboard"
@@ -60,7 +60,11 @@
   "e403": "Nicht autorisiert",
   "modal": {
     "confirm": "Bestätigen",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "acknowledge": "Alles klar",
+    "goToPremium": "Schau dir Premium an",
+    "generalPremiumFeatureExplanation": "{{featureName}} ist ein tolles Premium-Feature! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken, oder nutze Journaly weiterhin kostenfrei.",
+    "unnamedPremiumFeatureExplanation": "Das ist ein tolles Premium-Feature! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken, oder nutze Journaly weiterhin kostenfrei."
   },
   "imageErrors": {
     "initial": "Fehler bei der Kommunikation mit dem Journaly-Server. Bitte versuche es später erneut.",

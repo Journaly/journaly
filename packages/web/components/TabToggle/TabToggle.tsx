@@ -25,10 +25,7 @@ const spaceUnit = 5
 const TabToggle: React.FC<Props> = (props) => {
   const { activeKey, onToggle, tabs, className, variant = ToggleVariant.Standard } = props
   const tabToggleClasses = classNames('tab-toggle', className)
-
-  if (tabs.length !== 2) {
-    throw new Error('TabToggle must contain 2 and only 2 tabs')
-  }
+  const activeTabIndex = tabs.findIndex((tab) => tab.key === activeKey)
 
   return (
     <div className={`tab-toggle-wrapper ${variant}`}>
@@ -54,7 +51,6 @@ const TabToggle: React.FC<Props> = (props) => {
       </div>
 
       <style jsx>{`
-
         .tab-toggle-wrapper {
           padding: ${spaceUnit}px;
           background: #d5d9dc;
@@ -63,7 +59,7 @@ const TabToggle: React.FC<Props> = (props) => {
         .tab-toggle {
           position: relative;
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: ${new Array(tabs.length).fill('1fr').join(' ')};
           grid-gap: ${2 * spaceUnit}px;
         }
 
@@ -71,11 +67,13 @@ const TabToggle: React.FC<Props> = (props) => {
           position: absolute;
           top: 50%;
           height: 100%;
-          width: calc(50% - ${spaceUnit}px);
+          width: calc(${100 / tabs.length}%);
           background: ${theme.colors.white};
           box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.25);
           border-radius: ${6 * spaceUnit}px;
           transition: transform 150ms ease;
+          transform: translateX(calc(${100 * activeTabIndex}% + ${activeTabIndex * 2 * 0}px))
+            translateY(-50%);
         }
 
         .tab {
@@ -102,10 +100,10 @@ const TabToggle: React.FC<Props> = (props) => {
         }
 
         .tab.active:nth-child(1) ~ .tab-background {
-          transform: translateX(0) translateY(-50%);
+          /* transform: translateX(0) translateY(-50%); */
         }
         .tab.active:nth-child(2) ~ .tab-background {
-          transform: translateX(calc(100% + ${2 * spaceUnit}px)) translateY(-50%);
+          /* transform: translateX(calc(100% + ${2 * spaceUnit}px)) translateY(-50%); */
         }
       `}</style>
     </div>

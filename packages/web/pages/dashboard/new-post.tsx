@@ -2,8 +2,9 @@ import React, { useRef, useState, useMemo } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { withApollo } from '@/lib/apollo'
+import { makeReference } from '@apollo/client'
 
+import { withApollo } from '@/lib/apollo'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import { navConstants } from '@/components/Dashboard/Nav'
 import PostEditor, {
@@ -17,11 +18,13 @@ import {
   useNewPostQuery,
   useCreatePostMutation,
   PostStatus as PostStatusType,
+  UserRole,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation, Router } from '@/config/i18n'
 import useUILanguage from '@/hooks/useUILanguage'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
+import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
 
 type NewPostPageProps = {
   defaultImage: {
@@ -96,6 +99,12 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   const uploadInlineImages = useUploadInlineImages()
   const [saving, setSaving] = React.useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
+
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
 
   // TODO: Address properly handling invalidating the cache on My Feed,
   // Profile, and My Posts page immediately after publishing a new post
@@ -137,6 +146,19 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             headlineImage,
             body: modifiedBody,
           },
+          update(cache, { data }) {
+            if (data?.createPost && data.createPost.status === PostStatusType.Published) {
+              cache.modify({
+                id: cache.identify(makeReference('ROOT_QUERY')),
+                fields: {
+                  posts: () => {
+                    // This simply invalidates the cache for the `posts` query
+                    return undefined
+                  },
+                },
+              })
+            }
+          },
         })
       } catch (err) {
         console.error(err)
@@ -152,9 +174,27 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   const handlePublishClick = React.useCallback(
     (e) => {
       e.preventDefault()
-      createNewPost(PostStatusType.Published)
+      if (!currentUser?.emailAddressVerified) {
+        setErrorMessage(t('emailVerificationWarning'))
+      } else {
+        createNewPost(PostStatusType.Published)
+      }
     },
-    [createNewPost],
+    [currentUser, createNewPost],
+  )
+
+  const handleSharePrivatelyClick = React.useCallback(
+    (e) => {
+      e.preventDefault()
+      if (!isPremiumFeatureEligible) {
+        setDisplayPremiumFeatureModal(true)
+      } else if (!currentUser?.emailAddressVerified) {
+        setErrorMessage(t('emailVerificationWarning'))
+      } else {
+        createNewPost(PostStatusType.Private)
+      }
+    },
+    [currentUser, createNewPost],
   )
 
   const handleDraftClick = React.useCallback(
@@ -192,7 +232,15 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             >
               {t('publishCTA')}
             </Button>
-
+            <Button
+              type="submit"
+              variant={ButtonVariant.Secondary}
+              data-testid="post-share-privately"
+              loading={saving}
+              onClick={handleSharePrivatelyClick}
+            >
+              {t('sharePrivatelyCTA')}
+            </Button>
             <Button
               type="submit"
               variant={ButtonVariant.Secondary}
@@ -208,6 +256,18 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             <span className="error-message" data-testid="new-post-error">
               {errorMessage}
             </span>
+          )}
+          {displayPremiumFeatureModal && (
+            <PremiumFeatureModal
+              featureExplanation={t('privatePublishingPremiumFeatureExplanation')}
+              onAcknowledge={() => {
+                setDisplayPremiumFeatureModal(false)
+              }}
+              onGoToPremium={() => {
+                Router.push('/dashboard/settings/subscription')
+                setDisplayPremiumFeatureModal(false)
+              }}
+            />
           )}
 
           <style jsx>{`
@@ -231,6 +291,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
               margin: 0 auto;
               width: 250px;
               justify-content: space-around;
+              gap: 10px;
             }
 
             @media (max-width: ${theme.breakpoints.XS}) {
@@ -254,6 +315,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             .error-message {
               ${theme.typography.error}
               text-align: center;
+              margin-top: 20px;
             }
           `}</style>
         </form>

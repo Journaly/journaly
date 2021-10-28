@@ -31,6 +31,7 @@ export type Comment = {
   author: User
   body: Scalars['String']
   createdAt: Scalars['DateTime']
+  authorLanguageLevel: LanguageLevel
   thanks: Array<CommentThanks>
 }
 
@@ -146,6 +147,7 @@ export enum MembershipSubscriptionPeriod {
   Monthly = 'MONTHLY',
   Quarterly = 'QUARTERLY',
   Annualy = 'ANNUALY',
+  StudentAnnually = 'STUDENT_ANNUALLY',
 }
 
 export type Mutation = {
@@ -176,6 +178,9 @@ export type Mutation = {
   logout: User
   followUser: User
   unfollowUser: User
+  resendEmailVerificationEmail: User
+  savePost: User
+  unsavePost: User
   addLanguageRelation: LanguageRelation
   removeLanguageRelation: LanguageRelation
   updateSocialMedia: SocialMedia
@@ -307,6 +312,14 @@ export type MutationUnfollowUserArgs = {
   followedUserId: Scalars['Int']
 }
 
+export type MutationSavePostArgs = {
+  postId: Scalars['Int']
+}
+
+export type MutationUnsavePostArgs = {
+  postId: Scalars['Int']
+}
+
 export type MutationAddLanguageRelationArgs = {
   languageId: Scalars['Int']
   level: LanguageLevel
@@ -371,6 +384,7 @@ export type Post = {
   postComments: Array<PostComment>
   language: Language
   publishedLanguageLevel: LanguageLevel
+  privateShareId?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
   bodySrc: Scalars['String']
@@ -398,6 +412,7 @@ export type PostComment = {
   author: User
   body: Scalars['String']
   createdAt: Scalars['DateTime']
+  authorLanguageLevel: LanguageLevel
 }
 
 export type PostPage = {
@@ -413,6 +428,7 @@ export type PostPostCommentsOrderByInput = {
 export enum PostStatus {
   Draft = 'DRAFT',
   Published = 'PUBLISHED',
+  Private = 'PRIVATE',
 }
 
 export type PostTopic = {
@@ -439,7 +455,8 @@ export type QueryTopicsArgs = {
 }
 
 export type QueryPostByIdArgs = {
-  id: Scalars['Int']
+  id?: Maybe<Scalars['Int']>
+  privateShareId?: Maybe<Scalars['String']>
 }
 
 export type QueryPostsArgs = {
@@ -453,6 +470,7 @@ export type QueryPostsArgs = {
   hasInteracted?: Maybe<Scalars['Boolean']>
   status: PostStatus
   authorId?: Maybe<Scalars['Int']>
+  savedPosts?: Maybe<Scalars['Boolean']>
 }
 
 export type QueryUserByIdArgs = {
@@ -536,9 +554,11 @@ export type User = {
   country?: Maybe<Scalars['String']>
   badges: Array<UserBadge>
   posts: Array<Post>
+  savedPosts: Array<Post>
   profileImage?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
   membershipSubscription?: Maybe<MembershipSubscription>
+  isStudent: Scalars['Boolean']
   socialMedia?: Maybe<SocialMedia>
   languages: Array<LanguageRelation>
   following: Array<User>
@@ -546,6 +566,7 @@ export type User = {
   lastFourCardNumbers?: Maybe<Scalars['String']>
   cardBrand?: Maybe<Scalars['String']>
   userInterests: Array<UserInterest>
+  emailAddressVerified: Scalars['Boolean']
   postsWrittenCount: Scalars['Int']
   languagesPostedInCount: Scalars['Int']
   thanksReceivedCount: Scalars['Int']
@@ -665,7 +686,16 @@ export type UpdatePostCommentMutation = { __typename?: 'Mutation' } & {
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'name' | 'handle' | 'email' | 'bio' | 'userRole' | 'profileImage' | 'city' | 'country'
+  | 'id'
+  | 'name'
+  | 'handle'
+  | 'email'
+  | 'bio'
+  | 'userRole'
+  | 'profileImage'
+  | 'city'
+  | 'country'
+  | 'emailAddressVerified'
 >
 
 export type UserWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
@@ -683,6 +713,7 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 } & UserFragmentFragment
 
 export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
+  savedPosts: Array<{ __typename?: 'Post' } & Pick<Post, 'id'>>
   membershipSubscription?: Maybe<
     { __typename?: 'MembershipSubscription' } & Pick<MembershipSubscription, 'isActive'>
   >
@@ -718,7 +749,7 @@ export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
-  'id' | 'body' | 'createdAt'
+  'id' | 'body' | 'createdAt' | 'authorLanguageLevel'
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     thanks: Array<
@@ -739,7 +770,7 @@ export type PostClapFragmentFragment = { __typename?: 'PostClap' } & Pick<PostCl
 
 export type PostCommentFragmentFragment = { __typename?: 'PostComment' } & Pick<
   PostComment,
-  'id' | 'body' | 'createdAt'
+  'id' | 'body' | 'createdAt' | 'authorLanguageLevel'
 > & { author: { __typename?: 'User' } & AuthorFragmentFragment }
 
 export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
@@ -760,6 +791,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   | 'bumpedAt'
   | 'bumpCount'
   | 'publishedLanguageLevel'
+  | 'privateShareId'
 > & {
     author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
@@ -929,6 +961,16 @@ export type PostPageQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
+export type PrivatePostPageQueryVariables = Exact<{
+  privateShareId: Scalars['String']
+  uiLanguage: UiLanguage
+}>
+
+export type PrivatePostPageQuery = { __typename?: 'Query' } & {
+  postById: { __typename?: 'Post' } & PostWithTopicsFragmentFragment
+  currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
+}
+
 export type ProfilePageQueryVariables = Exact<{
   userId: Scalars['Int']
   uiLanguage: UiLanguage
@@ -956,7 +998,7 @@ export type SubscriptionSettingsPageQuery = { __typename?: 'Query' } & {
 
 export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'lastFourCardNumbers' | 'cardBrand'
+  'id' | 'email' | 'emailAddressVerified' | 'isStudent' | 'lastFourCardNumbers' | 'cardBrand'
 > & {
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
@@ -1063,12 +1105,29 @@ export type PostsQueryVariables = Exact<{
   hasInteracted?: Maybe<Scalars['Boolean']>
   authorId?: Maybe<Scalars['Int']>
   status: PostStatus
+  savedPosts?: Maybe<Scalars['Boolean']>
 }>
 
 export type PostsQuery = { __typename?: 'Query' } & {
   posts: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
       posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
     }
+}
+
+export type SavePostMutationVariables = Exact<{
+  postId: Scalars['Int']
+}>
+
+export type SavePostMutation = { __typename?: 'Mutation' } & {
+  savePost: { __typename?: 'User' } & Pick<User, 'id'>
+}
+
+export type UnsavePostMutationVariables = Exact<{
+  postId: Scalars['Int']
+}>
+
+export type UnsavePostMutation = { __typename?: 'Mutation' } & {
+  unsavePost: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type UpdatePostMutationVariables = Exact<{
@@ -1194,6 +1253,12 @@ export type RequestResetPasswordMutationVariables = Exact<{
 
 export type RequestResetPasswordMutation = { __typename?: 'Mutation' } & {
   requestResetPassword: { __typename?: 'User' } & Pick<User, 'id'>
+}
+
+export type ResendEmailVerificationEmailMutationVariables = Exact<{ [key: string]: never }>
+
+export type ResendEmailVerificationEmailMutation = { __typename?: 'Mutation' } & {
+  resendEmailVerificationEmail: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type ResetPasswordMutationVariables = Exact<{
@@ -1322,6 +1387,7 @@ export const UserFragmentFragmentDoc = gql`
     profileImage
     city
     country
+    emailAddressVerified
   }
 `
 export const UserWithStatsFragmentFragmentDoc = gql`
@@ -1357,6 +1423,9 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
 export const CurrentUserFragmentFragmentDoc = gql`
   fragment CurrentUserFragment on User {
     ...UserWithLanguagesFragment
+    savedPosts {
+      id
+    }
     membershipSubscription {
       isActive
     }
@@ -1415,6 +1484,7 @@ export const CommentFragmentFragmentDoc = gql`
     id
     body
     createdAt
+    authorLanguageLevel
     author {
       ...AuthorFragment
     }
@@ -1447,6 +1517,7 @@ export const PostCommentFragmentFragmentDoc = gql`
     id
     body
     createdAt
+    authorLanguageLevel
     author {
       ...AuthorFragment
     }
@@ -1466,6 +1537,7 @@ export const PostFragmentFragmentDoc = gql`
     bumpedAt
     bumpCount
     publishedLanguageLevel
+    privateShareId
     author {
       ...AuthorWithLanguagesFragment
     }
@@ -1609,6 +1681,9 @@ export const ProfileUserFragmentFragmentDoc = gql`
 export const UserWithSubscriptionFragmentFragmentDoc = gql`
   fragment UserWithSubscriptionFragment on User {
     id
+    email
+    emailAddressVerified
+    isStudent
     lastFourCardNumbers
     cardBrand
     membershipSubscription {
@@ -2573,6 +2648,64 @@ export type PostPageQueryResult = ApolloReactCommon.QueryResult<
   PostPageQuery,
   PostPageQueryVariables
 >
+export const PrivatePostPageDocument = gql`
+  query privatePostPage($privateShareId: String!, $uiLanguage: UILanguage!) {
+    postById(privateShareId: $privateShareId) {
+      ...PostWithTopicsFragment
+    }
+    currentUser {
+      ...CurrentUserFragment
+    }
+  }
+  ${PostWithTopicsFragmentFragmentDoc}
+  ${CurrentUserFragmentFragmentDoc}
+`
+
+/**
+ * __usePrivatePostPageQuery__
+ *
+ * To run a query within a React component, call `usePrivatePostPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePrivatePostPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePrivatePostPageQuery({
+ *   variables: {
+ *      privateShareId: // value for 'privateShareId'
+ *      uiLanguage: // value for 'uiLanguage'
+ *   },
+ * });
+ */
+export function usePrivatePostPageQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    PrivatePostPageQuery,
+    PrivatePostPageQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<PrivatePostPageQuery, PrivatePostPageQueryVariables>(
+    PrivatePostPageDocument,
+    baseOptions,
+  )
+}
+export function usePrivatePostPageLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PrivatePostPageQuery,
+    PrivatePostPageQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<PrivatePostPageQuery, PrivatePostPageQueryVariables>(
+    PrivatePostPageDocument,
+    baseOptions,
+  )
+}
+export type PrivatePostPageQueryHookResult = ReturnType<typeof usePrivatePostPageQuery>
+export type PrivatePostPageLazyQueryHookResult = ReturnType<typeof usePrivatePostPageLazyQuery>
+export type PrivatePostPageQueryResult = ApolloReactCommon.QueryResult<
+  PrivatePostPageQuery,
+  PrivatePostPageQueryVariables
+>
 export const ProfilePageDocument = gql`
   query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
     userById(id: $userId) {
@@ -3125,6 +3258,7 @@ export const PostsDocument = gql`
     $hasInteracted: Boolean
     $authorId: Int
     $status: PostStatus!
+    $savedPosts: Boolean
   ) {
     posts(
       first: $first
@@ -3137,6 +3271,7 @@ export const PostsDocument = gql`
       hasInteracted: $hasInteracted
       authorId: $authorId
       status: $status
+      savedPosts: $savedPosts
     ) {
       posts {
         ...PostCardFragment
@@ -3169,6 +3304,7 @@ export const PostsDocument = gql`
  *      hasInteracted: // value for 'hasInteracted'
  *      authorId: // value for 'authorId'
  *      status: // value for 'status'
+ *      savedPosts: // value for 'savedPosts'
  *   },
  * });
  */
@@ -3185,6 +3321,95 @@ export function usePostsLazyQuery(
 export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>
 export type PostsQueryResult = ApolloReactCommon.QueryResult<PostsQuery, PostsQueryVariables>
+export const SavePostDocument = gql`
+  mutation savePost($postId: Int!) {
+    savePost(postId: $postId) {
+      id
+    }
+  }
+`
+export type SavePostMutationFn = ApolloReactCommon.MutationFunction<
+  SavePostMutation,
+  SavePostMutationVariables
+>
+
+/**
+ * __useSavePostMutation__
+ *
+ * To run a mutation, you first call `useSavePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSavePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [savePostMutation, { data, loading, error }] = useSavePostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useSavePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<SavePostMutation, SavePostMutationVariables>,
+) {
+  return ApolloReactHooks.useMutation<SavePostMutation, SavePostMutationVariables>(
+    SavePostDocument,
+    baseOptions,
+  )
+}
+export type SavePostMutationHookResult = ReturnType<typeof useSavePostMutation>
+export type SavePostMutationResult = ApolloReactCommon.MutationResult<SavePostMutation>
+export type SavePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SavePostMutation,
+  SavePostMutationVariables
+>
+export const UnsavePostDocument = gql`
+  mutation unsavePost($postId: Int!) {
+    unsavePost(postId: $postId) {
+      id
+    }
+  }
+`
+export type UnsavePostMutationFn = ApolloReactCommon.MutationFunction<
+  UnsavePostMutation,
+  UnsavePostMutationVariables
+>
+
+/**
+ * __useUnsavePostMutation__
+ *
+ * To run a mutation, you first call `useUnsavePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnsavePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unsavePostMutation, { data, loading, error }] = useUnsavePostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useUnsavePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UnsavePostMutation,
+    UnsavePostMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<UnsavePostMutation, UnsavePostMutationVariables>(
+    UnsavePostDocument,
+    baseOptions,
+  )
+}
+export type UnsavePostMutationHookResult = ReturnType<typeof useUnsavePostMutation>
+export type UnsavePostMutationResult = ApolloReactCommon.MutationResult<UnsavePostMutation>
+export type UnsavePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UnsavePostMutation,
+  UnsavePostMutationVariables
+>
 export const UpdatePostDocument = gql`
   mutation updatePost(
     $postId: Int!
@@ -3879,6 +4104,54 @@ export type RequestResetPasswordMutationResult =
 export type RequestResetPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RequestResetPasswordMutation,
   RequestResetPasswordMutationVariables
+>
+export const ResendEmailVerificationEmailDocument = gql`
+  mutation resendEmailVerificationEmail {
+    resendEmailVerificationEmail {
+      id
+    }
+  }
+`
+export type ResendEmailVerificationEmailMutationFn = ApolloReactCommon.MutationFunction<
+  ResendEmailVerificationEmailMutation,
+  ResendEmailVerificationEmailMutationVariables
+>
+
+/**
+ * __useResendEmailVerificationEmailMutation__
+ *
+ * To run a mutation, you first call `useResendEmailVerificationEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResendEmailVerificationEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resendEmailVerificationEmailMutation, { data, loading, error }] = useResendEmailVerificationEmailMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useResendEmailVerificationEmailMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ResendEmailVerificationEmailMutation,
+    ResendEmailVerificationEmailMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ResendEmailVerificationEmailMutation,
+    ResendEmailVerificationEmailMutationVariables
+  >(ResendEmailVerificationEmailDocument, baseOptions)
+}
+export type ResendEmailVerificationEmailMutationHookResult = ReturnType<
+  typeof useResendEmailVerificationEmailMutation
+>
+export type ResendEmailVerificationEmailMutationResult =
+  ApolloReactCommon.MutationResult<ResendEmailVerificationEmailMutation>
+export type ResendEmailVerificationEmailMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ResendEmailVerificationEmailMutation,
+  ResendEmailVerificationEmailMutationVariables
 >
 export const ResetPasswordDocument = gql`
   mutation resetPassword($resetToken: String!, $password: String!, $confirmPassword: String!) {

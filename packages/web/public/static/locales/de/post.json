@@ -12,8 +12,13 @@
   "readAction": "Beitrag lesen",
   "editPost": "Beitrag bearbeiten",
   "editPostAction": "Beitrag bearbeiten",
+  "bumpPostAction": "Beitrag vorziehen",
+  "bumpPostSuccess": "Dein Beitrag wurde erfolgreich nach ganz oben in den Feed vorgezogen! Dieser Beitrag kann noch {{numRemaining}} mal vordgezogen werden.",
+  "postBumpLimitError": "Du hast die maximale Anzahl an Vorziehern für diesen Beitrag ausgeschöpft.",
+  "postBumpingPremiumFeatureExplanation": "Beiträge vorziehen ist ein tolles Premium-Feature, durch das deine Beiträge ganz nach oben in den Feed vorgezogen werden und sich somit ihre Sichtbarkeit verbessert und sie mehr Feedback erhalten! Klicke unten, um alle Vorteile von Journaly Premium zu sehen oder nutze weiterhin all die tollen kostenlosen Feature von Journaly!",
+  "inlineImagesPremiumFeatureExplanation": "Bilder einfügen ist ein tolles Premium-Feature, mit dem du eine beliebige Anzahl an Bildern in deinen Beitrag einfügen kannst! Das ist eine tolle Möglichkeit deine Beiträge zu personalisieren und interessanter zu machen. Klicke unten, um alle Vorteile von Journaly Premium zu sehen oder nutze weiterhin all die tollen kostenlosen Feature von Journaly!",
   "deletePostAction": "Beitrag löschen",
-  "deletePostSuccess": "Beitrag wurde erfolgreich gelöscht",
+  "deletePostSuccess": "Der Beitrag wurde erfolgreich gelöscht",
   "deletePostError": "Beim Löschen des Beitrags ist ein Fehler aufgetreten.",
   "titleLabel": "Titel",
   "languageLabel": "Sprache",
@@ -22,12 +27,30 @@
   "finishAction": "Beitrag vervollständigen",
   "noLanguageError": "Bitte eine Sprache auswählen.",
   "emptyTitleError": "Bitte einen Titel eingeben.",
-  "draftPublishedSuccess": "Beitrag wurde erfolgreich veröffentlicht",
+  "draftPublishedSuccess": "Dein Beitrag wurde erfolgreich veröffentlicht.",
+  "postSaveError": "Beim Speichern deines Beitrags ist ein Fehler aufgetreten.",
   "postBy": "von",
   "deleteModal": {
     "title": "Beitrag löschen",
     "body": "Bist du sicher, dass du diesen Beitrag löschen möchtest?"
   },
+  "cancelModal": {
+    "title": "Bearbeiten abbrechen",
+    "body": "Bist du dir sicher, dass du das Bearbeiten des Beitrags abbrechen möchtest? Ungespeicherte Änderungen gehen verloren."
+  },
   "enterUrlPrompt": "Gib die URL des Links ein",
-  "websitePatternError": "Ungültiger Webseiten-Link, z. B. DeineDomain.com oder DeineSubdomain.domain.com"
+  "websitePatternError": "Ungültiger Webseiten-Link, z. B. DeineDomain.com oder DeineSubdomain.domain.com",
+  "claps": {
+    "currentUserPronoun": "Du",
+    "noUsersClapped": "Kein Benutzer hat diesem Beitrag applaudiert ... bis jetzt!",
+    "oneUserClapped": "{{name1}} hat diesem Beitrag applaudiert!",
+    "twoUsersClapped": "{{name1}} und {{name2}} haben diesem Beitrag applaudiert.",
+    "manyUsersClapped": "{{name1}}, {{name2}} und {{numOthers}} weitere Journaler haben diesem Beitrag applaudiert."
+  },
+  "emailVerificationWarning": "Um Beiträge veröffentlichen zu können, verifiziere bitte deine E-Mail-Adresse, indem du auf den Link klickst, den du nach der Registrierung per E-Mail erhalten hast. Gehe in die Einstellungen > Profil Informationen, um die Verifikations-E-Mail erneut zu senden.",
+  "savePostSuccess": "Beitrag angeheftet! Finde deine angehefteten Beiträge über die erweitere Filter-Funktion.",
+  "savePostError": "Beim Anheften dieses Beitrags ist etwas schief gegangen",
+  "unsavePostSuccess": "Dieser Beitrag wurde von deiner Liste entfernt",
+  "unsavePostError": "Beim Entfernen dieses Beitrags von deiner Liste ist etwas schief gegangen",
+  "savePostPremiumFeatureExplanation": "Angeheftete Beiträge ist ein angenehmes Premium-Feature, dass dir das Anheften von Beiträgen ermöglicht, sodass du diese später einfach wiederfinden und lesen kannst. Die Liste kannst du über die erweiterten Filter der Mein-Feed-Seite erreichen! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken oder nutze all die kostenfreien Feature von Journaly weiterhin kostenlos."
 }

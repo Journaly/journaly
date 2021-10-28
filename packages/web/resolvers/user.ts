@@ -7,18 +7,16 @@ import {
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
-import { randomBytes } from 'crypto'
-import { promisify } from 'util'
-
-import { PostStatus } from '@journaly/j-db-client'
+import { isAcademic } from 'swot-node'
+import { PostStatus, EmailVerificationStatus } from '@journaly/j-db-client'
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
   generateThumbbusterUrl,
+  sendEmailAddressVerificationEmail,
   sendPasswordResetTokenEmail,
-  subscribeUserToProductUpdates,
 } from './utils'
-import { validateUpdateUserMutationData } from './utils/userValidation'
+import { generateToken, validateUpdateUserMutationData } from './utils/userValidation'
 
 const DatedActivityCount = objectType({
   name: 'DatedActivityCount',
@@ -27,7 +25,7 @@ const DatedActivityCount = objectType({
     t.int('postCount')
     t.int('threadCommentCount')
     t.int('postCommentCount')
-  }
+  },
 })
 
 const User = objectType({
@@ -55,9 +53,11 @@ const User = objectType({
     t.model.country()
     t.model.badges({ pagination: false })
     t.model.posts({ pagination: false })
+    t.model.savedPosts({ pagination: false })
     t.model.profileImage()
     t.model.createdAt()
     t.model.membershipSubscription()
+    t.model.isStudent()
     t.model.socialMedia({
       type: 'SocialMedia',
       resolve: async (parent, _args, ctx) => {
@@ -74,7 +74,16 @@ const User = objectType({
     t.model.lastFourCardNumbers()
     t.model.cardBrand()
     t.model.userInterests({ type: 'UserInterest', pagination: false })
-
+    t.boolean('emailAddressVerified', {
+      async resolve(parent, _args, ctx, _info) {
+        const auth = await ctx.db.auth.findUnique({
+          where: {
+            userId: parent.id,
+          },
+        })
+        return auth?.emailVerificationStatus === EmailVerificationStatus.VERIFIED
+      },
+    })
     t.int('postsWrittenCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.post.count({
@@ -87,23 +96,23 @@ const User = objectType({
     })
     t.int('languagesPostedInCount', {
       async resolve(parent, _args, ctx, _info) {
-        const q = await (ctx.db.$queryRaw`
+        const q = await ctx.db.$queryRaw`
           SELECT COUNT(DISTINCT "languageId") as count
           FROM "Post"
           WHERE
             "authorId" = ${parent.id}
             AND "status" = 'PUBLISHED'
           ;
-        `)
+        `
 
         return q[0].count
-      }
+      },
     })
     t.int('thanksReceivedCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.commentThanks.count({
           where: {
-            comment: { authorId: parent.id, },
+            comment: { authorId: parent.id },
           },
         })
       },
@@ -195,7 +204,7 @@ const UserBadge = objectType({
     t.model.id()
     t.model.type()
     t.model.createdAt()
-  }
+  },
 })
 
 const UserQueries = extendType({
@@ -263,16 +272,21 @@ const UserMutations = extendType({
         if (!args.handle.match(/^[a-zA-Z0-9_-]+$/)) {
           throw new Error('Invalid handle')
         }
-
+        const isStudent = await isAcademic(args.email)
         const password = await bcrypt.hash(args.password, 10)
+        const emailVerificationToken = await generateToken()
         let user
         try {
           user = await ctx.db.user.create({
             data: {
               handle: args.handle,
               email: args.email.toLowerCase(),
+              isStudent,
               auth: {
-                create: { password },
+                create: {
+                  password,
+                  emailVerificationToken,
+                },
               },
             },
           })
@@ -280,9 +294,11 @@ const UserMutations = extendType({
           // Prisma's error code for unique constraint violation
           if (ex.code === 'P2002') {
             if (ex.meta.target.find((x: string) => x === 'email')) {
-              throw new UserInputError("This email address is already in use. Please try logging in")
+              throw new UserInputError(
+                'This email address is already in use. Please try logging in',
+              )
             } else if (ex.meta.target.find((x: string) => x === 'handle')) {
-              throw new UserInputError("This handle is already in use")
+              throw new UserInputError('This handle is already in use')
             } else {
               throw ex
             }
@@ -291,7 +307,7 @@ const UserMutations = extendType({
           }
         }
 
-        await subscribeUserToProductUpdates(user, ctx.db)
+        await sendEmailAddressVerificationEmail({ user, verificationToken: emailVerificationToken })
 
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
         ctx.response.setHeader(
@@ -317,14 +333,26 @@ const UserMutations = extendType({
         country: stringArg({ required: false }),
         city: stringArg({ required: false }),
       },
-      resolve: async (_parent, args, ctx: any) => {
+      resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
         await validateUpdateUserMutationData(args, ctx)
 
+        const preUpdateUser = await ctx.db.user.findUnique({
+          where: { id: userId },
+        })
+
+        if (!preUpdateUser) throw new Error('User not found')
+
         const updates = {
           ...args,
+          handle: args.handle || undefined,
+          isStudent: false,
           email: args.email?.toLowerCase(),
+        }
+
+        if (args.email) {
+          updates.isStudent = await isAcademic(args.email)
         }
 
         const user = await ctx.db.user.update({
@@ -334,8 +362,19 @@ const UserMutations = extendType({
           },
         })
 
-        if (args.email) {
-          await subscribeUserToProductUpdates(user, ctx.db)
+        if (args.email && args.email.toLowerCase() !== preUpdateUser.email) {
+          const emailVerificationToken = await generateToken()
+          await ctx.db.auth.update({
+            where: { userId },
+            data: {
+              emailVerificationToken,
+              emailVerificationStatus: EmailVerificationStatus.PENDING,
+            },
+          })
+          await sendEmailAddressVerificationEmail({
+            user,
+            verificationToken: emailVerificationToken,
+          })
         }
 
         return user
@@ -473,8 +512,7 @@ const UserMutations = extendType({
           throw new Error('User not found')
         }
 
-        const randomBytesPromisified = promisify(randomBytes)
-        const resetToken = (await randomBytesPromisified(20)).toString('hex')
+        const resetToken = await generateToken()
         const resetTokenExpiry = Date.now() + 3600000 // 1 hour from now
 
         await ctx.db.auth.update({
@@ -615,6 +653,80 @@ const UserMutations = extendType({
           data: {
             following: {
               disconnect: [{ id: args.followedUserId }],
+            },
+          },
+        })
+      },
+    })
+
+    t.field('resendEmailVerificationEmail', {
+      type: 'User',
+      args: {},
+      resolve: async (_parent, _args, ctx, _info) => {
+        const { userId } = ctx.request
+        const user = await ctx.db.user.findUnique({
+          where: { id: userId },
+          include: { auth: true },
+        })
+        if (!user?.auth) throw new Error('User not found')
+        let verificationToken = user.auth.emailVerificationToken
+        if (!verificationToken) {
+          verificationToken = await generateToken()
+          await ctx.db.auth.update({
+            where: { userId },
+            data: {
+              emailVerificationToken: verificationToken,
+            },
+          })
+        }
+        await sendEmailAddressVerificationEmail({
+          user,
+          verificationToken,
+        })
+        return user
+      },
+    })
+
+    t.field('savePost', {
+      type: 'User',
+      args: {
+        postId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to save a post')
+        }
+
+        return await ctx.db.user.update({
+          where: { id: userId },
+          data: {
+            savedPosts: {
+              connect: [{ id: args.postId }],
+            },
+          },
+        })
+      },
+    })
+
+    t.field('unsavePost', {
+      type: 'User',
+      args: {
+        postId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to save a post')
+        }
+
+        return await ctx.db.user.update({
+          where: { id: userId },
+          data: {
+            savedPosts: {
+              disconnect: [{ id: args.postId }],
             },
           },
         })

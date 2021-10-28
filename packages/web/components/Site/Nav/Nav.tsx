@@ -18,8 +18,8 @@ const Nav = () => {
           <NavLink href="/about">
             <a className="nav-link">{t('home.nav.about')}</a>
           </NavLink>
-          <NavLink href="/blog/introducing-journaly">
-            <a className="nav-link">{t('home.nav.blog')}</a>
+          <NavLink href="/pricing">
+            <a className="nav-link">{t('home.nav.pricing')}</a>
           </NavLink>
           {currentUser ? (
             <NavLink href="/dashboard/my-feed">

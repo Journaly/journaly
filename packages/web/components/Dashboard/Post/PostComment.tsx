@@ -7,7 +7,6 @@ import {
   useUpdatePostCommentMutation,
   useDeletePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
-  LanguageLevel,
 } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
 
@@ -18,6 +17,7 @@ import theme from '@/theme'
 import EditIcon from '@/components/Icons/EditIcon'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import { formatDateRelativeToNow } from '@/utils'
+import LevelGauge from '@/components/LevelGauge'
 
 type PostCommentProps = {
   comment: PostCommentType
@@ -75,14 +75,12 @@ const PostComment: React.FC<PostCommentProps> = ({
     })
   }
 
-  const isNative = comment.authorLanguageLevel === LanguageLevel.Native
-
   return (
     <div className="comment">
       <div className="author-body-container">
         <div className="author-block">
           <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${comment.author.id}`}>
-            <a className={`author-info ${isNative && 'is-native'}`}>
+            <a className="author-info">
               {comment.author.profileImage ? (
                 <img className="profile-image" src={comment.author.profileImage} alt="" />
               ) : (
@@ -95,6 +93,7 @@ const PostComment: React.FC<PostCommentProps> = ({
               {comment.author.name
                 ? `${comment.author.name} (@${comment.author.handle})`
                 : `@${comment.author.handle}`}
+              <LevelGauge level={comment.authorLanguageLevel} />
             </span>
             <span className="comment-date">
               {formatDateRelativeToNow(comment.createdAt)} {t('relativeTimeWord')}
@@ -193,20 +192,10 @@ const PostComment: React.FC<PostCommentProps> = ({
           position: relative;
         }
 
-        .author-info.is-native::after {
-          position: absolute;
-          content: 'native';
-          color: ${theme.colors.white};
-          font-size: 10px;
-          font-weight: 400;
+        .author-identifier {
           display: flex;
-          justify-content: center;
+          gap: 5px;
           align-items: center;
-          top: -5px;
-          border-radius: 5px;
-          height: 12px;
-          background: ${theme.colors.greenDark};
-          padding: 2px;
         }
 
         .author-identifier {

@@ -11,7 +11,7 @@ const LevelGauge: React.FC<Props> = ({ level }) => {
   const levelNum = languageLevelToNumber(level) + 1
 
   return (
-    <div>
+    <div title={level}>
       <span />
       <span />
       <span />

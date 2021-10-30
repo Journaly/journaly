@@ -30,9 +30,7 @@ interface Props {
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
 
-  const notificationFeedRef = useRef<HTMLDivElement>(null)
   const [showNotificationFeed, setShowNotificationFeed] = useState(false)
-  const [notificationTarget, setNotificationTarget] = useState({ x: 0, y: 0, w: 0, h: 0 })
   const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
     refetchQueries: [{ query: CurrentUserDocument }],
@@ -64,6 +62,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const handleNotificationClick = () => {
     console.log('weehoo!')
     setShowNotificationFeed(true)
+    handleCollapse()
   }
 
   const handleLogOut = useCallback(async () => {
@@ -207,9 +206,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
       </nav>
       {showNotificationFeed && (
         <NotificationFeed
-          target={notificationTarget}
-          ref={notificationFeedRef}
           currentUser={currentUser}
+          onClose={() => setShowNotificationFeed(false)}
         />
       )}
       <style jsx>{`

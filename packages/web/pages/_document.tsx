@@ -48,6 +48,7 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
           <Main />
           <div id="modal-root" />
           <div id="popover-root" />
+          <div id="notification-feed-root" />
           <NextScript />
         </body>
       </Html>

@@ -45,9 +45,11 @@ model User {
   following                     User[]                          @relation("UserFollows", references: [id])
   lastFourCardNumbers           String?
   cardBrand                     String?
-  notifications                 Notification[]
+  notifications                 InAppNotification[]                  @relation("notifications")
+  notificationsTriggered        InAppNotification[]                  @relation("notificationsTriggered")
   newFollowerNotifications      NewFollowerNotification[]
-  isStudent                     Boolean                         @default(false)
+
+  isStudent Boolean @default(false)
 }
 
 model Auth {
@@ -134,7 +136,7 @@ model Post {
   claps                    PostClap[]
   postTopics               PostTopic[]
   threads                  Thread[]
-  notifications            Notification[]
+  notifications            InAppNotification[]
   savedUsers               User[]                    @relation("UserSavedPosts", references: [id])
   privateShareId           String?                   @unique
 }
@@ -193,13 +195,13 @@ model PostTopic {
 }
 
 model PostClap {
-  id                  Int                   @id @default(autoincrement())
-  createdAt           DateTime              @default(now())
-  postId              Int
-  authorId            Int
-  author              User                  @relation(fields: [authorId], references: [id])
-  post                Post                  @relation(fields: [postId], references: [id])
-  PendingNotification PendingNotification[]
+  id                    Int                    @id @default(autoincrement())
+  createdAt             DateTime               @default(now())
+  postId                Int
+  authorId              Int
+  author                User                   @relation(fields: [authorId], references: [id])
+  post                  Post                   @relation(fields: [postId], references: [id])
+  PendingNotification   PendingNotification[]
   postClapNotifications PostClapNotification[]
 
   @@unique([authorId, postId])
@@ -244,18 +246,18 @@ model Comment {
 }
 
 model PostComment {
-  id                  Int                   @id @default(autoincrement())
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  body                String
-  authorId            Int
-  postId              Int
-  author              User                  @relation(fields: [authorId], references: [id])
-  post                Post                  @relation(fields: [postId], references: [id])
-  PendingNotification PendingNotification[]
-  thanks              PostCommentThanks[]
+  id                       Int                       @id @default(autoincrement())
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  body                     String
+  authorId                 Int
+  postId                   Int
+  author                   User                      @relation(fields: [authorId], references: [id])
+  post                     Post                      @relation(fields: [postId], references: [id])
+  PendingNotification      PendingNotification[]
+  thanks                   PostCommentThanks[]
   postCommentNotifications PostCommentNotification[]
-  authorLanguageLevel LanguageLevel         @default(BEGINNER)
+  authorLanguageLevel      LanguageLevel             @default(BEGINNER)
 }
 
 model Thread {
@@ -360,7 +362,7 @@ model UserBadge {
 
 model PendingNotification {
   id                  Int                @id @default(autoincrement())
-  type                NotificationType
+  type                EmailNotificationType
   createdAt           DateTime           @default(now())
   userId              Int
   postId              Int?
@@ -378,58 +380,66 @@ model PendingNotification {
   user                User               @relation(fields: [userId], references: [id])
 }
 
-model Notification {
-  id                        Int                       @id @default(autoincrement())
-  type                      NotificationType
-  createdAt                 DateTime                  @default(now())
+model InAppNotification {
+  id                        Int                        @id @default(autoincrement())
+  type                      InAppNotificationType
+  createdAt                 DateTime                   @default(now())
   bumpedAt                  DateTime?
   postId                    Int?
   userId                    Int
-  post                      Post?                     @relation(fields: [postId], references: [id])
-  user                      User                      @relation(fields: [userId], references: [id])
+  post                      Post?                      @relation(fields: [postId], references: [id])
+  user                      User                       @relation(name: "notifications", fields: [userId], references: [id])
+  triggeringUser            User                       @relation(name: "notificationsTriggered", fields: [triggeringUserId], references: [id])
+  triggeringUserId          Int
   threadNotifications       ThreadNotification[]
   postCommentNotifications  PostCommentNotification[]
   newFollowerNotifications  NewFollowerNotification[]
   postClapNotifications     PostClapNotification[]
+  threadThanksNotifications ThreadThanksNotification[]
+}
+
+model ThreadThanksNotification {
+  id Int @id @default(autoincrement())
+
+  InAppNotification   InAppNotification? @relation(fields: [notificationId], references: [id])
+  notificationId Int?
 }
 
 model ThreadNotification {
-  id              Int            @id @default(autoincrement())
-  notificationId  Int
-  threadId        Int
-  lastCommentAt   DateTime
-  notification    Notification @relation(fields: [notificationId], references: [id])
-  thread          Thread @relation(fields: [threadId], references: [id])
+  id             Int          @id @default(autoincrement())
+  notificationId Int
+  threadId       Int
+  lastCommentAt  DateTime
+  notification   InAppNotification @relation(fields: [notificationId], references: [id])
+  thread         Thread       @relation(fields: [threadId], references: [id])
 }
 
 model PostCommentNotification {
-  id              Int            @id @default(autoincrement())
-  notificationId  Int
-  postCommentId   Int
-  lastCommentAt   DateTime
-  notification    Notification @relation(fields: [notificationId], references: [id])
-  postComment     PostComment @relation(fields: [postCommentId], references: [id])
+  id             Int          @id @default(autoincrement())
+  notificationId Int
+  postCommentId  Int
+  lastCommentAt  DateTime
+  notification   InAppNotification @relation(fields: [notificationId], references: [id])
+  postComment    PostComment  @relation(fields: [postCommentId], references: [id])
 }
 
 // Figure out disambiguating `followedUser` & `followingUser` relations
 model NewFollowerNotification {
-  id                Int            @id @default(autoincrement())
-  notificationId    Int
-  followedUserId    Int
-  followingUserId   Int
-  notification      Notification @relation(fields: [notificationId], references: [id])
-  followedUser      User @relation(name: "followedUser", fields: [followedUserId], references: [id])
-  followingUser     User @relation(name: "followingUser", fields: [followingUserId], references: [id])
+  id              Int          @id @default(autoincrement())
+  notificationId  Int
+  followingUserId Int
+  notification    InAppNotification @relation(fields: [notificationId], references: [id])
+  followingUser   User         @relation(fields: [followingUserId], references: [id])
 }
 
 model PostClapNotification {
-  id              Int            @id @default(autoincrement())
-  notificationId  Int
-  postId          Int
-  postClapId      Int
-  lastClapAt      DateTime
-  notification    Notification @relation(fields: [notificationId], references: [id])
-  postClap        PostClap @relation(fields: [postClapId], references: [id])
+  id             Int          @id @default(autoincrement())
+  notificationId Int
+  postId         Int
+  postClapId     Int
+  lastClapAt     DateTime
+  notification   InAppNotification @relation(fields: [notificationId], references: [id])
+  postClap       PostClap     @relation(fields: [postClapId], references: [id])
 }
 
 enum LanguageLevel {
@@ -467,11 +477,17 @@ enum BadgeType {
   NECROMANCER
 }
 
-enum NotificationType {
+enum EmailNotificationType {
+  THREAD_COMMENT
+  POST_COMMENT
+  NEW_POST
+  POST_CLAP
+}
+
+enum InAppNotificationType {
   THREAD_COMMENT
   POST_COMMENT
   THREAD_COMMENT_THANKS
-  POST_COMMENT_THANKS
   NEW_POST
   POST_CLAP
 }

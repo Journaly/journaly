@@ -9,6 +9,7 @@ type NotificationProps = {
   userImage?: string
   type: NotificationType
   thread?: any[]
+  handleNotificationLevelChange: (arg: string) => void
 }
 
 const getNotificationContent = (
@@ -33,6 +34,7 @@ const Notification: React.FC<NotificationProps> = ({
   userIdentifier,
   userImage,
   thread,
+  handleNotificationLevelChange,
 }) => {
   return (
     <div className="container">
@@ -41,7 +43,13 @@ const Notification: React.FC<NotificationProps> = ({
           {userImage ? <img src={userImage} alt="" className="user-avatar" /> : <BlankAvatarIcon />}
         </div>
       )}
-      <div className="middle-section">
+      <div
+        className="middle-section"
+        onClick={() => {
+          if (!thread) return
+          handleNotificationLevelChange('-50%')
+        }}
+      >
         <p>{getNotificationContent(type, userIdentifier, thread?.length)}</p>
       </div>
       {postImage && (

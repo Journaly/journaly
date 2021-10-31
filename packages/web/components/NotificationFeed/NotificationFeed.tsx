@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import { UserFragmentFragment as UserType } from '@/generated/graphql'
 import Notification from './Notification'
@@ -40,26 +40,32 @@ const notifications = [
 ]
 
 const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser }) => {
-  console.log('feed open!', currentUser)
   const notificationFeedRoot = document.getElementById('notification-feed-root')
+  const [notificationLevelTranslation, setNotificationLevelTranslation] = useState('0%')
 
   if (!notificationFeedRoot) {
     return null
   }
 
   return ReactDOM.createPortal(
-    <div>
+    <div className="wrapper">
       <div className="container">
-        {notifications.map(({ id, type, userIdentifier, userImage, postImage, thread }) => (
-          <Notification
-            key={id}
-            type={type}
-            userIdentifier={userIdentifier ? userIdentifier : undefined}
-            userImage={userImage ? userImage : undefined}
-            postImage={postImage ? postImage : undefined}
-            thread={thread ? thread : undefined}
-          />
-        ))}
+        <div className="level-1">
+          {notifications.map(({ id, type, userIdentifier, userImage, postImage, thread }) => (
+            <Notification
+              key={id}
+              type={type}
+              userIdentifier={userIdentifier ? userIdentifier : undefined}
+              userImage={userImage ? userImage : undefined}
+              postImage={postImage ? postImage : undefined}
+              thread={thread ? thread : undefined}
+              handleNotificationLevelChange={setNotificationLevelTranslation}
+            />
+          ))}
+        </div>
+        <div className="level-two" onClick={() => setNotificationLevelTranslation('0%')}>
+          <p>BAM!</p>
+        </div>
       </div>
       <style jsx>{`
         @keyframes fadeIn {
@@ -71,6 +77,9 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser }) => {
           }
         }
 
+        .wrapper {
+        }
+
         .container {
           position: fixed;
           top: 0;
@@ -79,11 +88,20 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser }) => {
           right: 0;
           animation: 100ms fadeIn linear;
           z-index: 100;
-          width: 100vw;
+          width: 200%;
+          overflow-x: hidden;
           height: 100vh;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          transform: translateX(${notificationLevelTranslation});
+          transition: all 0.2s ease;
+          background: ${theme.colors.charcoal};
+        }
+
+        .level-one,
+        .level-two {
           display: flex;
           flex-direction: column;
-          background: ${theme.colors.charcoal};
         }
       `}</style>
     </div>,

@@ -13,7 +13,8 @@
     "db:snapshot": "node db-check.js && pg_dump $DATABASE_URL > ${SNAPSHOT_FILE:-snapshot.sql}",
     "db:restore": "node db-check.js && npm run empty-db && cat ${SNAPSHOT_FILE:-snapshot.sql} | psql $DATABASE_URL",
     "empty-db": "node db-check.js && psql $DATABASE_URL  -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "prisma:format": "prisma format"
   },
   "files": [
     "db-check.js",

@@ -4,6 +4,9 @@ import { UserFragmentFragment as UserType } from '@/generated/graphql'
 import Notification from './Notification'
 import theme from '@/theme'
 import { NotificationType } from '.prisma/client'
+import BackArrowIcon from '../Icons/BackArrowIcon'
+import Button, { ButtonVariant } from '../Button'
+import XIcon from '../Icons/XIcon'
 
 type NotificationFeedProps = {
   currentUser: UserType | null | undefined
@@ -39,9 +42,10 @@ const notifications = [
   },
 ]
 
-const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser }) => {
+const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser, onClose }) => {
   const notificationFeedRoot = document.getElementById('notification-feed-root')
-  const [notificationLevelTranslation, setNotificationLevelTranslation] = useState('0%')
+  const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
+  const [levelTwoContent, setLevelTwoContent] = useState('')
 
   if (!notificationFeedRoot) {
     return null
@@ -50,7 +54,13 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser }) => {
   return ReactDOM.createPortal(
     <div className="wrapper">
       <div className="container">
-        <div className="level-1">
+        <div className="level-one">
+          <div className="top">
+            <p>Notifications</p>
+            <Button variant={ButtonVariant.Icon} onClick={onClose}>
+              <XIcon color={theme.colors.white} />
+            </Button>
+          </div>
           {notifications.map(({ id, type, userIdentifier, userImage, postImage, thread }) => (
             <Notification
               key={id}
@@ -60,11 +70,18 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser }) => {
               postImage={postImage ? postImage : undefined}
               thread={thread ? thread : undefined}
               handleNotificationLevelChange={setNotificationLevelTranslation}
+              handleSetLevelTwoContent={setLevelTwoContent}
             />
           ))}
         </div>
-        <div className="level-two" onClick={() => setNotificationLevelTranslation('0%')}>
-          <p>BAM!</p>
+        <div className="level-two">
+          <div className="top">
+            <Button variant={ButtonVariant.Icon} onClick={() => setNotificationLevelTranslation(0)}>
+              <BackArrowIcon />
+            </Button>
+            <p>Notifications</p>
+          </div>
+          <p className="content">{levelTwoContent}</p>
         </div>
       </div>
       <style jsx>{`
@@ -86,22 +103,39 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser }) => {
           bottom: 0;
           left: 0;
           right: 0;
-          animation: 100ms fadeIn linear;
           z-index: 100;
           width: 200%;
           overflow-x: hidden;
           height: 100vh;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          transform: translateX(${notificationLevelTranslation});
-          transition: all 0.2s ease;
+          transform: translateX(${notificationLevelTranslation}%);
+          transition: transform 0.2s ease;
           background: ${theme.colors.charcoal};
+          color: ${theme.colors.white};
         }
 
         .level-one,
         .level-two {
           display: flex;
           flex-direction: column;
+        }
+
+        .top {
+          display: flex;
+          gap: 16px;
+          padding: 16px;
+          border-bottom: 1px solid ${theme.colors.gray600};
+        }
+
+        .level-one > .top {
+          font-weight: 600;
+          font-size: 20px;
+          justify-content: space-between;
+        }
+
+        .level-two > .content {
+          padding: 16px;
         }
       `}</style>
     </div>,

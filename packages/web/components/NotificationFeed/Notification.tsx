@@ -9,7 +9,8 @@ type NotificationProps = {
   userImage?: string
   type: NotificationType
   thread?: any[]
-  handleNotificationLevelChange: (arg: string) => void
+  handleNotificationLevelChange: (arg: number) => void
+  handleSetLevelTwoContent: (arg: string) => void
 }
 
 const getNotificationContent = (
@@ -35,6 +36,7 @@ const Notification: React.FC<NotificationProps> = ({
   userImage,
   thread,
   handleNotificationLevelChange,
+  handleSetLevelTwoContent,
 }) => {
   return (
     <div className="container">
@@ -47,7 +49,8 @@ const Notification: React.FC<NotificationProps> = ({
         className="middle-section"
         onClick={() => {
           if (!thread) return
-          handleNotificationLevelChange('-50%')
+          handleSetLevelTwoContent(`There were ${thread.length} comments on this post`)
+          handleNotificationLevelChange(-50)
         }}
       >
         <p>{getNotificationContent(type, userIdentifier, thread?.length)}</p>
@@ -63,7 +66,6 @@ const Notification: React.FC<NotificationProps> = ({
           justify-content: space-between;
           padding: 16px;
           border-bottom: 1px solid ${theme.colors.gray600};
-          color: ${theme.colors.white};
           min-height: 100px;
           align-items: center;
         }

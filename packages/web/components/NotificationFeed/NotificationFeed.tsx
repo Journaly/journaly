@@ -21,8 +21,11 @@ const notifications = [
     userImage:
       'https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/a682efc7-8efa-48f8-82c1-6f9a5e01a567-large',
     type: NotificationType.POST_CLAP,
-    postImage:
-      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
+    post: {
+      title: 'Amazing',
+      image:
+        'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
+    },
   },
   {
     id: 2,
@@ -30,22 +33,28 @@ const notifications = [
     userImage:
       'https://res.cloudinary.com/journaly/image/upload/v1596759208/journaly/hxzlmnj56ow03sgojwsp.jpg',
     type: NotificationType.THREAD_COMMENT_THANKS,
-    postImage:
-      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-small',
+    post: {
+      title: 'EPIC',
+      image:
+        'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-small',
+    },
   },
   {
     id: 3,
     type: NotificationType.THREAD_COMMENT,
-    postImage:
-      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-small',
-    thread: ['hello!', 'woooooo', 'hoo!'],
+    post: {
+      title: 'Absolutely Smashing',
+      image:
+        'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-small',
+    },
+    threadNotifications: ['hello!', 'woooooo', 'hoo!'],
   },
 ]
 
 const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser, onClose }) => {
   const notificationFeedRoot = document.getElementById('notification-feed-root')
   const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
-  const [levelTwoContent, setLevelTwoContent] = useState('')
+  const [activeNotification, setActiveNotification] = useState(null)
 
   if (!notificationFeedRoot) {
     return null
@@ -61,16 +70,11 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser, onClos
               <XIcon color={theme.colors.white} />
             </Button>
           </div>
-          {notifications.map(({ id, type, userIdentifier, userImage, postImage, thread }) => (
+          {notifications.map((notification) => (
             <Notification
-              key={id}
-              type={type}
-              userIdentifier={userIdentifier ? userIdentifier : undefined}
-              userImage={userImage ? userImage : undefined}
-              postImage={postImage ? postImage : undefined}
-              thread={thread ? thread : undefined}
+              key={notification.id}
+              notification={notification}
               handleNotificationLevelChange={setNotificationLevelTranslation}
-              handleSetLevelTwoContent={setLevelTwoContent}
             />
           ))}
         </div>
@@ -81,7 +85,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser, onClos
             </Button>
             <p>Notifications</p>
           </div>
-          <p className="content">{levelTwoContent}</p>
+          <p className="content">WELCOME TO LEVEL 2</p>
         </div>
       </div>
       <style jsx>{`

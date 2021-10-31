@@ -2,64 +2,52 @@ import React from 'react'
 import theme from '@/theme'
 import { NotificationType } from '.prisma/client'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
+import ClapIcon from '../Icons/ClapIcon'
 
 type NotificationProps = {
-  postImage?: string
-  userIdentifier?: string
-  userImage?: string
-  type: NotificationType
-  thread?: any[]
-  handleNotificationLevelChange: (arg: number) => void
-  handleSetLevelTwoContent: (arg: string) => void
+  notification: any
+  handleNotificationLevelChange: (arg: any) => void
 }
 
-const getNotificationContent = (
-  notificationType: NotificationType,
-  userIdentifier?: string,
-  threadCount?: number,
-): string => {
-  switch (notificationType) {
-    case NotificationType.POST_CLAP:
-      return `${userIdentifier} clapped on your post!`
-    case NotificationType.THREAD_COMMENT_THANKS:
-      return `${userIdentifier} said thanks for your feedback!`
-    case NotificationType.THREAD_COMMENT:
-      return `You got ${threadCount} new feedback comments in this thread`
-  }
-  return ''
+// const getNotificationContent = (
+//   notificationType: NotificationType,
+//   userIdentifier?: string,
+//   threadCount?: number,
+// ): string => {
+//   switch (notificationType) {
+//     case NotificationType.POST_CLAP:
+//       return `${userIdentifier} clapped on your post!`
+//     case NotificationType.THREAD_COMMENT_THANKS:
+//       return `${userIdentifier} said thanks for your feedback!`
+//     case NotificationType.THREAD_COMMENT:
+//       return `You got ${threadCount} new feedback comments in this thread`
+//   }
+//   return ''
+// }
+
+type IndividualNotificationProps = {
+  notification: any
+  handleGoToLevelTwo: () => void
 }
 
-const Notification: React.FC<NotificationProps> = ({
-  postImage,
-  type,
-  userIdentifier,
-  userImage,
-  thread,
-  handleNotificationLevelChange,
-  handleSetLevelTwoContent,
+const ThreadCommentNotification: React.FC<IndividualNotificationProps> = ({
+  notification,
+  handleGoToLevelTwo,
 }) => {
   return (
     <div className="container">
-      {userIdentifier && (
-        <div className="left-section">
-          {userImage ? <img src={userImage} alt="" className="user-avatar" /> : <BlankAvatarIcon />}
-        </div>
-      )}
-      <div
-        className="middle-section"
-        onClick={() => {
-          if (!thread) return
-          handleSetLevelTwoContent(`There were ${thread.length} comments on this post`)
-          handleNotificationLevelChange(-50)
-        }}
-      >
-        <p>{getNotificationContent(type, userIdentifier, thread?.length)}</p>
+      <div className="middle-section" onClick={handleGoToLevelTwo}>
+        <p>
+          You got {notification.threadNotifications.length} new feedback comments in this thread
+        </p>
       </div>
-      {postImage && (
-        <div className="right-section">
-          <img className="post-image" src={postImage} alt="" />
-        </div>
-      )}
+      <div className="right-section">
+        <img
+          className="post-image"
+          src={notification.post.image}
+          alt={`post "${notification.post.title}"'s image`}
+        />
+      </div>
       <style jsx>{`
         .container {
           display: flex;
@@ -70,7 +58,7 @@ const Notification: React.FC<NotificationProps> = ({
           align-items: center;
         }
         .left-section {
-          display: ${userIdentifier ? '' : 'none'};
+          display: ${notification.userIdentifier ? '' : 'none'};
         }
         .middle-section {
           padding: 0 16px;
@@ -93,6 +81,152 @@ const Notification: React.FC<NotificationProps> = ({
       `}</style>
     </div>
   )
+}
+
+const PostClapNotification: React.FC<IndividualNotificationProps> = ({
+  notification,
+  handleGoToLevelTwo,
+}) => {
+  return (
+    <div className="container">
+      <div className="left-section">
+        <ClapIcon />
+      </div>
+      <div className="middle-section" onClick={handleGoToLevelTwo}>
+        <p>
+          {notification.postClapNotifications.length} people clapped for your post:{' '}
+          {notification.post.title}
+        </p>
+      </div>
+      <div className="right-section">
+        <img
+          className="post-image"
+          src={notification.post.image}
+          alt={`post "${notification.post.title}"'s image`}
+        />
+      </div>
+      <style jsx>{`
+        .container {
+          display: flex;
+          justify-content: space-between;
+          padding: 16px;
+          border-bottom: 1px solid ${theme.colors.gray600};
+          min-height: 100px;
+          align-items: center;
+        }
+        .left-section {
+          display: ${notification.userIdentifier ? '' : 'none'};
+        }
+        .middle-section {
+          padding: 0 16px;
+        }
+        .right-section {
+        }
+
+        .post-image {
+          width: 100%;
+          object-fit: cover;
+          height: 50px;
+        }
+
+        .user-avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      `}</style>
+    </div>
+  )
+}
+
+const ThreadCommentThanksNotification: React.FC<IndividualNotificationProps> = ({
+  notification,
+  handleGoToLevelTwo,
+}) => {
+  return (
+    <div className="container">
+      <div className="left-section">
+        {notification.userImage ? (
+          <img
+            src={notification.userImage}
+            alt={`${notification.userIdentifier}'s avatar'`}
+            className="user-avatar"
+          />
+        ) : (
+          <BlankAvatarIcon />
+        )}
+      </div>
+      <div className="middle-section" onClick={handleGoToLevelTwo}>
+        <p>
+          {notification.triggeringUser.handle} said thanks for{' '}
+          {notification.threadThanksNotifications.length} feedback comments!
+        </p>
+      </div>
+      <style jsx>{`
+        .container {
+          display: flex;
+          justify-content: space-between;
+          padding: 16px;
+          border-bottom: 1px solid ${theme.colors.gray600};
+          min-height: 100px;
+          align-items: center;
+        }
+        .left-section {
+          display: ${notification.userIdentifier ? '' : 'none'};
+        }
+        .middle-section {
+          padding: 0 16px;
+        }
+        .right-section {
+        }
+
+        .post-image {
+          width: 100%;
+          object-fit: cover;
+          height: 50px;
+        }
+
+        .user-avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      `}</style>
+    </div>
+  )
+}
+
+const Notification: React.FC<NotificationProps> = ({
+  notification,
+  handleNotificationLevelChange,
+}) => {
+  if (notification.type === NotificationType.THREAD_COMMENT) {
+    return (
+      <ThreadCommentNotification
+        notification={notification}
+        handleGoToLevelTwo={() => handleNotificationLevelChange(notification)}
+      />
+    )
+  }
+  if (notification.type === NotificationType.POST_CLAP) {
+    return (
+      <PostClapNotification
+        notification={notification}
+        handleGoToLevelTwo={() => handleNotificationLevelChange(notification)}
+      />
+    )
+  }
+  if (notification.type === NotificationType.THREAD_COMMENT_THANKS) {
+    return (
+      <ThreadCommentThanksNotification
+        notification={notification}
+        handleGoToLevelTwo={() => handleNotificationLevelChange(notification)}
+      />
+    )
+  }
+  return null
 }
 
 export default Notification

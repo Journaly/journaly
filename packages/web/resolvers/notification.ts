@@ -1,10 +1,10 @@
 import { objectType } from 'nexus'
 
-const Notification = objectType({
-  name: 'Notification',
+const InAppNotification = objectType({
+  name: 'InAppNotification',
   definition(t) {
     t.model.id()
   },
 })
 
-export default [Notification]
+export default [InAppNotification]

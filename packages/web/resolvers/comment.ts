@@ -6,7 +6,13 @@ import {
 } from 'nexus'
 import { add, isPast } from 'date-fns'
 
-import { User, NotificationType, BadgeType, LanguageLevel } from '@journaly/j-db-client'
+import {
+  User,
+  InAppNotificationType,
+  EmailNotificationType,
+  BadgeType,
+  LanguageLevel
+} from '@journaly/j-db-client'
 
 import {
   hasAuthorPermissions,
@@ -218,19 +224,43 @@ const CommentMutations = extendType({
           },
         })
 
-        const promises: Promise<any>[] = []
-        thread.subscriptions.forEach(({ user }: { user: User }) => {
+        const promises = thread.subscriptions.map(async ({ user }: { user: User }) => {
           if (user.id === userId) {
             // This is the user creating the comment, do not notify them.
-            return
+            return new Promise((res) => res(null))
           }
 
-          promises.push(
-            createNotification(ctx.db, user, {
-              type: NotificationType.THREAD_COMMENT,
-              comment,
-            }),
-          )
+          await createNotification(ctx.db, user, {
+            type: EmailNotificationType.THREAD_COMMENT,
+            comment,
+          })
+
+          const ian = await ctx.db.inAppNotification.upsert({
+            create: {
+              userId: user.id,
+              type: InAppNotificationType.THREAD_COMMENT,
+              bumpedAt: new Date(),
+              postId: thread.post.id,
+            },
+            update: {
+              bumpedAt: new Date(),
+            },
+            where: {
+              userId_type_postId_triggeringUserId: {
+                postId: thread.post.id,
+                userId: user.id,
+                triggeringUserId: thread.post.author.id,
+                type: InAppNotificationType.THREAD_COMMENT,
+              }
+            }
+          })
+
+          await ctx.db.threadNotification.create({
+            data: {
+              notificationId: ian.id,
+              threadId: thread.id
+            }
+          })
         })
 
         await Promise.all(promises)
@@ -405,7 +435,7 @@ const CommentMutations = extendType({
 
           promises.push(
             createNotification(ctx.db, user, {
-              type: NotificationType.POST_COMMENT,
+              type: EmailNotificationType.POST_COMMENT,
               postComment,
             }),
           )

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { UserFragmentFragment as UserType } from '@/generated/graphql'
 import Notification from './Notification'
 import theme from '@/theme'
-import { NotificationType } from '.prisma/client'
+import { InAppNotificationType } from '.prisma/client'
 import BackArrowIcon from '../Icons/BackArrowIcon'
 import Button, { ButtonVariant } from '../Button'
 import XIcon from '../Icons/XIcon'
@@ -20,7 +20,7 @@ const notifications = [
     userIdentifier: 'Lanny',
     userImage:
       'https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/a682efc7-8efa-48f8-82c1-6f9a5e01a567-large',
-    type: NotificationType.POST_CLAP,
+    type: InAppNotificationType.POST_CLAP,
     post: {
       title: 'Amazing',
       image:
@@ -32,7 +32,7 @@ const notifications = [
     userIdentifier: 'Kevin',
     userImage:
       'https://res.cloudinary.com/journaly/image/upload/v1596759208/journaly/hxzlmnj56ow03sgojwsp.jpg',
-    type: NotificationType.THREAD_COMMENT_THANKS,
+    type: InAppNotificationType.THREAD_COMMENT_THANKS,
     post: {
       title: 'EPIC',
       image:
@@ -41,7 +41,7 @@ const notifications = [
   },
   {
     id: 3,
-    type: NotificationType.THREAD_COMMENT,
+    type: InAppNotificationType.THREAD_COMMENT,
     post: {
       title: 'Absolutely Smashing',
       image:
@@ -51,10 +51,12 @@ const notifications = [
   },
 ]
 
-const NotificationFeed: React.FC<NotificationFeedProps> = ({ currentUser, onClose }) => {
+const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const notificationFeedRoot = document.getElementById('notification-feed-root')
   const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
   const [activeNotification, setActiveNotification] = useState(null)
+
+  console.log(activeNotification, setActiveNotification)
 
   if (!notificationFeedRoot) {
     return null

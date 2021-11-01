@@ -4,7 +4,7 @@ import {
   extendType,
 } from 'nexus'
 
-import { NotificationType } from '@journaly/j-db-client'
+import { EmailNotificationType } from '@journaly/j-db-client'
 
 import {
   createNotification,
@@ -74,7 +74,7 @@ const ThanksMutations = extendType({
         ctx.db,
         comment.author,
         {
-          type: NotificationType.THREAD_COMMENT_THANKS,
+          type: EmailNotificationType.THREAD_COMMENT_THANKS,
           commentThanks,
         },
       )

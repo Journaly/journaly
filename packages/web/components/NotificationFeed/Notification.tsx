@@ -1,6 +1,6 @@
 import React from 'react'
 import theme from '@/theme'
-import { NotificationType } from '.prisma/client'
+import { InAppNotificationType } from '.prisma/client'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import ClapIcon from '../Icons/ClapIcon'
 
@@ -10,16 +10,16 @@ type NotificationProps = {
 }
 
 // const getNotificationContent = (
-//   notificationType: NotificationType,
+//   notificationType: InAppNotificationType,
 //   userIdentifier?: string,
 //   threadCount?: number,
 // ): string => {
 //   switch (notificationType) {
-//     case NotificationType.POST_CLAP:
+//     case InAppNotificationType.POST_CLAP:
 //       return `${userIdentifier} clapped on your post!`
-//     case NotificationType.THREAD_COMMENT_THANKS:
+//     case InAppNotificationType.THREAD_COMMENT_THANKS:
 //       return `${userIdentifier} said thanks for your feedback!`
-//     case NotificationType.THREAD_COMMENT:
+//     case InAppNotificationType.THREAD_COMMENT:
 //       return `You got ${threadCount} new feedback comments in this thread`
 //   }
 //   return ''
@@ -202,7 +202,7 @@ const Notification: React.FC<NotificationProps> = ({
   notification,
   handleNotificationLevelChange,
 }) => {
-  if (notification.type === NotificationType.THREAD_COMMENT) {
+  if (notification.type === InAppNotificationType.THREAD_COMMENT) {
     return (
       <ThreadCommentNotification
         notification={notification}
@@ -210,7 +210,7 @@ const Notification: React.FC<NotificationProps> = ({
       />
     )
   }
-  if (notification.type === NotificationType.POST_CLAP) {
+  if (notification.type === InAppNotificationType.POST_CLAP) {
     return (
       <PostClapNotification
         notification={notification}
@@ -218,7 +218,7 @@ const Notification: React.FC<NotificationProps> = ({
       />
     )
   }
-  if (notification.type === NotificationType.THREAD_COMMENT_THANKS) {
+  if (notification.type === InAppNotificationType.THREAD_COMMENT_THANKS) {
     return (
       <ThreadCommentThanksNotification
         notification={notification}

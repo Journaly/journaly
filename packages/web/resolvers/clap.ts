@@ -1,4 +1,4 @@
-import { NotificationType } from '.prisma/client'
+import { EmailNotificationType } from '@journaly/j-db-client'
 import {
   extendType,
   intArg,
@@ -63,7 +63,7 @@ const PostClapMutations = extendType({
           ctx.db,
           post.author,
           {
-            type: NotificationType.POST_CLAP,
+            type: EmailNotificationType.POST_CLAP,
             postClap,
           },
         )

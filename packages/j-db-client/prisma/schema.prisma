@@ -390,13 +390,15 @@ model InAppNotification {
   userId                    Int
   post                      Post?                      @relation(fields: [postId], references: [id])
   user                      User                       @relation(name: "notifications", fields: [userId], references: [id])
-  triggeringUser            User                       @relation(name: "notificationsTriggered", fields: [triggeringUserId], references: [id])
-  triggeringUserId          Int
+  triggeringUser            User?                      @relation(name: "notificationsTriggered", fields: [triggeringUserId], references: [id])
+  triggeringUserId          Int?
   threadNotifications       ThreadNotification[]
   postCommentNotifications  PostCommentNotification[]
   newFollowerNotifications  NewFollowerNotification[]
   postClapNotifications     PostClapNotification[]
   threadThanksNotifications ThreadThanksNotification[]
+
+  @@unique([userId, type, postId, triggeringUserId])
 }
 
 model ThreadThanksNotification {

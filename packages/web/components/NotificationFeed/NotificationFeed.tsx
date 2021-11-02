@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import { UserFragmentFragment as UserType } from '@/generated/graphql'
+import { InAppNotification, UserFragmentFragment as UserType } from '@/generated/graphql'
 import Notification from './Notification'
 import theme from '@/theme'
 import { InAppNotificationType } from '.prisma/client'
@@ -26,6 +26,24 @@ const notifications = [
       image:
         'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
     },
+    postClapNotifications: [
+      {
+        author: {
+          id: 1,
+          profileImage:
+            'https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/a682efc7-8efa-48f8-82c1-6f9a5e01a567-large',
+          handle: 'Lanny',
+        },
+      },
+      {
+        author: {
+          id: 2,
+          profileImage:
+            'https://res.cloudinary.com/journaly/image/upload/v1596759208/journaly/hxzlmnj56ow03sgojwsp.jpg',
+          handle: 'Kevin',
+        },
+      },
+    ],
   },
   {
     id: 2,
@@ -51,15 +69,41 @@ const notifications = [
   },
 ]
 
+const ThreadCommentThanksNotificationLevelTwo = () => <p>8 New Comments In 5 Threads</p>
+
+const PostClapNotificationLevelTwo = (notification: InAppNotification) => {
+  // const users = notification.postClapNotifications.map((notification: any) => notification.author)
+  // return <UserList users={users} />
+  return <p>I will be the user list!</p>
+}
+
+const ThreadCommentNotificationLevelTwo = () => <p>Here are the threads</p>
+
 const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const notificationFeedRoot = document.getElementById('notification-feed-root')
   const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
-  const [activeNotification, setActiveNotification] = useState(null)
-
-  console.log(activeNotification, setActiveNotification)
+  const [activeNotification, setActiveNotification] = useState<JSX.Element | null>(null)
 
   if (!notificationFeedRoot) {
     return null
+  }
+
+  const handleGoToLevelTwo = (notification: any) => {
+    if (notification.type === InAppNotificationType.THREAD_COMMENT_THANKS) {
+      setActiveNotification(<ThreadCommentThanksNotificationLevelTwo />)
+    }
+    if (notification.type === InAppNotificationType.POST_CLAP) {
+      setActiveNotification(<PostClapNotificationLevelTwo notification={notification} />)
+    }
+    if (notification.type === InAppNotificationType.THREAD_COMMENT) {
+      setActiveNotification(<ThreadCommentNotificationLevelTwo />)
+    }
+    setNotificationLevelTranslation(-50)
+  }
+
+  const handleGoToLevelOne = () => {
+    setActiveNotification(null)
+    setNotificationLevelTranslation(0)
   }
 
   return ReactDOM.createPortal(
@@ -76,18 +120,18 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
             <Notification
               key={notification.id}
               notification={notification}
-              handleNotificationLevelChange={setNotificationLevelTranslation}
+              handleNotificationLevelChange={handleGoToLevelTwo}
             />
           ))}
         </div>
         <div className="level-two">
           <div className="top">
-            <Button variant={ButtonVariant.Icon} onClick={() => setNotificationLevelTranslation(0)}>
+            <Button variant={ButtonVariant.Icon} onClick={handleGoToLevelOne}>
               <BackArrowIcon />
             </Button>
-            <p>Notifications</p>
+            <span>Notifications</span>
           </div>
-          <p className="content">WELCOME TO LEVEL 2</p>
+          <div className="content">{activeNotification}</div>
         </div>
       </div>
       <style jsx>{`

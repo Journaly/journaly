@@ -241,6 +241,9 @@ const CommentMutations = extendType({
               type: InAppNotificationType.THREAD_COMMENT,
               bumpedAt: new Date(),
               postId: thread.post.id,
+              // A stable `triggeringUserId` is required for grouping, even
+              // though the post author isn't really the one who triggered it
+              triggeringUserId: thread.post.author.id,
             },
             update: {
               bumpedAt: new Date(),

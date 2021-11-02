@@ -76,6 +76,11 @@ export type HeadlineImageInput = {
   largeSize: Scalars['String']
 }
 
+export type InAppNotification = {
+  __typename?: 'InAppNotification'
+  id: Scalars['Int']
+}
+
 export type InitiateAvatarImageUploadResponse = {
   __typename?: 'InitiateAvatarImageUploadResponse'
   /** URL for the client to PUT an image to */
@@ -802,7 +807,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
     >
     claps: Array<
       { __typename?: 'PostClap' } & Pick<PostClap, 'id'> & {
-          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
         }
     >
   }
@@ -1558,6 +1563,7 @@ export const PostFragmentFragmentDoc = gql`
         id
         name
         handle
+        profileImage
       }
     }
   }

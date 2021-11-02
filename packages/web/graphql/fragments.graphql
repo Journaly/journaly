@@ -157,6 +157,7 @@ fragment PostFragment on Post {
       id
       name
       handle
+      profileImage
     }
   }
 }

@@ -30,6 +30,9 @@ fragment UserWithLanguagesFragment on User {
 
 fragment CurrentUserFragment on User {
   ...UserWithLanguagesFragment
+  notifications {
+    ...NotificationFragment
+  }
   savedPosts {
     id
   }
@@ -235,5 +238,25 @@ fragment UserBadgeFragment on UserBadge {
 fragment UserInterestFragment on UserInterest {
   topic {
     ...TopicFragment
+  }
+}
+
+fragment NotificationFragment on InAppNotification {
+  id
+  type
+  bumpedAt
+  post {
+    id
+    title
+  }
+
+  threadCommentNotifications {
+    comment {
+      id
+      author {
+        id
+        handle
+      }
+    }
   }
 }

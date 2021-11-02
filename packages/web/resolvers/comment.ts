@@ -255,10 +255,10 @@ const CommentMutations = extendType({
             }
           })
 
-          await ctx.db.threadNotification.create({
+          await ctx.db.threadCommentNotification.create({
             data: {
               notificationId: ian.id,
-              threadId: thread.id
+              commentId: comment.id
             }
           })
         })

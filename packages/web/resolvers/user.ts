@@ -131,6 +131,22 @@ const User = objectType({
         })
       },
     })
+    t.list.field('notifications', {
+      type: 'InAppNotification',
+      resolve(parent, _args, ctx, _info) {
+        const { userId } = ctx.request
+
+        if (!userId || userId !== parent.id) {
+          return []
+        }
+
+        return ctx.db.inAppNotification.findMany({
+          where: {
+            userId: userId
+          }
+        })
+      }
+    })
     t.list.field('activityGraphData', {
       type: 'DatedActivityCount',
       resolve(parent, _args, ctx, _info) {

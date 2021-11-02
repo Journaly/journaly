@@ -76,6 +76,28 @@ export type HeadlineImageInput = {
   largeSize: Scalars['String']
 }
 
+export type InAppNotification = {
+  __typename?: 'InAppNotification'
+  id: Scalars['Int']
+  type: InAppNotificationType
+  bumpedAt?: Maybe<Scalars['DateTime']>
+  post?: Maybe<Post>
+  triggeringUser?: Maybe<User>
+  threadCommentNotifications: Array<ThreadCommentNotification>
+  postCommentNotifications: Array<PostCommentNotification>
+  newFollowerNotifications: Array<NewFollowerNotification>
+  postClapNotifications: Array<PostClapNotification>
+  threadCommentThanksNotifications: Array<ThreadCommentThanksNotification>
+}
+
+export enum InAppNotificationType {
+  ThreadComment = 'THREAD_COMMENT',
+  PostComment = 'POST_COMMENT',
+  ThreadCommentThanks = 'THREAD_COMMENT_THANKS',
+  NewPost = 'NEW_POST',
+  PostClap = 'POST_CLAP',
+}
+
 export type InitiateAvatarImageUploadResponse = {
   __typename?: 'InitiateAvatarImageUploadResponse'
   /** URL for the client to PUT an image to */
@@ -369,6 +391,11 @@ export type MutationUpdateSubscriptionPaymentMethodArgs = {
   paymentMethodId: Scalars['String']
 }
 
+export type NewFollowerNotification = {
+  __typename?: 'NewFollowerNotification'
+  id: Scalars['Int']
+}
+
 export type Post = {
   __typename?: 'Post'
   id: Scalars['Int']
@@ -406,6 +433,11 @@ export type PostClap = {
   post: Post
 }
 
+export type PostClapNotification = {
+  __typename?: 'PostClapNotification'
+  id: Scalars['Int']
+}
+
 export type PostComment = {
   __typename?: 'PostComment'
   id: Scalars['Int']
@@ -413,6 +445,11 @@ export type PostComment = {
   body: Scalars['String']
   createdAt: Scalars['DateTime']
   authorLanguageLevel: LanguageLevel
+}
+
+export type PostCommentNotification = {
+  __typename?: 'PostCommentNotification'
+  id: Scalars['Int']
 }
 
 export type PostPage = {
@@ -510,6 +547,18 @@ export type ThreadCommentsArgs = {
   orderBy: Array<ThreadCommentsOrderByInput>
 }
 
+export type ThreadCommentNotification = {
+  __typename?: 'ThreadCommentNotification'
+  id: Scalars['Int']
+  comment: Comment
+}
+
+export type ThreadCommentThanksNotification = {
+  __typename?: 'ThreadCommentThanksNotification'
+  id: Scalars['Int']
+  thanks: CommentThanks
+}
+
 export type ThreadCommentsOrderByInput = {
   createdAt?: Maybe<SortOrder>
 }
@@ -572,6 +621,7 @@ export type User = {
   thanksReceivedCount: Scalars['Int']
   threadCommentsCount: Scalars['Int']
   postCommentsCount: Scalars['Int']
+  notifications: Array<InAppNotification>
   activityGraphData: Array<DatedActivityCount>
 }
 
@@ -713,6 +763,7 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 } & UserFragmentFragment
 
 export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
+  notifications: Array<{ __typename?: 'InAppNotification' } & NotificationFragmentFragment>
   savedPosts: Array<{ __typename?: 'Post' } & Pick<Post, 'id'>>
   membershipSubscription?: Maybe<
     { __typename?: 'MembershipSubscription' } & Pick<MembershipSubscription, 'isActive'>
@@ -862,6 +913,20 @@ export type UserBadgeFragmentFragment = { __typename?: 'UserBadge' } & Pick<
 export type UserInterestFragmentFragment = { __typename?: 'UserInterest' } & {
   topic: { __typename?: 'Topic' } & TopicFragmentFragment
 }
+
+export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } & Pick<
+  InAppNotification,
+  'id' | 'type' | 'bumpedAt'
+> & {
+    post?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'id' | 'title'>>
+    threadCommentNotifications: Array<
+      { __typename?: 'ThreadCommentNotification' } & {
+        comment: { __typename?: 'Comment' } & Pick<Comment, 'id'> & {
+            author: { __typename?: 'User' } & Pick<User, 'id' | 'handle'>
+          }
+      }
+    >
+  }
 
 export type AddLanguageRelationMutationVariables = Exact<{
   languageId: Scalars['Int']
@@ -1420,9 +1485,32 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
   ${UserFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
 `
+export const NotificationFragmentFragmentDoc = gql`
+  fragment NotificationFragment on InAppNotification {
+    id
+    type
+    bumpedAt
+    post {
+      id
+      title
+    }
+    threadCommentNotifications {
+      comment {
+        id
+        author {
+          id
+          handle
+        }
+      }
+    }
+  }
+`
 export const CurrentUserFragmentFragmentDoc = gql`
   fragment CurrentUserFragment on User {
     ...UserWithLanguagesFragment
+    notifications {
+      ...NotificationFragment
+    }
     savedPosts {
       id
     }
@@ -1431,6 +1519,7 @@ export const CurrentUserFragmentFragmentDoc = gql`
     }
   }
   ${UserWithLanguagesFragmentFragmentDoc}
+  ${NotificationFragmentFragmentDoc}
 `
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {

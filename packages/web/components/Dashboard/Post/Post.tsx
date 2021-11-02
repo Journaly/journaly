@@ -41,6 +41,7 @@ import { generateNegativeRandomNumber } from '@/utils/number'
 import { POST_BUMP_LIMIT } from '../../../constants'
 import { SelectionState, PostProps, PostContentProps, ThreadType } from './types'
 import BookmarkIcon from '@/components/Icons/BookmarkIcon'
+import UserListModal from '@/components/Modals/UserListModal'
 
 const selectionState: SelectionState = {
   bouncing: false,
@@ -95,6 +96,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0, w: 0, h: 0 })
   const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
+  const [displayUserListModal, setDisplayUserListModal] = useState(false)
   const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
   const isAuthoredPost = currentUser && post.author.id === currentUser.id
   const isPremiumFeatureEligible =
@@ -102,6 +104,8 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     currentUser?.userRole === UserRole.Admin ||
     currentUser?.userRole === UserRole.Moderator
   const canAttemptBump = isPremiumFeatureEligible && post.status === 'PUBLISHED'
+
+  const usersWhoClapped = post.claps.map((clap) => clap.author)
 
   const hasSavedPost = useMemo(() => {
     return currentUser?.savedPosts.find((savedPost) => savedPost.id === post.id) !== undefined
@@ -530,18 +534,28 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         </article>
         <div className="post-controls">
           <div className="clap-container">
-            <Button
-              variant={ButtonVariant.Icon}
-              onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
-              loading={isLoadingPostClap}
-              disabled={currentUser?.id === post.author.id || !currentUser}
-            >
-              <ClapIcon
-                width={24}
-                clapped={hasClappedPost}
-                title={getUsersClappedText(post.claps, currentUser?.id)}
-              />
-            </Button>
+            {currentUser?.id === post.author.id ? (
+              <Button variant={ButtonVariant.Icon} onClick={() => setDisplayUserListModal(true)}>
+                <ClapIcon
+                  width={24}
+                  clapped={hasClappedPost}
+                  title={getUsersClappedText(post.claps, currentUser?.id)}
+                />
+              </Button>
+            ) : (
+              <Button
+                variant={ButtonVariant.Icon}
+                onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
+                loading={isLoadingPostClap}
+                disabled={!currentUser}
+              >
+                <ClapIcon
+                  width={24}
+                  clapped={hasClappedPost}
+                  title={getUsersClappedText(post.claps, currentUser?.id)}
+                />
+              </Button>
+            )}
             <span>{post.claps.length}</span>
           </div>
           <div className="post-action-container">
@@ -655,6 +669,13 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
             setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}
+        />
+      )}
+      {displayUserListModal && (
+        <UserListModal
+          title={`${post.claps.length} People Clapped!`}
+          users={usersWhoClapped}
+          onClose={() => setDisplayUserListModal(false)}
         />
       )}
       <PostBodyStyles parentClassName="post-body" />

@@ -94,7 +94,7 @@ const PostClapNotification: React.FC<IndividualNotificationProps> = ({
       </div>
       <div className="middle-section" onClick={handleGoToLevelTwo}>
         <p>
-          {notification.postClapNotifications.length} people clapped for your post:{' '}
+          {notification.postClapNotifications?.length} people clapped for your post:{' '}
           {notification.post.title}
         </p>
       </div>
@@ -159,8 +159,8 @@ const ThreadCommentThanksNotification: React.FC<IndividualNotificationProps> = (
       </div>
       <div className="middle-section" onClick={handleGoToLevelTwo}>
         <p>
-          {notification.triggeringUser.handle} said thanks for{' '}
-          {notification.threadThanksNotifications.length} feedback comments!
+          {notification.triggeringUser?.handle} said thanks for{' '}
+          {notification.threadThanksNotifications?.length} feedback comments!
         </p>
       </div>
       <style jsx>{`

@@ -7,7 +7,8 @@ import JournalyEditor from '@/components/JournalyEditor'
 import XIcon from '@/components/Icons/XIcon'
 import Select from '@/components/Select'
 import MultiSelect from '@/components/MultiSelect'
-import { ButtonVariant } from '@/components/Button'
+import Button, { ButtonVariant } from '@/components/Button'
+import UnsplashModal from '@/components/Modals/UnsplashModal'
 import theme from '@/theme'
 import usePostImageUpload from '@/hooks/usePostImageUpload'
 import useAutosavedState from '@/hooks/useAutosavedState'
@@ -103,6 +104,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
 
   const [image, uploadingImage, onFileInputChange, resetImage] = usePostImageUpload()
   const postImage = image?.finalUrlLarge || initialData.headlineImage.largeSize
+
+  const [displayUnsplashModal, setDisplayUnsplashModal] = React.useState<boolean>(false)
 
   const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
   const formattedTopicOptions = (topics || []).map(({ name, id }) => ({
@@ -224,6 +227,15 @@ const PostEditor: React.FC<PostEditorProps> = ({
           topics={postTopics}
         >
           <div className="header-preview-options">
+            <Button
+              type="button"
+              variant={ButtonVariant.Secondary}
+              onClick={(): void => {
+                setDisplayUnsplashModal(true)
+              }}
+            >
+              {t('unsplash')}
+            </Button>
             <FileInput
               variant={ButtonVariant.Primary}
               className="image-upload-btn"
@@ -250,6 +262,14 @@ const PostEditor: React.FC<PostEditorProps> = ({
           allowInlineImages={!!isPremiumFeatureEligible}
         />
       </div>
+
+      <UnsplashModal
+        onConfirm={() => console.log('confirmed')}
+        onCancel={(): void => {
+          setDisplayUnsplashModal(false)
+        }}
+        show={displayUnsplashModal}
+      />
 
       <style jsx>{`
         .post-editor {

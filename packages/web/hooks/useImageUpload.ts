@@ -12,6 +12,7 @@ type UploadHookOutput<T> = [
   T | null,
   boolean,
   (e: HTMLInputEvent) => Promise<T | null>,
+  (smallUrl: string, largeUrl: string) => void,
   () => void,
 ]
 
@@ -59,8 +60,22 @@ const useImageUpload = <T extends BaseUploadData>(getUploadData: () => Promise<T
     return result.value
   }
 
-  return [image, uploadingImage, onFileInputChange, () => setImage(null)]
-}
+  const onUnsplashSelect = (smallUrl: string, largeUrl: string) => {
+    const result = {
+      failed: false,
+      value: {
+        uploadUrl: '',
+        checkUrl: '',
+        finalUrlLarge: largeUrl,
+        finalUrlSmall: smallUrl,
+      },
+    }
 
+    /* @ts-ignore */
+    setImage(result.value)
+  }
+
+  return [image, uploadingImage, onFileInputChange, onUnsplashSelect, () => setImage(null)]
+}
 
 export default useImageUpload

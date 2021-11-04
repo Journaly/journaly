@@ -1,14 +1,12 @@
 import React from 'react'
 import { createApi } from 'unsplash-js'
 
-import { useTranslation } from '@/config/i18n'
-import Button, { ButtonVariant } from '@/components/Button'
 import Modal from '@/components/Modal'
 import SearchInput from '@/components/Dashboard/Filters/SearchInput'
 
 type Props = {
-  onConfirm: () => void
   onCancel: () => void
+  onUnsplashSelect: (smallUrl: string, largeUrl: string) => void
   show: boolean
 }
 
@@ -16,7 +14,7 @@ type Photo = {
   id: number
   width: number
   height: number
-  urls: { large: string; regular: string; raw: string; small: string; thumb: string }
+  urls: { full: string; regular: string; raw: string; small: string; thumb: string }
   color: string | null
   user: {
     username: string
@@ -28,12 +26,16 @@ const unsplashApi = createApi({
   accessKey: process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY as string,
 })
 
-const PhotoComp: React.FC<{ photo: Photo }> = ({ photo }) => {
+const PhotoComp: React.FC<{ photo: Photo; onImageSelect: any }> = ({ photo, onImageSelect }) => {
   const { user, urls } = photo
 
   return (
     <>
-      <img className="img" src={urls.thumb} />
+      <img
+        className="img"
+        src={urls.thumb}
+        onClick={() => onImageSelect(urls.small, urls.regular)}
+      />
       <a className="credit" target="_blank" href={`https://unsplash.com/@${user.username}`}>
         {user.name}
       </a>
@@ -44,6 +46,10 @@ const PhotoComp: React.FC<{ photo: Photo }> = ({ photo }) => {
           width: 100%;
           max-height: 300px;
           object-fit: cover;
+        }
+
+        .img:hover {
+          cursor: pointer;
         }
 
         .credit {
@@ -57,7 +63,7 @@ const PhotoComp: React.FC<{ photo: Photo }> = ({ photo }) => {
   )
 }
 
-function UnsplashSearch() {
+const UnsplashSearch: React.FC<{ onImageSelect: any }> = ({ onImageSelect }) => {
   const [data, setPhotosResponse] = React.useState<any>()
 
   function onSearchChange(query: string) {
@@ -73,12 +79,12 @@ function UnsplashSearch() {
 
   return (
     <>
-      <SearchInput debounceTime={500} defaultValue="test" onChange={onSearchChange} />
+      <SearchInput debounceTime={500} defaultValue="" onChange={onSearchChange} />
       <div className="feed">
         <ul className="columnUl">
           {data?.map((photo: Photo) => (
             <li key={photo.id} className="li">
-              <PhotoComp photo={photo} />
+              <PhotoComp photo={photo} onImageSelect={onImageSelect} />
             </li>
           ))}
         </ul>
@@ -103,23 +109,11 @@ function UnsplashSearch() {
 }
 
 const UnsplashModal: React.FC<Props> = (props) => {
-  const { t } = useTranslation('common')
-
   return props.show ? (
     <>
       <Modal
-        title="Choose your image"
-        body={<UnsplashSearch />}
-        footer={
-          <>
-            <Button variant={ButtonVariant.Primary} onClick={props.onConfirm}>
-              {t('modal.confirm')}
-            </Button>
-            <Button variant={ButtonVariant.Secondary} onClick={props.onCancel}>
-              {t('modal.cancel')}
-            </Button>
-          </>
-        }
+        title="Search Unsplash"
+        body={<UnsplashSearch onImageSelect={props.onUnsplashSelect} />}
         onClose={props.onCancel}
       />
     </>

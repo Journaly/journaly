@@ -102,7 +102,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
     return { value, displayName }
   })
 
-  const [image, uploadingImage, onFileInputChange, resetImage] = usePostImageUpload()
+  const [image, uploadingImage, onFileInputChange, onUnsplashSelect, resetImage] =
+    usePostImageUpload()
   const postImage = image?.finalUrlLarge || initialData.headlineImage.largeSize
 
   const [displayUnsplashModal, setDisplayUnsplashModal] = React.useState<boolean>(false)
@@ -230,6 +231,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
             <Button
               type="button"
               variant={ButtonVariant.Secondary}
+              className="unsplash-button"
               onClick={(): void => {
                 setDisplayUnsplashModal(true)
               }}
@@ -264,11 +266,11 @@ const PostEditor: React.FC<PostEditorProps> = ({
       </div>
 
       <UnsplashModal
-        onConfirm={() => console.log('confirmed')}
         onCancel={(): void => {
           setDisplayUnsplashModal(false)
         }}
         show={displayUnsplashModal}
+        onUnsplashSelect={onUnsplashSelect}
       />
 
       <style jsx>{`
@@ -306,7 +308,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
           right: 10px;
         }
 
-        :global(.post-header .image-upload-btn) {
+        :global(.post-header .image-upload-btn, .unsplash-button) {
           margin-right: 5px;
         }
 

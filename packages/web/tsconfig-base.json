@@ -13,7 +13,8 @@
       "@/theme/*": ["theme/*"],
       "@/utils": ["utils/index"],
       "@/utils/*": ["utils/*"],
-      "@/nexus/*": ["resolvers/*"]
+      "@/nexus/*": ["resolvers/*"],
+      "@/constants": ["constants.ts"]
     }
   }
 }

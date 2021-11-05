@@ -14,7 +14,7 @@ const Header: React.FC<Props> = ({ onMenuClick }) => {
     <div className="header">
       <HamburgerIcon onClick={onMenuClick} className="hamburger-icon" />
 
-      <NotificationsIcon />
+      <NotificationsIcon count={3} />
 
       <style jsx>{`
         .header {

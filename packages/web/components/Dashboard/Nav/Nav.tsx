@@ -20,6 +20,8 @@ import HelpIcon from '@/components/Icons/HelpIcon'
 import Modal from '@/components/Modal'
 import NotificationsIcon from '@/components/Icons/NotificationsIcon'
 import NotificationFeed from '@/components/NotificationFeed'
+import { NOTIFICATION_FEED_POLLING_INTERVAL } from '@/constants'
+import { useInterval } from '@/hooks/useInterval'
 
 interface Props {
   expanded: boolean
@@ -36,6 +38,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
     refetchQueries: [{ query: CurrentUserDocument }],
   })
   const [shouldShowModal, setShouldShowModal] = useState(false)
+
+  const [newNotificationCount, setNewNotificationCount] = useState(0)
 
   let currentUser: UserType | null = data?.currentUser as UserType
   if (error) currentUser = null
@@ -122,7 +126,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                   onClick={handleNotificationClick}
                   data-testid="notifications-nav-link"
                 >
-                  <NotificationsIcon aria-hidden="true" />
+                  <NotificationsIcon count={newNotificationCount} aria-hidden="true" />
                   <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
                 </a>
               </NavLink>
@@ -208,6 +212,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         <NotificationFeed
           currentUser={currentUser}
           onClose={() => setShowNotificationFeed(false)}
+          onUpdateFeedCount={setNewNotificationCount}
         />
       )}
       <style jsx>{`

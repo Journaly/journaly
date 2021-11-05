@@ -1,17 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
-import { InAppNotification, UserFragmentFragment as UserType } from '@/generated/graphql'
+import {
+  InAppNotification,
+  useCurrentUserQuery,
+  UserFragmentFragment as UserType,
+} from '@/generated/graphql'
 import Notification from './Notification'
 import theme from '@/theme'
 import { InAppNotificationType } from '.prisma/client'
 import BackArrowIcon from '../Icons/BackArrowIcon'
 import Button, { ButtonVariant } from '../Button'
 import XIcon from '../Icons/XIcon'
+import { useInterval } from '@/hooks/useInterval'
+import { NOTIFICATION_FEED_POLLING_INTERVAL } from '@/constants'
 
 type NotificationFeedProps = {
   currentUser: UserType | null | undefined
   onClose: () => void
   dataTestId?: string
+  onUpdateFeedCount: React.Dispatch<React.SetStateAction<number>>
 }
 
 const notifications = [
@@ -69,7 +76,9 @@ const notifications = [
   },
 ]
 
-const ThreadCommentThanksNotificationLevelTwo = () => <p>8 New Comments In 5 Threads</p>
+const ThreadCommentThanksNotificationLevelTwo = (notification: InAppNotification) => (
+  <p>8 New Comments In 5 Threads</p>
+)
 
 const PostClapNotificationLevelTwo = (notification: InAppNotification) => {
   // const users = notification.postClapNotifications.map((notification: any) => notification.author)
@@ -77,26 +86,41 @@ const PostClapNotificationLevelTwo = (notification: InAppNotification) => {
   return <p>I will be the user list!</p>
 }
 
-const ThreadCommentNotificationLevelTwo = () => <p>Here are the threads</p>
+const ThreadCommentNotificationLevelTwo = (notification: InAppNotification) => (
+  <p>Here are the threads</p>
+)
 
-const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
+const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose, onUpdateFeedCount }) => {
   const notificationFeedRoot = document.getElementById('notification-feed-root')
   const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
   const [activeNotification, setActiveNotification] = useState<JSX.Element | null>(null)
+
+  // Short Polling For New Notifications
+  useInterval(async () => {
+    console.log('Polling for new notifications...')
+    const { data } = useCurrentUserQuery()
+    // onUpdateFeedCount(data?.currentUser?.notifications?.length)
+  }, NOTIFICATION_FEED_POLLING_INTERVAL)
+
+  useEffect(() => {
+    setTimeout(() => {
+      console.log('count!')
+    }, NOTIFICATION_FEED_POLLING_INTERVAL)
+  })
 
   if (!notificationFeedRoot) {
     return null
   }
 
-  const handleGoToLevelTwo = (notification: any) => {
+  const handleGoToLevelTwo = (notification: InAppNotification) => {
     if (notification.type === InAppNotificationType.THREAD_COMMENT_THANKS) {
-      setActiveNotification(<ThreadCommentThanksNotificationLevelTwo />)
+      setActiveNotification(<ThreadCommentThanksNotificationLevelTwo notification={notification} />)
     }
     if (notification.type === InAppNotificationType.POST_CLAP) {
       setActiveNotification(<PostClapNotificationLevelTwo notification={notification} />)
     }
     if (notification.type === InAppNotificationType.THREAD_COMMENT) {
-      setActiveNotification(<ThreadCommentNotificationLevelTwo />)
+      setActiveNotification(<ThreadCommentNotificationLevelTwo notification={notification} />)
     }
     setNotificationLevelTranslation(-50)
   }

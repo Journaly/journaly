@@ -249,6 +249,19 @@ fragment NotificationFragment on InAppNotification {
   post {
     id
     title
+    headlineImage {
+      smallSize
+    }
+  }
+  postClapNotifications {
+    postClap {
+      author {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
   }
 
   threadCommentNotifications {

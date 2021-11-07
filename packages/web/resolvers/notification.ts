@@ -42,6 +42,7 @@ const PostClapNotification = objectType({
   name: 'PostClapNotification',
   definition(t) {
     t.model.id()
+    t.model.postClap()
   }
 })
 

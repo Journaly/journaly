@@ -918,7 +918,11 @@ export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } 
   InAppNotification,
   'id' | 'type' | 'bumpedAt'
 > & {
-    post?: Maybe<{ __typename?: 'Post' } & Pick<Post, 'id' | 'title'>>
+    post?: Maybe<
+      { __typename?: 'Post' } & Pick<Post, 'id' | 'title'> & {
+          headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
+        }
+    >
     threadCommentNotifications: Array<
       { __typename?: 'ThreadCommentNotification' } & {
         comment: { __typename?: 'Comment' } & Pick<Comment, 'id'> & {
@@ -1493,6 +1497,9 @@ export const NotificationFragmentFragmentDoc = gql`
     post {
       id
       title
+      headlineImage {
+        smallSize
+      }
     }
     threadCommentNotifications {
       comment {

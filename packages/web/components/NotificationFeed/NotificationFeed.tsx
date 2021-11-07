@@ -1,89 +1,36 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import { InAppNotification, useCurrentUserQuery } from '@/generated/graphql'
+import { NotificationFragmentFragment as NotificationType } from '@/generated/graphql'
 import Notification from './Notification'
 import theme from '@/theme'
 import { InAppNotificationType } from '.prisma/client'
 import BackArrowIcon from '../Icons/BackArrowIcon'
 import Button, { ButtonVariant } from '../Button'
 import XIcon from '../Icons/XIcon'
-import { useInterval } from '@/hooks/useInterval'
-import {
-  NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE,
-  NOTIFICATION_FEED_POLLING_INTERVAL_TAB_INACTIVE,
-} from '@/constants'
 import {
   PostClapNotificationLevelTwo,
   ThreadCommentNotificationLevelTwo,
   ThreadCommentThanksNotificationLevelTwo,
 } from './Notifications'
+import { useNotificationContext } from './NotificationContext'
 
 type NotificationFeedProps = {
   onClose: () => void
   dataTestId?: string
-  onUpdateFeedCount: React.Dispatch<React.SetStateAction<number>>
 }
 
-enum NotificationFeedPollingInterval {
-  NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE,
-  NOTIFICATION_FEED_POLLING_INTERVAL_TAB_INACTIVE,
-}
-
-const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose, onUpdateFeedCount }) => {
+const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const notificationFeedRoot = document.getElementById('notification-feed-root')
   const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
-  const [activeNotification, setActiveNotification] = useState<JSX.Element | null>(null)
-  const [notificationFeedPollingDelay, setNotificationFeedPollingDelay] =
-    useState<NotificationFeedPollingInterval>(NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE)
+  const [activeNotification, setActiveNotification] = useState<NotificationType | null>(null)
 
-  const { data } = useCurrentUserQuery()
-  const notifications = data?.currentUser?.notifications
+  const { notifications } = useNotificationContext() || {}
 
-  const handleUpdatePollingDelay = () => {
-    if (document.visibilityState === 'visible') {
-      console.log(
-        `Tab is active, setting polling interval to ${
-          NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE / 1000
-        } seconds`,
-      )
-      setNotificationFeedPollingDelay(NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE)
-    } else if (document.visibilityState === 'hidden') {
-      console.log(
-        `Tab is inactive, setting polling interval to ${
-          NOTIFICATION_FEED_POLLING_INTERVAL_TAB_INACTIVE / 1000
-        } seconds`,
-      )
-      setNotificationFeedPollingDelay(NOTIFICATION_FEED_POLLING_INTERVAL_TAB_INACTIVE)
-    }
-  }
+  if (!notifications) return null
+  if (!notificationFeedRoot) return null
 
-  useEffect(() => {
-    // Track browser tab status
-    if (document !== undefined) {
-      document.addEventListener('visibilitychange', handleUpdatePollingDelay)
-    }
-  }, [])
-
-  // Short Polling For New Notifications
-  useInterval(async () => {
-    console.log('Polling for new notifications...')
-    // const { data } = useCurrentUserQuery()
-  }, notificationFeedPollingDelay)
-
-  if (!notificationFeedRoot) {
-    return null
-  }
-
-  const handleGoToLevelTwo = (notification: InAppNotification) => {
-    if (notification.type === InAppNotificationType.THREAD_COMMENT_THANKS) {
-      setActiveNotification(<ThreadCommentThanksNotificationLevelTwo notification={notification} />)
-    }
-    if (notification.type === InAppNotificationType.POST_CLAP) {
-      setActiveNotification(<PostClapNotificationLevelTwo notification={notification} />)
-    }
-    if (notification.type === InAppNotificationType.THREAD_COMMENT) {
-      setActiveNotification(<ThreadCommentNotificationLevelTwo notification={notification} />)
-    }
+  const handleGoToLevelTwo = (notification: NotificationType) => {
+    setActiveNotification(notification)
     setNotificationLevelTranslation(-50)
   }
 

@@ -1,11 +1,11 @@
 import React from 'react'
-import { InAppNotification } from '@/generated/graphql'
+import { NotificationFragmentFragment as NotificationType } from '@/generated/graphql'
 import theme from '@/theme'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import ClapIcon from '../Icons/ClapIcon'
 
 type IndividualNotificationProps = {
-  notification: any
+  notification: NotificationType
   handleGoToLevelTwo: () => void
 }
 
@@ -23,14 +23,15 @@ export const ThreadCommentNotificationLevelOne: React.FC<IndividualNotificationP
     <div className="container">
       <div className="middle-section" onClick={handleGoToLevelTwo}>
         <p>
-          You got {notification.threadNotifications.length} new feedback comments in this thread
+          You got {notification.threadCommentNotifications.length} new feedback comments in this
+          thread
         </p>
       </div>
       <div className="right-section">
         <img
           className="post-image"
-          src={notification.post.image}
-          alt={`post "${notification.post.title}"'s image`}
+          src={notification.post?.headlineImage.smallSize}
+          alt={`post "${notification.post?.title}"'s image`}
         />
       </div>
       <style jsx>{`
@@ -42,9 +43,7 @@ export const ThreadCommentNotificationLevelOne: React.FC<IndividualNotificationP
           min-height: 100px;
           align-items: center;
         }
-        .left-section {
-          display: ${notification.userIdentifier ? '' : 'none'};
-        }
+
         .middle-section {
           padding: 0 16px;
         }
@@ -191,20 +190,21 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<IndividualNotific
  * more details
  */
 
-export const ThreadCommentThanksNotificationLevelTwo = (notification: InAppNotification) => {
+export const ThreadCommentThanksNotificationLevelTwo = (notification: NotificationType) => {
   const count = notification.threadCommentThanksNotifications.length
 
   return <p>You received {count} claps!</p>
 }
 
-export const PostClapNotificationLevelTwo = (notification: InAppNotification) => {
+export const PostClapNotificationLevelTwo = (notification: NotificationType) => {
   const count = notification.postClapNotifications.length
   // const users = notification.postClapNotifications.map((notification) => notification.)
   // return <UserList users={users} />
   return <p>You have {count} claps!</p>
 }
 
-export const ThreadCommentNotificationLevelTwo = (notification: InAppNotification) => {
+export const ThreadCommentNotificationLevelTwo = (notification: NotificationType) => {
+  console.log(notification)
   const count = notification.threadCommentNotifications.length
 
   return <p>{count} New Comments In X Threads</p>

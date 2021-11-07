@@ -20,6 +20,7 @@ import HelpIcon from '@/components/Icons/HelpIcon'
 import Modal from '@/components/Modal'
 import NotificationsIcon from '@/components/Icons/NotificationsIcon'
 import NotificationFeed from '@/components/NotificationFeed'
+import { useNotificationContext } from '@/components/NotificationFeed/NotificationContext'
 
 interface Props {
   expanded: boolean
@@ -37,7 +38,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   })
   const [shouldShowModal, setShouldShowModal] = useState(false)
 
-  const [newNotificationCount, setNewNotificationCount] = useState(0)
+  const notificationContext = useNotificationContext()
 
   let currentUser: UserType | null = data?.currentUser as UserType
   if (error) currentUser = null
@@ -59,11 +60,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
     if (window.innerWidth < navConstants.mobileBreakpoint) {
       collapse()
     }
-  }
-
-  const handleNotificationClick = () => {
-    setShowNotificationFeed(true)
-    handleCollapse()
   }
 
   const handleLogOut = useCallback(async () => {
@@ -120,10 +116,13 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               <NavLink href="">
                 <a
                   className="nav-link"
-                  onClick={handleNotificationClick}
+                  onClick={() => setShowNotificationFeed(true)}
                   data-testid="notifications-nav-link"
                 >
-                  <NotificationsIcon count={newNotificationCount} aria-hidden="true" />
+                  <NotificationsIcon
+                    count={notificationContext?.unreadCount || 0}
+                    aria-hidden="true"
+                  />
                   <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
                 </a>
               </NavLink>
@@ -205,12 +204,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           />
         )}
       </nav>
-      {showNotificationFeed && (
-        <NotificationFeed
-          onClose={() => setShowNotificationFeed(false)}
-          onUpdateFeedCount={setNewNotificationCount}
-        />
-      )}
+      {showNotificationFeed && <NotificationFeed onClose={() => setShowNotificationFeed(false)} />}
       <style jsx>{`
         .nav-background {
           position: fixed;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { InAppNotification, useCurrentUserQuery } from '@/generated/graphql'
 import Notification from './Notification'
@@ -40,16 +40,29 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose, onUpdateFe
   const notifications = data?.currentUser?.notifications
 
   const handleUpdatePollingDelay = () => {
-    if (document !== undefined) {
-      if (document.visibilityState === 'visible') {
-        console.log('Tab is active')
-        setNotificationFeedPollingDelay(NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE)
-      } else if (document.visibilityState === 'hidden') {
-        console.log('Tab is inactive')
-        setNotificationFeedPollingDelay(NOTIFICATION_FEED_POLLING_INTERVAL_TAB_INACTIVE)
-      }
+    if (document.visibilityState === 'visible') {
+      console.log(
+        `Tab is active, setting polling interval to ${
+          NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE / 1000
+        } seconds`,
+      )
+      setNotificationFeedPollingDelay(NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE)
+    } else if (document.visibilityState === 'hidden') {
+      console.log(
+        `Tab is inactive, setting polling interval to ${
+          NOTIFICATION_FEED_POLLING_INTERVAL_TAB_INACTIVE / 1000
+        } seconds`,
+      )
+      setNotificationFeedPollingDelay(NOTIFICATION_FEED_POLLING_INTERVAL_TAB_INACTIVE)
     }
   }
+
+  useEffect(() => {
+    // Track browser tab status
+    if (document !== undefined) {
+      document.addEventListener('visibilitychange', handleUpdatePollingDelay)
+    }
+  }, [])
 
   // Short Polling For New Notifications
   useInterval(async () => {

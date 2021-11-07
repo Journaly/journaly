@@ -20,8 +20,6 @@ import HelpIcon from '@/components/Icons/HelpIcon'
 import Modal from '@/components/Modal'
 import NotificationsIcon from '@/components/Icons/NotificationsIcon'
 import NotificationFeed from '@/components/NotificationFeed'
-import { NOTIFICATION_FEED_POLLING_INTERVAL } from '@/constants'
-import { useInterval } from '@/hooks/useInterval'
 
 interface Props {
   expanded: boolean
@@ -64,7 +62,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   }
 
   const handleNotificationClick = () => {
-    console.log('weehoo!')
     setShowNotificationFeed(true)
     handleCollapse()
   }
@@ -210,7 +207,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
       </nav>
       {showNotificationFeed && (
         <NotificationFeed
-          currentUser={currentUser}
           onClose={() => setShowNotificationFeed(false)}
           onUpdateFeedCount={setNewNotificationCount}
         />

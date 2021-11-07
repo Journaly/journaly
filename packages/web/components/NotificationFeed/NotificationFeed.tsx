@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import {
-  InAppNotification,
-  useCurrentUserQuery,
-  UserFragmentFragment as UserType,
-} from '@/generated/graphql'
+import { InAppNotification, useCurrentUserQuery } from '@/generated/graphql'
 import Notification from './Notification'
 import theme from '@/theme'
 import { InAppNotificationType } from '.prisma/client'
@@ -12,101 +8,54 @@ import BackArrowIcon from '../Icons/BackArrowIcon'
 import Button, { ButtonVariant } from '../Button'
 import XIcon from '../Icons/XIcon'
 import { useInterval } from '@/hooks/useInterval'
-import { NOTIFICATION_FEED_POLLING_INTERVAL } from '@/constants'
+import {
+  NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE,
+  NOTIFICATION_FEED_POLLING_INTERVAL_TAB_INACTIVE,
+} from '@/constants'
+import {
+  PostClapNotificationLevelTwo,
+  ThreadCommentNotificationLevelTwo,
+  ThreadCommentThanksNotificationLevelTwo,
+} from './Notifications'
 
 type NotificationFeedProps = {
-  currentUser: UserType | null | undefined
   onClose: () => void
   dataTestId?: string
   onUpdateFeedCount: React.Dispatch<React.SetStateAction<number>>
 }
 
-const notifications = [
-  {
-    id: 1,
-    userIdentifier: 'Lanny',
-    userImage:
-      'https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/a682efc7-8efa-48f8-82c1-6f9a5e01a567-large',
-    type: InAppNotificationType.POST_CLAP,
-    post: {
-      title: 'Amazing',
-      image:
-        'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
-    },
-    postClapNotifications: [
-      {
-        author: {
-          id: 1,
-          profileImage:
-            'https://d2ieewwzq5w1x7.cloudfront.net/avatar-image/a682efc7-8efa-48f8-82c1-6f9a5e01a567-large',
-          handle: 'Lanny',
-        },
-      },
-      {
-        author: {
-          id: 2,
-          profileImage:
-            'https://res.cloudinary.com/journaly/image/upload/v1596759208/journaly/hxzlmnj56ow03sgojwsp.jpg',
-          handle: 'Kevin',
-        },
-      },
-    ],
-  },
-  {
-    id: 2,
-    userIdentifier: 'Kevin',
-    userImage:
-      'https://res.cloudinary.com/journaly/image/upload/v1596759208/journaly/hxzlmnj56ow03sgojwsp.jpg',
-    type: InAppNotificationType.THREAD_COMMENT_THANKS,
-    post: {
-      title: 'EPIC',
-      image:
-        'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-small',
-    },
-  },
-  {
-    id: 3,
-    type: InAppNotificationType.THREAD_COMMENT,
-    post: {
-      title: 'Absolutely Smashing',
-      image:
-        'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-small',
-    },
-    threadNotifications: ['hello!', 'woooooo', 'hoo!'],
-  },
-]
-
-const ThreadCommentThanksNotificationLevelTwo = (notification: InAppNotification) => (
-  <p>8 New Comments In 5 Threads</p>
-)
-
-const PostClapNotificationLevelTwo = (notification: InAppNotification) => {
-  // const users = notification.postClapNotifications.map((notification: any) => notification.author)
-  // return <UserList users={users} />
-  return <p>I will be the user list!</p>
+enum NotificationFeedPollingInterval {
+  NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE,
+  NOTIFICATION_FEED_POLLING_INTERVAL_TAB_INACTIVE,
 }
-
-const ThreadCommentNotificationLevelTwo = (notification: InAppNotification) => (
-  <p>Here are the threads</p>
-)
 
 const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose, onUpdateFeedCount }) => {
   const notificationFeedRoot = document.getElementById('notification-feed-root')
   const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
   const [activeNotification, setActiveNotification] = useState<JSX.Element | null>(null)
+  const [notificationFeedPollingDelay, setNotificationFeedPollingDelay] =
+    useState<NotificationFeedPollingInterval>(NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE)
+
+  const { data } = useCurrentUserQuery()
+  const notifications = data?.currentUser?.notifications
+
+  const handleUpdatePollingDelay = () => {
+    if (document !== undefined) {
+      if (document.visibilityState === 'visible') {
+        console.log('Tab is active')
+        setNotificationFeedPollingDelay(NOTIFICATION_FEED_POLLING_INTERVAL_TAB_ACTIVE)
+      } else if (document.visibilityState === 'hidden') {
+        console.log('Tab is inactive')
+        setNotificationFeedPollingDelay(NOTIFICATION_FEED_POLLING_INTERVAL_TAB_INACTIVE)
+      }
+    }
+  }
 
   // Short Polling For New Notifications
   useInterval(async () => {
     console.log('Polling for new notifications...')
-    const { data } = useCurrentUserQuery()
-    // onUpdateFeedCount(data?.currentUser?.notifications?.length)
-  }, NOTIFICATION_FEED_POLLING_INTERVAL)
-
-  useEffect(() => {
-    setTimeout(() => {
-      console.log('count!')
-    }, NOTIFICATION_FEED_POLLING_INTERVAL)
-  })
+    // const { data } = useCurrentUserQuery()
+  }, notificationFeedPollingDelay)
 
   if (!notificationFeedRoot) {
     return null
@@ -140,7 +89,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose, onUpdateFe
               <XIcon color={theme.colors.white} />
             </Button>
           </div>
-          {notifications.map((notification) => (
+          {notifications?.map((notification) => (
             <Notification
               key={notification.id}
               notification={notification}

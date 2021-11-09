@@ -436,6 +436,7 @@ export type PostClap = {
 export type PostClapNotification = {
   __typename?: 'PostClapNotification'
   id: Scalars['Int']
+  postClap: PostClap
 }
 
 export type PostComment = {
@@ -918,15 +919,32 @@ export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } 
   InAppNotification,
   'id' | 'type' | 'bumpedAt'
 > & {
+    triggeringUser?: Maybe<
+      { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
+    >
     post?: Maybe<
       { __typename?: 'Post' } & Pick<Post, 'id' | 'title'> & {
           headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
         }
     >
+    postClapNotifications: Array<
+      { __typename?: 'PostClapNotification' } & {
+        postClap: { __typename?: 'PostClap' } & {
+          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
+        }
+      }
+    >
     threadCommentNotifications: Array<
       { __typename?: 'ThreadCommentNotification' } & {
         comment: { __typename?: 'Comment' } & Pick<Comment, 'id'> & {
-            author: { __typename?: 'User' } & Pick<User, 'id' | 'handle'>
+            author: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'name' | 'profileImage'>
+          }
+      }
+    >
+    threadCommentThanksNotifications: Array<
+      { __typename?: 'ThreadCommentThanksNotification' } & {
+        thanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'> & {
+            author: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'name' | 'profileImage'>
           }
       }
     >
@@ -1494,11 +1512,27 @@ export const NotificationFragmentFragmentDoc = gql`
     id
     type
     bumpedAt
+    triggeringUser {
+      id
+      name
+      handle
+      profileImage
+    }
     post {
       id
       title
       headlineImage {
         smallSize
+      }
+    }
+    postClapNotifications {
+      postClap {
+        author {
+          id
+          name
+          handle
+          profileImage
+        }
       }
     }
     threadCommentNotifications {
@@ -1507,6 +1541,19 @@ export const NotificationFragmentFragmentDoc = gql`
         author {
           id
           handle
+          name
+          profileImage
+        }
+      }
+    }
+    threadCommentThanksNotifications {
+      thanks {
+        id
+        author {
+          id
+          handle
+          name
+          profileImage
         }
       }
     }

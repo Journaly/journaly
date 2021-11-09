@@ -246,6 +246,12 @@ fragment NotificationFragment on InAppNotification {
   id
   type
   bumpedAt
+  triggeringUser {
+    id
+    name
+    handle
+    profileImage
+  }
   post {
     id
     title
@@ -263,13 +269,25 @@ fragment NotificationFragment on InAppNotification {
       }
     }
   }
-
   threadCommentNotifications {
     comment {
       id
       author {
         id
         handle
+        name
+        profileImage
+      }
+    }
+  }
+  threadCommentThanksNotifications {
+    thanks {
+      id
+      author {
+        id
+        handle
+        name
+        profileImage
       }
     }
   }

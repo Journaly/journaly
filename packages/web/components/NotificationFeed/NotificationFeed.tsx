@@ -1,18 +1,13 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import { NotificationFragmentFragment as NotificationType } from '@/generated/graphql'
-import Notification from './Notification'
+import NotificationLevelOne from './NotificationLevelOne'
 import theme from '@/theme'
-import { InAppNotificationType } from '.prisma/client'
 import BackArrowIcon from '../Icons/BackArrowIcon'
 import Button, { ButtonVariant } from '../Button'
 import XIcon from '../Icons/XIcon'
-import {
-  PostClapNotificationLevelTwo,
-  ThreadCommentNotificationLevelTwo,
-  ThreadCommentThanksNotificationLevelTwo,
-} from './Notifications'
 import { useNotificationContext } from './NotificationContext'
+import NotificationLevelTwo from './NotificationLevelTwo'
 
 type NotificationFeedProps = {
   onClose: () => void
@@ -50,7 +45,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
             </Button>
           </div>
           {notifications?.map((notification) => (
-            <Notification
+            <NotificationLevelOne
               key={notification.id}
               notification={notification}
               handleNotificationLevelChange={handleGoToLevelTwo}
@@ -62,9 +57,14 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
             <Button variant={ButtonVariant.Icon} onClick={handleGoToLevelOne}>
               <BackArrowIcon />
             </Button>
-            <span>Notifications</span>
+            {activeNotification && (
+              <NotificationLevelTwo
+                notification={activeNotification}
+                handleNotificationLevelChange={handleGoToLevelTwo}
+              />
+            )}
           </div>
-          <div className="content">{activeNotification}</div>
+          <div className="content">{{}}</div>
         </div>
       </div>
       <style jsx>{`

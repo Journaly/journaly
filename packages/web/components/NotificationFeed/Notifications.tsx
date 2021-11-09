@@ -6,7 +6,7 @@ import ClapIcon from '../Icons/ClapIcon'
 
 type IndividualNotificationProps = {
   notification: NotificationType
-  handleGoToLevelTwo: () => void
+  onNotificationClick: () => void
 }
 
 /**
@@ -17,11 +17,11 @@ type IndividualNotificationProps = {
 
 export const ThreadCommentNotificationLevelOne: React.FC<IndividualNotificationProps> = ({
   notification,
-  handleGoToLevelTwo,
+  onNotificationClick,
 }) => {
   return (
     <div className="container">
-      <div className="middle-section" onClick={handleGoToLevelTwo}>
+      <div className="middle-section" onClick={onNotificationClick}>
         <p>
           You got {notification.threadCommentNotifications.length} new feedback comments in this
           thread
@@ -69,24 +69,24 @@ export const ThreadCommentNotificationLevelOne: React.FC<IndividualNotificationP
 
 export const PostClapNotificationLevelOne: React.FC<IndividualNotificationProps> = ({
   notification,
-  handleGoToLevelTwo,
+  onNotificationClick,
 }) => {
   return (
     <div className="container">
       <div className="left-section">
         <ClapIcon />
       </div>
-      <div className="middle-section" onClick={handleGoToLevelTwo}>
+      <div className="middle-section" onClick={onNotificationClick}>
         <p>
           {notification.postClapNotifications?.length} people clapped for your post:{' '}
-          {notification.post.title}
+          {notification.post?.title}
         </p>
       </div>
       <div className="right-section">
         <img
           className="post-image"
-          src={notification.post.image}
-          alt={`post "${notification.post.title}"'s image`}
+          src={notification.post?.headlineImage.smallSize}
+          alt={`post "${notification.post?.title}"'s image`}
         />
       </div>
       <style jsx>{`
@@ -99,7 +99,7 @@ export const PostClapNotificationLevelOne: React.FC<IndividualNotificationProps>
           align-items: center;
         }
         .left-section {
-          display: ${notification.userIdentifier ? '' : 'none'};
+          display: ${notification.triggeringUser ? '' : 'none'};
         }
         .middle-section {
           padding: 0 16px;
@@ -126,25 +126,27 @@ export const PostClapNotificationLevelOne: React.FC<IndividualNotificationProps>
 
 export const ThreadCommentThanksNotificationLevelOne: React.FC<IndividualNotificationProps> = ({
   notification,
-  handleGoToLevelTwo,
+  onNotificationClick,
 }) => {
   return (
     <div className="container">
       <div className="left-section">
-        {notification.userImage ? (
+        {notification.triggeringUser?.profileImage ? (
           <img
-            src={notification.userImage}
-            alt={`${notification.userIdentifier}'s avatar'`}
+            src={notification.triggeringUser.profileImage}
+            alt={`${
+              notification.triggeringUser?.name || notification.triggeringUser.handle
+            }'s avatar'`}
             className="user-avatar"
           />
         ) : (
           <BlankAvatarIcon />
         )}
       </div>
-      <div className="middle-section" onClick={handleGoToLevelTwo}>
+      <div className="middle-section" onClick={onNotificationClick}>
         <p>
           {notification.triggeringUser?.handle} said thanks for{' '}
-          {notification.threadThanksNotifications?.length} feedback comments!
+          {notification.threadCommentThanksNotifications?.length} feedback comments!
         </p>
       </div>
       <style jsx>{`
@@ -157,7 +159,7 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<IndividualNotific
           align-items: center;
         }
         .left-section {
-          display: ${notification.userIdentifier ? '' : 'none'};
+          display: ${notification.triggeringUser ? '' : 'none'};
         }
         .middle-section {
           padding: 0 16px;
@@ -190,20 +192,29 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<IndividualNotific
  * more details
  */
 
-export const ThreadCommentThanksNotificationLevelTwo = (notification: NotificationType) => {
+export const ThreadCommentThanksNotificationLevelTwo: React.FC<IndividualNotificationProps> = ({
+  notification,
+  onNotificationClick,
+}) => {
   const count = notification.threadCommentThanksNotifications.length
 
   return <p>You received {count} claps!</p>
 }
 
-export const PostClapNotificationLevelTwo = (notification: NotificationType) => {
+export const PostClapNotificationLevelTwo: React.FC<IndividualNotificationProps> = ({
+  notification,
+  onNotificationClick,
+}) => {
   const count = notification.postClapNotifications.length
   // const users = notification.postClapNotifications.map((notification) => notification.)
   // return <UserList users={users} />
   return <p>You have {count} claps!</p>
 }
 
-export const ThreadCommentNotificationLevelTwo = (notification: NotificationType) => {
+export const ThreadCommentNotificationLevelTwo: React.FC<IndividualNotificationProps> = ({
+  notification,
+  onNotificationClick,
+}) => {
   console.log(notification)
   const count = notification.threadCommentNotifications.length
 

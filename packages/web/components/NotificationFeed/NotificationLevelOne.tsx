@@ -1,5 +1,8 @@
 import React from 'react'
-import { InAppNotificationType } from '.prisma/client'
+import {
+  NotificationFragmentFragment as NotificationType,
+  InAppNotificationType,
+} from '@/generated/graphql'
 import {
   PostClapNotificationLevelOne,
   ThreadCommentNotificationLevelOne,
@@ -7,8 +10,8 @@ import {
 } from './Notifications'
 
 type NotificationProps = {
-  notification: any
-  handleNotificationLevelChange: (arg: any) => void
+  notification: NotificationType
+  handleNotificationLevelChange: (arg: NotificationType) => void
 }
 
 // const getNotificationContent = (
@@ -27,35 +30,35 @@ type NotificationProps = {
 //   return ''
 // }
 
-const Notification: React.FC<NotificationProps> = ({
+const NotificationLevelOne: React.FC<NotificationProps> = ({
   notification,
   handleNotificationLevelChange,
 }) => {
-  if (notification.type === InAppNotificationType.THREAD_COMMENT) {
+  if (notification.type === InAppNotificationType.ThreadComment) {
     return (
       <ThreadCommentNotificationLevelOne
         notification={notification}
-        handleGoToLevelTwo={() => handleNotificationLevelChange(notification)}
+        onNotificationClick={() => handleNotificationLevelChange(notification)}
       />
     )
   }
-  if (notification.type === InAppNotificationType.POST_CLAP) {
+  if (notification.type === InAppNotificationType.PostClap) {
     return (
       <PostClapNotificationLevelOne
         notification={notification}
-        handleGoToLevelTwo={() => handleNotificationLevelChange(notification)}
+        onNotificationClick={() => handleNotificationLevelChange(notification)}
       />
     )
   }
-  if (notification.type === InAppNotificationType.THREAD_COMMENT_THANKS) {
+  if (notification.type === InAppNotificationType.ThreadCommentThanks) {
     return (
       <ThreadCommentThanksNotificationLevelOne
         notification={notification}
-        handleGoToLevelTwo={() => handleNotificationLevelChange(notification)}
+        onNotificationClick={() => handleNotificationLevelChange(notification)}
       />
     )
   }
   return null
 }
 
-export default Notification
+export default NotificationLevelOne

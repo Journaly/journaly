@@ -1,4 +1,5 @@
 import React from 'react'
+import Markdown from 'react-markdown'
 import { NotificationFragmentFragment as NotificationType } from '@/generated/graphql'
 import theme from '@/theme'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
@@ -216,7 +217,72 @@ export const ThreadCommentNotificationLevelTwo: React.FC<IndividualNotificationP
   onNotificationClick,
 }) => {
   console.log(notification)
-  const count = notification.threadCommentNotifications.length
 
-  return <p>{count} New Comments In X Threads</p>
+  return (
+    <div className="container">
+      <div className="middle-section" onClick={onNotificationClick}>
+        {notification.threadCommentNotifications.map((notification) => (
+          // TODO: Understand the situation with thread being null
+          // <div className="thread" key={notification.thread?.id}>
+          //   {notification.thread?.highlightedContent}
+          // </div>
+
+          <div className="comment">
+            {notification.comment.author.profileImage ? (
+              <img
+                src={notification.comment.author.profileImage}
+                alt={`${
+                  notification.comment.author?.name || notification.comment.author.handle
+                }'s avatar'`}
+                className="user-avatar"
+              />
+            ) : (
+              <BlankAvatarIcon color={theme.colors.white} />
+            )}
+            <Markdown>{notification.comment.body}</Markdown>
+          </div>
+        ))}
+      </div>
+      <style jsx>{`
+        .container {
+          display: flex;
+          justify-content: space-between;
+          padding: 16px;
+          border-bottom: 1px solid ${theme.colors.gray600};
+          min-height: 100px;
+          align-items: center;
+          color: ${theme.colors.white};
+        }
+        .left-section {
+          display: ${notification.triggeringUser ? '' : 'none'};
+        }
+        .middle-section {
+          padding: 0 16px;
+        }
+        .right-section {
+        }
+
+        .post-image {
+          width: 100%;
+          object-fit: cover;
+          height: 50px;
+        }
+
+        .user-avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .thread {
+          display: flex;
+          flex-direction: column;
+        }
+        .comment {
+          display: flex;
+        }
+      `}</style>
+    </div>
+  )
 }

@@ -29,6 +29,7 @@ const Thread = objectType({
     t.model.startIndex()
     t.model.endIndex()
     t.model.highlightedContent()
+    t.model.postId()
     t.model.comments({
       pagination: false,
       ordering: {

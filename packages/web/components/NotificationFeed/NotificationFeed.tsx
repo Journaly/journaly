@@ -20,6 +20,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const [activeNotification, setActiveNotification] = useState<NotificationType | null>(null)
 
   const { notifications } = useNotificationContext() || {}
+  console.log(notifications)
 
   if (!notifications) return null
   if (!notificationFeedRoot) return null
@@ -44,6 +45,9 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
               <XIcon color={theme.colors.white} />
             </Button>
           </div>
+          {(!notifications || notifications.length === 0) && (
+            <p className="feed-empty-state">You have no notifications... yet!</p>
+          )}
           {notifications?.map((notification) => (
             <NotificationLevelOne
               key={notification.id}
@@ -57,6 +61,9 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
             <Button variant={ButtonVariant.Icon} onClick={handleGoToLevelOne}>
               <BackArrowIcon />
             </Button>
+            <span>Notifications</span>
+          </div>
+          <div className="content">
             {activeNotification && (
               <NotificationLevelTwo
                 notification={activeNotification}
@@ -64,7 +71,6 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
               />
             )}
           </div>
-          <div className="content">{{}}</div>
         </div>
       </div>
       <style jsx>{`
@@ -119,6 +125,11 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
 
         .level-two > .content {
           padding: 16px;
+        }
+
+        .feed-empty-state {
+          margin-top: 25px;
+          text-align: center;
         }
       `}</style>
     </div>,

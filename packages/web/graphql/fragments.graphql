@@ -270,6 +270,11 @@ fragment NotificationFragment on InAppNotification {
     }
   }
   threadCommentNotifications {
+    thread {
+      id
+      highlightedContent
+      postId
+    }
     comment {
       id
       author {
@@ -278,6 +283,7 @@ fragment NotificationFragment on InAppNotification {
         name
         profileImage
       }
+      body
     }
   }
   threadCommentThanksNotifications {

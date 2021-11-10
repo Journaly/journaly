@@ -222,7 +222,7 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
 }) => {
   const count = notification.threadCommentThanksNotifications.length
 
-  return <p>You received {count} claps!</p>
+  return <p onClick={() => onNotificationClick()}>You received {count} claps!</p>
 }
 
 export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
@@ -232,7 +232,7 @@ export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> =
   const count = notification.postClapNotifications.length
   // const users = notification.postClapNotifications.map((notification) => notification.)
   // return <UserList users={users} />
-  return <p>You have {count} claps!</p>
+  return <p onClick={() => onNotificationClick()}>You have {count} claps!</p>
 }
 
 export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({

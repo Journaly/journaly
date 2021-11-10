@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import {
   NotificationFragmentFragment as NotificationType,
   NotificationReadStatus,
+  useDeleteInAppNotificationMutation,
   useUpdateInAppNotificationMutation,
 } from '@/generated/graphql'
 import NotificationLevelOne from './NotificationLevelOne'
@@ -47,6 +48,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   }
 
   const [updateInAppNotification] = useUpdateInAppNotificationMutation()
+  const [deleteInAppNotification] = useDeleteInAppNotificationMutation()
 
   const handleMarkNotificationRead = (notificationId: number) => {
     console.log('Marked as read ✅')
@@ -57,8 +59,13 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
       },
     })
   }
-  const handleDeleteNotification = () => {
+  const handleDeleteNotification = (notificationId: number) => {
     console.log('Deleted ❌')
+    deleteInAppNotification({
+      variables: {
+        notificationId,
+      },
+    })
   }
 
   return ReactDOM.createPortal(

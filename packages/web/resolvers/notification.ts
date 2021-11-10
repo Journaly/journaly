@@ -8,6 +8,7 @@ const InAppNotification = objectType({
     t.model.bumpedAt()
     t.model.readStatus()
     t.model.post()
+    t.model.readStatus()
     t.model.triggeringUser()
     t.model.threadCommentNotifications({ pagination: false })
     t.model.postCommentNotifications({ pagination: false })
@@ -122,14 +123,11 @@ const NotificationMutations = extendType({
         if (notification.userId !== userId) {
           throw new Error('You do not have permission to delete this notification')
         }
-        if (args.readStatus) {
-          await ctx.db.inAppNotification.delete({
-            where: {
-              id: notification.id,
-            },
-          })
-        }
-        return notification
+        return ctx.db.inAppNotification.delete({
+          where: {
+            id: notification.id,
+          },
+        })
       },
     })
   },

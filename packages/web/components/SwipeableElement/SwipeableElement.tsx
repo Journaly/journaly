@@ -72,7 +72,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
       touchEnd: touchEndY,
     }))
   }
-  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchEnd = () => {
     console.log('Touch has ended...')
     let amountSwiped = touchStart - touchEnd
     if (amountSwiped > SENSITIVITY && moved) {
@@ -87,7 +87,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
     }
     cancelAnimationFrame(animationId)
   }
-  const handleTouchCancel = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchCancel = () => {
     console.log('Touch has been cancelled...')
   }
 

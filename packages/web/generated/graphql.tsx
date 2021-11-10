@@ -216,6 +216,7 @@ export type Mutation = {
   updateSubscriptionPlan: MembershipSubscription
   updateSubscriptionPaymentMethod: MembershipSubscription
   updateInAppNotification: InAppNotification
+  deleteInAppNotification: InAppNotification
 }
 
 export type MutationAddUserInterestArgs = {
@@ -396,6 +397,10 @@ export type MutationUpdateSubscriptionPaymentMethodArgs = {
 export type MutationUpdateInAppNotificationArgs = {
   notificationId: Scalars['Int']
   readStatus?: Maybe<NotificationReadStatus>
+}
+
+export type MutationDeleteInAppNotificationArgs = {
+  notificationId: Scalars['Int']
 }
 
 export type NewFollowerNotification = {
@@ -1053,6 +1058,14 @@ export type UpdateSubscriptionRenewalMutation = { __typename?: 'Mutation' } & {
     MembershipSubscription,
     'id'
   >
+}
+
+export type DeleteInAppNotificationMutationVariables = Exact<{
+  notificationId: Scalars['Int']
+}>
+
+export type DeleteInAppNotificationMutation = { __typename?: 'Mutation' } & {
+  deleteInAppNotification: { __typename?: 'InAppNotification' } & Pick<InAppNotification, 'id'>
 }
 
 export type UpdateInAppNotificationMutationVariables = Exact<{
@@ -2772,6 +2785,55 @@ export type UpdateSubscriptionRenewalMutationResult =
 export type UpdateSubscriptionRenewalMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSubscriptionRenewalMutation,
   UpdateSubscriptionRenewalMutationVariables
+>
+export const DeleteInAppNotificationDocument = gql`
+  mutation deleteInAppNotification($notificationId: Int!) {
+    deleteInAppNotification(notificationId: $notificationId) {
+      id
+    }
+  }
+`
+export type DeleteInAppNotificationMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteInAppNotificationMutation,
+  DeleteInAppNotificationMutationVariables
+>
+
+/**
+ * __useDeleteInAppNotificationMutation__
+ *
+ * To run a mutation, you first call `useDeleteInAppNotificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteInAppNotificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteInAppNotificationMutation, { data, loading, error }] = useDeleteInAppNotificationMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *   },
+ * });
+ */
+export function useDeleteInAppNotificationMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteInAppNotificationMutation,
+    DeleteInAppNotificationMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DeleteInAppNotificationMutation,
+    DeleteInAppNotificationMutationVariables
+  >(DeleteInAppNotificationDocument, baseOptions)
+}
+export type DeleteInAppNotificationMutationHookResult = ReturnType<
+  typeof useDeleteInAppNotificationMutation
+>
+export type DeleteInAppNotificationMutationResult =
+  ApolloReactCommon.MutationResult<DeleteInAppNotificationMutation>
+export type DeleteInAppNotificationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteInAppNotificationMutation,
+  DeleteInAppNotificationMutationVariables
 >
 export const UpdateInAppNotificationDocument = gql`
   mutation updateInAppNotification($notificationId: Int!, $readStatus: NotificationReadStatus) {

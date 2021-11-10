@@ -13,7 +13,7 @@ type NotificationProps = {
   notification: NotificationType
   handleNotificationLevelChange: (arg: NotificationType) => void
   handleMarkNotificationRead: (arg: number) => void
-  handleDeleteNotification: () => void
+  handleDeleteNotification: (arg: number) => void
 }
 
 // const getNotificationContent = (

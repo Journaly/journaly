@@ -7,7 +7,7 @@ import DeleteIcon from '../Icons/DeleteIcon'
 type SwipeableElementProps = {
   elementId: number
   nonDestructiveAction: (elementId: number) => void
-  destructiveAction: () => void
+  destructiveAction: (elementId: number) => void
 }
 
 type Swipe = {
@@ -116,7 +116,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
             Read
           </div>
         </Button>
-        <Button variant={ButtonVariant.Icon} onClick={destructiveAction}>
+        <Button variant={ButtonVariant.Icon} onClick={() => destructiveAction(elementId)}>
           <div className="action-btn delete">
             <DeleteIcon color={theme.colors.white} size={24} />
             Delete

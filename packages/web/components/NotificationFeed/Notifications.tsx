@@ -10,7 +10,7 @@ type LevelOneNotificationProps = {
   notification: NotificationType
   onNotificationClick: () => void
   onMarkNotificationRead: (arg: number) => void
-  onDeleteNotification: () => void
+  onDeleteNotification: (arg: number) => void
 }
 
 type LevelTwoNotificationProps = {

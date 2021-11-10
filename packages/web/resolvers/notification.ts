@@ -99,6 +99,39 @@ const NotificationMutations = extendType({
         return notification
       },
     })
+
+    t.field('deleteInAppNotification', {
+      type: InAppNotification,
+      args: {
+        notificationId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to update notifications')
+        }
+        const notification = await ctx.db.inAppNotification.findUnique({
+          where: {
+            id: args.notificationId,
+          },
+        })
+        if (!notification) {
+          throw new Error('Notification not found')
+        }
+        if (notification.userId !== userId) {
+          throw new Error('You do not have permission to delete this notification')
+        }
+        if (args.readStatus) {
+          await ctx.db.inAppNotification.delete({
+            where: {
+              id: notification.id,
+            },
+          })
+        }
+        return notification
+      },
+    })
   },
 })
 

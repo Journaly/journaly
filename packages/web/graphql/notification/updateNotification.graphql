@@ -1,0 +1,5 @@
+mutation updateInAppNotification($notificationId: Int!, $readStatus: NotificationReadStatus) {
+  updateInAppNotification(notificationId: $notificationId, readStatus: $readStatus) {
+    id
+  }
+}

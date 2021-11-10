@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Markdown from 'react-markdown'
 import { NotificationFragmentFragment as NotificationType } from '@/generated/graphql'
 import theme from '@/theme'
@@ -9,7 +9,7 @@ import SwipeableElement from '../SwipeableElement'
 type LevelOneNotificationProps = {
   notification: NotificationType
   onNotificationClick: () => void
-  onMarkNotificationRead: () => void
+  onMarkNotificationRead: (arg: number) => void
   onDeleteNotification: () => void
 }
 
@@ -34,6 +34,7 @@ export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationPro
     <SwipeableElement
       destructiveAction={onDeleteNotification}
       nonDestructiveAction={onMarkNotificationRead}
+      elementId={notification.id}
     >
       <div className="container">
         <div className="middle-section" onClick={onNotificationClick}>

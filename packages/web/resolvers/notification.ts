@@ -1,4 +1,4 @@
-import { objectType } from 'nexus'
+import { arg, extendType, intArg, objectType } from 'nexus'
 
 const InAppNotification = objectType({
   name: 'InAppNotification',
@@ -23,21 +23,21 @@ const ThreadCommentNotification = objectType({
     t.model.id()
     t.model.comment()
     t.model.thread()
-  }
+  },
 })
 
 const PostCommentNotification = objectType({
   name: 'PostCommentNotification',
   definition(t) {
     t.model.id()
-  }
+  },
 })
 
 const NewFollowerNotification = objectType({
   name: 'NewFollowerNotification',
   definition(t) {
     t.model.id()
-  }
+  },
 })
 
 const PostClapNotification = objectType({
@@ -45,7 +45,7 @@ const PostClapNotification = objectType({
   definition(t) {
     t.model.id()
     t.model.postClap()
-  }
+  },
 })
 
 const ThreadCommentThanksNotification = objectType({
@@ -53,7 +53,53 @@ const ThreadCommentThanksNotification = objectType({
   definition(t) {
     t.model.id()
     t.model.thanks()
-  }
+  },
+})
+
+const NotificationMutations = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.field('updateInAppNotification', {
+      type: 'InAppNotification',
+      args: {
+        notificationId: intArg({ required: true }),
+        readStatus: arg({
+          type: 'NotificationReadStatus',
+          description: 'Has the notification been read or not',
+          required: false,
+        }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to update notifications')
+        }
+        const notification = await ctx.db.inAppNotification.findUnique({
+          where: {
+            id: args.notificationId,
+          },
+        })
+        if (!notification) {
+          throw new Error('Notification not found')
+        }
+        if (notification.userId !== userId) {
+          throw new Error('You do not have permission to update this notification')
+        }
+        if (args.readStatus) {
+          await ctx.db.inAppNotification.update({
+            where: {
+              id: notification.id,
+            },
+            data: {
+              readStatus: args.readStatus,
+            },
+          })
+        }
+        return notification
+      },
+    })
+  },
 })
 
 export default [
@@ -63,4 +109,5 @@ export default [
   NewFollowerNotification,
   PostClapNotification,
   ThreadCommentThanksNotification,
+  NotificationMutations,
 ]

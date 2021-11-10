@@ -5,7 +5,8 @@ import CheckmarkIcon from '../Icons/CheckmarkIcon'
 import DeleteIcon from '../Icons/DeleteIcon'
 
 type SwipeableElementProps = {
-  nonDestructiveAction: () => void
+  elementId: number
+  nonDestructiveAction: (elementId: number) => void
   destructiveAction: () => void
 }
 
@@ -23,6 +24,7 @@ type Swipe = {
 const SwipeableElement: React.FC<SwipeableElementProps> = ({
   destructiveAction,
   nonDestructiveAction,
+  elementId,
   children,
 }) => {
   const [swipe, setSwipe] = useState<Swipe>({
@@ -108,7 +110,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
     >
       {children}
       <div className="right-hand-actions">
-        <Button variant={ButtonVariant.Icon} onClick={nonDestructiveAction}>
+        <Button variant={ButtonVariant.Icon} onClick={() => nonDestructiveAction(elementId)}>
           <div className="action-btn read">
             <CheckmarkIcon size={24} />
             Read

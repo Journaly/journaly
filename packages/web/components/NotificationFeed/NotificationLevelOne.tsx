@@ -12,7 +12,7 @@ import {
 type NotificationProps = {
   notification: NotificationType
   handleNotificationLevelChange: (arg: NotificationType) => void
-  handleMarkNotificationRead: () => void
+  handleMarkNotificationRead: (arg: number) => void
   handleDeleteNotification: () => void
 }
 

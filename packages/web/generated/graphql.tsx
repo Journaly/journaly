@@ -215,6 +215,7 @@ export type Mutation = {
   updateSubscriptionRenewal: MembershipSubscription
   updateSubscriptionPlan: MembershipSubscription
   updateSubscriptionPaymentMethod: MembershipSubscription
+  updateInAppNotification: InAppNotification
 }
 
 export type MutationAddUserInterestArgs = {
@@ -390,6 +391,11 @@ export type MutationUpdateSubscriptionPlanArgs = {
 
 export type MutationUpdateSubscriptionPaymentMethodArgs = {
   paymentMethodId: Scalars['String']
+}
+
+export type MutationUpdateInAppNotificationArgs = {
+  notificationId: Scalars['Int']
+  readStatus?: Maybe<NotificationReadStatus>
 }
 
 export type NewFollowerNotification = {
@@ -1047,6 +1053,15 @@ export type UpdateSubscriptionRenewalMutation = { __typename?: 'Mutation' } & {
     MembershipSubscription,
     'id'
   >
+}
+
+export type UpdateInAppNotificationMutationVariables = Exact<{
+  notificationId: Scalars['Int']
+  readStatus?: Maybe<NotificationReadStatus>
+}>
+
+export type UpdateInAppNotificationMutation = { __typename?: 'Mutation' } & {
+  updateInAppNotification: { __typename?: 'InAppNotification' } & Pick<InAppNotification, 'id'>
 }
 
 export type PostPageQueryVariables = Exact<{
@@ -2757,6 +2772,56 @@ export type UpdateSubscriptionRenewalMutationResult =
 export type UpdateSubscriptionRenewalMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSubscriptionRenewalMutation,
   UpdateSubscriptionRenewalMutationVariables
+>
+export const UpdateInAppNotificationDocument = gql`
+  mutation updateInAppNotification($notificationId: Int!, $readStatus: NotificationReadStatus) {
+    updateInAppNotification(notificationId: $notificationId, readStatus: $readStatus) {
+      id
+    }
+  }
+`
+export type UpdateInAppNotificationMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateInAppNotificationMutation,
+  UpdateInAppNotificationMutationVariables
+>
+
+/**
+ * __useUpdateInAppNotificationMutation__
+ *
+ * To run a mutation, you first call `useUpdateInAppNotificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateInAppNotificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateInAppNotificationMutation, { data, loading, error }] = useUpdateInAppNotificationMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *      readStatus: // value for 'readStatus'
+ *   },
+ * });
+ */
+export function useUpdateInAppNotificationMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateInAppNotificationMutation,
+    UpdateInAppNotificationMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateInAppNotificationMutation,
+    UpdateInAppNotificationMutationVariables
+  >(UpdateInAppNotificationDocument, baseOptions)
+}
+export type UpdateInAppNotificationMutationHookResult = ReturnType<
+  typeof useUpdateInAppNotificationMutation
+>
+export type UpdateInAppNotificationMutationResult =
+  ApolloReactCommon.MutationResult<UpdateInAppNotificationMutation>
+export type UpdateInAppNotificationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateInAppNotificationMutation,
+  UpdateInAppNotificationMutationVariables
 >
 export const PostPageDocument = gql`
   query postPage($id: Int!, $uiLanguage: UILanguage!) {

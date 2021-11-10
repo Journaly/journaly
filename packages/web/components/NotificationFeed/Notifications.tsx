@@ -5,6 +5,7 @@ import theme from '@/theme'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import ClapIcon from '../Icons/ClapIcon'
 import SwipeableElement from '../SwipeableElement'
+import UserList from '../UserList'
 
 type LevelOneNotificationProps = {
   notification: NotificationType
@@ -122,26 +123,15 @@ export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> =
           min-height: 100px;
           align-items: center;
         }
-        .left-section {
-          display: ${notification.triggeringUser ? '' : 'none'};
-        }
+
         .middle-section {
           padding: 0 16px;
-        }
-        .right-section {
         }
 
         .post-image {
           width: 100%;
           object-fit: cover;
           height: 50px;
-        }
-
-        .user-avatar {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
         }
       `}</style>
     </div>
@@ -188,8 +178,6 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
         .middle-section {
           padding: 0 16px;
         }
-        .right-section {
-        }
 
         .post-image {
           width: 100%;
@@ -230,9 +218,15 @@ export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> =
   onNotificationClick,
 }) => {
   const count = notification.postClapNotifications.length
+  const clappingUsers = notification.postClapNotifications.map((clap) => clap.postClap.author)
   // const users = notification.postClapNotifications.map((notification) => notification.)
   // return <UserList users={users} />
-  return <p onClick={() => onNotificationClick()}>You have {count} claps!</p>
+  return (
+    <div onClick={() => onNotificationClick()}>
+      <p>{count} people clapped for your post!</p>
+      <UserList users={clappingUsers} />
+    </div>
+  )
 }
 
 export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
@@ -242,8 +236,8 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
   console.log(notification)
 
   return (
-    <div className="container">
-      <div className="middle-section" onClick={onNotificationClick}>
+    <div className="container" onClick={onNotificationClick}>
+      <div className="middle-section">
         {notification.threadCommentNotifications.map((notification) => (
           // TODO: Understand the situation with thread being null
           // <div className="thread" key={notification.thread?.id}>
@@ -277,19 +271,8 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
           color: ${theme.colors.white};
         }
 
-        .left-section {
-          display: ${notification.triggeringUser ? '' : 'none'};
-        }
         .middle-section {
           padding: 0 16px;
-        }
-        .right-section {
-        }
-
-        .post-image {
-          width: 100%;
-          object-fit: cover;
-          height: 50px;
         }
 
         .user-avatar {

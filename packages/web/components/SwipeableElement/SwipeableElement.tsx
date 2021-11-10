@@ -140,7 +140,8 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
         }
 
         .right-hand-actions {
-          display: flex;
+          display: none;
+          /* display: flex; */
           width: 100vw;
           height: 100%;
           background-color: ${theme.colors.gray800};

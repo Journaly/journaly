@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Markdown from 'react-markdown'
 import { NotificationFragmentFragment as NotificationType } from '@/generated/graphql'
 import theme from '@/theme'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import ClapIcon from '../Icons/ClapIcon'
+import SwipeableElement from '../SwipeableElement'
 
-type IndividualNotificationProps = {
+type LevelOneNotificationProps = {
+  notification: NotificationType
+  onNotificationClick: () => void
+  onMarkNotificationRead: () => void
+  onDeleteNotification: () => void
+}
+
+type LevelTwoNotificationProps = {
   notification: NotificationType
   onNotificationClick: () => void
 }
@@ -16,24 +24,31 @@ type IndividualNotificationProps = {
  * These are notifications that appear at the top level of the Notification Feed
  */
 
-export const ThreadCommentNotificationLevelOne: React.FC<IndividualNotificationProps> = ({
+export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
   onNotificationClick,
+  onMarkNotificationRead,
+  onDeleteNotification,
 }) => {
   return (
-    <div className="container">
-      <div className="middle-section" onClick={onNotificationClick}>
-        <p>
-          You got {notification.threadCommentNotifications.length} new feedback comments in this
-          thread
-        </p>
-      </div>
-      <div className="right-section">
-        <img
-          className="post-image"
-          src={notification.post?.headlineImage.smallSize}
-          alt={`post "${notification.post?.title}"'s image`}
-        />
+    <SwipeableElement
+      destructiveAction={onDeleteNotification}
+      nonDestructiveAction={onMarkNotificationRead}
+    >
+      <div className="container">
+        <div className="middle-section" onClick={onNotificationClick}>
+          <p>
+            You got {notification.threadCommentNotifications.length} new feedback comments in this
+            thread
+          </p>
+        </div>
+        <div className="right-section">
+          <img
+            className="post-image"
+            src={notification.post?.headlineImage.smallSize}
+            alt={`post "${notification.post?.title}"'s image`}
+          />
+        </div>
       </div>
       <style jsx>{`
         .container {
@@ -43,6 +58,13 @@ export const ThreadCommentNotificationLevelOne: React.FC<IndividualNotificationP
           border-bottom: 1px solid ${theme.colors.gray600};
           min-height: 100px;
           align-items: center;
+          // TODO: decide what to do here
+          cursor: grab;
+          user-select: none;
+        }
+
+        .grabbing {
+          cursor: grabbing;
         }
 
         .middle-section {
@@ -64,11 +86,11 @@ export const ThreadCommentNotificationLevelOne: React.FC<IndividualNotificationP
           object-fit: cover;
         }
       `}</style>
-    </div>
+    </SwipeableElement>
   )
 }
 
-export const PostClapNotificationLevelOne: React.FC<IndividualNotificationProps> = ({
+export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
   onNotificationClick,
 }) => {
@@ -125,7 +147,7 @@ export const PostClapNotificationLevelOne: React.FC<IndividualNotificationProps>
   )
 }
 
-export const ThreadCommentThanksNotificationLevelOne: React.FC<IndividualNotificationProps> = ({
+export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
   onNotificationClick,
 }) => {
@@ -193,7 +215,7 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<IndividualNotific
  * more details
  */
 
-export const ThreadCommentThanksNotificationLevelTwo: React.FC<IndividualNotificationProps> = ({
+export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
   onNotificationClick,
 }) => {
@@ -202,7 +224,7 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<IndividualNotific
   return <p>You received {count} claps!</p>
 }
 
-export const PostClapNotificationLevelTwo: React.FC<IndividualNotificationProps> = ({
+export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
   onNotificationClick,
 }) => {
@@ -212,7 +234,7 @@ export const PostClapNotificationLevelTwo: React.FC<IndividualNotificationProps>
   return <p>You have {count} claps!</p>
 }
 
-export const ThreadCommentNotificationLevelTwo: React.FC<IndividualNotificationProps> = ({
+export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
   onNotificationClick,
 }) => {
@@ -253,6 +275,7 @@ export const ThreadCommentNotificationLevelTwo: React.FC<IndividualNotificationP
           align-items: center;
           color: ${theme.colors.white};
         }
+
         .left-section {
           display: ${notification.triggeringUser ? '' : 'none'};
         }

@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import { NotificationFragmentFragment as NotificationType } from '@/generated/graphql'
+import {
+  NotificationFragmentFragment as NotificationType,
+  NotificationReadStatus,
+} from '@/generated/graphql'
 import NotificationLevelOne from './NotificationLevelOne'
 import theme from '@/theme'
 import BackArrowIcon from '../Icons/BackArrowIcon'
@@ -25,6 +28,13 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   if (!notifications) return null
   if (!notificationFeedRoot) return null
 
+  const unreadNotifications = notifications.filter(
+    (notification) => notification.readStatus === NotificationReadStatus.Unread,
+  )
+  const readNotifications = notifications.filter(
+    (notification) => notification.readStatus === NotificationReadStatus.Read,
+  )
+
   const handleGoToLevelTwo = (notification: NotificationType) => {
     setActiveNotification(notification)
     setNotificationLevelTranslation(-50)
@@ -33,6 +43,13 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const handleGoToLevelOne = () => {
     setActiveNotification(null)
     setNotificationLevelTranslation(0)
+  }
+
+  const handleMarkNotificationRead = () => {
+    console.log('Marked as read ✅')
+  }
+  const handleDeleteNotification = () => {
+    console.log('Deleted ❌')
   }
 
   return ReactDOM.createPortal(
@@ -48,11 +65,22 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
           {(!notifications || notifications.length === 0) && (
             <p className="feed-empty-state">You have no notifications... yet!</p>
           )}
-          {notifications?.map((notification) => (
+          {unreadNotifications?.map((notification) => (
             <NotificationLevelOne
               key={notification.id}
               notification={notification}
               handleNotificationLevelChange={handleGoToLevelTwo}
+              handleDeleteNotification={handleDeleteNotification}
+              handleMarkNotificationRead={handleMarkNotificationRead}
+            />
+          ))}
+          {readNotifications?.map((notification) => (
+            <NotificationLevelOne
+              key={notification.id}
+              notification={notification}
+              handleNotificationLevelChange={handleGoToLevelTwo}
+              handleDeleteNotification={handleDeleteNotification}
+              handleMarkNotificationRead={handleMarkNotificationRead}
             />
           ))}
         </div>

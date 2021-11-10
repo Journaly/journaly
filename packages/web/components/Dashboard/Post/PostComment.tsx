@@ -302,6 +302,7 @@ const PostComment: React.FC<PostCommentProps> = ({
           cursor: pointer;
           fill: ${theme.colors.blueLight};
         }
+        // TODO: Fix hover state color
         .delete-btn :global(svg:hover) {
           cursor: pointer;
           fill: ${theme.colors.red};

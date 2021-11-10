@@ -81,6 +81,7 @@ export type InAppNotification = {
   id: Scalars['Int']
   type: InAppNotificationType
   bumpedAt?: Maybe<Scalars['DateTime']>
+  readStatus: NotificationReadStatus
   post?: Maybe<Post>
   triggeringUser?: Maybe<User>
   threadCommentNotifications: Array<ThreadCommentNotification>
@@ -394,6 +395,11 @@ export type MutationUpdateSubscriptionPaymentMethodArgs = {
 export type NewFollowerNotification = {
   __typename?: 'NewFollowerNotification'
   id: Scalars['Int']
+}
+
+export enum NotificationReadStatus {
+  Read = 'READ',
+  Unread = 'UNREAD',
 }
 
 export type Post = {
@@ -919,7 +925,7 @@ export type UserInterestFragmentFragment = { __typename?: 'UserInterest' } & {
 
 export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } & Pick<
   InAppNotification,
-  'id' | 'type' | 'bumpedAt'
+  'id' | 'type' | 'bumpedAt' | 'readStatus'
 > & {
     triggeringUser?: Maybe<
       { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
@@ -1517,6 +1523,7 @@ export const NotificationFragmentFragmentDoc = gql`
     id
     type
     bumpedAt
+    readStatus
     triggeringUser {
       id
       name

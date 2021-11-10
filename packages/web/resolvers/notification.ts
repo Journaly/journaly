@@ -6,6 +6,7 @@ const InAppNotification = objectType({
     t.model.id()
     t.model.type()
     t.model.bumpedAt()
+    t.model.readStatus()
     t.model.post()
     t.model.triggeringUser()
     t.model.threadCommentNotifications({ pagination: false })

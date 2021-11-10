@@ -12,6 +12,8 @@ import {
 type NotificationProps = {
   notification: NotificationType
   handleNotificationLevelChange: (arg: NotificationType) => void
+  handleMarkNotificationRead: () => void
+  handleDeleteNotification: () => void
 }
 
 // const getNotificationContent = (
@@ -33,12 +35,16 @@ type NotificationProps = {
 const NotificationLevelOne: React.FC<NotificationProps> = ({
   notification,
   handleNotificationLevelChange,
+  handleMarkNotificationRead,
+  handleDeleteNotification,
 }) => {
   if (notification.type === InAppNotificationType.ThreadComment) {
     return (
       <ThreadCommentNotificationLevelOne
         notification={notification}
         onNotificationClick={() => handleNotificationLevelChange(notification)}
+        onDeleteNotification={handleDeleteNotification}
+        onMarkNotificationRead={handleMarkNotificationRead}
       />
     )
   }
@@ -47,6 +53,8 @@ const NotificationLevelOne: React.FC<NotificationProps> = ({
       <PostClapNotificationLevelOne
         notification={notification}
         onNotificationClick={() => handleNotificationLevelChange(notification)}
+        onDeleteNotification={handleDeleteNotification}
+        onMarkNotificationRead={handleMarkNotificationRead}
       />
     )
   }
@@ -55,6 +63,8 @@ const NotificationLevelOne: React.FC<NotificationProps> = ({
       <ThreadCommentThanksNotificationLevelOne
         notification={notification}
         onNotificationClick={() => handleNotificationLevelChange(notification)}
+        onDeleteNotification={handleDeleteNotification}
+        onMarkNotificationRead={handleMarkNotificationRead}
       />
     )
   }

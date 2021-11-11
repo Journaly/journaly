@@ -6,9 +6,10 @@ import theme from '@/theme'
 
 type UserListProps = {
   users: UserType[]
+  colorScheme?: 'light-mode' | 'dark-mode'
 }
 
-const UserList: React.FC<UserListProps> = ({ users }) => {
+const UserList: React.FC<UserListProps> = ({ users, colorScheme = 'light-mode' }) => {
   return (
     <div className="list-container">
       {users.map((user) => (
@@ -17,7 +18,10 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
             {user.profileImage ? (
               <img src={user.profileImage} className="user-avatar" />
             ) : (
-              <BlankAvatarIcon size={50} />
+              <BlankAvatarIcon
+                size={50}
+                color={colorScheme === 'light-mode' ? theme.colors.black : theme.colors.white}
+              />
             )}
             <div className="name-handle-container">
               <p className="handle">{user.handle}</p>
@@ -37,6 +41,7 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
           display: flex;
           gap: 20px;
           align-items: center;
+          color: ${colorScheme === 'light-mode' ? theme.colors.black : theme.colors.white};
         }
 
         .user-container:hover {

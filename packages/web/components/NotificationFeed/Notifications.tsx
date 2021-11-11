@@ -222,9 +222,21 @@ export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> =
   // const users = notification.postClapNotifications.map((notification) => notification.)
   // return <UserList users={users} />
   return (
-    <div onClick={() => onNotificationClick()}>
-      <p>{count} people clapped for your post!</p>
-      <UserList users={clappingUsers} />
+    <div className="container" onClick={() => onNotificationClick()}>
+      <p className="clap-count">
+        {count} {count > 1 ? 'people' : 'person'} clapped for your post!
+      </p>
+      <UserList users={clappingUsers} colorScheme="dark-mode" />
+      <style jsx>{`
+        .container {
+          padding: 0 10px;
+        }
+        .clap-count {
+          text-align: center;
+          font-weight: 600;
+          margin-bottom: 16px;
+        }
+      `}</style>
     </div>
   )
 }

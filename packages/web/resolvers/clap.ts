@@ -66,7 +66,7 @@ const PostClapMutations = extendType({
             type: InAppNotificationType.POST_CLAP,
             bumpedAt: new Date(),
             postId: post.id,
-            triggeringUserId: userId,
+            triggeringUserId: post.author.id,
           },
           update: {
             bumpedAt: new Date(),
@@ -75,7 +75,7 @@ const PostClapMutations = extendType({
             userId_type_postId_triggeringUserId: {
               userId: post.author.id,
               postId: post.id,
-              triggeringUserId: userId,
+              triggeringUserId: post.authorId,
               type: InAppNotificationType.POST_CLAP,
             },
           },

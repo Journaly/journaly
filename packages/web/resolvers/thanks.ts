@@ -109,6 +109,9 @@ const ThanksMutations = extendType({
               where: {
                 id: commentThanksId,
               },
+              include: {
+                ThreadCommentThanksNotification: true,
+              },
             }),
           ])
 
@@ -117,7 +120,19 @@ const ThanksMutations = extendType({
 
           hasAuthorPermissions(originalCommentThanks, currentUser)
 
-          return await ctx.db.commentThanks.delete({
+          const originalThanksNotification = await ctx.db.threadCommentThanksNotification.delete({
+            where: {
+              id: originalCommentThanks.ThreadCommentThanksNotification[0].id,
+            },
+          })
+
+          await ctx.db.inAppNotification.delete({
+            where: {
+              id: originalThanksNotification.notificationId,
+            },
+          })
+
+          return ctx.db.commentThanks.delete({
             where: {
               id: commentThanksId,
             },

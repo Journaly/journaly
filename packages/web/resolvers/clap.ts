@@ -112,6 +112,9 @@ const PostClapMutations = extendType({
               where: {
                 id: postClapId,
               },
+              include: {
+                postClapNotifications: true,
+              },
             }),
           ])
 
@@ -120,7 +123,19 @@ const PostClapMutations = extendType({
 
           hasAuthorPermissions(originalPostClap, currentUser)
 
-          return await ctx.db.postClap.delete({
+          const originalClapNotification = await ctx.db.postClapNotification.delete({
+            where: {
+              id: originalPostClap.postClapNotifications[0].id,
+            },
+          })
+
+          await ctx.db.inAppNotification.delete({
+            where: {
+              id: originalClapNotification.notificationId,
+            },
+          })
+
+          return ctx.db.postClap.delete({
             where: {
               id: postClapId,
             },

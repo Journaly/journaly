@@ -468,6 +468,7 @@ export type PostComment = {
 export type PostCommentNotification = {
   __typename?: 'PostCommentNotification'
   id: Scalars['Int']
+  postComment: PostComment
 }
 
 export type PostPage = {
@@ -962,6 +963,16 @@ export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } 
             author: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'name' | 'profileImage'>
           }
       }
+    >
+    postCommentNotifications: Array<
+      { __typename?: 'PostCommentNotification' } & Pick<PostCommentNotification, 'id'> & {
+          postComment: { __typename?: 'PostComment' } & Pick<PostComment, 'id' | 'body'> & {
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'name' | 'handle' | 'profileImage'
+              >
+            }
+        }
     >
     threadCommentThanksNotifications: Array<
       { __typename?: 'ThreadCommentThanksNotification' } & {
@@ -1583,13 +1594,26 @@ export const NotificationFragmentFragmentDoc = gql`
       }
       comment {
         id
+        body
         author {
           id
           handle
           name
           profileImage
         }
+      }
+    }
+    postCommentNotifications {
+      id
+      postComment {
+        id
         body
+        author {
+          id
+          name
+          handle
+          profileImage
+        }
       }
     }
     threadCommentThanksNotifications {

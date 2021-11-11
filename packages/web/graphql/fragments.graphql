@@ -278,13 +278,26 @@ fragment NotificationFragment on InAppNotification {
     }
     comment {
       id
+      body
       author {
         id
         handle
         name
         profileImage
       }
+    }
+  }
+  postCommentNotifications {
+    id
+    postComment {
+      id
       body
+      author {
+        id
+        name
+        handle
+        profileImage
+      }
     }
   }
   threadCommentThanksNotifications {

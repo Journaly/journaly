@@ -447,6 +447,34 @@ const CommentMutations = extendType({
 
         await Promise.all(promises)
 
+        const ian = await ctx.db.inAppNotification.upsert({
+          create: {
+            userId: post.authorId,
+            type: InAppNotificationType.POST_COMMENT,
+            bumpedAt: new Date(),
+            postId: post.id,
+            triggeringUserId: post.author.id,
+          },
+          update: {
+            bumpedAt: new Date(),
+          },
+          where: {
+            userId_type_postId_triggeringUserId: {
+              userId: post.author.id,
+              postId: post.id,
+              triggeringUserId: post.authorId,
+              type: InAppNotificationType.POST_COMMENT,
+            },
+          },
+        })
+
+        await ctx.db.postCommentNotification.create({
+          data: {
+            notificationId: ian.id,
+            postCommentId: postComment.id,
+          },
+        })
+
         // TODO: Set up logging and check for successful `mailResponse`
         return postComment
       },

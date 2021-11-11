@@ -9,6 +9,7 @@ import UserList from '../UserList'
 
 type LevelOneNotificationProps = {
   notification: NotificationType
+  notificationIndex?: number
   onNotificationClick: () => void
   onMarkNotificationRead: (arg: number) => void
   onDeleteNotification: (arg: number) => void
@@ -95,24 +96,32 @@ export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationPro
 export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
   onNotificationClick,
+  onMarkNotificationRead,
+  onDeleteNotification,
 }) => {
   return (
-    <div className="container">
-      <div className="left-section">
-        <ClapIcon />
-      </div>
-      <div className="middle-section" onClick={onNotificationClick}>
-        <p>
-          {notification.postClapNotifications?.length} people clapped for your post:{' '}
-          {notification.post?.title}
-        </p>
-      </div>
-      <div className="right-section">
-        <img
-          className="post-image"
-          src={notification.post?.headlineImage.smallSize}
-          alt={`post "${notification.post?.title}"'s image`}
-        />
+    <SwipeableElement
+      destructiveAction={onDeleteNotification}
+      nonDestructiveAction={onMarkNotificationRead}
+      elementId={notification.id}
+    >
+      <div className="container">
+        <div className="left-section">
+          <ClapIcon />
+        </div>
+        <div className="middle-section" onClick={onNotificationClick}>
+          <p>
+            {notification.postClapNotifications?.length} people clapped for your post:{' '}
+            {notification.post?.title}
+          </p>
+        </div>
+        <div className="right-section">
+          <img
+            className="post-image"
+            src={notification.post?.headlineImage.smallSize}
+            alt={`post "${notification.post?.title}"'s image`}
+          />
+        </div>
       </div>
       <style jsx>{`
         .container {
@@ -134,23 +143,23 @@ export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> =
           height: 50px;
         }
       `}</style>
-    </div>
+    </SwipeableElement>
   )
 }
 
 export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
+  notificationIndex,
   onNotificationClick,
 }) => {
+  const thanksAuthor = notification.threadCommentThanksNotifications[0].thanks.author
   return (
     <div className="container">
       <div className="left-section">
-        {notification.triggeringUser?.profileImage ? (
+        {thanksAuthor.profileImage ? (
           <img
-            src={notification.triggeringUser.profileImage}
-            alt={`${
-              notification.triggeringUser?.name || notification.triggeringUser.handle
-            }'s avatar'`}
+            src={thanksAuthor.profileImage}
+            alt={`${thanksAuthor?.name || thanksAuthor.handle}'s avatar'`}
             className="user-avatar"
           />
         ) : (
@@ -159,7 +168,7 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
       </div>
       <div className="middle-section" onClick={onNotificationClick}>
         <p>
-          {notification.triggeringUser?.handle} said thanks for{' '}
+          {thanksAuthor?.handle} said thanks for{' '}
           {notification.threadCommentThanksNotifications?.length} feedback comments!
         </p>
       </div>
@@ -193,6 +202,73 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
         }
       `}</style>
     </div>
+  )
+}
+
+export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
+  notification,
+  onNotificationClick,
+  onMarkNotificationRead,
+  onDeleteNotification,
+}) => {
+  return (
+    <SwipeableElement
+      destructiveAction={onDeleteNotification}
+      nonDestructiveAction={onMarkNotificationRead}
+      elementId={notification.id}
+    >
+      <div className="container">
+        <div className="middle-section" onClick={onNotificationClick}>
+          <p>
+            You got {notification.postCommentNotifications.length} new comment
+            {notification.postCommentNotifications.length > 1 && 's'} on this post
+          </p>
+        </div>
+        <div className="right-section">
+          <img
+            className="post-image"
+            src={notification.post?.headlineImage.smallSize}
+            alt={`post "${notification.post?.title}"'s image`}
+          />
+        </div>
+      </div>
+      <style jsx>{`
+        .container {
+          display: flex;
+          justify-content: space-between;
+          padding: 16px;
+          border-bottom: 1px solid ${theme.colors.gray600};
+          min-height: 100px;
+          align-items: center;
+          // TODO: decide what to do here
+          cursor: grab;
+          user-select: none;
+        }
+
+        .grabbing {
+          cursor: grabbing;
+        }
+
+        .middle-section {
+          padding: 0 16px;
+        }
+        .right-section {
+        }
+
+        .post-image {
+          width: 100%;
+          object-fit: cover;
+          height: 50px;
+        }
+
+        .user-avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      `}</style>
+    </SwipeableElement>
   )
 }
 

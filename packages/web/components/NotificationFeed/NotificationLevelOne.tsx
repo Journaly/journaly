@@ -5,6 +5,7 @@ import {
 } from '@/generated/graphql'
 import {
   PostClapNotificationLevelOne,
+  PostCommentNotificationLevelOne,
   ThreadCommentNotificationLevelOne,
   ThreadCommentThanksNotificationLevelOne,
 } from './Notifications'
@@ -61,6 +62,16 @@ const NotificationLevelOne: React.FC<NotificationProps> = ({
   if (notification.type === InAppNotificationType.ThreadCommentThanks) {
     return (
       <ThreadCommentThanksNotificationLevelOne
+        notification={notification}
+        onNotificationClick={() => handleNotificationLevelChange(notification)}
+        onDeleteNotification={handleDeleteNotification}
+        onMarkNotificationRead={handleMarkNotificationRead}
+      />
+    )
+  }
+  if (notification.type === InAppNotificationType.PostComment) {
+    return (
+      <PostCommentNotificationLevelOne
         notification={notification}
         onNotificationClick={() => handleNotificationLevelChange(notification)}
         onDeleteNotification={handleDeleteNotification}

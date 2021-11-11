@@ -31,6 +31,7 @@ const PostCommentNotification = objectType({
   name: 'PostCommentNotification',
   definition(t) {
     t.model.id()
+    t.model.postComment()
   },
 })
 

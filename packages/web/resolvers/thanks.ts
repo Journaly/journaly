@@ -69,12 +69,23 @@ const ThanksMutations = extendType({
           commentThanks,
         })
 
-        const ian = await ctx.db.inAppNotification.create({
-          data: {
+        const ian = await ctx.db.inAppNotification.upsert({
+          create: {
             userId: comment.authorId,
             type: InAppNotificationType.THREAD_COMMENT_THANKS,
             bumpedAt: new Date(),
             triggeringUserId: comment.authorId,
+          },
+          update: {
+            bumpedAt: new Date(),
+          },
+          where: {
+            userId_type_postId_triggeringUserId: {
+              userId: comment.author.id,
+              postId: comment.thread.post.id,
+              triggeringUserId: comment.authorId,
+              type: InAppNotificationType.THREAD_COMMENT_THANKS,
+            },
           },
         })
 

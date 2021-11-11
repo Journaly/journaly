@@ -1,15 +1,9 @@
-import {
-  intArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { InAppNotificationType } from '.prisma/client'
+import { intArg, objectType, extendType } from 'nexus'
 
 import { EmailNotificationType } from '@journaly/j-db-client'
 
-import {
-  createNotification,
-  hasAuthorPermissions,
-} from './utils'
+import { createNotification, hasAuthorPermissions } from './utils'
 
 const CommentThanks = objectType({
   name: 'CommentThanks',
@@ -70,16 +64,28 @@ const ThanksMutations = extendType({
           },
         })
 
-      await createNotification(
-        ctx.db,
-        comment.author,
-        {
+        await createNotification(ctx.db, comment.author, {
           type: EmailNotificationType.THREAD_COMMENT_THANKS,
           commentThanks,
-        },
-      )
-      
-      return commentThanks
+        })
+
+        const ian = await ctx.db.inAppNotification.create({
+          data: {
+            userId: comment.authorId,
+            type: InAppNotificationType.THREAD_COMMENT_THANKS,
+            bumpedAt: new Date(),
+            triggeringUserId: comment.authorId,
+          },
+        })
+
+        await ctx.db.threadCommentThanksNotification.create({
+          data: {
+            notificationId: ian.id,
+            thanksId: commentThanks.id,
+          },
+        })
+
+        return commentThanks
       },
     }),
       t.field('deleteCommentThanks', {
@@ -121,7 +127,4 @@ const ThanksMutations = extendType({
   },
 })
 
-export default [
-  CommentThanks,
-  ThanksMutations,
-]
+export default [CommentThanks, ThanksMutations]

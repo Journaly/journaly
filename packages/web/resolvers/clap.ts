@@ -1,9 +1,5 @@
-import { EmailNotificationType } from '@journaly/j-db-client'
-import {
-  extendType,
-  intArg,
-  objectType,
-} from 'nexus'
+import { extendType, intArg, objectType } from 'nexus'
+import { EmailNotificationType, InAppNotificationType } from '@journaly/j-db-client'
 import { createNotification, hasAuthorPermissions } from './utils'
 
 const PostClap = objectType({
@@ -11,7 +7,7 @@ const PostClap = objectType({
   definition(t) {
     t.model.id()
     t.model.author()
-    t.model.post() 
+    t.model.post()
   },
 })
 
@@ -41,7 +37,7 @@ const PostClapMutations = extendType({
 
         if (!post) {
           throw new Error('Post not found.')
-        } 
+        }
 
         const postClap = await ctx.db.postClap.create({
           data: {
@@ -59,25 +55,49 @@ const PostClapMutations = extendType({
           },
         })
 
-        await createNotification(
-          ctx.db,
-          post.author,
-          {
-            type: EmailNotificationType.POST_CLAP,
-            postClap,
+        await createNotification(ctx.db, post.author, {
+          type: EmailNotificationType.POST_CLAP,
+          postClap,
+        })
+
+        const ian = await ctx.db.inAppNotification.upsert({
+          create: {
+            userId: post.authorId,
+            type: InAppNotificationType.POST_CLAP,
+            bumpedAt: new Date(),
+            postId: post.id,
+            triggeringUserId: userId,
           },
-        )
+          update: {
+            bumpedAt: new Date(),
+          },
+          where: {
+            userId_type_postId_triggeringUserId: {
+              userId: post.author.id,
+              postId: post.id,
+              triggeringUserId: userId,
+              type: InAppNotificationType.POST_CLAP,
+            },
+          },
+        })
+
+        await ctx.db.postClapNotification.create({
+          data: {
+            notificationId: ian.id,
+            postClapId: postClap.id,
+          },
+        })
 
         return postClap
-      }
-    }),
-    t.field('deletePostClap', {
-      type: 'PostClap',
-      args: {
-        postClapId: intArg({ required: true }),
       },
-      resolve: async (_parent, args, ctx) => {
-        const { userId } = ctx.request
+    }),
+      t.field('deletePostClap', {
+        type: 'PostClap',
+        args: {
+          postClapId: intArg({ required: true }),
+        },
+        resolve: async (_parent, args, ctx) => {
+          const { userId } = ctx.request
           if (!userId) throw new Error('You must be logged in to do that.')
 
           const { postClapId } = args
@@ -104,14 +124,10 @@ const PostClapMutations = extendType({
             where: {
               id: postClapId,
             },
-          }
-        )
-      }
-    })
-  }
+          })
+        },
+      })
+  },
 })
 
-export default [
-  PostClap,
-  PostClapMutations,
-]
+export default [PostClap, PostClapMutations]

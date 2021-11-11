@@ -271,11 +271,6 @@ fragment NotificationFragment on InAppNotification {
     }
   }
   threadCommentNotifications {
-    thread {
-      id
-      highlightedContent
-      postId
-    }
     comment {
       id
       body
@@ -284,6 +279,10 @@ fragment NotificationFragment on InAppNotification {
         handle
         name
         profileImage
+      }
+      thread {
+        id
+        highlightedContent
       }
     }
   }

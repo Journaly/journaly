@@ -73,8 +73,9 @@ const ThanksMutations = extendType({
           create: {
             userId: comment.authorId,
             type: InAppNotificationType.THREAD_COMMENT_THANKS,
+            postId: comment.thread.postId,
             bumpedAt: new Date(),
-            triggeringUserId: comment.authorId,
+            triggeringUserId: userId,
           },
           update: {
             bumpedAt: new Date(),
@@ -83,7 +84,7 @@ const ThanksMutations = extendType({
             userId_type_postId_triggeringUserId: {
               userId: comment.author.id,
               postId: comment.thread.post.id,
-              triggeringUserId: comment.authorId,
+              triggeringUserId: userId,
               type: InAppNotificationType.THREAD_COMMENT_THANKS,
             },
           },

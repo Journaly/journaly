@@ -33,6 +33,7 @@ export type Comment = {
   createdAt: Scalars['DateTime']
   authorLanguageLevel: LanguageLevel
   thanks: Array<CommentThanks>
+  thread: Thread
 }
 
 export type CommentThanks = {
@@ -571,7 +572,6 @@ export type ThreadCommentNotification = {
   __typename?: 'ThreadCommentNotification'
   id: Scalars['Int']
   comment: Comment
-  thread?: Maybe<Thread>
 }
 
 export type ThreadCommentThanksNotification = {
@@ -956,11 +956,9 @@ export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } 
     >
     threadCommentNotifications: Array<
       { __typename?: 'ThreadCommentNotification' } & {
-        thread?: Maybe<
-          { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent' | 'postId'>
-        >
         comment: { __typename?: 'Comment' } & Pick<Comment, 'id' | 'body'> & {
             author: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'name' | 'profileImage'>
+            thread: { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent'>
           }
       }
     >
@@ -1587,11 +1585,6 @@ export const NotificationFragmentFragmentDoc = gql`
       }
     }
     threadCommentNotifications {
-      thread {
-        id
-        highlightedContent
-        postId
-      }
       comment {
         id
         body
@@ -1600,6 +1593,10 @@ export const NotificationFragmentFragmentDoc = gql`
           handle
           name
           profileImage
+        }
+        thread {
+          id
+          highlightedContent
         }
       }
     }

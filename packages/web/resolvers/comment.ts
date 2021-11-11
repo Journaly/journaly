@@ -48,6 +48,7 @@ const Comment = objectType({
     t.model.createdAt()
     t.model.authorLanguageLevel()
     t.model.thanks({ pagination: false })
+    t.model.thread()
   },
 })
 

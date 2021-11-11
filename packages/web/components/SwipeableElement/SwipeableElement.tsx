@@ -5,9 +5,8 @@ import CheckmarkIcon from '../Icons/CheckmarkIcon'
 import DeleteIcon from '../Icons/DeleteIcon'
 
 type SwipeableElementProps = {
-  elementId: number
-  nonDestructiveAction: (elementId: number) => void
-  destructiveAction: (elementId: number) => void
+  nonDestructiveAction: () => void
+  destructiveAction: () => void
 }
 
 type Swipe = {
@@ -24,7 +23,6 @@ type Swipe = {
 const SwipeableElement: React.FC<SwipeableElementProps> = ({
   destructiveAction,
   nonDestructiveAction,
-  elementId,
   children,
 }) => {
   const [swipe, setSwipe] = useState<Swipe>({
@@ -110,13 +108,13 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
     >
       {children}
       <div className="right-hand-actions">
-        <Button variant={ButtonVariant.Icon} onClick={() => nonDestructiveAction(elementId)}>
+        <Button variant={ButtonVariant.Icon} onClick={nonDestructiveAction}>
           <div className="action-btn read">
             <CheckmarkIcon size={24} />
             Read
           </div>
         </Button>
-        <Button variant={ButtonVariant.Icon} onClick={() => destructiveAction(elementId)}>
+        <Button variant={ButtonVariant.Icon} onClick={destructiveAction}>
           <div className="action-btn delete">
             <DeleteIcon color={theme.colors.white} size={24} />
             Delete
@@ -133,6 +131,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
           user-select: none;
           // Prevent screen dragging behavior
           touch-action: none;
+          overflow-x: hidden;
         }
 
         .grabbing {
@@ -140,8 +139,8 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
         }
 
         .right-hand-actions {
-          display: none;
-          /* display: flex; */
+          /* display: none; */
+          display: flex;
           width: 100vw;
           height: 100%;
           background-color: ${theme.colors.gray800};

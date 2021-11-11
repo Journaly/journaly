@@ -23,7 +23,6 @@ const ThreadCommentNotification = objectType({
   definition(t) {
     t.model.id()
     t.model.comment()
-    t.model.thread()
   },
 })
 

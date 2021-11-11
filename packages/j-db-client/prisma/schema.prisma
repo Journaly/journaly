@@ -418,8 +418,6 @@ model ThreadCommentNotification {
   commentId      Int
   notification   InAppNotification @relation(fields: [notificationId], references: [id])
   comment        Comment           @relation(fields: [commentId], references: [id])
-  thread         Thread?           @relation(fields: [threadId], references: [id])
-  threadId       Int?
 }
 
 model PostCommentNotification {

@@ -111,7 +111,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
             {activeNotification && (
               <NotificationLevelTwo
                 notification={activeNotification}
-                handleNotificationLevelChange={handleGoToLevelTwo}
+                handleNotificationLevelChange={handleGoToLevelOne}
               />
             )}
           </div>

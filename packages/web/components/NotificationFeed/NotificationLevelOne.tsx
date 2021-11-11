@@ -8,7 +8,9 @@ import {
   PostCommentNotificationLevelOne,
   ThreadCommentNotificationLevelOne,
   ThreadCommentThanksNotificationLevelOne,
+  LevelOneNotificationProps,
 } from './Notifications'
+import SwipeableElement from '../SwipeableElement'
 
 type NotificationProps = {
   notification: NotificationType
@@ -17,21 +19,22 @@ type NotificationProps = {
   handleDeleteNotification: (arg: number) => void
 }
 
-// const getNotificationContent = (
-//   notificationType: InAppNotificationType,
-//   userIdentifier?: string,
-//   threadCount?: number,
-// ): string => {
-//   switch (notificationType) {
-//     case InAppNotificationType.POST_CLAP:
-//       return `${userIdentifier} clapped on your post!`
-//     case InAppNotificationType.THREAD_COMMENT_THANKS:
-//       return `${userIdentifier} said thanks for your feedback!`
-//     case InAppNotificationType.THREAD_COMMENT:
-//       return `You got ${threadCount} new feedback comments in this thread`
-//   }
-//   return ''
-// }
+const getNotificationComponent = (
+  notificationType: InAppNotificationType,
+): React.FC<LevelOneNotificationProps> | null => {
+  switch (notificationType) {
+    case InAppNotificationType.PostClap:
+      return PostClapNotificationLevelOne
+    case InAppNotificationType.ThreadCommentThanks:
+      return ThreadCommentThanksNotificationLevelOne
+    case InAppNotificationType.ThreadComment:
+      return ThreadCommentNotificationLevelOne
+    case InAppNotificationType.PostComment:
+      return PostCommentNotificationLevelOne
+    case InAppNotificationType.NewPost:
+      return null
+  }
+}
 
 const NotificationLevelOne: React.FC<NotificationProps> = ({
   notification,
@@ -39,47 +42,20 @@ const NotificationLevelOne: React.FC<NotificationProps> = ({
   handleMarkNotificationRead,
   handleDeleteNotification,
 }) => {
-  if (notification.type === InAppNotificationType.ThreadComment) {
-    return (
-      <ThreadCommentNotificationLevelOne
+  const Component = getNotificationComponent(notification.type)
+  if (!Component) return null
+
+  return (
+    <SwipeableElement
+      destructiveAction={() => handleMarkNotificationRead(notification.id)}
+      nonDestructiveAction={() => handleDeleteNotification(notification.id)}
+    >
+      <Component
         notification={notification}
         onNotificationClick={() => handleNotificationLevelChange(notification)}
-        onDeleteNotification={handleDeleteNotification}
-        onMarkNotificationRead={handleMarkNotificationRead}
       />
-    )
-  }
-  if (notification.type === InAppNotificationType.PostClap) {
-    return (
-      <PostClapNotificationLevelOne
-        notification={notification}
-        onNotificationClick={() => handleNotificationLevelChange(notification)}
-        onDeleteNotification={handleDeleteNotification}
-        onMarkNotificationRead={handleMarkNotificationRead}
-      />
-    )
-  }
-  if (notification.type === InAppNotificationType.ThreadCommentThanks) {
-    return (
-      <ThreadCommentThanksNotificationLevelOne
-        notification={notification}
-        onNotificationClick={() => handleNotificationLevelChange(notification)}
-        onDeleteNotification={handleDeleteNotification}
-        onMarkNotificationRead={handleMarkNotificationRead}
-      />
-    )
-  }
-  if (notification.type === InAppNotificationType.PostComment) {
-    return (
-      <PostCommentNotificationLevelOne
-        notification={notification}
-        onNotificationClick={() => handleNotificationLevelChange(notification)}
-        onDeleteNotification={handleDeleteNotification}
-        onMarkNotificationRead={handleMarkNotificationRead}
-      />
-    )
-  }
-  return null
+    </SwipeableElement>
+  )
 }
 
 export default NotificationLevelOne

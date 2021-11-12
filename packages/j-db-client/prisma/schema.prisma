@@ -139,6 +139,7 @@ model Post {
   notifications            InAppNotification[]
   savedUsers               User[]                    @relation("UserSavedPosts", references: [id])
   privateShareId           String?                   @unique
+  newPostNotifications     NewPostNotification[]
 }
 
 model Language {
@@ -233,18 +234,18 @@ model PostCommentThanks {
 }
 
 model Comment {
-  id                        Int                         @id @default(autoincrement())
-  createdAt                 DateTime                    @default(now())
-  updatedAt                 DateTime                    @updatedAt
-  body                      String
-  authorId                  Int
-  threadId                  Int
-  author                    User                        @relation(fields: [authorId], references: [id])
-  thread                    Thread                      @relation(fields: [threadId], references: [id])
-  thanks                    CommentThanks[]
-  PendingNotification       PendingNotification[]
-  authorLanguageLevel       LanguageLevel               @default(BEGINNER)
-  ThreadCommentNotification ThreadCommentNotification[]
+  id                         Int                         @id @default(autoincrement())
+  createdAt                  DateTime                    @default(now())
+  updatedAt                  DateTime                    @updatedAt
+  body                       String
+  authorId                   Int
+  threadId                   Int
+  author                     User                        @relation(fields: [authorId], references: [id])
+  thread                     Thread                      @relation(fields: [threadId], references: [id])
+  thanks                     CommentThanks[]
+  PendingNotification        PendingNotification[]
+  authorLanguageLevel        LanguageLevel               @default(BEGINNER)
+  threadCommentNotifications ThreadCommentNotification[]
 }
 
 model PostComment {
@@ -263,16 +264,15 @@ model PostComment {
 }
 
 model Thread {
-  id                  Int                         @id @default(autoincrement())
-  startIndex          Int
-  endIndex            Int
-  highlightedContent  String
-  postId              Int
-  archived            Boolean                     @default(false)
-  post                Post                        @relation(fields: [postId], references: [id])
-  comments            Comment[]
-  subscriptions       ThreadSubscription[]
-  threadNotifications ThreadCommentNotification[]
+  id                 Int                  @id @default(autoincrement())
+  startIndex         Int
+  endIndex           Int
+  highlightedContent String
+  postId             Int
+  archived           Boolean              @default(false)
+  post               Post                 @relation(fields: [postId], references: [id])
+  comments           Comment[]
+  subscriptions      ThreadSubscription[]
 }
 
 model HeadlineImage {
@@ -399,6 +399,7 @@ model InAppNotification {
   newFollowerNotifications         NewFollowerNotification[]
   postClapNotifications            PostClapNotification[]
   threadCommentThanksNotifications ThreadCommentThanksNotification[]
+  newPostNotifications             NewPostNotification[]
 
   @@unique([userId, type, postId, triggeringUserId])
 }
@@ -442,6 +443,14 @@ model PostClapNotification {
   postClapId     Int
   notification   InAppNotification @relation(fields: [notificationId], references: [id])
   postClap       PostClap          @relation(fields: [postClapId], references: [id])
+}
+
+model NewPostNotification {
+  id             Int               @id @default(autoincrement())
+  notificationId Int
+  postId         Int
+  notification   InAppNotification @relation(fields: [notificationId], references: [id])
+  post           Post              @relation(fields: [postId], references: [id])
 }
 
 enum LanguageLevel {
@@ -493,6 +502,7 @@ enum InAppNotificationType {
   THREAD_COMMENT_THANKS
   NEW_POST
   POST_CLAP
+  NEW_FOLLOWER
 }
 
 enum NotificationReadStatus {

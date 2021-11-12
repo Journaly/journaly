@@ -1,21 +1,21 @@
 {
-  "feedTitle": "Notifications",
-  "emptyFeed": "You have no notifications... yet!",
+  "feedTitle": "Benachrichtigungen",
+  "emptyFeed": "Keine Benachrichtigungen ... bis jetzt!",
   "levelOne": {
-    "newFollowers": "You got {{followerCount}} new follower",
-    "threadComments": "You got {{commentCount}} new feedback comments on this post",
-    "postComments": "You got {{commentCount}} new general comments on this post",
-    "postClaps": "{{clapCount}} people clapped for your post",
-    "threadCommentThanks": "{{userIdentifier}} said thanks for {{thanksCount}} feedback comments",
-    "newPosts": "Journalers you follow published {{postCount}} new posts"
+    "newFollowers": "Du hast {{followerCount}} neue Follower",
+    "threadComments": "Du hast {{commentCount}} neue Feedback-Kommentare zu diesem Beitrag",
+    "postComments": "Du hast {{commentCount}} neue allgemeine Kommentare zu diesem Beitrag",
+    "postClaps": "{{clapCount}} Leute haben diesem Beitrag applaudiert",
+    "threadCommentThanks": "{{userIdentifier}} hat für {{thanksCount}} Feedback-Kommentare Danke gesagt",
+    "newPosts": "Journaler, denen du folgst, haben {{postCount}} neue Beiträge veröffentlicht"
   },
   "levelTwo": {
-    "newFollowers": "These {{followerCount}} awesome Journalers are now following you",
-    "threadCommentThanks": "You received {{thanksCount}} thanks for feedback on this post",
-    "postClaps": "These {{userCount}} people clapped for your post"
+    "newFollowers": "Diese {{followerCount}} großartigen Journaler folgen dir nun",
+    "threadCommentThanks": "Du hast {{thanksCount}} Danke für Feedback zu diesem Beitrag erhalten",
+    "postClaps": "Diese {{userCount}} Leute haben deinem Beitrag applaudiert"
   },
   "actions": {
-    "markAsRead": "Read",
-    "delete": "Delete"
+    "markAsRead": "Gelesen",
+    "delete": "Löschen"
   }
 }

@@ -394,7 +394,7 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
 
   return (
     <div className="container" onClick={onNotificationClick}>
-      <h3 className="post-title">{notification.post?.title}</h3>
+      <p className="post-title">{notification.post?.title}</p>
       {Object.values(threadGroupedComments).map(
         ({ thread, comments }: ThreadGroupedCommentsType[number]) => {
           return (
@@ -412,7 +412,10 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
                     ) : (
                       <BlankAvatarIcon color={theme.colors.white} />
                     )}
+                    <div className="comment-right-side">
+                      <span className="author-identifier">@{comment.author.handle}</span>
                     <Markdown>{comment.body}</Markdown>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -432,6 +435,8 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
         }
 
         .post-title {
+          font-weight: 600;
+          font-size: 20px;
           text-align: center;
           margin-bottom: 16px;
         }
@@ -439,12 +444,13 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
         .highlighted-content {
           text-align: center;
           background-color: ${theme.colors.highlightColor};
-          margin-bottom: 8px;
+          margin-bottom: 12px;
+          padding: 4px;
         }
 
         .user-avatar {
-          width: 60px;
-          height: 60px;
+          width: 50px;
+          height: 50px;
           border-radius: 50%;
           object-fit: cover;
         }
@@ -452,9 +458,22 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
         .thread {
           display: flex;
           flex-direction: column;
+          margin-bottom: 10px;
         }
+
+        ul {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
         .comment {
           display: flex;
+          gap: 12px;
+          align-items: center;
+        }
+        .author-identifier {
+          font-weight: 600;
         }
       `}</style>
     </div>

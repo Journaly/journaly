@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Button, { ButtonVariant } from '@/components/Button'
 import CheckmarkIcon from '../Icons/CheckmarkIcon'
 import DeleteIcon from '../Icons/DeleteIcon'
+import { useTranslation } from '@/config/i18n'
 
 type SwipeableElementProps = {
   nonDestructiveAction: () => void
@@ -25,6 +26,8 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
   nonDestructiveAction,
   children,
 }) => {
+  const { t } = useTranslation('notifications')
+
   const [swipe, setSwipe] = useState<Swipe>({
     touchStart: 0,
     touchEnd: 0,
@@ -111,13 +114,13 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
         <Button variant={ButtonVariant.Icon} onClick={nonDestructiveAction}>
           <div className="action-btn read">
             <CheckmarkIcon size={24} />
-            Read
+            {t('actions.markAsRead')}
           </div>
         </Button>
         <Button variant={ButtonVariant.Icon} onClick={destructiveAction}>
           <div className="action-btn delete">
             <DeleteIcon color={theme.colors.white} size={24} />
-            Delete
+            {t('actions.delete')}
           </div>
         </Button>
       </div>

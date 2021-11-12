@@ -5,6 +5,7 @@ import theme from '@/theme'
 import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import ClapIcon from '../Icons/ClapIcon'
 import UserList from '../UserList'
+import { useTranslation } from '@/config/i18n'
 
 export type LevelOneNotificationProps = {
   notification: NotificationType
@@ -37,11 +38,14 @@ export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationPro
   notification,
   onNotificationClick,
 }) => {
+  const { t } = useTranslation('notifications')
+  const commentCount = notification.threadCommentNotifications.length
+
   return (
     <div className="container">
       <div className="middle-section" onClick={onNotificationClick}>
         <p>
-          You got {notification.threadCommentNotifications.length} new feedback comments on this post
+          {t('levelOne.threadComments', { commentCount, })}
         </p>
       </div>
       <div className="right-section">
@@ -95,6 +99,9 @@ export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> =
   notification,
   onNotificationClick,
 }) => {
+  const { t } = useTranslation('notifications')
+  const clapCount = notification.postClapNotifications.length
+
   return (
     <div className="container">
       <div className="left-section">
@@ -102,7 +109,7 @@ export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> =
       </div>
       <div className="middle-section" onClick={onNotificationClick}>
         <p>
-          {notification.postClapNotifications?.length} people clapped for your post
+          {t('levelOne.postClaps', { clapCount, })}
         </p>
       </div>
       <div className="right-section">
@@ -140,7 +147,11 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
   notification,
   onNotificationClick,
 }) => {
+  const { t } = useTranslation('notifications')
   const thanksAuthor = notification.threadCommentThanksNotifications[0].thanks.author
+  const userIdentifier = thanksAuthor?.name || thanksAuthor.handle
+  const thanksCount = notification.threadCommentThanksNotifications.length
+
   return (
     <div className="container">
       <div className="left-section">
@@ -155,10 +166,12 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
         )}
       </div>
       <div className="middle-section" onClick={onNotificationClick}>
-        <p>
-          {thanksAuthor?.handle} said thanks for{' '}
-          {notification.threadCommentThanksNotifications?.length} feedback comments!
-        </p>
+        <p>{
+          t('levelOne.threadCommentThanks', {
+            userIdentifier,
+            thanksCount,
+          })
+        }</p>
       </div>
       <style jsx>{`
         .container {
@@ -197,12 +210,16 @@ export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps
   notification,
   onNotificationClick,
 }) => {
+  const { t } = useTranslation('notifications')
+  const commentCount = notification.postCommentNotifications.length
+
+
   return (
     <div className="container">
       <div className="middle-section" onClick={onNotificationClick}>
         <p>
-          You got {notification.postCommentNotifications.length} new general comment
-          {notification.postCommentNotifications.length > 1 && 's'} on this post
+          {/* TODO: figure out plurals programmatically */}
+          {t('levelOne.postComments', { commentCount })}
         </p>
       </div>
       <div className="right-section">
@@ -256,12 +273,14 @@ export const NewPostNotificationLevelOne: React.FC<LevelOneNotificationProps> = 
   notification,
   onNotificationClick,
 }) => {
+  const { t } = useTranslation('notifications')
   const postCount = notification.newPostNotifications.length
+
   return (
     <div className="container">
       <div className="middle-section" onClick={onNotificationClick}>
         <p>
-          {postCount} people you follow published new posts!
+          {t('levelOne.newPosts', { postCount })}
         </p>
       </div>
       <style jsx>{`
@@ -308,10 +327,12 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
   notification,
   onNotificationClick,
 }) => {
+  const { t } = useTranslation('notifications')
   const followerCount = notification.newFollowerNotifications.length
+
   return (
     <div className="container" onClick={onNotificationClick}>
-      <p>You got {followerCount} new follower{followerCount > 1 && 's'}</p>
+      <p>{t('levelOne.newFollowers', { followerCount })}</p>
       <style jsx>{`
         .container {
           display: flex;
@@ -341,23 +362,26 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
   notification,
   onNotificationClick,
 }) => {
-  const count = notification.threadCommentThanksNotifications.length
+  const { t } = useTranslation('notifications')
 
-  return <p onClick={() => onNotificationClick()}>You received {count} claps!</p>
+  const thanksCount = notification.threadCommentThanksNotifications.length
+
+  return <p onClick={() => onNotificationClick()}>{t('levelTwo.threadCommentThanks', { thanksCount, })}</p>
 }
 
 export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
   onNotificationClick,
 }) => {
-  const count = notification.postClapNotifications.length
+  const { t } = useTranslation('notifications')
+
+  const userCount = notification.postClapNotifications.length
   const clappingUsers = notification.postClapNotifications.map((clap) => clap.postClap.author)
-  // const users = notification.postClapNotifications.map((notification) => notification.)
-  // return <UserList users={users} />
+
   return (
     <div className="container" onClick={() => onNotificationClick()}>
       <p className="clap-count">
-        {count} {count > 1 ? 'people' : 'person'} clapped for your post!
+        {t('levelTwo.postClaps', { userCount, })}
       </p>
       <UserList users={clappingUsers} colorScheme="dark-mode" />
       <style jsx>{`
@@ -484,48 +508,10 @@ export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps
   notification,
   onNotificationClick,
 }) => {
-  // Separate the different threads
-  const threadGroupedComments: ThreadGroupedCommentsType = {}
-
-  for (const { comment } of notification.threadCommentNotifications) {
-    if (threadGroupedComments[comment.thread.id]) {
-      threadGroupedComments[comment.thread.id].comments.push(comment)
-    } else {
-      threadGroupedComments[comment.thread.id] = {
-        thread: comment.thread,
-        comments: [comment],
-      }
-    }
-  }
-
   return (
     <div className="container" onClick={onNotificationClick}>
       <h3 className="post-title">{notification.post?.title}</h3>
-      {Object.values(threadGroupedComments).map(
-        ({ thread, comments }: ThreadGroupedCommentsType[number]) => {
-          return (
-            <div className="thread" key={thread.id}>
-              <span className="highlighted-content">{thread.highlightedContent}</span>
-              <ul>
-                {comments.map((comment) => (
-                  <li className="comment">
-                    {comment.author.profileImage ? (
-                      <img
-                        src={comment.author.profileImage}
-                        alt={`${comment.author?.name || comment.author.handle}'s avatar'`}
-                        className="user-avatar"
-                      />
-                    ) : (
-                      <BlankAvatarIcon color={theme.colors.white} />
-                    )}
-                    <Markdown>{comment.body}</Markdown>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )
-        },
-      )}
+      
       <style jsx>{`
         .container {
           display: flex;
@@ -571,6 +557,7 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
   notification,
   onNotificationClick,
 }) => {
+  const { t } = useTranslation('notifications')
 
   const newPosts = notification.newPostNotifications.map((notification) => notification.post)
 
@@ -627,13 +614,15 @@ export const NewFollowerNotificationLevelTwo: React.FC<LevelTwoNotificationProps
   notification,
   onNotificationClick,
 }) => {
+  const { t } = useTranslation('notifications')
 
   const newFollowerCount = notification.newFollowerNotifications.length
   const newFollowers = notification.newFollowerNotifications.map((notification) => notification.followingUser)
 
+
   return (
     <div className="container" onClick={onNotificationClick}>
-      <p className="title">These {newFollowerCount} awesome Journalers are now following you:</p>
+      <p className="title">{t('levelTwo.newFollowers', { newFollowerCount })}</p>
       <UserList users={newFollowers} colorScheme="dark-mode" />
       <style jsx>{`
         .container {

@@ -90,6 +90,7 @@ export type InAppNotification = {
   newFollowerNotifications: Array<NewFollowerNotification>
   postClapNotifications: Array<PostClapNotification>
   threadCommentThanksNotifications: Array<ThreadCommentThanksNotification>
+  newPostNotifications: Array<NewPostNotification>
 }
 
 export enum InAppNotificationType {
@@ -98,6 +99,7 @@ export enum InAppNotificationType {
   ThreadCommentThanks = 'THREAD_COMMENT_THANKS',
   NewPost = 'NEW_POST',
   PostClap = 'POST_CLAP',
+  NewFollower = 'NEW_FOLLOWER',
 }
 
 export type InitiateAvatarImageUploadResponse = {
@@ -407,6 +409,13 @@ export type MutationDeleteInAppNotificationArgs = {
 export type NewFollowerNotification = {
   __typename?: 'NewFollowerNotification'
   id: Scalars['Int']
+  followingUser: User
+}
+
+export type NewPostNotification = {
+  __typename?: 'NewPostNotification'
+  id: Scalars['Int']
+  post: Post
 }
 
 export enum NotificationReadStatus {
@@ -978,6 +987,25 @@ export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } 
             author: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'name' | 'profileImage'>
           }
       }
+    >
+    newFollowerNotifications: Array<
+      { __typename?: 'NewFollowerNotification' } & Pick<NewFollowerNotification, 'id'> & {
+          followingUser: { __typename?: 'User' } & Pick<
+            User,
+            'id' | 'name' | 'handle' | 'profileImage'
+          >
+        }
+    >
+    newPostNotifications: Array<
+      { __typename?: 'NewPostNotification' } & Pick<NewPostNotification, 'id'> & {
+          post: { __typename?: 'Post' } & Pick<Post, 'title'> & {
+              headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'name' | 'handle' | 'profileImage'
+              >
+            }
+        }
     >
   }
 
@@ -1620,6 +1648,30 @@ export const NotificationFragmentFragmentDoc = gql`
           id
           handle
           name
+          profileImage
+        }
+      }
+    }
+    newFollowerNotifications {
+      id
+      followingUser {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
+    newPostNotifications {
+      id
+      post {
+        title
+        headlineImage {
+          smallSize
+        }
+        author {
+          id
+          name
+          handle
           profileImage
         }
       }

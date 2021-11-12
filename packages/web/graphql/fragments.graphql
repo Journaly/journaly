@@ -310,4 +310,28 @@ fragment NotificationFragment on InAppNotification {
       }
     }
   }
+  newFollowerNotifications {
+    id
+    followingUser {
+      id
+      name
+      handle
+      profileImage
+    }
+  }
+  newPostNotifications {
+    id
+    post {
+      title
+      headlineImage {
+        smallSize
+      }
+      author {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
+  }
 }

@@ -4,9 +4,13 @@ import {
   InAppNotificationType,
 } from '@/generated/graphql'
 import {
+  LevelTwoNotificationProps,
+  NewPostNotificationLevelTwo,
   PostClapNotificationLevelTwo,
+  PostCommentNotificationLevelTwo,
   ThreadCommentNotificationLevelTwo,
   ThreadCommentThanksNotificationLevelTwo,
+  NewFollowerNotificationLevelTwo,
 } from './Notifications'
 
 type NotificationProps = {
@@ -14,35 +18,39 @@ type NotificationProps = {
   handleNotificationLevelChange: (arg: NotificationType) => void
 }
 
+const getNotificationComponent = (
+  notificationType: InAppNotificationType,
+): React.FC<LevelTwoNotificationProps> => {
+  switch (notificationType) {
+    case InAppNotificationType.PostClap:
+      return PostClapNotificationLevelTwo
+    case InAppNotificationType.ThreadCommentThanks:
+      return ThreadCommentThanksNotificationLevelTwo
+    case InAppNotificationType.ThreadComment:
+      return ThreadCommentNotificationLevelTwo
+    case InAppNotificationType.PostComment:
+      return PostCommentNotificationLevelTwo
+    case InAppNotificationType.NewPost:
+      return NewPostNotificationLevelTwo
+    case InAppNotificationType.NewFollower:
+      return NewFollowerNotificationLevelTwo
+  }
+}
+
+
 const NotificationLevelTwo: React.FC<NotificationProps> = ({
   notification,
   handleNotificationLevelChange,
 }) => {
-  if (notification.type === InAppNotificationType.ThreadComment) {
-    return (
-      <ThreadCommentNotificationLevelTwo
+  const Component = getNotificationComponent(notification.type)
+  if (!Component) return null
+
+  return (
+      <Component
         notification={notification}
         onNotificationClick={() => handleNotificationLevelChange(notification)}
       />
-    )
-  }
-  if (notification.type === InAppNotificationType.PostClap) {
-    return (
-      <PostClapNotificationLevelTwo
-        notification={notification}
-        onNotificationClick={() => handleNotificationLevelChange(notification)}
-      />
-    )
-  }
-  if (notification.type === InAppNotificationType.ThreadCommentThanks) {
-    return (
-      <ThreadCommentThanksNotificationLevelTwo
-        notification={notification}
-        onNotificationClick={() => handleNotificationLevelChange(notification)}
-      />
-    )
-  }
-  return null
+  )
 }
 
 export default NotificationLevelTwo

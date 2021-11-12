@@ -9,6 +9,8 @@ import {
   ThreadCommentNotificationLevelOne,
   ThreadCommentThanksNotificationLevelOne,
   LevelOneNotificationProps,
+  NewPostNotificationLevelOne,
+  NewFollowerNotificationLevelOne,
 } from './Notifications'
 import SwipeableElement from '../SwipeableElement'
 
@@ -21,7 +23,7 @@ type NotificationProps = {
 
 const getNotificationComponent = (
   notificationType: InAppNotificationType,
-): React.FC<LevelOneNotificationProps> | null => {
+): React.FC<LevelOneNotificationProps> => {
   switch (notificationType) {
     case InAppNotificationType.PostClap:
       return PostClapNotificationLevelOne
@@ -32,7 +34,9 @@ const getNotificationComponent = (
     case InAppNotificationType.PostComment:
       return PostCommentNotificationLevelOne
     case InAppNotificationType.NewPost:
-      return null
+      return NewPostNotificationLevelOne
+    case InAppNotificationType.NewFollower:
+      return NewFollowerNotificationLevelOne
   }
 }
 

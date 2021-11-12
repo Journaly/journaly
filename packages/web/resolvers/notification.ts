@@ -15,6 +15,7 @@ const InAppNotification = objectType({
     t.model.newFollowerNotifications({ pagination: false })
     t.model.postClapNotifications({ pagination: false })
     t.model.threadCommentThanksNotifications({ pagination: false })
+    t.model.newPostNotifications({ pagination: false })
   },
 })
 
@@ -38,6 +39,7 @@ const NewFollowerNotification = objectType({
   name: 'NewFollowerNotification',
   definition(t) {
     t.model.id()
+    t.model.followingUser()
   },
 })
 
@@ -54,6 +56,14 @@ const ThreadCommentThanksNotification = objectType({
   definition(t) {
     t.model.id()
     t.model.thanks()
+  },
+})
+
+const NewPostNotification = objectType({
+  name: 'NewPostNotification',
+  definition(t) {
+    t.model.id()
+    t.model.post()
   },
 })
 
@@ -140,5 +150,6 @@ export default [
   NewFollowerNotification,
   PostClapNotification,
   ThreadCommentThanksNotification,
+  NewPostNotification,
   NotificationMutations,
 ]

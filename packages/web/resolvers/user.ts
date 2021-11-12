@@ -8,7 +8,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 import { isAcademic } from 'swot-node'
-import { PostStatus, EmailVerificationStatus } from '@journaly/j-db-client'
+import { PostStatus, EmailVerificationStatus, InAppNotificationType, } from '@journaly/j-db-client'
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
@@ -640,6 +640,22 @@ const UserMutations = extendType({
       },
       resolve: async (_parent, args, ctx, _info) => {
         const { userId: followerId } = ctx.request
+
+        const ian = await ctx.db.inAppNotification.create({
+          data: {
+            userId: args.followedUserId,
+            bumpedAt: new Date(),
+            type: InAppNotificationType.NEW_FOLLOWER,
+            triggeringUserId: args.followedUserId,
+          }
+        })
+
+        await ctx.db.newFollowerNotification.create({
+          data: {
+            notificationId: ian.id,
+            followingUserId: followerId,
+          }
+        })
 
         return ctx.db.user.update({
           where: {

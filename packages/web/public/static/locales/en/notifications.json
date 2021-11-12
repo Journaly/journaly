@@ -1,5 +1,6 @@
 {
   "feedTitle": "Notifications",
+  "emptyFeed": "You have no notifications... yet!",
   "levelOne": {
     "newFollowers": "You got {{followerCount}} new follower",
     "threadComments": "You got {{commentCount}} new feedback comments on this post",

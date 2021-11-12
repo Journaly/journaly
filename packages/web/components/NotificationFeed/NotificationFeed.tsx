@@ -13,6 +13,7 @@ import Button, { ButtonVariant } from '../Button'
 import XIcon from '../Icons/XIcon'
 import { useNotificationContext } from './NotificationContext'
 import NotificationLevelTwo from './NotificationLevelTwo'
+import { useTranslation } from '@/config/i18n'
 
 type NotificationFeedProps = {
   onClose: () => void
@@ -20,6 +21,8 @@ type NotificationFeedProps = {
 }
 
 const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
+  const { t } = useTranslation('notifications')
+
   const notificationFeedRoot = document.getElementById('notification-feed-root')
   const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
   const [activeNotification, setActiveNotification] = useState<NotificationType | null>(null)
@@ -79,7 +82,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
             </Button>
           </div>
           {(!notifications || notifications.length === 0) && (
-            <p className="feed-empty-state">You have no notifications... yet!</p>
+            <p className="feed-empty-state">{t('emptyFeed')}</p>
           )}
           {unreadNotifications?.map((notification) => (
             <NotificationLevelOne

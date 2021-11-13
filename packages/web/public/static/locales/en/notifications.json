@@ -12,7 +12,8 @@
   "levelTwo": {
     "newFollowers": "These {{followerCount}} awesome Journalers are now following you",
     "threadCommentThanks": "You received {{thanksCount}} thanks for feedback on this post",
-    "postClaps": "These {{userCount}} people clapped for your post"
+    "postClaps": "These {{userCount}} people clapped for your post",
+    "newPosts": "New posts from your community"
   },
   "actions": {
     "markAsRead": "Read",

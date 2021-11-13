@@ -44,9 +44,7 @@ export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationPro
   return (
     <div className="container">
       <div className="middle-section" onClick={onNotificationClick}>
-        <p>
-          {t('levelOne.threadComments', { commentCount, })}
-        </p>
+        <p>{t('levelOne.threadComments', { commentCount })}</p>
       </div>
       <div className="right-section">
         <img
@@ -108,9 +106,7 @@ export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> =
         <ClapIcon colorScheme="dark-mode" width={24} />
       </div>
       <div className="middle-section" onClick={onNotificationClick}>
-        <p>
-          {t('levelOne.postClaps', { clapCount, })}
-        </p>
+        <p>{t('levelOne.postClaps', { clapCount })}</p>
       </div>
       <div className="right-section">
         <img
@@ -166,12 +162,12 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
         )}
       </div>
       <div className="middle-section" onClick={onNotificationClick}>
-        <p>{
-          t('levelOne.threadCommentThanks', {
+        <p>
+          {t('levelOne.threadCommentThanks', {
             userIdentifier,
             thanksCount,
-          })
-        }</p>
+          })}
+        </p>
       </div>
       <style jsx>{`
         .container {
@@ -212,7 +208,6 @@ export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps
 }) => {
   const { t } = useTranslation('notifications')
   const commentCount = notification.postCommentNotifications.length
-
 
   return (
     <div className="container">
@@ -279,9 +274,7 @@ export const NewPostNotificationLevelOne: React.FC<LevelOneNotificationProps> = 
   return (
     <div className="container">
       <div className="middle-section" onClick={onNotificationClick}>
-        <p>
-          {t('levelOne.newPosts', { postCount })}
-        </p>
+        <p>{t('levelOne.newPosts', { postCount })}</p>
       </div>
       <style jsx>{`
         .container {
@@ -349,7 +342,6 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
   )
 }
 
-
 /**
  * Level Two Notifications
  *
@@ -366,7 +358,11 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
 
   const thanksCount = notification.threadCommentThanksNotifications.length
 
-  return <p onClick={() => onNotificationClick()}>{t('levelTwo.threadCommentThanks', { thanksCount, })}</p>
+  return (
+    <p onClick={() => onNotificationClick()}>
+      {t('levelTwo.threadCommentThanks', { thanksCount })}
+    </p>
+  )
 }
 
 export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
@@ -380,9 +376,7 @@ export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> =
 
   return (
     <div className="container" onClick={() => onNotificationClick()}>
-      <p className="clap-count">
-        {t('levelTwo.postClaps', { userCount, })}
-      </p>
+      <p className="clap-count">{t('levelTwo.postClaps', { userCount })}</p>
       <UserList users={clappingUsers} colorScheme="dark-mode" />
       <style jsx>{`
         .container {
@@ -438,7 +432,7 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
                     )}
                     <div className="comment-right-side">
                       <span className="author-identifier">@{comment.author.handle}</span>
-                    <Markdown>{comment.body}</Markdown>
+                      <Markdown>{comment.body}</Markdown>
                     </div>
                   </li>
                 ))}
@@ -508,30 +502,47 @@ export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps
   notification,
   onNotificationClick,
 }) => {
+  const comments = notification.postCommentNotifications.map(
+    (notification) => notification.postComment,
+  )
+
   return (
     <div className="container" onClick={onNotificationClick}>
-      <h3 className="post-title">{notification.post?.title}</h3>
-      
+      <p className="post-title">{notification.post?.title}</p>
+      <ul>
+        {comments.map((comment) => (
+          <li className="comment">
+            {comment.author.profileImage ? (
+              <img
+                src={comment.author.profileImage}
+                alt={`${comment.author?.name || comment.author.handle}'s avatar'`}
+                className="user-avatar"
+              />
+            ) : (
+              <BlankAvatarIcon color={theme.colors.white} />
+            )}
+            <div className="comment-right-side">
+              <span className="author-identifier">@{comment.author.handle}</span>
+              <Markdown>{comment.body}</Markdown>
+            </div>
+          </li>
+        ))}
+      </ul>
       <style jsx>{`
         .container {
           display: flex;
           flex-direction: column;
           padding: 16px;
-          border-bottom: 1px solid ${theme.colors.gray600};
           min-height: 100px;
           gap: 16px;
           color: ${theme.colors.white};
         }
 
         .post-title {
+          font-weight: 600;
+          font-size: 20px;
           text-align: center;
           margin-bottom: 16px;
-        }
-
-        .highlighted-content {
-          text-align: center;
-          background-color: ${theme.colors.highlightColor};
-          margin-bottom: 8px;
         }
 
         .user-avatar {
@@ -541,12 +552,21 @@ export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps
           object-fit: cover;
         }
 
-        .thread {
+        ul {
           display: flex;
           flex-direction: column;
+          gap: 12px;
         }
+
         .comment {
           display: flex;
+          gap: 12px;
+          align-items: center;
+          border-bottom: 1px solid ${theme.colors.gray600};
+          padding-bottom: 16px;
+        }
+        .author-identifier {
+          font-weight: 600;
         }
       `}</style>
     </div>
@@ -563,10 +583,24 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
 
   return (
     <div className="container" onClick={onNotificationClick}>
-      <h3 className="post-title">{notification.post?.title}</h3>
+      <p className="post-title">{t('levelTwo.newPosts')}</p>
       {newPosts.map((post) => (
-        <div>
-          <p>{post.title}</p>
+        <div className="post">
+          {post.author.profileImage ? (
+            <img
+              src={post.author.profileImage}
+              alt={`${post.author?.name || post.author.handle}'s avatar'`}
+              className="user-avatar"
+            />
+          ) : (
+            <BlankAvatarIcon color={theme.colors.white} />
+          )}
+          <p className="post-title">{post.title}</p>
+          <img
+            className="post-image"
+            src={notification.post?.headlineImage.smallSize}
+            alt={`post "${notification.post?.title}"'s image`}
+          />
         </div>
       ))}
       <style jsx>{`
@@ -581,14 +615,10 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
         }
 
         .post-title {
+          font-weight: 600;
+          font-size: 20px;
           text-align: center;
           margin-bottom: 16px;
-        }
-
-        .highlighted-content {
-          text-align: center;
-          background-color: ${theme.colors.highlightColor};
-          margin-bottom: 8px;
         }
 
         .user-avatar {
@@ -598,12 +628,9 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
           object-fit: cover;
         }
 
-        .thread {
-          display: flex;
-          flex-direction: column;
-        }
-        .comment {
-          display: flex;
+        .post {
+          display: grid;
+          grid-template-columns: 1fr 3fr 1fr;
         }
       `}</style>
     </div>
@@ -617,8 +644,9 @@ export const NewFollowerNotificationLevelTwo: React.FC<LevelTwoNotificationProps
   const { t } = useTranslation('notifications')
 
   const newFollowerCount = notification.newFollowerNotifications.length
-  const newFollowers = notification.newFollowerNotifications.map((notification) => notification.followingUser)
-
+  const newFollowers = notification.newFollowerNotifications.map(
+    (notification) => notification.followingUser,
+  )
 
   return (
     <div className="container" onClick={onNotificationClick}>

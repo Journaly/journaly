@@ -181,6 +181,13 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
           })}
         </p>
       </div>
+      <div className="right-section">
+        <img
+          className="post-image"
+          src={notification.post?.headlineImage.smallSize}
+          alt={`post "${notification.post?.title}"'s image`}
+        />
+      </div>
       <style jsx>{`
         .container {
           display: flex;
@@ -337,10 +344,23 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
 
   return (
     <div className="container" onClick={onNotificationClick}>
+      {followerCount === 1 ? (
+      <ul className="multiple-follower-container">
+        <li>
+        <img className="user-avatar" src={notification.newFollowerNotifications[0]?.followingUser?.profileImage || ''} />
+        </li>
+        <li>
+        <BlankAvatarIcon color={theme.colors.white} size={50} />
+        </li>
+      </ul>
+        ): (
+          <img className="user-avatar" src={notification.newFollowerNotifications[0].followingUser?.profileImage || ''} />
+      )}
       <p>{t('levelOne.newFollowers', { followerCount })}</p>
       <style jsx>{`
         .container {
           display: flex;
+          gap: 16px;
           padding: 16px;
           border-bottom: 1px solid ${theme.colors.gray600};
           min-height: 100px;
@@ -348,6 +368,26 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
           justify-content: center;
           user-select: none;
           flex: 1;
+        }
+
+        .user-avatar {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .multiple-follower-container {
+          position: relative;
+        }
+
+        .multiple-follower-container > li:nth-child(2) {
+          position: absolute;
+          /* top: -16px;
+          left: -16px; */
+          top: 0;
+          left: -28px;
+          z-index: -1;
         }
       `}</style>
     </div>

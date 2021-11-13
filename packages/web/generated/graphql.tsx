@@ -985,6 +985,9 @@ export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } 
       { __typename?: 'ThreadCommentThanksNotification' } & {
         thanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'> & {
             author: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'name' | 'profileImage'>
+            comment: { __typename?: 'Comment' } & Pick<Comment, 'id' | 'body'> & {
+                thread: { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent'>
+              }
           }
       }
     >
@@ -1649,6 +1652,14 @@ export const NotificationFragmentFragmentDoc = gql`
           handle
           name
           profileImage
+        }
+        comment {
+          id
+          body
+          thread {
+            id
+            highlightedContent
+          }
         }
       }
     }

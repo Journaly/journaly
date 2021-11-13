@@ -6,6 +6,7 @@ import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import ClapIcon from '../Icons/ClapIcon'
 import UserList from '../UserList'
 import { useTranslation } from '@/config/i18n'
+import LikeIcon from '../Icons/LikeIcon'
 
 export type LevelOneNotificationProps = {
   notification: NotificationType
@@ -25,6 +26,17 @@ type ThreadGroupedCommentsType = Record<
   {
     thread: ThreadCommentNotificationComment['thread']
     comments: ThreadCommentNotificationComment[]
+  }
+>
+
+type ThreadCommentThanksNotificationThanks =
+  NotificationType['threadCommentThanksNotifications'][number]['thanks']
+
+type ThreadGroupedThanksType = Record<
+  number,
+  {
+    thread: ThreadCommentThanksNotificationThanks['comment']['thread']
+    thanks: ThreadCommentThanksNotificationThanks[]
   }
 >
 
@@ -355,13 +367,118 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
   onNotificationClick,
 }) => {
   const { t } = useTranslation('notifications')
-
+  const thanksAuthor = notification.threadCommentThanksNotifications[0].thanks.author
+  const userIdentifier = thanksAuthor?.name || thanksAuthor.handle
   const thanksCount = notification.threadCommentThanksNotifications.length
+  // Separate the different threads
+  const threadGroupedThanks: ThreadGroupedThanksType = {}
+
+  for (const { thanks } of notification.threadCommentThanksNotifications) {
+    if (threadGroupedThanks[thanks.comment.thread.id]) {
+      threadGroupedThanks[thanks.comment.thread.id].thanks.push(thanks)
+    } else {
+      threadGroupedThanks[thanks.comment.thread.id] = {
+        thread: thanks.comment.thread,
+        thanks: [thanks],
+      }
+    }
+  }
 
   return (
-    <p onClick={() => onNotificationClick()}>
-      {t('levelTwo.threadCommentThanks', { thanksCount })}
-    </p>
+    <div className="container" onClick={onNotificationClick}>
+      <div className="thanks-author">
+        {thanksAuthor.profileImage ? (
+          <img
+            src={thanksAuthor.profileImage}
+            alt={`${userIdentifier}'s avatar'`}
+            className="user-avatar"
+          />
+        ) : (
+          <BlankAvatarIcon color={theme.colors.white} />
+        )}
+      </div>
+      <p className="title">{t('levelTwo.threadCommentThanks', { userIdentifier, thanksCount })}</p>
+      {Object.values(threadGroupedThanks).map(
+        ({ thread, thanks }: ThreadGroupedThanksType[number]) => {
+          return (
+            <div className="thread" key={thread.id}>
+              <span className="highlighted-content">{thread.highlightedContent}</span>
+              <ul>
+                {thanks.map((thanks) => (
+                  <li className="comment">
+                    <span>
+                      <LikeIcon filled={true} />
+                    </span>
+                    <span className="comment-body-container">
+                      <Markdown>{thanks.comment.body}</Markdown>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        },
+      )}
+      <style jsx>{`
+        .container {
+          display: flex;
+          flex-direction: column;
+          padding: 16px;
+          border-bottom: 1px solid ${theme.colors.gray600};
+          min-height: 100px;
+          gap: 16px;
+          color: ${theme.colors.white};
+        }
+
+        .title {
+          text-align: center;
+          margin-bottom: 16px;
+        }
+
+        .highlighted-content {
+          text-align: center;
+          background-color: ${theme.colors.highlightColor};
+          margin-bottom: 12px;
+          padding: 4px;
+        }
+
+        .thanks-author {
+          margin: 0 auto;
+        }
+
+        .user-avatar {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .thread {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 10px;
+        }
+
+        ul {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .comment {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+        }
+
+        .comment-body-container {
+        }
+
+        .author-identifier {
+          font-weight: 600;
+        }
+      `}</style>
+    </div>
   )
 }
 

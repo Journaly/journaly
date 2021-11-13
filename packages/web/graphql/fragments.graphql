@@ -308,6 +308,14 @@ fragment NotificationFragment on InAppNotification {
         name
         profileImage
       }
+      comment {
+        id
+        body
+        thread {
+          id
+          highlightedContent
+        }
+      }
     }
   }
   newFollowerNotifications {

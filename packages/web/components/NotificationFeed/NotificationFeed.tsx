@@ -33,13 +33,6 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   if (!notifications) return null
   if (!notificationFeedRoot) return null
 
-  const unreadNotifications = notifications.filter(
-    (notification) => notification.readStatus === NotificationReadStatus.Unread,
-  )
-  const readNotifications = notifications.filter(
-    (notification) => notification.readStatus === NotificationReadStatus.Read,
-  )
-
   const handleGoToLevelTwo = (notification: NotificationType) => {
     setActiveNotification(notification)
     setNotificationLevelTranslation(-50)
@@ -84,16 +77,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
           {(!notifications || notifications.length === 0) && (
             <p className="feed-empty-state">{t('emptyFeed')}</p>
           )}
-          {unreadNotifications?.map((notification) => (
-            <NotificationLevelOne
-              key={notification.id}
-              notification={notification}
-              handleNotificationLevelChange={handleGoToLevelTwo}
-              handleDeleteNotification={handleDeleteNotification}
-              handleMarkNotificationRead={handleMarkNotificationRead}
-            />
-          ))}
-          {readNotifications?.map((notification) => (
+          {notifications.map((notification) => (
             <NotificationLevelOne
               key={notification.id}
               notification={notification}

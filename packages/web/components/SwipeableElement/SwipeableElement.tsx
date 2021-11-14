@@ -34,7 +34,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
     isSwiping: false,
     currentTranslate: 0,
     animationId: 0,
-    translateStart: 0
+    translateStart: 0,
   })
 
   const rightHandActionsRef = useRef<HTMLDivElement>(null)
@@ -46,7 +46,9 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
 
   const animation = () => {
     if (rightHandActionsRef.current) {
-      rightHandActionsRef.current.style.transform = `translateX(max(${swipe.current.translateStart + swipe.current.currentTranslate}px, -100%))`
+      rightHandActionsRef.current.style.transform = `translateX(max(${
+        swipe.current.translateStart + swipe.current.currentTranslate
+      }px, -100%))`
     }
     if (swipe.current.isSwiping) swipe.current.animationId = requestAnimationFrame(animation)
   }
@@ -70,93 +72,87 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
     if (amountSwiped < -SENSITIVITY) {
       swipe.current.currentTranslate = -200
     } else if (amountSwiped > -SENSITIVITY) {
-      swipe.current.isSwiping = false,
-      swipe.current.currentTranslate = 0
+      ;(swipe.current.isSwiping = false), (swipe.current.currentTranslate = 0)
     } else {
-      swipe.current.isSwiping = false,
-      swipe.current.currentTranslate = 0
+      ;(swipe.current.isSwiping = false), (swipe.current.currentTranslate = 0)
     }
     rightHandActionsRef.current!.style.transform = `translateX(${swipe.current.currentTranslate}px)`
     cancelAnimationFrame(swipe.current.animationId)
   }
 
   // Make sure menu doesn't pop up when clicking & holding
-  if (window !== undefined) {
-    window.oncontextmenu = (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      return false
-    }
+  const onContextMenuClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    return false
   }
 
   return (
-    <div
-      className="container"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      {children}
-      <div className="right-hand-actions" ref={rightHandActionsRef}>
-        <Button variant={ButtonVariant.Icon} onClick={nonDestructiveAction}>
-          <div className="action-btn read">
-            <CheckmarkIcon size={24} />
-            {t('actions.markAsRead')}
-          </div>
-        </Button>
-        <Button variant={ButtonVariant.Icon} onClick={destructiveAction}>
-          <div className="action-btn delete">
-            <DeleteIcon color={theme.colors.white} size={24} />
-            {t('actions.delete')}
-          </div>
-        </Button>
+    <div onContextMenu={onContextMenuClick}>
+      <div
+        className="container"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {children}
+        <div className="right-hand-actions" ref={rightHandActionsRef}>
+          <Button variant={ButtonVariant.Icon} onClick={nonDestructiveAction}>
+            <div className="action-btn read">
+              <CheckmarkIcon size={24} />
+              {t('actions.markAsRead')}
+            </div>
+          </Button>
+          <Button variant={ButtonVariant.Icon} onClick={destructiveAction}>
+            <div className="action-btn delete">
+              <DeleteIcon color={theme.colors.white} size={24} />
+              {t('actions.delete')}
+            </div>
+          </Button>
+        </div>
+        <style jsx>{`
+          .container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            user-select: none;
+            // Prevent screen dragging behavior
+            touch-action: none;
+            overflow-x: hidden;
+          }
+
+          .right-hand-actions {
+            display: flex;
+            width: 100vw;
+            height: 100%;
+            background-color: ${theme.colors.gray800};
+            position: absolute;
+            left: 100%;
+            transition: transform 0.1s linear;
+          }
+
+          .right-hand-actions > :global(button) {
+            height: 100%;
+          }
+
+          .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 100%;
+          }
+
+          .action-btn.read {
+            background-color: ${theme.colors.gray600};
+          }
+
+          .action-btn.delete {
+            background-color: ${theme.colors.red};
+          }
+        `}</style>
       </div>
-      <style jsx>{`
-        .container {
-          position: relative;
-          display: flex;
-          align-items: center;
-          user-select: none;
-          // Prevent screen dragging behavior
-          touch-action: none;
-          overflow-x: hidden;
-        }
-
-        .grabbing {
-          cursor: grabbing;
-        }
-
-        .right-hand-actions {
-          display: flex;
-          width: 100vw;
-          height: 100%;
-          background-color: ${theme.colors.gray800};
-          position: absolute;
-          left: 100%;
-          transition: transform 0.1s linear;
-        }
-
-        .right-hand-actions > :global(button) {
-          height: 100%;
-        }
-
-        .action-btn {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          width: 100px;
-          height: 100%;
-        }
-
-        .action-btn.read {
-          background-color: ${theme.colors.gray600};
-        }
-
-        .action-btn.delete {
-          background-color: ${theme.colors.red};
-        }
-      `}</style>
     </div>
   )
 }

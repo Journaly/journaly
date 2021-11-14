@@ -78,6 +78,9 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
 
         {currentUser && (
           <>
+            {showNotificationFeed && (
+              <div className="notification-feed-container">{/* <NotificationsFeed /> */}</div>
+            )}
             <div className="nav-top">
               <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${currentUser.id}`}>
                 <a onClick={handleCollapse} className="profile-image">
@@ -217,6 +220,15 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           z-index: ${navConstants.zIndex};
         }
 
+        .notification-feed-container {
+          position: absolute;
+          top: 0;
+          height: 100vh;
+          left: 100%;
+          background-color: ${theme.colors.charcoal};
+          width: min(50vw, 400px);
+        }
+
         .expanded .nav-background {
           opacity: 1;
           /* Make background take up full screen */
@@ -242,7 +254,9 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           transform: translateX(-100%);
           transition: transform ${navConstants.transitionDuration}ms linear,
             width ${navConstants.transitionDuration}ms linear;
-          overflow: auto;
+          /* overflow-y: auto;
+          overflow-x: visible; */
+          overflow: visible;
         }
 
         .expanded nav {

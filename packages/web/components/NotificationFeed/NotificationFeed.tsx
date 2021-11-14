@@ -72,10 +72,12 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
 
         const dataClone = cloneDeep(data)
         if (!dataClone?.currentUser) return
-        dataClone.currentUser.notifications = dataClone.currentUser?.notifications.filter(({ id }) => id !== notificationId)
+        dataClone.currentUser.notifications = dataClone.currentUser?.notifications.filter(
+          ({ id }) => id !== notificationId,
+        )
 
         cache.writeQuery({ query: CurrentUserDocument, data: dataClone })
-      }
+      },
     })
   }
 

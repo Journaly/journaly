@@ -1,5 +1,5 @@
 import theme from '@/theme'
-import React, { useState, useRef } from 'react'
+import React, { useRef } from 'react'
 import Button, { ButtonVariant } from '@/components/Button'
 import CheckmarkIcon from '../Icons/CheckmarkIcon'
 import DeleteIcon from '../Icons/DeleteIcon'

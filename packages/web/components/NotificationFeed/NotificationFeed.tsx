@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
+import cloneDeep from 'lodash/cloneDeep'
 import {
+  CurrentUserDocument,
+  CurrentUserQuery,
+  CurrentUserQueryVariables,
   NotificationFragmentFragment as NotificationType,
   NotificationReadStatus,
   useDeleteInAppNotificationMutation,
@@ -47,7 +51,6 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const [deleteInAppNotification] = useDeleteInAppNotificationMutation()
 
   const handleMarkNotificationRead = (notificationId: number) => {
-    console.log('Marked as read ✅')
     updateInAppNotification({
       variables: {
         notificationId,
@@ -56,11 +59,23 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
     })
   }
   const handleDeleteNotification = (notificationId: number) => {
-    console.log('Deleted ❌')
     deleteInAppNotification({
       variables: {
         notificationId,
       },
+      update: (cache, mutationResult) => {
+        if (!mutationResult.data?.deleteInAppNotification) return
+        const data = cache.readQuery<CurrentUserQuery, CurrentUserQueryVariables>({
+          query: CurrentUserDocument,
+          variables: {},
+        })
+
+        const dataClone = cloneDeep(data)
+        if (!dataClone?.currentUser) return
+        dataClone.currentUser.notifications = dataClone.currentUser?.notifications.filter(({ id }) => id !== notificationId)
+
+        cache.writeQuery({ query: CurrentUserDocument, data: dataClone })
+      }
     })
   }
 

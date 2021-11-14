@@ -957,19 +957,22 @@ export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } 
         }
     >
     postClapNotifications: Array<
-      { __typename?: 'PostClapNotification' } & {
-        postClap: { __typename?: 'PostClap' } & {
-          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
+      { __typename?: 'PostClapNotification' } & Pick<PostClapNotification, 'id'> & {
+          postClap: { __typename?: 'PostClap' } & {
+            author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
+          }
         }
-      }
     >
     threadCommentNotifications: Array<
-      { __typename?: 'ThreadCommentNotification' } & {
-        comment: { __typename?: 'Comment' } & Pick<Comment, 'id' | 'body'> & {
-            author: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'name' | 'profileImage'>
-            thread: { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent'>
-          }
-      }
+      { __typename?: 'ThreadCommentNotification' } & Pick<ThreadCommentNotification, 'id'> & {
+          comment: { __typename?: 'Comment' } & Pick<Comment, 'id' | 'body'> & {
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'handle' | 'name' | 'profileImage'
+              >
+              thread: { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent'>
+            }
+        }
     >
     postCommentNotifications: Array<
       { __typename?: 'PostCommentNotification' } & Pick<PostCommentNotification, 'id'> & {
@@ -982,14 +985,20 @@ export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } 
         }
     >
     threadCommentThanksNotifications: Array<
-      { __typename?: 'ThreadCommentThanksNotification' } & {
-        thanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'> & {
-            author: { __typename?: 'User' } & Pick<User, 'id' | 'handle' | 'name' | 'profileImage'>
-            comment: { __typename?: 'Comment' } & Pick<Comment, 'id' | 'body'> & {
-                thread: { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent'>
-              }
-          }
-      }
+      { __typename?: 'ThreadCommentThanksNotification' } & Pick<
+        ThreadCommentThanksNotification,
+        'id'
+      > & {
+          thanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'> & {
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'handle' | 'name' | 'profileImage'
+              >
+              comment: { __typename?: 'Comment' } & Pick<Comment, 'id' | 'body'> & {
+                  thread: { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent'>
+                }
+            }
+        }
     >
     newFollowerNotifications: Array<
       { __typename?: 'NewFollowerNotification' } & Pick<NewFollowerNotification, 'id'> & {
@@ -1001,7 +1010,7 @@ export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } 
     >
     newPostNotifications: Array<
       { __typename?: 'NewPostNotification' } & Pick<NewPostNotification, 'id'> & {
-          post: { __typename?: 'Post' } & Pick<Post, 'title'> & {
+          post: { __typename?: 'Post' } & Pick<Post, 'id' | 'title'> & {
               headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
               author: { __typename?: 'User' } & Pick<
                 User,
@@ -1606,6 +1615,7 @@ export const NotificationFragmentFragmentDoc = gql`
       }
     }
     postClapNotifications {
+      id
       postClap {
         author {
           id
@@ -1616,6 +1626,7 @@ export const NotificationFragmentFragmentDoc = gql`
       }
     }
     threadCommentNotifications {
+      id
       comment {
         id
         body
@@ -1645,6 +1656,7 @@ export const NotificationFragmentFragmentDoc = gql`
       }
     }
     threadCommentThanksNotifications {
+      id
       thanks {
         id
         author {
@@ -1675,6 +1687,7 @@ export const NotificationFragmentFragmentDoc = gql`
     newPostNotifications {
       id
       post {
+        id
         title
         headlineImage {
           smallSize

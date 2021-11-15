@@ -17,7 +17,9 @@ import {
   generateThumbbusterUrl,
   getThumbusterVars,
   generatePostPrivateShareId,
+  createInAppNotification,
 } from './utils'
+
 
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
@@ -30,6 +32,7 @@ import {
   User,
   UserRole,
   EmailVerificationStatus,
+  InAppNotificationType,
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
@@ -94,7 +97,7 @@ const PostTopic = objectType({
   },
 })
 
-const Post = objectType({
+const PostObjectType = objectType({
   name: 'Post',
   definition(t) {
     t.model.id()
@@ -440,6 +443,7 @@ const PostMutations = extendType({
           include: {
             languages: true,
             auth: true,
+            followedBy: true,
           },
         })
 
@@ -497,6 +501,17 @@ const PostMutations = extendType({
 
           await Promise.all(insertPromises)
         }
+
+        await Promise.all(user.followedBy.map((follower) => {
+          return createInAppNotification(ctx.db, {
+            userId: follower.id,
+            type: InAppNotificationType.NEW_POST,
+            key: {},
+            subNotification: {
+              postId: post.id,
+            }
+          })
+        }))
 
         if (isPublished) await assignPostCountBadges(ctx.db, userId)
 
@@ -886,7 +901,7 @@ const PostMutations = extendType({
 
 export default [
   PostTopic,
-  Post,
+  PostObjectType,
   PostPage,
   InitiatePostImageUploadResponse,
   InitiateInlinePostImageUploadResponse,

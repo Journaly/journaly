@@ -94,15 +94,17 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
           {(!notifications || notifications.length === 0) && (
             <p className="feed-empty-state">{t('emptyFeed')}</p>
           )}
-          {notifications.map((notification) => (
-            <NotificationLevelOne
-              key={notification.id}
-              notification={notification}
-              handleNotificationLevelChange={handleGoToLevelTwo}
-              handleDeleteNotification={handleDeleteNotification}
-              handleMarkNotificationRead={handleMarkNotificationRead}
-            />
-          ))}
+          <div className="content">
+            {notifications.map((notification) => (
+              <NotificationLevelOne
+                key={notification.id}
+                notification={notification}
+                handleNotificationLevelChange={handleGoToLevelTwo}
+                handleDeleteNotification={handleDeleteNotification}
+                handleMarkNotificationRead={handleMarkNotificationRead}
+              />
+            ))}
+          </div>
         </div>
         <div className="level-two">
           <div className="top">
@@ -156,6 +158,12 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
         .level-two {
           display: flex;
           flex-direction: column;
+        }
+
+        .level-one .content {
+          display:  flex;
+          flex-direction: column;
+          align-items: stretch;
         }
 
         .top {

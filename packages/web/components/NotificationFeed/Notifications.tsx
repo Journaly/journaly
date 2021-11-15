@@ -68,6 +68,7 @@ export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationPro
       <style jsx>{`
         .container {
           display: flex;
+          width: 100%;
           justify-content: space-between;
           padding: 16px;
           border-bottom: 1px solid ${theme.colors.gray600};
@@ -130,6 +131,7 @@ export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> =
       <style jsx>{`
         .container {
           display: flex;
+          width: 100%;
           justify-content: space-between;
           padding: 16px;
           border-bottom: 1px solid ${theme.colors.gray600};
@@ -192,6 +194,7 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
         .container {
           display: flex;
           justify-content: space-between;
+          width: 100%;
           padding: 16px;
           border-bottom: 1px solid ${theme.colors.gray600};
           min-height: 100px;
@@ -246,6 +249,7 @@ export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps
       <style jsx>{`
         .container {
           display: flex;
+          width: 100%;
           justify-content: space-between;
           padding: 16px;
           border-bottom: 1px solid ${theme.colors.gray600};
@@ -298,6 +302,7 @@ export const NewPostNotificationLevelOne: React.FC<LevelOneNotificationProps> = 
       <style jsx>{`
         .container {
           display: flex;
+          width: 100%;
           justify-content: space-between;
           padding: 16px;
           border-bottom: 1px solid ${theme.colors.gray600};
@@ -360,6 +365,7 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
       <style jsx>{`
         .container {
           display: flex;
+          width: 100%;
           gap: 16px;
           padding: 16px;
           border-bottom: 1px solid ${theme.colors.gray600};

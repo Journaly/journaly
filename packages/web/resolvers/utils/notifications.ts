@@ -67,6 +67,14 @@ type InAppNotificationSubtypes = {
     type: 'POST_COMMENT'
     subNotification: Prisma.PostCommentNotificationUncheckedCreateWithoutNotificationInput
   }
+  NewFollower: {
+    type: 'NEW_FOLLOWER'
+    subNotification: Prisma.NewFollowerNotificationUncheckedCreateWithoutNotificationInput
+  }
+  NewPost: {
+    type: 'NEW_POST'
+    subNotification: Prisma.NewPostNotificationUncheckedCreateWithoutNotificationInput
+  }
 }
 
 type BaseInAppNotificationCreationInput = {
@@ -96,7 +104,7 @@ const createInAppNotification = async (
     },
   })
 
-  let subnoteData: Partial<Pick<Prisma.InAppNotificationCreateInput, 'threadCommentNotifications' | 'postCommentNotifications' | 'newFollowerNotifications' | 'postClapNotifications' | 'threadCommentThanksNotifications'>>
+  let subnoteData: Partial<Pick<Prisma.InAppNotificationCreateInput, 'threadCommentNotifications' | 'postCommentNotifications' | 'newFollowerNotifications' | 'postClapNotifications' | 'threadCommentThanksNotifications' | 'newPostNotifications' | 'newFollowerNotifications'>>
 
   switch (input.type) {
     case 'THREAD_COMMENT': {
@@ -126,6 +134,22 @@ const createInAppNotification = async (
     case 'POST_COMMENT': {
       subnoteData = {
         postCommentNotifications: {
+          create: [input.subNotification]
+        }
+      }
+      break
+    }
+    case 'NEW_POST': {
+      subnoteData = {
+        newPostNotifications: {
+          create: [input.subNotification]
+        }
+      }
+      break
+    }
+    case 'NEW_FOLLOWER': {
+      subnoteData = {
+        newFollowerNotifications: {
           create: [input.subNotification]
         }
       }

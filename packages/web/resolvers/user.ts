@@ -8,13 +8,18 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 import { isAcademic } from 'swot-node'
-import { PostStatus, EmailVerificationStatus, InAppNotificationType, } from '@journaly/j-db-client'
+import {
+  PostStatus,
+  EmailVerificationStatus,
+  InAppNotificationType,
+} from '@journaly/j-db-client'
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
   generateThumbbusterUrl,
   sendEmailAddressVerificationEmail,
   sendPasswordResetTokenEmail,
+  createInAppNotification,
 } from './utils'
 import { generateToken, validateUpdateUserMutationData } from './utils/userValidation'
 
@@ -143,7 +148,12 @@ const User = objectType({
         return ctx.db.inAppNotification.findMany({
           where: {
             userId: userId
-          }
+          },
+          take: 100,
+          orderBy: [
+            { readStatus: 'desc' },
+            { bumpedAt: 'desc' },
+          ]
         })
       }
     })
@@ -657,7 +667,8 @@ const UserMutations = extendType({
           }
         })
 
-        return ctx.db.user.update({
+
+        const follower = await ctx.db.user.update({
           where: {
             id: followerId,
           },
@@ -667,6 +678,17 @@ const UserMutations = extendType({
             },
           },
         })
+
+        await createInAppNotification(ctx.db, {
+          userId: args.followedUserId,
+          type: InAppNotificationType.NEW_FOLLOWER,
+          key: {},
+          subNotification: {
+            followingUserId: follower.id
+          }
+        })
+
+        return follower
       },
     })
 

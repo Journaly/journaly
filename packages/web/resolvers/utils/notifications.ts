@@ -59,16 +59,14 @@ type InAppNotificationSubtypes = {
     type: 'THREAD_COMMENT_THANKS'
     subNotification: Prisma.ThreadCommentThanksNotificationUncheckedCreateWithoutNotificationInput
   }
-  /*
   PostClap: {
     type: 'POST_CLAP'
-    subNotification: Prisma.ThreadCommentThanksNotificationUncheckedCreateNestedManyWithoutNotificationInput
+    subNotification: Prisma.PostClapNotificationUncheckedCreateWithoutNotificationInput
   }
   PostComment: {
     type: 'POST_COMMENT'
-    subNotification: Prisma.ThreadCommentThanksNotificationUncheckedCreateNestedManyWithoutNotificationInput
+    subNotification: Prisma.PostCommentNotificationUncheckedCreateWithoutNotificationInput
   }
-  */
 }
 
 type BaseInAppNotificationCreationInput = {
@@ -112,6 +110,22 @@ const createInAppNotification = async (
     case 'THREAD_COMMENT_THANKS': {
       subnoteData = {
         threadCommentThanksNotifications: {
+          create: [input.subNotification]
+        }
+      }
+      break
+    }
+    case 'POST_CLAP': {
+      subnoteData = {
+        postClapNotifications: {
+          create: [input.subNotification]
+        }
+      }
+      break
+    }
+    case 'POST_COMMENT': {
+      subnoteData = {
+        postCommentNotifications: {
           create: [input.subNotification]
         }
       }

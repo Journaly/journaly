@@ -1,6 +1,6 @@
 import { extendType, intArg, objectType } from 'nexus'
 import { EmailNotificationType, InAppNotificationType } from '@journaly/j-db-client'
-import { createEmailNotification, hasAuthorPermissions } from './utils'
+import { createInAppNotification, createEmailNotification, hasAuthorPermissions } from './utils'
 
 const PostClap = objectType({
   name: 'PostClap',
@@ -60,32 +60,14 @@ const PostClapMutations = extendType({
           postClap,
         })
 
-        const ian = await ctx.db.inAppNotification.upsert({
-          create: {
-            userId: post.authorId,
-            type: InAppNotificationType.POST_CLAP,
-            bumpedAt: new Date(),
-            postId: post.id,
-            triggeringUserId: post.author.id,
-          },
-          update: {
-            bumpedAt: new Date(),
-          },
-          where: {
-            userId_type_postId_triggeringUserId: {
-              userId: post.author.id,
-              postId: post.id,
-              triggeringUserId: post.authorId,
-              type: InAppNotificationType.POST_CLAP,
-            },
-          },
-        })
 
-        await ctx.db.postClapNotification.create({
-          data: {
-            notificationId: ian.id,
+        await createInAppNotification(ctx.db, {
+          userId: post.authorId,
+          type: InAppNotificationType.POST_CLAP,
+          key: { postId: post.id, },
+          subNotification: {
             postClapId: postClap.id,
-          },
+          }
         })
 
         return postClap

@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
+import cloneDeep from 'lodash/cloneDeep'
 import {
+  CurrentUserDocument,
+  CurrentUserQuery,
+  CurrentUserQueryVariables,
   NotificationFragmentFragment as NotificationType,
   NotificationReadStatus,
   useDeleteInAppNotificationMutation,
@@ -33,13 +37,6 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   if (!notifications) return null
   if (!notificationFeedRoot) return null
 
-  const unreadNotifications = notifications.filter(
-    (notification) => notification.readStatus === NotificationReadStatus.Unread,
-  )
-  const readNotifications = notifications.filter(
-    (notification) => notification.readStatus === NotificationReadStatus.Read,
-  )
-
   const handleGoToLevelTwo = (notification: NotificationType) => {
     setActiveNotification(notification)
     setNotificationLevelTranslation(-50)
@@ -54,7 +51,6 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const [deleteInAppNotification] = useDeleteInAppNotificationMutation()
 
   const handleMarkNotificationRead = (notificationId: number) => {
-    console.log('Marked as read ✅')
     updateInAppNotification({
       variables: {
         notificationId,
@@ -63,10 +59,24 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
     })
   }
   const handleDeleteNotification = (notificationId: number) => {
-    console.log('Deleted ❌')
     deleteInAppNotification({
       variables: {
         notificationId,
+      },
+      update: (cache, mutationResult) => {
+        if (!mutationResult.data?.deleteInAppNotification) return
+        const data = cache.readQuery<CurrentUserQuery, CurrentUserQueryVariables>({
+          query: CurrentUserDocument,
+          variables: {},
+        })
+
+        const dataClone = cloneDeep(data)
+        if (!dataClone?.currentUser) return
+        dataClone.currentUser.notifications = dataClone.currentUser?.notifications.filter(
+          ({ id }) => id !== notificationId,
+        )
+
+        cache.writeQuery({ query: CurrentUserDocument, data: dataClone })
       },
     })
   }
@@ -84,16 +94,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
           {(!notifications || notifications.length === 0) && (
             <p className="feed-empty-state">{t('emptyFeed')}</p>
           )}
-          {unreadNotifications?.map((notification) => (
-            <NotificationLevelOne
-              key={notification.id}
-              notification={notification}
-              handleNotificationLevelChange={handleGoToLevelTwo}
-              handleDeleteNotification={handleDeleteNotification}
-              handleMarkNotificationRead={handleMarkNotificationRead}
-            />
-          ))}
-          {readNotifications?.map((notification) => (
+          {notifications.map((notification) => (
             <NotificationLevelOne
               key={notification.id}
               notification={notification}

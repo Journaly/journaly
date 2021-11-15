@@ -261,6 +261,7 @@ fragment NotificationFragment on InAppNotification {
     }
   }
   postClapNotifications {
+    id
     postClap {
       author {
         id
@@ -271,6 +272,7 @@ fragment NotificationFragment on InAppNotification {
     }
   }
   threadCommentNotifications {
+    id
     comment {
       id
       body
@@ -300,6 +302,7 @@ fragment NotificationFragment on InAppNotification {
     }
   }
   threadCommentThanksNotifications {
+    id
     thanks {
       id
       author {
@@ -330,6 +333,7 @@ fragment NotificationFragment on InAppNotification {
   newPostNotifications {
     id
     post {
+      id
       title
       headlineImage {
         smallSize

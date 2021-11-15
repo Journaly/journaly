@@ -51,8 +51,8 @@ const NotificationLevelOne: React.FC<NotificationProps> = ({
 
   return (
     <SwipeableElement
-      destructiveAction={() => handleMarkNotificationRead(notification.id)}
-      nonDestructiveAction={() => handleDeleteNotification(notification.id)}
+      destructiveAction={() => handleDeleteNotification(notification.id)}
+      nonDestructiveAction={() => handleMarkNotificationRead(notification.id)}
     >
       <Component
         notification={notification}

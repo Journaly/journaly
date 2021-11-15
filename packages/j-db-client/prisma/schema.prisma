@@ -410,14 +410,14 @@ model ThreadCommentThanksNotification {
   thanksId          Int
   notificationId    Int
   thanks            CommentThanks     @relation(fields: [thanksId], references: [id])
-  InAppNotification InAppNotification @relation(fields: [notificationId], references: [id])
+  notification InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
 }
 
 model ThreadCommentNotification {
   id             Int               @id @default(autoincrement())
   notificationId Int
   commentId      Int
-  notification   InAppNotification @relation(fields: [notificationId], references: [id])
+  notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
   comment        Comment           @relation(fields: [commentId], references: [id])
 }
 
@@ -425,7 +425,7 @@ model PostCommentNotification {
   id             Int               @id @default(autoincrement())
   notificationId Int
   postCommentId  Int
-  notification   InAppNotification @relation(fields: [notificationId], references: [id])
+  notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
   postComment    PostComment       @relation(fields: [postCommentId], references: [id])
 }
 
@@ -433,7 +433,7 @@ model NewFollowerNotification {
   id              Int               @id @default(autoincrement())
   notificationId  Int
   followingUserId Int
-  notification    InAppNotification @relation(fields: [notificationId], references: [id])
+  notification    InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
   followingUser   User              @relation(fields: [followingUserId], references: [id])
 }
 
@@ -441,7 +441,7 @@ model PostClapNotification {
   id             Int               @id @default(autoincrement())
   notificationId Int
   postClapId     Int
-  notification   InAppNotification @relation(fields: [notificationId], references: [id])
+  notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
   postClap       PostClap          @relation(fields: [postClapId], references: [id])
 }
 
@@ -449,7 +449,7 @@ model NewPostNotification {
   id             Int               @id @default(autoincrement())
   notificationId Int
   postId         Int
-  notification   InAppNotification @relation(fields: [notificationId], references: [id])
+  notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
   post           Post              @relation(fields: [postId], references: [id])
 }
 

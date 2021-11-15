@@ -3,7 +3,11 @@ import { intArg, objectType, extendType } from 'nexus'
 
 import { EmailNotificationType } from '@journaly/j-db-client'
 
-import { createNotification, hasAuthorPermissions } from './utils'
+import {
+  createInAppNotification, 
+  createEmailNotification,
+  hasAuthorPermissions
+} from './utils'
 
 const CommentThanks = objectType({
   name: 'CommentThanks',
@@ -64,37 +68,21 @@ const ThanksMutations = extendType({
           },
         })
 
-        await createNotification(ctx.db, comment.author, {
+        await createEmailNotification(ctx.db, comment.author, {
           type: EmailNotificationType.THREAD_COMMENT_THANKS,
           commentThanks,
         })
 
-        const ian = await ctx.db.inAppNotification.upsert({
-          create: {
-            userId: comment.authorId,
-            type: InAppNotificationType.THREAD_COMMENT_THANKS,
-            postId: comment.thread.postId,
-            bumpedAt: new Date(),
+        await createInAppNotification(ctx.db, {
+          user: comment.authorId,
+          type: InAppNotificationType.THREAD_COMMENT_THANKS,
+          key: {
+            postId: comment.thread.post.id,
             triggeringUserId: userId,
           },
-          update: {
-            bumpedAt: new Date(),
-          },
-          where: {
-            userId_type_postId_triggeringUserId: {
-              userId: comment.author.id,
-              postId: comment.thread.post.id,
-              triggeringUserId: userId,
-              type: InAppNotificationType.THREAD_COMMENT_THANKS,
-            },
-          },
-        })
-
-        await ctx.db.threadCommentThanksNotification.create({
-          data: {
-            notificationId: ian.id,
+          subNotification: {
             thanksId: commentThanks.id,
-          },
+          }
         })
 
         return commentThanks

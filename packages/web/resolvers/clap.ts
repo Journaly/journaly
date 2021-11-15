@@ -1,6 +1,6 @@
 import { extendType, intArg, objectType } from 'nexus'
 import { EmailNotificationType, InAppNotificationType } from '@journaly/j-db-client'
-import { createNotification, hasAuthorPermissions } from './utils'
+import { createEmailNotification, hasAuthorPermissions } from './utils'
 
 const PostClap = objectType({
   name: 'PostClap',
@@ -55,7 +55,7 @@ const PostClapMutations = extendType({
           },
         })
 
-        await createNotification(ctx.db, post.author, {
+        await createEmailNotification(ctx.db, post.author, {
           type: EmailNotificationType.POST_CLAP,
           postClap,
         })

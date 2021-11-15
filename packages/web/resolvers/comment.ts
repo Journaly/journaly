@@ -16,7 +16,8 @@ import {
 
 import {
   hasAuthorPermissions,
-  createNotification,
+  createEmailNotification,
+  createInAppNotification,
   assignBadge,
 } from './utils'
 import { NotFoundError } from './errors'
@@ -232,37 +233,16 @@ const CommentMutations = extendType({
             return new Promise((res) => res(null))
           }
 
-          await createNotification(ctx.db, user, {
+          await createEmailNotification(ctx.db, user, {
             type: EmailNotificationType.THREAD_COMMENT,
             comment,
           })
 
-          const ian = await ctx.db.inAppNotification.upsert({
-            create: {
-              userId: user.id,
-              type: InAppNotificationType.THREAD_COMMENT,
-              bumpedAt: new Date(),
-              postId: thread.post.id,
-              // A stable `triggeringUserId` is required for grouping, even
-              // though the post author isn't really the one who triggered it
-              triggeringUserId: thread.post.author.id,
-            },
-            update: {
-              bumpedAt: new Date(),
-            },
-            where: {
-              userId_type_postId_triggeringUserId: {
-                postId: thread.post.id,
-                userId: user.id,
-                triggeringUserId: thread.post.author.id,
-                type: InAppNotificationType.THREAD_COMMENT,
-              }
-            }
-          })
-
-          await ctx.db.threadCommentNotification.create({
-            data: {
-              notificationId: ian.id,
+          await createInAppNotification(ctx.db, {
+            user: user.id,
+            type: InAppNotificationType.THREAD_COMMENT,
+            key: { postId: thread.post.id, },
+            subNotification: {
               commentId: comment.id
             }
           })

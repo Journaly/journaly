@@ -96,7 +96,7 @@ const User = objectType({
     })
     t.int('languagesPostedInCount', {
       async resolve(parent, _args, ctx, _info) {
-        const q = await ctx.db.$queryRaw`
+        const q = await ctx.db.$queryRaw<{ count: number }[]>`
           SELECT COUNT(DISTINCT "languageId") as count
           FROM "Post"
           WHERE
@@ -199,7 +199,7 @@ const User = objectType({
             ON post_activity.date = post_comment_activity.date
           ;
         `
-        return stats || []
+        return stats as any || []
       },
     })
   },

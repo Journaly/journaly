@@ -239,7 +239,7 @@ const CommentMutations = extendType({
           })
 
           await createInAppNotification(ctx.db, {
-            user: user.id,
+            userId: user.id,
             type: InAppNotificationType.THREAD_COMMENT,
             key: { postId: thread.post.id, },
             subNotification: {
@@ -419,7 +419,7 @@ const CommentMutations = extendType({
           }
 
           promises.push(
-            createNotification(ctx.db, user, {
+            createEmailNotification(ctx.db, user, {
               type: EmailNotificationType.POST_COMMENT,
               postComment,
             }),

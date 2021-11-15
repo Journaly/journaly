@@ -74,7 +74,7 @@ const ThanksMutations = extendType({
         })
 
         await createInAppNotification(ctx.db, {
-          user: comment.authorId,
+          userId: comment.authorId,
           type: InAppNotificationType.THREAD_COMMENT_THANKS,
           key: {
             postId: comment.thread.post.id,

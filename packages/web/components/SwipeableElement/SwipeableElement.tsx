@@ -13,12 +13,10 @@ type SwipeableElementProps = {
 type Swipe = {
   touchStart: number
   touchEnd: number
-  moved: boolean
   isSwiping: boolean
-  prevTranslate: number
-  currentTranslate: string
+  currentTranslate: number
   animationId: number
-  // startPosition: number
+  translateStart: number
 }
 
 const SwipeableElement: React.FC<SwipeableElementProps> = ({
@@ -28,7 +26,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
 }) => {
   const { t } = useTranslation('notifications')
 
-  const swipe = useRef({
+  const swipe = useRef<Swipe>({
     touchStart: 0,
     touchEnd: 0,
     isSwiping: false,

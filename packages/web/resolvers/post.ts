@@ -22,6 +22,7 @@ import {
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
   Prisma,
+  Post,
   PostStatus,
   BadgeType,
   PrismaClient,
@@ -394,13 +395,13 @@ const PostQueries = extendType({
         `
 
         const [posts, [{ count }]] = await Promise.all([
-          ctx.db.$queryRaw`
+          ctx.db.$queryRaw<Post[]>`
             SELECT p.* ${queryPred}
             ORDER BY p."bumpedAt" DESC
             LIMIT ${args.first}
             OFFSET ${args.skip};
           `,
-          ctx.db.$queryRaw`SELECT COUNT(*) ${queryPred};`,
+          ctx.db.$queryRaw<{ count: number }[]>`SELECT COUNT(*) ${queryPred};`,
         ])
 
         return { posts, count }

@@ -53,24 +53,26 @@ const createEmailNotification = (
 type InAppNotificationSubtypes = {
   ThreadComment: {
     type: 'THREAD_COMMENT'
-    subNotification: Prisma.InAppNotificationCreateInput.threadNotifications
+    subNotification: Prisma.ThreadCommentNotificationUncheckedCreateWithoutNotificationInput
   }
   ThreadCommentThanks: {
     type: 'THREAD_COMMENT_THANKS'
-    subNotification: Prisma.InAppNotificationCreateInput.threadCommentThanksNotifications
+    subNotification: Prisma.ThreadCommentThanksNotificationUncheckedCreateWithoutNotificationInput
   }
+  /*
   PostClap: {
     type: 'POST_CLAP'
-    subNotification: Prisma.InAppNotificationCreateInput.postClapNotifications
+    subNotification: Prisma.ThreadCommentThanksNotificationUncheckedCreateNestedManyWithoutNotificationInput
   }
   PostComment: {
     type: 'POST_COMMENT'
-    subNotification: Prisma.InAppNotificationCreateInput.postCommentNotifications
+    subNotification: Prisma.ThreadCommentThanksNotificationUncheckedCreateNestedManyWithoutNotificationInput
   }
+  */
 }
 
 type BaseInAppNotificationCreationInput = {
-  user: User,
+  userId: number,
   key: Partial<Pick<Prisma.InAppNotificationUncheckedCreateInput, 'postId' | 'triggeringUserId' >>
 }
 
@@ -92,7 +94,7 @@ const createInAppNotification = async (
       ...input.key,
       readStatus: 'UNREAD',
       type: input.type,
-      userId: input.user.id,
+      userId: input.userId,
     },
   })
 
@@ -102,7 +104,7 @@ const createInAppNotification = async (
     case 'THREAD_COMMENT': {
       subnoteData = {
         threadCommentNotifications: {
-          create: input.subNotification
+          create: [input.subNotification]
         }
       }
       break
@@ -110,7 +112,7 @@ const createInAppNotification = async (
     case 'THREAD_COMMENT_THANKS': {
       subnoteData = {
         threadCommentThanksNotifications: {
-          create: input.subNotification
+          create: [input.subNotification]
         }
       }
       break
@@ -131,7 +133,7 @@ const createInAppNotification = async (
         ...subnoteData,
         ...input.key,
         bumpedAt: timestamp,
-        userId: input.user.id,
+        userId: input.userId,
         type: input.type,
       }
     })

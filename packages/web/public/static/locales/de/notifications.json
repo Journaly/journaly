@@ -11,9 +11,9 @@
   },
   "levelTwo": {
     "newFollowers": "Diese {{followerCount}} großartigen Journaler folgen dir nun",
-    "threadCommentThanks": "{{userIdentifier}} said thank you for the following {{thanksCount}} feedback comments",
+    "threadCommentThanks": "{{userIdentifier}} hat für die folgendenden {{thanksCount}} Feedback-Kommentare Danke gesagt",
     "postClaps": "Diese {{userCount}} Leute haben deinem Beitrag applaudiert",
-    "newPosts": "New posts from your community"
+    "newPosts": "Neue Beiträge aus deiner Community"
   },
   "actions": {
     "markAsRead": "Gelesen",

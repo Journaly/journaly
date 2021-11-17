@@ -2,11 +2,11 @@ import React from 'react'
 import Markdown from 'react-markdown'
 import { NotificationFragmentFragment as NotificationType } from '@/generated/graphql'
 import theme from '@/theme'
-import BlankAvatarIcon from '../Icons/BlankAvatarIcon'
 import ClapIcon from '../Icons/ClapIcon'
 import UserList from '../UserList'
 import { useTranslation } from '@/config/i18n'
 import LikeIcon from '../Icons/LikeIcon'
+import UserAvatar from '../UserAvatar'
 
 export type LevelOneNotificationProps = {
   notification: NotificationType
@@ -165,15 +165,7 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
   return (
     <div className="container">
       <div className="left-section">
-        {thanksAuthor.profileImage ? (
-          <img
-            src={thanksAuthor.profileImage}
-            alt={`${thanksAuthor?.name || thanksAuthor.handle}'s avatar'`}
-            className="user-avatar"
-          />
-        ) : (
-          <BlankAvatarIcon />
-        )}
+        <UserAvatar user={thanksAuthor} size={50} />
       </div>
       <div className="middle-section" onClick={onNotificationClick}>
         <p>
@@ -211,13 +203,6 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
           width: 100%;
           object-fit: cover;
           height: 50px;
-        }
-
-        .user-avatar {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
         }
       `}</style>
     </div>
@@ -275,13 +260,6 @@ export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps
           object-fit: cover;
           height: 50px;
         }
-
-        .user-avatar {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
       `}</style>
     </div>
   )
@@ -308,8 +286,6 @@ export const NewPostNotificationLevelOne: React.FC<LevelOneNotificationProps> = 
           border-bottom: 1px solid ${theme.colors.gray600};
           min-height: 100px;
           align-items: center;
-          // TODO: decide what to do here
-          cursor: grab;
           user-select: none;
         }
 
@@ -349,17 +325,17 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
 
   return (
     <div className="container" onClick={onNotificationClick}>
-      {followerCount === 1 ? (
+      {followerCount > 1 ? (
       <ul className="multiple-follower-container">
         <li>
-        <img className="user-avatar" src={notification.newFollowerNotifications[0]?.followingUser?.profileImage || ''} />
+        <UserAvatar user={notification.newFollowerNotifications[0]?.followingUser} size={50} />
         </li>
         <li>
-        <BlankAvatarIcon color={theme.colors.white} size={50} />
+        <UserAvatar user={notification.newFollowerNotifications[1]?.followingUser} size={50} />
         </li>
       </ul>
         ): (
-          <img className="user-avatar" src={notification.newFollowerNotifications[0].followingUser?.profileImage || ''} />
+          <UserAvatar user={notification.newFollowerNotifications[0]?.followingUser} size={50} />
       )}
       <p>{t('levelOne.newFollowers', { followerCount })}</p>
       <style jsx>{`
@@ -376,23 +352,16 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
           flex: 1;
         }
 
-        .user-avatar {
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-
         .multiple-follower-container {
           position: relative;
+          // TODO: figure proper centering out here
+          margin-top: 16px;
         }
 
         .multiple-follower-container > li:nth-child(2) {
           position: absolute;
-          /* top: -16px;
-          left: -16px; */
-          top: 0;
-          left: -28px;
+          top: -16px;
+          left: -16px;
           z-index: -1;
         }
       `}</style>
@@ -433,15 +402,7 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
   return (
     <div className="container" onClick={onNotificationClick}>
       <div className="thanks-author">
-        {thanksAuthor.profileImage ? (
-          <img
-            src={thanksAuthor.profileImage}
-            alt={`${userIdentifier}'s avatar'`}
-            className="user-avatar"
-          />
-        ) : (
-          <BlankAvatarIcon color={theme.colors.white} />
-        )}
+        <UserAvatar user={thanksAuthor} size={50} />
       </div>
       <p className="title">{t('levelTwo.threadCommentThanks', { userIdentifier, thanksCount })}</p>
       {Object.values(threadGroupedThanks).map(
@@ -490,13 +451,6 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
 
         .thanks-author {
           margin: 0 auto;
-        }
-
-        .user-avatar {
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          object-fit: cover;
         }
 
         .thread {
@@ -584,15 +538,7 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
               <ul>
                 {comments.map((comment) => (
                   <li className="comment">
-                    {comment.author.profileImage ? (
-                      <img
-                        src={comment.author.profileImage}
-                        alt={`${comment.author?.name || comment.author.handle}'s avatar'`}
-                        className="user-avatar"
-                      />
-                    ) : (
-                      <BlankAvatarIcon color={theme.colors.white} />
-                    )}
+                    <UserAvatar user={comment.author} size={50} />
                     <div className="comment-right-side">
                       <span className="author-identifier">@{comment.author.handle}</span>
                       <Markdown>{comment.body}</Markdown>
@@ -627,13 +573,6 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
           background-color: ${theme.colors.highlightColor};
           margin-bottom: 12px;
           padding: 4px;
-        }
-
-        .user-avatar {
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          object-fit: cover;
         }
 
         .thread {
@@ -675,15 +614,7 @@ export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps
       <ul>
         {comments.map((comment) => (
           <li className="comment">
-            {comment.author.profileImage ? (
-              <img
-                src={comment.author.profileImage}
-                alt={`${comment.author?.name || comment.author.handle}'s avatar'`}
-                className="user-avatar"
-              />
-            ) : (
-              <BlankAvatarIcon color={theme.colors.white} />
-            )}
+            <UserAvatar user={comment.author} size={50} />
             <div className="comment-right-side">
               <span className="author-identifier">@{comment.author.handle}</span>
               <Markdown>{comment.body}</Markdown>
@@ -706,13 +637,6 @@ export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps
           font-size: 20px;
           text-align: center;
           margin-bottom: 16px;
-        }
-
-        .user-avatar {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
         }
 
         ul {
@@ -749,15 +673,7 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
       <p className="post-title">{t('levelTwo.newPosts')}</p>
       {newPosts.map((post) => (
         <div className="post">
-          {post.author.profileImage ? (
-            <img
-              src={post.author.profileImage}
-              alt={`${post.author?.name || post.author.handle}'s avatar'`}
-              className="user-avatar"
-            />
-          ) : (
-            <BlankAvatarIcon color={theme.colors.white} />
-          )}
+          <UserAvatar user={post.author} size={50} />
           <p className="post-title">{post.title}</p>
           <img
             className="post-image"
@@ -782,13 +698,6 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
           font-size: 20px;
           text-align: center;
           margin-bottom: 16px;
-        }
-
-        .user-avatar {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
         }
 
         .post {
@@ -835,13 +744,6 @@ export const NewFollowerNotificationLevelTwo: React.FC<LevelTwoNotificationProps
           text-align: center;
           background-color: ${theme.colors.highlightColor};
           margin-bottom: 8px;
-        }
-
-        .user-avatar {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
         }
 
         .thread {

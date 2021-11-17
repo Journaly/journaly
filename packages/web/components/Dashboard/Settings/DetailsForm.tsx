@@ -12,9 +12,9 @@ import {
   useResendEmailVerificationEmailMutation,
   useUpdateUserMutation,
 } from '@/generated/graphql'
-import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import { ApolloError } from '@apollo/client'
 import { toast } from 'react-toastify'
+import UserAvatar from '@/components/UserAvatar'
 
 type DetailsFormProps = {
   currentUser: UserType
@@ -122,11 +122,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
       <SettingsFieldset legend={t('profile.details.legend')}>
         <div className="details-wrapper">
           <div className="profile-image-wrapper">
-            {profileImage ? (
-              <img src={profileImage} alt="" />
-            ) : (
-              <BlankAvatarIcon className="blank-avatar" size={130} />
-            )}
+            <UserAvatar user={currentUser} size={130} />
 
             <Button
               onClick={(e) => {
@@ -315,17 +311,6 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
           .profile-image-wrapper {
             margin-top: 30px;
           }
-        }
-
-        .profile-image-wrapper :global(img) {
-          width: 100%;
-          height: 150px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-        .profile-image-wrapper :global(.blank-avatar) {
-          border-radius: 50%;
-          background-color: ${theme.colors.blueLight};
         }
 
         .details-form-fields-wrapper {

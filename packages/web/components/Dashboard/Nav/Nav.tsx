@@ -15,12 +15,12 @@ import {
 import HamburgerIcon from '../Header/HamburgerIcon'
 import NavLink from '@/components/NavLink'
 import FeedIcon from '@/components/Icons/FeedIcon'
-import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import HelpIcon from '@/components/Icons/HelpIcon'
 import Modal from '@/components/Modal'
 import NotificationsIcon from '@/components/Icons/NotificationsIcon'
 import NotificationFeed from '@/components/NotificationFeed'
 import { useNotificationContext } from '@/components/NotificationFeed/NotificationContext'
+import UserAvatar from '@/components/UserAvatar'
 
 interface Props {
   expanded: boolean
@@ -83,13 +83,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             )}
             <div className="nav-top">
               <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${currentUser.id}`}>
-                <a onClick={handleCollapse} className="profile-image">
-                  {currentUser.profileImage ? (
-                    <img src={currentUser.profileImage} alt="" />
-                  ) : (
-                    <BlankAvatarIcon size={60} />
-                  )}
-
+                <a onClick={handleCollapse}>
+                  <UserAvatar size={60} user={currentUser} />
                   <p className="current-user-name">{currentUser.handle}</p>
                 </a>
               </Link>
@@ -312,18 +307,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           align-items: center;
           justify-content: center;
           width: 100%;
-        }
-
-        .profile-image img {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-
-        .profile-image :global(svg) {
-          border-radius: 50%;
-          background-color: ${theme.colors.blueLight};
         }
 
         .current-user-name,

@@ -4,8 +4,18 @@
   - Changed the type of `type` on the `PendingNotification` table. No cast exists, the column would be dropped and recreated, which cannot be done if there is data, since the column is required.
 
 */
+
+-- Re-name "NotificationType" to "EmailNotificationType", manual SQL to address above warning.
 -- CreateEnum
 CREATE TYPE "EmailNotificationType" AS ENUM ('THREAD_COMMENT', 'POST_COMMENT', 'THREAD_COMMENT_THANKS', 'NEW_POST', 'POST_CLAP');
+
+ALTER TABLE "PendingNotification" ALTER COLUMN "type" TYPE VARCHAR(255);
+
+DROP TYPE IF EXISTS "NotificationType" CASCADE;
+
+ALTER TABLE "PendingNotification"
+  ALTER COLUMN "type" TYPE "EmailNotificationType"
+  USING ("type"::"EmailNotificationType");
 
 -- CreateEnum
 CREATE TYPE "InAppNotificationType" AS ENUM ('THREAD_COMMENT', 'POST_COMMENT', 'THREAD_COMMENT_THANKS', 'NEW_POST', 'POST_CLAP', 'NEW_FOLLOWER');
@@ -127,9 +137,6 @@ ADD COLUMN     "type" "EmailNotificationType" NOT NULL;
 
 -- AlterTable
 ALTER TABLE "Post" ALTER COLUMN "status" SET DEFAULT E'DRAFT';
-
--- DropEnum
-DROP TYPE "NotificationType";
 
 -- CreateTable
 CREATE TABLE "InAppNotification" (

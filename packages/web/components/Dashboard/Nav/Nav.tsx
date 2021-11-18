@@ -15,12 +15,13 @@ import {
 import HamburgerIcon from '../Header/HamburgerIcon'
 import NavLink from '@/components/NavLink'
 import FeedIcon from '@/components/Icons/FeedIcon'
-import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import HelpIcon from '@/components/Icons/HelpIcon'
 import Modal from '@/components/Modal'
 import NotificationsIcon from '@/components/Icons/NotificationsIcon'
 import NotificationFeed from '@/components/NotificationFeed'
+import NotificationFeedMobile from '@/components/NotificationFeed/NotificationFeedMobile'
 import { useNotificationContext } from '@/components/NotificationFeed/NotificationContext'
+import UserAvatar from '@/components/UserAvatar'
 
 interface Props {
   expanded: boolean
@@ -31,7 +32,11 @@ interface Props {
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
 
-  const [showNotificationFeed, setShowNotificationFeed] = useState(false)
+  // TODO: figure out proper calculation & handling both nav widths
+  const [notificationFeedDesktopTranslate, setNotificationFeedDesktopTranslate] = useState(-120)
+
+  const [notificationFeedDesktopIsShowing, setNotificationFeedDesktopIsShowing] = useState(false)
+  const [showNotificationFeedMobile, setShowNotificationFeedMobile] = useState(false)
   const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
     refetchQueries: [{ query: CurrentUserDocument }],
@@ -54,6 +59,17 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
       document.body.classList.remove('block-transitions-on-page-load')
     }, 0)
   }, [])
+
+  const handleToggleNotificationFeedDesktop = () => {
+    // TODO: figure out why first click doesn't open it
+    if (notificationFeedDesktopIsShowing) {
+      setNotificationFeedDesktopTranslate(0)
+      setNotificationFeedDesktopIsShowing(!notificationFeedDesktopIsShowing)
+    } else {
+      setNotificationFeedDesktopTranslate(-100)
+      setNotificationFeedDesktopIsShowing(!notificationFeedDesktopIsShowing)
+    }
+  }
 
   const handleCollapse = (): void => {
     // Collapse the nav after clicking a link for mobile only
@@ -78,18 +94,13 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
 
         {currentUser && (
           <>
-            {showNotificationFeed && (
-              <div className="notification-feed-container">{/* <NotificationsFeed /> */}</div>
-            )}
+            <div className="notification-feed-desktop-container">
+              <NotificationFeed onClose={handleToggleNotificationFeedDesktop} />
+            </div>
             <div className="nav-top">
               <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${currentUser.id}`}>
-                <a onClick={handleCollapse} className="profile-image">
-                  {currentUser.profileImage ? (
-                    <img src={currentUser.profileImage} alt="" />
-                  ) : (
-                    <BlankAvatarIcon size={60} />
-                  )}
-
+                <a onClick={handleCollapse}>
+                  <UserAvatar size={60} user={currentUser} />
                   <p className="current-user-name">{currentUser.handle}</p>
                 </a>
               </Link>
@@ -116,10 +127,9 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
 
               <hr />
 
-              <NavLink href="">
-                <a
+                <div
                   className="nav-link"
-                  onClick={() => setShowNotificationFeed(true)}
+                  onClick={handleToggleNotificationFeedDesktop}
                   data-testid="notifications-nav-link"
                 >
                   <NotificationsIcon
@@ -127,8 +137,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                     aria-hidden="true"
                   />
                   <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
-                </a>
-              </NavLink>
+                </div>
               <NavLink href="/dashboard/settings/profile">
                 <a className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
                   <img src="/images/icons/settings-icon.svg" alt="" />
@@ -207,7 +216,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           />
         )}
       </nav>
-      {showNotificationFeed && <NotificationFeed onClose={() => setShowNotificationFeed(false)} />}
+      {showNotificationFeedMobile && <NotificationFeedMobile onClose={() => setShowNotificationFeedMobile(false)} />}
       <style jsx>{`
         .nav-background {
           position: fixed;
@@ -220,13 +229,19 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           z-index: ${navConstants.zIndex};
         }
 
-        .notification-feed-container {
+        .notification-feed-desktop-container {
           position: absolute;
           top: 0;
           height: 100vh;
           left: 100%;
-          background-color: ${theme.colors.charcoal};
+          /* TODO: make this work for both navWidths */
+          transform: translateX(${notificationFeedDesktopTranslate}%) translateX(-${notificationFeedDesktopIsShowing ? navConstants.skinnyNavWidth : 0}px);
+          transition: transform 0.5s ease;
           width: min(50vw, 400px);
+          overflow-x: hidden;
+          /* TODO: fix z-indexing here
+          z-index: calc(${navConstants.zIndex} - 1); */
+          z-index: -1;
         }
 
         .expanded .nav-background {
@@ -314,18 +329,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           width: 100%;
         }
 
-        .profile-image img {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-
-        .profile-image :global(svg) {
-          border-radius: 50%;
-          background-color: ${theme.colors.blueLight};
-        }
-
         .current-user-name,
         .nav-link {
           /* Prevent words from wrapping during transition */
@@ -366,6 +369,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         .nav-link.active,
         .nav-link:hover {
           background-color: #5a5a5a;
+          cursor: pointer;
         }
 
         .nav-link img {
@@ -437,6 +441,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             transform: translateX(0%);
             width: ${navConstants.skinnyNavWidth}px;
           }
+
+          .
 
           .nav-top {
             margin-top: 50px;

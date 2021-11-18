@@ -132,10 +132,6 @@ ALTER TABLE "UserInterest" DROP CONSTRAINT "UserInterest_topicId_fkey";
 ALTER TABLE "UserInterest" DROP CONSTRAINT "UserInterest_userId_fkey";
 
 -- AlterTable
-ALTER TABLE "PendingNotification" DROP COLUMN "type",
-ADD COLUMN     "type" "EmailNotificationType" NOT NULL;
-
--- AlterTable
 ALTER TABLE "Post" ALTER COLUMN "status" SET DEFAULT E'DRAFT';
 
 -- CreateTable

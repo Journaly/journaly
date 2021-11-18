@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
 
@@ -29,13 +29,16 @@ interface Props {
   collapse: () => void
 }
 
+const NOTIFICATION_FEED_SLIDE_TIME = 0.5
+
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
 
-  // TODO: figure out proper calculation & handling both nav widths
-  const [notificationFeedDesktopTranslate, setNotificationFeedDesktopTranslate] = useState(-120)
+  // TODO: Refactor these into a hook
+  const [renderNotificationFeedDesktop, setRenderNotificationFeedDesktop] = useState(false)
+  const [showNotificationFeedDesktop, setShowNotificationFeedDesktop] = useState(false)
+  const unrenderNotificationFeedDesktopTimeout = useRef<ReturnType<typeof setTimeout>>()
 
-  const [notificationFeedDesktopIsShowing, setNotificationFeedDesktopIsShowing] = useState(false)
   const [showNotificationFeedMobile, setShowNotificationFeedMobile] = useState(false)
   const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
@@ -61,13 +64,17 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   }, [])
 
   const handleToggleNotificationFeedDesktop = () => {
-    // TODO: figure out why first click doesn't open it
-    if (notificationFeedDesktopIsShowing) {
-      setNotificationFeedDesktopTranslate(0)
-      setNotificationFeedDesktopIsShowing(!notificationFeedDesktopIsShowing)
+    if (!showNotificationFeedDesktop) {
+      if (unrenderNotificationFeedDesktopTimeout.current) {
+        clearTimeout(unrenderNotificationFeedDesktopTimeout.current)
+      }
+      setRenderNotificationFeedDesktop(true)
+      setShowNotificationFeedDesktop(true)
     } else {
-      setNotificationFeedDesktopTranslate(-100)
-      setNotificationFeedDesktopIsShowing(!notificationFeedDesktopIsShowing)
+      setShowNotificationFeedDesktop(false)
+      unrenderNotificationFeedDesktopTimeout.current = setTimeout(() => {
+        setRenderNotificationFeedDesktop(false)
+      }, NOTIFICATION_FEED_SLIDE_TIME * 1000)
     }
   }
 
@@ -88,15 +95,18 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   return (
     <div className={navStyles}>
       <div className="nav-background" onClick={handleCollapse} />
-
+      {currentUser && (
+        <div className="notification-feed-desktop-container">
+          {renderNotificationFeedDesktop && (
+            <NotificationFeed onClose={handleToggleNotificationFeedDesktop} />
+          )}
+        </div>
+      )}
       <nav>
         <HamburgerIcon onClick={handleCollapse} className="mobile-hamburger-icon" />
 
         {currentUser && (
           <>
-            <div className="notification-feed-desktop-container">
-              <NotificationFeed onClose={handleToggleNotificationFeedDesktop} />
-            </div>
             <div className="nav-top">
               <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${currentUser.id}`}>
                 <a onClick={handleCollapse}>
@@ -128,7 +138,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               <hr />
 
                 <div
-                  className="nav-link"
+                  className="nav-link notifications"
                   onClick={handleToggleNotificationFeedDesktop}
                   data-testid="notifications-nav-link"
                 >
@@ -218,6 +228,23 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
       </nav>
       {showNotificationFeedMobile && <NotificationFeedMobile onClose={() => setShowNotificationFeedMobile(false)} />}
       <style jsx>{`
+        .nav-wrapper {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          z-index: 2;
+          width: ${navConstants.navWidth}px;
+        }
+
+        .nav-wrapper.expanded {
+          z-index: ${navConstants.zIndex};
+        }
+
+        nav > :global(*) {
+          max-width: ${navConstants.navWidth}px;
+        }
+
         .nav-background {
           position: fixed;
           top: 0;
@@ -226,22 +253,18 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           background-color: rgba(0, 0, 0, 0.4);
           opacity: 0;
           transition: opacity ${navConstants.transitionDuration}ms linear;
-          z-index: ${navConstants.zIndex};
         }
 
         .notification-feed-desktop-container {
           position: absolute;
           top: 0;
           height: 100vh;
-          left: 100%;
-          /* TODO: make this work for both navWidths */
-          transform: translateX(${notificationFeedDesktopTranslate}%) translateX(-${notificationFeedDesktopIsShowing ? navConstants.skinnyNavWidth : 0}px);
-          transition: transform 0.5s ease;
+          left: ${showNotificationFeedDesktop ? '100%' : 'max(-50vw, -400px)'};
+          transition: left ${NOTIFICATION_FEED_SLIDE_TIME}s ease;
           width: min(50vw, 400px);
           overflow-x: hidden;
-          /* TODO: fix z-indexing here
-          z-index: calc(${navConstants.zIndex} - 1); */
           z-index: -1;
+          border-left: 1px solid ${theme.colors.gray600};
         }
 
         .expanded .nav-background {
@@ -256,19 +279,17 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         }
 
         nav {
-          position: fixed;
-          top: 0;
-          bottom: 0;
-          left: 0;
           display: grid;
           grid-template-rows: 1fr 2fr 1fr;
           grid-gap: 10px;
-          width: ${navConstants.navWidth}px;
           background-color: ${theme.colors.charcoal};
           z-index: ${navConstants.zIndex};
           transform: translateX(-100%);
           transition: transform ${navConstants.transitionDuration}ms linear,
             width ${navConstants.transitionDuration}ms linear;
+          width: 100%;
+          height: 100%;
+          // TODO: Figure this out
           /* overflow-y: auto;
           overflow-x: visible; */
           overflow: visible;
@@ -363,7 +384,11 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           font-size: 16px;
           color: ${theme.colors.white};
           transition: padding-left ${navConstants.transitionDuration}ms linear,
-            padding-right ${navConstants.transitionDuration}ms linear;
+          padding-right ${navConstants.transitionDuration}ms linear;
+        }
+
+        .nav-link.notifications {
+          padding: 21px;
         }
 
         .nav-link.active,
@@ -425,6 +450,10 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             padding: 25px;
           }
 
+          .nav-link.notifications {
+            padding: 22px 25px;
+          }
+
           .nav-link-text {
             margin-left: 15px;
             font-size: 16px;
@@ -435,14 +464,18 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           .nav-background {
             display: none;
           }
+          .nav-wrapper {
+            width: ${navConstants.skinnyNavWidth}px;
+          }
+
+          nav > :global(*) {
+            max-width: ${navConstants.skinnyNavWidth}px;
+          }
 
           nav {
             grid-gap: 30px;
             transform: translateX(0%);
-            width: ${navConstants.skinnyNavWidth}px;
           }
-
-          .
 
           .nav-top {
             margin-top: 50px;
@@ -453,10 +486,15 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           .disable-large-nav .nav-background {
             display: none;
           }
+          .disable-large-nav .nav-wrapper {
+            width: ${navConstants.skinnyNavWidth}px;
+          }
+          .disable-large-nav nav > :global(*) {
+            max-width: ${navConstants.skinnyNavWidth}px;
+          }
           .disable-large-nav nav {
             grid-gap: 30px;
             transform: translateX(0%);
-            width: ${navConstants.skinnyNavWidth}px;
           }
           .disable-large-nave .nav-top {
             margin-top: 50px;
@@ -493,6 +531,9 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             justify-content: normal;
             height: auto;
             padding: 25px;
+          }
+          .nav-wrapper:not(.disable-large-nav) .nav-link.notifications {
+            padding: 22px 25px;
           }
           .nav-wrapper:not(.disable-large-nav) .nav-link-text {
             margin-left: 15px;

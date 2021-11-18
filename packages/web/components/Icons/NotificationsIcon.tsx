@@ -34,6 +34,7 @@ function NotificationsIcon({
       <style jsx>{`
         .container {
           position: relative;
+          height: 30px;
         }
       `}</style>
     </div>

@@ -421,6 +421,11 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             display: block;
           }
 
+          // TODO: Fix animation issue
+          .nav-wrapper:not(.expanded) {
+            display: none;
+          }
+
           .nav-logo a {
             font-size: 24px;
             animation: fadeIn ${navConstants.transitionDuration}ms linear;

@@ -61,6 +61,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   }, [])
 
   const handleToggleNotificationFeedDesktop = () => {
+    // TODO: figure out why first click doesn't open it
     if (notificationFeedDesktopIsShowing) {
       setNotificationFeedDesktopTranslate(0)
       setNotificationFeedDesktopIsShowing(!notificationFeedDesktopIsShowing)
@@ -126,8 +127,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
 
               <hr />
 
-              <NavLink href="">
-                <a
+                <div
                   className="nav-link"
                   onClick={handleToggleNotificationFeedDesktop}
                   data-testid="notifications-nav-link"
@@ -137,8 +137,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                     aria-hidden="true"
                   />
                   <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
-                </a>
-              </NavLink>
+                </div>
               <NavLink href="/dashboard/settings/profile">
                 <a className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
                   <img src="/images/icons/settings-icon.svg" alt="" />
@@ -370,6 +369,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         .nav-link.active,
         .nav-link:hover {
           background-color: #5a5a5a;
+          cursor: pointer;
         }
 
         .nav-link img {

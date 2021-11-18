@@ -38,7 +38,7 @@ const UserList: React.FC<UserListProps> = ({ users, colorScheme = 'light-mode' }
         }
 
         .user-container:hover {
-          background-color: ${theme.colors.gray100};
+          background-color: ${colorScheme === 'light-mode' ? theme.colors.gray200 : theme.colors.gray800};
         }
 
         .name-handle-container {

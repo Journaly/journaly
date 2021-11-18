@@ -2,17 +2,26 @@
   "feedTitle": "Notifications",
   "emptyFeed": "You have no notifications... yet!",
   "levelOne": {
-    "newFollowers": "You got {{followerCount}} new follower",
-    "threadComments": "You got {{commentCount}} new feedback comments on this post",
-    "postComments": "You got {{commentCount}} new general comments on this post",
-    "postClaps": "{{clapCount}} people clapped for your post",
-    "threadCommentThanks": "{{userIdentifier}} said thanks for {{thanksCount}} feedback comments",
-    "newPosts": "Journalers you follow published {{postCount}} new posts"
+    "newFollowers_one": "You got 1 new follower",
+    "newFollowers_other": "You got {{count}} new followers",
+    "threadComments_one": "You got 1 new feedback comment on this post",
+    "threadComments_other": "You got {{count}} new feedback comments on this post",
+    "postComments_one": "You got 1 new general comment on this post",
+    "postComments_other": "You got {{count}} new general comments on this post",
+    "postClaps_one": "1 Journaler clapped for your post",
+    "postClaps_other": "{{count}} Journalers clapped for your post",
+    "threadCommentThanks_one": "{{userIdentifier}} said thanks for 1 feedback comment",
+    "threadCommentThanks_other": "{{userIdentifier}} said thanks for {{count}} feedback comments",
+    "newPosts_one": "A Journaler you follow published a new post",
+    "newPosts_other": "Journalers you follow published {{count}} new posts"
   },
   "levelTwo": {
-    "newFollowers": "These {{followerCount}} awesome Journalers are now following you",
-    "threadCommentThanks": "{{userIdentifier}} said thank you for the following {{thanksCount}} feedback comments",
-    "postClaps": "These {{userCount}} people clapped for your post",
+    "newFollowers_one": "This awesome Journaler is now following you",
+    "newFollowers_other": "These {{count}} awesome Journalers are now following you",
+    "threadCommentThanks_one": "{{userIdentifier}} said thank you for this helpful feedback comment",
+    "threadCommentThanks_other": "{{userIdentifier}} said thank you for the following {{count}} helpful feedback comments",
+    "postClaps_one": "This Journaler clapped for your post",
+    "postClaps_other": "These {{count}} Journalers clapped for your post",
     "newPosts": "New posts from your community"
   },
   "actions": {

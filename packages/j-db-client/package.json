@@ -1,6 +1,6 @@
 {
   "name": "@journaly/j-db-client",
-  "version": "13.15.0-ALPHA16",
+  "version": "13.16.0",
   "description": "Journaly's internal database client.",
   "main": "dist/index",
   "scripts": {

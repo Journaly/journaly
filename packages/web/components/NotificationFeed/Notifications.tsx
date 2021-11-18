@@ -52,6 +52,7 @@ export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationPro
 }) => {
   const { t } = useTranslation('notifications')
   const count = notification.threadCommentNotifications.length
+  // TODO: Get subscriber translation if needed
 
   return (
     <div className="container">
@@ -215,6 +216,7 @@ export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps
 }) => {
   const { t } = useTranslation('notifications')
   const count = notification.postCommentNotifications.length
+  // TODO: Get subscriber translation if needed
 
   return (
     <div className="container">

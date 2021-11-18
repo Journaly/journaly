@@ -13,8 +13,8 @@ const UserList: React.FC<UserListProps> = ({ users, colorScheme = 'light-mode' }
   return (
     <div className="list-container">
       {users.map((user) => (
-        <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${user.id}`}>
-          <a className="user-container" key={user.id}>
+        <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${user.id}`} key={user.id}>
+          <a className="user-container">
             <UserAvatar user={user} size={50} />
             <div className="name-handle-container">
               <p className="handle">{user.handle}</p>

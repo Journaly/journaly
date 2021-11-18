@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
 import cloneDeep from 'lodash/cloneDeep'
 import {
   CurrentUserDocument,
@@ -26,8 +25,6 @@ type NotificationFeedProps = {
 
 const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const { t } = useTranslation('notifications')
-
-  const notificationFeedRoot = document.getElementById('notification-feed-root')
   const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
   const [activeNotification, setActiveNotification] = useState<NotificationType | null>(null)
 
@@ -35,7 +32,6 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   console.log(notifications)
 
   if (!notifications) return null
-  if (!notificationFeedRoot) return null
 
   const handleGoToLevelTwo = (notification: NotificationType) => {
     setActiveNotification(notification)
@@ -81,8 +77,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
     })
   }
 
-  return ReactDOM.createPortal(
-    <div className="wrapper">
+  return (
       <div className="container">
         <div className="level-one">
           <div className="top">
@@ -122,7 +117,6 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
             )}
           </div>
         </div>
-      </div>
       <style jsx>{`
         @keyframes fadeIn {
           from {
@@ -133,11 +127,8 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
           }
         }
 
-        .wrapper {
-        }
-
         .container {
-          position: fixed;
+          position: absolute;
           top: 0;
           bottom: 0;
           left: 0;
@@ -188,8 +179,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
           text-align: center;
         }
       `}</style>
-    </div>,
-    notificationFeedRoot,
+      </div>
   )
 }
 

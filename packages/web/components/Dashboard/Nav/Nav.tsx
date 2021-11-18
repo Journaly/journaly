@@ -65,8 +65,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
       setNotificationFeedDesktopTranslate(0)
       setNotificationFeedDesktopIsShowing(!notificationFeedDesktopIsShowing)
     } else {
-      console.log(navConstants.navWidth)
-      setNotificationFeedDesktopTranslate(-120)
+      setNotificationFeedDesktopTranslate(-100)
       setNotificationFeedDesktopIsShowing(!notificationFeedDesktopIsShowing)
     }
   }
@@ -95,7 +94,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         {currentUser && (
           <>
             <div className="notification-feed-desktop-container">
-              <NotificationFeed onClose={() => setNotificationFeedDesktopTranslate(-100)} />
+              <NotificationFeed onClose={handleToggleNotificationFeedDesktop} />
             </div>
             <div className="nav-top">
               <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${currentUser.id}`}>
@@ -237,9 +236,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           height: 100vh;
           left: 100%;
           /* TODO: make this work for both navWidths */
-          transform: translateX(${notificationFeedDesktopTranslate}%) translateX(-${navConstants.skinnyNavWidth}px);
+          transform: translateX(${notificationFeedDesktopTranslate}%) translateX(-${notificationFeedDesktopIsShowing ? navConstants.skinnyNavWidth : 0}px);
           transition: transform 0.5s ease;
-          background-color: ${theme.colors.charcoal}50;
           width: min(50vw, 400px);
           overflow-x: hidden;
           /* TODO: fix z-indexing here

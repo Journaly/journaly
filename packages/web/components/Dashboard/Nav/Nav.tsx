@@ -64,6 +64,12 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   }, [])
 
   const handleToggleNotificationFeedDesktop = () => {
+    // If accessing from the mobile hamburger menu, show mobile notification feed
+    if (window.innerWidth < navConstants.mobileBreakpoint) {
+      setShowNotificationFeedMobile(true)
+      return
+    }
+    // When collapsing, allow animation to play before unmounting elements
     if (!showNotificationFeedDesktop) {
       if (unrenderNotificationFeedDesktopTimeout.current) {
         clearTimeout(unrenderNotificationFeedDesktopTimeout.current)

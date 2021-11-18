@@ -792,6 +792,9 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           .post-action-subcontainer > :global(button) {
             width: 100%;
           }
+          .post-container {
+            margin-top: 0;
+          }
         }
         .clap-container {
           display: flex;

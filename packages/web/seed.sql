@@ -1734,6 +1734,8 @@ COPY public."Auth" (id, "userId", password, "resetToken", "resetTokenExpiry", "e
 7	7	$2a$10$3g3UmKx2bZRDVQic3HDYKO2sTB2X5a4L2wrEO7NFnR9rny6DrLVha	\N	\N	e4cdbd2c91eeb548b0bb9a342df19471763160e6	VERIFIED
 8	8	$2a$10$Iqq/ux8dK0D8v9BOftuHo.0xmKpnUv8iT9vUZyCuhFMHUi4awMYjO	\N	\N	754f68a3ab9cd45e150b0d40f10ea48005e64c04	PENDING
 9	9	$2a$10$A16mk/LdVFB5cBSkBrlXV.q4R9PxtFnhcoNHuTdw0uKKNkP5feQfG	\N	\N	2eb4e734271a6db185a580162491136492db6a1d	VERIFIED
+10	10	$2a$10$z8EADBrP8mJwjI7g2mk1/eRjCS.e5WuaqQund17fiHZ5TOlGN9IYq	\N	\N	96cfb5c973b42c6db5186dc2f7e362c2546774dc	PENDING
+11	11	$2a$10$MfOV4bW7ZZewLGAU7p3Ja.YDty/8z65nMi9dlzoYCXZbq025SV2rm	\N	\N	e54837c12a77f70ee1e267fa16b55d1919174c3c	PENDING
 \.
 
 
@@ -1753,6 +1755,14 @@ COPY public."Comment" (id, "createdAt", "updatedAt", body, "authorId", "threadId
 12	2021-11-19 15:29:55.515	2021-11-19 15:30:19.871	Are you trying to get my daughter drunk **@smartest_man_in_westeros**? Right, meet me outside. Bring your little crossbow and I'll bring my giant sword.	8	2	BEGINNER
 13	2021-11-19 15:31:10.83	2021-11-19 15:31:10.831	HA HA I'm saved! 🙌🏼	4	2	BEGINNER
 14	2021-11-19 15:35:00.508	2021-11-19 15:35:00.509	Oh shut up, Tywin!	8	5	BEGINNER
+15	2021-11-19 18:53:41.298	2021-11-19 18:53:41.299	Are we allowed to swear on this bloody platform?	5	2	NATIVE
+16	2021-11-19 19:11:45.759	2021-11-19 19:11:45.76	The free folk would never say this. "nice" would be more widely understood.	3	9	NATIVE
+17	2021-11-19 19:12:05.574	2021-11-19 19:12:05.574	"nice" works just fine here, too.	3	10	NATIVE
+18	2021-11-19 19:13:58.775	2021-11-19 19:13:58.776	I'm not trying to be mean but I honestly just don't understand why people love this place. It smells, it's expensive, and if you're a northerner you will almost definitely be killed.	3	11	NATIVE
+20	2021-11-19 19:23:03.499	2021-11-19 19:23:03.5	Almost! It's **valar morghulis**	9	14	ADVANCED
+22	2021-11-19 19:27:43.867	2021-11-19 19:27:43.868	Damn it! I always mess up the spelling.	3	14	BEGINNER
+23	2021-11-19 19:28:09.946	2021-11-19 19:28:09.947	Great point! I definitely don't want to exclude our northern friends.	9	9	NATIVE
+24	2021-11-19 19:35:52.838	2021-11-19 19:35:52.839	I'm with Jon here. On literally every point... I can confirm from experience. Good post, though! I personally look forward to your High Valyrian posts. Cheers	8	11	BEGINNER
 \.
 
 
@@ -1768,6 +1778,12 @@ COPY public."CommentThanks" (id, "createdAt", "authorId", "commentId") FROM stdi
 5	2021-11-19 15:18:45.497	7	9
 6	2021-11-19 15:30:00.072	8	10
 7	2021-11-19 15:31:13.611	4	12
+8	2021-11-19 18:53:59.828	5	4
+9	2021-11-19 19:26:51.739	3	20
+10	2021-11-19 19:28:01.499	9	22
+11	2021-11-19 19:28:11.307	9	16
+12	2021-11-19 19:28:16.776	9	17
+13	2021-11-19 19:28:21.592	9	18
 \.
 
 
@@ -1793,20 +1809,32 @@ COPY public."InAppNotification" (id, type, "createdAt", "bumpedAt", "readStatus"
 7	THREAD_COMMENT_THANKS	2021-11-19 15:09:17.445	2021-11-19 15:09:17.435	UNREAD	1	3	7
 12	THREAD_COMMENT_THANKS	2021-11-19 15:16:49.87	2021-11-19 15:16:49.867	UNREAD	1	3	8
 14	THREAD_COMMENT_THANKS	2021-11-19 15:18:45.537	2021-11-19 15:18:45.525	UNREAD	1	8	7
-4	POST_CLAP	2021-11-19 15:08:19.915	2021-11-19 15:24:47.782	UNREAD	3	3	\N
-5	NEW_FOLLOWER	2021-11-19 15:08:23.61	2021-11-19 15:24:51.055	UNREAD	\N	3	\N
-15	NEW_FOLLOWER	2021-11-19 15:26:50.44	2021-11-19 15:26:50.43	UNREAD	\N	9	\N
 11	THREAD_COMMENT_THANKS	2021-11-19 15:16:47.182	2021-11-19 15:30:00.089	UNREAD	1	7	8
-16	THREAD_COMMENT	2021-11-19 15:29:55.564	2021-11-19 15:31:10.863	UNREAD	1	9	\N
-13	THREAD_COMMENT	2021-11-19 15:18:38.347	2021-11-19 15:31:10.864	UNREAD	1	8	\N
-10	THREAD_COMMENT	2021-11-19 15:16:23.292	2021-11-19 15:31:10.866	UNREAD	1	7	\N
 17	THREAD_COMMENT_THANKS	2021-11-19 15:31:13.648	2021-11-19 15:31:13.637	UNREAD	1	8	4
-8	THREAD_COMMENT	2021-11-19 15:10:22.95	2021-11-19 15:35:00.538	UNREAD	1	3	\N
-9	THREAD_COMMENT	2021-11-19 15:10:22.954	2021-11-19 15:35:00.542	UNREAD	1	4	\N
 18	NEW_POST	2021-11-19 15:40:00.821	2021-11-19 15:40:00.809	UNREAD	\N	3	\N
 19	POST_CLAP	2021-11-19 15:42:10.285	2021-11-19 15:42:10.278	UNREAD	2	4	\N
 20	POST_COMMENT	2021-11-19 15:42:35.74	2021-11-19 15:42:35.735	UNREAD	2	4	\N
-6	POST_CLAP	2021-11-19 15:08:49.907	2021-11-19 15:42:51.344	UNREAD	1	3	\N
+15	NEW_FOLLOWER	2021-11-19 15:26:50.44	2021-11-19 18:52:53.229	UNREAD	\N	9	\N
+9	THREAD_COMMENT	2021-11-19 15:10:22.954	2021-11-19 18:53:41.331	UNREAD	1	4	\N
+8	THREAD_COMMENT	2021-11-19 15:10:22.95	2021-11-19 18:53:41.33	UNREAD	1	3	\N
+16	THREAD_COMMENT	2021-11-19 15:29:55.564	2021-11-19 18:53:41.331	UNREAD	1	9	\N
+13	THREAD_COMMENT	2021-11-19 15:18:38.347	2021-11-19 18:53:41.331	UNREAD	1	8	\N
+10	THREAD_COMMENT	2021-11-19 15:16:23.292	2021-11-19 18:53:41.333	UNREAD	1	7	\N
+24	THREAD_COMMENT_THANKS	2021-11-19 18:53:59.853	2021-11-19 18:53:59.845	UNREAD	1	3	5
+5	NEW_FOLLOWER	2021-11-19 15:08:23.61	2021-11-19 19:07:28.871	UNREAD	\N	3	\N
+6	POST_CLAP	2021-11-19 15:08:49.907	2021-11-19 19:10:18.533	UNREAD	1	3	\N
+26	POST_COMMENT	2021-11-19 19:10:38.501	2021-11-19 19:10:38.492	UNREAD	1	10	\N
+21	POST_COMMENT	2021-11-19 18:50:38.434	2021-11-19 19:10:38.491	UNREAD	1	3	\N
+25	POST_COMMENT	2021-11-19 19:00:49.595	2021-11-19 19:10:38.501	UNREAD	1	9	\N
+28	POST_CLAP	2021-11-19 19:14:08.752	2021-11-19 19:16:51.273	UNREAD	4	9	\N
+4	POST_CLAP	2021-11-19 15:08:19.915	2021-11-19 19:17:39.116	UNREAD	3	3	\N
+32	THREAD_COMMENT	2021-11-19 19:23:03.546	2021-11-19 19:23:03.536	UNREAD	3	3	\N
+33	THREAD_COMMENT_THANKS	2021-11-19 19:26:51.77	2021-11-19 19:26:51.758	UNREAD	3	9	3
+34	THREAD_COMMENT	2021-11-19 19:27:43.901	2021-11-19 19:27:43.894	UNREAD	3	9	\N
+35	THREAD_COMMENT_THANKS	2021-11-19 19:28:01.524	2021-11-19 19:28:01.518	UNREAD	3	3	9
+37	THREAD_COMMENT_THANKS	2021-11-19 19:28:11.338	2021-11-19 19:28:21.607	UNREAD	4	3	9
+27	THREAD_COMMENT	2021-11-19 19:11:45.83	2021-11-19 19:35:52.863	UNREAD	4	9	\N
+36	THREAD_COMMENT	2021-11-19 19:28:09.986	2021-11-19 19:35:52.871	UNREAD	4	3	\N
 \.
 
 
@@ -1896,6 +1924,9 @@ COPY public."NewFollowerNotification" (id, "notificationId", "followingUserId") 
 1	5	7
 2	5	9
 3	15	3
+4	15	5
+5	5	5
+6	5	10
 \.
 
 
@@ -1958,6 +1989,48 @@ COPY public."PendingNotification" (id, type, "createdAt", "userId", "postId", "p
 43	POST_CLAP	2021-11-19 15:42:10.266	4	\N	\N	\N	\N	\N	6
 44	POST_COMMENT	2021-11-19 15:42:35.721	4	\N	\N	\N	2	\N	\N
 45	POST_CLAP	2021-11-19 15:42:51.34	3	\N	\N	\N	\N	\N	7
+47	POST_COMMENT	2021-11-19 18:50:38.412	3	\N	\N	\N	3	\N	\N
+46	POST_COMMENT	2021-11-19 18:50:38.412	4	\N	\N	\N	3	\N	\N
+48	POST_COMMENT	2021-11-19 18:52:49.299	9	\N	\N	\N	4	\N	\N
+50	THREAD_COMMENT	2021-11-19 18:53:41.321	8	\N	\N	\N	\N	15	\N
+51	THREAD_COMMENT	2021-11-19 18:53:41.321	3	\N	\N	\N	\N	15	\N
+49	THREAD_COMMENT	2021-11-19 18:53:41.321	9	\N	\N	\N	\N	15	\N
+52	THREAD_COMMENT	2021-11-19 18:53:41.321	4	\N	\N	\N	\N	15	\N
+53	THREAD_COMMENT	2021-11-19 18:53:41.321	7	\N	\N	\N	\N	15	\N
+54	THREAD_COMMENT_THANKS	2021-11-19 18:53:59.838	3	\N	\N	8	\N	\N	\N
+55	POST_CLAP	2021-11-19 18:54:30.599	3	\N	\N	\N	\N	\N	8
+56	POST_COMMENT	2021-11-19 19:00:49.584	4	\N	\N	\N	5	\N	\N
+57	POST_COMMENT	2021-11-19 19:00:49.584	9	\N	\N	\N	5	\N	\N
+58	POST_COMMENT	2021-11-19 19:00:49.584	3	\N	\N	\N	5	\N	\N
+59	POST_CLAP	2021-11-19 19:07:25.233	3	\N	\N	\N	\N	\N	9
+60	POST_CLAP	2021-11-19 19:10:18.528	3	\N	\N	\N	\N	\N	10
+61	POST_COMMENT	2021-11-19 19:10:38.487	3	\N	\N	\N	6	\N	\N
+62	POST_COMMENT	2021-11-19 19:10:38.487	10	\N	\N	\N	6	\N	\N
+63	POST_COMMENT	2021-11-19 19:10:38.487	4	\N	\N	\N	6	\N	\N
+64	POST_COMMENT	2021-11-19 19:10:38.487	9	\N	\N	\N	6	\N	\N
+65	THREAD_COMMENT	2021-11-19 19:11:45.793	9	\N	\N	\N	\N	16	\N
+66	THREAD_COMMENT	2021-11-19 19:12:05.59	9	\N	\N	\N	\N	17	\N
+67	THREAD_COMMENT	2021-11-19 19:13:58.799	9	\N	\N	\N	\N	18	\N
+68	POST_CLAP	2021-11-19 19:14:08.742	9	\N	\N	\N	\N	\N	11
+69	POST_COMMENT	2021-11-19 19:14:41.535	9	\N	\N	\N	7	\N	\N
+70	POST_COMMENT	2021-11-19 19:14:41.535	5	\N	\N	\N	7	\N	\N
+74	POST_CLAP	2021-11-19 19:16:51.267	9	\N	\N	\N	\N	\N	12
+75	POST_CLAP	2021-11-19 19:17:39.105	3	\N	\N	\N	\N	\N	13
+76	THREAD_COMMENT	2021-11-19 19:18:44.062	3	\N	\N	\N	\N	\N	\N
+77	THREAD_COMMENT	2021-11-19 19:23:03.524	3	\N	\N	\N	\N	20	\N
+78	THREAD_COMMENT	2021-11-19 19:24:05.099	9	\N	\N	\N	\N	\N	\N
+79	THREAD_COMMENT_THANKS	2021-11-19 19:26:51.747	9	\N	\N	9	\N	\N	\N
+80	THREAD_COMMENT	2021-11-19 19:27:43.885	9	\N	\N	\N	\N	22	\N
+81	THREAD_COMMENT_THANKS	2021-11-19 19:28:01.505	3	\N	\N	10	\N	\N	\N
+82	THREAD_COMMENT	2021-11-19 19:28:09.97	3	\N	\N	\N	\N	23	\N
+83	THREAD_COMMENT_THANKS	2021-11-19 19:28:11.314	3	\N	\N	11	\N	\N	\N
+84	THREAD_COMMENT_THANKS	2021-11-19 19:28:16.781	3	\N	\N	12	\N	\N	\N
+85	THREAD_COMMENT_THANKS	2021-11-19 19:28:21.599	3	\N	\N	13	\N	\N	\N
+71	POST_COMMENT	2021-11-19 19:16:32.286	5	\N	\N	\N	\N	\N	\N
+72	POST_COMMENT	2021-11-19 19:16:32.286	9	\N	\N	\N	\N	\N	\N
+73	POST_COMMENT	2021-11-19 19:16:32.286	3	\N	\N	\N	\N	\N	\N
+86	THREAD_COMMENT	2021-11-19 19:35:52.856	9	\N	\N	\N	\N	24	\N
+87	THREAD_COMMENT	2021-11-19 19:35:52.856	3	\N	\N	\N	\N	24	\N
 \.
 
 
@@ -1984,6 +2057,12 @@ COPY public."PostClap" (id, "createdAt", "postId", "authorId") FROM stdin;
 5	2021-11-19 15:24:47.762	3	9
 6	2021-11-19 15:42:10.257	2	9
 7	2021-11-19 15:42:51.334	1	9
+8	2021-11-19 18:54:30.591	1	5
+9	2021-11-19 19:07:25.221	1	10
+10	2021-11-19 19:10:18.52	1	11
+11	2021-11-19 19:14:08.734	4	3
+12	2021-11-19 19:16:51.255	4	8
+13	2021-11-19 19:17:39.097	3	8
 \.
 
 
@@ -1997,6 +2076,12 @@ COPY public."PostClapNotification" (id, "notificationId", "postClapId") FROM std
 4	4	5
 5	19	6
 6	6	7
+7	6	8
+8	6	9
+9	6	10
+10	28	11
+11	28	12
+12	4	13
 \.
 
 
@@ -2007,6 +2092,11 @@ COPY public."PostClapNotification" (id, "notificationId", "postClapId") FROM std
 COPY public."PostComment" (id, "createdAt", "updatedAt", body, "authorId", "postId", "authorLanguageLevel") FROM stdin;
 1	2021-07-28 23:24:01.906	2021-07-28 23:24:01.907	Lots of factual errors here buddy	4	1	BEGINNER
 2	2021-11-19 15:42:35.701	2021-11-19 15:42:35.702	You are an inspiration, father. Please love me.	9	2	NATIVE
+3	2021-11-19 18:50:38.374	2021-11-19 18:50:38.376	I must say, **@jsno**, I always knew you had a scholarly edge to you and this essay definitely shows it. As much as it pains me to see your views on my beloved house, one must commend a man for his efforts.	9	1	NATIVE
+4	2021-11-19 18:52:49.277	2021-11-19 18:52:49.277	F... screw Kings Landing!	5	4	NATIVE
+5	2021-11-19 19:00:49.561	2021-11-19 19:00:49.562	🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥	10	1	BEGINNER
+6	2021-11-19 19:10:38.467	2021-11-19 19:10:38.468	🔥🥺🔥❤️🔥	11	1	BEGINNER
+7	2021-11-19 19:14:41.498	2021-11-19 19:14:41.499	All in all, I'd say this is a great first post! I look forward to seeing your posts in Bravosi, I've always wanted to learn.	3	4	NATIVE
 \.
 
 
@@ -2016,6 +2106,12 @@ COPY public."PostComment" (id, "createdAt", "updatedAt", body, "authorId", "post
 
 COPY public."PostCommentNotification" (id, "notificationId", "postCommentId") FROM stdin;
 1	20	2
+2	21	3
+6	25	5
+7	21	5
+9	21	6
+10	26	6
+11	25	6
 \.
 
 
@@ -2030,6 +2126,12 @@ COPY public."PostCommentSubscription" (id, "createdAt", "userId", "postId") FROM
 4	2021-07-28 23:27:04.038	3	3
 5	2021-11-19 15:40:00.787	9	4
 6	2021-11-19 15:42:35.712	9	2
+7	2021-11-19 18:50:38.395	9	1
+8	2021-11-19 18:52:49.287	5	4
+9	2021-11-19 19:00:49.572	10	1
+10	2021-11-19 19:10:38.481	11	1
+11	2021-11-19 19:14:41.522	3	4
+12	2021-11-19 19:16:32.27	8	4
 \.
 
 
@@ -2079,6 +2181,10 @@ COPY public."Thread" (id, "startIndex", "endIndex", "highlightedContent", "postI
 3	546	554	Everyone	1	f
 5	508	532	who doesn't like a lion?	1	f
 2	277	286	Lannister	1	f
+9	41	49	splendid	4	f
+10	94	104	marvellous	4	f
+11	111	135	my beloved Kings Landing	4	f
+14	0	14	Valar Morgulus	3	f
 \.
 
 
@@ -2109,6 +2215,19 @@ COPY public."ThreadCommentNotification" (id, "notificationId", "commentId") FROM
 23	8	13
 24	8	14
 25	9	14
+26	9	15
+28	16	15
+27	8	15
+29	13	15
+30	10	15
+31	27	16
+32	27	17
+33	27	18
+35	32	20
+37	34	22
+38	36	23
+39	27	24
+40	36	24
 \.
 
 
@@ -2123,6 +2242,12 @@ COPY public."ThreadCommentThanksNotification" (id, "thanksId", "notificationId")
 4	5	14
 5	6	11
 6	7	17
+7	8	24
+8	9	33
+9	10	35
+10	11	37
+11	12	37
+12	13	37
 \.
 
 
@@ -2143,6 +2268,16 @@ COPY public."ThreadSubscription" (id, "createdAt", "userId", "threadId") FROM st
 15	2021-11-19 15:16:23.254	8	2
 3	2021-07-28 23:22:56.301	4	2
 17	2021-11-19 15:35:00.52	8	5
+18	2021-11-19 18:53:41.311	5	2
+21	2021-11-19 19:11:54.938	9	10
+22	2021-11-19 19:12:05.579	3	10
+23	2021-11-19 19:12:48.627	9	11
+24	2021-11-19 19:13:58.787	3	11
+29	2021-11-19 19:23:03.508	9	14
+20	2021-11-19 19:11:45.775	3	9
+28	2021-11-19 19:22:55.648	3	14
+19	2021-11-19 19:11:08.3	9	9
+30	2021-11-19 19:35:52.847	8	11
 \.
 
 
@@ -2184,6 +2319,8 @@ COPY public."User" (id, name, email, handle, "userRole", bio, "createdAt", "upda
 7		arya@harvard.edu	faceless_one	USER	Now you see me... Now you don't.	2021-11-19 15:02:26.403	2021-11-19 15:05:04.285	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/ab7f791a-309e-4367-b10e-ca047cc5c30d-large	Winterfell		\N	\N	\N	\N	f
 8		ned@stark.coffee	true_stark	USER	The Man Who Passes The Sentence Should Swing The Sword. Oh and, for God's sake, winter is coming!	2021-11-19 15:11:09.472	2021-11-19 15:14:01.098	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/12d2f0ec-02f3-4a80-be21-e5f11f9593b9-large	Winterfell		\N	\N	\N	\N	f
 9		tyrion@stark.com	smartest_man_in_westeros	USER	I really am the smartest man in Westeros, and also the most modest!	2021-11-19 15:19:48.545	2021-11-19 15:22:27.069	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/482cfb85-907e-431b-a01f-0fb429b2f5ab-large	Casterly Rock		\N	\N	\N	\N	f
+10	\N	drogon@fire.com	drogon	USER	\N	2021-11-19 18:55:34.072	2021-11-19 19:00:29.249	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/14ed7bec-9016-4c14-9b65-edce13bdf9f1-large	\N	\N	\N	\N	\N	\N	f
+11	\N	rhaegal@fire.com	rhaegal_1991	USER	\N	2021-11-19 19:09:38.651	2021-11-19 19:10:01.511	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/e45bd6bc-a92a-410e-b02c-aa3fc9699fab-large	\N	\N	\N	\N	\N	\N	f
 \.
 
 
@@ -2198,6 +2335,7 @@ COPY public."UserBadge" (id, type, "createdAt", "userId") FROM stdin;
 5	NECROMANCER	2021-11-19 15:16:23.306	8
 7	NECROMANCER	2021-11-19 15:20:39.806	9
 10	ODRADEK	2021-11-19 15:33:24.273	3
+12	NECROMANCER	2021-11-19 18:53:41.345	5
 \.
 
 
@@ -2220,6 +2358,9 @@ COPY public."_UserFollows" ("A", "B") FROM stdin;
 3	7
 3	9
 9	3
+9	5
+3	5
+3	10
 \.
 
 
@@ -2260,21 +2401,21 @@ d49245d0-eca0-4e60-80d9-c8a579990fe6	1e783e22a0231dd839808cae1a271080250e9b01bb2
 -- Name: Auth_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."Auth_id_seq"', 9, true);
+SELECT pg_catalog.setval('public."Auth_id_seq"', 11, true);
 
 
 --
 -- Name: CommentThanks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."CommentThanks_id_seq"', 7, true);
+SELECT pg_catalog.setval('public."CommentThanks_id_seq"', 13, true);
 
 
 --
 -- Name: Comment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."Comment_id_seq"', 14, true);
+SELECT pg_catalog.setval('public."Comment_id_seq"', 24, true);
 
 
 --
@@ -2288,7 +2429,7 @@ SELECT pg_catalog.setval('public."HeadlineImage_id_seq"', 6, true);
 -- Name: InAppNotification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."InAppNotification_id_seq"', 20, true);
+SELECT pg_catalog.setval('public."InAppNotification_id_seq"', 37, true);
 
 
 --
@@ -2344,7 +2485,7 @@ SELECT pg_catalog.setval('public."MembershipSubscription_id_seq"', 2, true);
 -- Name: NewFollowerNotification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."NewFollowerNotification_id_seq"', 3, true);
+SELECT pg_catalog.setval('public."NewFollowerNotification_id_seq"', 6, true);
 
 
 --
@@ -2358,35 +2499,35 @@ SELECT pg_catalog.setval('public."NewPostNotification_id_seq"', 1, true);
 -- Name: PendingNotification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."PendingNotification_id_seq"', 45, true);
+SELECT pg_catalog.setval('public."PendingNotification_id_seq"', 87, true);
 
 
 --
 -- Name: PostClapNotification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."PostClapNotification_id_seq"', 6, true);
+SELECT pg_catalog.setval('public."PostClapNotification_id_seq"', 12, true);
 
 
 --
 -- Name: PostClap_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."PostClap_id_seq"', 7, true);
+SELECT pg_catalog.setval('public."PostClap_id_seq"', 13, true);
 
 
 --
 -- Name: PostCommentNotification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."PostCommentNotification_id_seq"', 1, true);
+SELECT pg_catalog.setval('public."PostCommentNotification_id_seq"', 16, true);
 
 
 --
 -- Name: PostCommentSubscription_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."PostCommentSubscription_id_seq"', 6, true);
+SELECT pg_catalog.setval('public."PostCommentSubscription_id_seq"', 12, true);
 
 
 --
@@ -2400,7 +2541,7 @@ SELECT pg_catalog.setval('public."PostCommentThanks_id_seq"', 1, false);
 -- Name: PostComment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."PostComment_id_seq"', 2, true);
+SELECT pg_catalog.setval('public."PostComment_id_seq"', 8, true);
 
 
 --
@@ -2435,28 +2576,28 @@ SELECT pg_catalog.setval('public."SocialMedia_id_seq"', 1, false);
 -- Name: ThreadCommentNotification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."ThreadCommentNotification_id_seq"', 25, true);
+SELECT pg_catalog.setval('public."ThreadCommentNotification_id_seq"', 40, true);
 
 
 --
 -- Name: ThreadCommentThanksNotification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."ThreadCommentThanksNotification_id_seq"', 6, true);
+SELECT pg_catalog.setval('public."ThreadCommentThanksNotification_id_seq"', 12, true);
 
 
 --
 -- Name: ThreadSubscription_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."ThreadSubscription_id_seq"', 17, true);
+SELECT pg_catalog.setval('public."ThreadSubscription_id_seq"', 30, true);
 
 
 --
 -- Name: Thread_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."Thread_id_seq"', 8, true);
+SELECT pg_catalog.setval('public."Thread_id_seq"', 14, true);
 
 
 --
@@ -2477,7 +2618,7 @@ SELECT pg_catalog.setval('public."Topic_id_seq"', 9, true);
 -- Name: UserBadge_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."UserBadge_id_seq"', 11, true);
+SELECT pg_catalog.setval('public."UserBadge_id_seq"', 14, true);
 
 
 --
@@ -2491,7 +2632,7 @@ SELECT pg_catalog.setval('public."UserInterest_id_seq"', 3, true);
 -- Name: User_id_seq; Type: SEQUENCE SET; Schema: public; Owner: robin
 --
 
-SELECT pg_catalog.setval('public."User_id_seq"', 9, true);
+SELECT pg_catalog.setval('public."User_id_seq"', 11, true);
 
 
 --

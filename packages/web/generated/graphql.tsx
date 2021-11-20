@@ -80,6 +80,7 @@ export type HeadlineImageInput = {
 export type InAppNotification = {
   __typename?: 'InAppNotification'
   id: Scalars['Int']
+  userId: Scalars['Int']
   type: InAppNotificationType
   bumpedAt?: Maybe<Scalars['DateTime']>
   readStatus: NotificationReadStatus
@@ -946,7 +947,7 @@ export type UserInterestFragmentFragment = { __typename?: 'UserInterest' } & {
 
 export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } & Pick<
   InAppNotification,
-  'id' | 'type' | 'bumpedAt' | 'readStatus'
+  'id' | 'type' | 'bumpedAt' | 'readStatus' | 'userId'
 > & {
     triggeringUser?: Maybe<
       { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
@@ -1601,6 +1602,7 @@ export const NotificationFragmentFragmentDoc = gql`
     type
     bumpedAt
     readStatus
+    userId
     triggeringUser {
       id
       name

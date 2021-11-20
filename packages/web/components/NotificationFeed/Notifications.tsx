@@ -1,6 +1,9 @@
 import React from 'react'
 import Markdown from 'react-markdown'
-import { NotificationFragmentFragment as NotificationType } from '@/generated/graphql'
+import {
+  NotificationFragmentFragment as NotificationType,
+  AuthorFragmentFragment as UserType,
+} from '@/generated/graphql'
 import theme from '@/theme'
 import ClapIcon from '../Icons/ClapIcon'
 import UserList from '../UserList'
@@ -41,17 +44,48 @@ type ThreadGroupedThanksType = Record<
 >
 
 type BaseNotificationLayoutProps = {
-  left?: string
-  middle?: string
-  right?: string
+  left?: JSX.Element
+  middle?: JSX.Element
+  right?: JSX.Element
 }
+
+export const getUserIdentifier = (user: UserType) => user?.name || user.handle
 
 const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({ left, middle, right }) => {
   return (
     <div className="container">
-      <p>{left}</p>
-      <p>{middle}</p>
-      <p>{right}</p>
+      <div className="left-section">{left}</div>
+      <div className="middle-section">{middle}</div>
+      <div className="right-section">{right}</div>
+      <style jsx>{`
+        .container {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          padding: 16px 0;
+          border-bottom: 1px solid ${theme.colors.gray600};
+          align-items: center;
+        }
+
+        .left-section {
+          display: ${left ? '' : 'none'};
+        }
+
+        .middle-section {
+          display: ${middle ? '' : 'none'};
+          padding: 0 16px;
+        }
+
+        .right-section {
+          display: ${right ? '' : 'none'};
+        }
+
+        .container :global(.right-section > img) {
+          width: 80px;
+          height: 50px;
+          object-fit: cover;
+        }
+      `}</style>
     </div>
   )
 }
@@ -172,7 +206,6 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
 }) => {
   const { t } = useTranslation('notifications')
   const thanksAuthor = notification.threadCommentThanksNotifications[0].thanks.author
-  const userIdentifier = thanksAuthor?.name || thanksAuthor.handle
   const count = notification.threadCommentThanksNotifications.length
 
   return (
@@ -183,7 +216,7 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
       <div className="middle-section" onClick={onNotificationClick}>
         <p>
           {t('levelOne.threadCommentThanks', {
-            userIdentifier,
+            userIdentifier: getUserIdentifier(thanksAuthor),
             count,
           })}
         </p>
@@ -396,7 +429,6 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
 }) => {
   const { t } = useTranslation('notifications')
   const thanksAuthor = notification.threadCommentThanksNotifications[0].thanks.author
-  const userIdentifier = thanksAuthor?.name || thanksAuthor.handle
   const count = notification.threadCommentThanksNotifications.length
   // Separate the different threads
   const threadGroupedThanks: ThreadGroupedThanksType = {}
@@ -417,7 +449,12 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
       <div className="thanks-author">
         <UserAvatar user={thanksAuthor} size={50} />
       </div>
-      <p className="title">{t('levelTwo.threadCommentThanks', { userIdentifier, count })}</p>
+      <p className="title">
+        {t('levelTwo.threadCommentThanks', {
+          userIdentifier: getUserIdentifier(thanksAuthor),
+          count,
+        })}
+      </p>
       {Object.values(threadGroupedThanks).map(
         ({ thread, thanks }: ThreadGroupedThanksType[number]) => {
           return (
@@ -554,7 +591,9 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
                   <li className="comment">
                     <UserAvatar user={comment.author} size={50} />
                     <div className="comment-right-side">
-                      <span className="author-identifier">@{comment.author.handle}</span>
+                      <span className="author-identifier">
+                        @{getUserIdentifier(comment.author)}
+                      </span>
                       <Markdown>{comment.body}</Markdown>
                     </div>
                   </li>
@@ -630,7 +669,7 @@ export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps
           <li className="comment">
             <UserAvatar user={comment.author} size={50} />
             <div className="comment-right-side">
-              <span className="author-identifier">@{comment.author.handle}</span>
+              <span className="author-identifier">@{getUserIdentifier(comment.author)}</span>
               <Markdown>{comment.body}</Markdown>
             </div>
           </li>
@@ -684,39 +723,41 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
 
   return (
     <div className="container" onClick={onNotificationClick}>
-      <p className="post-title">{t('levelTwo.newPosts')}</p>
+      <p className="title">{t('levelTwo.newPosts')}</p>
       {newPosts.map((post) => (
-        <div className="post">
-          <UserAvatar user={post.author} size={50} />
-          <p className="post-title">{post.title}</p>
-          <img
-            className="post-image"
-            src={notification.post?.headlineImage.smallSize}
-            alt={`post "${notification.post?.title}"'s image`}
+        <>
+          <BaseNotificationLayout
+            left={<UserAvatar user={post.author} size={50} />}
+            middle={
+              <div>
+                <p className="post-title">{post.title}</p>
+                <p className="post-author">by {getUserIdentifier(post.author)}</p>
+              </div>
+            }
+            right={<img src={post.headlineImage.smallSize} />}
           />
-        </div>
+        </>
       ))}
       <style jsx>{`
         .container {
           display: flex;
           flex-direction: column;
-          padding: 16px;
-          border-bottom: 1px solid ${theme.colors.gray600};
-          min-height: 100px;
           gap: 16px;
-          color: ${theme.colors.white};
         }
 
+        .title,
         .post-title {
           font-weight: 600;
+        }
+
+        .title {
           font-size: 20px;
           text-align: center;
           margin-bottom: 16px;
         }
 
-        .post {
-          display: grid;
-          grid-template-columns: 1fr 3fr 1fr;
+        .post-author {
+          font-size: 12px;
         }
       `}</style>
     </div>

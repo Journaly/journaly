@@ -4,6 +4,7 @@ const InAppNotification = objectType({
   name: 'InAppNotification',
   definition(t) {
     t.model.id()
+    t.model.userId()
     t.model.type()
     t.model.bumpedAt()
     t.model.readStatus()

@@ -247,6 +247,7 @@ fragment NotificationFragment on InAppNotification {
   type
   bumpedAt
   readStatus
+  userId
   triggeringUser {
     id
     name

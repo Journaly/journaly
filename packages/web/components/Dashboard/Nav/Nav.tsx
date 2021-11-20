@@ -245,10 +245,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           width: ${navConstants.navWidth}px;
         }
 
-        .nav-wrapper.expanded {
-          z-index: ${navConstants.zIndex};
-        }
-
         nav > :global(*) {
           max-width: ${navConstants.navWidth}px;
         }
@@ -261,6 +257,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           background-color: rgba(0, 0, 0, 0.4);
           opacity: 0;
           transition: opacity ${navConstants.transitionDuration}ms linear;
+          z-index: ${navConstants.zIndex - 1};
         }
 
         .nav-overlay {
@@ -416,6 +413,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           }
 
           .nav-wrapper {
+            z-index: ${navConstants.zIndex};
             transform: translateX(-100%);
             transition: transform ${navConstants.transitionDuration}ms linear;
           }

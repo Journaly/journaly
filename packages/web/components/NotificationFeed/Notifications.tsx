@@ -673,13 +673,13 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
     <div className="container" onClick={onNotificationClick}>
       <p className="post-title">{t('levelTwo.newPosts')}</p>
       {newPosts.map((post) => (
-        <div className="post">
+        <div className="post" id={post.id}>
           <UserAvatar user={post.author} size={50} />
           <p className="post-title">{post.title}</p>
           <img
             className="post-image"
-            src={notification.post?.headlineImage.smallSize}
-            alt={`post "${notification.post?.title}"'s image`}
+            src={post.headlineImage.smallSize}
+            alt={`post "${post.title}"'s image`}
           />
         </div>
       ))}

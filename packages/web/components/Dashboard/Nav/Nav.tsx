@@ -258,9 +258,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           opacity: 0;
           transition: opacity ${navConstants.transitionDuration}ms linear;
           z-index: ${navConstants.zIndex - 1};
-        }
-
-        .nav-overlay {
           opacity: 1;
           /* Make background take up full screen */
           bottom: ${expanded ? '0' : 'unset'};
@@ -279,7 +276,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           border-left: 1px solid ${theme.colors.gray600};
         }
 
-
         :global(.mobile-hamburger-icon) {
           display: none;
         }
@@ -295,6 +291,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           height: 100%;
           overflow: visible;
           overflow-y: auto;
+          position: relative;
         }
 
         .nav-support {
@@ -489,11 +486,11 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         }
 
         @media (${navConstants.aboveDesktopNav}) {
+          .nav-wrapper.disable-large-nav {
+            width: ${navConstants.skinnyNavWidth}px;
+          }
           .disable-large-nav .nav-overlay {
             display: none;
-          }
-          .disable-large-nav .nav-wrapper {
-            width: ${navConstants.skinnyNavWidth}px;
           }
           .disable-large-nav nav > :global(*) {
             max-width: ${navConstants.skinnyNavWidth}px;

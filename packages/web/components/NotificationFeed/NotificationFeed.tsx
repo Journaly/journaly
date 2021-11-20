@@ -29,7 +29,6 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const [activeNotification, setActiveNotification] = useState<NotificationType | null>(null)
 
   const { notifications } = useNotificationContext() || {}
-  console.log(notifications)
 
   if (!notifications) return null
 

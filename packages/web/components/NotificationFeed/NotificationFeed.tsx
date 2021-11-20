@@ -148,6 +148,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
         .level-two {
           display: flex;
           flex-direction: column;
+          overflow-y: auto;
         }
 
         .level-one .content {

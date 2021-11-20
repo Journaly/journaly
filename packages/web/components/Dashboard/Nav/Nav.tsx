@@ -296,10 +296,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           transition: width ${navConstants.transitionDuration}ms linear;
           width: 100%;
           height: 100%;
-          // TODO: Figure this out
-          /* overflow-y: auto;
-          overflow-x: visible; */
           overflow: visible;
+          overflow-y: auto;
         }
 
         .nav-support {

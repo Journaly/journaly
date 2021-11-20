@@ -46,10 +46,10 @@ const NotificationLevelTwo: React.FC<NotificationProps> = ({
   if (!Component) return null
 
   return (
-      <Component
-        notification={notification}
-        onNotificationClick={() => handleNotificationLevelChange(notification)}
-      />
+    <Component
+      notification={notification}
+      onNotificationClick={() => handleNotificationLevelChange(notification)}
+    />
   )
 }
 

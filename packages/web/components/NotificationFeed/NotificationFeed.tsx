@@ -29,7 +29,6 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const [activeNotification, setActiveNotification] = useState<NotificationType | null>(null)
 
   const { notifications } = useNotificationContext() || {}
-  console.log(notifications)
 
   if (!notifications) return null
 
@@ -149,6 +148,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
         .level-two {
           display: flex;
           flex-direction: column;
+          overflow-y: auto;
         }
 
         .level-one .content {

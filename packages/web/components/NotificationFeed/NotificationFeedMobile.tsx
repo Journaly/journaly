@@ -12,8 +12,23 @@ const NotificationFeedMobile: React.FC<NotificationFeedMobileProps> = ({ onClose
   if (!notificationFeedRoot) return null
 
   return ReactDOM.createPortal(
-      <NotificationFeed onClose={onClose} />, notificationFeedRoot
-    
+    (
+      <div className="mobile-notification-feed-container">
+        <NotificationFeed onClose={onClose} />
+        <style jsx>{`
+          .mobile-notification-feed-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+          }
+        `}
+        </style>
+      </div>
+    ),
+    notificationFeedRoot
   )
 }
 

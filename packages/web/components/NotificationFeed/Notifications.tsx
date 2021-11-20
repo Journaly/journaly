@@ -413,7 +413,7 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
               <span className="highlighted-content">{thread.highlightedContent}</span>
               <ul>
                 {thanks.map((thanks) => (
-                  <li className="comment">
+                  <li className="comment" key={thanks.id}>
                     <span>
                       <LikeIcon filled={true} />
                     </span>
@@ -538,7 +538,7 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
               <span className="highlighted-content">{thread.highlightedContent}</span>
               <ul>
                 {comments.map((comment) => (
-                  <li className="comment">
+                  <li className="comment" key={comment.id}>
                     <UserAvatar user={comment.author} size={50} />
                     <div className="comment-right-side">
                       <span className="author-identifier">@{comment.author.handle}</span>
@@ -614,7 +614,7 @@ export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps
       <p className="post-title">{notification.post?.title}</p>
       <ul>
         {comments.map((comment) => (
-          <li className="comment">
+          <li className="comment" key={comment.id}>
             <UserAvatar user={comment.author} size={50} />
             <div className="comment-right-side">
               <span className="author-identifier">@{comment.author.handle}</span>

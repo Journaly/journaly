@@ -115,7 +115,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
             align-items: center;
             user-select: none;
             // Prevent screen dragging behavior
-            touch-action: none;
+            touch-action: pan-y;
             overflow-x: hidden;
           }
 

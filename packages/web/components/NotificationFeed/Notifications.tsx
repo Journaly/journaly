@@ -40,6 +40,22 @@ type ThreadGroupedThanksType = Record<
   }
 >
 
+type BaseNotificationLayoutProps = {
+  left?: string
+  middle?: string
+  right?: string
+}
+
+const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({ left, middle, right }) => {
+  return (
+    <div className="container">
+      <p>{left}</p>
+      <p>{middle}</p>
+      <p>{right}</p>
+    </div>
+  )
+}
+
 /**
  * Level One Notifications
  *
@@ -75,13 +91,8 @@ export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationPro
           border-bottom: 1px solid ${theme.colors.gray600};
           min-height: 100px;
           align-items: center;
-          // TODO: decide what to do here
-          cursor: grab;
+          cursor: pointer;
           user-select: none;
-        }
-
-        .grabbing {
-          cursor: grabbing;
         }
 
         .middle-section {
@@ -138,6 +149,7 @@ export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> =
           border-bottom: 1px solid ${theme.colors.gray600};
           min-height: 100px;
           align-items: center;
+          cursor: pointer;
         }
 
         .middle-section {
@@ -192,6 +204,7 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
           border-bottom: 1px solid ${theme.colors.gray600};
           min-height: 100px;
           align-items: center;
+          cursor: pointer;
         }
         .left-section {
           display: ${notification.triggeringUser ? '' : 'none'};
@@ -221,9 +234,7 @@ export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps
   return (
     <div className="container">
       <div className="middle-section" onClick={onNotificationClick}>
-        <p>
-          {t('levelOne.postComments', { count })}
-        </p>
+        <p>{t('levelOne.postComments', { count })}</p>
       </div>
       <div className="right-section">
         <img
@@ -241,8 +252,7 @@ export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps
           border-bottom: 1px solid ${theme.colors.gray600};
           min-height: 100px;
           align-items: center;
-          // TODO: decide what to do here
-          cursor: grab;
+          cursor: pointer;
           user-select: none;
         }
 
@@ -288,6 +298,7 @@ export const NewPostNotificationLevelOne: React.FC<LevelOneNotificationProps> = 
           min-height: 100px;
           align-items: center;
           user-select: none;
+          cursor: pointer;
         }
 
         .grabbing {
@@ -327,16 +338,16 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
   return (
     <div className="container" onClick={onNotificationClick}>
       {count > 1 ? (
-      <ul className="multiple-follower-container">
-        <li>
+        <ul className="multiple-follower-container">
+          <li>
+            <UserAvatar user={notification.newFollowerNotifications[0]?.followingUser} size={50} />
+          </li>
+          <li>
+            <UserAvatar user={notification.newFollowerNotifications[1]?.followingUser} size={50} />
+          </li>
+        </ul>
+      ) : (
         <UserAvatar user={notification.newFollowerNotifications[0]?.followingUser} size={50} />
-        </li>
-        <li>
-        <UserAvatar user={notification.newFollowerNotifications[1]?.followingUser} size={50} />
-        </li>
-      </ul>
-        ): (
-          <UserAvatar user={notification.newFollowerNotifications[0]?.followingUser} size={50} />
       )}
       <p>{t('levelOne.newFollowers', { count })}</p>
       <style jsx>{`
@@ -351,6 +362,7 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
           justify-content: center;
           user-select: none;
           flex: 1;
+          cursor: pointer;
         }
 
         .multiple-follower-container {
@@ -436,6 +448,7 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
           min-height: 100px;
           gap: 16px;
           color: ${theme.colors.white};
+          cursor: pointer;
         }
 
         .title {

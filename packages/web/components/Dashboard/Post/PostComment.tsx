@@ -75,8 +75,10 @@ const PostComment: React.FC<PostCommentProps> = ({
     })
   }
 
+  console.log('foobee!')
+
   return (
-    <div className="comment">
+    <div className="comment" id={`pc-${comment.id}`}>
       <div className="author-body-container">
         <div className="author-block">
           <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${comment.author.id}`}>

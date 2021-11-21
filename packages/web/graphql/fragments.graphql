@@ -260,6 +260,7 @@ fragment NotificationFragment on InAppNotification {
     headlineImage {
       smallSize
     }
+    authorId
   }
   postClapNotifications {
     id

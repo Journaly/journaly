@@ -106,6 +106,7 @@ const PostObjectType = objectType({
     t.model.excerpt()
     t.model.readTime()
     t.model.author()
+    t.model.authorId()
     t.model.status()
     t.model.claps({ pagination: false })
     t.model.threads({ pagination: false })

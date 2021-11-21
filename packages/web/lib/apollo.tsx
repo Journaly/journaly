@@ -96,6 +96,7 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
           const ssrContext = { redirectTarget: null }
 
           try {
+            console.log('Trying...')
             // Run all GraphQL queries
             const { getDataFromTree } = await import('@apollo/client/react/ssr')
             await getDataFromTree(
@@ -107,6 +108,7 @@ export function withApollo<PageProps extends object, PageInitialProps = PageProp
                 }}
               />,
             )
+            console.log('Tried')
           } catch (error) {
             // Prevent Apollo Client GraphQL errors from crashing SSR.
             // Handle them in components via the data.error prop:

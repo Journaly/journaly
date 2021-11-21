@@ -2,6 +2,7 @@ import React, { useState, memo, useMemo, useRef, forwardRef, useEffect } from 'r
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { makeReference } from '@apollo/client'
+import queryString from 'query-string'
 
 import { findEventTargetParent, sanitize, iOS, wait } from '@/utils'
 import {
@@ -275,6 +276,8 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     return post.claps.find((clap) => clap.author.id === currentUser?.id) !== undefined
   }, [post.claps, currentUser?.id])
 
+  const hasHandledDeepLink = useRef<boolean>(false)
+
   useEffect(() => {
     if (!selectableRef.current) {
       return
@@ -313,7 +316,45 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         return
       }
     })
+
+    const reconcileDocumentHash = () => {
+      const hash = queryString.parse(document.location.hash)
+
+      if (hash.t && typeof hash.t === 'string') {
+        const threadHighlight = document.querySelector(
+          `.thread-highlight[data-tid="${hash.t}"]`,
+        ) as HTMLElement | null
+        if (threadHighlight) {
+          setActiveThreadId(parseInt(hash.t))
+          setPopoverPosition({
+            ...getCoords(threadHighlight),
+            w: threadHighlight.offsetWidth,
+            h: threadHighlight.offsetHeight,
+          })
+          threadHighlight.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          })
+        }
+      }
+    }
+    if (!hasHandledDeepLink.current) {
+      hasHandledDeepLink.current = true
+      reconcileDocumentHash()
+    }
+
+    Router.events.on('hashChangeComplete', reconcileDocumentHash)
+    // window.addEventListener('hashchange', reconcileDocumentHash)
+    return () => {
+      Router.events.off('hashChangeComplete', reconcileDocumentHash)
+      // window.removeEventListener('hashchange', reconcileDocumentHash)
+    }
   }, [post.threads.length])
+
+  // useEffect(() => {
+
+  //   }
+  // }, [])
 
   useEffect(() => {
     const onSelectionChange = () => {

@@ -20,10 +20,13 @@ const PostPage: NextPage = () => {
   const { refetch, loading, error, data } = usePostPageQuery({
     variables: { id, uiLanguage },
   })
+  console.log(id, uiLanguage)
 
   const { postById: post, currentUser } = data || {}
   const outdatedThreads = post ? post.threads.filter((post) => post.archived) : []
-
+  console.log('post page!')
+  console.log(post)
+  console.log(post?.postComments)
   return (
     <DashboardLayout pad="aboveMobile">
       <LoadingWrapper loading={loading} error={error}>

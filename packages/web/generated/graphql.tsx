@@ -432,6 +432,7 @@ export type Post = {
   excerpt: Scalars['String']
   readTime: Scalars['Int']
   author: User
+  authorId: Scalars['Int']
   status: PostStatus
   claps: Array<PostClap>
   threads: Array<Thread>
@@ -953,7 +954,7 @@ export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } 
       { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
     >
     post?: Maybe<
-      { __typename?: 'Post' } & Pick<Post, 'id' | 'title'> & {
+      { __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'authorId'> & {
           headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
         }
     >
@@ -1615,6 +1616,7 @@ export const NotificationFragmentFragmentDoc = gql`
       headlineImage {
         smallSize
       }
+      authorId
     }
     postClapNotifications {
       id

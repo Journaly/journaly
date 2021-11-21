@@ -20,7 +20,6 @@ export type LevelOneNotificationProps = {
 
 export type LevelTwoNotificationProps = {
   notification: NotificationType
-  onNotificationClick: () => void
 }
 
 type ThreadCommentNotificationComment =
@@ -263,7 +262,6 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
 
 export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
-  onNotificationClick,
 }) => {
   const { t } = useTranslation('notifications')
   const thanksAuthor = notification.threadCommentThanksNotifications[0].thanks.author
@@ -283,7 +281,7 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
   }
 
   return (
-    <div className="container" onClick={onNotificationClick}>
+    <div className="container">
       <div className="thanks-author">
         <UserAvatar user={thanksAuthor} size={50} />
       </div>
@@ -373,7 +371,6 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
 
 export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
-  onNotificationClick,
 }) => {
   const { t } = useTranslation('notifications')
 

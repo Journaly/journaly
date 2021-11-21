@@ -17,8 +17,8 @@ const NotificationCount: React.FC<NotificationCountProps> = ({ count }) => {
           border-radius: 50%;
           padding: 0 8px;
           font-size: 12px;
-          top: -7px;
-          left: 12px;
+          top: -10px;
+          right: -5px;
           font-weight: 700;
           /* Makes all numbers exact same width */
           font-feature-settings: 'tnum';

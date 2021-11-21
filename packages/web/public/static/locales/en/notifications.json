@@ -2,8 +2,8 @@
   "feedTitle": "Notifications",
   "emptyFeed": "You have no notifications... yet!",
   "levelOne": {
-    "newFollowers": "You got 1 new follower",
-    "newFollowers_plural": "You got {{count}} new followers",
+    "newFollowers": "1 new Journaler followed you",
+    "newFollowers_plural": "{{count}} new Journalers followed you",
     "threadComments": "There is 1 new feedback comment on your post",
     "threadComments_plural": "There are {{count}} new feedback comments on your post",
     "threadCommentsSubscribed": "There is 1 new feedback comment on this post",

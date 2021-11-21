@@ -10,6 +10,7 @@ import UserList from '../UserList'
 import { useTranslation } from '@/config/i18n'
 import LikeIcon from '../Icons/LikeIcon'
 import UserAvatar from '../UserAvatar'
+import MultiuserAvatar from '../MultiuserAvatar'
 
 export type LevelOneNotificationProps = {
   notification: NotificationType
@@ -45,26 +46,32 @@ type ThreadGroupedThanksType = Record<
 
 type BaseNotificationLayoutProps = {
   left?: JSX.Element
-  middle?: JSX.Element
+  middle: JSX.Element
   right?: JSX.Element
+  onNotificationClick: () => void
 }
 
 export const getUserIdentifier = (user: UserType) => user?.name || user.handle
 
-const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({ left, middle, right }) => {
+const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
+  left,
+  middle,
+  right,
+  onNotificationClick,
+}) => {
   return (
-    <div className="container">
+    <div className="container" onClick={onNotificationClick}>
       <div className="left-section">{left}</div>
       <div className="middle-section">{middle}</div>
       <div className="right-section">{right}</div>
       <style jsx>{`
         .container {
           display: flex;
-          justify-content: space-between;
           width: 100%;
-          padding: 16px 0;
+          padding: 16px;
           border-bottom: 1px solid ${theme.colors.gray600};
           align-items: center;
+          min-height: 100px;
         }
 
         .left-section {
@@ -74,6 +81,7 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({ left, m
         .middle-section {
           display: ${middle ? '' : 'none'};
           padding: 0 16px;
+          flex: 1;
         }
 
         .right-section {
@@ -84,6 +92,12 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({ left, m
           width: 80px;
           height: 50px;
           object-fit: cover;
+          border-radius: 2px;
+          box-shadow: 0px 3px 8px #00000075;
+        }
+
+        .container :global(.left-section img) {
+          box-shadow: 0px 3px 8px #00000075;
         }
       `}</style>
     </div>
@@ -105,50 +119,17 @@ export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationPro
   // TODO: Get subscriber translation if needed
 
   return (
-    <div className="container">
-      <div className="middle-section" onClick={onNotificationClick}>
-        <p>{t('levelOne.threadComments', { count })}</p>
-      </div>
-      <div className="right-section">
+    <BaseNotificationLayout
+      middle={<p>{t('levelOne.threadComments', { count })}</p>}
+      right={
         <img
           className="post-image"
           src={notification.post?.headlineImage.smallSize}
           alt={`post "${notification.post?.title}"'s image`}
         />
-      </div>
-      <style jsx>{`
-        .container {
-          display: flex;
-          width: 100%;
-          justify-content: space-between;
-          padding: 16px;
-          border-bottom: 1px solid ${theme.colors.gray600};
-          min-height: 100px;
-          align-items: center;
-          cursor: pointer;
-          user-select: none;
-        }
-
-        .middle-section {
-          padding: 0 16px;
-        }
-        .right-section {
-        }
-
-        .post-image {
-          width: 100%;
-          object-fit: cover;
-          height: 50px;
-        }
-
-        .user-avatar {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-      `}</style>
-    </div>
+      }
+      onNotificationClick={onNotificationClick}
+    />
   )
 }
 
@@ -160,43 +141,17 @@ export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> =
   const count = notification.postClapNotifications.length
 
   return (
-    <div className="container">
-      <div className="left-section">
-        <ClapIcon colorScheme="dark-mode" width={24} />
-      </div>
-      <div className="middle-section" onClick={onNotificationClick}>
-        <p>{t('levelOne.postClaps', { count })}</p>
-      </div>
-      <div className="right-section">
+    <BaseNotificationLayout
+      left={<ClapIcon colorScheme="dark-mode" width={24} />}
+      middle={<p>{t('levelOne.postClaps', { count })}</p>}
+      right={
         <img
-          className="post-image"
           src={notification.post?.headlineImage.smallSize}
           alt={`post "${notification.post?.title}"'s image`}
         />
-      </div>
-      <style jsx>{`
-        .container {
-          display: flex;
-          width: 100%;
-          justify-content: space-between;
-          padding: 16px;
-          border-bottom: 1px solid ${theme.colors.gray600};
-          min-height: 100px;
-          align-items: center;
-          cursor: pointer;
-        }
-
-        .middle-section {
-          padding: 0 16px;
-        }
-
-        .post-image {
-          width: 100%;
-          object-fit: cover;
-          height: 50px;
-        }
-      `}</style>
-    </div>
+      }
+      onNotificationClick={onNotificationClick}
+    />
   )
 }
 
@@ -209,50 +164,24 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
   const count = notification.threadCommentThanksNotifications.length
 
   return (
-    <div className="container">
-      <div className="left-section">
-        <UserAvatar user={thanksAuthor} size={50} />
-      </div>
-      <div className="middle-section" onClick={onNotificationClick}>
+    <BaseNotificationLayout
+      left={<UserAvatar user={thanksAuthor} size={50} />}
+      middle={
         <p>
           {t('levelOne.threadCommentThanks', {
             userIdentifier: getUserIdentifier(thanksAuthor),
             count,
           })}
         </p>
-      </div>
-      <div className="right-section">
+      }
+      right={
         <img
-          className="post-image"
           src={notification.post?.headlineImage.smallSize}
           alt={`post "${notification.post?.title}"'s image`}
         />
-      </div>
-      <style jsx>{`
-        .container {
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
-          padding: 16px;
-          border-bottom: 1px solid ${theme.colors.gray600};
-          min-height: 100px;
-          align-items: center;
-          cursor: pointer;
-        }
-        .left-section {
-          display: ${notification.triggeringUser ? '' : 'none'};
-        }
-        .middle-section {
-          padding: 0 16px;
-        }
-
-        .post-image {
-          width: 100%;
-          object-fit: cover;
-          height: 50px;
-        }
-      `}</style>
-    </div>
+      }
+      onNotificationClick={onNotificationClick}
+    />
   )
 }
 
@@ -265,47 +194,16 @@ export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps
   // TODO: Get subscriber translation if needed
 
   return (
-    <div className="container">
-      <div className="middle-section" onClick={onNotificationClick}>
-        <p>{t('levelOne.postComments', { count })}</p>
-      </div>
-      <div className="right-section">
+    <BaseNotificationLayout
+      middle={<p>{t('levelOne.postComments', { count })}</p>}
+      right={
         <img
-          className="post-image"
           src={notification.post?.headlineImage.smallSize}
           alt={`post "${notification.post?.title}"'s image`}
         />
-      </div>
-      <style jsx>{`
-        .container {
-          display: flex;
-          width: 100%;
-          justify-content: space-between;
-          padding: 16px;
-          border-bottom: 1px solid ${theme.colors.gray600};
-          min-height: 100px;
-          align-items: center;
-          cursor: pointer;
-          user-select: none;
-        }
-
-        .grabbing {
-          cursor: grabbing;
-        }
-
-        .middle-section {
-          padding: 0 16px;
-        }
-        .right-section {
-        }
-
-        .post-image {
-          width: 100%;
-          object-fit: cover;
-          height: 50px;
-        }
-      `}</style>
-    </div>
+      }
+      onNotificationClick={onNotificationClick}
+    />
   )
 }
 
@@ -317,47 +215,15 @@ export const NewPostNotificationLevelOne: React.FC<LevelOneNotificationProps> = 
   const count = notification.newPostNotifications.length
 
   return (
-    <div className="container">
-      <div className="middle-section" onClick={onNotificationClick}>
-        <p>{t('levelOne.newPosts', { count })}</p>
-      </div>
-      <style jsx>{`
-        .container {
-          display: flex;
-          width: 100%;
-          justify-content: space-between;
-          padding: 16px;
-          border-bottom: 1px solid ${theme.colors.gray600};
-          min-height: 100px;
-          align-items: center;
-          user-select: none;
-          cursor: pointer;
-        }
-
-        .grabbing {
-          cursor: grabbing;
-        }
-
-        .middle-section {
-          padding: 0 16px;
-        }
-        .right-section {
-        }
-
-        .post-image {
-          width: 100%;
-          object-fit: cover;
-          height: 50px;
-        }
-
-        .user-avatar {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-      `}</style>
-    </div>
+    <BaseNotificationLayout
+      left={
+        <MultiuserAvatar
+          users={notification.newPostNotifications.map((notification) => notification.post.author)}
+        />
+      }
+      middle={<p>{t('levelOne.newPosts', { count })}</p>}
+      onNotificationClick={onNotificationClick}
+    />
   )
 }
 
@@ -369,49 +235,17 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
   const count = notification.newFollowerNotifications.length
 
   return (
-    <div className="container" onClick={onNotificationClick}>
-      {count > 1 ? (
-        <ul className="multiple-follower-container">
-          <li>
-            <UserAvatar user={notification.newFollowerNotifications[0]?.followingUser} size={50} />
-          </li>
-          <li>
-            <UserAvatar user={notification.newFollowerNotifications[1]?.followingUser} size={50} />
-          </li>
-        </ul>
-      ) : (
-        <UserAvatar user={notification.newFollowerNotifications[0]?.followingUser} size={50} />
-      )}
-      <p>{t('levelOne.newFollowers', { count })}</p>
-      <style jsx>{`
-        .container {
-          display: flex;
-          width: 100%;
-          gap: 16px;
-          padding: 16px;
-          border-bottom: 1px solid ${theme.colors.gray600};
-          min-height: 100px;
-          align-items: center;
-          justify-content: center;
-          user-select: none;
-          flex: 1;
-          cursor: pointer;
-        }
-
-        .multiple-follower-container {
-          position: relative;
-          // TODO: figure proper centering out here
-          margin-top: 16px;
-        }
-
-        .multiple-follower-container > li:nth-child(2) {
-          position: absolute;
-          top: -16px;
-          left: -16px;
-          z-index: -1;
-        }
-      `}</style>
-    </div>
+    <BaseNotificationLayout
+      left={
+        <MultiuserAvatar
+          users={notification.newFollowerNotifications.map(
+            (notification) => notification.followingUser,
+          )}
+        />
+      }
+      middle={<p>{t('levelOne.newFollowers', { count })}</p>}
+      onNotificationClick={onNotificationClick}
+    />
   )
 }
 
@@ -731,7 +565,9 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
             middle={
               <div>
                 <p className="post-title">{post.title}</p>
-                <p className="post-author">by {getUserIdentifier(post.author)}</p>
+                <p className="post-author">
+                  by <span className="user-identifier">{getUserIdentifier(post.author)}</span>
+                </p>
               </div>
             }
             right={<img src={post.headlineImage.smallSize} />}
@@ -758,6 +594,10 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
 
         .post-author {
           font-size: 12px;
+        }
+
+        .user-identifier {
+          font-weight: 600;
         }
       `}</style>
     </div>

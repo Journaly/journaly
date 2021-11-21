@@ -149,7 +149,7 @@ const User = objectType({
           where: {
             userId: userId
           },
-          take: 100,
+          take: 99,
           orderBy: [
             { readStatus: 'desc' },
             { bumpedAt: 'desc' },

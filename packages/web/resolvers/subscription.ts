@@ -340,7 +340,7 @@ const MembershipSubscriptionMutations = extendType({
         await setPaymentMethod(
           userId,
           ctx.db,
-          user.membershipSubscription.stripeSubscriptionId,
+          user.stripeCustomerId,
           args.paymentMethodId,
         )
         return user.membershipSubscription

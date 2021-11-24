@@ -336,11 +336,14 @@ const MembershipSubscriptionMutations = extendType({
         if (!user?.membershipSubscription?.stripeSubscriptionId) {
           throw new Error("User has no subscription to update")
         }
+        if (!user?.stripeCustomerId) {
+          throw new Error('User has no stripeCustomerId')
+        }
 
         await setPaymentMethod(
           userId,
           ctx.db,
-          user.membershipSubscription.stripeSubscriptionId,
+          user.stripeCustomerId,
           args.paymentMethodId,
         )
         return user.membershipSubscription

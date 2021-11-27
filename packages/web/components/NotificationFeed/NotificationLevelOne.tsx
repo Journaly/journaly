@@ -57,6 +57,8 @@ const NotificationLevelOne: React.FC<NotificationProps> = ({
       <Component
         notification={notification}
         onNotificationClick={() => handleNotificationLevelChange(notification)}
+        onMarkRead={() => handleMarkNotificationRead(notification.id)}
+        onDelete={() => handleDeleteNotification(notification.id)}
       />
     </SwipeableElement>
   )

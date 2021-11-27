@@ -96,13 +96,13 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
         {children}
         <div className="right-hand-actions" ref={rightHandActionsRef}>
           <Button variant={ButtonVariant.Icon} onClick={nonDestructiveAction}>
-            <div className="action-btn read">
+            <div className="action-btn non-destructive">
               <CheckmarkIcon size={24} />
               {t('actions.markAsRead')}
             </div>
           </Button>
           <Button variant={ButtonVariant.Icon} onClick={destructiveAction}>
-            <div className="action-btn delete">
+            <div className="action-btn destructive">
               <DeleteIcon color={theme.colors.white} size={24} />
               {t('actions.delete')}
             </div>
@@ -142,11 +142,11 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
             height: 100%;
           }
 
-          .action-btn.read {
+          .action-btn.non-destructive {
             background-color: ${theme.colors.gray600};
           }
 
-          .action-btn.delete {
+          .action-btn.destructive {
             background-color: ${theme.colors.red};
           }
         `}</style>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Markdown from 'react-markdown'
 import Link from 'next/link'
 import {
@@ -12,10 +12,16 @@ import { useTranslation } from '@/config/i18n'
 import LikeIcon from '../Icons/LikeIcon'
 import UserAvatar from '../UserAvatar'
 import MultiuserAvatar from '../MultiuserAvatar'
+import Button, { ButtonVariant } from '@/components/Button'
+import CheckmarkIcon from '../Icons/CheckmarkIcon'
+import DeleteIcon from '../Icons/DeleteIcon'
+import { navConstants } from '../Dashboard/Nav'
 
 export type LevelOneNotificationProps = {
   notification: NotificationType
   onNotificationClick: () => void
+  onMarkRead: (arg: number) => void
+  onDelete: (arg: number) => void
 }
 
 export type LevelTwoNotificationProps = {
@@ -49,6 +55,8 @@ type BaseNotificationLayoutProps = {
   middle: JSX.Element
   right?: JSX.Element
   onNotificationClick: () => void
+  onMarkRead: () => void
+  onDelete: () => void
 }
 
 export const getUserIdentifier = (user: UserType) => user?.name || user.handle
@@ -58,12 +66,33 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
   middle,
   right,
   onNotificationClick,
+  onMarkRead,
+  onDelete,
 }) => {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    if (window.innerWidth < navConstants.mobileBreakpoint) {
+      setIsMobile(true)
+    }
+  }, [])
   return (
     <div className="container" onClick={onNotificationClick}>
       <div className="left-section">{left}</div>
       <div className="middle-section">{middle}</div>
       <div className="right-section">{right}</div>
+      <div className="desktop-actions">
+        <Button variant={ButtonVariant.Icon}>
+          <div className="desktop-action-btn read">
+            <CheckmarkIcon size={24} color={theme.colors.charcoal} onClick={onMarkRead} />
+          </div>
+        </Button>
+        <Button variant={ButtonVariant.Icon} onClick={onDelete}>
+          <div className="desktop-action-btn delete">
+            <DeleteIcon color={theme.colors.red} size={24} />
+          </div>
+        </Button>
+      </div>
       <style jsx>{`
         .container {
           display: flex;
@@ -99,6 +128,10 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
 
         .container :global(.left-section img) {
           box-shadow: 0px 3px 8px #00000075;
+        }
+
+        .desktop-actions {
+          display: ${isMobile ? 'none' : ''};
         }
       `}</style>
     </div>

@@ -75,8 +75,6 @@ const PostComment: React.FC<PostCommentProps> = ({
     })
   }
 
-  console.log('foobee!')
-
   return (
     <div className="comment" id={`pc-${comment.id}`}>
       <div className="author-body-container">

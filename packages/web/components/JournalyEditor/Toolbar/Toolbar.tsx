@@ -84,80 +84,89 @@ const Toolbar = ({
   return (
     <div className={toolbarClasses} ref={toolbarRef}>
       <div className="editor-toolbar">
-        <ToggleMarkButton type="bold">
-          <FormatBoldIcon title="Bold" titleId="toolbar-bold-icon" />
-        </ToggleMarkButton>
-        <ToggleMarkButton type="italic">
-          <FormatItalicIcon title="Italic" titleId="toolbar-italic-icon" />
-        </ToggleMarkButton>
-        <ToggleMarkButton type="underline">
-          <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
-        </ToggleMarkButton>
-        <InsertImageButton allowInlineImages={allowInlineImages}>
-          <ImageIcon title="Insert image" />
-        </InsertImageButton>
-        <ToolbarButton type="link" format="link">
-          <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
-        </ToolbarButton>
-        <ToolbarButton type="block" format="heading-two">
-          <FormatTitleIcon title="Apply heading" titleId="toolbar-title-icon" />
-        </ToolbarButton>
-        <ToolbarButton type="block" format="block-quote">
-          <FormatQuoteIcon title="Block quote" titleId="toolbar-quote-icon" />
-        </ToolbarButton>
-        <ToolbarButton type="block" format="numbered-list">
-          <FormatListNumberedIcon title="Numbered list" titleId="toolbar-list-numbered-icon" />
-        </ToolbarButton>
-        <ToolbarButton type="block" format="bulleted-list">
-          <FormatListBulletedIcon title="Bulleted list" titleId="toolbar-list-bulleted-icon" />
-        </ToolbarButton>
+        <div className="toolbar-row">
+          <ToggleMarkButton type="bold">
+            <FormatBoldIcon title="Bold" titleId="toolbar-bold-icon" />
+          </ToggleMarkButton>
+          <ToggleMarkButton type="italic">
+            <FormatItalicIcon title="Italic" titleId="toolbar-italic-icon" />
+          </ToggleMarkButton>
+          <ToggleMarkButton type="underline">
+            <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
+          </ToggleMarkButton>
+          <InsertImageButton allowInlineImages={allowInlineImages}>
+            <ImageIcon title="Insert image" />
+          </InsertImageButton>
+          <ToolbarButton type="link" format="link">
+            <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
+          </ToolbarButton>
+        </div>
+        <div className="toolbar-row">
+          <ToolbarButton type="block" format="heading-two">
+            <FormatTitleIcon title="Apply heading" titleId="toolbar-title-icon" />
+          </ToolbarButton>
+          <ToolbarButton type="block" format="block-quote">
+            <FormatQuoteIcon title="Block quote" titleId="toolbar-quote-icon" />
+          </ToolbarButton>
+          <ToolbarButton type="block" format="numbered-list">
+            <FormatListNumberedIcon title="Numbered list" titleId="toolbar-list-numbered-icon" />
+          </ToolbarButton>
+          <ToolbarButton type="block" format="bulleted-list">
+            <FormatListBulletedIcon title="Bulleted list" titleId="toolbar-list-bulleted-icon" />
+          </ToolbarButton>
 
-        {isTableActivated ? (
-          <Popup
-            trigger={<span>{tableIcon}</span>}
-            position="bottom center"
-            on={['hover', 'focus']}
-            closeOnDocumentClick
-            className="editor-toolbar-popover"
-          >
-            <ToolbarTable
-              {...options}
-              className="editor-toolbar-popover-item"
-              transform={addRow}
-              icon="Add row"
+          {isTableActivated ? (
+            <Popup
+              trigger={<span>{tableIcon}</span>}
+              position="bottom center"
+              on={['hover', 'focus']}
+              closeOnDocumentClick
+              className="editor-toolbar-popover"
+            >
+              <ToolbarTable
+                {...options}
+                className="editor-toolbar-popover-item"
+                transform={addRow}
+                icon="Add row"
+              />
+              <ToolbarTable
+                {...options}
+                className="editor-toolbar-popover-item"
+                transform={deleteRow}
+                icon="Delete row"
+              />
+              <ToolbarTable
+                {...options}
+                className="editor-toolbar-popover-item"
+                transform={addColumn}
+                icon="Add column"
+              />
+              <ToolbarTable
+                {...options}
+                className="editor-toolbar-popover-item"
+                transform={deleteColumn}
+                icon="Delete column"
+              />
+              <ToolbarTable
+                {...options}
+                className="editor-toolbar-popover-item"
+                transform={deleteTable}
+                icon="Delete table"
+              />
+            </Popup>
+          ) : (
+            tableIcon
+          )}
+        </div>
+        <div className="toolbar-row">
+          <div className="typewriter-sounds-switch-container">
+            {/* TODO: translation */}
+            <span>Typewriter Sounds</span>
+            <SwitchToggle
+              isToggled={playTypewriterSounds}
+              onToggle={onTogglePlayTypewriterSounds}
             />
-            <ToolbarTable
-              {...options}
-              className="editor-toolbar-popover-item"
-              transform={deleteRow}
-              icon="Delete row"
-            />
-            <ToolbarTable
-              {...options}
-              className="editor-toolbar-popover-item"
-              transform={addColumn}
-              icon="Add column"
-            />
-            <ToolbarTable
-              {...options}
-              className="editor-toolbar-popover-item"
-              transform={deleteColumn}
-              icon="Delete column"
-            />
-            <ToolbarTable
-              {...options}
-              className="editor-toolbar-popover-item"
-              transform={deleteTable}
-              icon="Delete table"
-            />
-          </Popup>
-        ) : (
-          tableIcon
-        )}
-
-        <div className="typewriter-sounds-switch-container">
-          <span>Typewriter Sounds</span>
-          <SwitchToggle isToggled={playTypewriterSounds} onToggle={onTogglePlayTypewriterSounds} />
+          </div>
         </div>
       </div>
       <style jsx>{`
@@ -168,9 +177,11 @@ const Toolbar = ({
         .editor-toolbar {
           display: flex;
           justify-content: center;
+          flex-wrap: wrap;
           padding: 15px 0;
           border-bottom: 2px solid #eee;
           z-index: 1;
+          gap: 10px;
         }
 
         .is-fixed .editor-toolbar {
@@ -190,6 +201,8 @@ const Toolbar = ({
           justify-content: center;
           align-items: center;
           gap: 10px;
+          height: 100%;
+          margin-left: 10px;
         }
 
         @media (${navConstants.skinnyNavToDesktop}) {

@@ -16,8 +16,8 @@ const SwitchToggle: React.FC<SwitchToggleProps> = ({ isToggled, onToggle }) => {
         .switch {
           position: relative;
           display: inline-block;
-          width: 60px;
-          height: 34px;
+          width: 40px;
+          height: 24px;
         }
 
         .switch input {
@@ -33,29 +33,25 @@ const SwitchToggle: React.FC<SwitchToggleProps> = ({ isToggled, onToggle }) => {
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: ${theme.colors.gray300};
-          transition: background 0.4s;
-          border-radius: 24px;
+          background-color: ${theme.colors.gray800};
+          border-radius: 26px;
         }
 
         .slider::before {
           position: absolute;
           content: '';
-          height: 26px;
-          width: 26px;
+          height: 16px;
+          width: 16px;
           left: 4px;
           bottom: 4px;
           background-color: ${theme.colors.white};
-          transition: transform 0.4s;
+          transition: all 0.2s;
           border-radius: 15px;
         }
 
-        input:checked + .slider {
-          background-color: ${theme.colors.blueLight};
-        }
-
         input:checked + .slider::before {
-          transform: translateX(26px);
+          transform: translateX(16px);
+          background-color: ${theme.colors.blueLight};
         }
       `}</style>
     </label>

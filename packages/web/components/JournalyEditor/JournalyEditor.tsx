@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback } from 'react'
+import React, { useEffect, useMemo, useCallback, useRef } from 'react'
 import { createEditor, Editor, Descendant } from 'slate'
 import { Slate, withReact } from 'slate-react'
 import { withHistory } from 'slate-history'
@@ -64,6 +64,21 @@ const JournalyEditor = ({
     return pipe(withReact(createEditor()), ...withPlugins)
   }, [])
 
+  const typewriterSound = useRef<HTMLAudioElement | undefined>(
+    typeof Audio !== 'undefined'
+      ? new Audio('https://journaly-sound-effects.s3.us-east-2.amazonaws.com/typewriter-sound.wav')
+      : undefined,
+  )
+
+  const playTypewriterSound = (sound: React.MutableRefObject<HTMLAudioElement | undefined>) => {
+    // Always rewind audio to beginning before playing
+    // This enables rapic replays even if the file was still playing
+    if (sound.current) {
+      sound.current.currentTime = 0
+      sound.current.play()
+    }
+  }
+
   useEffect(() => {
     ;(slateRef as React.MutableRefObject<Editor>).current = editor
   }, [editor])
@@ -81,6 +96,7 @@ const JournalyEditor = ({
             spellCheck
             onKeyDown={[
               (event: React.KeyboardEvent) => {
+                playTypewriterSound(typewriterSound)
                 Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
                   // Convert React keyboard event to native keyboard event
                   if (isHotkey(hotkey, (event as unknown) as KeyboardEvent)) {

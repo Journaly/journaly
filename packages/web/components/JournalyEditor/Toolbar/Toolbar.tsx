@@ -29,12 +29,19 @@ import ToggleMarkButton from './ToggleMarkButton'
 import ToolbarButton from './ToolbarButton'
 import InsertImageButton from './InsertImageButton'
 import { options, isTableActive } from '../helpers'
+import SwitchToggle from '@/components/SwitchToggle'
 
 type ToolbarProps = {
   allowInlineImages: boolean
+  playTypewriterSounds: boolean
+  onTogglePlayTypewriterSounds: () => void
 }
 
-const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
+const Toolbar = ({
+  allowInlineImages,
+  playTypewriterSounds,
+  onTogglePlayTypewriterSounds,
+}: ToolbarProps) => {
   const editor = useSlate()
   const isEditorFocused = useFocused()
   const toolbarRef = useRef<HTMLDivElement>(null)
@@ -147,6 +154,11 @@ const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
         ) : (
           tableIcon
         )}
+
+        <div className="typewriter-sounds-switch-container">
+          <span>Typewriter Sounds</span>
+          <SwitchToggle isToggled={playTypewriterSounds} onToggle={onTogglePlayTypewriterSounds} />
+        </div>
       </div>
       <style jsx>{`
         .editor-toolbar-container {
@@ -171,6 +183,13 @@ const Toolbar = ({ allowInlineImages }: ToolbarProps) => {
           border-radius: 5px;
           box-shadow: 0px 8px 10px #00000029;
           border: 1px solid #eee;
+        }
+
+        .typewriter-sounds-switch-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
         }
 
         @media (${navConstants.skinnyNavToDesktop}) {

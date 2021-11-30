@@ -4,6 +4,7 @@ import Link from 'next/link'
 import {
   NotificationFragmentFragment as NotificationType,
   AuthorFragmentFragment as UserType,
+  NotificationReadStatus,
 } from '@/generated/graphql'
 import theme from '@/theme'
 import ClapIcon from '../Icons/ClapIcon'
@@ -57,6 +58,7 @@ type BaseNotificationLayoutProps = {
   onNotificationClick: () => void
   onMarkRead: () => void
   onDelete: () => void
+  readStatus: NotificationReadStatus
 }
 
 export const getUserIdentifier = (user: UserType) => user?.name || user.handle
@@ -68,6 +70,7 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
   onNotificationClick,
   onMarkRead,
   onDelete,
+  readStatus,
 }) => {
   const [isMobile, setIsMobile] = useState(false)
 
@@ -77,12 +80,18 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
     }
   }, [])
   return (
-    <div className="container" onClick={onNotificationClick}>
-      <div className="left-section">{left}</div>
-      <div className="middle-section">{middle}</div>
-      <div className="right-section">{right}</div>
+    <div className="container">
+      <div className="left-section" onClick={onNotificationClick}>
+        {left}
+      </div>
+      <div className="middle-section" onClick={onNotificationClick}>
+        {middle}
+      </div>
+      <div className="right-section" onClick={onNotificationClick}>
+        {right}
+      </div>
       <div className="desktop-actions">
-        <Button variant={ButtonVariant.Icon}>
+        <Button variant={ButtonVariant.Icon} disabled={readStatus === NotificationReadStatus.Read}>
           <div className="desktop-action-btn read">
             <CheckmarkIcon size={24} color={theme.colors.charcoal} onClick={onMarkRead} />
           </div>
@@ -102,6 +111,7 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
           align-items: center;
           min-height: 100px;
           cursor: pointer;
+          filter: opacity(${readStatus === NotificationReadStatus.Read ? 0.5 : 1});
         }
 
         .left-section {
@@ -131,6 +141,7 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
         }
 
         .desktop-actions {
+          margin-left: 16px;
           display: ${isMobile ? 'none' : ''};
         }
       `}</style>
@@ -147,6 +158,8 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
 export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
   onNotificationClick,
+  onDelete,
+  onMarkRead,
 }) => {
   const { t } = useTranslation('notifications')
   const count = notification.threadCommentNotifications.length
@@ -164,6 +177,9 @@ export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationPro
         />
       }
       onNotificationClick={onNotificationClick}
+      readStatus={notification.readStatus}
+      onDelete={() => onDelete(notification.id)}
+      onMarkRead={() => onMarkRead(notification.id)}
     />
   )
 }
@@ -171,6 +187,8 @@ export const ThreadCommentNotificationLevelOne: React.FC<LevelOneNotificationPro
 export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
   onNotificationClick,
+  onDelete,
+  onMarkRead,
 }) => {
   const { t } = useTranslation('notifications')
   const count = notification.postClapNotifications.length
@@ -186,6 +204,9 @@ export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> =
         />
       }
       onNotificationClick={onNotificationClick}
+      readStatus={notification.readStatus}
+      onDelete={() => onDelete(notification.id)}
+      onMarkRead={() => onMarkRead(notification.id)}
     />
   )
 }
@@ -193,6 +214,8 @@ export const PostClapNotificationLevelOne: React.FC<LevelOneNotificationProps> =
 export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
   onNotificationClick,
+  onDelete,
+  onMarkRead,
 }) => {
   const { t } = useTranslation('notifications')
   const thanksAuthor = notification.threadCommentThanksNotifications[0].thanks.author
@@ -216,6 +239,9 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
         />
       }
       onNotificationClick={onNotificationClick}
+      readStatus={notification.readStatus}
+      onDelete={() => onDelete(notification.id)}
+      onMarkRead={() => onMarkRead(notification.id)}
     />
   )
 }
@@ -223,6 +249,8 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
 export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
   onNotificationClick,
+  onDelete,
+  onMarkRead,
 }) => {
   const { t } = useTranslation('notifications')
   const count = notification.postCommentNotifications.length
@@ -239,6 +267,9 @@ export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps
         />
       }
       onNotificationClick={onNotificationClick}
+      readStatus={notification.readStatus}
+      onDelete={() => onDelete(notification.id)}
+      onMarkRead={() => onMarkRead(notification.id)}
     />
   )
 }
@@ -246,6 +277,8 @@ export const PostCommentNotificationLevelOne: React.FC<LevelOneNotificationProps
 export const NewPostNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
   onNotificationClick,
+  onDelete,
+  onMarkRead,
 }) => {
   const { t } = useTranslation('notifications')
   const count = notification.newPostNotifications.length
@@ -259,6 +292,9 @@ export const NewPostNotificationLevelOne: React.FC<LevelOneNotificationProps> = 
       }
       middle={<p>{t('levelOne.newPosts', { count })}</p>}
       onNotificationClick={onNotificationClick}
+      readStatus={notification.readStatus}
+      onDelete={() => onDelete(notification.id)}
+      onMarkRead={() => onMarkRead(notification.id)}
     />
   )
 }
@@ -266,6 +302,8 @@ export const NewPostNotificationLevelOne: React.FC<LevelOneNotificationProps> = 
 export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
   notification,
   onNotificationClick,
+  onDelete,
+  onMarkRead,
 }) => {
   const { t } = useTranslation('notifications')
   const count = notification.newFollowerNotifications.length
@@ -281,6 +319,9 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
       }
       middle={<p>{t('levelOne.newFollowers', { count })}</p>}
       onNotificationClick={onNotificationClick}
+      readStatus={notification.readStatus}
+      onDelete={() => onDelete(notification.id)}
+      onMarkRead={() => onMarkRead(notification.id)}
     />
   )
 }

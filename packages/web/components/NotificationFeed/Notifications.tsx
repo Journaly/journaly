@@ -360,12 +360,16 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
 
   return (
     <div className="container">
-      <div className="thanks-author">
-        <UserAvatar user={thanksAuthor} size={50} />
-      </div>
+      <Link href={`/dashboard/profile/${thanksAuthor.id}`}>
+        <a className="thanks-author">
+          <UserAvatar user={thanksAuthor} size={50} />
+        </a>
+      </Link>
       <p className="title">
+        <Link href={`/dashboard/profile/${thanksAuthor.id}`}>
+          <a className="user-identifier">{getUserIdentifier(thanksAuthor)} </a>
+        </Link>
         {t('levelTwo.threadCommentThanks', {
-          userIdentifier: getUserIdentifier(thanksAuthor),
           count,
         })}
       </p>
@@ -403,7 +407,6 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
           min-height: 100px;
           gap: 16px;
           color: ${theme.colors.white};
-          cursor: pointer;
         }
 
         .title {
@@ -445,10 +448,8 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
           color: ${theme.colors.white};
         }
 
-        .comment-body-container {
-        }
-
-        .author-identifier {
+        .user-identifier {
+          color: ${theme.colors.white};
           font-weight: 600;
         }
       `}</style>

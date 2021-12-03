@@ -14,8 +14,8 @@
     "postCommentsSubscribed_plural": "Es gibt {{count}} neue allgemeine Kommetare zu diesem Beitrag",
     "postClaps": "Ein Journaler hat diesem Beitrag applaudiert",
     "postClaps_plural": "{{count}} Journaler haben diesem Beitrag applaudiert",
-    "threadCommentThanks": "{{userIdentifier}} hat für einen Feedback-Kommentar Danke gesagt",
-    "threadCommentThanks_plural": "{{userIdentifier}} hat für {{count}} Feedback-Kommentare Danke gesagt",
+    "threadCommentThanks": "hat für einen Feedback-Kommentar Danke gesagt",
+    "threadCommentThanks_plural": "hat für {{count}} Feedback-Kommentare Danke gesagt",
     "newPosts": "Journaler, denen du folgst, haben einen neuen Beitrag veröffentlicht",
     "newPosts_plural": "Journaler, denen du folgst, haben {{count}} neue Beiträge veröffentlicht"
   },

@@ -14,8 +14,8 @@
     "postCommentsSubscribed_plural": "There are {{count}} new general comments on this post",
     "postClaps": "1 Journaler clapped for your post",
     "postClaps_plural": "{{count}} Journalers clapped for your post",
-    "threadCommentThanks": "{{userIdentifier}} said thanks for 1 feedback comment",
-    "threadCommentThanks_plural": "{{userIdentifier}} said thanks for {{count}} feedback comments",
+    "threadCommentThanks": "said thanks for 1 feedback comment",
+    "threadCommentThanks_plural": "said thanks for {{count}} feedback comments",
     "newPosts": "A Journaler you follow published a new post",
     "newPosts_plural": "Journalers you follow published {{count}} new posts"
   },

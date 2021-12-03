@@ -15,7 +15,7 @@ import {
 
 type NotificationProps = {
   notification: NotificationType
-  handleNotificationLevelChange: (arg: NotificationType) => void
+  handleCloseNotificationFeed: () => void
 }
 
 const getNotificationComponent = (
@@ -37,19 +37,15 @@ const getNotificationComponent = (
   }
 }
 
-
 const NotificationLevelTwo: React.FC<NotificationProps> = ({
   notification,
-  handleNotificationLevelChange,
+  handleCloseNotificationFeed,
 }) => {
   const Component = getNotificationComponent(notification.type)
   if (!Component) return null
 
   return (
-    <Component
-      notification={notification}
-      onNotificationClick={() => handleNotificationLevelChange(notification)}
-    />
+    <Component notification={notification} closeNotificationFeed={handleCloseNotificationFeed} />
   )
 }
 

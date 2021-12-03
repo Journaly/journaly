@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import {
   CurrentUserDocument,
@@ -17,6 +17,7 @@ import XIcon from '../Icons/XIcon'
 import { useNotificationContext } from './NotificationContext'
 import NotificationLevelTwo from './NotificationLevelTwo'
 import { useTranslation } from '@/config/i18n'
+import useOnClickOut from '@/hooks/useOnClickOut'
 
 type NotificationFeedProps = {
   onClose: () => void
@@ -27,6 +28,10 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const { t } = useTranslation('notifications')
   const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
   const [activeNotification, setActiveNotification] = useState<NotificationType | null>(null)
+
+  // Close notification feed if user clicks out of it
+  const feedContainerRef = useRef<HTMLDivElement>(null)
+  useOnClickOut(feedContainerRef, onClose)
 
   const { notifications } = useNotificationContext() || {}
 
@@ -77,45 +82,45 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   }
 
   return (
-      <div className="container">
-        <div className="level-one">
-          <div className="top">
-            <p>Notifications</p>
-            <Button variant={ButtonVariant.Icon} onClick={onClose}>
-              <XIcon color={theme.colors.white} />
-            </Button>
-          </div>
-          {(!notifications || notifications.length === 0) && (
-            <p className="feed-empty-state">{t('emptyFeed')}</p>
+    <div className="container" ref={feedContainerRef}>
+      <div className="level-one">
+        <div className="top">
+          <p>Notifications</p>
+          <Button variant={ButtonVariant.Icon} onClick={onClose}>
+            <XIcon color={theme.colors.white} />
+          </Button>
+        </div>
+        {(!notifications || notifications.length === 0) && (
+          <p className="feed-empty-state">{t('emptyFeed')}</p>
+        )}
+        <div className="content">
+          {notifications.map((notification) => (
+            <NotificationLevelOne
+              key={notification.id}
+              notification={notification}
+              handleNotificationLevelChange={handleGoToLevelTwo}
+              handleDeleteNotification={handleDeleteNotification}
+              handleMarkNotificationRead={handleMarkNotificationRead}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="level-two">
+        <div className="top">
+          <Button variant={ButtonVariant.Icon} onClick={handleGoToLevelOne}>
+            <BackArrowIcon />
+          </Button>
+          <span>Notifications</span>
+        </div>
+        <div className="content">
+          {activeNotification && (
+            <NotificationLevelTwo
+              notification={activeNotification}
+              handleCloseNotificationFeed={onClose}
+            />
           )}
-          <div className="content">
-            {notifications.map((notification) => (
-              <NotificationLevelOne
-                key={notification.id}
-                notification={notification}
-                handleNotificationLevelChange={handleGoToLevelTwo}
-                handleDeleteNotification={handleDeleteNotification}
-                handleMarkNotificationRead={handleMarkNotificationRead}
-              />
-            ))}
-          </div>
         </div>
-        <div className="level-two">
-          <div className="top">
-            <Button variant={ButtonVariant.Icon} onClick={handleGoToLevelOne}>
-              <BackArrowIcon />
-            </Button>
-            <span>Notifications</span>
-          </div>
-          <div className="content">
-            {activeNotification && (
-              <NotificationLevelTwo
-                notification={activeNotification}
-                handleNotificationLevelChange={handleGoToLevelOne}
-              />
-            )}
-          </div>
-        </div>
+      </div>
       <style jsx>{`
         @keyframes fadeIn {
           from {
@@ -152,7 +157,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
         }
 
         .level-one .content {
-          display:  flex;
+          display: flex;
           flex-direction: column;
           align-items: stretch;
         }
@@ -179,7 +184,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
           text-align: center;
         }
       `}</style>
-      </div>
+    </div>
   )
 }
 

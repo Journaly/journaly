@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Markdown from 'react-markdown'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import {
   NotificationFragmentFragment as NotificationType,
@@ -27,6 +28,7 @@ export type LevelOneNotificationProps = {
 
 export type LevelTwoNotificationProps = {
   notification: NotificationType
+  closeNotificationFeed: () => void
 }
 
 type ThreadCommentNotificationComment =
@@ -62,6 +64,19 @@ type BaseNotificationLayoutProps = {
 }
 
 export const getUserIdentifier = (user: UserType) => user?.name || user.handle
+
+type NotificationLinkProps = React.ComponentPropsWithoutRef<'a'>
+
+const NotificationLink: React.FC<NotificationLinkProps> = ({ onClick, ...rest }) => {
+  const router = useRouter()
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    console.log('handling click...')
+    e.preventDefault()
+    onClick && onClick(e)
+    if (rest.href) router.push(rest.href)
+  }
+  return <a {...rest} onClick={handleClick} />
+}
 
 const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
   left,
@@ -340,6 +355,7 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
 
 export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
+  closeNotificationFeed,
 }) => {
   const { t } = useTranslation('notifications')
   const thanksAuthor = notification.threadCommentThanksNotifications[0].thanks.author
@@ -359,15 +375,17 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
   }
 
   return (
-    <div className="container">
+    <div className="container" onClick={() => console.log('hello!')}>
       <Link href={`/dashboard/profile/${thanksAuthor.id}`}>
-        <a className="thanks-author">
+        <a className="thanks-author" onClick={closeNotificationFeed}>
           <UserAvatar user={thanksAuthor} size={50} />
         </a>
       </Link>
       <p className="title">
         <Link href={`/dashboard/profile/${thanksAuthor.id}`}>
-          <a className="user-identifier">{getUserIdentifier(thanksAuthor)} </a>
+          <a className="user-identifier" onClick={closeNotificationFeed}>
+            {getUserIdentifier(thanksAuthor)}{' '}
+          </a>
         </Link>
         {t('levelTwo.threadCommentThanks', {
           count,
@@ -381,16 +399,19 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
               <ul>
                 {thanks.map((thanks) => (
                   <li key={thanks.id}>
-                    <Link href={`/post/${notification.post?.id}#t=${thread.id}`}>
-                      <a className="comment">
+                    <NotificationLink
+                      href={`/post/${notification.post?.id}#t=${thread.id}`}
+                      onClick={closeNotificationFeed}
+                    >
+                      <div className="comment">
                         <span>
                           <LikeIcon filled={true} />
                         </span>
                         <span className="comment-body-container">
                           <Markdown>{thanks.comment.body}</Markdown>
                         </span>
-                      </a>
-                    </Link>
+                      </div>
+                    </NotificationLink>
                   </li>
                 ))}
               </ul>
@@ -459,6 +480,7 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
 
 export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
+  closeNotificationFeed,
 }) => {
   const { t } = useTranslation('notifications')
 
@@ -494,6 +516,7 @@ export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> =
 
 export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
+  closeNotificationFeed,
 }) => {
   // Separate the different threads
   const threadGroupedComments: ThreadGroupedCommentsType = {}
@@ -596,6 +619,7 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
 
 export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
+  closeNotificationFeed,
 }) => {
   const comments = notification.postCommentNotifications.map(
     (notification) => notification.postComment,
@@ -665,6 +689,7 @@ export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps
 
 export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
+  closeNotificationFeed,
 }) => {
   const { t } = useTranslation('notifications')
 
@@ -757,6 +782,7 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
 
 export const NewFollowerNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = ({
   notification,
+  closeNotificationFeed,
 }) => {
   const { t } = useTranslation('notifications')
 

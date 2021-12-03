@@ -1,10 +1,10 @@
-import React, { useState, memo, useMemo, useRef, forwardRef, useEffect } from 'react'
+import React, { useState, memo, useMemo, useRef, forwardRef, useEffect, useCallback } from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { makeReference } from '@apollo/client'
 import queryString from 'query-string'
 
-import { findEventTargetParent, sanitize, iOS, wait } from '@/utils'
+import { sanitize, iOS, wait } from '@/utils'
 import {
   PostStatus,
   useCreateThreadMutation,
@@ -43,6 +43,7 @@ import { POST_BUMP_LIMIT } from '../../../constants'
 import { SelectionState, PostProps, PostContentProps, ThreadType } from './types'
 import BookmarkIcon from '@/components/Icons/BookmarkIcon'
 import UserListModal from '@/components/Modals/UserListModal'
+import useOnClickOut from '@/hooks/useOnClickOut'
 
 const selectionState: SelectionState = {
   bouncing: false,
@@ -351,11 +352,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     }
   }, [post.threads.length])
 
-  // useEffect(() => {
-
-  //   }
-  // }, [])
-
   useEffect(() => {
     const onSelectionChange = () => {
       const selection = window.getSelection()
@@ -389,27 +385,17 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       })
     }
 
-    const onDocumentMouseDown = (e: MouseEvent) => {
-      if (!e.target || !popoverRef.current || isChildOf(e.target as Node, popoverRef.current)) {
-        return
-      }
-
-      // Mouse/touch events in modals shouldn't close the thread popover
-      if (findEventTargetParent(e, (el) => el.id === 'modal-root')) {
-        return
-      }
-
-      setActiveThreadId(-1)
-    }
-
     document.addEventListener('selectionchange', onSelectionChange)
-    document.addEventListener('mousedown', onDocumentMouseDown)
 
     return () => {
       document.removeEventListener('selectionchange', onSelectionChange)
-      document.removeEventListener('mousedown', onDocumentMouseDown)
     }
   }, [selectableRef.current])
+
+  const closeThread = useCallback(() => {
+    setActiveThreadId(-1)
+  }, [])
+  useOnClickOut(popoverRef, closeThread)
 
   const createThreadHandler = (e: React.MouseEvent) => {
     e.preventDefault()

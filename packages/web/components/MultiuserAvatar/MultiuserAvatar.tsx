@@ -24,7 +24,6 @@ const MultiuserAvatar: React.FC<MultiuserAvatarProps> = ({ users }) => {
       <style jsx>{`
         .multiple-follower-container {
           position: relative;
-          // TODO: figure proper centering out here
           padding: 16px 0 0 16px;
         }
 

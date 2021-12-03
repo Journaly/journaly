@@ -114,6 +114,10 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
           filter: opacity(${readStatus === NotificationReadStatus.Read ? 0.5 : 1});
         }
 
+        .container:hover {
+          background-color: ${theme.colors.gray800};
+        }
+
         .left-section {
           display: ${left ? '' : 'none'};
         }
@@ -420,6 +424,10 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
           margin-bottom: 10px;
         }
 
+        .thread:hover {
+          background-color: ${theme.colors.gray800};
+        }
+
         ul {
           display: flex;
           flex-direction: column;
@@ -546,6 +554,10 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
           margin-bottom: 10px;
         }
 
+        .thread:hover {
+          background-color: ${theme.colors.gray800};
+        }
+
         ul {
           display: flex;
           flex-direction: column;
@@ -623,6 +635,11 @@ export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps
           padding-bottom: 16px;
           color: ${theme.colors.white};
         }
+
+        .comment:hover {
+          background-color: ${theme.colors.gray800};
+        }
+
         .author-identifier {
           font-weight: 600;
         }
@@ -642,27 +659,47 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
     <div className="container">
       <p className="title">{t('levelTwo.newPosts')}</p>
       {newPosts.map((post) => (
-        <>
-          <BaseNotificationLayout
-            left={<UserAvatar user={post.author} size={50} />}
-            middle={
-              <div>
-                <p className="post-title">{post.title}</p>
-                <p className="post-author">
-                  by <span className="user-identifier">{getUserIdentifier(post.author)}</span>
-                </p>
-              </div>
-            }
-            right={<img src={post.headlineImage.smallSize} />}
-            onNotificationClick={() => {}}
-          />
-        </>
+        <div className="post-container" onClick={() => {}}>
+          <div className="left-section">
+            <UserAvatar user={post.author} size={50} />
+          </div>
+          <div className="middle-section">
+            <div>
+              <p className="post-title">{post.title}</p>
+              <p className="post-author">
+                by <span className="user-identifier">{getUserIdentifier(post.author)}</span>
+              </p>
+            </div>
+          </div>
+          <div className="right-section">
+            <img src={post.headlineImage.smallSize} />
+          </div>
+        </div>
       ))}
       <style jsx>{`
         .container {
           display: flex;
           flex-direction: column;
           gap: 16px;
+        }
+
+        .post-container {
+          display: flex;
+          width: 100%;
+          padding: 16px;
+          border-bottom: 1px solid ${theme.colors.gray600};
+          align-items: center;
+          min-height: 100px;
+          cursor: pointer;
+        }
+
+        .post-container:hover {
+          background-color: ${theme.colors.gray800};
+        }
+
+        .middle-section {
+          padding: 0 16px;
+          flex: 1;
         }
 
         .title,
@@ -682,6 +719,18 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
 
         .user-identifier {
           font-weight: 600;
+        }
+
+        .right-section > img {
+          width: 80px;
+          height: 50px;
+          object-fit: cover;
+          border-radius: 2px;
+          box-shadow: 0px 3px 8px #00000075;
+        }
+
+        .container :global(.left-section img) {
+          box-shadow: 0px 3px 8px #00000075;
         }
       `}</style>
     </div>

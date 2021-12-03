@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import {
   NotificationFragmentFragment as NotificationType,
+  NotificationReadStatus,
   useCurrentUserQuery,
 } from '@/generated/graphql'
 
@@ -35,7 +36,10 @@ const useNotificationContextValue = (): NotificationContextValue | null => {
 
   if (!notifications) return null
 
-  const unreadCount = notifications.length
+  const unreadNotifications = notifications.filter(
+    (notification) => notification.readStatus === NotificationReadStatus.Unread,
+  )
+  const unreadCount = unreadNotifications.length
 
   return {
     notifications,

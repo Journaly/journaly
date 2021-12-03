@@ -376,13 +376,17 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
               <span className="highlighted-content">{thread.highlightedContent}</span>
               <ul>
                 {thanks.map((thanks) => (
-                  <li className="comment" key={thanks.id}>
-                    <span>
-                      <LikeIcon filled={true} />
-                    </span>
-                    <span className="comment-body-container">
-                      <Markdown>{thanks.comment.body}</Markdown>
-                    </span>
+                  <li key={thanks.id}>
+                    <Link href={`/post/${notification.post?.id}#t=${thread.id}`}>
+                      <a className="comment">
+                        <span>
+                          <LikeIcon filled={true} />
+                        </span>
+                        <span className="comment-body-container">
+                          <Markdown>{thanks.comment.body}</Markdown>
+                        </span>
+                      </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -438,6 +442,7 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
           display: flex;
           gap: 12px;
           align-items: center;
+          color: ${theme.colors.white};
         }
 
         .comment-body-container {
@@ -462,11 +467,20 @@ export const PostClapNotificationLevelTwo: React.FC<LevelTwoNotificationProps> =
   return (
     <div className="container">
       <p className="clap-count">{t('levelTwo.postClaps', { count })}</p>
+      <p className="post-title">{notification.post?.title}</p>
       <UserList users={clappingUsers} colorScheme="dark-mode" />
       <style jsx>{`
         .container {
           padding: 0 10px;
         }
+
+        .post-title {
+          font-weight: 600;
+          font-size: 20px;
+          text-align: center;
+          margin-bottom: 16px;
+        }
+
         .clap-count {
           text-align: center;
           font-weight: 600;
@@ -659,22 +673,24 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
     <div className="container">
       <p className="title">{t('levelTwo.newPosts')}</p>
       {newPosts.map((post) => (
-        <div className="post-container" onClick={() => {}}>
-          <div className="left-section">
-            <UserAvatar user={post.author} size={50} />
-          </div>
-          <div className="middle-section">
-            <div>
-              <p className="post-title">{post.title}</p>
-              <p className="post-author">
-                by <span className="user-identifier">{getUserIdentifier(post.author)}</span>
-              </p>
+        <Link href={`/post/${post.id}`}>
+          <a className="post-container">
+            <div className="left-section">
+              <UserAvatar user={post.author} size={50} />
             </div>
-          </div>
-          <div className="right-section">
-            <img src={post.headlineImage.smallSize} />
-          </div>
-        </div>
+            <div className="middle-section">
+              <div>
+                <p className="post-title">{post.title}</p>
+                <p className="post-author">
+                  by <span className="user-identifier">{getUserIdentifier(post.author)}</span>
+                </p>
+              </div>
+            </div>
+            <div className="right-section">
+              <img src={post.headlineImage.smallSize} />
+            </div>
+          </a>
+        </Link>
       ))}
       <style jsx>{`
         .container {
@@ -691,6 +707,7 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
           align-items: center;
           min-height: 100px;
           cursor: pointer;
+          color: ${theme.colors.white};
         }
 
         .post-container:hover {

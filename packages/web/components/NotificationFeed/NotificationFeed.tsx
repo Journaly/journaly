@@ -56,6 +56,48 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
         notificationId,
         readStatus: NotificationReadStatus.Read,
       },
+      update: (cache, mutationResult) => {
+        if (!mutationResult.data?.updateInAppNotification) return
+        const data = cache.readQuery<CurrentUserQuery, CurrentUserQueryVariables>({
+          query: CurrentUserDocument,
+          variables: {},
+        })
+
+        const dataClone = cloneDeep(data)
+        if (!dataClone?.currentUser) return
+        console.log('1', dataClone.currentUser.notifications)
+        cache.modify({
+          id: `InAppNotification:${notificationId}`,
+          fields: {
+            readStatus: () => NotificationReadStatus.Read,
+          },
+        })
+        dataClone.currentUser.notifications.sort((a, b) => {
+          if (
+            a.readStatus === NotificationReadStatus.Read &&
+            b.readStatus === NotificationReadStatus.Unread
+          ) {
+            return 1
+          }
+          if (
+            a.readStatus === NotificationReadStatus.Unread &&
+            b.readStatus === NotificationReadStatus.Read
+          ) {
+            return -1
+          }
+
+          if (a.bumpedAt > b.bumpedAt) {
+            return -1
+          }
+          if (a.bumpedAt < b.bumpedAt) {
+            return 1
+          }
+          return 0
+        })
+        console.log('2', dataClone.currentUser.notifications)
+
+        cache.writeQuery({ query: CurrentUserDocument, data: dataClone })
+      },
     })
   }
   const handleDeleteNotification = (notificationId: number) => {

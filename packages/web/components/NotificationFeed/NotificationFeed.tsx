@@ -25,7 +25,7 @@ type NotificationFeedProps = {
 }
 
 const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
-  const { t } = useTranslation('notifications')
+  const { t } = useTranslation('common')
   const [notificationLevelTranslation, setNotificationLevelTranslation] = useState(0)
   const [activeNotification, setActiveNotification] = useState<NotificationType | null>(null)
 
@@ -91,7 +91,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
           </Button>
         </div>
         {(!notifications || notifications.length === 0) && (
-          <p className="feed-empty-state">{t('emptyFeed')}</p>
+          <p className="feed-empty-state">{t('notifications.emptyFeed')}</p>
         )}
         <div className="content">
           {notifications.map((notification) => (

@@ -105,7 +105,6 @@ const PostComments = ({
     })
     setPostCommentBody('')
   }
-  console.log('post comment!')
 
   return (
     <div className="container">

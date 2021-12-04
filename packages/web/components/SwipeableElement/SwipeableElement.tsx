@@ -24,7 +24,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
   nonDestructiveAction,
   children,
 }) => {
-  const { t } = useTranslation('notifications')
+  const { t } = useTranslation('common')
 
   const swipe = useRef<Swipe>({
     touchStart: 0,
@@ -98,13 +98,13 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
           <Button variant={ButtonVariant.Icon} onClick={nonDestructiveAction}>
             <div className="action-btn non-destructive">
               <CheckmarkIcon size={24} />
-              {t('actions.markAsRead')}
+              {t('notifications.actions.markAsRead')}
             </div>
           </Button>
           <Button variant={ButtonVariant.Icon} onClick={destructiveAction}>
             <div className="action-btn destructive">
               <DeleteIcon color={theme.colors.white} size={24} />
-              {t('actions.delete')}
+              {t('notifications.actions.delete')}
             </div>
           </Button>
         </div>

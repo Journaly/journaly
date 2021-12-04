@@ -541,8 +541,11 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
               <ul>
                 {comments.map((comment) => (
                   <li key={comment.id}>
-                    <Link href={`/post/${notification.post?.id}#t=${thread.id}`}>
-                      <a className="comment">
+                    <NotificationLink
+                      href={`/post/${notification.post?.id}#t=${thread.id}`}
+                      onClick={closeNotificationFeed}
+                    >
+                      <div className="comment">
                         <UserAvatar user={comment.author} size={50} />
                         <div className="comment-right-side">
                           <span className="author-identifier">
@@ -550,8 +553,8 @@ export const ThreadCommentNotificationLevelTwo: React.FC<LevelTwoNotificationPro
                           </span>
                           <Markdown>{comment.body}</Markdown>
                         </div>
-                      </a>
-                    </Link>
+                      </div>
+                    </NotificationLink>
                   </li>
                 ))}
               </ul>
@@ -629,15 +632,18 @@ export const PostCommentNotificationLevelTwo: React.FC<LevelTwoNotificationProps
       <ul>
         {comments.map((comment) => (
           <li key={comment.id}>
-            <Link href={`/post/${notification.post?.id}#pc-${comment.id}`}>
-              <a className="comment">
+            <NotificationLink
+              href={`/post/${notification.post?.id}#pc-${comment.id}`}
+              onClick={closeNotificationFeed}
+            >
+              <div className="comment">
                 <UserAvatar user={comment.author} size={50} />
                 <div className="comment-right-side">
                   <span className="author-identifier">@{getUserIdentifier(comment.author)}</span>
                   <Markdown>{comment.body}</Markdown>
                 </div>
-              </a>
-            </Link>
+              </div>
+            </NotificationLink>
           </li>
         ))}
       </ul>

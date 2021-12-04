@@ -35,7 +35,6 @@ import {
   highlightRange,
   isSelectionCommentable,
   buildPreOrderListAndOffsets,
-  isChildOf,
 } from './helpers'
 import ClapIcon from '@/components/Icons/ClapIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
@@ -44,6 +43,74 @@ import { SelectionState, PostProps, PostContentProps, ThreadType } from './types
 import BookmarkIcon from '@/components/Icons/BookmarkIcon'
 import UserListModal from '@/components/Modals/UserListModal'
 import useOnClickOut from '@/hooks/useOnClickOut'
+import { DOMOffsetTarget } from '@/components/Popover'
+
+type UseDeepLinkingArg = {
+  setActiveThreadId: (arg: number) => void
+  setPopoverPosition: (arg: DOMOffsetTarget) => void
+}
+
+const useDeepLinking = ({ setActiveThreadId, setPopoverPosition }: UseDeepLinkingArg) => {
+  const haveHandledDeepLink = useRef(false)
+
+  const reconcileDocumentHash = () => {
+    const hash = queryString.parse(document.location.hash)
+
+    if (hash.t && typeof hash.t === 'string') {
+      const threadHighlight = document.querySelector(
+        `.thread-highlight[data-tid="${hash.t}"]`,
+      ) as HTMLElement | null
+      if (threadHighlight) {
+        setActiveThreadId(parseInt(hash.t))
+        setPopoverPosition({
+          ...getCoords(threadHighlight),
+          w: threadHighlight.offsetWidth,
+          h: threadHighlight.offsetHeight,
+        })
+        threadHighlight.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        })
+      }
+    }
+  }
+
+  const imageContainerRefCallback = (el: HTMLDivElement) => {
+    if (!el || haveHandledDeepLink.current) return
+    const images = Array.from(el.querySelectorAll('img'))
+    let imagesAreUnloaded = false
+
+    const loadingPromises = images.map((img) => {
+      if (img.complete) {
+        return new Promise<void>((res) => {
+          res()
+        })
+      } else {
+        imagesAreUnloaded = true
+        return new Promise<void>((res) => {
+          img.addEventListener('load', () => res())
+        })
+      }
+    })
+    if (!imagesAreUnloaded) {
+      haveHandledDeepLink.current = true
+      reconcileDocumentHash()
+      return
+    }
+    Promise.all(loadingPromises).then(() => {
+      reconcileDocumentHash()
+    })
+  }
+
+  useEffect(() => {
+    Router.events.on('hashChangeComplete', reconcileDocumentHash)
+
+    return () => {
+      Router.events.off('hashChangeComplete', reconcileDocumentHash)
+    }
+  }, [])
+  return imageContainerRefCallback
+}
 
 const selectionState: SelectionState = {
   bouncing: false,
@@ -100,6 +167,12 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const [displayUserListModal, setDisplayUserListModal] = useState(false)
   const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
+
+  const imageContainerRefCallback = useDeepLinking({
+    setActiveThreadId,
+    setPopoverPosition,
+  })
+
   const isAuthoredPost = currentUser && post.author.id === currentUser.id
   const isPremiumFeatureEligible =
     currentUser?.membershipSubscription?.isActive ||
@@ -277,8 +350,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     return post.claps.find((clap) => clap.author.id === currentUser?.id) !== undefined
   }, [post.claps, currentUser?.id])
 
-  const hasHandledDeepLink = useRef<boolean>(false)
-
   useEffect(() => {
     if (!selectableRef.current) {
       return
@@ -317,39 +388,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         return
       }
     })
-
-    const reconcileDocumentHash = () => {
-      const hash = queryString.parse(document.location.hash)
-
-      if (hash.t && typeof hash.t === 'string') {
-        const threadHighlight = document.querySelector(
-          `.thread-highlight[data-tid="${hash.t}"]`,
-        ) as HTMLElement | null
-        if (threadHighlight) {
-          setActiveThreadId(parseInt(hash.t))
-          setPopoverPosition({
-            ...getCoords(threadHighlight),
-            w: threadHighlight.offsetWidth,
-            h: threadHighlight.offsetHeight,
-          })
-          threadHighlight.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-          })
-        }
-      }
-    }
-    if (!hasHandledDeepLink.current) {
-      hasHandledDeepLink.current = true
-      reconcileDocumentHash()
-    }
-
-    Router.events.on('hashChangeComplete', reconcileDocumentHash)
-    // window.addEventListener('hashchange', reconcileDocumentHash)
-    return () => {
-      Router.events.off('hashChangeComplete', reconcileDocumentHash)
-      // window.removeEventListener('hashchange', reconcileDocumentHash)
-    }
   }, [post.threads.length])
 
   useEffect(() => {
@@ -533,7 +571,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   })
 
   return (
-    <div className="post-container">
+    <div className="post-container" ref={imageContainerRefCallback}>
       <Head>
         <title>
           {post.author.handle} | {post.title}

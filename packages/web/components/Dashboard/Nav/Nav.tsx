@@ -31,37 +31,12 @@ interface Props {
 
 const NOTIFICATION_FEED_SLIDE_TIME = 0.5
 
-const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
-  const { t } = useTranslation()
-
-  // TODO: Refactor these into a hook
+const useNotificationFeedState = () => {
   const [renderNotificationFeedDesktop, setRenderNotificationFeedDesktop] = useState(false)
   const [showNotificationFeedDesktop, setShowNotificationFeedDesktop] = useState(false)
-  const unrenderNotificationFeedDesktopTimeout = useRef<ReturnType<typeof setTimeout>>()
-
   const [showNotificationFeedMobile, setShowNotificationFeedMobile] = useState(false)
-  const { data, error } = useCurrentUserQuery()
-  const [logout] = useLogoutMutation({
-    refetchQueries: [{ query: CurrentUserDocument }],
-  })
-  const [shouldShowModal, setShouldShowModal] = useState(false)
 
-  const notificationContext = useNotificationContext()
-
-  let currentUser: UserType | null = data?.currentUser as UserType
-  if (error) currentUser = null
-
-  const navStyles = classNames('nav-wrapper', {
-    expanded,
-    'disable-large-nav': disableLargeNav,
-    'logged-in': Boolean(currentUser),
-  })
-
-  useEffect(() => {
-    setTimeout(() => {
-      document.body.classList.remove('block-transitions-on-page-load')
-    }, 0)
-  }, [])
+  const unrenderNotificationFeedDesktopTimeout = useRef<ReturnType<typeof setTimeout>>()
 
   const handleToggleNotificationFeedDesktop = () => {
     // If accessing from the mobile hamburger menu, show mobile notification feed
@@ -84,6 +59,46 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
     }
   }
 
+  const handleToggleNotificationFeedMobile = () => {
+    setShowNotificationFeedMobile((show) => !show)
+  }
+
+  return {
+    renderDesktop: renderNotificationFeedDesktop,
+    showDesktop: showNotificationFeedDesktop,
+    showMobile: showNotificationFeedMobile,
+    toggleDesktop: handleToggleNotificationFeedDesktop,
+    toggleMobile: handleToggleNotificationFeedMobile,
+  }
+}
+
+const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
+  const { t } = useTranslation()
+
+  const { data, error } = useCurrentUserQuery()
+  const [logout] = useLogoutMutation({
+    refetchQueries: [{ query: CurrentUserDocument }],
+  })
+  const [shouldShowModal, setShouldShowModal] = useState(false)
+  const notificationFeedState = useNotificationFeedState()
+
+  const notificationContext = useNotificationContext()
+
+  let currentUser: UserType | null = data?.currentUser as UserType
+  if (error) currentUser = null
+
+  const navStyles = classNames('nav-wrapper', {
+    expanded,
+    'disable-large-nav': disableLargeNav,
+    'logged-in': Boolean(currentUser),
+  })
+
+  useEffect(() => {
+    setTimeout(() => {
+      document.body.classList.remove('block-transitions-on-page-load')
+    }, 0)
+  }, [])
+
   const handleCollapse = (): void => {
     // Collapse the nav after clicking a link for mobile only
     if (window.innerWidth < navConstants.mobileBreakpoint) {
@@ -104,8 +119,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
       <div className={navStyles}>
         {currentUser && (
           <div className="notification-feed-desktop-container">
-            {renderNotificationFeedDesktop && (
-              <NotificationFeed onClose={handleToggleNotificationFeedDesktop} />
+            {notificationFeedState.renderDesktop && (
+              <NotificationFeed onClose={notificationFeedState.toggleDesktop} />
             )}
           </div>
         )}
@@ -144,17 +159,18 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
 
                 <hr />
 
-                  <div
-                    className="nav-link notifications"
-                    onClick={handleToggleNotificationFeedDesktop}
-                    data-testid="notifications-nav-link"
-                  >
-                    <NotificationsIcon
-                      count={notificationContext?.unreadCount || 0}
-                      aria-hidden="true"
-                    />
-                    <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
-                  </div>
+                <div
+                  className="nav-link notifications"
+                  onClick={notificationFeedState.toggleDesktop}
+                  data-testid="notifications-nav-link"
+                  id="notification-feed"
+                >
+                  <NotificationsIcon
+                    count={notificationContext?.unreadCount || 0}
+                    aria-hidden="true"
+                  />
+                  <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
+                </div>
                 <NavLink href="/dashboard/settings/profile">
                   <a className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
                     <img src="/images/icons/settings-icon.svg" alt="" />
@@ -233,7 +249,9 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             />
           )}
         </nav>
-        {showNotificationFeedMobile && <NotificationFeedMobile onClose={() => setShowNotificationFeedMobile(false)} />}
+        {notificationFeedState.showMobile && (
+          <NotificationFeedMobile onClose={notificationFeedState.toggleMobile} />
+        )}
       </div>
       <style jsx>{`
         .nav-wrapper {
@@ -268,7 +286,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           position: absolute;
           top: 0;
           height: 100vh;
-          left: ${showNotificationFeedDesktop ? '100%' : 'max(-50vw, -400px)'};
+          left: ${notificationFeedState.showDesktop ? '100%' : 'max(-50vw, -400px)'};
           transition: left ${NOTIFICATION_FEED_SLIDE_TIME}s ease;
           width: min(50vw, 400px);
           overflow-x: hidden;
@@ -378,7 +396,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           font-size: 16px;
           color: ${theme.colors.white};
           transition: padding-left ${navConstants.transitionDuration}ms linear,
-          padding-right ${navConstants.transitionDuration}ms linear;
+            padding-right ${navConstants.transitionDuration}ms linear;
         }
 
         .nav-link.notifications {

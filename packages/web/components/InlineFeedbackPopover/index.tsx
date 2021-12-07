@@ -1,2 +1,2 @@
 export { default } from './InlineFeedbackPopover'
-export { PendingThreadData } from './Thread'
+export type { PendingThreadData } from './Thread'

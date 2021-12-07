@@ -1,9 +1,5 @@
 import React from 'react'
 
-import {
-  ThreadFragmentFragment as ThreadType,
-  UserFragmentFragment as UserType,
-} from '@/generated/graphql'
 import Popover, { DOMOffsetTarget } from '@/components/Popover'
 import Thread, { ThreadProps } from './Thread'
 

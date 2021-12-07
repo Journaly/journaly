@@ -214,7 +214,7 @@ model CommentThanks {
   authorId                        Int
   commentId                       Int
   author                          User                              @relation(fields: [authorId], references: [id])
-  comment                         Comment                           @relation(fields: [commentId], references: [id])
+  comment                         Comment                           @relation(fields: [commentId], references: [id], onDelete: Cascade)
   PendingNotification             PendingNotification[]
   ThreadCommentThanksNotification ThreadCommentThanksNotification[]
 
@@ -407,7 +407,7 @@ model ThreadCommentThanksNotification {
 
   thanksId          Int
   notificationId    Int
-  thanks            CommentThanks     @relation(fields: [thanksId], references: [id])
+  thanks            CommentThanks     @relation(fields: [thanksId], references: [id], onDelete: Cascade)
   notification InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
 }
 
@@ -416,7 +416,7 @@ model ThreadCommentNotification {
   notificationId Int
   commentId      Int
   notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-  comment        Comment           @relation(fields: [commentId], references: [id])
+  comment        Comment           @relation(fields: [commentId], references: [id], onDelete: Cascade)
 }
 
 model PostCommentNotification {
@@ -424,7 +424,7 @@ model PostCommentNotification {
   notificationId Int
   postCommentId  Int
   notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-  postComment    PostComment       @relation(fields: [postCommentId], references: [id])
+  postComment    PostComment       @relation(fields: [postCommentId], references: [id], onDelete: Cascade)
 }
 
 model NewFollowerNotification {
@@ -432,7 +432,7 @@ model NewFollowerNotification {
   notificationId  Int
   followingUserId Int
   notification    InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-  followingUser   User              @relation(fields: [followingUserId], references: [id])
+  followingUser   User              @relation(fields: [followingUserId], references: [id], onDelete: Cascade)
 }
 
 model PostClapNotification {
@@ -440,7 +440,7 @@ model PostClapNotification {
   notificationId Int
   postClapId     Int
   notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-  postClap       PostClap          @relation(fields: [postClapId], references: [id])
+  postClap       PostClap          @relation(fields: [postClapId], references: [id], onDelete: Cascade)
 }
 
 model NewPostNotification {
@@ -448,7 +448,7 @@ model NewPostNotification {
   notificationId Int
   postId         Int
   notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-  post           Post              @relation(fields: [postId], references: [id])
+  post           Post              @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 enum LanguageLevel {

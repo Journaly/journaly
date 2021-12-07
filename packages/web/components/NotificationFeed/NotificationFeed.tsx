@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import {
   CurrentUserDocument,
@@ -18,6 +18,7 @@ import { useNotificationContext } from './NotificationContext'
 import NotificationLevelTwo from './NotificationLevelTwo'
 import { useTranslation } from '@/config/i18n'
 import useOnClickOut from '@/hooks/useOnClickOut'
+import { findEventTargetParent } from '@/utils'
 
 type NotificationFeedProps = {
   onClose: () => void
@@ -31,7 +32,19 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
 
   // Close notification feed if user clicks out of it
   const feedContainerRef = useRef<HTMLDivElement>(null)
-  useOnClickOut(feedContainerRef, onClose)
+
+  const onClickOut = useCallback(
+    (e: MouseEvent) => {
+      if (findEventTargetParent(e, (el) => el.id === 'notification-feed')) {
+        return
+      } else {
+        onClose()
+      }
+    },
+    [onClose],
+  )
+
+  useOnClickOut(feedContainerRef, onClickOut)
 
   const { notifications } = useNotificationContext() || {}
 

@@ -30,7 +30,7 @@ const useVisibility = () => {
 const useNotificationContextValue = (): NotificationContextValue | null => {
   // 2 minuites = 120 seconds = 120000 miliseconds
   // 5 minuites = 300 seconds = 300000 miliseconds
-  const pollInterval = useVisibility() ? 300000 : 300000
+  const pollInterval = useVisibility() ? 120000 : 300000
   const { data } = useCurrentUserQuery({
     pollInterval,
   })

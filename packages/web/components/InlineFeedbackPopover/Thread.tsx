@@ -4,9 +4,10 @@ import { useTranslation } from '@/config/i18n'
 import { sanitize } from '@/utils'
 import {
   useCreateCommentMutation,
+  useCreateThreadMutation,
+  useDeleteThreadMutation,
   UserFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
-  useDeleteThreadMutation,
 } from '@/generated/graphql'
 
 import theme from '@/theme'
@@ -14,16 +15,28 @@ import Comment from './Comment'
 import Button, { ButtonVariant } from '@/components/Button'
 import Textarea from '@/components/Textarea'
 
+export type PendingThreadData = {
+  postId: number
+  startIndex: number
+  endIndex: number
+  highlightedContent: string
+}
+
+export type ThreadOrHighlightProps =
+  | { thread: ThreadType; pendingThreadData?: never }
+  | { thread?: never; pendingThreadData?: PendingThreadData }
+
 type ThreadProps = {
-  thread: ThreadType
-  onNewComment: () => void
+  thread: ThreadType | undefined
+  onNewComment: (threadId: number) => void
   onUpdateComment: () => void
   onDeleteThread: () => void
   currentUser: UserType | null | undefined
-}
+} & ThreadOrHighlightProps
 
 const Thread: React.FC<ThreadProps> = ({
   thread,
+  pendingThreadData,
   onNewComment,
   onUpdateComment,
   onDeleteThread,
@@ -31,31 +44,50 @@ const Thread: React.FC<ThreadProps> = ({
 }) => {
   const { t } = useTranslation('comment')
 
+  const [loading, setLoading] = React.useState(false)
   const [commentBody, setCommentBody] = React.useState<string>('')
-  const [createComment, { loading }] = useCreateCommentMutation({
-    onCompleted: () => {
-      onNewComment()
-      setCommentBody('')
-    },
-  })
+  const [createComment] = useCreateCommentMutation()
+  const [createThread] = useCreateThreadMutation()
   const [deleteThread] = useDeleteThreadMutation({
     onCompleted: () => {
       onDeleteThread()
     },
   })
 
-  const createNewComment = (e: React.FormEvent<HTMLFormElement>) => {
+  const createNewComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setLoading(true)
+    let threadId: number = 0
 
-    createComment({
-      variables: {
-        threadId: thread.id,
-        body: commentBody,
-      },
-    })
+    try {
+      if (pendingThreadData) {
+        const { data } = await createThread({ variables: pendingThreadData })
+
+        threadId = data.createThread.id
+      } else if (thread) {
+        threadId = thread.id
+      }
+
+      await createComment({
+        variables: {
+          threadId,
+          body: commentBody,
+        },
+      })
+
+      onNewComment(threadId)
+      setCommentBody('')
+    } catch (e: Error) {
+      console.error('Error creating comment or thread: ', e)
+    }
+
+    setLoading(false)
   }
 
   const cancelNewComment = () => {
+    if (!thread)
+      return
+
     if (thread.comments.length === 0) {
       deleteThread({
         variables: {
@@ -65,7 +97,9 @@ const Thread: React.FC<ThreadProps> = ({
     }
   }
 
-  const sanitizedHTML = sanitize(thread.highlightedContent)
+  const comments = thread?.comments || []
+  const archived = thread?.archived || false
+  const sanitizedHTML = sanitize((pendingThreadData || thread).highlightedContent)
 
   return (
     <div className="thread">
@@ -74,7 +108,7 @@ const Thread: React.FC<ThreadProps> = ({
       </div>
       <div className="thread-body">
         <div className="comments">
-          {thread.comments.map((comment, idx) => {
+          {comments.map((comment, idx) => {
             const canEdit = currentUser?.id === comment.author.id
             return (
               <Comment
@@ -87,11 +121,11 @@ const Thread: React.FC<ThreadProps> = ({
             )
           })}
 
-          {!thread.comments.length && (
+          {!comments.length && (
             <div className="empty-notice">{t('noCommentsYetMessage')}</div>
           )}
         </div>
-        {currentUser && !thread.archived && (
+        {currentUser && !archived && (
           <form onSubmit={createNewComment}>
             <fieldset>
               <div className="new-comment-block">
@@ -105,12 +139,13 @@ const Thread: React.FC<ThreadProps> = ({
                   <Button
                     type="submit"
                     disabled={loading}
+                    loading={loading}
                     className="new-comment-btn"
                     variant={ButtonVariant.PrimaryDark}
                   >
                     {t('submit')}
                   </Button>
-                  {thread.comments.length === 0 && (
+                  {thread && comments.length === 0 && (
                     <Button
                       onClick={() => cancelNewComment()}
                       disabled={loading}

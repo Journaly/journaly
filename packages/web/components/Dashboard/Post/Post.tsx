@@ -7,7 +7,6 @@ import queryString from 'query-string'
 import { sanitize, iOS, wait } from '@/utils'
 import {
   PostStatus,
-  useCreateThreadMutation,
   useUpdatePostMutation,
   useDeletePostMutation,
   Post as PostModel,
@@ -22,7 +21,7 @@ import {
 import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
 import PostBodyStyles from '@/components/PostBodyStyles'
-import InlineFeedbackPopover from '@/components/InlineFeedbackPopover'
+import InlineFeedbackPopover, { PendingThreadData } from '@/components/InlineFeedbackPopover'
 import { Router, useTranslation } from '@/config/i18n'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
@@ -44,6 +43,7 @@ import BookmarkIcon from '@/components/Icons/BookmarkIcon'
 import UserListModal from '@/components/Modals/UserListModal'
 import useOnClickOut from '@/hooks/useOnClickOut'
 import { DOMOffsetTarget } from '@/components/Popover'
+
 
 type UseDeepLinkingArg = {
   setActiveThreadId: (arg: number) => void
@@ -161,6 +161,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const popoverRef = useRef<HTMLDivElement>(null)
   const [displayCommentButton, setDisplayCommentButton] = useState(false)
   const [activeThreadId, setActiveThreadId] = useState<number>(-1)
+  const [pendingThreadData, setPendingThreadData] = useState<PendingThreadData | null>(null)
   const [commentButtonPosition, setCommentButtonPosition] = useState({ x: '0', y: '0' })
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0, w: 0, h: 0 })
   const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
@@ -261,16 +262,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       }
     },
   })
-  const [createThread] = useCreateThreadMutation({
-    onCompleted: ({ createThread }) => {
-      if (!createThread) {
-        return
-      }
-
-      refetch()
-      setActiveThreadId(createThread.id)
-    },
-  })
   const [updatePost] = useUpdatePostMutation({
     onCompleted: () => {
       refetch()
@@ -350,7 +341,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     return post.claps.find((clap) => clap.author.id === currentUser?.id) !== undefined
   }, [post.claps, currentUser?.id])
 
-  useEffect(() => {
+  const rerenderThreadHighlights = () => {
     if (!selectableRef.current) {
       return
     }
@@ -388,7 +379,9 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         return
       }
     })
-  }, [post.threads.length])
+  }
+
+  useEffect(rerenderThreadHighlights, [post.threads.length])
 
   useEffect(() => {
     const onSelectionChange = () => {
@@ -432,7 +425,10 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
 
   const closeThread = useCallback(() => {
     setActiveThreadId(-1)
-  }, [])
+    setPendingThreadData(null)
+
+    rerenderThreadHighlights()
+  }, [post.threads.length])
   useOnClickOut(popoverRef, closeThread)
 
   const createThreadHandler = (e: React.MouseEvent) => {
@@ -457,22 +453,22 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       const highlightedContent = highlightRange(firstRange, -1)
 
       window.getSelection()?.empty()
-      setDisplayCommentButton(false)
       setPopoverPosition({
         x: selectionDims.x + window.scrollX,
         y: selectionDims.y + window.scrollY,
         w: selectionDims.width,
         h: selectionDims.height,
       })
-
-      createThread({
-        variables: {
-          postId: post.id,
-          startIndex,
-          endIndex,
-          highlightedContent,
-        },
+      setDisplayCommentButton(false)
+      setPendingThreadData({
+        postId: post.id,
+        startIndex,
+        endIndex,
+        highlightedContent,
       })
+
+      /*
+      */
     }
   }
 
@@ -541,6 +537,11 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         }
       },
     })
+  }
+
+  const handleNewComment = async (threadId: number) => {
+    await refetch()
+    setActiveThreadId(threadId)
   }
 
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
@@ -699,17 +700,27 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         position={commentButtonPosition}
         display={displayCommentButton && !!currentUser}
       />
-      {activeThread && (
+      {(activeThread && (
         <InlineFeedbackPopover
           thread={activeThread}
           target={popoverPosition}
           currentUser={currentUser}
-          onNewComment={refetch}
+          onNewComment={handleNewComment}
           onUpdateComment={refetch}
           onDeleteThread={refetch}
           ref={popoverRef}
         />
-      )}
+      )) || (pendingThreadData && (
+        <InlineFeedbackPopover
+          pendingThreadData={pendingThreadData}
+          target={popoverPosition}
+          currentUser={currentUser}
+          onNewComment={handleNewComment}
+          onUpdateComment={refetch}
+          onDeleteThread={refetch}
+          ref={popoverRef}
+        />
+      ))}
       <ConfirmationModal
         onConfirm={() => {
           deletePost({ variables: { postId: post.id } })

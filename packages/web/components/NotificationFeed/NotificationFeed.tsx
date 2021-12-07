@@ -56,8 +56,16 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
         notificationId,
         readStatus: NotificationReadStatus.Read,
       },
+      optimisticResponse: {
+        updateInAppNotification: {
+          id: notificationId,
+          __typename: 'InAppNotification',
+          readStatus: NotificationReadStatus.Read,
+        },
+      },
       update: (cache, mutationResult) => {
         if (!mutationResult.data?.updateInAppNotification) return
+
         const data = cache.readQuery<CurrentUserQuery, CurrentUserQueryVariables>({
           query: CurrentUserDocument,
           variables: {},
@@ -65,13 +73,7 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
 
         const dataClone = cloneDeep(data)
         if (!dataClone?.currentUser) return
-        console.log('1', dataClone.currentUser.notifications)
-        cache.modify({
-          id: `InAppNotification:${notificationId}`,
-          fields: {
-            readStatus: () => NotificationReadStatus.Read,
-          },
-        })
+
         dataClone.currentUser.notifications.sort((a, b) => {
           if (
             a.readStatus === NotificationReadStatus.Read &&
@@ -94,7 +96,6 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
           }
           return 0
         })
-        console.log('2', dataClone.currentUser.notifications)
 
         cache.writeQuery({ query: CurrentUserDocument, data: dataClone })
       },
@@ -104,6 +105,12 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
     deleteInAppNotification({
       variables: {
         notificationId,
+      },
+      optimisticResponse: {
+        deleteInAppNotification: {
+          id: notificationId,
+          __typename: 'InAppNotification',
+        },
       },
       update: (cache, mutationResult) => {
         if (!mutationResult.data?.deleteInAppNotification) return

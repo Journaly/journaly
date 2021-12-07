@@ -99,7 +99,7 @@ const NotificationMutations = extendType({
           throw new Error('You do not have permission to update this notification')
         }
         if (args.readStatus) {
-          await ctx.db.inAppNotification.update({
+          return ctx.db.inAppNotification.update({
             where: {
               id: notification.id,
             },
@@ -107,8 +107,9 @@ const NotificationMutations = extendType({
               readStatus: args.readStatus,
             },
           })
+        } else {
+          return notification
         }
-        return notification
       },
     })
 

@@ -1,9 +1,9 @@
 import React, { useState, useRef, useCallback } from 'react'
-import cloneDeep from 'lodash/cloneDeep'
 import {
   CurrentUserDocument,
   CurrentUserQuery,
   CurrentUserQueryVariables,
+  NotificationFragmentFragmentDoc as NotificationFragmentDoc,
   NotificationFragmentFragment as NotificationType,
   NotificationReadStatus,
   useDeleteInAppNotificationMutation,
@@ -84,33 +84,49 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
           variables: {},
         })
 
-        const dataClone = cloneDeep(data)
-        if (!dataClone?.currentUser) return
+        if (!data?.currentUser) return
 
-        dataClone.currentUser.notifications.sort((a, b) => {
-          if (
-            a.readStatus === NotificationReadStatus.Read &&
-            b.readStatus === NotificationReadStatus.Unread
-          ) {
-            return 1
-          }
-          if (
-            a.readStatus === NotificationReadStatus.Unread &&
-            b.readStatus === NotificationReadStatus.Read
-          ) {
-            return -1
-          }
+        cache.modify({
+          id: cache.identify(data.currentUser),
+          fields: {
+            notifications: (oldNotifications) => {
+              const newNotifications = [...oldNotifications].sort((aRef, bRef) => {
+                const a = cache.readFragment<NotificationType>({
+                  id: cache.identify(aRef),
+                  fragment: NotificationFragmentDoc
+                })!
 
-          if (a.bumpedAt > b.bumpedAt) {
-            return -1
+                const b = cache.readFragment<NotificationType>({
+                  id: cache.identify(bRef),
+                  fragment: NotificationFragmentDoc
+                })!
+
+                if (
+                  a.readStatus === NotificationReadStatus.Read &&
+                  b.readStatus === NotificationReadStatus.Unread
+                ) {
+                  return 1
+                }
+                if (
+                  a.readStatus === NotificationReadStatus.Unread &&
+                  b.readStatus === NotificationReadStatus.Read
+                ) {
+                  return -1
+                }
+
+                if (a.bumpedAt > b.bumpedAt) {
+                  return -1
+                }
+                if (a.bumpedAt < b.bumpedAt) {
+                  return 1
+                }
+                return 0
+              })
+
+              return newNotifications
+            }
           }
-          if (a.bumpedAt < b.bumpedAt) {
-            return 1
-          }
-          return 0
         })
-
-        cache.writeQuery({ query: CurrentUserDocument, data: dataClone })
       },
     })
   }
@@ -127,18 +143,27 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
       },
       update: (cache, mutationResult) => {
         if (!mutationResult.data?.deleteInAppNotification) return
+
         const data = cache.readQuery<CurrentUserQuery, CurrentUserQueryVariables>({
           query: CurrentUserDocument,
           variables: {},
         })
 
-        const dataClone = cloneDeep(data)
-        if (!dataClone?.currentUser) return
-        dataClone.currentUser.notifications = dataClone.currentUser?.notifications.filter(
-          ({ id }) => id !== notificationId,
-        )
+        if (!data?.currentUser) return
 
-        cache.writeQuery({ query: CurrentUserDocument, data: dataClone })
+        const deletedNotificationIdentity = cache.identify(
+          mutationResult.data.deleteInAppNotification
+        )
+        cache.modify({
+          id: cache.identify(data.currentUser),
+          fields: {
+            notifications: (oldNotifications) => {
+              return oldNotifications.filter((notification: NotificationType) => {
+                return cache.identify(notification) !== deletedNotificationIdentity
+              })
+            }
+          }
+        })
       },
     })
   }

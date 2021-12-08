@@ -26,4 +26,5 @@ module.exports = new NextI18Next({
     'my-posts',
     'post-author-card',
   ],
+  defaultNS: 'common',
 })

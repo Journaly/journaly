@@ -19,10 +19,25 @@
       "dashboard": "Dashboard"
     }
   },
+  "ui": {
+    "languageSelectPlaceholder": "Languages",
+    "clearFilters": "clear filters",
+    "myLanguages": "my languages",
+    "followedUsers": "followed journalers",
+    "needsFeedback": "needs feedback",
+    "hasInteracted": "commented posts",
+    "textSearchPlaceholder": "Search posts",
+    "topicSelectPlaceholder": "Topics",
+    "showAdvancedFilters": "Show Advanced Filters",
+    "hideAdvancedFilters": "Hide Advanced Filters",
+    "savedPosts": "saved posts",
+    "savePostPremiumFeatureExplanation": "Saved Posts is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!"
+  },
   "dashboardNav": {
     "myFeed": "My Feed",
     "myPosts": "My Posts",
     "newPost": "New Post",
+    "notifications": "Notifications",
     "settings": "Settings",
     "logOut": "Log Out"
   },
@@ -81,5 +96,40 @@
   },
   "editor": {
     "placeholderPrompt": "It all started this morning when..."
+  },
+  "notifications": {
+    "feedTitle": "Notifications",
+    "emptyFeed": "You have no notifications... yet!",
+    "levelOne": {
+      "newFollowers": "1 new Journaler followed you",
+      "newFollowers_plural": "{{count}} new Journalers followed you",
+      "threadComments": "There is 1 new feedback comment on your post",
+      "threadComments_plural": "There are {{count}} new feedback comments on your post",
+      "threadCommentsSubscribed": "There is 1 new feedback comment on this post",
+      "threadCommentsSubscribed_plural": "There are {{count}} new feedback comments on this post",
+      "postComments": "There is 1 new general comment on your post",
+      "postComments_plural": "There are {{count}} new general comments on your post",
+      "postCommentsSubscribed": "There is 1 new general comment on this post",
+      "postCommentsSubscribed_plural": "There are {{count}} new general comments on this post",
+      "postClaps": "1 Journaler clapped for your post",
+      "postClaps_plural": "{{count}} Journalers clapped for your post",
+      "threadCommentThanks": "{{userIdentifier}} said thanks for 1 feedback comment",
+      "threadCommentThanks_plural": "{{userIdentifier}} said thanks for {{count}} feedback comments",
+      "newPosts": "A Journaler you follow published a new post",
+      "newPosts_plural": "Journalers you follow published {{count}} new posts"
+    },
+    "levelTwo": {
+      "newFollowers": "This awesome Journaler is now following you",
+      "newFollowers_plural": "These {{count}} awesome Journalers are now following you",
+      "threadCommentThanks": "{{userIdentifier}} said thank you for this helpful feedback comment",
+      "threadCommentThanks_plural": "{{userIdentifier}} said thank you for the following {{count}} helpful feedback comments",
+      "postClaps": "This Journaler clapped for your post",
+      "postClaps_plural": "These {{count}} Journalers clapped for your post",
+      "newPosts": "New posts from your community"
+    },
+    "actions": {
+      "markAsRead": "Read",
+      "delete": "Delete"
+    }
   }
 }

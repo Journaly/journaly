@@ -18,7 +18,7 @@ const TopicSelect: React.FC<Props> = ({
   onRemove,
   showPostCount = true,
 }) => {
-  const { t } = useTranslation('my-feed')
+  const { t } = useTranslation('common')
   const formattedTopicOptions = (topics || []).map(({ name, id, postCount }) => ({
     value: id,
     displayName: `${name} ${
@@ -34,7 +34,7 @@ const TopicSelect: React.FC<Props> = ({
       selectedOptionValues={selectedTopicsIds}
       onAdd={onAdd}
       onRemove={onRemove}
-      placeholder={t('topicSelectPlaceholder')}
+      placeholder={t('ui.topicSelectPlaceholder')}
     />
   )
 }

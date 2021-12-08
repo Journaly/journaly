@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import Nav, { navConstants } from '@/components/Dashboard/Nav'
 import { layoutPadding, headerHeight } from '@/components/Dashboard/dashboardConstants'
 import Header from '@/components/Dashboard/Header'
+import NotificationContextProvider from '../NotificationFeed/NotificationContext'
 
 interface Props {
   children: React.ReactNode
@@ -19,69 +20,69 @@ const DashboardLayout: React.FC<Props> = ({ children, pad = 'always' }) => {
   })
 
   const toggleNav = (): void => {
-    setNavExpanded(navExpanded => !navExpanded)
+    setNavExpanded((navExpanded) => !navExpanded)
   }
 
   return (
-    <div className="dashboard">
-      <Header onMenuClick={toggleNav} />
+    <NotificationContextProvider>
+      <div className="dashboard">
+        <Header onMenuClick={toggleNav} />
 
-      <Nav
-        expanded={navExpanded}
-        collapse={() => setNavExpanded(false)}
-        disableLargeNav={router.pathname.includes('/settings/')}
-      />
+        <Nav
+          expanded={navExpanded}
+          collapse={() => setNavExpanded(false)}
+          disableLargeNav={router.pathname.includes('/settings/')}
+        />
 
-      <div className={dashboardContainerStyles}>{children}</div>
+        <div className={dashboardContainerStyles}>{children}</div>
 
-      <style jsx>{`
-        .dashboard {
-          position: relative;
-          height: 100%;
-          width: 100%;
-          overflow: hidden;
-        }
-
-        .dashboard-container {
-          padding: ${(pad === 'always' || pad === 'aboveMobile') ? layoutPadding : '0' };
-        }
-
-        @media (${navConstants.mobileNavOnly}) {
-          .dashboard-container {
-            ${(pad === 'aboveMobile') ? 'padding: 0;' : ''}
-          }
-        }
-
-
-        @media (${navConstants.mobileNavOnly}) {
+        <style jsx>{`
           .dashboard {
-            padding-top: ${headerHeight};
+            position: relative;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
           }
-        }
 
-        .dashboard-container {
-          height: 100%;
-          overflow-y: auto;
-          transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;
-        }
-
-
-        @media (${navConstants.skinnyNavToDesktop}) {
           .dashboard-container {
-            margin-left: ${navConstants.skinnyNavWidth}px;
+            padding: ${pad === 'always' || pad === 'aboveMobile' ? layoutPadding : '0'};
           }
-        }
-        @media (${navConstants.aboveDesktopNav}) {
+
+          @media (${navConstants.mobileNavOnly}) {
+            .dashboard-container {
+              ${pad === 'aboveMobile' ? 'padding: 0;' : ''}
+            }
+          }
+
+          @media (${navConstants.mobileNavOnly}) {
+            .dashboard {
+              padding-top: ${headerHeight};
+            }
+          }
+
           .dashboard-container {
-            margin-left: ${navConstants.navWidth}px;
+            height: 100%;
+            overflow-y: auto;
+            transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;
           }
-          /* The settings page has a collapsed nav bar, so we use the smaller left margin */
-          .dashboard-container.settings-page {
-            margin-left: ${navConstants.skinnyNavWidth}px;
+
+          @media (${navConstants.skinnyNavToDesktop}) {
+            .dashboard-container {
+              margin-left: ${navConstants.skinnyNavWidth}px;
+            }
           }
-        }
-      `}</style>
-    </div>
+          @media (${navConstants.aboveDesktopNav}) {
+            .dashboard-container {
+              margin-left: ${navConstants.navWidth}px;
+            }
+            /* The settings page has a collapsed nav bar, so we use the smaller left margin */
+            .dashboard-container.settings-page {
+              margin-left: ${navConstants.skinnyNavWidth}px;
+            }
+          }
+        `}</style>
+      </div>
+    </NotificationContextProvider>
   )
 }
 

@@ -23,9 +23,9 @@ const HamburgerIcon: React.FC<Props> = ({ onClick, className }) => {
         }
 
         .hamburger-container div {
-          height: 1px;
+          height: 2px;
           width: 32px;
-          background-color: ${theme.colors.white};
+          background-color: ${theme.colors.blueLight};
         }
 
         .hamburger-container div:nth-child(2) {

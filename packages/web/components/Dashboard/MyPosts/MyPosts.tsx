@@ -102,6 +102,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       {showEmptyState && (
         <div>
           {status === PostStatusType.Published ? (
+            // TOOD: Refactor to use our current pattern
             <Trans i18nKey="publishedEmptyState">
               <div className="empty-state-container">
                 You have no published posts. You can either publish a draft or{' '}

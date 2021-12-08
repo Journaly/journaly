@@ -133,7 +133,7 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
         }
 
         .left-section {
-          display: ${left ? '' : 'none'};
+          display: ${left ? 'flex' : 'none'};
         }
 
         .middle-section {

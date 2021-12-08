@@ -19,6 +19,21 @@
       "dashboard": "Dashboard"
     }
   },
+  "ui": {
+    "languageSelectPlaceholder": "Sprachen",
+    "clearFilters": "Filter löschen",
+    "myLanguages": "Meine Sprachen",
+    "followedUsers": "Journaler, denen ich folge",
+    "needsFeedback": "needs feedback",
+    "hasInteracted": "commented posts",
+    "textSearchPlaceholder": "Beiträge durchsuchen",
+    "topicSelectPlaceholder": "Themen",
+    "showAdvancedFilters": "Zeige erweiterte Filter",
+    "hideAdvancedFilters": "erweiterte Filter ausblenden",
+    "savedPosts": "angeheftete Beiträge",
+    "savePostPremiumFeatureName": "Angeheftete Beiträge",
+    "savePostPremiumFeatureExplanation": "ist ein angenehmes Premium-Feature, dass dir das Anheften von Beiträgen ermöglicht, sodass du diese später einfach wiederfinden und lesen kannst. Die Liste kannst du über die erweiterten Filter der Mein-Feed-Seite erreichen! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken oder nutze all die kostenfreien Features von Journaly weiterhin kostenlos."
+  },
   "dashboardNav": {
     "myFeed": "Mein Feed",
     "myPosts": "Meine Beiträge",

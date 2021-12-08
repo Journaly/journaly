@@ -77,7 +77,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       />
       {error && (
         <div className="empty-state-container">
-          <p>There was an error retrieving your posts.</p>
+          <p>{t('errorLoadingPostsMessage')}</p>
         </div>
       )}
 

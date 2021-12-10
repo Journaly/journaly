@@ -38,7 +38,7 @@
       "nativeLanguagesLabel": "Welche Sprache(n) sprichst du auf Muttersprachler-Niveau?",
       "learningLanguagesLabel": "Welche Sprache(n) lernst du?",
       "welcomeModalFormLabel": "Teile uns deine Muttersprache(n) mit und welche Sprache(n) du lernst",
-      "languageSelectPlaceholder": "Wähle eine Sprache aus...",
+      "languageSelectPlaceholder": "Wähle eine Sprache aus ...",
       "levelSelectPlaceholder": "Wähle ein Niveau ...",
       "addLanguageButtonText": "Hinzufügen",
       "levels": {
@@ -53,12 +53,12 @@
       "bioLabel": "Erzähl uns etwas über dich!",
       "bioError": "Dein 'Über mich' darf bis zu {{characters}} enthalten.",
       "bioInputDescription": "Maximal {{characters}} Zeichen",
-      "bioSuccess": "Über mich erfolgreich aktualisiert"
+      "bioSuccess": "'Über mich' erfolgreich aktualisiert"
     },
     "interests": {
       "legend": "Interessen",
       "topicsLabel": "Erzähle uns, welche Themen dich interessieren! Das wird uns helfen, dir Beiträge zu zeigen, die dir gefallen werden, und Leute zu finden, die dieselben Interessen wie du haben.",
-      "topicsPlaceholder": "Kommt bald..."
+      "topicsPlaceholder": "Kommt bald ..."
     },
     "social": {
       "legend": "Soziale Medien",
@@ -76,7 +76,7 @@
       "handleMinimumErrorMessage": "Dein Benutzername muss min. 3 Zeichen lang sein",
       "emailValidationErrorMessage": "Ungültige E-Mail-Adresse",
       "emailAlreadyinUseError": "Diese E-Mail-Adresse wird bereits verwendet",
-      "websitePatternError": "Ungültiger Webseiten-Link, z. B. DeineDomain.com oder DeineSubdomain.domain.com",
+      "websitePatternError": "Ungültiger Webseiten-Link, z. B.: DeineDomain.com oder DeineSubdomain.domain.com",
       "youtubePatternError": "Ungültiger YouTube-Link, z. B.: youtube.com/channel/DeinKanal oder youtube.com/user/DeinBenutzername",
       "facebookPatternError": "Ungültiger Facebook-Link, z. B.: facebook.com/DeineSeite oder fb.com/DeineSeite",
       "instagramPatternError": "Ungültiger Instagram-Link, z. B.: instagram.com/DeineSeite"
@@ -132,7 +132,7 @@
     "cancellationError": "Beim Kündigen deiner Mitgliedschaft ist ein Fehler aufgetreten.",
     "updateCardSuccess": "Du hast deine Kreditkarten-Daten erfolgreich aktualisiert.",
     "updateCardError": "Beim Aktualisiseren deiner Kreditkartendaten ist ein Fehler aufgetreten",
-    "studentEmailVerificationNeededMsg": "Um den Studenten-Rabatt zu erhalten, verifiziere bitte deine E-Mail-Adresse, indem du auf den Link klickst, den du nach der Registrierung per E-Mail erhalten hast. Gehe in die Einstellungen > Profil Informationen, um die Verifikations-E-Mail erneut zu senden.",
+    "studentEmailVerificationNeededMsg": "Um den Studenten-Rabatt zu erhalten, verifiziere bitte deine E-Mail-Adresse, indem du auf den Link klickst, den du nach der Registrierung per E-Mail erhalten hast. Gehe in die Einstellungen > Profil-Informationen, um die Verifikations-E-Mail erneut zu senden.",
     "freePlan": "Kostenfrei",
     "premiumPlan": "Premium",
     "only": "Nur",
@@ -156,7 +156,7 @@
       "supportFreeLearning": "Unterstütze kostenloses Sprachenlernen",
       "writingPrompts": "Erhalte Schreibideen (kommt bald)",
       "focusMode": "Nutze den Fokus-Modus (kommt bald)",
-      "postThemes": "Wähle eine Motiv für deinen Beitrag (kommt bald)",
+      "postThemes": "Wähle ein Motiv für deinen Beitrag (kommt bald)",
       "audioPosts": "Erstelle Audio-Beiträge (kommt bald)",
       "weeklyGoals": "Erreiche wöchentliche Ziele (kommt bald)"
     }

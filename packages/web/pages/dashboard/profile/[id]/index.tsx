@@ -1,41 +1,29 @@
 import React from 'react'
-import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import { withApollo } from '@/lib/apollo'
 import LoadingWrapper from '@/components/LoadingWrapper'
-import DashboardLayout from '@/components/Layouts/DashboardLayout'
-import { useProfilePageQuery } from '@/generated/graphql'
-import useUILanguage from '@/hooks/useUILanguage'
-import Profile from '@/components/Dashboard/Profile'
+import { useUserByIdQuery } from '@/generated/graphql'
 
-interface InitialProps {
-  namespacesRequired: string[]
-}
-
-const ProfilePage: NextPage<InitialProps> = () => {
-  const idStr = useRouter().query.id as string
+const ProfilePage = () => {
+  const router = useRouter()
+  const idStr = router.query.id as string
   const userId = parseInt(idStr, 10)
 
-  const uiLanguage = useUILanguage()
-  const { data, loading, error } = useProfilePageQuery({ variables: { uiLanguage, userId } })
+  const { data, loading, error } = useUserByIdQuery({ variables: { id: userId } })
 
-  const { userById, currentUser } = data || {}
-  const posts = data?.posts?.posts
+  if (data?.userById && typeof window !== 'undefined') {
+    router.push({
+      pathname: `/dashboard/user/${data.userById.handle}`,
+    })
+    return null
+  }
 
   return (
     <LoadingWrapper loading={loading} error={error}>
-      <DashboardLayout pad="never">
-        {userById && posts && (
-          <Profile isLoggedInUser={currentUser?.id === userId} user={userById} posts={posts} />
-        )}
-      </DashboardLayout>
+      {}
     </LoadingWrapper>
   )
 }
-
-ProfilePage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'profile', 'post'],
-})
 
 export default withApollo(ProfilePage)

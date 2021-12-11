@@ -1,5 +1,5 @@
-query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
-  userById(id: $userId) {
+query profilePage($handle: String!, $userId: Int!, $uiLanguage: UILanguage!) {
+  userByHandle(handle: $handle) {
     ...ProfileUserFragment
   }
   posts(first: 20, skip: 0, status: PUBLISHED, authorId: $userId) {

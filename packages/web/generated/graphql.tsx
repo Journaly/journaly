@@ -514,6 +514,7 @@ export type Query = {
   users: Array<User>
   currentUser?: Maybe<User>
   userById: User
+  userByHandle: User
   languages: Array<Language>
 }
 
@@ -543,6 +544,10 @@ export type QueryPostsArgs = {
 
 export type QueryUserByIdArgs = {
   id: Scalars['Int']
+}
+
+export type QueryUserByHandleArgs = {
+  handle: Scalars['String']
 }
 
 export type QueryLanguagesArgs = {
@@ -1152,12 +1157,13 @@ export type PrivatePostPageQuery = { __typename?: 'Query' } & {
 }
 
 export type ProfilePageQueryVariables = Exact<{
+  handle: Scalars['String']
   userId: Scalars['Int']
   uiLanguage: UiLanguage
 }>
 
 export type ProfilePageQuery = { __typename?: 'Query' } & {
-  userById: { __typename?: 'User' } & ProfileUserFragmentFragment
+  userByHandle: { __typename?: 'User' } & ProfileUserFragmentFragment
   posts: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
       posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
     }
@@ -1510,6 +1516,14 @@ export type UpdateUserMutationVariables = Exact<{
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
   updateUser: { __typename?: 'User' } & UserFragmentFragment
+}
+
+export type UserByHandleQueryVariables = Exact<{
+  handle: Scalars['String']
+}>
+
+export type UserByHandleQuery = { __typename?: 'Query' } & {
+  userByHandle: { __typename?: 'User' } & UserWithLanguagesFragmentFragment
 }
 
 export type UserByIdQueryVariables = Exact<{
@@ -3101,8 +3115,8 @@ export type PrivatePostPageQueryResult = ApolloReactCommon.QueryResult<
   PrivatePostPageQueryVariables
 >
 export const ProfilePageDocument = gql`
-  query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
-    userById(id: $userId) {
+  query profilePage($handle: String!, $userId: Int!, $uiLanguage: UILanguage!) {
+    userByHandle(handle: $handle) {
       ...ProfileUserFragment
     }
     posts(first: 20, skip: 0, status: PUBLISHED, authorId: $userId) {
@@ -3132,6 +3146,7 @@ export const ProfilePageDocument = gql`
  * @example
  * const { data, loading, error } = useProfilePageQuery({
  *   variables: {
+ *      handle: // value for 'handle'
  *      userId: // value for 'userId'
  *      uiLanguage: // value for 'uiLanguage'
  *   },
@@ -4889,6 +4904,56 @@ export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<UpdateUs
 export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
+>
+export const UserByHandleDocument = gql`
+  query userByHandle($handle: String!) {
+    userByHandle(handle: $handle) {
+      ...UserWithLanguagesFragment
+    }
+  }
+  ${UserWithLanguagesFragmentFragmentDoc}
+`
+
+/**
+ * __useUserByHandleQuery__
+ *
+ * To run a query within a React component, call `useUserByHandleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserByHandleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserByHandleQuery({
+ *   variables: {
+ *      handle: // value for 'handle'
+ *   },
+ * });
+ */
+export function useUserByHandleQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<UserByHandleQuery, UserByHandleQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<UserByHandleQuery, UserByHandleQueryVariables>(
+    UserByHandleDocument,
+    baseOptions,
+  )
+}
+export function useUserByHandleLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    UserByHandleQuery,
+    UserByHandleQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<UserByHandleQuery, UserByHandleQueryVariables>(
+    UserByHandleDocument,
+    baseOptions,
+  )
+}
+export type UserByHandleQueryHookResult = ReturnType<typeof useUserByHandleQuery>
+export type UserByHandleLazyQueryHookResult = ReturnType<typeof useUserByHandleLazyQuery>
+export type UserByHandleQueryResult = ApolloReactCommon.QueryResult<
+  UserByHandleQuery,
+  UserByHandleQueryVariables
 >
 export const UserByIdDocument = gql`
   query userById($id: Int!) {

@@ -281,6 +281,26 @@ const UserQueries = extendType({
         return user
       },
     })
+
+    t.field('userByHandle', {
+      type: 'User',
+      args: {
+        handle: stringArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        if (!args.handle) throw new Error('Handle is required')
+
+        const user = await ctx.db.user.findUnique({
+          where: {
+            handle: args.handle,
+          },
+        })
+
+        if (!user) throw new Error('User not found')
+
+        return user
+      },
+    })
   },
 })
 

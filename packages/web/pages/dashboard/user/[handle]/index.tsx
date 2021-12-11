@@ -14,6 +14,7 @@ interface InitialProps {
 }
 
 const ProfilePage: NextPage<InitialProps> = () => {
+  // TODO: consider implactions of casing
   const userHandle = useRouter().query.handle as string
   const uiLanguage = useUILanguage()
 

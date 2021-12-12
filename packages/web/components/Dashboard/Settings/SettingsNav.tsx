@@ -75,7 +75,7 @@ const SettingsNav: React.FC = () => {
         }
 
         .settings-nav-item.active {
-          border-color: ${theme.colors.blueLight};
+          border-color: #4391c9;
           pointer-events: none;
         }
       `}</style>

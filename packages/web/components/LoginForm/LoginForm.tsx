@@ -7,6 +7,7 @@ import { useTranslation } from '@/config/i18n'
 import { useLoginUserMutation, CurrentUserDocument, useCurrentUserQuery } from '@/generated/graphql'
 import FormError from '@/components/FormError'
 import Button from '@/components/Button'
+import { brandBlue } from '@/utils'
 import theme from '@/theme'
 import { gtag } from '@/components/GoogleAnalytics'
 
@@ -24,7 +25,7 @@ const LoginForm: React.FC = () => {
 
   const [loginUser, { loading, error }] = useLoginUserMutation({
     onCompleted: async () => {
-      gtag('event', 'login', { method: 'Journaly' })
+      gtag('event', 'login', { 'method': 'Journaly' })
       await refetch()
       router.push({
         pathname: '/dashboard/my-feed',
@@ -127,12 +128,12 @@ const LoginForm: React.FC = () => {
         textarea,
         select:focus {
           outline: 0;
-          border-color: ${theme.colors.blueLight};
+          border-color: ${brandBlue};
         }
         button,
         input[type='submit'] {
           width: auto;
-          background: ${theme.colors.blueLight};
+          background: ${brandBlue};
           color: white;
           border: 0;
           font-size: 2rem;
@@ -151,12 +152,7 @@ const LoginForm: React.FC = () => {
           height: 10px;
           content: '';
           display: block;
-          background-image: linear-gradient(
-            to right,
-            #32567e 0%,
-            ${theme.colors.blueLight} 50%,
-            #32567e 100%
-          );
+          background-image: linear-gradient(to right, #32567e 0%, #4391c9 50%, #32567e 100%);
         }
         @keyframes loading {
           from {

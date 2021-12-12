@@ -1,8 +1,8 @@
 import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
+import { width, darkGrey } from '@/utils'
 import NavLink from '@/components/NavLink'
 import Logo from '@/components/Logo'
-import theme from '@/theme'
 
 const Nav = () => {
   const { t } = useTranslation('common')
@@ -45,7 +45,7 @@ const Nav = () => {
           justify-content: space-between;
           align-items: center;
           height: 72px;
-          max-width: 1364px;
+          max-width: ${width.desktopHD}px;
           margin: 0 auto;
           padding: 0 20px;
         }
@@ -61,17 +61,11 @@ const Nav = () => {
           align-items: center;
           height: 100%;
           padding: 0 10px;
-          color: ${theme.colors.white};
-        }
-
-        @media (max-width: ${theme.breakpoints.XS}) {
-          .nav-link {
-            font-size: 14px;
-          }
+          color: #ffffff;
         }
 
         .nav-link.active {
-          background-color: ${theme.colors.gray800};
+          background-color: ${darkGrey};
         }
 
         .nav-link:last-child {

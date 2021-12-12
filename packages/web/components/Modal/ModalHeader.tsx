@@ -2,8 +2,7 @@ import React from 'react'
 import Button, { ButtonVariant } from '@/components/Button'
 import XIcon from '@/components/Icons/XIcon'
 import modalConstants from './modalConstants'
-import { truncate } from '@/utils'
-import theme from '@/theme'
+import { truncate, lightGrey } from '@/utils'
 
 interface Props {
   onClose: () => void
@@ -40,7 +39,7 @@ const ModalHeader: React.FC<Props> = ({ onClose, title, showTitle }) => {
           border-radius: 8px;
         }
         .modal-header :global(.modal-close-button):hover {
-          background-color: ${theme.colors.gray500};
+          background-color: ${lightGrey};
         }
         @media (min-width: ${modalConstants.modalBreakpoint}) {
           .modal-header :global(.modal-close-button) {

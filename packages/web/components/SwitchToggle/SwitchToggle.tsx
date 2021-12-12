@@ -7,7 +7,6 @@ type SwitchToggleProps = {
 }
 
 const SwitchToggle: React.FC<SwitchToggleProps> = ({ isToggled, onToggle }) => {
-  console.log(isToggled)
   return (
     <label className="switch">
       <input type="checkbox" checked={isToggled} onChange={onToggle}></input>

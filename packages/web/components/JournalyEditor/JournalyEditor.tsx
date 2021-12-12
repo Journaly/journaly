@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useCallback, useState } from 'react'
 import { createEditor, Editor, Descendant } from 'slate'
 import { Slate, withReact } from 'slate-react'
 import { withHistory } from 'slate-history'
@@ -11,7 +11,7 @@ import Toolbar from './Toolbar'
 import RenderElement from './RenderElement'
 import RenderLeaf from './RenderLeaf'
 import { withLinks, withImages, toggleMark, options, MarkType } from './helpers'
-import SwitchToggle from '../SwitchToggle'
+import usePlayPolyphonicSound from '@/hooks/usePlayPolyphonicSound'
 
 /**
  * The Journaly Rich Text Editor
@@ -28,13 +28,28 @@ const HOTKEYS: { [key in HotKey]: MarkType } = {
   'mod+u': 'underline',
 }
 
+const KEY_BLACK_LIST = new Set([
+  'Shift',
+  'Tab',
+  'Meta',
+  'Control',
+  'Alt',
+  'ArrowUp',
+  'ArrowLeft',
+  'ArrowDown',
+  'ArrowRight',
+  'PageUp',
+  'PageDown',
+  'Home',
+  'End',
+])
+
 type JournalyEditorProps = {
   value: Descendant[]
   setValue: (value: Descendant[]) => void
   slateRef: React.RefObject<Editor>
   allowInlineImages: boolean
   disabled?: boolean
-  playTypewriterSounds?: boolean
 }
 const plugins = [TablePlugin(options)]
 
@@ -57,26 +72,23 @@ const JournalyEditor = ({
     return pipe(withReact(createEditor()), ...withPlugins)
   }, [])
 
-  const [playTypewriterSounds, setPlayTypewriterSounds] = useState(false)
+  const [shouldPlayTypewriterSounds, setShouldPlayTypewriterSounds] = useState(false)
 
-  const typewriterSound = useRef<HTMLAudioElement | undefined>(
-    typeof Audio !== 'undefined'
-      ? new Audio('https://journaly-sound-effects.s3.us-east-2.amazonaws.com/typewriter-sound.wav')
-      : undefined,
+  const playTypewriterSound = usePlayPolyphonicSound('/static/sounds/typewriter-key-sound.wav', 3)
+  const playTypewriterReturnSound = usePlayPolyphonicSound(
+    '/static/sounds/typewriter-return-sound.wav',
+    1,
   )
 
-  const handlePlayTypewriterSound = (
-    sound: React.MutableRefObject<HTMLAudioElement | undefined>,
-  ) => {
-    // Always rewind audio to beginning before playing
-    // This enables rapic replays even if the file was still playing
-    console.log('play', playTypewriterSounds)
-    if (sound.current && playTypewriterSounds) {
-      console.log('TAP!')
-      sound.current.currentTime = 0
-      sound.current.play()
+  const handlePlayTypewriterSound = (e: React.KeyboardEvent) => {
+    if (shouldPlayTypewriterSounds) {
+      if (KEY_BLACK_LIST.has(e.key)) return
+      else if (e.key === 'Enter') {
+        playTypewriterReturnSound()
+      } else {
+        playTypewriterSound()
+      }
     }
-    return
   }
 
   useEffect(() => {
@@ -89,8 +101,10 @@ const JournalyEditor = ({
         <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
           <Toolbar
             allowInlineImages={allowInlineImages}
-            playTypewriterSounds={playTypewriterSounds}
-            onTogglePlayTypewriterSounds={() => setPlayTypewriterSounds(!playTypewriterSounds)}
+            shouldPlayTypewriterSounds={shouldPlayTypewriterSounds}
+            onToggleShouldPlayTypewriterSounds={() =>
+              setShouldPlayTypewriterSounds(!shouldPlayTypewriterSounds)
+            }
           />
           <EditablePlugins
             plugins={plugins}
@@ -100,7 +114,7 @@ const JournalyEditor = ({
             spellCheck
             onKeyDown={[
               (event: React.KeyboardEvent) => {
-                handlePlayTypewriterSound(typewriterSound)
+                handlePlayTypewriterSound(event)
                 Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
                   // Convert React keyboard event to native keyboard event
                   if (isHotkey(hotkey, event as unknown as KeyboardEvent)) {
@@ -110,6 +124,7 @@ const JournalyEditor = ({
                 })
               },
             ]}
+            onKeyDownDeps={[shouldPlayTypewriterSounds]}
             data-testid="post-body"
           />
         </Slate>

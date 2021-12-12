@@ -33,14 +33,14 @@ import SwitchToggle from '@/components/SwitchToggle'
 
 type ToolbarProps = {
   allowInlineImages: boolean
-  playTypewriterSounds: boolean
-  onTogglePlayTypewriterSounds: () => void
+  shouldPlayTypewriterSounds: boolean
+  onToggleShouldPlayTypewriterSounds: () => void
 }
 
 const Toolbar = ({
   allowInlineImages,
-  playTypewriterSounds,
-  onTogglePlayTypewriterSounds,
+  shouldPlayTypewriterSounds,
+  onToggleShouldPlayTypewriterSounds,
 }: ToolbarProps) => {
   const editor = useSlate()
   const isEditorFocused = useFocused()
@@ -163,8 +163,8 @@ const Toolbar = ({
             {/* TODO: translation */}
             <span>Typewriter Sounds</span>
             <SwitchToggle
-              isToggled={playTypewriterSounds}
-              onToggle={onTogglePlayTypewriterSounds}
+              isToggled={shouldPlayTypewriterSounds}
+              onToggle={onToggleShouldPlayTypewriterSounds}
             />
           </div>
         </div>

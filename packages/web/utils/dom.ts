@@ -20,6 +20,17 @@ const findEventTargetParent = (
   }
 }
 
-export {
-  findEventTargetParent
+function isChildOf(el: Node, target: HTMLElement) {
+  let current = el
+  while (current.parentElement) {
+    if (current.parentElement === target) {
+      return true
+    }
+
+    current = current.parentElement
+  }
+
+  return false
 }
+
+export { findEventTargetParent, isChildOf }

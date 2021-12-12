@@ -77,7 +77,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       />
       {error && (
         <div className="empty-state-container">
-          <p>There was an error retrieving your posts.</p>
+          <p>{t('errorLoadingPostsMessage')}</p>
         </div>
       )}
 
@@ -102,6 +102,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       {showEmptyState && (
         <div>
           {status === PostStatusType.Published ? (
+            // TOOD: Refactor to use our current pattern
             <Trans i18nKey="publishedEmptyState">
               <div className="empty-state-container">
                 You have no published posts. You can either publish a draft or{' '}

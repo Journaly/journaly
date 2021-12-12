@@ -18,7 +18,7 @@ const LanguageSelect: React.FC<Props> = ({
   onRemove,
   showPostCount = true,
 }) => {
-  const { t } = useTranslation('my-feed')
+  const { t } = useTranslation('common')
   const languageOptions = (languagesData?.languages || []).map(
     ({ dialect, id, name, postCount }) => {
       const languageName =
@@ -38,7 +38,7 @@ const LanguageSelect: React.FC<Props> = ({
     <MultiSelect
       options={languageOptions}
       selectedOptionValues={selectedLanguagesIds}
-      placeholder={t('languageSelectPlaceholder')}
+      placeholder={t('ui.languageSelectPlaceholder')}
       onAdd={onAdd}
       onRemove={onRemove}
     />

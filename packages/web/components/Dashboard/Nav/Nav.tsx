@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
 
@@ -15,9 +15,13 @@ import {
 import HamburgerIcon from '../Header/HamburgerIcon'
 import NavLink from '@/components/NavLink'
 import FeedIcon from '@/components/Icons/FeedIcon'
-import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import HelpIcon from '@/components/Icons/HelpIcon'
 import Modal from '@/components/Modal'
+import NotificationsIcon from '@/components/Icons/NotificationsIcon'
+import NotificationFeed from '@/components/NotificationFeed'
+import NotificationFeedMobile from '@/components/NotificationFeed/NotificationFeedMobile'
+import { useNotificationContext } from '@/components/NotificationFeed/NotificationContext'
+import UserAvatar from '@/components/UserAvatar'
 
 interface Props {
   expanded: boolean
@@ -25,15 +29,60 @@ interface Props {
   collapse: () => void
 }
 
+const NOTIFICATION_FEED_SLIDE_TIME = 0.5
+
+const useNotificationFeedState = () => {
+  const [renderNotificationFeedDesktop, setRenderNotificationFeedDesktop] = useState(false)
+  const [showNotificationFeedDesktop, setShowNotificationFeedDesktop] = useState(false)
+  const [showNotificationFeedMobile, setShowNotificationFeedMobile] = useState(false)
+
+  const unrenderNotificationFeedDesktopTimeout = useRef<ReturnType<typeof setTimeout>>()
+
+  const handleToggleNotificationFeedDesktop = () => {
+    // If accessing from the mobile hamburger menu, show mobile notification feed
+    if (window.innerWidth < navConstants.mobileBreakpoint) {
+      setShowNotificationFeedMobile(true)
+      return
+    }
+    // When collapsing, allow animation to play before unmounting elements
+    if (!showNotificationFeedDesktop) {
+      if (unrenderNotificationFeedDesktopTimeout.current) {
+        clearTimeout(unrenderNotificationFeedDesktopTimeout.current)
+      }
+      setRenderNotificationFeedDesktop(true)
+      setShowNotificationFeedDesktop(true)
+    } else {
+      setShowNotificationFeedDesktop(false)
+      unrenderNotificationFeedDesktopTimeout.current = setTimeout(() => {
+        setRenderNotificationFeedDesktop(false)
+      }, NOTIFICATION_FEED_SLIDE_TIME * 1000)
+    }
+  }
+
+  const handleToggleNotificationFeedMobile = () => {
+    setShowNotificationFeedMobile((show) => !show)
+  }
+
+  return {
+    renderDesktop: renderNotificationFeedDesktop,
+    showDesktop: showNotificationFeedDesktop,
+    showMobile: showNotificationFeedMobile,
+    toggleDesktop: handleToggleNotificationFeedDesktop,
+    toggleMobile: handleToggleNotificationFeedMobile,
+  }
+}
+
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
+
   const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
-    refetchQueries: [
-      { query: CurrentUserDocument }
-    ]
+    refetchQueries: [{ query: CurrentUserDocument }],
   })
   const [shouldShowModal, setShouldShowModal] = useState(false)
+  const notificationFeedState = useNotificationFeedState()
+
+  const notificationContext = useNotificationContext()
 
   let currentUser: UserType | null = data?.currentUser as UserType
   if (error) currentUser = null
@@ -41,7 +90,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const navStyles = classNames('nav-wrapper', {
     expanded,
     'disable-large-nav': disableLargeNav,
-    'logged-in': Boolean(currentUser)
+    'logged-in': Boolean(currentUser),
   })
 
   useEffect(() => {
@@ -65,102 +114,160 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   }, [logout])
 
   return (
-    <div className={navStyles}>
-      <div className="nav-background" onClick={handleCollapse} />
-
-      <nav>
-        <HamburgerIcon onClick={handleCollapse} className="mobile-hamburger-icon" />
-
+    <>
+      <div className="nav-overlay" onClick={handleCollapse} />
+      <div className={navStyles}>
         {currentUser && (
-          <>
-            <div className="nav-top">
-              <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${currentUser.id}`}>
-                <a onClick={handleCollapse} className="profile-image">
-                  {currentUser.profileImage ? (
-                    <img src={currentUser.profileImage} alt="" />
-                  ) : (
-                    <BlankAvatarIcon size={60} />
-                  )}
+          <div className="notification-feed-desktop-container">
+            {notificationFeedState.renderDesktop && (
+              <NotificationFeed onClose={notificationFeedState.toggleDesktop} />
+            )}
+          </div>
+        )}
+        <nav>
+          <HamburgerIcon onClick={handleCollapse} className="mobile-hamburger-icon" />
 
-                  <p className="current-user-name">{currentUser.handle}</p>
+          {currentUser && (
+            <>
+              <div className="nav-top">
+                <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${currentUser.id}`}>
+                  <a onClick={handleCollapse}>
+                    <UserAvatar size={60} user={currentUser} />
+                    <p className="current-user-name">{currentUser.handle}</p>
+                  </a>
+                </Link>
+              </div>
+              <div className="nav-bottom">
+                <NavLink href="/dashboard/my-feed">
+                  <a className="nav-link" onClick={handleCollapse} data-testid="my-feed-nav-link">
+                    <FeedIcon aria-hidden="true" />
+                    <span className="nav-link-text">{t('dashboardNav.myFeed')}</span>
+                  </a>
+                </NavLink>
+                <NavLink href="/dashboard/my-posts">
+                  <a className="nav-link" onClick={handleCollapse} data-testid="my-posts-nav-link">
+                    <FeedIcon aria-hidden="true" />
+                    <span className="nav-link-text">{t('dashboardNav.myPosts')}</span>
+                  </a>
+                </NavLink>
+                <NavLink href="/dashboard/new-post">
+                  <a className="nav-link" onClick={handleCollapse} data-testid="new-post-nav-link">
+                    <img src="/images/icons/new-post-icon.svg" alt="" />
+                    <span className="nav-link-text">{t('dashboardNav.newPost')}</span>
+                  </a>
+                </NavLink>
+
+                <hr />
+
+                <div
+                  className="nav-link notifications"
+                  onClick={notificationFeedState.toggleDesktop}
+                  data-testid="notifications-nav-link"
+                  id="notification-feed"
+                >
+                  <NotificationsIcon
+                    count={notificationContext?.unreadCount || 0}
+                    aria-hidden="true"
+                  />
+                  <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
+                </div>
+                <NavLink href="/dashboard/settings/profile">
+                  <a className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
+                    <img src="/images/icons/settings-icon.svg" alt="" />
+                    <span className="nav-link-text">{t('dashboardNav.settings')}</span>
+                  </a>
+                </NavLink>
+
+                <a
+                  role="button"
+                  className="log-out nav-link"
+                  onClick={handleLogOut}
+                  data-testid="log-out-nav-link"
+                >
+                  <img src="/images/icons/logout-icon.svg" alt="Log out" />
+                  <span className="nav-link-text">{t('dashboardNav.logOut')}</span>
+                </a>
+              </div>
+            </>
+          )}
+
+          <div className="nav-support">
+            {currentUser && (
+              <span
+                role="button"
+                className="help-btn"
+                onClick={() => setShouldShowModal(true)}
+                data-testid="help-nav-link"
+              >
+                <HelpIcon width={30} height={30} />
+              </span>
+            )}
+            <h1 className="nav-logo">
+              <Link href="/">
+                <a onClick={handleCollapse}>
+                  J<span>ournaly</span>
                 </a>
               </Link>
-            </div>
-            <div className="nav-bottom">
-              <NavLink href="/dashboard/my-feed">
-                <a className="nav-link" onClick={handleCollapse} data-testid="my-feed-nav-link">
-                  <FeedIcon aria-hidden="true" />
-                  <span className="nav-link-text">{t('dashboardNav.myFeed')}</span>
-                </a>
-              </NavLink>
-              <NavLink href="/dashboard/my-posts">
-                <a className="nav-link" onClick={handleCollapse} data-testid="my-posts-nav-link">
-                  <FeedIcon aria-hidden="true" />
-                  <span className="nav-link-text">{t('dashboardNav.myPosts')}</span>
-                </a>
-              </NavLink>
-              <NavLink href="/dashboard/new-post">
-                <a className="nav-link" onClick={handleCollapse} data-testid="new-post-nav-link">
-                  <img src="/images/icons/new-post-icon.svg" alt="" />
-                  <span className="nav-link-text">{t('dashboardNav.newPost')}</span>
-                </a>
-              </NavLink>
-
-              <hr />
-
-              <NavLink href="/dashboard/settings/profile">
-                <a className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
-                  <img src="/images/icons/settings-icon.svg" alt="" />
-                  <span className="nav-link-text">{t('dashboardNav.settings')}</span>
-                </a>
-              </NavLink>
-
-              <a role="button" className="log-out nav-link" onClick={handleLogOut} data-testid="log-out-nav-link">
-                <img src="/images/icons/logout-icon.svg" alt="Log out" />
-                <span className="nav-link-text">{t('dashboardNav.logOut')}</span>
-              </a>
-            </div>
-          </>
-        )}
-        
-        <div className="nav-support">
-          { currentUser && (
-            <span role="button" className="help-btn" onClick={() => setShouldShowModal(true)} data-testid="help-nav-link">
-              <HelpIcon width={30} height={30} />
-            </span>
+            </h1>
+          </div>
+          {shouldShowModal && (
+            <Modal
+              title={t('helpModal.header')}
+              body={
+                <>
+                  <p
+                    style={{
+                      marginTop: '25px',
+                    }}
+                  >
+                    {t('helpModal.bodyOne')}
+                  </p>
+                  <p>
+                    {t('helpModal.bodyTwo')}
+                    <a
+                      href="mailto:hello@journaly.com"
+                      style={{
+                        color: theme.colors.blueLight,
+                      }}
+                    >
+                      hello@journaly.com
+                    </a>
+                    {t('helpModal.bodyThree')}
+                  </p>
+                </>
+              }
+              footer={
+                <p
+                  style={{
+                    margin: '0 auto',
+                  }}
+                >
+                  {t('helpModal.footer')}
+                </p>
+              }
+              onClose={() => setShouldShowModal(false)}
+            />
           )}
-          <h1 className="nav-logo">
-            <Link href="/">
-              <a onClick={handleCollapse}>
-                J<span>ournaly</span>
-              </a>
-            </Link>
-          </h1>
-        </div>
-        {shouldShowModal && (
-          <Modal
-            title={t('helpModal.header')}
-            body={
-              <>
-                <p style={{
-                  marginTop: '25px',
-                }}>{t('helpModal.bodyOne')}</p>
-                <p>{t('helpModal.bodyTwo')}<a href="mailto:hello@journaly.com" style={{
-                  color: theme.colors.blueLight,
-                }}>hello@journaly.com</a>{t('helpModal.bodyThree')}</p>
-              </>
-            }
-            footer={
-              <p style={{
-                margin: '0 auto',
-              }}>{t('helpModal.footer')}</p>
-            }
-            onClose={() => setShouldShowModal(false)}
-          />
+        </nav>
+        {notificationFeedState.showMobile && (
+          <NotificationFeedMobile onClose={notificationFeedState.toggleMobile} />
         )}
-      </nav>
+      </div>
       <style jsx>{`
-        .nav-background {
+        .nav-wrapper {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          z-index: 2;
+          width: ${navConstants.navWidth}px;
+        }
+
+        nav > :global(*) {
+          max-width: ${navConstants.navWidth}px;
+        }
+
+        .nav-overlay {
           position: fixed;
           top: 0;
           left: 0;
@@ -168,14 +275,23 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           background-color: rgba(0, 0, 0, 0.4);
           opacity: 0;
           transition: opacity ${navConstants.transitionDuration}ms linear;
-          z-index: ${navConstants.zIndex};
-        }
-
-        .expanded .nav-background {
+          z-index: ${navConstants.zIndex - 1};
           opacity: 1;
           /* Make background take up full screen */
-          bottom: 0;
-          right: 0;
+          bottom: ${expanded ? '0' : 'unset'};
+          rigth: ${expanded ? '0' : 'unset'};
+        }
+
+        .notification-feed-desktop-container {
+          position: absolute;
+          top: 0;
+          height: 100vh;
+          left: ${notificationFeedState.showDesktop ? '100%' : 'max(-50vw, -400px)'};
+          transition: left ${NOTIFICATION_FEED_SLIDE_TIME}s ease;
+          width: min(50vw, 400px);
+          overflow-x: hidden;
+          z-index: -1;
+          border-left: 1px solid ${theme.colors.gray600};
         }
 
         :global(.mobile-hamburger-icon) {
@@ -183,30 +299,23 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         }
 
         nav {
-          position: fixed;
-          top: 0;
-          bottom: 0;
-          left: 0;
           display: grid;
           grid-template-rows: 1fr 2fr 1fr;
           grid-gap: 10px;
-          width: ${navConstants.navWidth}px;
           background-color: ${theme.colors.charcoal};
           z-index: ${navConstants.zIndex};
-          transform: translateX(-100%);
-          transition: transform ${navConstants.transitionDuration}ms linear,
-            width ${navConstants.transitionDuration}ms linear;
-        }
-
-        .expanded nav {
-          /* Move the nav from off the screen to on the screen */
-          transform: translateX(0%);
+          transition: width ${navConstants.transitionDuration}ms linear;
+          width: 100%;
+          height: 100%;
+          overflow: visible;
+          overflow-y: auto;
+          position: relative;
         }
 
         .nav-support {
           /* The auto top margin allows the logo to take up enough space, but push itself down */
-          margin: ${ currentUser ? 'auto 0 15px' : 'auto 0'};
-          grid-row-start: ${ currentUser ? 3 : 2 };
+          margin: ${currentUser ? 'auto 0 15px' : 'auto 0'};
+          grid-row-start: ${currentUser ? 3 : 2};
           text-align: center;
           display: flex;
           flex-direction: column;
@@ -253,18 +362,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           width: 100%;
         }
 
-        .profile-image img {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-
-        .profile-image :global(svg) {
-          border-radius: 50%;
-          background-color: ${theme.colors.blueLight};
-        }
-
         .current-user-name,
         .nav-link {
           /* Prevent words from wrapping during transition */
@@ -302,9 +399,14 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             padding-right ${navConstants.transitionDuration}ms linear;
         }
 
+        .nav-link.notifications {
+          padding: 21px;
+        }
+
         .nav-link.active,
         .nav-link:hover {
           background-color: #5a5a5a;
+          cursor: pointer;
         }
 
         .nav-link img {
@@ -317,14 +419,22 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           transition: margin-left ${navConstants.transitionDuration}ms linear;
         }
 
-
-
         @media (${navConstants.mobileNavOnly}) {
           :global(.mobile-hamburger-icon) {
             position: absolute;
             top: 20px;
             left: 10px;
             display: block;
+          }
+
+          .nav-wrapper {
+            z-index: ${navConstants.zIndex};
+            transform: translateX(-100%);
+            transition: transform ${navConstants.transitionDuration}ms linear;
+          }
+
+          .nav-wrapper.expanded {
+            transform: translateX(0);
           }
 
           .nav-logo a {
@@ -362,22 +472,30 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             padding: 25px;
           }
 
+          .nav-link.notifications {
+            padding: 22px 25px;
+          }
+
           .nav-link-text {
             margin-left: 15px;
             font-size: 16px;
           }
         }
 
-
         @media (${navConstants.skinnyNavToDesktop}) {
-          .nav-background {
+          .nav-overlay {
             display: none;
+          }
+          .nav-wrapper {
+            width: ${navConstants.skinnyNavWidth}px;
+          }
+
+          nav > :global(*) {
+            max-width: ${navConstants.skinnyNavWidth}px;
           }
 
           nav {
             grid-gap: 30px;
-            transform: translateX(0%);
-            width: ${navConstants.skinnyNavWidth}px;
           }
 
           .nav-top {
@@ -386,25 +504,27 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         }
 
         @media (${navConstants.aboveDesktopNav}) {
-          .disable-large-nav .nav-background {
+          .nav-wrapper.disable-large-nav {
+            width: ${navConstants.skinnyNavWidth}px;
+          }
+          .disable-large-nav .nav-overlay {
             display: none;
+          }
+          .disable-large-nav nav > :global(*) {
+            max-width: ${navConstants.skinnyNavWidth}px;
           }
           .disable-large-nav nav {
             grid-gap: 30px;
-            transform: translateX(0%);
-            width: ${navConstants.skinnyNavWidth}px;
           }
           .disable-large-nave .nav-top {
             margin-top: 50px;
           }
 
-
-          .nav-wrapper:not(.disable-large-nav) .nav-background {
+          .nav-wrapper:not(.disable-large-nav) .nav-overlay {
             display: none;
           }
           .nav-wrapper:not(.disable-large-nav) nav {
             grid-gap: 30px;
-            transform: translateX(0%);
           }
           .nav-wrapper:not(.disable-large-nav) .nav-logo span {
             display: inline;
@@ -431,13 +551,16 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             height: auto;
             padding: 25px;
           }
+          .nav-wrapper:not(.disable-large-nav) .nav-link.notifications {
+            padding: 22px 25px;
+          }
           .nav-wrapper:not(.disable-large-nav) .nav-link-text {
             margin-left: 15px;
             font-size: 16px;
           }
         }
       `}</style>
-    </div>
+    </>
   )
 }
 

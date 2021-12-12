@@ -30,6 +30,9 @@ fragment UserWithLanguagesFragment on User {
 
 fragment CurrentUserFragment on User {
   ...UserWithLanguagesFragment
+  notifications {
+    ...NotificationFragment
+  }
   savedPosts {
     id
   }
@@ -157,6 +160,7 @@ fragment PostFragment on Post {
       id
       name
       handle
+      profileImage
     }
   }
 }
@@ -235,5 +239,113 @@ fragment UserBadgeFragment on UserBadge {
 fragment UserInterestFragment on UserInterest {
   topic {
     ...TopicFragment
+  }
+}
+
+fragment NotificationFragment on InAppNotification {
+  id
+  type
+  bumpedAt
+  readStatus
+  userId
+  triggeringUser {
+    id
+    name
+    handle
+    profileImage
+  }
+  post {
+    id
+    title
+    headlineImage {
+      smallSize
+    }
+    authorId
+  }
+  postClapNotifications {
+    id
+    postClap {
+      author {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
+  }
+  threadCommentNotifications {
+    id
+    comment {
+      id
+      body
+      author {
+        id
+        handle
+        name
+        profileImage
+      }
+      thread {
+        id
+        highlightedContent
+      }
+    }
+  }
+  postCommentNotifications {
+    id
+    postComment {
+      id
+      body
+      author {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
+  }
+  threadCommentThanksNotifications {
+    id
+    thanks {
+      id
+      author {
+        id
+        handle
+        name
+        profileImage
+      }
+      comment {
+        id
+        body
+        thread {
+          id
+          highlightedContent
+        }
+      }
+    }
+  }
+  newFollowerNotifications {
+    id
+    followingUser {
+      id
+      name
+      handle
+      profileImage
+    }
+  }
+  newPostNotifications {
+    id
+    post {
+      id
+      title
+      headlineImage {
+        smallSize
+      }
+      author {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
   }
 }

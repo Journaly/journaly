@@ -1,20 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import theme from '@/theme'
 import { navConstants } from '../Nav'
 import { headerHeight } from '../dashboardConstants'
 import HamburgerIcon from './HamburgerIcon'
+import NotificationsIcon from '@/components/Icons/NotificationsIcon'
+import { useNotificationContext } from '@/components/NotificationFeed/NotificationContext'
+import NotificationFeed from '@/components/NotificationFeed'
+import Button, { ButtonVariant } from '@/components/Button'
 
 interface Props {
   onMenuClick: () => void
 }
 
 const Header: React.FC<Props> = ({ onMenuClick }) => {
+  const [showNotificationFeed, setShowNotificationFeed] = useState(false)
+
+  const notificationContext = useNotificationContext()
+
   return (
     <div className="header">
       <HamburgerIcon onClick={onMenuClick} className="hamburger-icon" />
-
-      <span className="logo-text">Journaly</span>
-
+      {notificationContext && (
+        <Button variant={ButtonVariant.Icon} onClick={() => setShowNotificationFeed(true)}>
+          <NotificationsIcon count={notificationContext.unreadCount} />
+        </Button>
+      )}
+      {showNotificationFeed && <NotificationFeed onClose={() => setShowNotificationFeed(false)} />}
       <style jsx>{`
         .header {
           position: fixed;
@@ -30,21 +41,13 @@ const Header: React.FC<Props> = ({ onMenuClick }) => {
           background-color: ${theme.colors.charcoal};
           /* Show header above scrolled dashboard content */
           z-index: ${navConstants.zIndex - 1};
+          padding: 0 10px;
         }
         /* Header should disappear when the mobile nav does */
         @media (${navConstants.aboveMobileNav}) {
           .header {
             display: none;
           }
-        }
-
-        :global(.hamburger-icon) {
-          margin-left: 10px;
-        }
-
-        .logo-text {
-          ${theme.typography.fontFamilySerif};
-          margin-right: 20px;
         }
       `}</style>
     </div>

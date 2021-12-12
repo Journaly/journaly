@@ -17,11 +17,14 @@ import {
   generateThumbbusterUrl,
   getThumbusterVars,
   generatePostPrivateShareId,
+  createInAppNotification,
 } from './utils'
+
 
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
   Prisma,
+  Post,
   PostStatus,
   BadgeType,
   PrismaClient,
@@ -29,6 +32,7 @@ import {
   User,
   UserRole,
   EmailVerificationStatus,
+  InAppNotificationType,
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
@@ -93,7 +97,7 @@ const PostTopic = objectType({
   },
 })
 
-const Post = objectType({
+const PostObjectType = objectType({
   name: 'Post',
   definition(t) {
     t.model.id()
@@ -102,6 +106,7 @@ const Post = objectType({
     t.model.excerpt()
     t.model.readTime()
     t.model.author()
+    t.model.authorId()
     t.model.status()
     t.model.claps({ pagination: false })
     t.model.threads({ pagination: false })
@@ -394,13 +399,13 @@ const PostQueries = extendType({
         `
 
         const [posts, [{ count }]] = await Promise.all([
-          ctx.db.$queryRaw`
+          ctx.db.$queryRaw<Post[]>`
             SELECT p.* ${queryPred}
             ORDER BY p."bumpedAt" DESC
             LIMIT ${args.first}
             OFFSET ${args.skip};
           `,
-          ctx.db.$queryRaw`SELECT COUNT(*) ${queryPred};`,
+          ctx.db.$queryRaw<{ count: number }[]>`SELECT COUNT(*) ${queryPred};`,
         ])
 
         return { posts, count }
@@ -439,6 +444,7 @@ const PostMutations = extendType({
           include: {
             languages: true,
             auth: true,
+            followedBy: true,
           },
         })
 
@@ -497,7 +503,20 @@ const PostMutations = extendType({
           await Promise.all(insertPromises)
         }
 
-        if (isPublished) await assignPostCountBadges(ctx.db, userId)
+        if (isPublished) {
+          const promises: Promise<unknown>[] = user.followedBy.map((follower) => {
+            return createInAppNotification(ctx.db, {
+              userId: follower.id,
+              type: InAppNotificationType.NEW_POST,
+              key: {},
+              subNotification: {
+                postId: post.id,
+              },
+            })
+          })
+          promises.push(assignPostCountBadges(ctx.db, userId))
+          await Promise.all(promises)
+        }
 
         return post
       },
@@ -527,6 +546,7 @@ const PostMutations = extendType({
             include: {
               languages: true,
               membershipSubscription: true,
+              followedBy: true,
             },
           }),
           ctx.db.post.findUnique({
@@ -639,7 +659,20 @@ const PostMutations = extendType({
           data,
         })
 
-        if (post.status === PostStatus.PUBLISHED) await assignPostCountBadges(ctx.db, userId)
+        if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
+          const promises: Promise<unknown>[] = currentUser.followedBy.map((follower) => {
+            return createInAppNotification(ctx.db, {
+              userId: follower.id,
+              type: InAppNotificationType.NEW_POST,
+              key: {},
+              subNotification: {
+                postId: post.id,
+              },
+            })
+          })
+          promises.push(assignPostCountBadges(ctx.db, userId))
+          await Promise.all(promises)
+        }
 
         return post
       },
@@ -885,7 +918,7 @@ const PostMutations = extendType({
 
 export default [
   PostTopic,
-  Post,
+  PostObjectType,
   PostPage,
   InitiatePostImageUploadResponse,
   InitiateInlinePostImageUploadResponse,

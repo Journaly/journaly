@@ -5,7 +5,7 @@ import {
   UserFragmentFragment as UserType,
 } from '@/generated/graphql'
 import { gtag } from '@/components/GoogleAnalytics'
-import Popover, { DOMOffsetTarget } from './Popover'
+import Popover, { DOMOffsetTarget } from '@/components/Popover'
 import Thread from './Thread'
 
 type InlineFeedbackPopoverProps = {

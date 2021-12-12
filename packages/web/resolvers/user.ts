@@ -8,13 +8,18 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 import { isAcademic } from 'swot-node'
-import { PostStatus, EmailVerificationStatus } from '@journaly/j-db-client'
+import {
+  PostStatus,
+  EmailVerificationStatus,
+  InAppNotificationType,
+} from '@journaly/j-db-client'
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
   generateThumbbusterUrl,
   sendEmailAddressVerificationEmail,
   sendPasswordResetTokenEmail,
+  createInAppNotification,
 } from './utils'
 import { generateToken, validateUpdateUserMutationData } from './utils/userValidation'
 
@@ -96,7 +101,7 @@ const User = objectType({
     })
     t.int('languagesPostedInCount', {
       async resolve(parent, _args, ctx, _info) {
-        const q = await ctx.db.$queryRaw`
+        const q = await ctx.db.$queryRaw<{ count: number }[]>`
           SELECT COUNT(DISTINCT "languageId") as count
           FROM "Post"
           WHERE
@@ -130,6 +135,27 @@ const User = objectType({
           where: { authorId: parent.id },
         })
       },
+    })
+    t.list.field('notifications', {
+      type: 'InAppNotification',
+      resolve(parent, _args, ctx, _info) {
+        const { userId } = ctx.request
+
+        if (!userId || userId !== parent.id) {
+          return []
+        }
+
+        return ctx.db.inAppNotification.findMany({
+          where: {
+            userId: userId
+          },
+          take: 99,
+          orderBy: [
+            { readStatus: 'desc' },
+            { bumpedAt: 'desc' },
+          ]
+        })
+      }
     })
     t.list.field('activityGraphData', {
       type: 'DatedActivityCount',
@@ -183,7 +209,7 @@ const User = objectType({
             ON post_activity.date = post_comment_activity.date
           ;
         `
-        return stats || []
+        return stats as any || []
       },
     })
   },
@@ -625,7 +651,7 @@ const UserMutations = extendType({
       resolve: async (_parent, args, ctx, _info) => {
         const { userId: followerId } = ctx.request
 
-        return ctx.db.user.update({
+        const follower = await ctx.db.user.update({
           where: {
             id: followerId,
           },
@@ -635,6 +661,17 @@ const UserMutations = extendType({
             },
           },
         })
+
+        await createInAppNotification(ctx.db, {
+          userId: args.followedUserId,
+          type: InAppNotificationType.NEW_FOLLOWER,
+          key: {},
+          subNotification: {
+            followingUserId: follower.id
+          }
+        })
+
+        return follower
       },
     })
 

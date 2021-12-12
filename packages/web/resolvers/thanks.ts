@@ -1,14 +1,12 @@
-import {
-  intArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { InAppNotificationType } from '.prisma/client'
+import { intArg, objectType, extendType } from 'nexus'
 
-import { NotificationType } from '@journaly/j-db-client'
+import { EmailNotificationType } from '@journaly/j-db-client'
 
 import {
-  createNotification,
-  hasAuthorPermissions,
+  createInAppNotification, 
+  createEmailNotification,
+  hasAuthorPermissions
 } from './utils'
 
 const CommentThanks = objectType({
@@ -70,16 +68,24 @@ const ThanksMutations = extendType({
           },
         })
 
-      await createNotification(
-        ctx.db,
-        comment.author,
-        {
-          type: NotificationType.THREAD_COMMENT_THANKS,
+        await createEmailNotification(ctx.db, comment.author, {
+          type: EmailNotificationType.THREAD_COMMENT_THANKS,
           commentThanks,
-        },
-      )
-      
-      return commentThanks
+        })
+
+        await createInAppNotification(ctx.db, {
+          userId: comment.authorId,
+          type: InAppNotificationType.THREAD_COMMENT_THANKS,
+          key: {
+            postId: comment.thread.post.id,
+            triggeringUserId: userId,
+          },
+          subNotification: {
+            thanksId: commentThanks.id,
+          }
+        })
+
+        return commentThanks
       },
     }),
       t.field('deleteCommentThanks', {
@@ -103,6 +109,9 @@ const ThanksMutations = extendType({
               where: {
                 id: commentThanksId,
               },
+              include: {
+                ThreadCommentThanksNotification: true,
+              },
             }),
           ])
 
@@ -111,7 +120,19 @@ const ThanksMutations = extendType({
 
           hasAuthorPermissions(originalCommentThanks, currentUser)
 
-          return await ctx.db.commentThanks.delete({
+          const originalThanksNotification = await ctx.db.threadCommentThanksNotification.delete({
+            where: {
+              id: originalCommentThanks.ThreadCommentThanksNotification[0].id,
+            },
+          })
+
+          await ctx.db.inAppNotification.delete({
+            where: {
+              id: originalThanksNotification.notificationId,
+            },
+          })
+
+          return ctx.db.commentThanks.delete({
             where: {
               id: commentThanksId,
             },
@@ -121,7 +142,4 @@ const ThanksMutations = extendType({
   },
 })
 
-export default [
-  CommentThanks,
-  ThanksMutations,
-]
+export default [CommentThanks, ThanksMutations]

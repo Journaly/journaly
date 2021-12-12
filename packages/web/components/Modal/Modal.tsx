@@ -5,7 +5,7 @@ import ModalBody from './ModalBody'
 import ModalFooter from './ModalFooter'
 import modalConstants from './modalConstants'
 import useFocusTrap from '@/hooks/useFocusTrap'
-import theme from '@/theme'
+import { white } from '@/utils'
 
 type Props = {
   onClose: () => void
@@ -135,7 +135,7 @@ const Modal: React.FC<Props> = (props) => {
           flex-direction: column;
           max-height: 100%;
           max-width: ${maxWidth};
-          background-color: ${theme.colors.white};
+          background-color: ${white};
         }
         @media (min-width: ${modalConstants.modalBreakpoint}) {
           :global(.modal-content) {

@@ -8,7 +8,6 @@ import { useTranslation } from '@/config/i18n'
 import { useRequestResetPasswordMutation } from '@/generated/graphql'
 import FormError from '@/components/FormError'
 import Button from '@/components/Button'
-import { brandBlue } from '@/utils'
 import theme from '@/theme'
 
 const RequestResetPasswordForm: React.FC = () => {
@@ -109,13 +108,13 @@ const RequestResetPasswordForm: React.FC = () => {
         textarea,
         select:focus {
           outline: 0;
-          border-color: ${brandBlue};
+          border-color: ${theme.colors.blueLight};
         }
         button,
         input[type='submit'] {
           width: auto;
-          background: ${brandBlue};
-          color: white;
+          background: ${theme.colors.blueLight};
+          color: ${theme.colors.white};
           border: 0;
           font-size: 2rem;
           font-weight: 600;
@@ -133,7 +132,12 @@ const RequestResetPasswordForm: React.FC = () => {
           height: 10px;
           content: '';
           display: block;
-          background-image: linear-gradient(to right, #32567e 0%, #4391c9 50%, #32567e 100%);
+          background-image: linear-gradient(
+            to right,
+            #32567e 0%,
+            ${theme.colors.blueLight} 50%,
+            #32567e 100%
+          );
         }
         @keyframes loading {
           from {
@@ -171,7 +175,7 @@ const RequestResetPasswordForm: React.FC = () => {
         :global(.form-error) {
           margin-bottom: 24px;
         }
-        :global(input[name="${fieldErrorName}"]) {
+        :global(input[name='${fieldErrorName}']) {
           border-color: ${theme.colors.red};
         }
       `}</style>

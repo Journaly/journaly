@@ -1,5 +1,5 @@
 import React from 'react'
-import { lightBlue } from '@/utils'
+import theme from '@/theme'
 
 const createListOfLanguages = (languages: string[]) => {
   if (languages.length === 1) return languages[0]
@@ -55,7 +55,7 @@ const Testimonial: React.FC<Props> = ({ quote, speaks, writes, name, picture }) 
           left: -22px;
           font-family: 'Playfair Display', serif;
           font-size: 100px;
-          color: ${lightBlue};
+          color: ${theme.colors.blueLight};
           opacity: 0.19;
         }
 

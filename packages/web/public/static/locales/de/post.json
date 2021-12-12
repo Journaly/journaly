@@ -1,6 +1,6 @@
 {
   "header": "Lass uns einen Beitrag verfassen",
-  "titlePlaceholder": "Die beste Geschichte, die nie erzählt wurde...",
+  "titlePlaceholder": "Die beste Geschichte, die nie erzählt wurde ...",
   "languageSelectPlaceholder": "Wähle eine Sprache aus ...",
   "topicSelectPlaceholder": "Wähle bis zu fünf Themen",
   "uploadImageButtonText": "Bild hochladen",
@@ -13,7 +13,7 @@
   "editPost": "Beitrag bearbeiten",
   "editPostAction": "Beitrag bearbeiten",
   "bumpPostAction": "Beitrag vorziehen",
-  "bumpPostSuccess": "Dein Beitrag wurde erfolgreich nach ganz oben in den Feed vorgezogen! Dieser Beitrag kann noch {{numRemaining}} mal vordgezogen werden.",
+  "bumpPostSuccess": "Dein Beitrag wurde erfolgreich nach ganz oben in den Feed vorgezogen! Dieser Beitrag kann noch {{numRemaining}} mal vorgezogen werden.",
   "postBumpLimitError": "Du hast die maximale Anzahl an Vorziehern für diesen Beitrag ausgeschöpft.",
   "postBumpingPremiumFeatureExplanation": "Beiträge vorziehen ist ein tolles Premium-Feature, durch das deine Beiträge ganz nach oben in den Feed vorgezogen werden und sich somit ihre Sichtbarkeit verbessert und sie mehr Feedback erhalten! Klicke unten, um alle Vorteile von Journaly Premium zu sehen oder nutze weiterhin all die tollen kostenlosen Feature von Journaly!",
   "inlineImagesPremiumFeatureExplanation": "Bilder einfügen ist ein tolles Premium-Feature, mit dem du eine beliebige Anzahl an Bildern in deinen Beitrag einfügen kannst! Das ist eine tolle Möglichkeit deine Beiträge zu personalisieren und interessanter zu machen. Klicke unten, um alle Vorteile von Journaly Premium zu sehen oder nutze weiterhin all die tollen kostenlosen Feature von Journaly!",

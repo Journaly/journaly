@@ -1,0 +1,5 @@
+mutation deleteInAppNotification($notificationId: Int!) {
+  deleteInAppNotification(notificationId: $notificationId) {
+    id
+  }
+}

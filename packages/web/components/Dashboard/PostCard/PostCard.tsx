@@ -11,9 +11,9 @@ import LineClamp from '@/components/LineClamp'
 import ClapIcon from '@/components/Icons/ClapIcon'
 import CommentIcon from '@/components/Icons/CommentIcon'
 import theme from '@/theme'
-import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import LevelGauge from '@/components/LevelGauge'
 import LockIcon from '@/components/Icons/LockIcon'
+import UserAvatar from '@/components/UserAvatar'
 
 type Props = {
   post: PostCardType
@@ -33,7 +33,7 @@ const PostCard: React.FC<Props> = ({ post, avatar = false, stacked = false }) =>
     headlineImage,
     claps,
     commentCount,
-    author: { handle, name, profileImage },
+    author: { handle, name },
     createdAt,
     publishedAt,
     publishedLanguageLevel,
@@ -66,11 +66,7 @@ const PostCard: React.FC<Props> = ({ post, avatar = false, stacked = false }) =>
               {avatar && (
                 <div className="avatar-and-language">
                   <div className="post-avatar">
-                    {profileImage ? (
-                      <img className="profile-image" src={profileImage} alt="" />
-                    ) : (
-                      <BlankAvatarIcon size={27} />
-                    )}
+                    <UserAvatar user={post.author} size={27} />
                     <p className="author">{handle || name}</p>
                   </div>
                   <div className="post-language">
@@ -203,21 +199,7 @@ const PostCard: React.FC<Props> = ({ post, avatar = false, stacked = false }) =>
           display: flex;
           align-items: center;
           margin-bottom: 4px;
-        }
-
-        .post-avatar > :global(*) {
-          border-radius: 50%;
-          margin-right: 12px;
-        }
-
-        .post-avatar :global(svg) {
-          background-color: ${theme.colors.blueLight};
-        }
-
-        .profile-image {
-          width: 27px;
-          height: 27px;
-          object-fit: cover;
+          gap: 12px;
         }
 
         .author {

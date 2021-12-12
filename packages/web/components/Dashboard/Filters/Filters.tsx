@@ -42,7 +42,7 @@ const Filters: React.FC<Props> = ({
   showPostCount = true,
   showSavedPosts = false,
 }) => {
-  const { t } = useTranslation('my-feed')
+  const { t } = useTranslation('common')
   const [showAdvancedFilters, setShowAdvancedFilters] = useToggle(false)
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const onSearchChange = useCallback(
@@ -172,7 +172,7 @@ const Filters: React.FC<Props> = ({
           showPostCount={showPostCount}
         />
         <Button variant={ButtonVariant.Link} onClick={setShowAdvancedFilters}>
-          {t(`${showAdvancedFilters ? 'hideAdvancedFilters' : 'showAdvancedFilters'}`)}{' '}
+          {t(`${showAdvancedFilters ? 'ui.hideAdvancedFilters' : 'ui.showAdvancedFilters'}`)}{' '}
           {filterCount > 0 && `(${filterCount})`}
         </Button>
         {showAdvancedFilters && (
@@ -206,7 +206,7 @@ const Filters: React.FC<Props> = ({
                     })
                   }}
                 >
-                  {t('clearFilters')}
+                  {t('ui.clearFilters')}
                 </Button>
                 <Button
                   variant={ButtonVariant.Link}
@@ -218,14 +218,14 @@ const Filters: React.FC<Props> = ({
                     }))
                   }}
                 >
-                  {t('myLanguages')}
+                  {t('ui.myLanguages')}
                 </Button>
                 <Button
                   variant={ButtonVariant.Link}
                   className={`filter-action-btn ${postQueryVars.followedAuthors ? 'active' : ''}`}
                   onClick={toggleFollowedAuthorsFilter}
                 >
-                  {t('followedUsers')}
+                  {t('ui.followedUsers')}
                 </Button>
               </div>
               <div className="filter-actions">
@@ -234,14 +234,14 @@ const Filters: React.FC<Props> = ({
                   className={`filter-action-btn ${postQueryVars.needsFeedback ? 'active' : ''}`}
                   onClick={toggleNeedsFeedbackFilter}
                 >
-                  {t('needsFeedback')}
+                  {t('ui.needsFeedback')}
                 </Button>
                 <Button
                   variant={ButtonVariant.Link}
                   className={`filter-action-btn ${postQueryVars.hasInteracted ? 'active' : ''}`}
                   onClick={toggleHasInteractedFilter}
                 >
-                  {t('hasInteracted')}
+                  {t('ui.hasInteracted')}
                 </Button>
                 {showSavedPosts && (
                   <Button
@@ -249,7 +249,7 @@ const Filters: React.FC<Props> = ({
                     className={`filter-action-btn ${postQueryVars.savedPosts ? 'active' : ''}`}
                     onClick={handleToggleSavedPosts}
                   >
-                    {t('savedPosts')}
+                    {t('ui.savedPosts')}
                   </Button>
                 )}
               </div>
@@ -259,7 +259,7 @@ const Filters: React.FC<Props> = ({
       </div>
       {displayPremiumFeatureModal && (
         <PremiumFeatureModal
-          featureExplanation={t('savePostPremiumFeatureExplanation')}
+          featureExplanation={t('ui.savePostPremiumFeatureExplanation')}
           onAcknowledge={() => {
             setDisplayPremiumFeatureModal(false)
           }}

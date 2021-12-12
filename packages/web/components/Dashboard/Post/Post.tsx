@@ -1,9 +1,10 @@
-import React, { useState, memo, useMemo, useRef, forwardRef, useEffect } from 'react'
+import React, { useState, memo, useMemo, useRef, forwardRef, useEffect, useCallback } from 'react'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { makeReference } from '@apollo/client'
+import queryString from 'query-string'
 
-import { findEventTargetParent, sanitize, iOS, wait } from '@/utils'
+import { sanitize, iOS, wait } from '@/utils'
 import {
   PostStatus,
   useCreateThreadMutation,
@@ -34,13 +35,82 @@ import {
   highlightRange,
   isSelectionCommentable,
   buildPreOrderListAndOffsets,
-  isChildOf,
 } from './helpers'
 import ClapIcon from '@/components/Icons/ClapIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
 import { POST_BUMP_LIMIT } from '../../../constants'
 import { SelectionState, PostProps, PostContentProps, ThreadType } from './types'
 import BookmarkIcon from '@/components/Icons/BookmarkIcon'
+import UserListModal from '@/components/Modals/UserListModal'
+import useOnClickOut from '@/hooks/useOnClickOut'
+import { DOMOffsetTarget } from '@/components/Popover'
+
+type UseDeepLinkingArg = {
+  setActiveThreadId: (arg: number) => void
+  setPopoverPosition: (arg: DOMOffsetTarget) => void
+}
+
+const useDeepLinking = ({ setActiveThreadId, setPopoverPosition }: UseDeepLinkingArg) => {
+  const haveHandledDeepLink = useRef(false)
+
+  const reconcileDocumentHash = () => {
+    const hash = queryString.parse(document.location.hash)
+
+    if (hash.t && typeof hash.t === 'string') {
+      const threadHighlight = document.querySelector(
+        `.thread-highlight[data-tid="${hash.t}"]`,
+      ) as HTMLElement | null
+      if (threadHighlight) {
+        setActiveThreadId(parseInt(hash.t))
+        setPopoverPosition({
+          ...getCoords(threadHighlight),
+          w: threadHighlight.offsetWidth,
+          h: threadHighlight.offsetHeight,
+        })
+        threadHighlight.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        })
+      }
+    }
+  }
+
+  const imageContainerRefCallback = (el: HTMLDivElement) => {
+    if (!el || haveHandledDeepLink.current) return
+    const images = Array.from(el.querySelectorAll('img'))
+    let imagesAreUnloaded = false
+
+    const loadingPromises = images.map((img) => {
+      if (img.complete) {
+        return new Promise<void>((res) => {
+          res()
+        })
+      } else {
+        imagesAreUnloaded = true
+        return new Promise<void>((res) => {
+          img.addEventListener('load', () => res())
+        })
+      }
+    })
+    if (!imagesAreUnloaded) {
+      haveHandledDeepLink.current = true
+      reconcileDocumentHash()
+      return
+    }
+    Promise.all(loadingPromises).then(() => {
+      reconcileDocumentHash()
+    })
+  }
+
+  useEffect(() => {
+    Router.events.on('hashChangeComplete', reconcileDocumentHash)
+
+    return () => {
+      Router.events.off('hashChangeComplete', reconcileDocumentHash)
+    }
+  }, [])
+  return imageContainerRefCallback
+}
 
 const selectionState: SelectionState = {
   bouncing: false,
@@ -95,13 +165,22 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0, w: 0, h: 0 })
   const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
+  const [displayUserListModal, setDisplayUserListModal] = useState(false)
   const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
+
+  const imageContainerRefCallback = useDeepLinking({
+    setActiveThreadId,
+    setPopoverPosition,
+  })
+
   const isAuthoredPost = currentUser && post.author.id === currentUser.id
   const isPremiumFeatureEligible =
     currentUser?.membershipSubscription?.isActive ||
     currentUser?.userRole === UserRole.Admin ||
     currentUser?.userRole === UserRole.Moderator
   const canAttemptBump = isPremiumFeatureEligible && post.status === 'PUBLISHED'
+
+  const usersWhoClapped = post.claps.map((clap) => clap.author)
 
   const hasSavedPost = useMemo(() => {
     return currentUser?.savedPosts.find((savedPost) => savedPost.id === post.id) !== undefined
@@ -344,27 +423,17 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       })
     }
 
-    const onDocumentMouseDown = (e: MouseEvent) => {
-      if (!e.target || !popoverRef.current || isChildOf(e.target as Node, popoverRef.current)) {
-        return
-      }
-
-      // Mouse/touch events in modals shouldn't close the thread popover
-      if (findEventTargetParent(e, (el) => el.id === 'modal-root')) {
-        return
-      }
-
-      setActiveThreadId(-1)
-    }
-
     document.addEventListener('selectionchange', onSelectionChange)
-    document.addEventListener('mousedown', onDocumentMouseDown)
 
     return () => {
       document.removeEventListener('selectionchange', onSelectionChange)
-      document.removeEventListener('mousedown', onDocumentMouseDown)
     }
   }, [selectableRef.current])
+
+  const closeThread = useCallback(() => {
+    setActiveThreadId(-1)
+  }, [])
+  useOnClickOut(popoverRef, closeThread)
 
   const createThreadHandler = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -502,7 +571,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   })
 
   return (
-    <div className="post-container">
+    <div className="post-container" ref={imageContainerRefCallback}>
       <Head>
         <title>
           {post.author.handle} | {post.title}
@@ -530,18 +599,28 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         </article>
         <div className="post-controls">
           <div className="clap-container">
-            <Button
-              variant={ButtonVariant.Icon}
-              onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
-              loading={isLoadingPostClap}
-              disabled={currentUser?.id === post.author.id || !currentUser}
-            >
-              <ClapIcon
-                width={24}
-                clapped={hasClappedPost}
-                title={getUsersClappedText(post.claps, currentUser?.id)}
-              />
-            </Button>
+            {currentUser?.id === post.author.id ? (
+              <Button variant={ButtonVariant.Icon} onClick={() => setDisplayUserListModal(true)}>
+                <ClapIcon
+                  width={24}
+                  clapped={hasClappedPost}
+                  title={getUsersClappedText(post.claps, currentUser?.id)}
+                />
+              </Button>
+            ) : (
+              <Button
+                variant={ButtonVariant.Icon}
+                onClick={hasClappedPost ? deleteExistingPostClap : createNewPostClap}
+                loading={isLoadingPostClap}
+                disabled={!currentUser}
+              >
+                <ClapIcon
+                  width={24}
+                  clapped={hasClappedPost}
+                  title={getUsersClappedText(post.claps, currentUser?.id)}
+                />
+              </Button>
+            )}
             <span>{post.claps.length}</span>
           </div>
           <div className="post-action-container">
@@ -657,6 +736,13 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           }}
         />
       )}
+      {displayUserListModal && (
+        <UserListModal
+          title={`${post.claps.length} People Clapped!`}
+          users={usersWhoClapped}
+          onClose={() => setDisplayUserListModal(false)}
+        />
+      )}
       <PostBodyStyles parentClassName="post-body" />
       <style>{`
         .thread-highlight {
@@ -770,6 +856,9 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           }
           .post-action-subcontainer > :global(button) {
             width: 100%;
+          }
+          .post-container {
+            margin-top: 0;
           }
         }
         .clap-container {

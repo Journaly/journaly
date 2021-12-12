@@ -14,6 +14,7 @@ import SocialMediaTypes from './socialMedia'
 import ClapTypes from './clap'
 import ThanksTypes from './thanks'
 import SubscriptionTypes from './subscription'
+import NotificationTypes from './notification'
 
 const reflectionRun = !!parseInt(process.env.NEXUS_REFLECTION || '0')
 
@@ -47,6 +48,7 @@ const schemaOpts: Parameters<typeof makeSchema>[0] = {
     ...ClapTypes,
     ...ThanksTypes,
     ...SubscriptionTypes,
+    ...NotificationTypes,
   ],
   shouldGenerateArtifacts: reflectionRun,
   plugins: [

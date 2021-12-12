@@ -16,8 +16,8 @@ import {
   LanguageLevel,
   ProfileUserFragmentFragment
 } from '@/generated/graphql'
-import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import Button, { ButtonVariant } from '@/components/Button'
+import UserAvatar from '@/components/UserAvatar'
 
 type Props = {
   user: ProfileUserFragmentFragment
@@ -34,7 +34,6 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
     user.socialMedia?.instagram ||
     user.socialMedia?.youtube ||
     user.socialMedia?.website
-  const profileImage = user.profileImage
 
   const speaksList = user.languages.filter((language) => language.level === LanguageLevel.Native)
   const learnsList = user.languages.filter((language) => language.level !== LanguageLevel.Native)
@@ -85,12 +84,9 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
       <div className="profile-card-content">
         <div className="profile-header">
           <h1 className="profile-name">{name}</h1>
-
-          {profileImage ? (
-            <img className="profile-image-mobile" src={profileImage} />
-          ) : (
-            <BlankAvatarIcon className="blank-avatar-mobile" size={130} />
-          )}
+          <div className="profile-image-mobile">
+            <UserAvatar user={user} size={150} />
+          </div>
 
           <div className="languages-and-interests">
             <p>
@@ -108,11 +104,9 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         </div>
 
         <div className="profile-body">
-          {profileImage ? (
-            <img className="profile-image-desktop" src={profileImage} />
-          ) : (
-            <BlankAvatarIcon className="blank-avatar-desktop" size={130} />
-          )}
+          <div className="profile-image-desktop">
+            <UserAvatar user={user} size={150} />
+          </div>
 
           {currentUser && currentUser.id !== user.id && (
             <Button
@@ -252,28 +246,12 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           }
         }
 
-        .profile-card :global(.blank-avatar-mobile),
-        .profile-card :global(.blank-avatar-desktop) {
-          border-radius: 50%;
-          background-color: ${theme.colors.blueLight};
-        }
-
-        .profile-image-mobile,
-        .profile-image-desktop {
-          width: 150px;
-          height: 150px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-        .profile-image-mobile,
-        .profile-card :global(.blank-avatar-mobile) {
+        .profile-image-mobile {
           margin: 30px 0 20px;
         }
+
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-image-mobile {
-            display: none;
-          }
-          .profile-card :global(.blank-avatar-mobile) {
             display: none;
           }
         }
@@ -296,16 +274,8 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         .profile-image-desktop {
           display: none;
         }
-        .profile-card :global(.blank-avatar-desktop) {
-          display: none;
-        }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-image-desktop {
-            display: block;
-            margin: 0 auto 40px;
-          }
-
-          .profile-card :global(.blank-avatar-desktop) {
             display: block;
             margin: 0 auto 40px;
           }

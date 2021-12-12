@@ -1,7 +1,7 @@
 {
   "signInPrompt": "Bitte einloggen, um fortzufahren",
   "error": "Auf dem Server ist ein Fehler aufgetreten",
-  "loading": "Lädt...",
+  "loading": "Lädt ...",
   "home": {
     "reasonsHeader": "Drei Gründe, Journaly zu verwenden",
     "elevatorPitch": "Verbessere deine Sprachkenntnisse und verbinde dich mit anderen durch Journaling.",
@@ -19,10 +19,26 @@
       "dashboard": "Dashboard"
     }
   },
+  "ui": {
+    "languageSelectPlaceholder": "Sprachen",
+    "clearFilters": "Filter löschen",
+    "myLanguages": "Meine Sprachen",
+    "followedUsers": "Journaler, denen ich folge",
+    "needsFeedback": "benötigt Feedback",
+    "hasInteracted": "kommentierte Beiträge",
+    "textSearchPlaceholder": "Beiträge durchsuchen",
+    "topicSelectPlaceholder": "Themen",
+    "showAdvancedFilters": "Zeige erweiterte Filter",
+    "hideAdvancedFilters": "erweiterte Filter ausblenden",
+    "savedPosts": "angeheftete Beiträge",
+    "savePostPremiumFeatureName": "Angeheftete Beiträge",
+    "savePostPremiumFeatureExplanation": "ist ein angenehmes Premium-Feature, dass dir das Anheften von Beiträgen ermöglicht, sodass du diese später einfach wiederfinden und lesen kannst. Die Liste kannst du über die erweiterten Filter der Mein-Feed-Seite erreichen! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken oder nutze all die kostenfreien Features von Journaly weiterhin kostenlos."
+  },
   "dashboardNav": {
     "myFeed": "Mein Feed",
     "myPosts": "Meine Beiträge",
     "newPost": "Neuer Beitrag",
+    "notifications": "Benachrichtigungen",
     "settings": "Einstellungen",
     "logOut": "Ausloggen"
   },
@@ -72,6 +88,41 @@
     "allDoneChecksFailed": "Beim Hochladen deines Bildes ist ein Fehler aufgetreten. Bitte versuche es später noch einmal."
   },
   "editor": {
-    "placeholderPrompt": "Alles begann heute früh, als..."
+    "placeholderPrompt": "Alles begann heute früh, als ..."
+  },
+  "notifications": {
+    "feedTitle": "Benachrichtigungen",
+    "emptyFeed": "Keine Benachrichtigungen ... bis jetzt!",
+    "levelOne": {
+      "newFollowers": "Du hast einen neuen Follower",
+      "newFollowers_plural": "Du hast {{count}} neue Follower",
+      "threadComments": "Du hast einen neuen Feedback-Kommentar zu deinem Beitrag",
+      "threadComments_plural": "Du hast {{count}} neue Feedback-Kommentare zu deinem Beitrag",
+      "threadCommentsSubscribed": "Es gibt einen neuen Feedback-Kommentar zu diesem Beitrag",
+      "threadCommentsSubscribed_plural": "Es gibt {{count}} neue Feedback-Kommentare zu diesem Beitrag",
+      "postComments": "Du hast einen neuen allgemeinen Kommentar zu deinem Beitrag",
+      "postComments_plural": "Du hast {{count}} neue allgemeine Kommentare zu deinem Beitrag",
+      "postCommentsSubscribed": "Es gibt einen neuen allgemeinen Kommentar zu diesem Beitrag",
+      "postCommentsSubscribed_plural": "Es gibt {{count}} neue allgemeine Kommentare zu diesem Beitrag",
+      "postClaps": "Ein Journaler hat diesem Beitrag applaudiert",
+      "postClaps_plural": "{{count}} Journaler haben diesem Beitrag applaudiert",
+      "threadCommentThanks": "hat für einen Feedback-Kommentar Danke gesagt",
+      "threadCommentThanks_plural": "hat für {{count}} Feedback-Kommentare Danke gesagt",
+      "newPosts": "Dieser Journaler, dem du folgst, hat einen neuen Beitrag veröffentlicht",
+      "newPosts_plural": "Journaler, denen du folgst, haben {{count}} neue Beiträge veröffentlicht"
+    },
+    "levelTwo": {
+      "newFollowers": "Dieser großartige Journaler folgt dir nun",
+      "newFollowers_plural": "Diese {{count}} großartigen Journaler folgen dir nun",
+      "threadCommentThanks": "{{userIdentifier}} hat für den folgenden Feedback-Kommentar Danke gesagt",
+      "threadCommentThanks_plural": "{{userIdentifier}} hat für die folgenden {{count}} Feedback-Kommentare Danke gesagt",
+      "postClaps": "Dieser Journaler hat deinem Beitrag applaudiert",
+      "postClaps_plural": "Diese {{count}} Journaler haben deinem Beitrag applaudiert",
+      "newPosts": "Neue Beiträge aus deiner Community"
+    },
+    "actions": {
+      "markAsRead": "Gelesen",
+      "delete": "Löschen"
+    }
   }
 }

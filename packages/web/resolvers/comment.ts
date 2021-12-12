@@ -6,11 +6,18 @@ import {
 } from 'nexus'
 import { add, isPast } from 'date-fns'
 
-import { User, NotificationType, BadgeType, LanguageLevel } from '@journaly/j-db-client'
+import {
+  User,
+  InAppNotificationType,
+  EmailNotificationType,
+  BadgeType,
+  LanguageLevel
+} from '@journaly/j-db-client'
 
 import {
   hasAuthorPermissions,
-  createNotification,
+  createEmailNotification,
+  createInAppNotification,
   assignBadge,
 } from './utils'
 import { NotFoundError } from './errors'
@@ -23,6 +30,7 @@ const Thread = objectType({
     t.model.startIndex()
     t.model.endIndex()
     t.model.highlightedContent()
+    t.model.postId()
     t.model.comments({
       pagination: false,
       ordering: {
@@ -41,6 +49,7 @@ const Comment = objectType({
     t.model.createdAt()
     t.model.authorLanguageLevel()
     t.model.thanks({ pagination: false })
+    t.model.thread()
   },
 })
 
@@ -218,19 +227,25 @@ const CommentMutations = extendType({
           },
         })
 
-        const promises: Promise<any>[] = []
-        thread.subscriptions.forEach(({ user }: { user: User }) => {
+        const promises = thread.subscriptions.map(async ({ user }: { user: User }) => {
           if (user.id === userId) {
             // This is the user creating the comment, do not notify them.
-            return
+            return new Promise((res) => res(null))
           }
 
-          promises.push(
-            createNotification(ctx.db, user, {
-              type: NotificationType.THREAD_COMMENT,
-              comment,
-            }),
-          )
+          await createEmailNotification(ctx.db, user, {
+            type: EmailNotificationType.THREAD_COMMENT,
+            comment,
+          })
+
+          await createInAppNotification(ctx.db, {
+            userId: user.id,
+            type: InAppNotificationType.THREAD_COMMENT,
+            key: { postId: thread.post.id, },
+            subNotification: {
+              commentId: comment.id
+            }
+          })
         })
 
         await Promise.all(promises)
@@ -396,22 +411,28 @@ const CommentMutations = extendType({
           },
         })
 
-        const promises: Promise<any>[] = []
-        post.postCommentSubscriptions.forEach(({ user }: { user: User }) => {
-          if (user.id === userId) {
-            // This is the user creating the comment, do not notify them.
-            return
-          }
+        await Promise.all(post.postCommentSubscriptions.map(
+            async ({ user }: { user: User }
+          ) => {
+            if (user.id === userId) {
+              // This is the user creating the comment, do not notify them.
+              return
+            }
 
-          promises.push(
-            createNotification(ctx.db, user, {
-              type: NotificationType.POST_COMMENT,
+            await createEmailNotification(ctx.db, user, {
+              type: EmailNotificationType.POST_COMMENT,
               postComment,
-            }),
-          )
-        })
+            })
 
-        await Promise.all(promises)
+            await createInAppNotification(ctx.db, {
+              userId: user.id,
+              type: InAppNotificationType.POST_COMMENT,
+              key: { postId: post.id, },
+              subNotification: {
+                postCommentId: postComment.id,
+              }
+            })
+        }))
 
         // TODO: Set up logging and check for successful `mailResponse`
         return postComment

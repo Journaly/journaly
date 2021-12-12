@@ -59,6 +59,7 @@ const PostComments = ({
     onError: (error) => {
       toast.error(error.message)
     },
+    // TODO: Refactor approach to using cache.modify
     update: (cache, mutationResult) => {
       if (mutationResult.data?.createPostComment) {
         const data = cache.readQuery<PostPageQuery, PostPageQueryVariables>({

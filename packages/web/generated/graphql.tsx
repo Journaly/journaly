@@ -33,6 +33,7 @@ export type Comment = {
   createdAt: Scalars['DateTime']
   authorLanguageLevel: LanguageLevel
   thanks: Array<CommentThanks>
+  thread: Thread
 }
 
 export type CommentThanks = {
@@ -74,6 +75,32 @@ export type HeadlineImage = {
 export type HeadlineImageInput = {
   smallSize: Scalars['String']
   largeSize: Scalars['String']
+}
+
+export type InAppNotification = {
+  __typename?: 'InAppNotification'
+  id: Scalars['Int']
+  userId: Scalars['Int']
+  type: InAppNotificationType
+  bumpedAt?: Maybe<Scalars['DateTime']>
+  readStatus: NotificationReadStatus
+  post?: Maybe<Post>
+  triggeringUser?: Maybe<User>
+  threadCommentNotifications: Array<ThreadCommentNotification>
+  postCommentNotifications: Array<PostCommentNotification>
+  newFollowerNotifications: Array<NewFollowerNotification>
+  postClapNotifications: Array<PostClapNotification>
+  threadCommentThanksNotifications: Array<ThreadCommentThanksNotification>
+  newPostNotifications: Array<NewPostNotification>
+}
+
+export enum InAppNotificationType {
+  ThreadComment = 'THREAD_COMMENT',
+  PostComment = 'POST_COMMENT',
+  ThreadCommentThanks = 'THREAD_COMMENT_THANKS',
+  NewPost = 'NEW_POST',
+  PostClap = 'POST_CLAP',
+  NewFollower = 'NEW_FOLLOWER',
 }
 
 export type InitiateAvatarImageUploadResponse = {
@@ -192,6 +219,8 @@ export type Mutation = {
   updateSubscriptionRenewal: MembershipSubscription
   updateSubscriptionPlan: MembershipSubscription
   updateSubscriptionPaymentMethod: MembershipSubscription
+  updateInAppNotification: InAppNotification
+  deleteInAppNotification: InAppNotification
 }
 
 export type MutationAddUserInterestArgs = {
@@ -369,6 +398,32 @@ export type MutationUpdateSubscriptionPaymentMethodArgs = {
   paymentMethodId: Scalars['String']
 }
 
+export type MutationUpdateInAppNotificationArgs = {
+  notificationId: Scalars['Int']
+  readStatus?: Maybe<NotificationReadStatus>
+}
+
+export type MutationDeleteInAppNotificationArgs = {
+  notificationId: Scalars['Int']
+}
+
+export type NewFollowerNotification = {
+  __typename?: 'NewFollowerNotification'
+  id: Scalars['Int']
+  followingUser: User
+}
+
+export type NewPostNotification = {
+  __typename?: 'NewPostNotification'
+  id: Scalars['Int']
+  post: Post
+}
+
+export enum NotificationReadStatus {
+  Read = 'READ',
+  Unread = 'UNREAD',
+}
+
 export type Post = {
   __typename?: 'Post'
   id: Scalars['Int']
@@ -377,6 +432,7 @@ export type Post = {
   excerpt: Scalars['String']
   readTime: Scalars['Int']
   author: User
+  authorId: Scalars['Int']
   status: PostStatus
   claps: Array<PostClap>
   threads: Array<Thread>
@@ -406,6 +462,12 @@ export type PostClap = {
   post: Post
 }
 
+export type PostClapNotification = {
+  __typename?: 'PostClapNotification'
+  id: Scalars['Int']
+  postClap: PostClap
+}
+
 export type PostComment = {
   __typename?: 'PostComment'
   id: Scalars['Int']
@@ -413,6 +475,12 @@ export type PostComment = {
   body: Scalars['String']
   createdAt: Scalars['DateTime']
   authorLanguageLevel: LanguageLevel
+}
+
+export type PostCommentNotification = {
+  __typename?: 'PostCommentNotification'
+  id: Scalars['Int']
+  postComment: PostComment
 }
 
 export type PostPage = {
@@ -503,11 +571,24 @@ export type Thread = {
   startIndex: Scalars['Int']
   endIndex: Scalars['Int']
   highlightedContent: Scalars['String']
+  postId: Scalars['Int']
   comments: Array<Comment>
 }
 
 export type ThreadCommentsArgs = {
   orderBy: Array<ThreadCommentsOrderByInput>
+}
+
+export type ThreadCommentNotification = {
+  __typename?: 'ThreadCommentNotification'
+  id: Scalars['Int']
+  comment: Comment
+}
+
+export type ThreadCommentThanksNotification = {
+  __typename?: 'ThreadCommentThanksNotification'
+  id: Scalars['Int']
+  thanks: CommentThanks
 }
 
 export type ThreadCommentsOrderByInput = {
@@ -572,6 +653,7 @@ export type User = {
   thanksReceivedCount: Scalars['Int']
   threadCommentsCount: Scalars['Int']
   postCommentsCount: Scalars['Int']
+  notifications: Array<InAppNotification>
   activityGraphData: Array<DatedActivityCount>
 }
 
@@ -713,6 +795,7 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 } & UserFragmentFragment
 
 export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
+  notifications: Array<{ __typename?: 'InAppNotification' } & NotificationFragmentFragment>
   savedPosts: Array<{ __typename?: 'Post' } & Pick<Post, 'id'>>
   membershipSubscription?: Maybe<
     { __typename?: 'MembershipSubscription' } & Pick<MembershipSubscription, 'isActive'>
@@ -802,7 +885,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
     >
     claps: Array<
       { __typename?: 'PostClap' } & Pick<PostClap, 'id'> & {
-          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
         }
     >
   }
@@ -862,6 +945,83 @@ export type UserBadgeFragmentFragment = { __typename?: 'UserBadge' } & Pick<
 export type UserInterestFragmentFragment = { __typename?: 'UserInterest' } & {
   topic: { __typename?: 'Topic' } & TopicFragmentFragment
 }
+
+export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } & Pick<
+  InAppNotification,
+  'id' | 'type' | 'bumpedAt' | 'readStatus' | 'userId'
+> & {
+    triggeringUser?: Maybe<
+      { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
+    >
+    post?: Maybe<
+      { __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'authorId'> & {
+          headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
+        }
+    >
+    postClapNotifications: Array<
+      { __typename?: 'PostClapNotification' } & Pick<PostClapNotification, 'id'> & {
+          postClap: { __typename?: 'PostClap' } & {
+            author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
+          }
+        }
+    >
+    threadCommentNotifications: Array<
+      { __typename?: 'ThreadCommentNotification' } & Pick<ThreadCommentNotification, 'id'> & {
+          comment: { __typename?: 'Comment' } & Pick<Comment, 'id' | 'body'> & {
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'handle' | 'name' | 'profileImage'
+              >
+              thread: { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent'>
+            }
+        }
+    >
+    postCommentNotifications: Array<
+      { __typename?: 'PostCommentNotification' } & Pick<PostCommentNotification, 'id'> & {
+          postComment: { __typename?: 'PostComment' } & Pick<PostComment, 'id' | 'body'> & {
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'name' | 'handle' | 'profileImage'
+              >
+            }
+        }
+    >
+    threadCommentThanksNotifications: Array<
+      { __typename?: 'ThreadCommentThanksNotification' } & Pick<
+        ThreadCommentThanksNotification,
+        'id'
+      > & {
+          thanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'> & {
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'handle' | 'name' | 'profileImage'
+              >
+              comment: { __typename?: 'Comment' } & Pick<Comment, 'id' | 'body'> & {
+                  thread: { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent'>
+                }
+            }
+        }
+    >
+    newFollowerNotifications: Array<
+      { __typename?: 'NewFollowerNotification' } & Pick<NewFollowerNotification, 'id'> & {
+          followingUser: { __typename?: 'User' } & Pick<
+            User,
+            'id' | 'name' | 'handle' | 'profileImage'
+          >
+        }
+    >
+    newPostNotifications: Array<
+      { __typename?: 'NewPostNotification' } & Pick<NewPostNotification, 'id'> & {
+          post: { __typename?: 'Post' } & Pick<Post, 'id' | 'title'> & {
+              headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'name' | 'handle' | 'profileImage'
+              >
+            }
+        }
+    >
+  }
 
 export type AddLanguageRelationMutationVariables = Exact<{
   languageId: Scalars['Int']
@@ -948,6 +1108,26 @@ export type UpdateSubscriptionRenewalMutation = { __typename?: 'Mutation' } & {
   updateSubscriptionRenewal: { __typename?: 'MembershipSubscription' } & Pick<
     MembershipSubscription,
     'id'
+  >
+}
+
+export type DeleteInAppNotificationMutationVariables = Exact<{
+  notificationId: Scalars['Int']
+}>
+
+export type DeleteInAppNotificationMutation = { __typename?: 'Mutation' } & {
+  deleteInAppNotification: { __typename?: 'InAppNotification' } & Pick<InAppNotification, 'id'>
+}
+
+export type UpdateInAppNotificationMutationVariables = Exact<{
+  notificationId: Scalars['Int']
+  readStatus?: Maybe<NotificationReadStatus>
+}>
+
+export type UpdateInAppNotificationMutation = { __typename?: 'Mutation' } & {
+  updateInAppNotification: { __typename?: 'InAppNotification' } & Pick<
+    InAppNotification,
+    'id' | 'readStatus'
   >
 }
 
@@ -1420,9 +1600,121 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
   ${UserFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
 `
+export const NotificationFragmentFragmentDoc = gql`
+  fragment NotificationFragment on InAppNotification {
+    id
+    type
+    bumpedAt
+    readStatus
+    userId
+    triggeringUser {
+      id
+      name
+      handle
+      profileImage
+    }
+    post {
+      id
+      title
+      headlineImage {
+        smallSize
+      }
+      authorId
+    }
+    postClapNotifications {
+      id
+      postClap {
+        author {
+          id
+          name
+          handle
+          profileImage
+        }
+      }
+    }
+    threadCommentNotifications {
+      id
+      comment {
+        id
+        body
+        author {
+          id
+          handle
+          name
+          profileImage
+        }
+        thread {
+          id
+          highlightedContent
+        }
+      }
+    }
+    postCommentNotifications {
+      id
+      postComment {
+        id
+        body
+        author {
+          id
+          name
+          handle
+          profileImage
+        }
+      }
+    }
+    threadCommentThanksNotifications {
+      id
+      thanks {
+        id
+        author {
+          id
+          handle
+          name
+          profileImage
+        }
+        comment {
+          id
+          body
+          thread {
+            id
+            highlightedContent
+          }
+        }
+      }
+    }
+    newFollowerNotifications {
+      id
+      followingUser {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
+    newPostNotifications {
+      id
+      post {
+        id
+        title
+        headlineImage {
+          smallSize
+        }
+        author {
+          id
+          name
+          handle
+          profileImage
+        }
+      }
+    }
+  }
+`
 export const CurrentUserFragmentFragmentDoc = gql`
   fragment CurrentUserFragment on User {
     ...UserWithLanguagesFragment
+    notifications {
+      ...NotificationFragment
+    }
     savedPosts {
       id
     }
@@ -1431,6 +1723,7 @@ export const CurrentUserFragmentFragmentDoc = gql`
     }
   }
   ${UserWithLanguagesFragmentFragmentDoc}
+  ${NotificationFragmentFragmentDoc}
 `
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {
@@ -1558,6 +1851,7 @@ export const PostFragmentFragmentDoc = gql`
         id
         name
         handle
+        profileImage
       }
     }
   }
@@ -2595,6 +2889,106 @@ export type UpdateSubscriptionRenewalMutationResult =
 export type UpdateSubscriptionRenewalMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSubscriptionRenewalMutation,
   UpdateSubscriptionRenewalMutationVariables
+>
+export const DeleteInAppNotificationDocument = gql`
+  mutation deleteInAppNotification($notificationId: Int!) {
+    deleteInAppNotification(notificationId: $notificationId) {
+      id
+    }
+  }
+`
+export type DeleteInAppNotificationMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteInAppNotificationMutation,
+  DeleteInAppNotificationMutationVariables
+>
+
+/**
+ * __useDeleteInAppNotificationMutation__
+ *
+ * To run a mutation, you first call `useDeleteInAppNotificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteInAppNotificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteInAppNotificationMutation, { data, loading, error }] = useDeleteInAppNotificationMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *   },
+ * });
+ */
+export function useDeleteInAppNotificationMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteInAppNotificationMutation,
+    DeleteInAppNotificationMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DeleteInAppNotificationMutation,
+    DeleteInAppNotificationMutationVariables
+  >(DeleteInAppNotificationDocument, baseOptions)
+}
+export type DeleteInAppNotificationMutationHookResult = ReturnType<
+  typeof useDeleteInAppNotificationMutation
+>
+export type DeleteInAppNotificationMutationResult =
+  ApolloReactCommon.MutationResult<DeleteInAppNotificationMutation>
+export type DeleteInAppNotificationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteInAppNotificationMutation,
+  DeleteInAppNotificationMutationVariables
+>
+export const UpdateInAppNotificationDocument = gql`
+  mutation updateInAppNotification($notificationId: Int!, $readStatus: NotificationReadStatus) {
+    updateInAppNotification(notificationId: $notificationId, readStatus: $readStatus) {
+      id
+      readStatus
+    }
+  }
+`
+export type UpdateInAppNotificationMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateInAppNotificationMutation,
+  UpdateInAppNotificationMutationVariables
+>
+
+/**
+ * __useUpdateInAppNotificationMutation__
+ *
+ * To run a mutation, you first call `useUpdateInAppNotificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateInAppNotificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateInAppNotificationMutation, { data, loading, error }] = useUpdateInAppNotificationMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *      readStatus: // value for 'readStatus'
+ *   },
+ * });
+ */
+export function useUpdateInAppNotificationMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateInAppNotificationMutation,
+    UpdateInAppNotificationMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateInAppNotificationMutation,
+    UpdateInAppNotificationMutationVariables
+  >(UpdateInAppNotificationDocument, baseOptions)
+}
+export type UpdateInAppNotificationMutationHookResult = ReturnType<
+  typeof useUpdateInAppNotificationMutation
+>
+export type UpdateInAppNotificationMutationResult =
+  ApolloReactCommon.MutationResult<UpdateInAppNotificationMutation>
+export type UpdateInAppNotificationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateInAppNotificationMutation,
+  UpdateInAppNotificationMutationVariables
 >
 export const PostPageDocument = gql`
   query postPage($id: Int!, $uiLanguage: UILanguage!) {

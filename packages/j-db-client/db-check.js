@@ -26,23 +26,34 @@ const url2obj = (url) => {
   }
 }
 
-const { hostname } = url2obj(process.env.DATABASE_URL)
+const main = () => {
+  if (!process.env.DATABASE_URL) {
+    console.error('DATABASE_URL env var was not defined. Bailing.')
+    return 2
+  }
 
-if (!(hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'journaly_db')) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  })
+  const { hostname } = url2obj(process.env.DATABASE_URL)
 
-  rl.question(
-    `DATABASE_URL is: ${process.env.DATABASE_URL} which is not a local address, if it points to prod you could be doing some real damage. Are you sure you want to continue?\n[y/N] `,
-    (answer) => {
-      if (!(answer.toLowerCase() === 'y')) {
-        console.error('Bailing. Probably a smart move')
-        process.exitCode = 1
-      }
+  if (!(hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'journaly_db')) {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    })
 
-      rl.close()
-    },
-  )
+    rl.question(
+      `DATABASE_URL is: ${process.env.DATABASE_URL} which is not a local address, if it points to prod you could be doing some real damage. Are you sure you want to continue?\n[y/N] `,
+      (answer) => {
+        rl.close()
+
+        if (!(answer.toLowerCase() === 'y')) {
+          console.error('Bailing. Probably a smart move')
+          return 1
+        }
+      },
+    )
+  }
+
+  return 0
 }
+
+process.exitCode = main()

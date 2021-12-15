@@ -11,12 +11,13 @@ import {
 import { useTranslation } from '@/config/i18n'
 
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
-import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
 import theme from '@/theme'
 import EditIcon from '@/components/Icons/EditIcon'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import { formatDateRelativeToNow } from '@/utils'
+import LevelGauge from '@/components/LevelGauge'
+import UserAvatar from '@/components/UserAvatar'
 
 type PostCommentProps = {
   comment: PostCommentType
@@ -75,16 +76,12 @@ const PostComment: React.FC<PostCommentProps> = ({
   }
 
   return (
-    <div className="comment">
+    <div className="comment" id={`pc-${comment.id}`}>
       <div className="author-body-container">
         <div className="author-block">
           <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${comment.author.id}`}>
             <a className="author-info">
-              {comment.author.profileImage ? (
-                <img className="profile-image" src={comment.author.profileImage} alt="" />
-              ) : (
-                <BlankAvatarIcon size={20} />
-              )}
+              <UserAvatar size={30} user={comment.author} />
             </a>
           </Link>
           <div className="identifier-date-block">
@@ -92,6 +89,7 @@ const PostComment: React.FC<PostCommentProps> = ({
               {comment.author.name
                 ? `${comment.author.name} (@${comment.author.handle})`
                 : `@${comment.author.handle}`}
+              <LevelGauge level={comment.authorLanguageLevel} />
             </span>
             <span className="comment-date">
               {formatDateRelativeToNow(comment.createdAt)} {t('relativeTimeWord')}
@@ -187,24 +185,17 @@ const PostComment: React.FC<PostCommentProps> = ({
           display: flex;
           flex-direction: column;
           justify-content: center;
+          position: relative;
+        }
+
+        .author-identifier {
+          display: flex;
+          gap: 5px;
+          align-items: center;
         }
 
         .author-identifier {
           text-align: left;
-        }
-
-        .profile-image {
-          border-radius: 50%;
-          width: 30px;
-          height: 30px;
-          object-fit: cover;
-        }
-
-        .author-block :global(svg) {
-          border-radius: 50%;
-          background-color: ${theme.colors.blueLight};
-          width: 30px;
-          height: 30px;
         }
 
         .identifier-date-block {
@@ -293,7 +284,8 @@ const PostComment: React.FC<PostCommentProps> = ({
           cursor: pointer;
           fill: ${theme.colors.blueLight};
         }
-        .delete-btn :global(svg:hover) {
+
+        .delete-btn :global(svg:hover path) {
           cursor: pointer;
           fill: ${theme.colors.red};
         }

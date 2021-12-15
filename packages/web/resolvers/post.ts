@@ -16,23 +16,28 @@ import {
   sendNewBadgeEmail,
   generateThumbbusterUrl,
   getThumbusterVars,
+  generatePostPrivateShareId,
+  createInAppNotification,
 } from './utils'
+
+
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
   Prisma,
+  Post,
   PostStatus,
   BadgeType,
   PrismaClient,
   LanguageRelation,
+  User,
   UserRole,
+  EmailVerificationStatus,
+  InAppNotificationType,
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
 
-const assignPostCountBadges = async (
-  db: PrismaClient,
-  userId: number,
-): Promise<void> => {
+const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {
   // Use a raw query here because we'll soon have a number of post count
   // badges and we could end up with quite a bit of back and fourth
   // querying, whereas here we can just make one roundtrip.
@@ -68,16 +73,18 @@ const assignPostCountBadges = async (
     const newBadges = await db.userBadge.findMany({
       where: { user: { id: userId } },
       include: { user: true },
-      orderBy: { createdAt: 'desc', },
-      take: newBadgeCount
+      orderBy: { createdAt: 'desc' },
+      take: newBadgeCount,
     })
 
-    await Promise.all(newBadges.map(badge => {
-      return sendNewBadgeEmail({
-        badgeType: badge.type,
-        user: badge.user
-      })
-    }))
+    await Promise.all(
+      newBadges.map((badge) => {
+        return sendNewBadgeEmail({
+          badgeType: badge.type,
+          user: badge.user,
+        })
+      }),
+    )
   }
 }
 
@@ -90,7 +97,7 @@ const PostTopic = objectType({
   },
 })
 
-const Post = objectType({
+const PostObjectType = objectType({
   name: 'Post',
   definition(t) {
     t.model.id()
@@ -99,6 +106,7 @@ const Post = objectType({
     t.model.excerpt()
     t.model.readTime()
     t.model.author()
+    t.model.authorId()
     t.model.status()
     t.model.claps({ pagination: false })
     t.model.threads({ pagination: false })
@@ -111,6 +119,7 @@ const Post = objectType({
     })
     t.model.language()
     t.model.publishedLanguageLevel()
+    t.model.privateShareId()
     t.model.createdAt()
     t.model.updatedAt()
     t.model.bodySrc()
@@ -130,9 +139,9 @@ const Post = objectType({
           }),
           ctx.db.postComment.count({
             where: {
-              postId: parent.id
-            }
-          })
+              postId: parent.id,
+            },
+          }),
         ])
         return threadCommentCount + postCommentCount
       },
@@ -176,39 +185,46 @@ const InitiateInlinePostImageUploadResponse = objectType({
 const PostQueries = extendType({
   type: 'Query',
   definition(t) {
-    t.list.field('posts', {
-      type: 'Post',
-      args: {
-        status: arg({ type: 'PostStatus', required: true }),
-        authorId: intArg({ required: true }),
-      },
-      resolve: async (_parent, args, ctx) => {
-        return ctx.db.post.findMany({
-          where: {
-            author: { id: args.authorId },
-            status: args.status,
-          },
-          orderBy: {
-            publishedAt: 'desc',
-          },
-        })
-      },
-    })
-
     t.field('postById', {
       type: 'Post',
       args: {
         id: intArg({
           description: 'ID of the post to be retreived',
-          required: true
+          required: false,
+        }),
+        privateShareId: stringArg({
+          description: 'Private share ID of the post to be retrived',
+          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
-        const post = await ctx.db.post.findUnique({
-          where: {
-            id: args.id,
-          },
-        })
+        const { userId } = ctx.request
+
+        if (!args.id && !args.privateShareId) {
+          throw new Error('A post id or privateShareId must be provided to the postById query')
+        }
+
+        let post
+        if (args.id) {
+          post = await ctx.db.post.findUnique({
+            where: {
+              id: args.id,
+            },
+            include: {
+              author: true,
+            },
+          })
+          if (post?.status === PostStatus.PRIVATE && post?.authorId !== userId) {
+            throw new NotAuthorizedError()
+          }
+        }
+        if (args.privateShareId) {
+          post = await ctx.db.post.findUnique({
+            where: {
+              privateShareId: args.privateShareId,
+            },
+          })
+        }
 
         if (!post) {
           throw new NotFoundError('Post')
@@ -222,7 +238,7 @@ const PostQueries = extendType({
       },
     })
 
-    t.field('feed', {
+    t.field('posts', {
       type: 'PostPage',
       args: {
         search: stringArg({
@@ -248,7 +264,7 @@ const PostQueries = extendType({
           required: true,
         }),
         followedAuthors: booleanArg({
-          description: 'Author IDs to filter posts by. No value means all languages.',
+          description: 'Author IDs to filter posts by. No value means all authors.',
           required: false,
         }),
         needsFeedback: booleanArg({
@@ -256,7 +272,21 @@ const PostQueries = extendType({
           required: false,
         }),
         hasInteracted: booleanArg({
-          description: 'If true, return only posts that the user has commented on in any way',
+          description: 'If true, return only posts that the user has commented on in any way.',
+          required: false,
+        }),
+        status: arg({
+          type: 'PostStatus',
+          description:
+            'The post status, indicating Published or Draft. Param is ignored unless the current user is specified in `authorId`',
+          required: true,
+        }),
+        authorId: intArg({
+          description: 'Return posts by a given author.',
+          required: false,
+        }),
+        savedPosts: booleanArg({
+          description: 'If true, return only posts that the user has saved.',
           required: false,
         }),
       },
@@ -272,143 +302,113 @@ const PostQueries = extendType({
           },
         })
 
-        const filterClauses = []
         if (!args.first) args.first = 10
         if (args.first > 50) args.first = 50
 
-        if (args.languages) {
-          const languageFilters = args.languages.map((language) => {
-            return {
-              language: {
-                id: {
-                  equals: language,
-                },
-              },
-            }
-          })
+        const joins = []
+        const where = []
 
-          filterClauses.push({
-            OR: languageFilters,
-          })
+        if (args.languages?.length) {
+          where.push(Prisma.sql`p."languageId" IN (${Prisma.join(args.languages)})`)
         }
 
-        if (args.topics) {
-          const topicFilters = args.topics.map((topic) => {
-            return {
-              postTopics: {
-                some: {
-                  topicId: {
-                    equals: topic,
-                  },
-                },
-              },
-            }
-          })
-
-          filterClauses.push({
-            OR: topicFilters,
-          })
+        if (args.topics?.length) {
+          joins.push(Prisma.sql`
+            INNER JOIN (
+              SELECT DISTINCT pt."postId"
+              FROM "PostTopic" AS pt
+              WHERE pt."topicId" IN (${Prisma.join(args.topics)})
+            ) ptc ON p.id = ptc."postId"
+          `)
         }
 
         if (args.search) {
-          filterClauses.push({
-            OR: [
-              {
-                title: {
-                  contains: args.search,
-                  mode: 'insensitive',
-                },
-              },
-              {
-                body: {
-                  contains: args.search,
-                  mode: 'insensitive',
-                },
-              },
-            ],
-          })
+          const likeExpr = `%${args.search}%`
+          where.push(Prisma.sql`
+            p.title ILIKE ${likeExpr}
+            OR p.body ILIKE ${likeExpr}
+
+          `)
         }
 
         if (currentUser && args.followedAuthors) {
-          filterClauses.push({
-            author: {
-              followedBy: {
-                some: { id: currentUser.id },
-              },
-            },
-          })
+          const followingIds = currentUser.following.map((user: User) => user.id)
+          where.push(Prisma.sql`p."authorId" IN (${Prisma.join(followingIds)})`)
+        }
+
+        if (currentUser && args.savedPosts) {
+          joins.push(Prisma.sql`
+            INNER JOIN "_UserSavedPosts" as usp
+                    ON usp."B" = ${currentUser.id} AND usp."A" = p.id
+          `)
         }
 
         if (args.needsFeedback) {
-          filterClauses.push({
-            AND: [
-              {
-                threads: {
-                  none: {},
-                },
-              },
-              {
-                postComments: {
-                  none: {},
-                },
-              },
-            ],
-          })
+          joins.push(
+            Prisma.sql`LEFT JOIN "PostComment" AS pc ON pc."postId" = p.id`,
+            Prisma.sql`LEFT JOIN "Thread" AS t ON t."postId" = p.id`,
+          )
+          where.push(Prisma.sql`pc.id IS NULL`, Prisma.sql`t.id IS NULL`)
         }
 
         if (currentUser && args.hasInteracted) {
-          filterClauses.push({
-            OR: [
-              {
-                threads: {
-                  some: {
-                    comments: {
-                      some: {
-                        authorId: currentUser.id,
-                      },
-                    },
-                  },
-                },
-              },
-              {
-                postComments: {
-                  some: {
-                    authorId: currentUser.id,
-                  },
-                },
-              },
-            ],
-          })
+          joins.push(Prisma.sql`
+            INNER JOIN (
+              (
+                SELECT hi_pc."postId" as "postId"
+                FROM "PostComment" AS hi_pc
+                WHERE hi_pc."authorId" = ${currentUser.id}
+              )
+              UNION
+              (
+                SELECT hi_t."postId" as "postId"
+                FROM "Comment" AS hi_c
+                JOIN "Thread" AS hi_t ON hi_c."threadId" = hi_t.id
+                WHERE hi_c."authorId" = ${currentUser.id}
+              )
+            ) "interactedPostIds" ON p.id = "interactedPostIds"."postId"
+          `)
         }
 
-        const countQuery = ctx.db.post.count({
-          where: {
-            AND: filterClauses,
-            status: {
-              not: 'DRAFT',
-            },
-          },
-        })
-
-        const postQuery = ctx.db.post.findMany({
-          where: {
-            AND: filterClauses,
-            status: {
-              not: 'DRAFT',
-            },
-          },
-          skip: args.skip,
-          take: args.first,
-          orderBy: {
-            bumpedAt: 'desc',
-          },
-        })
-
-        const [count, posts] = await Promise.all([countQuery, postQuery])
-        return {
-          count,
-          posts,
+        if (args.authorId) {
+          where.push(Prisma.sql`p."authorId" = ${args.authorId}`)
         }
+
+        // Only logged in users looking at their own posts may filter on status,
+        // everyone else _must_ see only published posts.
+        if (!currentUser || args.authorId !== currentUser.id) {
+          where.push(Prisma.sql`p."status" = 'PUBLISHED'`)
+        } else if (args.status) {
+          where.push(Prisma.sql`p."status" = ${args.status}`)
+        }
+
+        let whereQueryFragment = where[0] ? Prisma.sql`WHERE ${where[0]}` : Prisma.empty
+        for (let i = 1; i < where.length; i++) {
+          whereQueryFragment = Prisma.sql`${whereQueryFragment} AND ${where[i]}`
+        }
+
+        let joinQueryFragment = joins[0] || Prisma.empty
+        for (let i = 1; i < joins.length; i++) {
+          joinQueryFragment = Prisma.sql`${joinQueryFragment}\n${joins[i]}`
+        }
+
+        const queryPred = Prisma.sql`
+          FROM "public"."Post" AS p
+          ${joinQueryFragment}
+          ${whereQueryFragment}
+        `
+
+        const [posts, [{ count }]] = await Promise.all([
+          ctx.db.$queryRaw<Post[]>`
+            SELECT p.* ${queryPred}
+            ORDER BY p."bumpedAt" DESC
+            LIMIT ${args.first}
+            OFFSET ${args.skip};
+          `,
+          ctx.db.$queryRaw<{ count: number }[]>`SELECT COUNT(*) ${queryPred};`,
+        ])
+
+        return { posts, count }
       },
     })
   },
@@ -430,7 +430,8 @@ const PostMutations = extendType({
       resolve: async (_parent, args, ctx) => {
         const { title, body, languageId, status, headlineImage } = args
         const { userId } = ctx.request
-        const isPublished = status === 'PUBLISHED'
+        const isPublished = status === PostStatus.PUBLISHED
+        const isPrivate = status === PostStatus.PRIVATE
 
         if (!body) {
           throw new ResolverError('We need a body!', {})
@@ -438,16 +439,30 @@ const PostMutations = extendType({
 
         const user = await ctx.db.user.findUnique({
           where: {
-            id: userId
+            id: userId,
           },
           include: {
             languages: true,
-          }
+            auth: true,
+            followedBy: true,
+          },
         })
 
-        if (!user) throw new Error("User not found")
+        if (!user?.auth) throw new Error('User not found')
 
-        const userLanguageLevel = user.languages.filter((language: LanguageRelation) => language.languageId === languageId)[0].level
+        if (
+          (isPublished || isPrivate) &&
+          user.auth.emailVerificationStatus !== EmailVerificationStatus.VERIFIED
+        ) {
+          throw new Error('Please verify your email address in order to begin publishing posts')
+        }
+
+        const userLanguageLevel = user.languages.filter(
+          (language: LanguageRelation) => language.languageId === languageId,
+        )[0].level
+
+        let privateShareId = null
+        if (isPrivate) privateShareId = generatePostPrivateShareId()
 
         const post = await ctx.db.post.create({
           data: {
@@ -455,6 +470,7 @@ const PostMutations = extendType({
             author: { connect: { id: userId } },
             title,
             status,
+            privateShareId,
             publishedAt: isPublished ? new Date() : null,
             bumpedAt: isPublished ? new Date() : null,
             publishedLanguageLevel: userLanguageLevel,
@@ -463,12 +479,12 @@ const PostMutations = extendType({
                 {
                   user: { connect: { id: userId } },
                 },
-              ]
+              ],
             },
             headlineImage: {
               create: {
                 ...headlineImage,
-              }
+              },
             },
             ...processEditorDocument(body),
           },
@@ -487,7 +503,20 @@ const PostMutations = extendType({
           await Promise.all(insertPromises)
         }
 
-        if (isPublished) await assignPostCountBadges(ctx.db, userId)
+        if (isPublished) {
+          const promises: Promise<unknown>[] = user.followedBy.map((follower) => {
+            return createInAppNotification(ctx.db, {
+              userId: follower.id,
+              type: InAppNotificationType.NEW_POST,
+              key: {},
+              subNotification: {
+                postId: post.id,
+              },
+            })
+          })
+          promises.push(assignPostCountBadges(ctx.db, userId))
+          await Promise.all(promises)
+        }
 
         return post
       },
@@ -517,7 +546,8 @@ const PostMutations = extendType({
             include: {
               languages: true,
               membershipSubscription: true,
-            }
+              followedBy: true,
+            },
           }),
           ctx.db.post.findUnique({
             where: {
@@ -546,6 +576,9 @@ const PostMutations = extendType({
         }
 
         if (args.status) {
+          if (args.status === PostStatus.PRIVATE) {
+            data.privateShareId = generatePostPrivateShareId()
+          }
           data.status = args.status
         }
 
@@ -555,43 +588,38 @@ const PostMutations = extendType({
           const newThreadPositions = updatedThreadPositions(
             JSON.parse(originalPost.bodySrc) as NodeType[],
             args.body,
-            originalPost.threads
+            originalPost.threads,
           )
 
-          await Promise.all(newThreadPositions.map(({
-            id,
-            startIndex,
-            endIndex,
-            archived
-          }) => {
-            if (archived) {
-              return new Promise<void>(res => res())
-            } else if (startIndex === -1) {
-              return ctx.db.thread.update({
-                where: { id },
-                data: { archived: true },
-              })
-            } else {
-              return ctx.db.thread.update({
-                where: { id },
-                data: { startIndex, endIndex },
-              })
-            }
-          }))
+          await Promise.all<unknown>(
+            newThreadPositions.map(({ id, startIndex, endIndex, archived }) => {
+              if (archived) {
+                return new Promise<void>((res) => res())
+              } else if (startIndex === -1) {
+                return ctx.db.thread.update({
+                  where: { id },
+                  data: { archived: true },
+                })
+              } else {
+                return ctx.db.thread.update({
+                  where: { id },
+                  data: { startIndex, endIndex },
+                })
+              }
+            }),
+          )
 
           if (data.body === originalPost.body) {
-            await assignBadge(
-              ctx.db,
-              userId,
-              BadgeType.ODRADEK
-            )
+            await assignBadge(ctx.db, userId, BadgeType.ODRADEK)
           }
         }
 
-        const languageId = args.languageId  || originalPost.languageId
-        const userLanguageLevel = currentUser.languages.filter((language: LanguageRelation) => language.languageId === languageId)[0].level
+        const languageId = args.languageId || originalPost.languageId
+        const userLanguageLevel = currentUser.languages.filter(
+          (language: LanguageRelation) => language.languageId === languageId,
+        )[0].level
         data.publishedLanguageLevel = userLanguageLevel
-        
+
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
           data.publishedAt = new Date()
           data.bumpedAt = new Date()
@@ -602,10 +630,10 @@ const PostMutations = extendType({
             data: {
               smallSize: args.headlineImage.smallSize,
               largeSize: args.headlineImage.largeSize,
-            }
+            },
           })
           data.headlineImage = {
-            connect: { id: headlineImage.id }
+            connect: { id: headlineImage.id },
           }
         }
 
@@ -631,8 +659,20 @@ const PostMutations = extendType({
           data,
         })
 
-        if (post.status === PostStatus.PUBLISHED)
-          await assignPostCountBadges(ctx.db, userId)
+        if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
+          const promises: Promise<unknown>[] = currentUser.followedBy.map((follower) => {
+            return createInAppNotification(ctx.db, {
+              userId: follower.id,
+              type: InAppNotificationType.NEW_POST,
+              key: {},
+              subNotification: {
+                postId: post.id,
+              },
+            })
+          })
+          promises.push(assignPostCountBadges(ctx.db, userId))
+          await Promise.all(promises)
+        }
 
         return post
       },
@@ -641,7 +681,7 @@ const PostMutations = extendType({
     t.field('deletePost', {
       type: 'Post',
       args: {
-        postId: intArg({ required: true })
+        postId: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { postId } = args
@@ -659,7 +699,7 @@ const PostMutations = extendType({
           },
         })
 
-        if (!post) throw new Error('Post not found.');
+        if (!post) throw new Error('Post not found.')
 
         const currentUser = await ctx.db.user.findUnique({
           where: {
@@ -789,7 +829,7 @@ const PostMutations = extendType({
           finalUrlLarge: `https://${cdnDomain}/post-image/${uuid}-large`,
           finalUrlSmall: `https://${cdnDomain}/post-image/${uuid}-small`,
         }
-      }
+      },
     })
 
     t.field('initiateInlinePostImageUpload', {
@@ -815,8 +855,9 @@ const PostMutations = extendType({
           checkUrl: `https://${transformBucket}.s3.us-east-2.amazonaws.com/inline-post-image/${uuid}-default`,
           finalUrl: `https://${cdnDomain}/inline-post-image/${uuid}-default`,
         }
-      }
-    }),
+      },
+    })
+
     t.field('bumpPost', {
       type: 'Post',
       args: {
@@ -833,7 +874,7 @@ const PostMutations = extendType({
             },
             include: {
               membershipSubscription: true,
-            }
+            },
           }),
           ctx.db.post.findUnique({
             where: {
@@ -845,13 +886,16 @@ const PostMutations = extendType({
         if (!currentUser) throw new NotFoundError('User')
         if (!post) throw new NotFoundError('Post')
 
+        const canBump =
+          (currentUser.membershipSubscription?.expiresAt &&
+            currentUser.membershipSubscription.expiresAt > new Date()) ||
+          currentUser.userRole === UserRole.ADMIN ||
+          currentUser.userRole === UserRole.MODERATOR
+
         hasAuthorPermissions(post, currentUser)
 
-        const canBump = (currentUser.membershipSubscription && currentUser.membershipSubscription.expiresAt > new Date())
-          || currentUser.userRole === UserRole.ADMIN || currentUser.userRole === UserRole.MODERATOR
-
         if (!canBump) {
-          throw new Error("Only Journaly Premium members can access this feature")
+          throw new Error('Only Journaly Premium members can access this feature')
         }
 
         if (post.bumpCount >= POST_BUMP_LIMIT) {
@@ -867,14 +911,14 @@ const PostMutations = extendType({
             bumpCount: post.bumpCount + 1,
           },
         })
-      }
+      },
     })
   },
 })
 
 export default [
   PostTopic,
-  Post,
+  PostObjectType,
   PostPage,
   InitiatePostImageUploadResponse,
   InitiateInlinePostImageUploadResponse,

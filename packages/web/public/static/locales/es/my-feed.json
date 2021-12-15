@@ -1,12 +1,6 @@
 {
   "pageTitle": "Mi Feed",
   "noPostsMessage": "Nada para ver todavía...",
-  "clearFilters": "Eliminar filtros",
-  "myLanguages": "Mis idiomas",
-  "followedUsers": "Jornalistas seguidos",
-  "textSearchPlaceholder": "Buscar publicaciones",
-  "topicSelectPlaceholder": "Temas",
-  "languageSelectPlaceholder": "Idiomas",
   "pagination": {
     "previous": "Anterior",
     "next": "Siguiente",

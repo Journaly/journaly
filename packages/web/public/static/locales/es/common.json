@@ -13,10 +13,17 @@
     "testimonialsHeader": "Lo que estan diciento los jornalistas",
     "nav": {
       "about": "Acerca de",
-      "blog": "Blog",
       "logIn": "Iniciar sesión",
       "signUp": "Registrarse"
     }
+  },
+  "ui": {
+    "languageSelectPlaceholder": "Idiomas",
+    "clearFilters": "Eliminar filtros",
+    "myLanguages": "Mis idiomas",
+    "followedUsers": "Jornalistas seguidos",
+    "textSearchPlaceholder": "Buscar publicaciones",
+    "topicSelectPlaceholder": "Temas"
   },
   "dashboardNav": {
     "myFeed": "Mi Feed",

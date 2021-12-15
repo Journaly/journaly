@@ -1,15 +1,10 @@
 import { diffChars } from 'diff'
 import escapeHTML from 'escape-html'
 import {
-  Prisma,
   PrismaClient,
   User,
   Thread,
-  Comment,
   Post,
-  PostComment,
-  CommentThanks,
-  PostClap,
   BadgeType,
 } from '@journaly/j-db-client'
 
@@ -311,48 +306,6 @@ export const hasAuthorPermissions = (original: AuthoredObject, currentUser: User
   return true
 }
 
-type NotificationCreationType =
-  | { type: 'THREAD_COMMENT'; comment: Comment }
-  | { type: 'POST_COMMENT'; postComment: PostComment }
-  | { type: 'THREAD_COMMENT_THANKS'; commentThanks: CommentThanks }
-  | { type: 'POST_CLAP'; postClap: PostClap }
-
-export const createNotification = (
-  db: PrismaClient,
-  user: User,
-  note: NotificationCreationType,
-) => {
-  const data: Prisma.PendingNotificationCreateInput = {
-    user: { connect: { id: user.id } },
-    type: note.type,
-  }
-
-  switch (note.type) {
-    case 'THREAD_COMMENT': {
-      data.comment = { connect: { id: note.comment.id } }
-      break
-    }
-    case 'POST_COMMENT': {
-      data.postComment = { connect: { id: note.postComment.id } }
-      break
-    }
-    case 'THREAD_COMMENT_THANKS': {
-      data.commentThanks = { connect: { id: note.commentThanks.id } }
-      break
-    }
-    case 'POST_CLAP': {
-      data.postClap = { connect: { id: note.postClap.id } }
-      break
-    }
-    /*
-    default:
-      return assertUnreachable(note.type)
-    */
-  }
-
-  return db.pendingNotification.create({ data })
-}
-
 export const assignBadge = async (
   db: PrismaClient,
   userId: number,
@@ -372,3 +325,4 @@ export * from './email'
 export * from './aws'
 export * from './resolverUtils'
 export * from './db'
+export * from './notifications'

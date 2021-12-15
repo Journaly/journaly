@@ -1,5 +1,10 @@
-query topics($hasPosts: Boolean, $uiLanguage: UILanguage!, $languages: [Int!]) {
-  topics(hasPosts: $hasPosts) {
+query topics(
+  $hasPosts: Boolean
+  $authoredOnly: Boolean
+  $uiLanguage: UILanguage!
+  $languages: [Int!]
+) {
+  topics(hasPosts: $hasPosts, authoredOnly: $authoredOnly) {
     ...TopicWithPostCountFragment
   }
 }

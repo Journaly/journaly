@@ -14,6 +14,7 @@ import stripe, {
   getOrCreateStripeCustomer,
   paymentErrorWrapper
 } from '@/nexus/utils/stripe'
+import { sendPremiumWelcomeEmail } from './utils'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
@@ -34,13 +35,13 @@ const MembershipSubscription = objectType({
 })
 
 const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
-  switch(subType) {
+  switch (subType) {
     case MembershipSubscriptionPeriod.MONTHLY:
       return process.env.STRIPE_MONTHLY_PRICE_ID
-    case MembershipSubscriptionPeriod.QUARTERLY:
-      return process.env.STRIPE_QUARTERLY_PRICE_ID
     case MembershipSubscriptionPeriod.ANNUALY:
       return process.env.STRIPE_ANNUAL_PRICE_ID
+    case MembershipSubscriptionPeriod.STUDENT_ANNUALLY:
+      return process.env.STRIPE_STUDENT_ANNUAL_PRICE_ID
   }
 }
 
@@ -147,12 +148,31 @@ const MembershipSubscriptionMutations = extendType({
         })
 
         if (!user) throw new Error("User not found")
-        
+        if (args.period === MembershipSubscriptionPeriod.STUDENT_ANNUALLY && !user.isStudent) {
+          throw new Error('You must have a student email address to get the student discount price')
+        }
+
         const customerId = await getOrCreateStripeCustomer(user, ctx.db)
 
         const stripePaymentMethod = await setPaymentMethod(userId, ctx.db, customerId, args.paymentMethodId)
         if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
-        if (!user.membershipSubscription) {
+
+        let subscriptionIsFullyExpired = false
+
+        // If we have a subscription record but the subscription has ended
+        // because the billing period dates need to change (also stripe just
+        // won't let us re-activate a supscription that's full canceled)
+        if (user.membershipSubscription) {
+          const stripeSubscription = await stripe.subscriptions.retrieve(
+            user.membershipSubscription.stripeSubscriptionId
+          ) 
+
+          if (stripeSubscription.ended_at) {
+            subscriptionIsFullyExpired = true
+          }
+        }
+
+        if (!user.membershipSubscription || subscriptionIsFullyExpired) {
 
           // If we're in dev or stage, create subscription with a trial period
           // that expires 5 minutes from the current time in order to test
@@ -172,23 +192,34 @@ const MembershipSubscriptionMutations = extendType({
             customer: customerId,
             trial_end: trialEnd
           })
+
+          const membershipSubscriptionData = {
+            period: args.period,
+            // Give 2 days grace period
+            expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+            nextBillingDate: new Date(stripeSubscription.current_period_end * 1000),
+            // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
+            stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
+            stripeSubscriptionId: stripeSubscription.id,
+          }
   
-          const membershipSubscription = await ctx.db.membershipSubscription.create({
-            data: {
-              period: args.period,
-              // Give 2 days grace period
-              expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
-              nextBillingDate: new Date(stripeSubscription.current_period_end * 1000),
-              // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
-              stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
-              stripeSubscriptionId: stripeSubscription.id,
-              user: {
-                connect: {
-                  id: userId,
-                }, 
-              }
-            },
-          })
+          let membershipSubscription
+
+          if (user.membershipSubscription) {
+            membershipSubscription = await ctx.db.membershipSubscription.update({
+              where: { userId },
+              data: membershipSubscriptionData
+            })
+          } else {
+            membershipSubscription = await ctx.db.membershipSubscription.create({
+              data: {
+                ...membershipSubscriptionData,
+                user: { connect: { id: userId, }, }
+              },
+            })
+          }
+
+          await sendPremiumWelcomeEmail({ user })
 
           return membershipSubscription
         } else {
@@ -305,11 +336,14 @@ const MembershipSubscriptionMutations = extendType({
         if (!user?.membershipSubscription?.stripeSubscriptionId) {
           throw new Error("User has no subscription to update")
         }
+        if (!user?.stripeCustomerId) {
+          throw new Error('User has no stripeCustomerId')
+        }
 
         await setPaymentMethod(
           userId,
           ctx.db,
-          user.membershipSubscription.stripeSubscriptionId,
+          user.stripeCustomerId,
           args.paymentMethodId,
         )
         return user.membershipSubscription

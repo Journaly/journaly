@@ -15,33 +15,41 @@ export type Scalars = {
   DateTime: any
 }
 
-export type HeadlineImage = {
-  __typename?: 'HeadlineImage'
-  id: Scalars['Int']
-  smallSize: Scalars['String']
-  largeSize: Scalars['String']
+export enum BadgeType {
+  AlphaUser = 'ALPHA_USER',
+  BetaUser = 'BETA_USER',
+  OnehundredPosts = 'ONEHUNDRED_POSTS',
+  TenPosts = 'TEN_POSTS',
+  CodeContributor = 'CODE_CONTRIBUTOR',
+  Odradek = 'ODRADEK',
+  Necromancer = 'NECROMANCER',
 }
 
-export type TopicTranslation = {
-  __typename?: 'TopicTranslation'
+export type Comment = {
+  __typename?: 'Comment'
   id: Scalars['Int']
-  name: Scalars['String']
-  uiLanguage: UiLanguage
+  author: User
+  body: Scalars['String']
+  createdAt: Scalars['DateTime']
+  authorLanguageLevel: LanguageLevel
+  thanks: Array<CommentThanks>
+  thread: Thread
 }
 
-export type Topic = {
-  __typename?: 'Topic'
+export type CommentThanks = {
+  __typename?: 'CommentThanks'
   id: Scalars['Int']
-  name?: Maybe<Scalars['String']>
+  commentId: Scalars['Int']
+  author: User
+  comment: Comment
+}
+
+export type DatedActivityCount = {
+  __typename?: 'DatedActivityCount'
+  date: Scalars['String']
   postCount: Scalars['Int']
-}
-
-export type TopicNameArgs = {
-  uiLanguage: UiLanguage
-}
-
-export type TopicPostCountArgs = {
-  languages?: Maybe<Array<Scalars['Int']>>
+  threadCommentCount: Scalars['Int']
+  postCommentCount: Scalars['Int']
 }
 
 export type EditorNode = {
@@ -57,82 +65,62 @@ export type EditorNode = {
   children?: Maybe<Array<EditorNode>>
 }
 
+export type HeadlineImage = {
+  __typename?: 'HeadlineImage'
+  id: Scalars['Int']
+  smallSize: Scalars['String']
+  largeSize: Scalars['String']
+}
+
 export type HeadlineImageInput = {
   smallSize: Scalars['String']
   largeSize: Scalars['String']
 }
 
-export type Thread = {
-  __typename?: 'Thread'
+export type InAppNotification = {
+  __typename?: 'InAppNotification'
   id: Scalars['Int']
-  archived: Scalars['Boolean']
-  startIndex: Scalars['Int']
-  endIndex: Scalars['Int']
-  highlightedContent: Scalars['String']
-  comments: Array<Comment>
-}
-
-export type ThreadCommentsArgs = {
-  orderBy: Array<ThreadCommentsOrderByInput>
-}
-
-export type Comment = {
-  __typename?: 'Comment'
-  id: Scalars['Int']
-  author: User
-  body: Scalars['String']
-  createdAt: Scalars['DateTime']
-  thanks: Array<CommentThanks>
-}
-
-export type PostComment = {
-  __typename?: 'PostComment'
-  id: Scalars['Int']
-  author: User
-  body: Scalars['String']
-  createdAt: Scalars['DateTime']
-}
-
-export type PostTopic = {
-  __typename?: 'PostTopic'
-  id: Scalars['Int']
-  post: Post
-  topic: Topic
-}
-
-export type Post = {
-  __typename?: 'Post'
-  id: Scalars['Int']
-  title: Scalars['String']
-  body: Scalars['String']
-  excerpt: Scalars['String']
-  readTime: Scalars['Int']
-  author: User
-  status: PostStatus
-  claps: Array<PostClap>
-  threads: Array<Thread>
-  postTopics: Array<PostTopic>
-  postComments: Array<PostComment>
-  language: Language
-  publishedLanguageLevel: LanguageLevel
-  createdAt: Scalars['DateTime']
-  updatedAt: Scalars['DateTime']
-  bodySrc: Scalars['String']
-  headlineImage: HeadlineImage
-  publishedAt?: Maybe<Scalars['DateTime']>
+  userId: Scalars['Int']
+  type: InAppNotificationType
   bumpedAt?: Maybe<Scalars['DateTime']>
-  bumpCount: Scalars['Int']
-  commentCount: Scalars['Int']
+  readStatus: NotificationReadStatus
+  post?: Maybe<Post>
+  triggeringUser?: Maybe<User>
+  threadCommentNotifications: Array<ThreadCommentNotification>
+  postCommentNotifications: Array<PostCommentNotification>
+  newFollowerNotifications: Array<NewFollowerNotification>
+  postClapNotifications: Array<PostClapNotification>
+  threadCommentThanksNotifications: Array<ThreadCommentThanksNotification>
+  newPostNotifications: Array<NewPostNotification>
 }
 
-export type PostPostCommentsArgs = {
-  orderBy: Array<PostPostCommentsOrderByInput>
+export enum InAppNotificationType {
+  ThreadComment = 'THREAD_COMMENT',
+  PostComment = 'POST_COMMENT',
+  ThreadCommentThanks = 'THREAD_COMMENT_THANKS',
+  NewPost = 'NEW_POST',
+  PostClap = 'POST_CLAP',
+  NewFollower = 'NEW_FOLLOWER',
 }
 
-export type PostPage = {
-  __typename?: 'PostPage'
-  posts: Array<Post>
-  count: Scalars['Int']
+export type InitiateAvatarImageUploadResponse = {
+  __typename?: 'InitiateAvatarImageUploadResponse'
+  /** URL for the client to PUT an image to */
+  uploadUrl: Scalars['String']
+  /** polling goes here */
+  checkUrl: Scalars['String']
+  /** final url of the transform */
+  finalUrl: Scalars['String']
+}
+
+export type InitiateInlinePostImageUploadResponse = {
+  __typename?: 'InitiateInlinePostImageUploadResponse'
+  /** URL for the client to PUT an image to */
+  uploadUrl: Scalars['String']
+  /** polling goes here */
+  checkUrl: Scalars['String']
+  /** final url of the transform */
+  finalUrl: Scalars['String']
 }
 
 export type InitiatePostImageUploadResponse = {
@@ -147,68 +135,21 @@ export type InitiatePostImageUploadResponse = {
   finalUrlSmall: Scalars['String']
 }
 
-export type InitiateInlinePostImageUploadResponse = {
-  __typename?: 'InitiateInlinePostImageUploadResponse'
-  /** URL for the client to PUT an image to */
-  uploadUrl: Scalars['String']
-  /** polling goes here */
-  checkUrl: Scalars['String']
-  /** final url of the transform */
-  finalUrl: Scalars['String']
-}
-
-export type User = {
-  __typename?: 'User'
+export type Language = {
+  __typename?: 'Language'
   id: Scalars['Int']
-  name?: Maybe<Scalars['String']>
-  email?: Maybe<Scalars['String']>
-  handle: Scalars['String']
-  bio?: Maybe<Scalars['String']>
-  userRole: UserRole
-  city?: Maybe<Scalars['String']>
-  country?: Maybe<Scalars['String']>
-  badges: Array<UserBadge>
+  name: Scalars['String']
+  devName?: Maybe<Scalars['String']>
   posts: Array<Post>
-  profileImage?: Maybe<Scalars['String']>
-  createdAt: Scalars['DateTime']
-  membershipSubscription?: Maybe<MembershipSubscription>
-  socialMedia?: Maybe<SocialMedia>
-  languages: Array<LanguageRelation>
-  following: Array<User>
-  followedBy: Array<User>
-  lastFourCardNumbers?: Maybe<Scalars['String']>
-  cardBrand?: Maybe<Scalars['String']>
-  postsWrittenCount: Scalars['Int']
-  languagesPostedInCount: Scalars['Int']
-  thanksReceivedCount: Scalars['Int']
-  threadCommentsCount: Scalars['Int']
-  postCommentsCount: Scalars['Int']
-  activityGraphData: Array<DatedActivityCount>
-}
-
-export type UserBadge = {
-  __typename?: 'UserBadge'
-  id: Scalars['Int']
-  type: BadgeType
-  createdAt: Scalars['DateTime']
-}
-
-export type InitiateAvatarImageUploadResponse = {
-  __typename?: 'InitiateAvatarImageUploadResponse'
-  /** URL for the client to PUT an image to */
-  uploadUrl: Scalars['String']
-  /** polling goes here */
-  checkUrl: Scalars['String']
-  /** final url of the transform */
-  finalUrl: Scalars['String']
-}
-
-export type DatedActivityCount = {
-  __typename?: 'DatedActivityCount'
-  date: Scalars['String']
+  dialect?: Maybe<Scalars['String']>
   postCount: Scalars['Int']
-  threadCommentCount: Scalars['Int']
-  postCommentCount: Scalars['Int']
+}
+
+export enum LanguageLevel {
+  Beginner = 'BEGINNER',
+  Intermediate = 'INTERMEDIATE',
+  Advanced = 'ADVANCED',
+  Native = 'NATIVE',
 }
 
 export type LanguageRelation = {
@@ -216,43 +157,6 @@ export type LanguageRelation = {
   id: Scalars['Int']
   language: Language
   level: LanguageLevel
-}
-
-export type Language = {
-  __typename?: 'Language'
-  id: Scalars['Int']
-  name: Scalars['String']
-  posts: Array<Post>
-  dialect?: Maybe<Scalars['String']>
-  postCount: Scalars['Int']
-}
-
-export type LanguagePostCountArgs = {
-  topics?: Maybe<Array<Scalars['Int']>>
-}
-
-export type SocialMedia = {
-  __typename?: 'SocialMedia'
-  id: Scalars['Int']
-  facebook: Scalars['String']
-  youtube: Scalars['String']
-  instagram: Scalars['String']
-  website: Scalars['String']
-}
-
-export type PostClap = {
-  __typename?: 'PostClap'
-  id: Scalars['Int']
-  author: User
-  post: Post
-}
-
-export type CommentThanks = {
-  __typename?: 'CommentThanks'
-  id: Scalars['Int']
-  commentId: Scalars['Int']
-  author: User
-  comment: Comment
 }
 
 export type MembershipSubscription = {
@@ -266,105 +170,17 @@ export type MembershipSubscription = {
   isActive: Scalars['Boolean']
 }
 
-export enum UiLanguage {
-  English = 'ENGLISH',
-  German = 'GERMAN',
-  Spanish = 'SPANISH',
-}
-
-export type ThreadCommentsOrderByInput = {
-  createdAt?: Maybe<SortOrder>
-}
-
-export enum PostStatus {
-  Draft = 'DRAFT',
-  Published = 'PUBLISHED',
-}
-
-export type PostPostCommentsOrderByInput = {
-  createdAt?: Maybe<SortOrder>
-}
-
-export enum LanguageLevel {
-  Beginner = 'BEGINNER',
-  Intermediate = 'INTERMEDIATE',
-  Advanced = 'ADVANCED',
-  Native = 'NATIVE',
-}
-
-export enum UserRole {
-  Admin = 'ADMIN',
-  Moderator = 'MODERATOR',
-  User = 'USER',
-}
-
-export enum BadgeType {
-  AlphaUser = 'ALPHA_USER',
-  BetaUser = 'BETA_USER',
-  OnehundredPosts = 'ONEHUNDRED_POSTS',
-  TenPosts = 'TEN_POSTS',
-  CodeContributor = 'CODE_CONTRIBUTOR',
-  Odradek = 'ODRADEK',
-  Necromancer = 'NECROMANCER',
-}
-
 export enum MembershipSubscriptionPeriod {
   Monthly = 'MONTHLY',
   Quarterly = 'QUARTERLY',
   Annualy = 'ANNUALY',
-}
-
-export enum SortOrder {
-  Asc = 'asc',
-  Desc = 'desc',
-}
-
-export type Query = {
-  __typename?: 'Query'
-  topics: Array<Topic>
-  posts: Array<Post>
-  postById: Post
-  feed: PostPage
-  users: Array<User>
-  currentUser?: Maybe<User>
-  userById: User
-  languages: Array<Language>
-}
-
-export type QueryTopicsArgs = {
-  hasPosts?: Maybe<Scalars['Boolean']>
-}
-
-export type QueryPostsArgs = {
-  status: PostStatus
-  authorId: Scalars['Int']
-}
-
-export type QueryPostByIdArgs = {
-  id: Scalars['Int']
-}
-
-export type QueryFeedArgs = {
-  search?: Maybe<Scalars['String']>
-  languages?: Maybe<Array<Scalars['Int']>>
-  topics?: Maybe<Array<Scalars['Int']>>
-  skip: Scalars['Int']
-  first: Scalars['Int']
-  followedAuthors?: Maybe<Scalars['Boolean']>
-  needsFeedback?: Maybe<Scalars['Boolean']>
-  hasInteracted?: Maybe<Scalars['Boolean']>
-}
-
-export type QueryUserByIdArgs = {
-  id: Scalars['Int']
-}
-
-export type QueryLanguagesArgs = {
-  hasPosts?: Maybe<Scalars['Boolean']>
+  StudentAnnually = 'STUDENT_ANNUALLY',
 }
 
 export type Mutation = {
   __typename?: 'Mutation'
+  addUserInterest: UserInterest
+  removeUserInterest: UserInterest
   createThread: Thread
   deleteThread: Thread
   createComment: Comment
@@ -389,6 +205,9 @@ export type Mutation = {
   logout: User
   followUser: User
   unfollowUser: User
+  resendEmailVerificationEmail: User
+  savePost: User
+  unsavePost: User
   addLanguageRelation: LanguageRelation
   removeLanguageRelation: LanguageRelation
   updateSocialMedia: SocialMedia
@@ -400,6 +219,16 @@ export type Mutation = {
   updateSubscriptionRenewal: MembershipSubscription
   updateSubscriptionPlan: MembershipSubscription
   updateSubscriptionPaymentMethod: MembershipSubscription
+  updateInAppNotification: InAppNotification
+  deleteInAppNotification: InAppNotification
+}
+
+export type MutationAddUserInterestArgs = {
+  topicId: Scalars['Int']
+}
+
+export type MutationRemoveUserInterestArgs = {
+  topicId: Scalars['Int']
 }
 
 export type MutationCreateThreadArgs = {
@@ -512,6 +341,14 @@ export type MutationUnfollowUserArgs = {
   followedUserId: Scalars['Int']
 }
 
+export type MutationSavePostArgs = {
+  postId: Scalars['Int']
+}
+
+export type MutationUnsavePostArgs = {
+  postId: Scalars['Int']
+}
+
 export type MutationAddLanguageRelationArgs = {
   languageId: Scalars['Int']
   level: LanguageLevel
@@ -559,6 +396,285 @@ export type MutationUpdateSubscriptionPlanArgs = {
 
 export type MutationUpdateSubscriptionPaymentMethodArgs = {
   paymentMethodId: Scalars['String']
+}
+
+export type MutationUpdateInAppNotificationArgs = {
+  notificationId: Scalars['Int']
+  readStatus?: Maybe<NotificationReadStatus>
+}
+
+export type MutationDeleteInAppNotificationArgs = {
+  notificationId: Scalars['Int']
+}
+
+export type NewFollowerNotification = {
+  __typename?: 'NewFollowerNotification'
+  id: Scalars['Int']
+  followingUser: User
+}
+
+export type NewPostNotification = {
+  __typename?: 'NewPostNotification'
+  id: Scalars['Int']
+  post: Post
+}
+
+export enum NotificationReadStatus {
+  Read = 'READ',
+  Unread = 'UNREAD',
+}
+
+export type Post = {
+  __typename?: 'Post'
+  id: Scalars['Int']
+  title: Scalars['String']
+  body: Scalars['String']
+  excerpt: Scalars['String']
+  readTime: Scalars['Int']
+  author: User
+  authorId: Scalars['Int']
+  status: PostStatus
+  claps: Array<PostClap>
+  threads: Array<Thread>
+  postTopics: Array<PostTopic>
+  postComments: Array<PostComment>
+  language: Language
+  publishedLanguageLevel: LanguageLevel
+  privateShareId?: Maybe<Scalars['String']>
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  bodySrc: Scalars['String']
+  headlineImage: HeadlineImage
+  publishedAt?: Maybe<Scalars['DateTime']>
+  bumpedAt?: Maybe<Scalars['DateTime']>
+  bumpCount: Scalars['Int']
+  commentCount: Scalars['Int']
+}
+
+export type PostPostCommentsArgs = {
+  orderBy: Array<PostPostCommentsOrderByInput>
+}
+
+export type PostClap = {
+  __typename?: 'PostClap'
+  id: Scalars['Int']
+  author: User
+  post: Post
+}
+
+export type PostClapNotification = {
+  __typename?: 'PostClapNotification'
+  id: Scalars['Int']
+  postClap: PostClap
+}
+
+export type PostComment = {
+  __typename?: 'PostComment'
+  id: Scalars['Int']
+  author: User
+  body: Scalars['String']
+  createdAt: Scalars['DateTime']
+  authorLanguageLevel: LanguageLevel
+}
+
+export type PostCommentNotification = {
+  __typename?: 'PostCommentNotification'
+  id: Scalars['Int']
+  postComment: PostComment
+}
+
+export type PostPage = {
+  __typename?: 'PostPage'
+  posts: Array<Post>
+  count: Scalars['Int']
+}
+
+export type PostPostCommentsOrderByInput = {
+  createdAt?: Maybe<SortOrder>
+}
+
+export enum PostStatus {
+  Draft = 'DRAFT',
+  Published = 'PUBLISHED',
+  Private = 'PRIVATE',
+}
+
+export type PostTopic = {
+  __typename?: 'PostTopic'
+  id: Scalars['Int']
+  post: Post
+  topic: Topic
+}
+
+export type Query = {
+  __typename?: 'Query'
+  topics: Array<Topic>
+  postById: Post
+  posts: PostPage
+  users: Array<User>
+  currentUser?: Maybe<User>
+  userById: User
+  languages: Array<Language>
+}
+
+export type QueryTopicsArgs = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
+}
+
+export type QueryPostByIdArgs = {
+  id?: Maybe<Scalars['Int']>
+  privateShareId?: Maybe<Scalars['String']>
+}
+
+export type QueryPostsArgs = {
+  search?: Maybe<Scalars['String']>
+  languages?: Maybe<Array<Scalars['Int']>>
+  topics?: Maybe<Array<Scalars['Int']>>
+  skip: Scalars['Int']
+  first: Scalars['Int']
+  followedAuthors?: Maybe<Scalars['Boolean']>
+  needsFeedback?: Maybe<Scalars['Boolean']>
+  hasInteracted?: Maybe<Scalars['Boolean']>
+  status: PostStatus
+  authorId?: Maybe<Scalars['Int']>
+  savedPosts?: Maybe<Scalars['Boolean']>
+}
+
+export type QueryUserByIdArgs = {
+  id: Scalars['Int']
+}
+
+export type QueryLanguagesArgs = {
+  hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
+}
+
+export type SocialMedia = {
+  __typename?: 'SocialMedia'
+  id: Scalars['Int']
+  facebook: Scalars['String']
+  youtube: Scalars['String']
+  instagram: Scalars['String']
+  website: Scalars['String']
+}
+
+export enum SortOrder {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export type Thread = {
+  __typename?: 'Thread'
+  id: Scalars['Int']
+  archived: Scalars['Boolean']
+  startIndex: Scalars['Int']
+  endIndex: Scalars['Int']
+  highlightedContent: Scalars['String']
+  postId: Scalars['Int']
+  comments: Array<Comment>
+}
+
+export type ThreadCommentsArgs = {
+  orderBy: Array<ThreadCommentsOrderByInput>
+}
+
+export type ThreadCommentNotification = {
+  __typename?: 'ThreadCommentNotification'
+  id: Scalars['Int']
+  comment: Comment
+}
+
+export type ThreadCommentThanksNotification = {
+  __typename?: 'ThreadCommentThanksNotification'
+  id: Scalars['Int']
+  thanks: CommentThanks
+}
+
+export type ThreadCommentsOrderByInput = {
+  createdAt?: Maybe<SortOrder>
+}
+
+export type Topic = {
+  __typename?: 'Topic'
+  id: Scalars['Int']
+  name?: Maybe<Scalars['String']>
+  postCount: Scalars['Int']
+}
+
+export type TopicNameArgs = {
+  uiLanguage: UiLanguage
+}
+
+export type TopicPostCountArgs = {
+  languages?: Maybe<Array<Scalars['Int']>>
+}
+
+export type TopicTranslation = {
+  __typename?: 'TopicTranslation'
+  id: Scalars['Int']
+  name: Scalars['String']
+  uiLanguage: UiLanguage
+}
+
+export enum UiLanguage {
+  English = 'ENGLISH',
+  German = 'GERMAN',
+  Spanish = 'SPANISH',
+}
+
+export type User = {
+  __typename?: 'User'
+  id: Scalars['Int']
+  name?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
+  handle: Scalars['String']
+  bio?: Maybe<Scalars['String']>
+  userRole: UserRole
+  city?: Maybe<Scalars['String']>
+  country?: Maybe<Scalars['String']>
+  badges: Array<UserBadge>
+  posts: Array<Post>
+  savedPosts: Array<Post>
+  profileImage?: Maybe<Scalars['String']>
+  createdAt: Scalars['DateTime']
+  membershipSubscription?: Maybe<MembershipSubscription>
+  isStudent: Scalars['Boolean']
+  socialMedia?: Maybe<SocialMedia>
+  languages: Array<LanguageRelation>
+  following: Array<User>
+  followedBy: Array<User>
+  lastFourCardNumbers?: Maybe<Scalars['String']>
+  cardBrand?: Maybe<Scalars['String']>
+  userInterests: Array<UserInterest>
+  emailAddressVerified: Scalars['Boolean']
+  postsWrittenCount: Scalars['Int']
+  languagesPostedInCount: Scalars['Int']
+  thanksReceivedCount: Scalars['Int']
+  threadCommentsCount: Scalars['Int']
+  postCommentsCount: Scalars['Int']
+  notifications: Array<InAppNotification>
+  activityGraphData: Array<DatedActivityCount>
+}
+
+export type UserBadge = {
+  __typename?: 'UserBadge'
+  id: Scalars['Int']
+  type: BadgeType
+  createdAt: Scalars['DateTime']
+}
+
+export type UserInterest = {
+  __typename?: 'UserInterest'
+  id: Scalars['Int']
+  user: User
+  topic: Topic
+}
+
+export enum UserRole {
+  Admin = 'ADMIN',
+  Moderator = 'MODERATOR',
+  User = 'USER',
 }
 
 export type CreatePostClapMutationVariables = Exact<{
@@ -652,7 +768,16 @@ export type UpdatePostCommentMutation = { __typename?: 'Mutation' } & {
 
 export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'name' | 'handle' | 'email' | 'bio' | 'userRole' | 'profileImage' | 'city' | 'country'
+  | 'id'
+  | 'name'
+  | 'handle'
+  | 'email'
+  | 'bio'
+  | 'userRole'
+  | 'profileImage'
+  | 'city'
+  | 'country'
+  | 'emailAddressVerified'
 >
 
 export type UserWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
@@ -670,6 +795,8 @@ export type UserWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 } & UserFragmentFragment
 
 export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
+  notifications: Array<{ __typename?: 'InAppNotification' } & NotificationFragmentFragment>
+  savedPosts: Array<{ __typename?: 'Post' } & Pick<Post, 'id'>>
   membershipSubscription?: Maybe<
     { __typename?: 'MembershipSubscription' } & Pick<MembershipSubscription, 'isActive'>
   >
@@ -705,7 +832,7 @@ export type AuthorWithLanguagesFragmentFragment = { __typename?: 'User' } & {
 
 export type CommentFragmentFragment = { __typename?: 'Comment' } & Pick<
   Comment,
-  'id' | 'body' | 'createdAt'
+  'id' | 'body' | 'createdAt' | 'authorLanguageLevel'
 > & {
     author: { __typename?: 'User' } & AuthorFragmentFragment
     thanks: Array<
@@ -726,7 +853,7 @@ export type PostClapFragmentFragment = { __typename?: 'PostClap' } & Pick<PostCl
 
 export type PostCommentFragmentFragment = { __typename?: 'PostComment' } & Pick<
   PostComment,
-  'id' | 'body' | 'createdAt'
+  'id' | 'body' | 'createdAt' | 'authorLanguageLevel'
 > & { author: { __typename?: 'User' } & AuthorFragmentFragment }
 
 export type ThreadFragmentFragment = { __typename?: 'Thread' } & Pick<
@@ -747,6 +874,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
   | 'bumpedAt'
   | 'bumpCount'
   | 'publishedLanguageLevel'
+  | 'privateShareId'
 > & {
     author: { __typename?: 'User' } & AuthorWithLanguagesFragmentFragment
     threads: Array<{ __typename?: 'Thread' } & ThreadFragmentFragment>
@@ -757,7 +885,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
     >
     claps: Array<
       { __typename?: 'PostClap' } & Pick<PostClap, 'id'> & {
-          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle'>
+          author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
         }
     >
   }
@@ -788,7 +916,7 @@ export type PostCardFragmentFragment = { __typename?: 'Post' } & Pick<
 
 export type LanguageFragmentFragment = { __typename?: 'Language' } & Pick<
   Language,
-  'id' | 'name' | 'dialect'
+  'id' | 'name' | 'devName' | 'dialect'
 >
 
 export type LanguageWithPostCountFragmentFragment = { __typename?: 'Language' } & Pick<
@@ -814,6 +942,87 @@ export type UserBadgeFragmentFragment = { __typename?: 'UserBadge' } & Pick<
   'type' | 'createdAt'
 >
 
+export type UserInterestFragmentFragment = { __typename?: 'UserInterest' } & {
+  topic: { __typename?: 'Topic' } & TopicFragmentFragment
+}
+
+export type NotificationFragmentFragment = { __typename?: 'InAppNotification' } & Pick<
+  InAppNotification,
+  'id' | 'type' | 'bumpedAt' | 'readStatus' | 'userId'
+> & {
+    triggeringUser?: Maybe<
+      { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
+    >
+    post?: Maybe<
+      { __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'authorId'> & {
+          headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
+        }
+    >
+    postClapNotifications: Array<
+      { __typename?: 'PostClapNotification' } & Pick<PostClapNotification, 'id'> & {
+          postClap: { __typename?: 'PostClap' } & {
+            author: { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'handle' | 'profileImage'>
+          }
+        }
+    >
+    threadCommentNotifications: Array<
+      { __typename?: 'ThreadCommentNotification' } & Pick<ThreadCommentNotification, 'id'> & {
+          comment: { __typename?: 'Comment' } & Pick<Comment, 'id' | 'body'> & {
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'handle' | 'name' | 'profileImage'
+              >
+              thread: { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent'>
+            }
+        }
+    >
+    postCommentNotifications: Array<
+      { __typename?: 'PostCommentNotification' } & Pick<PostCommentNotification, 'id'> & {
+          postComment: { __typename?: 'PostComment' } & Pick<PostComment, 'id' | 'body'> & {
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'name' | 'handle' | 'profileImage'
+              >
+            }
+        }
+    >
+    threadCommentThanksNotifications: Array<
+      { __typename?: 'ThreadCommentThanksNotification' } & Pick<
+        ThreadCommentThanksNotification,
+        'id'
+      > & {
+          thanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'> & {
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'handle' | 'name' | 'profileImage'
+              >
+              comment: { __typename?: 'Comment' } & Pick<Comment, 'id' | 'body'> & {
+                  thread: { __typename?: 'Thread' } & Pick<Thread, 'id' | 'highlightedContent'>
+                }
+            }
+        }
+    >
+    newFollowerNotifications: Array<
+      { __typename?: 'NewFollowerNotification' } & Pick<NewFollowerNotification, 'id'> & {
+          followingUser: { __typename?: 'User' } & Pick<
+            User,
+            'id' | 'name' | 'handle' | 'profileImage'
+          >
+        }
+    >
+    newPostNotifications: Array<
+      { __typename?: 'NewPostNotification' } & Pick<NewPostNotification, 'id'> & {
+          post: { __typename?: 'Post' } & Pick<Post, 'id' | 'title'> & {
+              headlineImage: { __typename?: 'HeadlineImage' } & Pick<HeadlineImage, 'smallSize'>
+              author: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'name' | 'handle' | 'profileImage'
+              >
+            }
+        }
+    >
+  }
+
 export type AddLanguageRelationMutationVariables = Exact<{
   languageId: Scalars['Int']
   level: LanguageLevel
@@ -827,7 +1036,7 @@ export type AddLanguageRelationMutation = { __typename?: 'Mutation' } & {
 
 export type LanguagesQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
-  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
 }>
 
 export type LanguagesQuery = { __typename?: 'Query' } & {
@@ -902,6 +1111,26 @@ export type UpdateSubscriptionRenewalMutation = { __typename?: 'Mutation' } & {
   >
 }
 
+export type DeleteInAppNotificationMutationVariables = Exact<{
+  notificationId: Scalars['Int']
+}>
+
+export type DeleteInAppNotificationMutation = { __typename?: 'Mutation' } & {
+  deleteInAppNotification: { __typename?: 'InAppNotification' } & Pick<InAppNotification, 'id'>
+}
+
+export type UpdateInAppNotificationMutationVariables = Exact<{
+  notificationId: Scalars['Int']
+  readStatus?: Maybe<NotificationReadStatus>
+}>
+
+export type UpdateInAppNotificationMutation = { __typename?: 'Mutation' } & {
+  updateInAppNotification: { __typename?: 'InAppNotification' } & Pick<
+    InAppNotification,
+    'id' | 'readStatus'
+  >
+}
+
 export type PostPageQueryVariables = Exact<{
   id: Scalars['Int']
   uiLanguage: UiLanguage
@@ -912,18 +1141,32 @@ export type PostPageQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
+export type PrivatePostPageQueryVariables = Exact<{
+  privateShareId: Scalars['String']
+  uiLanguage: UiLanguage
+}>
+
+export type PrivatePostPageQuery = { __typename?: 'Query' } & {
+  postById: { __typename?: 'Post' } & PostWithTopicsFragmentFragment
+  currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
+}
+
 export type ProfilePageQueryVariables = Exact<{
   userId: Scalars['Int']
+  uiLanguage: UiLanguage
 }>
 
 export type ProfilePageQuery = { __typename?: 'Query' } & {
   userById: { __typename?: 'User' } & ProfileUserFragmentFragment
-  posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+  posts: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
+      posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+    }
   currentUser?: Maybe<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
   badges: Array<{ __typename?: 'UserBadge' } & UserBadgeFragmentFragment>
+  userInterests: Array<{ __typename?: 'UserInterest' } & UserInterestFragmentFragment>
 } & UserWithLanguagesFragmentFragment &
   SocialMediaFragmentFragment
 
@@ -935,7 +1178,7 @@ export type SubscriptionSettingsPageQuery = { __typename?: 'Query' } & {
 
 export type UserWithSubscriptionFragmentFragment = { __typename?: 'User' } & Pick<
   User,
-  'id' | 'lastFourCardNumbers' | 'cardBrand'
+  'id' | 'email' | 'emailAddressVerified' | 'isStudent' | 'lastFourCardNumbers' | 'cardBrand'
 > & {
     membershipSubscription?: Maybe<
       { __typename?: 'MembershipSubscription' } & Pick<
@@ -995,23 +1238,6 @@ export type EditPostQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<{ __typename?: 'User' } & CurrentUserFragmentFragment>
 }
 
-export type FeedQueryVariables = Exact<{
-  first: Scalars['Int']
-  skip: Scalars['Int']
-  search?: Maybe<Scalars['String']>
-  languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
-  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
-  followedAuthors?: Maybe<Scalars['Boolean']>
-  needsFeedback?: Maybe<Scalars['Boolean']>
-  hasInteracted?: Maybe<Scalars['Boolean']>
-}>
-
-export type FeedQuery = { __typename?: 'Query' } & {
-  feed: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
-      posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
-    }
-}
-
 export type InitiateInlinePostImageUploadMutationVariables = Exact<{ [key: string]: never }>
 
 export type InitiateInlinePostImageUploadMutation = { __typename?: 'Mutation' } & {
@@ -1049,12 +1275,39 @@ export type PostByIdQuery = { __typename?: 'Query' } & {
 }
 
 export type PostsQueryVariables = Exact<{
-  authorId: Scalars['Int']
+  first: Scalars['Int']
+  skip: Scalars['Int']
+  search?: Maybe<Scalars['String']>
+  languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  topics?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
+  followedAuthors?: Maybe<Scalars['Boolean']>
+  needsFeedback?: Maybe<Scalars['Boolean']>
+  hasInteracted?: Maybe<Scalars['Boolean']>
+  authorId?: Maybe<Scalars['Int']>
   status: PostStatus
+  savedPosts?: Maybe<Scalars['Boolean']>
 }>
 
 export type PostsQuery = { __typename?: 'Query' } & {
-  posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+  posts: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
+      posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
+    }
+}
+
+export type SavePostMutationVariables = Exact<{
+  postId: Scalars['Int']
+}>
+
+export type SavePostMutation = { __typename?: 'Mutation' } & {
+  savePost: { __typename?: 'User' } & Pick<User, 'id'>
+}
+
+export type UnsavePostMutationVariables = Exact<{
+  postId: Scalars['Int']
+}>
+
+export type UnsavePostMutation = { __typename?: 'Mutation' } & {
+  unsavePost: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
 export type UpdatePostMutationVariables = Exact<{
@@ -1087,8 +1340,27 @@ export type DeleteCommentThanksMutation = { __typename?: 'Mutation' } & {
   deleteCommentThanks: { __typename?: 'CommentThanks' } & Pick<CommentThanks, 'id'>
 }
 
+export type AddUserInterestMutationVariables = Exact<{
+  topicId: Scalars['Int']
+}>
+
+export type AddUserInterestMutation = { __typename?: 'Mutation' } & {
+  addUserInterest: { __typename?: 'UserInterest' } & {
+    topic: { __typename?: 'Topic' } & Pick<Topic, 'id'>
+  }
+}
+
+export type RemoveUserInterestMutationVariables = Exact<{
+  topicId: Scalars['Int']
+}>
+
+export type RemoveUserInterestMutation = { __typename?: 'Mutation' } & {
+  removeUserInterest: { __typename?: 'UserInterest' } & Pick<UserInterest, 'id'>
+}
+
 export type TopicsQueryVariables = Exact<{
   hasPosts?: Maybe<Scalars['Boolean']>
+  authoredOnly?: Maybe<Scalars['Boolean']>
   uiLanguage: UiLanguage
   languages?: Maybe<Array<Scalars['Int']> | Scalars['Int']>
 }>
@@ -1163,6 +1435,12 @@ export type RequestResetPasswordMutation = { __typename?: 'Mutation' } & {
   requestResetPassword: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
+export type ResendEmailVerificationEmailMutationVariables = Exact<{ [key: string]: never }>
+
+export type ResendEmailVerificationEmailMutation = { __typename?: 'Mutation' } & {
+  resendEmailVerificationEmail: { __typename?: 'User' } & Pick<User, 'id'>
+}
+
 export type ResetPasswordMutationVariables = Exact<{
   resetToken: Scalars['String']
   password: Scalars['String']
@@ -1173,10 +1451,13 @@ export type ResetPasswordMutation = { __typename?: 'Mutation' } & {
   resetPassword: { __typename?: 'User' } & Pick<User, 'id'>
 }
 
-export type SettingsFormDataQueryVariables = Exact<{ [key: string]: never }>
+export type SettingsFormDataQueryVariables = Exact<{
+  uiLanguage: UiLanguage
+}>
 
 export type SettingsFormDataQuery = { __typename?: 'Query' } & {
   languages: Array<{ __typename?: 'Language' } & LanguageFragmentFragment>
+  topics: Array<{ __typename?: 'Topic' } & TopicFragmentFragment>
   currentUser?: Maybe<
     { __typename?: 'User' } & Pick<User, 'bio'> & {
         languages: Array<
@@ -1184,6 +1465,7 @@ export type SettingsFormDataQuery = { __typename?: 'Query' } & {
               language: { __typename?: 'Language' } & LanguageFragmentFragment
             }
         >
+        userInterests: Array<{ __typename?: 'UserInterest' } & UserInterestFragmentFragment>
       } & SocialMediaFragmentFragment
   >
 }
@@ -1285,6 +1567,7 @@ export const UserFragmentFragmentDoc = gql`
     profileImage
     city
     country
+    emailAddressVerified
   }
 `
 export const UserWithStatsFragmentFragmentDoc = gql`
@@ -1299,6 +1582,7 @@ export const LanguageFragmentFragmentDoc = gql`
   fragment LanguageFragment on Language {
     id
     name
+    devName
     dialect
   }
 `
@@ -1316,14 +1600,130 @@ export const UserWithLanguagesFragmentFragmentDoc = gql`
   ${UserFragmentFragmentDoc}
   ${LanguageFragmentFragmentDoc}
 `
+export const NotificationFragmentFragmentDoc = gql`
+  fragment NotificationFragment on InAppNotification {
+    id
+    type
+    bumpedAt
+    readStatus
+    userId
+    triggeringUser {
+      id
+      name
+      handle
+      profileImage
+    }
+    post {
+      id
+      title
+      headlineImage {
+        smallSize
+      }
+      authorId
+    }
+    postClapNotifications {
+      id
+      postClap {
+        author {
+          id
+          name
+          handle
+          profileImage
+        }
+      }
+    }
+    threadCommentNotifications {
+      id
+      comment {
+        id
+        body
+        author {
+          id
+          handle
+          name
+          profileImage
+        }
+        thread {
+          id
+          highlightedContent
+        }
+      }
+    }
+    postCommentNotifications {
+      id
+      postComment {
+        id
+        body
+        author {
+          id
+          name
+          handle
+          profileImage
+        }
+      }
+    }
+    threadCommentThanksNotifications {
+      id
+      thanks {
+        id
+        author {
+          id
+          handle
+          name
+          profileImage
+        }
+        comment {
+          id
+          body
+          thread {
+            id
+            highlightedContent
+          }
+        }
+      }
+    }
+    newFollowerNotifications {
+      id
+      followingUser {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
+    newPostNotifications {
+      id
+      post {
+        id
+        title
+        headlineImage {
+          smallSize
+        }
+        author {
+          id
+          name
+          handle
+          profileImage
+        }
+      }
+    }
+  }
+`
 export const CurrentUserFragmentFragmentDoc = gql`
   fragment CurrentUserFragment on User {
     ...UserWithLanguagesFragment
+    notifications {
+      ...NotificationFragment
+    }
+    savedPosts {
+      id
+    }
     membershipSubscription {
       isActive
     }
   }
   ${UserWithLanguagesFragmentFragmentDoc}
+  ${NotificationFragmentFragmentDoc}
 `
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {
@@ -1377,6 +1777,7 @@ export const CommentFragmentFragmentDoc = gql`
     id
     body
     createdAt
+    authorLanguageLevel
     author {
       ...AuthorFragment
     }
@@ -1409,6 +1810,7 @@ export const PostCommentFragmentFragmentDoc = gql`
     id
     body
     createdAt
+    authorLanguageLevel
     author {
       ...AuthorFragment
     }
@@ -1428,6 +1830,7 @@ export const PostFragmentFragmentDoc = gql`
     bumpedAt
     bumpCount
     publishedLanguageLevel
+    privateShareId
     author {
       ...AuthorWithLanguagesFragment
     }
@@ -1448,6 +1851,7 @@ export const PostFragmentFragmentDoc = gql`
         id
         name
         handle
+        profileImage
       }
     }
   }
@@ -1516,7 +1920,7 @@ export const PostCardFragmentFragmentDoc = gql`
 export const LanguageWithPostCountFragmentFragmentDoc = gql`
   fragment LanguageWithPostCountFragment on Language {
     ...LanguageFragment
-    postCount(topics: $topics)
+    postCount
   }
   ${LanguageFragmentFragmentDoc}
 `
@@ -1532,6 +1936,14 @@ export const UserBadgeFragmentFragmentDoc = gql`
     type
     createdAt
   }
+`
+export const UserInterestFragmentFragmentDoc = gql`
+  fragment UserInterestFragment on UserInterest {
+    topic {
+      ...TopicFragment
+    }
+  }
+  ${TopicFragmentFragmentDoc}
 `
 export const SocialMediaFragmentFragmentDoc = gql`
   fragment SocialMediaFragment on User {
@@ -1550,15 +1962,22 @@ export const ProfileUserFragmentFragmentDoc = gql`
     badges {
       ...UserBadgeFragment
     }
+    userInterests {
+      ...UserInterestFragment
+    }
     ...SocialMediaFragment
   }
   ${UserWithLanguagesFragmentFragmentDoc}
   ${UserBadgeFragmentFragmentDoc}
+  ${UserInterestFragmentFragmentDoc}
   ${SocialMediaFragmentFragmentDoc}
 `
 export const UserWithSubscriptionFragmentFragmentDoc = gql`
   fragment UserWithSubscriptionFragment on User {
     id
+    email
+    emailAddressVerified
+    isStudent
     lastFourCardNumbers
     cardBrand
     membershipSubscription {
@@ -1758,7 +2177,8 @@ export function useCreatePostCommentMutation(
   >(CreatePostCommentDocument, baseOptions)
 }
 export type CreatePostCommentMutationHookResult = ReturnType<typeof useCreatePostCommentMutation>
-export type CreatePostCommentMutationResult = ApolloReactCommon.MutationResult<CreatePostCommentMutation>
+export type CreatePostCommentMutationResult =
+  ApolloReactCommon.MutationResult<CreatePostCommentMutation>
 export type CreatePostCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreatePostCommentMutation,
   CreatePostCommentMutationVariables
@@ -1910,7 +2330,8 @@ export function useDeletePostCommentMutation(
   >(DeletePostCommentDocument, baseOptions)
 }
 export type DeletePostCommentMutationHookResult = ReturnType<typeof useDeletePostCommentMutation>
-export type DeletePostCommentMutationResult = ApolloReactCommon.MutationResult<DeletePostCommentMutation>
+export type DeletePostCommentMutationResult =
+  ApolloReactCommon.MutationResult<DeletePostCommentMutation>
 export type DeletePostCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   DeletePostCommentMutation,
   DeletePostCommentMutationVariables
@@ -2052,7 +2473,8 @@ export function useUpdatePostCommentMutation(
   >(UpdatePostCommentDocument, baseOptions)
 }
 export type UpdatePostCommentMutationHookResult = ReturnType<typeof useUpdatePostCommentMutation>
-export type UpdatePostCommentMutationResult = ApolloReactCommon.MutationResult<UpdatePostCommentMutation>
+export type UpdatePostCommentMutationResult =
+  ApolloReactCommon.MutationResult<UpdatePostCommentMutation>
 export type UpdatePostCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdatePostCommentMutation,
   UpdatePostCommentMutationVariables
@@ -2103,14 +2525,15 @@ export function useAddLanguageRelationMutation(
 export type AddLanguageRelationMutationHookResult = ReturnType<
   typeof useAddLanguageRelationMutation
 >
-export type AddLanguageRelationMutationResult = ApolloReactCommon.MutationResult<AddLanguageRelationMutation>
+export type AddLanguageRelationMutationResult =
+  ApolloReactCommon.MutationResult<AddLanguageRelationMutation>
 export type AddLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AddLanguageRelationMutation,
   AddLanguageRelationMutationVariables
 >
 export const LanguagesDocument = gql`
-  query languages($hasPosts: Boolean, $topics: [Int!]) {
-    languages(hasPosts: $hasPosts) {
+  query languages($hasPosts: Boolean, $authoredOnly: Boolean) {
+    languages(hasPosts: $hasPosts, authoredOnly: $authoredOnly) {
       ...LanguageWithPostCountFragment
     }
   }
@@ -2130,7 +2553,7 @@ export const LanguagesDocument = gql`
  * const { data, loading, error } = useLanguagesQuery({
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
- *      topics: // value for 'topics'
+ *      authoredOnly: // value for 'authoredOnly'
  *   },
  * });
  */
@@ -2260,7 +2683,8 @@ export function useRemoveLanguageRelationMutation(
 export type RemoveLanguageRelationMutationHookResult = ReturnType<
   typeof useRemoveLanguageRelationMutation
 >
-export type RemoveLanguageRelationMutationResult = ApolloReactCommon.MutationResult<RemoveLanguageRelationMutation>
+export type RemoveLanguageRelationMutationResult =
+  ApolloReactCommon.MutationResult<RemoveLanguageRelationMutation>
 export type RemoveLanguageRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RemoveLanguageRelationMutation,
   RemoveLanguageRelationMutationVariables
@@ -2312,7 +2736,8 @@ export function usePurchaseMembershipSubscriptionMutation(
 export type PurchaseMembershipSubscriptionMutationHookResult = ReturnType<
   typeof usePurchaseMembershipSubscriptionMutation
 >
-export type PurchaseMembershipSubscriptionMutationResult = ApolloReactCommon.MutationResult<PurchaseMembershipSubscriptionMutation>
+export type PurchaseMembershipSubscriptionMutationResult =
+  ApolloReactCommon.MutationResult<PurchaseMembershipSubscriptionMutation>
 export type PurchaseMembershipSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
   PurchaseMembershipSubscriptionMutation,
   PurchaseMembershipSubscriptionMutationVariables
@@ -2360,7 +2785,8 @@ export function useUpdateSubscriptionPaymentMethodMutation(
 export type UpdateSubscriptionPaymentMethodMutationHookResult = ReturnType<
   typeof useUpdateSubscriptionPaymentMethodMutation
 >
-export type UpdateSubscriptionPaymentMethodMutationResult = ApolloReactCommon.MutationResult<UpdateSubscriptionPaymentMethodMutation>
+export type UpdateSubscriptionPaymentMethodMutationResult =
+  ApolloReactCommon.MutationResult<UpdateSubscriptionPaymentMethodMutation>
 export type UpdateSubscriptionPaymentMethodMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSubscriptionPaymentMethodMutation,
   UpdateSubscriptionPaymentMethodMutationVariables
@@ -2409,7 +2835,8 @@ export function useUpdateSubscriptionPlanMutation(
 export type UpdateSubscriptionPlanMutationHookResult = ReturnType<
   typeof useUpdateSubscriptionPlanMutation
 >
-export type UpdateSubscriptionPlanMutationResult = ApolloReactCommon.MutationResult<UpdateSubscriptionPlanMutation>
+export type UpdateSubscriptionPlanMutationResult =
+  ApolloReactCommon.MutationResult<UpdateSubscriptionPlanMutation>
 export type UpdateSubscriptionPlanMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSubscriptionPlanMutation,
   UpdateSubscriptionPlanMutationVariables
@@ -2457,10 +2884,111 @@ export function useUpdateSubscriptionRenewalMutation(
 export type UpdateSubscriptionRenewalMutationHookResult = ReturnType<
   typeof useUpdateSubscriptionRenewalMutation
 >
-export type UpdateSubscriptionRenewalMutationResult = ApolloReactCommon.MutationResult<UpdateSubscriptionRenewalMutation>
+export type UpdateSubscriptionRenewalMutationResult =
+  ApolloReactCommon.MutationResult<UpdateSubscriptionRenewalMutation>
 export type UpdateSubscriptionRenewalMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSubscriptionRenewalMutation,
   UpdateSubscriptionRenewalMutationVariables
+>
+export const DeleteInAppNotificationDocument = gql`
+  mutation deleteInAppNotification($notificationId: Int!) {
+    deleteInAppNotification(notificationId: $notificationId) {
+      id
+    }
+  }
+`
+export type DeleteInAppNotificationMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteInAppNotificationMutation,
+  DeleteInAppNotificationMutationVariables
+>
+
+/**
+ * __useDeleteInAppNotificationMutation__
+ *
+ * To run a mutation, you first call `useDeleteInAppNotificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteInAppNotificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteInAppNotificationMutation, { data, loading, error }] = useDeleteInAppNotificationMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *   },
+ * });
+ */
+export function useDeleteInAppNotificationMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DeleteInAppNotificationMutation,
+    DeleteInAppNotificationMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DeleteInAppNotificationMutation,
+    DeleteInAppNotificationMutationVariables
+  >(DeleteInAppNotificationDocument, baseOptions)
+}
+export type DeleteInAppNotificationMutationHookResult = ReturnType<
+  typeof useDeleteInAppNotificationMutation
+>
+export type DeleteInAppNotificationMutationResult =
+  ApolloReactCommon.MutationResult<DeleteInAppNotificationMutation>
+export type DeleteInAppNotificationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteInAppNotificationMutation,
+  DeleteInAppNotificationMutationVariables
+>
+export const UpdateInAppNotificationDocument = gql`
+  mutation updateInAppNotification($notificationId: Int!, $readStatus: NotificationReadStatus) {
+    updateInAppNotification(notificationId: $notificationId, readStatus: $readStatus) {
+      id
+      readStatus
+    }
+  }
+`
+export type UpdateInAppNotificationMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateInAppNotificationMutation,
+  UpdateInAppNotificationMutationVariables
+>
+
+/**
+ * __useUpdateInAppNotificationMutation__
+ *
+ * To run a mutation, you first call `useUpdateInAppNotificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateInAppNotificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateInAppNotificationMutation, { data, loading, error }] = useUpdateInAppNotificationMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *      readStatus: // value for 'readStatus'
+ *   },
+ * });
+ */
+export function useUpdateInAppNotificationMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateInAppNotificationMutation,
+    UpdateInAppNotificationMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateInAppNotificationMutation,
+    UpdateInAppNotificationMutationVariables
+  >(UpdateInAppNotificationDocument, baseOptions)
+}
+export type UpdateInAppNotificationMutationHookResult = ReturnType<
+  typeof useUpdateInAppNotificationMutation
+>
+export type UpdateInAppNotificationMutationResult =
+  ApolloReactCommon.MutationResult<UpdateInAppNotificationMutation>
+export type UpdateInAppNotificationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateInAppNotificationMutation,
+  UpdateInAppNotificationMutationVariables
 >
 export const PostPageDocument = gql`
   query postPage($id: Int!, $uiLanguage: UILanguage!) {
@@ -2514,13 +3042,74 @@ export type PostPageQueryResult = ApolloReactCommon.QueryResult<
   PostPageQuery,
   PostPageQueryVariables
 >
+export const PrivatePostPageDocument = gql`
+  query privatePostPage($privateShareId: String!, $uiLanguage: UILanguage!) {
+    postById(privateShareId: $privateShareId) {
+      ...PostWithTopicsFragment
+    }
+    currentUser {
+      ...CurrentUserFragment
+    }
+  }
+  ${PostWithTopicsFragmentFragmentDoc}
+  ${CurrentUserFragmentFragmentDoc}
+`
+
+/**
+ * __usePrivatePostPageQuery__
+ *
+ * To run a query within a React component, call `usePrivatePostPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePrivatePostPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePrivatePostPageQuery({
+ *   variables: {
+ *      privateShareId: // value for 'privateShareId'
+ *      uiLanguage: // value for 'uiLanguage'
+ *   },
+ * });
+ */
+export function usePrivatePostPageQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    PrivatePostPageQuery,
+    PrivatePostPageQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<PrivatePostPageQuery, PrivatePostPageQueryVariables>(
+    PrivatePostPageDocument,
+    baseOptions,
+  )
+}
+export function usePrivatePostPageLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    PrivatePostPageQuery,
+    PrivatePostPageQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<PrivatePostPageQuery, PrivatePostPageQueryVariables>(
+    PrivatePostPageDocument,
+    baseOptions,
+  )
+}
+export type PrivatePostPageQueryHookResult = ReturnType<typeof usePrivatePostPageQuery>
+export type PrivatePostPageLazyQueryHookResult = ReturnType<typeof usePrivatePostPageLazyQuery>
+export type PrivatePostPageQueryResult = ApolloReactCommon.QueryResult<
+  PrivatePostPageQuery,
+  PrivatePostPageQueryVariables
+>
 export const ProfilePageDocument = gql`
-  query profilePage($userId: Int!) {
+  query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
     userById(id: $userId) {
       ...ProfileUserFragment
     }
-    posts(authorId: $userId, status: PUBLISHED) {
-      ...PostCardFragment
+    posts(first: 20, skip: 0, status: PUBLISHED, authorId: $userId) {
+      posts {
+        ...PostCardFragment
+      }
+      count
     }
     currentUser {
       ...UserWithLanguagesFragment
@@ -2544,6 +3133,7 @@ export const ProfilePageDocument = gql`
  * const { data, loading, error } = useProfilePageQuery({
  *   variables: {
  *      userId: // value for 'userId'
+ *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
  */
@@ -2853,72 +3443,6 @@ export type EditPostQueryResult = ApolloReactCommon.QueryResult<
   EditPostQuery,
   EditPostQueryVariables
 >
-export const FeedDocument = gql`
-  query feed(
-    $first: Int!
-    $skip: Int!
-    $search: String
-    $languages: [Int!]
-    $topics: [Int!]
-    $followedAuthors: Boolean
-    $needsFeedback: Boolean
-    $hasInteracted: Boolean
-  ) {
-    feed(
-      first: $first
-      skip: $skip
-      search: $search
-      languages: $languages
-      topics: $topics
-      followedAuthors: $followedAuthors
-      needsFeedback: $needsFeedback
-      hasInteracted: $hasInteracted
-    ) {
-      posts {
-        ...PostCardFragment
-      }
-      count
-    }
-  }
-  ${PostCardFragmentFragmentDoc}
-`
-
-/**
- * __useFeedQuery__
- *
- * To run a query within a React component, call `useFeedQuery` and pass it any options that fit your needs.
- * When your component renders, `useFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFeedQuery({
- *   variables: {
- *      first: // value for 'first'
- *      skip: // value for 'skip'
- *      search: // value for 'search'
- *      languages: // value for 'languages'
- *      topics: // value for 'topics'
- *      followedAuthors: // value for 'followedAuthors'
- *      needsFeedback: // value for 'needsFeedback'
- *      hasInteracted: // value for 'hasInteracted'
- *   },
- * });
- */
-export function useFeedQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>,
-) {
-  return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions)
-}
-export function useFeedLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>,
-) {
-  return ApolloReactHooks.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions)
-}
-export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>
-export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>
-export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>
 export const InitiateInlinePostImageUploadDocument = gql`
   mutation initiateInlinePostImageUpload {
     initiateInlinePostImageUpload {
@@ -2963,7 +3487,8 @@ export function useInitiateInlinePostImageUploadMutation(
 export type InitiateInlinePostImageUploadMutationHookResult = ReturnType<
   typeof useInitiateInlinePostImageUploadMutation
 >
-export type InitiateInlinePostImageUploadMutationResult = ApolloReactCommon.MutationResult<InitiateInlinePostImageUploadMutation>
+export type InitiateInlinePostImageUploadMutationResult =
+  ApolloReactCommon.MutationResult<InitiateInlinePostImageUploadMutation>
 export type InitiateInlinePostImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
   InitiateInlinePostImageUploadMutation,
   InitiateInlinePostImageUploadMutationVariables
@@ -3013,7 +3538,8 @@ export function useInitiatePostImageUploadMutation(
 export type InitiatePostImageUploadMutationHookResult = ReturnType<
   typeof useInitiatePostImageUploadMutation
 >
-export type InitiatePostImageUploadMutationResult = ApolloReactCommon.MutationResult<InitiatePostImageUploadMutation>
+export type InitiatePostImageUploadMutationResult =
+  ApolloReactCommon.MutationResult<InitiatePostImageUploadMutation>
 export type InitiatePostImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
   InitiatePostImageUploadMutation,
   InitiatePostImageUploadMutationVariables
@@ -3115,9 +3641,36 @@ export type PostByIdQueryResult = ApolloReactCommon.QueryResult<
   PostByIdQueryVariables
 >
 export const PostsDocument = gql`
-  query posts($authorId: Int!, $status: PostStatus!) {
-    posts(authorId: $authorId, status: $status) {
-      ...PostCardFragment
+  query posts(
+    $first: Int!
+    $skip: Int!
+    $search: String
+    $languages: [Int!]
+    $topics: [Int!]
+    $followedAuthors: Boolean
+    $needsFeedback: Boolean
+    $hasInteracted: Boolean
+    $authorId: Int
+    $status: PostStatus!
+    $savedPosts: Boolean
+  ) {
+    posts(
+      first: $first
+      skip: $skip
+      search: $search
+      languages: $languages
+      topics: $topics
+      followedAuthors: $followedAuthors
+      needsFeedback: $needsFeedback
+      hasInteracted: $hasInteracted
+      authorId: $authorId
+      status: $status
+      savedPosts: $savedPosts
+    ) {
+      posts {
+        ...PostCardFragment
+      }
+      count
     }
   }
   ${PostCardFragmentFragmentDoc}
@@ -3135,8 +3688,17 @@ export const PostsDocument = gql`
  * @example
  * const { data, loading, error } = usePostsQuery({
  *   variables: {
+ *      first: // value for 'first'
+ *      skip: // value for 'skip'
+ *      search: // value for 'search'
+ *      languages: // value for 'languages'
+ *      topics: // value for 'topics'
+ *      followedAuthors: // value for 'followedAuthors'
+ *      needsFeedback: // value for 'needsFeedback'
+ *      hasInteracted: // value for 'hasInteracted'
  *      authorId: // value for 'authorId'
  *      status: // value for 'status'
+ *      savedPosts: // value for 'savedPosts'
  *   },
  * });
  */
@@ -3153,6 +3715,95 @@ export function usePostsLazyQuery(
 export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>
 export type PostsQueryResult = ApolloReactCommon.QueryResult<PostsQuery, PostsQueryVariables>
+export const SavePostDocument = gql`
+  mutation savePost($postId: Int!) {
+    savePost(postId: $postId) {
+      id
+    }
+  }
+`
+export type SavePostMutationFn = ApolloReactCommon.MutationFunction<
+  SavePostMutation,
+  SavePostMutationVariables
+>
+
+/**
+ * __useSavePostMutation__
+ *
+ * To run a mutation, you first call `useSavePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSavePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [savePostMutation, { data, loading, error }] = useSavePostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useSavePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<SavePostMutation, SavePostMutationVariables>,
+) {
+  return ApolloReactHooks.useMutation<SavePostMutation, SavePostMutationVariables>(
+    SavePostDocument,
+    baseOptions,
+  )
+}
+export type SavePostMutationHookResult = ReturnType<typeof useSavePostMutation>
+export type SavePostMutationResult = ApolloReactCommon.MutationResult<SavePostMutation>
+export type SavePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SavePostMutation,
+  SavePostMutationVariables
+>
+export const UnsavePostDocument = gql`
+  mutation unsavePost($postId: Int!) {
+    unsavePost(postId: $postId) {
+      id
+    }
+  }
+`
+export type UnsavePostMutationFn = ApolloReactCommon.MutationFunction<
+  UnsavePostMutation,
+  UnsavePostMutationVariables
+>
+
+/**
+ * __useUnsavePostMutation__
+ *
+ * To run a mutation, you first call `useUnsavePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnsavePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unsavePostMutation, { data, loading, error }] = useUnsavePostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useUnsavePostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UnsavePostMutation,
+    UnsavePostMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<UnsavePostMutation, UnsavePostMutationVariables>(
+    UnsavePostDocument,
+    baseOptions,
+  )
+}
+export type UnsavePostMutationHookResult = ReturnType<typeof useUnsavePostMutation>
+export type UnsavePostMutationResult = ApolloReactCommon.MutationResult<UnsavePostMutation>
+export type UnsavePostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UnsavePostMutation,
+  UnsavePostMutationVariables
+>
 export const UpdatePostDocument = gql`
   mutation updatePost(
     $postId: Int!
@@ -3266,7 +3917,8 @@ export function useCreateCommentThanksMutation(
 export type CreateCommentThanksMutationHookResult = ReturnType<
   typeof useCreateCommentThanksMutation
 >
-export type CreateCommentThanksMutationResult = ApolloReactCommon.MutationResult<CreateCommentThanksMutation>
+export type CreateCommentThanksMutationResult =
+  ApolloReactCommon.MutationResult<CreateCommentThanksMutation>
 export type CreateCommentThanksMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateCommentThanksMutation,
   CreateCommentThanksMutationVariables
@@ -3314,14 +3966,116 @@ export function useDeleteCommentThanksMutation(
 export type DeleteCommentThanksMutationHookResult = ReturnType<
   typeof useDeleteCommentThanksMutation
 >
-export type DeleteCommentThanksMutationResult = ApolloReactCommon.MutationResult<DeleteCommentThanksMutation>
+export type DeleteCommentThanksMutationResult =
+  ApolloReactCommon.MutationResult<DeleteCommentThanksMutation>
 export type DeleteCommentThanksMutationOptions = ApolloReactCommon.BaseMutationOptions<
   DeleteCommentThanksMutation,
   DeleteCommentThanksMutationVariables
 >
+export const AddUserInterestDocument = gql`
+  mutation addUserInterest($topicId: Int!) {
+    addUserInterest(topicId: $topicId) {
+      topic {
+        id
+      }
+    }
+  }
+`
+export type AddUserInterestMutationFn = ApolloReactCommon.MutationFunction<
+  AddUserInterestMutation,
+  AddUserInterestMutationVariables
+>
+
+/**
+ * __useAddUserInterestMutation__
+ *
+ * To run a mutation, you first call `useAddUserInterestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddUserInterestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addUserInterestMutation, { data, loading, error }] = useAddUserInterestMutation({
+ *   variables: {
+ *      topicId: // value for 'topicId'
+ *   },
+ * });
+ */
+export function useAddUserInterestMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddUserInterestMutation,
+    AddUserInterestMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<AddUserInterestMutation, AddUserInterestMutationVariables>(
+    AddUserInterestDocument,
+    baseOptions,
+  )
+}
+export type AddUserInterestMutationHookResult = ReturnType<typeof useAddUserInterestMutation>
+export type AddUserInterestMutationResult =
+  ApolloReactCommon.MutationResult<AddUserInterestMutation>
+export type AddUserInterestMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddUserInterestMutation,
+  AddUserInterestMutationVariables
+>
+export const RemoveUserInterestDocument = gql`
+  mutation removeUserInterest($topicId: Int!) {
+    removeUserInterest(topicId: $topicId) {
+      id
+    }
+  }
+`
+export type RemoveUserInterestMutationFn = ApolloReactCommon.MutationFunction<
+  RemoveUserInterestMutation,
+  RemoveUserInterestMutationVariables
+>
+
+/**
+ * __useRemoveUserInterestMutation__
+ *
+ * To run a mutation, you first call `useRemoveUserInterestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveUserInterestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeUserInterestMutation, { data, loading, error }] = useRemoveUserInterestMutation({
+ *   variables: {
+ *      topicId: // value for 'topicId'
+ *   },
+ * });
+ */
+export function useRemoveUserInterestMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RemoveUserInterestMutation,
+    RemoveUserInterestMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    RemoveUserInterestMutation,
+    RemoveUserInterestMutationVariables
+  >(RemoveUserInterestDocument, baseOptions)
+}
+export type RemoveUserInterestMutationHookResult = ReturnType<typeof useRemoveUserInterestMutation>
+export type RemoveUserInterestMutationResult =
+  ApolloReactCommon.MutationResult<RemoveUserInterestMutation>
+export type RemoveUserInterestMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RemoveUserInterestMutation,
+  RemoveUserInterestMutationVariables
+>
 export const TopicsDocument = gql`
-  query topics($hasPosts: Boolean, $uiLanguage: UILanguage!, $languages: [Int!]) {
-    topics(hasPosts: $hasPosts) {
+  query topics(
+    $hasPosts: Boolean
+    $authoredOnly: Boolean
+    $uiLanguage: UILanguage!
+    $languages: [Int!]
+  ) {
+    topics(hasPosts: $hasPosts, authoredOnly: $authoredOnly) {
       ...TopicWithPostCountFragment
     }
   }
@@ -3341,6 +4095,7 @@ export const TopicsDocument = gql`
  * const { data, loading, error } = useTopicsQuery({
  *   variables: {
  *      hasPosts: // value for 'hasPosts'
+ *      authoredOnly: // value for 'authoredOnly'
  *      uiLanguage: // value for 'uiLanguage'
  *      languages: // value for 'languages'
  *   },
@@ -3602,7 +4357,8 @@ export function useInitiateAvatarImageUploadMutation(
 export type InitiateAvatarImageUploadMutationHookResult = ReturnType<
   typeof useInitiateAvatarImageUploadMutation
 >
-export type InitiateAvatarImageUploadMutationResult = ApolloReactCommon.MutationResult<InitiateAvatarImageUploadMutation>
+export type InitiateAvatarImageUploadMutationResult =
+  ApolloReactCommon.MutationResult<InitiateAvatarImageUploadMutation>
 export type InitiateAvatarImageUploadMutationOptions = ApolloReactCommon.BaseMutationOptions<
   InitiateAvatarImageUploadMutation,
   InitiateAvatarImageUploadMutationVariables
@@ -3737,10 +4493,59 @@ export function useRequestResetPasswordMutation(
 export type RequestResetPasswordMutationHookResult = ReturnType<
   typeof useRequestResetPasswordMutation
 >
-export type RequestResetPasswordMutationResult = ApolloReactCommon.MutationResult<RequestResetPasswordMutation>
+export type RequestResetPasswordMutationResult =
+  ApolloReactCommon.MutationResult<RequestResetPasswordMutation>
 export type RequestResetPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
   RequestResetPasswordMutation,
   RequestResetPasswordMutationVariables
+>
+export const ResendEmailVerificationEmailDocument = gql`
+  mutation resendEmailVerificationEmail {
+    resendEmailVerificationEmail {
+      id
+    }
+  }
+`
+export type ResendEmailVerificationEmailMutationFn = ApolloReactCommon.MutationFunction<
+  ResendEmailVerificationEmailMutation,
+  ResendEmailVerificationEmailMutationVariables
+>
+
+/**
+ * __useResendEmailVerificationEmailMutation__
+ *
+ * To run a mutation, you first call `useResendEmailVerificationEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResendEmailVerificationEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resendEmailVerificationEmailMutation, { data, loading, error }] = useResendEmailVerificationEmailMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useResendEmailVerificationEmailMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ResendEmailVerificationEmailMutation,
+    ResendEmailVerificationEmailMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    ResendEmailVerificationEmailMutation,
+    ResendEmailVerificationEmailMutationVariables
+  >(ResendEmailVerificationEmailDocument, baseOptions)
+}
+export type ResendEmailVerificationEmailMutationHookResult = ReturnType<
+  typeof useResendEmailVerificationEmailMutation
+>
+export type ResendEmailVerificationEmailMutationResult =
+  ApolloReactCommon.MutationResult<ResendEmailVerificationEmailMutation>
+export type ResendEmailVerificationEmailMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ResendEmailVerificationEmailMutation,
+  ResendEmailVerificationEmailMutationVariables
 >
 export const ResetPasswordDocument = gql`
   mutation resetPassword($resetToken: String!, $password: String!, $confirmPassword: String!) {
@@ -3791,9 +4596,12 @@ export type ResetPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions
   ResetPasswordMutationVariables
 >
 export const SettingsFormDataDocument = gql`
-  query settingsFormData {
+  query settingsFormData($uiLanguage: UILanguage!) {
     languages {
       ...LanguageFragment
+    }
+    topics {
+      ...TopicFragment
     }
     currentUser {
       bio
@@ -3804,10 +4612,15 @@ export const SettingsFormDataDocument = gql`
           ...LanguageFragment
         }
       }
+      userInterests {
+        ...UserInterestFragment
+      }
       ...SocialMediaFragment
     }
   }
   ${LanguageFragmentFragmentDoc}
+  ${TopicFragmentFragmentDoc}
+  ${UserInterestFragmentFragmentDoc}
   ${SocialMediaFragmentFragmentDoc}
 `
 
@@ -3823,6 +4636,7 @@ export const SettingsFormDataDocument = gql`
  * @example
  * const { data, loading, error } = useSettingsFormDataQuery({
  *   variables: {
+ *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
  */
@@ -4001,7 +4815,8 @@ export function useUpdateSocialMediaMutation(
   >(UpdateSocialMediaDocument, baseOptions)
 }
 export type UpdateSocialMediaMutationHookResult = ReturnType<typeof useUpdateSocialMediaMutation>
-export type UpdateSocialMediaMutationResult = ApolloReactCommon.MutationResult<UpdateSocialMediaMutation>
+export type UpdateSocialMediaMutationResult =
+  ApolloReactCommon.MutationResult<UpdateSocialMediaMutation>
 export type UpdateSocialMediaMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSocialMediaMutation,
   UpdateSocialMediaMutationVariables

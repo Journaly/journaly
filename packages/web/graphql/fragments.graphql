@@ -8,6 +8,7 @@ fragment UserFragment on User {
   profileImage
   city
   country
+  emailAddressVerified
 }
 
 fragment UserWithStatsFragment on User {
@@ -29,6 +30,12 @@ fragment UserWithLanguagesFragment on User {
 
 fragment CurrentUserFragment on User {
   ...UserWithLanguagesFragment
+  notifications {
+    ...NotificationFragment
+  }
+  savedPosts {
+    id
+  }
   membershipSubscription {
     isActive
   }
@@ -71,6 +78,7 @@ fragment CommentFragment on Comment {
   id
   body
   createdAt
+  authorLanguageLevel
   author {
     ...AuthorFragment
   }
@@ -102,6 +110,7 @@ fragment PostCommentFragment on PostComment {
   id
   body
   createdAt
+  authorLanguageLevel
   author {
     ...AuthorFragment
   }
@@ -130,6 +139,7 @@ fragment PostFragment on Post {
   bumpedAt
   bumpCount
   publishedLanguageLevel
+  privateShareId
   author {
     ...AuthorWithLanguagesFragment
   }
@@ -150,6 +160,7 @@ fragment PostFragment on Post {
       id
       name
       handle
+      profileImage
     }
   }
 }
@@ -195,12 +206,13 @@ fragment PostCardFragment on Post {
 fragment LanguageFragment on Language {
   id
   name
+  devName
   dialect
 }
 
 fragment LanguageWithPostCountFragment on Language {
   ...LanguageFragment
-  postCount(topics: $topics)
+  postCount
 }
 
 fragment TopicFragment on Topic {
@@ -222,4 +234,118 @@ fragment PostTopicFragment on PostTopic {
 fragment UserBadgeFragment on UserBadge {
   type
   createdAt
+}
+
+fragment UserInterestFragment on UserInterest {
+  topic {
+    ...TopicFragment
+  }
+}
+
+fragment NotificationFragment on InAppNotification {
+  id
+  type
+  bumpedAt
+  readStatus
+  userId
+  triggeringUser {
+    id
+    name
+    handle
+    profileImage
+  }
+  post {
+    id
+    title
+    headlineImage {
+      smallSize
+    }
+    authorId
+  }
+  postClapNotifications {
+    id
+    postClap {
+      author {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
+  }
+  threadCommentNotifications {
+    id
+    comment {
+      id
+      body
+      author {
+        id
+        handle
+        name
+        profileImage
+      }
+      thread {
+        id
+        highlightedContent
+      }
+    }
+  }
+  postCommentNotifications {
+    id
+    postComment {
+      id
+      body
+      author {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
+  }
+  threadCommentThanksNotifications {
+    id
+    thanks {
+      id
+      author {
+        id
+        handle
+        name
+        profileImage
+      }
+      comment {
+        id
+        body
+        thread {
+          id
+          highlightedContent
+        }
+      }
+    }
+  }
+  newFollowerNotifications {
+    id
+    followingUser {
+      id
+      name
+      handle
+      profileImage
+    }
+  }
+  newPostNotifications {
+    id
+    post {
+      id
+      title
+      headlineImage {
+        smallSize
+      }
+      author {
+        id
+        name
+        handle
+        profileImage
+      }
+    }
+  }
 }

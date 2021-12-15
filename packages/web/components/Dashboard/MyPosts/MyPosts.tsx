@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useRouter } from 'next/router'
 import {
   PostStatus as PostStatusType,
   Post as PostType,
@@ -10,6 +11,10 @@ import TranslationLink from '@/components/TranslationLink'
 import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import PostCard from '../PostCard'
 import theme from '@/theme'
+import Filters, { PostQueryVarsType } from '@/components/Dashboard/Filters'
+import Pagination from '@/components/Pagination'
+
+const NUM_POSTS_PER_PAGE = 10
 
 type Props = {
   currentUser: UserType
@@ -18,40 +23,96 @@ type Props = {
 
 const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
   const { t } = useTranslation('my-posts')
+  /**
+   * Pagination handling
+   */
+  // Pull query params off the router instance
+  const router = useRouter()
+  const currentPage = router.query.page ? Math.max(1, parseInt(router.query.page as string, 10)) : 1
+  const [postQueryVars, setPostQueryVars] = useState<PostQueryVarsType>({
+    languages: [],
+    topics: [],
+    followedAuthors: false,
+    needsFeedback: false,
+    hasInteracted: false,
+    search: '',
+    savedPosts: false,
+  })
   const { loading, data, error } = usePostsQuery({
     variables: {
+      first: NUM_POSTS_PER_PAGE,
+      skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
       status,
       authorId: currentUser.id,
+      ...postQueryVars,
     },
   })
 
-  const posts = (data?.posts as PostType[]) || []
+  const posts = (data?.posts?.posts as PostType[]) || []
+  const count = data?.posts?.count || 0
   const showPosts = !loading && posts.length > 0
+  const showPagination = count > NUM_POSTS_PER_PAGE
   const showEmptyState = !loading && posts.length === 0
+  const pageTitle = t('pageTitle')
+
+  const resetPagination = (): void => {
+    // filter out page key to reset the url
+    const newQuery = { ...router.query }
+    delete newQuery.page
+    router.push({ ...router, query: newQuery })
+  }
 
   return (
     <div className="my-posts-container">
-      {error && <p>There was an error retrieving your posts.</p>}
+      <Filters
+        currentUser={currentUser}
+        resetPagination={resetPagination}
+        postQueryVars={postQueryVars}
+        setPostQueryVars={setPostQueryVars}
+        topicAndLanguageOptions={{
+          hasPosts: true,
+          authoredOnly: true,
+        }}
+        showPostCount={false}
+      />
+      {error && (
+        <div className="empty-state-container">
+          <p>{t('errorLoadingPostsMessage')}</p>
+        </div>
+      )}
 
       {loading && <LoadingSpinner size={60} />}
 
       {showPosts && (
         <div className="my-posts">
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} status={status} />
+            <PostCard key={post.id} post={post} />
           ))}
+          {showPagination && (
+            <Pagination
+              currentPage={currentPage}
+              total={count}
+              numPerPage={NUM_POSTS_PER_PAGE}
+              title={pageTitle}
+            />
+          )}
         </div>
       )}
 
       {showEmptyState && (
         <div>
           {status === PostStatusType.Published ? (
+            // TOOD: Refactor to use our current pattern
             <Trans i18nKey="publishedEmptyState">
-              You have no published posts. You can either publish a draft or{' '}
-              <TranslationLink href="/dashboard/new-post">create a new post</TranslationLink>.
+              <div className="empty-state-container">
+                You have no published posts. You can either publish a draft or{' '}
+                <TranslationLink href="/dashboard/new-post">create a new post</TranslationLink>.
+              </div>
             </Trans>
           ) : (
-            t('draftEmptyState')
+            <div className="empty-state-container">
+              {t(`${status === PostStatusType.Draft ? 'draft' : 'private'}EmptyState`)}
+            </div>
           )}
         </div>
       )}
@@ -67,9 +128,11 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
         }
 
         .my-posts {
-          display: grid;
-          grid-template-columns: 1fr;
-          grid-gap: 50px;
+          margin-top: 25px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 50px;
           animation: 150ms fadeIn ease-in;
         }
 
@@ -89,6 +152,33 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
             width: 768px;
             margin: 0 auto;
           }
+        }
+
+        :global(.pagination-wrapper) {
+          margin: 40px 0;
+        }
+
+        .empty-state-container {
+          max-width: 900px;
+          margin: 20px auto;
+          padding: 50px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          background: ${theme.colors.white};
+          box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+          text-align: center;
+          font-weight: 700;
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
+        p {
+          margin-bottom: 35px;
         }
       `}</style>
     </div>

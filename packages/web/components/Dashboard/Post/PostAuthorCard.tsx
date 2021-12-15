@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import Link from 'next/link'
 import theme from '@/theme'
 import {
@@ -8,10 +8,10 @@ import {
   useFollowingUsersQuery,
 } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
-import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import { languageNameWithDialect } from '@/utils/languages'
 import Button, { ButtonVariant } from '@/components/Button'
 import LevelGauge from '@/components/LevelGauge'
+import UserAvatar from '@/components/UserAvatar'
 
 type PostAuthorCardProps = {
   author: Author
@@ -23,8 +23,9 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
 
   const { data: { currentUser } = {}, refetch } = useFollowingUsersQuery()
 
-  const hasFollowedAuthor =
-    currentUser && currentUser.following.find((user) => user.id === author.id) !== undefined
+  const hasFollowedAuthor = useMemo(() => {
+    return currentUser?.following.find((user) => user.id === author.id) !== undefined
+  }, [currentUser?.following])
 
   const [followUserMutation, { loading: followLoading }] = useFollowUserMutation({
     onCompleted: () => {
@@ -59,11 +60,7 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
       <div className="author-info-container">
         <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${author.id}`}>
           <a className="author-info">
-            {author.profileImage ? (
-              <img src={author.profileImage} alt="" />
-            ) : (
-              <BlankAvatarIcon size={60} />
-            )}
+            <UserAvatar user={author} size={60} />
           </a>
         </Link>
         <p className="author-name">{author.name || author.handle}</p>
@@ -131,18 +128,6 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
           margin-bottom: 5px;
           border-bottom: 1px solid ${theme.colors.gray400};
           font-weight: 600;
-        }
-
-        .author-info img {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-
-        .author-info :global(svg) {
-          border-radius: 50%;
-          background-color: ${theme.colors.blueLight};
         }
 
         .author-info-heading {

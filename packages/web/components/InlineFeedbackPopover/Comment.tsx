@@ -5,8 +5,6 @@ import classNames from 'classnames'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-// TODO: Update `react-markdown` and `remark-gfm` once Next.js versioning issues are resolved
-
 import {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
@@ -14,24 +12,25 @@ import {
   useCreateCommentThanksMutation,
   useDeleteCommentThanksMutation,
   CommentThanks,
-  UserFragmentFragment,
+  UserFragmentFragment as UserType,
 } from '@/generated/graphql'
 import theme from '@/theme'
 import { useTranslation } from '@/config/i18n'
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
-import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
 import EditIcon from '@/components/Icons/EditIcon'
 import DeleteIcon from '@/components/Icons/DeleteIcon'
 import { formatDateRelativeToNow } from '@/utils'
 import LikeIcon from '@/components/Icons/LikeIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
+import LevelGauge from '../LevelGauge'
+import UserAvatar from '../UserAvatar'
 
 type CommentProps = {
   comment: CommentType
   canEdit: boolean
   onUpdateComment(): void
-  currentUser?: UserFragmentFragment | null
+  currentUser?: UserType | null
 }
 
 const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProps) => {
@@ -157,11 +156,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         <div className="author-block">
           <Link href={`/dashboard/profile/${comment.author.id}`}>
             <a className="author-info">
-              {comment.author.profileImage ? (
-                <img className="profile-image" src={comment.author.profileImage} alt="" />
-              ) : (
-                <BlankAvatarIcon size={20} />
-              )}
+              <UserAvatar user={comment.author} size={30} />
             </a>
           </Link>
           <div className="identifier-date-block">
@@ -169,6 +164,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
               {comment.author.name
                 ? `${comment.author.name} (@${comment.author.handle})`
                 : `@${comment.author.handle}`}
+              <LevelGauge level={comment.authorLanguageLevel} />
             </span>
             <span className="comment-date">
               {formatDateRelativeToNow(comment.createdAt)} {t('relativeTimeWord')}
@@ -292,20 +288,13 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           display: flex;
           flex-direction: column;
           justify-content: center;
+          position: relative;
         }
 
-        .profile-image {
-          border-radius: 50%;
-          width: 30px;
-          height: 30px;
-          object-fit: cover;
-        }
-
-        .author-block :global(svg) {
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          background-color: ${theme.colors.blueLight};
+        .author-identifier {
+          display: flex;
+          gap: 5px;
+          align-items: center;
         }
 
         .identifier-date-block {
@@ -400,7 +389,8 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           cursor: pointer;
           fill: ${theme.colors.blueLight};
         }
-        .delete-btn :global(svg:hover) {
+
+        .delete-btn :global(svg:hover path) {
           cursor: pointer;
           fill: ${theme.colors.red};
         }

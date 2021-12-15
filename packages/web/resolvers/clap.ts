@@ -1,17 +1,13 @@
-import { NotificationType } from '.prisma/client'
-import {
-  extendType,
-  intArg,
-  objectType,
-} from 'nexus'
-import { createNotification, hasAuthorPermissions } from './utils'
+import { extendType, intArg, objectType } from 'nexus'
+import { EmailNotificationType, InAppNotificationType } from '@journaly/j-db-client'
+import { createInAppNotification, createEmailNotification, hasAuthorPermissions } from './utils'
 
 const PostClap = objectType({
   name: 'PostClap',
   definition(t) {
     t.model.id()
     t.model.author()
-    t.model.post() 
+    t.model.post()
   },
 })
 
@@ -41,7 +37,7 @@ const PostClapMutations = extendType({
 
         if (!post) {
           throw new Error('Post not found.')
-        } 
+        }
 
         const postClap = await ctx.db.postClap.create({
           data: {
@@ -59,25 +55,31 @@ const PostClapMutations = extendType({
           },
         })
 
-        await createNotification(
-          ctx.db,
-          post.author,
-          {
-            type: NotificationType.POST_CLAP,
-            postClap,
-          },
-        )
+        await createEmailNotification(ctx.db, post.author, {
+          type: EmailNotificationType.POST_CLAP,
+          postClap,
+        })
+
+
+        await createInAppNotification(ctx.db, {
+          userId: post.authorId,
+          type: InAppNotificationType.POST_CLAP,
+          key: { postId: post.id, },
+          subNotification: {
+            postClapId: postClap.id,
+          }
+        })
 
         return postClap
-      }
-    }),
-    t.field('deletePostClap', {
-      type: 'PostClap',
-      args: {
-        postClapId: intArg({ required: true }),
       },
-      resolve: async (_parent, args, ctx) => {
-        const { userId } = ctx.request
+    }),
+      t.field('deletePostClap', {
+        type: 'PostClap',
+        args: {
+          postClapId: intArg({ required: true }),
+        },
+        resolve: async (_parent, args, ctx) => {
+          const { userId } = ctx.request
           if (!userId) throw new Error('You must be logged in to do that.')
 
           const { postClapId } = args
@@ -92,6 +94,9 @@ const PostClapMutations = extendType({
               where: {
                 id: postClapId,
               },
+              include: {
+                postClapNotifications: true,
+              },
             }),
           ])
 
@@ -100,18 +105,14 @@ const PostClapMutations = extendType({
 
           hasAuthorPermissions(originalPostClap, currentUser)
 
-          return await ctx.db.postClap.delete({
+          return ctx.db.postClap.delete({
             where: {
               id: postClapId,
             },
-          }
-        )
-      }
-    })
-  }
+          })
+        },
+      })
+  },
 })
 
-export default [
-  PostClap,
-  PostClapMutations,
-]
+export default [PostClap, PostClapMutations]

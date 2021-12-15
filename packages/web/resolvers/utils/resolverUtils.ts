@@ -34,3 +34,5 @@ export const getThumbusterVars = (): [string, string] => {
 
   return [transformBucket, cdnDomain]
 }
+
+export const generatePostPrivateShareId = () => uuidv4()

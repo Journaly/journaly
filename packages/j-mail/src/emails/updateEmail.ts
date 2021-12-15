@@ -31,7 +31,7 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
             <h3>
               New post comment on post:
               <a
-                href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
+                href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}#pc-${note.postComment.id}"
                 style="
                   color: #4391C9;
                   text-decoration: none;
@@ -63,7 +63,7 @@ const formatNotificationBlock = (note: ValidatedNotification): string => {
             <h3>
               New feedback comment on post:
               <a
-                href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}"
+                href="https://${process.env.SITE_DOMAIN || 'journaly.com'}/post/${note.post.id}#t=${note.comment.threadId}"
                 style="
                   color: #4391C9;
                   text-decoration: none;

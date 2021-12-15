@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Router, { withRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { ToastContainer } from 'react-toastify'
-import { appWithTranslation } from '@/config/i18n'
+import nexti18Next from '@/config/i18n'
 
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 
@@ -39,4 +39,4 @@ class JournalyApp extends App {
   }
 }
 
-export default appWithTranslation(withRouter(JournalyApp))
+export default nexti18Next.appWithTranslation(withRouter(JournalyApp))

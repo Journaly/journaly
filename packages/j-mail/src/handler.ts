@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 import { Handler, SQSHandler } from 'aws-lambda'
 
 import {
-  NotificationType,
+  EmailNotificationType,
   User,
 } from '@journaly/j-db-client'
 
@@ -74,7 +74,7 @@ const getDataForUpdateEmail = async (
       ? note.createdAt
       : lastNotificationDate
 
-    if (note.type === NotificationType.POST_COMMENT) {
+    if (note.type === EmailNotificationType.POST_COMMENT) {
       if (note.postComment) {
         validated.push({
           type: note.type,
@@ -85,7 +85,7 @@ const getDataForUpdateEmail = async (
           commentAuthor: note.postComment.author.handle,
         })
       }
-    } else if (note.type === NotificationType.THREAD_COMMENT) {
+    } else if (note.type === EmailNotificationType.THREAD_COMMENT) {
       if (note.comment) {
         validated.push({
           type: note.type,
@@ -97,9 +97,9 @@ const getDataForUpdateEmail = async (
           commentAuthor: note.comment.author.handle,
         })
       }
-    } else if (note.type === NotificationType.THREAD_COMMENT_THANKS) {
+    } else if (note.type === EmailNotificationType.THREAD_COMMENT_THANKS) {
       thanksCount++
-    } else if (note.type === NotificationType.POST_CLAP) {
+    } else if (note.type === EmailNotificationType.POST_CLAP) {
       clapCount++
     }
   })

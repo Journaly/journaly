@@ -1,0 +1,7 @@
+mutation addUserInterest($topicId: Int!) {
+  addUserInterest(topicId: $topicId) {
+    topic {
+      id
+    }
+  }
+}

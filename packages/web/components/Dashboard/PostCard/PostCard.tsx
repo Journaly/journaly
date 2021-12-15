@@ -11,24 +11,19 @@ import LineClamp from '@/components/LineClamp'
 import ClapIcon from '@/components/Icons/ClapIcon'
 import CommentIcon from '@/components/Icons/CommentIcon'
 import theme from '@/theme'
-import BlankAvatarIcon from '@/components/Icons/BlankAvatarIcon'
 import LevelGauge from '@/components/LevelGauge'
+import LockIcon from '@/components/Icons/LockIcon'
+import UserAvatar from '@/components/UserAvatar'
 
 type Props = {
   post: PostCardType
-  status?: PostStatusType
   avatar?: boolean
   stacked?: boolean
 }
 
 const postBorderRadius = '5px'
 
-const PostCard: React.FC<Props> = ({
-  post,
-  status = PostStatusType.Published,
-  avatar = false,
-  stacked = false,
-}) => {
+const PostCard: React.FC<Props> = ({ post, avatar = false, stacked = false }) => {
   const { t } = useTranslation('post')
   const {
     id,
@@ -38,21 +33,26 @@ const PostCard: React.FC<Props> = ({
     headlineImage,
     claps,
     commentCount,
-    author: { handle, name, profileImage },
+    author: { handle, name },
     createdAt,
     publishedAt,
     publishedLanguageLevel,
     language: { name: languageName },
   } = post
-  const isDraft = status === PostStatusType.Draft
-  const isPublished = status === PostStatusType.Published
+  const isDraft = post.status === PostStatusType.Draft
+  const isPublished = post.status === PostStatusType.Published
+  const isPrivate = post.status === PostStatusType.Private
   const postCardStyles = classNames('post-card-container', { stacked })
 
   return (
     <>
       <Link href={'/post/[id]'} as={`/post/${id}`}>
         <a className={postCardStyles} data-testid="my-feed-post-card">
-          <img className="post-image" src={headlineImage.smallSize} alt="headline image" />
+          <img
+            className={`post-image ${isPrivate ? 'private' : ''}`}
+            src={headlineImage.smallSize}
+            alt="headline image"
+          />
           <div className="post-card-details">
             <div className="post-text" dir="auto">
               <h1 className="post-title">
@@ -66,11 +66,7 @@ const PostCard: React.FC<Props> = ({
               {avatar && (
                 <div className="avatar-and-language">
                   <div className="post-avatar">
-                    {profileImage ? (
-                      <img className="profile-image" src={profileImage} alt="" />
-                    ) : (
-                      <BlankAvatarIcon size={27} />
-                    )}
+                    <UserAvatar user={post.author} size={27} />
                     <p className="author">{handle || name}</p>
                   </div>
                   <div className="post-language">
@@ -80,7 +76,7 @@ const PostCard: React.FC<Props> = ({
                 </div>
               )}
               <div className="post-data">
-                {isPublished && (
+                {(isPublished || isPrivate) && (
                   <div className="post-stats">
                     <div className="post-stat">
                       <ClapIcon clapped />
@@ -90,6 +86,12 @@ const PostCard: React.FC<Props> = ({
                       <CommentIcon />
                       <span>{commentCount}</span>
                     </div>
+                    {isPrivate && (
+                      <div className="private-badge">
+                        <LockIcon size={18} />
+                        {t('private')}
+                      </div>
+                    )}
                   </div>
                 )}
                 <div className="post-subtext">
@@ -137,6 +139,7 @@ const PostCard: React.FC<Props> = ({
           object-fit: cover;
           flex-shrink: 0;
         }
+
         @media (min-width: ${theme.breakpoints.MD}) {
           :not(.stacked) .post-image {
             width: 125px;
@@ -196,21 +199,7 @@ const PostCard: React.FC<Props> = ({
           display: flex;
           align-items: center;
           margin-bottom: 4px;
-        }
-
-        .post-avatar > :global(*) {
-          border-radius: 50%;
-          margin-right: 12px;
-        }
-
-        .post-avatar :global(svg) {
-          background-color: ${theme.colors.blueLight};
-        }
-
-        .profile-image {
-          width: 27px;
-          height: 27px;
-          object-fit: cover;
+          gap: 12px;
         }
 
         .author {
@@ -279,6 +268,19 @@ const PostCard: React.FC<Props> = ({
             color: ${theme.colors.blue};
             text-transform: uppercase;
           }
+        }
+
+        .private-badge {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+          margin-left: 15px;
+          text-transform: uppercase;
+          border: 2px solid ${theme.colors.blueLight};
+          border-radius: 4px;
+          font-weight: 700;
+          font-size: 12px;
+          padding: 2px 5px 2px 2px;
         }
       `}</style>
     </>

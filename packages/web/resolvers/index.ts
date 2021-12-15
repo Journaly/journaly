@@ -14,22 +14,23 @@ import SocialMediaTypes from './socialMedia'
 import ClapTypes from './clap'
 import ThanksTypes from './thanks'
 import SubscriptionTypes from './subscription'
+import NotificationTypes from './notification'
 
 const reflectionRun = !!parseInt(process.env.NEXUS_REFLECTION || '0')
 
-const schemaOpts: any = {
-  typegenAutoConfig: {
-    sources: [
+const schemaOpts: Parameters<typeof makeSchema>[0] = {
+  sourceTypes: {
+    modules: [
       {
-        source: '@journaly/j-db-client',
+        module: '@journaly/j-db-client',
         alias: 'prisma',
       },
-      {
-        source: require.resolve('./context'),
-        alias: 'ContextModule',
-      },
     ],
-    contextType: 'ContextModule.Context',
+  },
+  contextType: {
+    module: require.resolve('./context'),
+    alias: 'ctx',
+    export: 'Context',
   },
   nonNullDefaults: {
     output: true,
@@ -47,6 +48,7 @@ const schemaOpts: any = {
     ...ClapTypes,
     ...ThanksTypes,
     ...SubscriptionTypes,
+    ...NotificationTypes,
   ],
   shouldGenerateArtifacts: reflectionRun,
   plugins: [

@@ -2,8 +2,9 @@ import React, { useRef, useState, useMemo } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { withApollo } from '@/lib/apollo'
+import { makeReference } from '@apollo/client'
 
+import { withApollo } from '@/lib/apollo'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import { navConstants } from '@/components/Dashboard/Nav'
 import PostEditor, {
@@ -17,14 +18,13 @@ import {
   useNewPostQuery,
   useCreatePostMutation,
   PostStatus as PostStatusType,
-  PostsQuery,
-  PostsQueryVariables,
-  PostsDocument,
+  UserRole,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation, Router } from '@/config/i18n'
 import useUILanguage from '@/hooks/useUILanguage'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
+import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
 
 type NewPostPageProps = {
   defaultImage: {
@@ -35,24 +35,40 @@ type NewPostPageProps = {
 
 const defaultImages = [
   {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-large',
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/f24ad1f4-c934-4e5b-b183-19358856e2ce-large',
   },
   {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-large',
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/a8949a84-43b3-4dc1-851c-6f089fab32b3-large',
   },
   {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-large',
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/b78e06ad-2f8c-42ac-80d7-12315831f1b2-large',
   },
   {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-large',
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/149c24d6-99de-4dc7-972e-cab92ff2d358-large',
   },
   {
-    smallSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-small',
-    largeSize: 'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-large',
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-large',
+  },
+  {
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/ee047239-f255-49cf-beb2-d73aa4cfdcb3-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/ee047239-f255-49cf-beb2-d73aa4cfdcb3-large',
   },
 ]
 
@@ -62,8 +78,8 @@ const selectDefaultImage = () => {
 }
 
 const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
-  const initialData: InputPostData = useMemo(() => (
-    {
+  const initialData: InputPostData = useMemo(
+    () => ({
       title: '',
       languageId: -1,
       topicIds: [],
@@ -76,8 +92,9 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
       ],
       timestamp: 0,
     }),
-    [defaultImage])
-  
+    [defaultImage],
+  )
+
   const uiLanguage = useUILanguage()
   const { data: { currentUser, topics } = {} } = useNewPostQuery({
     variables: { uiLanguage },
@@ -88,6 +105,15 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   const uploadInlineImages = useUploadInlineImages()
   const [saving, setSaving] = React.useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
+
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
+
+  // TODO: Address properly handling invalidating the cache on My Feed,
+  // Profile, and My Posts page immediately after publishing a new post
 
   const [createPost] = useCreatePostMutation({
     onCompleted: (mutationResult) => {
@@ -97,74 +123,93 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
     onError: (error) => {
       toast.error(error.message)
     },
-    update: (cache, mutationResult) => {
-      if (currentUser?.id && mutationResult.data?.createPost) {
-        const data = cache.readQuery<PostsQuery, PostsQueryVariables>({
-          query: PostsDocument,
-          variables: {
-            status: mutationResult.data.createPost.status,
-            authorId: currentUser.id,
-          },
-        })
-
-        if (data?.posts) {
-          data.posts.push(mutationResult.data.createPost)
-          cache.writeQuery({ query: PostsDocument, data: data.posts })
-        }
-      }
-    },
   })
 
-  const createNewPost = React.useCallback(async (status: PostStatusType) => {
-    if (!(dataRef.current)) {
-      return
-    }
-    setSaving(true)
+  const createNewPost = React.useCallback(
+    async (status: PostStatusType) => {
+      if (!dataRef.current) {
+        return
+      }
+      setSaving(true)
 
-    const [valid, message] = validatePostData(dataRef.current, t)
-    if (!valid) {
-      setSaving(false)
-      setErrorMessage(message)
-      return
-    }
+      const [valid, message] = validatePostData(dataRef.current, t)
+      if (!valid) {
+        setSaving(false)
+        setErrorMessage(message)
+        return
+      }
 
-    const { title, languageId, topicIds, headlineImage, body } = dataRef.current
+      const { title, languageId, topicIds, headlineImage, body } = dataRef.current
 
-    try {
-      const modifiedBody = await uploadInlineImages(body)
-      createPost({
-        variables: {
-          title,
-          status,
-          languageId,
-          topicIds,
-          headlineImage,
-          body: modifiedBody
-        }
-      })
-    } catch (err) {
-      console.error(err)
-      setErrorMessage(t('postSaveError'))
-      return
-    } finally {
-      setSaving(false)
-    }
-  }, [
-    dataRef,
-    uploadInlineImages,
-    setSaving,
-    createPost,
-  ])
+      try {
+        const modifiedBody = await uploadInlineImages(body)
+        createPost({
+          variables: {
+            title,
+            status,
+            languageId,
+            topicIds,
+            headlineImage,
+            body: modifiedBody,
+          },
+          update(cache, { data }) {
+            if (data?.createPost && data.createPost.status === PostStatusType.Published) {
+              cache.modify({
+                id: cache.identify(makeReference('ROOT_QUERY')),
+                fields: {
+                  posts: () => {
+                    // This simply invalidates the cache for the `posts` query
+                    return undefined
+                  },
+                },
+              })
+            }
+          },
+        })
+      } catch (err) {
+        console.error(err)
+        setErrorMessage(t('postSaveError'))
+        return
+      } finally {
+        setSaving(false)
+      }
+    },
+    [dataRef, uploadInlineImages, setSaving, createPost],
+  )
 
-  const handlePublishClick = React.useCallback((e) => {
-    e.preventDefault()
-    createNewPost(PostStatusType.Published)
-  }, [createNewPost])
+  const handlePublishClick = React.useCallback(
+    (e) => {
+      e.preventDefault()
+      if (!currentUser?.emailAddressVerified) {
+        setErrorMessage(t('emailVerificationWarning'))
+      } else {
+        createNewPost(PostStatusType.Published)
+      }
+    },
+    [currentUser, createNewPost],
+  )
 
-  const handleDraftClick = React.useCallback((e) => {
-    e.preventDefault()
-    createNewPost(PostStatusType.Draft)
-  }, [createNewPost])
+  const handleSharePrivatelyClick = React.useCallback(
+    (e) => {
+      e.preventDefault()
+      if (!isPremiumFeatureEligible) {
+        setDisplayPremiumFeatureModal(true)
+      } else if (!currentUser?.emailAddressVerified) {
+        setErrorMessage(t('emailVerificationWarning'))
+      } else {
+        createNewPost(PostStatusType.Private)
+      }
+    },
+    [currentUser, createNewPost],
+  )
+
+  const handleDraftClick = React.useCallback(
+    (e) => {
+      e.preventDefault()
+      createNewPost(PostStatusType.Draft)
+    },
+    [createNewPost],
+  )
 
   return (
     <AuthGate>
@@ -193,7 +238,15 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             >
               {t('publishCTA')}
             </Button>
-
+            <Button
+              type="submit"
+              variant={ButtonVariant.Secondary}
+              data-testid="post-share-privately"
+              loading={saving}
+              onClick={handleSharePrivatelyClick}
+            >
+              {t('sharePrivatelyCTA')}
+            </Button>
             <Button
               type="submit"
               variant={ButtonVariant.Secondary}
@@ -209,6 +262,18 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             <span className="error-message" data-testid="new-post-error">
               {errorMessage}
             </span>
+          )}
+          {displayPremiumFeatureModal && (
+            <PremiumFeatureModal
+              featureExplanation={t('privatePublishingPremiumFeatureExplanation')}
+              onAcknowledge={() => {
+                setDisplayPremiumFeatureModal(false)
+              }}
+              onGoToPremium={() => {
+                Router.push('/dashboard/settings/subscription')
+                setDisplayPremiumFeatureModal(false)
+              }}
+            />
           )}
 
           <style jsx>{`
@@ -232,6 +297,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
               margin: 0 auto;
               width: 250px;
               justify-content: space-around;
+              gap: 10px;
             }
 
             @media (max-width: ${theme.breakpoints.XS}) {
@@ -255,6 +321,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             .error-message {
               ${theme.typography.error}
               text-align: center;
+              margin-top: 20px;
             }
           `}</style>
         </form>

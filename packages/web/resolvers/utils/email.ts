@@ -11,6 +11,15 @@ type sendPasswordResetTokenEmailArgs = {
   resetToken: string
 }
 
+type sendEmailAddressVerificationEmailArgs = {
+  user: User
+  verificationToken: string
+}
+
+type sendPremiumWelcomeEmailArgs = {
+  user: User
+}
+
 type sendNewBadgeEmailArgs = {
   badgeType: BadgeType
   user: User
@@ -29,17 +38,53 @@ type SqsParams = {
 }
 
 const makeEmail = (text: string) => `
-<div className="email" style="
-  border: 1px solid black;
-  padding: 20px;
-  font-family: sans-serif;
-  line-height: 2;
-font-size: 20px;
-">
-  <h2>Howdy, Journaler!</h2>
-  ${text}
-  <p>Robin @ Journaly</p>
-</div>
+  <div style="
+    padding: 40px 20px;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.2;
+    background: #ebeae7;
+    margin-top: 0px;
+  ">
+    <div style="
+      border-top: 10px solid #313131;
+      width: 80%;
+      background: white;
+      padding: 30px 20px;
+      text-align: center;
+      margin: 0 auto 25px;
+    ">
+      <img
+        src="https://dlke4x4hpr6qb.cloudfront.net/j-logo-100.png"
+        style="width: 75px;"
+      >
+      <h1 style="
+        margin-top: 25px;
+        margin-bottom: 25px;
+        font-size: 24px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-weight: 400;
+      ">Howdy, Journaler!</h1>
+      <div style="font-size: 14px; text-align: left;">
+        ${text}
+        <p>Warmly,</p>
+        <p><strong>Robin @ Journaly</strong></p>
+      </div>
+    </div>
+    <div style="
+      padding: 40px 20px;
+      margin: 0 auto 25px;
+      background-color: #313131;
+      width: 80%;
+      text-align: center; 
+    ">
+      <p style="
+        text-transform: uppercase;
+        color: white;
+      ">
+        Sent with ❤️ from the <a href="https://www.journaly.com" style="color: #4391C9; text-decoration: none;">journaly</a> team
+      </p>
+    </div>
+  </div>
 `
 
 const sendJmail = (emailParams: EmailParams) => {
@@ -75,10 +120,7 @@ const sendJmail = (emailParams: EmailParams) => {
   })
 }
 
-const sendPasswordResetTokenEmail = ({
-  user,
-  resetToken,
-}: sendPasswordResetTokenEmailArgs) => {
+const sendPasswordResetTokenEmail = ({ user, resetToken }: sendPasswordResetTokenEmailArgs) => {
   return sendJmail({
     from: 'robin@journaly.com',
     to: user.email,
@@ -87,7 +129,6 @@ const sendPasswordResetTokenEmail = ({
       <p>I heard you were having some trouble logging in.</>
       <p>Click <a href="https://${process.env.SITE_DOMAIN}/dashboard/reset-password?resetToken=${resetToken}">here</a> to reset your password!</p>
       <p>Please note that the link will expire in 1 hour.</p>
-      <p>Warmly,</p>
     `),
   })
 }
@@ -132,8 +173,8 @@ const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {
 }
 
 type MoosendSubscriberResponse = {
-  Code: number,
-  Error: string | null,
+  Code: number
+  Error: string | null
   Context: {
     ID: string
   }
@@ -157,18 +198,15 @@ const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
     },
     cache: 'no-cache',
     body: JSON.stringify({
       Name: user.name || user.handle,
       Email: user.email,
-      CustomFields: [
-        `journalyId=${user.id}`,
-        `registrationDate=${user.createdAt.toISOString()}`,
-      ]
-    })
-  }).then(r => r.json())) as MoosendSubscriberResponse
+      CustomFields: [`journalyId=${user.id}`, `registrationDate=${user.createdAt.toISOString()}`],
+    }),
+  }).then((r) => r.json())) as MoosendSubscriberResponse
 
   if (resp['Error']) {
     throw new Error(resp['Error'])
@@ -184,9 +222,37 @@ const subscribeUserToProductUpdates = async (user: User, db: PrismaClient) => {
     // Only update the DB if we created a new subscriber.
     return db.user.update({
       where: { id: user.id },
-      data: { moosendSubscriberId: resp.Context.ID }
+      data: { moosendSubscriberId: resp.Context.ID },
     })
   }
+}
+
+const sendEmailAddressVerificationEmail = ({
+  user,
+  verificationToken,
+}: sendEmailAddressVerificationEmailArgs) => {
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: user.email,
+    subject: "Let's Verify Your Email Address :)",
+    html: makeEmail(`
+      <p>To commplete the sign up process, please click <a href="https://${process.env.SITE_DOMAIN}/api/verify-email-address?verificationToken=${verificationToken}&id=${user.id}">here</a> to verify your e-mail address :)</p>
+    `),
+  })
+}
+
+const sendPremiumWelcomeEmail = ({ user }: sendPremiumWelcomeEmailArgs) => {
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: user.email,
+    subject: '🎈 WELCOME To Journaly Premium! 🎉',
+    html: makeEmail(`
+      <p>Hi ${user.name || user.handle}!</p>
+      <p>I am absolutely delighted to be able to WELCOME you to Journaly Premium 🎉 How exciting! I can honestly tell you that, at this early stage, I quite literally jump up and down with every single new Journaly Premium signup and rush to send Ryan a series of excited GIFs.</p>
+      <p>THANK YOU so much for officially being an early adopter and supporter of not just the Journaly platform and its community, but of the tiny Journaly Team and our dreams of a financially sustainable platform.</p>
+      <p>You rock, now go and have some fun with those new, shiny premium features! We'll be adding plenty more in the coming weeks and months.</p>
+    `),
+  })
 }
 
 export {
@@ -194,4 +260,6 @@ export {
   sendPasswordResetTokenEmail,
   sendNewBadgeEmail,
   subscribeUserToProductUpdates,
+  sendEmailAddressVerificationEmail,
+  sendPremiumWelcomeEmail,
 }

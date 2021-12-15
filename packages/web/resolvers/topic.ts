@@ -10,6 +10,15 @@ const TopicTranslation = objectType({
   },
 })
 
+const UserInterest = objectType({
+  name: 'UserInterest',
+  definition(t) {
+    t.model.id()
+    t.model.user()
+    t.model.topic()
+  }
+})
+
 const Topic = objectType({
   name: 'Topic',
   sourceType: 'prisma.Topic',
@@ -68,12 +77,22 @@ const TopicQueries = extendType({
     t.list.field('topics', {
       type: 'Topic',
       args: {
-        hasPosts: booleanArg({ required: false }),
+        hasPosts: booleanArg({
+          description: 'If true, only return topics that have at least one post',
+          required: false,
+        }),
+        authoredOnly: booleanArg({
+          description: 'If true, return only topics with posts authored by currentUser.',
+          required: false,
+        }),
       },
       resolve: async (_parent, args, ctx) => {
-        let filter
+        const { userId } = ctx.request
+
+        const filterClauses = []
+
         if (args.hasPosts) {
-          filter = {
+          filterClauses.push({
             postTopics: {
               some: {
                 post: {
@@ -81,13 +100,25 @@ const TopicQueries = extendType({
                 },
               },
             },
-          }
-        } else {
-          filter = undefined
+          })
+        }
+
+        if (args.authoredOnly) {
+          filterClauses.push({
+            postTopics: {
+              some: {
+                post: {
+                  authorId: userId,
+                },
+              },
+            },
+          })
         }
 
         return ctx.db.topic.findMany({
-          where: filter,
+          where: {
+            AND: filterClauses,
+          },
           orderBy: {
             devName: 'asc',
           },
@@ -97,4 +128,62 @@ const TopicQueries = extendType({
   },
 })
 
-export default [TopicTranslation, Topic, TopicQueries]
+const TopicMutations = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.field('addUserInterest', {
+      type: 'UserInterest',
+      args: {
+        topicId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to add a user interest.')
+        }
+
+        const topic = await ctx.db.topic.findUnique({
+          where: { id: args.topicId },
+        })
+
+        if (!topic) {
+          throw new Error(`Unable to find topic with id "${args.topicId}".`)
+        }
+
+        return ctx.db.userInterest.create({
+          data: {
+            user: { connect: { id: userId } },
+            topic: { connect: { id: args.topicId } },
+          },
+        })
+      },
+    })
+    t.field('removeUserInterest', {
+      type: 'UserInterest',
+      args: {
+        topicId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        if (!userId) {
+          throw new Error('You must be logged in to remove a user interest.')
+        }
+
+        const interestFilter = {
+          where: {
+            userId_topicId: {
+              topicId: args.topicId,
+              userId,
+            },
+          },
+        }
+
+        return ctx.db.userInterest.delete(interestFilter)
+      },
+    })
+  }
+})
+
+export default [TopicTranslation, UserInterest, Topic, TopicQueries, TopicMutations]

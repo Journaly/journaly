@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 import {
   PostStatus,
@@ -11,13 +12,15 @@ import { formatLongDate } from '@/utils'
 
 import theme from '@/theme'
 import LevelGauge from '@/components/LevelGauge'
+import LockIcon from '../Icons/LockIcon'
 
 type PostHeaderProps = {
   postTitle: string
   postStatus: PostStatus
-  publishDate: string
+  publishDate?: string
   publishedLanguageLevel?: LanguageLevel
   authorName: string
+  authorId: number
   postImage: string
   topics?: TopicType[]
   language?: LanguageType
@@ -29,6 +32,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
   postTitle,
   postStatus,
   authorName,
+  authorId,
   publishDate,
   publishedLanguageLevel,
   postImage,
@@ -47,16 +51,29 @@ const PostHeader: React.FC<PostHeaderProps> = ({
               {publishedLanguageLevel && <LevelGauge level={publishedLanguageLevel} />}
             </div>
           )}
-          {postStatus === 'DRAFT' && <div className="draft badge">{t('draft')}</div>}
+          {postStatus === PostStatus.Draft && <div className="draft badge">{t('draft')}</div>}
+          {postStatus === PostStatus.Private && (
+            <div className="private badge">
+              <LockIcon size={12} />
+              {t('private')}
+            </div>
+          )}
         </div>
 
         <div className="title-and-info">
           <h1>{postTitle}</h1>
           <p> &mdash; </p>
           <p>
-            {t('postBy')} <em>{authorName}</em>
+            {t('postBy')}{' '}
+            <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${authorId}`}>
+              <a className="author-name" rel="author">
+                {authorName}
+              </a>
+            </Link>
           </p>
-          <p>{formatLongDate(publishDate)}</p>
+          <time dateTime={publishDate}>
+            {formatLongDate(publishDate || new Date().toISOString())}
+          </time>
         </div>
 
         <div className="topics-container">
@@ -92,7 +109,13 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           top: 10px;
         }
 
-        .draft {
+        .badge.private {
+          display: flex;
+          gap: 4px;
+        }
+
+        .draft,
+        .private {
           right: 10px;
         }
 
@@ -166,6 +189,11 @@ const PostHeader: React.FC<PostHeaderProps> = ({
 
         p {
           font-size: 14px;
+        }
+
+        .author-name {
+          color: ${theme.colors.white};
+          font-style: italic;
         }
 
         @media (min-width: ${theme.breakpoints.MD}) {

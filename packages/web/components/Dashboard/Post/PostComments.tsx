@@ -10,6 +10,7 @@ import {
   PostPageDocument,
   PostPageQuery,
   PostPageQueryVariables,
+  LanguageLevel,
 } from '@/generated/graphql'
 import { useTranslation } from '@/config/i18n'
 
@@ -58,6 +59,7 @@ const PostComments = ({
     onError: (error) => {
       toast.error(error.message)
     },
+    // TODO: Refactor approach to using cache.modify
     update: (cache, mutationResult) => {
       if (mutationResult.data?.createPostComment) {
         const data = cache.readQuery<PostPageQuery, PostPageQueryVariables>({
@@ -90,6 +92,7 @@ const PostComments = ({
         __typename: 'Mutation',
         createPostComment: {
           __typename: 'PostComment',
+          authorLanguageLevel: LanguageLevel.Beginner,
           author: {
             __typename: 'User',
             handle: currentUser!.handle,

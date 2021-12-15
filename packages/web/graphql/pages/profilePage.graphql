@@ -1,9 +1,12 @@
-query profilePage($userId: Int!) {
+query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
   userById(id: $userId) {
     ...ProfileUserFragment
   }
-  posts(authorId: $userId, status: PUBLISHED) {
-    ...PostCardFragment
+  posts(first: 20, skip: 0, status: PUBLISHED, authorId: $userId) {
+    posts {
+      ...PostCardFragment
+    }
+    count
   }
   currentUser {
     ...UserWithLanguagesFragment
@@ -14,6 +17,9 @@ fragment ProfileUserFragment on User {
   ...UserWithLanguagesFragment
   badges {
     ...UserBadgeFragment
+  }
+  userInterests {
+    ...UserInterestFragment
   }
   ...SocialMediaFragment
 }

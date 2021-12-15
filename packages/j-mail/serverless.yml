@@ -29,7 +29,10 @@ package:
     # one. If we don't do this, the package size ends up too large to deploy.
     - 'node_modules/**/query-engine-darwin'
     - 'node_modules/**/query-engine-rhel-openssl-1.0.x'
+    - 'node_modules/**/libquery_engine-darwin-arm64.dylib.node'
+    - 'node_modules/**/libquery_engine-rhel-openssl-1.0.x.so.node'
     - '!node_modules/.prisma/client/query-engine-rhel-openssl-1.0.x'
+    - '!node_modules/.prisma/client/libquery_engine-rhel-openssl-1.0.x.so.node'
 
 functions:
   processJMailQueue:

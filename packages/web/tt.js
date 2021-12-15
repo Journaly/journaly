@@ -7,19 +7,28 @@ const path = require('path')
 const NodeGit = require('nodegit')
 const jsonParser = require('jsonc-parser')
 const createCsvWriter = require('csv-writer').createObjectCsvWriter
-const CsvReadableStream = require('csv-reader')
-const CLIProgress = require('cli-progress')
+const CsvReadableStream = require('csv-reader');
+const CLIProgress = require('cli-progress');
 
-const LOCALES = ['de', 'es', 'fr', 'pl', 'it', 'ru', 'ko', 'pt-br']
+const LOCALES = [
+  'de',
+  'es',
+  'fr',
+  'pl',
+  'it',
+  'ru',
+  'ko',
+  'pt-br',
+]
 
 const LOCALE_NAME_MAP = {
-  de: 'German',
-  es: 'Spanish',
-  fr: 'French',
-  pl: 'Polish',
-  it: 'Italian',
-  ru: 'Russian',
-  ko: 'Korean',
+  'de': 'German',
+  'es': 'Spanish',
+  'fr': 'French',
+  'pl': 'Polish',
+  'it': 'Italian',
+  'ru': 'Russian',
+  'ko': 'Korean',
   'pt-br': 'Portuguese (Brazil)',
 }
 
@@ -62,7 +71,10 @@ const computeLocaleCompleteness = (localeReport) => {
     }
   }
 
-  return [`${((100 * missing) / total).toFixed(2)}%`, `${((100 * ood) / total).toFixed(2)}%`]
+  return [
+    `${(100 * missing / total).toFixed(2)}%`,
+    `${(100 * ood / total).toFixed(2)}%`,
+  ]
 }
 
 const generateIndexHTML = async (report) => {
@@ -245,7 +257,7 @@ const generateIndexHTML = async (report) => {
         </tr>
       </thead>
       </tbody>
-      ${LOCALES.map((locale) => {
+      ${LOCALES.map(locale => {
         const [missing, ood] = computeLocaleCompleteness(report.locales[locale])
         return `
           <tr>
@@ -261,7 +273,11 @@ const generateIndexHTML = async (report) => {
 </html>
   `
 
-  await fs.writeFile('translation-site/index.html', html, { encoding: 'UTF-8' })
+  await fs.writeFile(
+    'translation-site/index.html',
+    html,
+    { encoding: 'UTF-8' }
+  )
 }
 
 let _progressBar = null
@@ -279,8 +295,9 @@ const stopProgress = () => {
   _progressBar && _progressBar.stop()
 }
 
+
 const slurpFile = async (path) => {
-  return await fs.readFile(path, { encoding: 'UTF-8' })
+  return await fs.readFile(path, { encoding: 'UTF-8' });
 }
 
 const getTranslations = (jsonStr) => {
@@ -288,7 +305,7 @@ const getTranslations = (jsonStr) => {
   const lineByOffset = new Array(jsonStr.length)
   let lineNo = 1
 
-  for (let i = 0; i < jsonStr.length; i++) {
+  for (let i=0; i<jsonStr.length; i++) {
     lineByOffset[i] = lineNo
 
     if (jsonStr[i] === '\n') {
@@ -299,7 +316,7 @@ const getTranslations = (jsonStr) => {
   return getProperties(tree, lineByOffset)
 }
 
-const getProperties = (tree, lineByOffset, path = []) => {
+const getProperties = (tree, lineByOffset, path=[]) => {
   const properties = []
 
   for (node of tree.children) {
@@ -316,7 +333,9 @@ const getProperties = (tree, lineByOffset, path = []) => {
         value,
       })
     } else if (value.type === 'object') {
-      properties.push(...getProperties(value, lineByOffset, path.concat([key.value])))
+      properties.push(
+        ...getProperties(value, lineByOffset, path.concat([key.value]))
+      )
     } else {
       throw new Error(`Unexpected node type: ${node.type}`)
     }
@@ -374,7 +393,7 @@ const compareTranslationFiles = async (repo, sourceFilePath, targetFilePath) => 
       merged.push({
         source: sourceAnnotation,
         target: null,
-        status: 'MISSING_TRANSLATION',
+        status: 'MISSING_TRANSLATION'
       })
       continue
     }
@@ -385,13 +404,13 @@ const compareTranslationFiles = async (repo, sourceFilePath, targetFilePath) => 
       merged.push({
         source: sourceAnnotation,
         target: targetAnnotation,
-        status: 'SOURCE_NEWER',
+        status: 'SOURCE_NEWER'
       })
     } else {
       merged.push({
         source: sourceAnnotation,
         target: targetAnnotation,
-        status: 'UP_TO_DATE',
+        status: 'UP_TO_DATE'
       })
     }
   }
@@ -403,12 +422,12 @@ const generateAllLocalesReport = async () => {
   const repo = await NodeGit.Repository.open(path.resolve('../../'))
 
   const report = {
-    locales: {},
+    locales: {}
   }
 
   for (locale of LOCALES) {
     const localeReport = {
-      namespaces: {},
+      namespaces: {}
     }
 
     for (ns of NAMESPACES) {
@@ -436,7 +455,7 @@ const generateTemplates = async (report) => {
     await fs.writeFile(
       templatePath,
       '\ufeff' + HEADER_SPEC.map(({ title }) => title).join(',') + '\n',
-      { encoding: 'UTF-8' },
+      { encoding: 'UTF-8' }
     )
 
     const writer = createCsvWriter({
@@ -452,13 +471,13 @@ const generateTemplates = async (report) => {
 
       for (comp of nsReport) {
         records.push({
-          namespace: ns,
+          'namespace': ns,
           fullId: comp.source.fullId,
           status: comp.status,
           source: comp.source.value.value,
           target: comp.target ? comp.target.value.value : '',
           tlnotes: '',
-          lastCommitSHA: comp.source.lastCommitSHA,
+          lastCommitSHA: comp.source.lastCommitSHA
         })
       }
     }
@@ -472,14 +491,14 @@ const generateTemplates = async (report) => {
 
 const ingestFile = async (locale, file) => {
   const inputStream = cbfs.createReadStream(file, 'utf8')
-  const records = await new Promise((res, rej) => {
+  const records = await (new Promise((res, rej) => {
     const records = []
 
     inputStream
       .pipe(new CsvReadableStream({ skipHeader: true }))
       .on('data', function (row) {
         const record = {}
-        for (let i = 0; i < row.length; i++) {
+        for (let i=0; i<row.length; i++) {
           record[HEADER_SPEC[i].id] = row[i]
         }
         if (record.target) {
@@ -489,7 +508,7 @@ const ingestFile = async (locale, file) => {
       .on('end', function () {
         res(records)
       })
-  })
+  }))
 
   const recordsByNamespace = {}
 
@@ -514,18 +533,27 @@ const ingestFile = async (locale, file) => {
     for (fullId in recordsByNamespace[ns]) {
       const record = recordsByNamespace[ns][fullId]
       modifiedDoc = jsonParser.applyEdits(
-        modifiedDoc,
-        jsonParser.modify(modifiedDoc, fullId.split('.'), record.target, {
-          formattingOptions: {
-            tabSize: 2,
-            insertSpaces: true,
-            eol: '\n',
-          },
-        }),
+        modifiedDoc, 
+        jsonParser.modify(
+          modifiedDoc,
+          fullId.split('.'),
+          record.target,
+          {
+            formattingOptions: {
+              tabSize: 2,
+              insertSpaces: true,
+              eol: '\n',
+            }
+          }
+        )
       )
     }
 
-    await fs.writeFile(targetFilePath, modifiedDoc, { encoding: 'UTF-8' })
+    await fs.writeFile(
+      targetFilePath,
+      modifiedDoc,
+      { encoding: 'UTF-8' }
+    )
   }
 }
 
@@ -542,29 +570,33 @@ require('yargs/yargs')(process.argv.splice(2))
       await generateTemplates(report)
       await generateIndexHTML(report)
     },
-    builder: (yargs) =>
-      yargs.positional('progress', {
-        boolean: 'true',
-        default: false,
-      }),
+    builder: (yargs) => (
+      yargs
+        .positional('progress', {
+          boolean: 'true',
+          default: false,
+        })
+    )
   })
   .command({
     command: 'ingest',
     describe: 'Ingest a filled out translation CSV into the translations',
-    builder: (yargs) =>
+    builder: (yargs) => (
       yargs
         .positional('locale', {
           choices: LOCALES,
-          desc: 'The locale (language) the CSV applies to.',
+          desc: 'The locale (language) the CSV applies to.'
         })
         .require('locale')
         .positional('file', {
           desc: 'The CSV file to ingest',
         })
-        .require('file'),
+        .require('file')
+    ),
     handler: async (argv) => {
       await ingestFile(argv.locale, argv.file)
-    },
+    }
   })
   .demandCommand()
-  .help().argv
+  .help()
+  .argv

@@ -25,22 +25,23 @@ export const getCoords = (htmlElement: HTMLElement) => {
 
 /**
  * Generate the text to show for claps on a specific post.
- *
+ * 
  * @param claps The array of PostClap objects containing their author
  * @param currentUserId The id of the current user
  * @returns string The text to show
  */
 export const getUsersClappedText = (
   claps: Array<PostClapType>,
-  currentUserId: number | undefined,
-) => {
+  currentUserId: number | undefined) => {
+
   const { t } = useTranslation('post')
 
-  const containsCurrentUser = claps.some((clap) => clap.author.id === currentUserId)
+  const containsCurrentUser = claps.some(
+    (clap) => clap.author.id === currentUserId)
 
   let usersClapped = claps
     .filter((clap) => clap.author.id !== currentUserId)
-    .map((clap) => (clap.author.name ? clap.author.name : clap.author.handle))
+    .map((clap) => clap.author.name ? clap.author.name : clap.author.handle)
 
   if (containsCurrentUser) {
     usersClapped = [t('claps.currentUserPronoun'), ...usersClapped]
@@ -48,19 +49,22 @@ export const getUsersClappedText = (
 
   if (usersClapped.length == 0) {
     return t('claps.noUsersClapped')
-  } else if (usersClapped.length == 1) {
+  }
+  else if (usersClapped.length == 1) {
     return t('claps.oneUserClapped', { name1: usersClapped[0] })
-  } else if (usersClapped.length == 2) {
+  }
+  else if (usersClapped.length == 2) {
     return t('claps.twoUsersClapped', {
       name1: usersClapped[0],
-      name2: usersClapped[1],
+      name2: usersClapped[1]
     })
-  } /* usersClapped.length > 2 */ else {
+  }
+  else /* usersClapped.length > 2 */ {
     const numOthersClapped = usersClapped.length - 2
     return t('claps.manyUsersClapped', {
       name1: usersClapped[0],
       name2: usersClapped[1],
-      numOthers: numOthersClapped,
+      numOthers: numOthersClapped
     })
   }
 }

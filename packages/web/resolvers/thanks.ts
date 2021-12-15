@@ -1,8 +1,15 @@
-import { intArg, objectType, extendType } from 'nexus'
+import {
+  intArg,
+  objectType,
+  extendType,
+} from 'nexus'
 
 import { NotificationType } from '@journaly/j-db-client'
 
-import { createNotification, hasAuthorPermissions } from './utils'
+import {
+  createNotification,
+  hasAuthorPermissions,
+} from './utils'
 
 const CommentThanks = objectType({
   name: 'CommentThanks',
@@ -63,12 +70,16 @@ const ThanksMutations = extendType({
           },
         })
 
-        await createNotification(ctx.db, comment.author, {
+      await createNotification(
+        ctx.db,
+        comment.author,
+        {
           type: NotificationType.THREAD_COMMENT_THANKS,
           commentThanks,
-        })
-
-        return commentThanks
+        },
+      )
+      
+      return commentThanks
       },
     }),
       t.field('deleteCommentThanks', {
@@ -110,4 +121,7 @@ const ThanksMutations = extendType({
   },
 })
 
-export default [CommentThanks, ThanksMutations]
+export default [
+  CommentThanks,
+  ThanksMutations,
+]

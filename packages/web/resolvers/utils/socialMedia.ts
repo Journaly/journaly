@@ -3,23 +3,19 @@ import { InvalidInput } from '../errors'
 const socialMediaPatterns = [
   {
     platform: 'facebook',
-    pattern:
-      /^(?:(?:http|https):\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/([A-Za-z0-9-_\.]+)\/?$/im,
+    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?(?:facebook\.com|fb\.com)\/([A-Za-z0-9-_\.]+)\/?$/im,
   },
   {
     platform: 'instagram',
-    pattern:
-      /^(?:(?:http|https):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([A-Za-z0-9-_\.]+)\/?$/im,
+    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([A-Za-z0-9-_\.]+)\/?$/im,
   },
   {
     platform: 'youtube',
-    pattern:
-      /^(?:(?:http|https):\/\/)?(?:www\.)?(?:youtube\.com)\/(channel|user)\/([A-Za-z0-9-_\.]+)\/?$/im,
+    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?(?:youtube\.com)\/(channel|user)\/([A-Za-z0-9-_\.]+)\/?$/im,
   },
   {
     platform: 'website',
-    pattern:
-      /^(?:(?:http|https):\/\/)?(?:www\.)?(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]\/?$/im,
+    pattern: /^(?:(?:http|https):\/\/)?(?:www\.)?(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]\/?$/im,
   },
 ]
 

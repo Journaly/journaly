@@ -1,9 +1,11 @@
-import { PrismaClient } from '@journaly/j-db-client'
+import {
+  PrismaClient,
+} from '@journaly/j-db-client'
 
 declare global {
   namespace NodeJS {
     interface Global {
-      prisma: PrismaClient
+      prisma: PrismaClient;
     }
   }
 }

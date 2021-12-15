@@ -1,6 +1,19 @@
-import { Prisma, MembershipSubscriptionPeriod, PrismaClient } from '@journaly/j-db-client'
-import { arg, booleanArg, extendType, objectType, stringArg } from 'nexus'
-import stripe, { getOrCreateStripeCustomer, paymentErrorWrapper } from '@/nexus/utils/stripe'
+import { 
+  Prisma,
+  MembershipSubscriptionPeriod,
+  PrismaClient,
+} from '@journaly/j-db-client'
+import {
+  arg,
+  booleanArg,
+  extendType,
+  objectType,
+  stringArg,
+} from 'nexus'
+import stripe, {
+  getOrCreateStripeCustomer,
+  paymentErrorWrapper
+} from '@/nexus/utils/stripe'
 
 const MembershipSubscription = objectType({
   name: 'MembershipSubscription',
@@ -15,13 +28,13 @@ const MembershipSubscription = objectType({
       resolve: async (parent, _args, _ctx, _info) => {
         if (parent.expiresAt && parent.expiresAt < new Date(Date.now())) return false
         return true
-      },
+      }
     })
-  },
+  }
 })
 
 const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
-  switch (subType) {
+  switch(subType) {
     case MembershipSubscriptionPeriod.MONTHLY:
       return process.env.STRIPE_MONTHLY_PRICE_ID
     case MembershipSubscriptionPeriod.QUARTERLY:
@@ -38,14 +51,14 @@ const setPaymentMethod = async (
   paymentMethodId: string,
 ) => {
   const customer = await stripe.customers.retrieve(customerId)
-
-  if (!customer) throw new Error('User has stripeCustomerId but unable to find customer in Stripe')
+  
+  if (!customer) throw new Error("User has stripeCustomerId but unable to find customer in Stripe")
 
   const stripePaymentMethod = await stripe.paymentMethods.attach(paymentMethodId, {
     customer: customer.id,
   })
 
-  if (!stripePaymentMethod.card) throw new Error('Unable to retrieve payment method')
+  if (!stripePaymentMethod.card) throw new Error("Unable to retrieve payment method")
 
   await stripe.customers.update(customer.id, {
     invoice_settings: {
@@ -77,16 +90,14 @@ const setPlan = async (
   const subscriptionUpdated = await stripe.subscriptions.update(stripeSubscription.id, {
     payment_behavior: 'pending_if_incomplete',
     proration_behavior: 'always_invoice',
-    items: [
-      {
-        id: stripeSubscription.items.data[0].id,
-        price: getSubscriptionPriceId(subscriptionPeriod),
-      },
-    ],
+    items: [{
+      id: stripeSubscription.items.data[0].id,
+      price: getSubscriptionPriceId(subscriptionPeriod),
+    }],
   })
   if (subscriptionUpdated.pending_update) {
     // Payment failed
-    throw new Error('Unable to update subscription, possible payment failure')
+    throw new Error("Unable to update subscription, possible payment failure")
   }
   if (subscriptionUpdated.cancel_at_period_end !== cancelAtPeriodEnd) {
     // For unknown reasons we are unable to set the `cancel_at_period_end`
@@ -102,10 +113,8 @@ const setPlan = async (
     },
     data: {
       period: subscriptionPeriod,
-      expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + 24 * 60 * 60 * 1000 * 2),
-      nextBillingDate: subscriptionUpdated.cancel_at_period_end
-        ? null
-        : new Date(subscriptionUpdated.current_period_end * 1000),
+      expiresAt: new Date(subscriptionUpdated.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+      nextBillingDate: subscriptionUpdated.cancel_at_period_end ? null : new Date(subscriptionUpdated.current_period_end * 1000),
       stripeSubscription: subscriptionUpdated as unknown as Prisma.InputJsonValue,
       cancelAtPeriodEnd,
     },
@@ -121,136 +130,120 @@ const MembershipSubscriptionMutations = extendType({
         period: arg({ type: 'MembershipSubscriptionPeriod', required: true }),
         paymentMethodId: stringArg({ required: true }),
       },
-      resolve: (_parent, args, ctx) =>
-        paymentErrorWrapper(async () => {
-          const { userId } = ctx.request
+      resolve: (_parent, args, ctx) => paymentErrorWrapper(async () => {
+        const { userId } = ctx.request
 
-          if (!userId) {
-            throw new Error('You must be logged in to create a subscription')
+        if (!userId) {
+          throw new Error("You must be logged in to create a subscription")
+        }
+
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: userId,
+          },
+          include: {
+            membershipSubscription: true,
           }
+        })
 
-          const user = await ctx.db.user.findUnique({
-            where: {
-              id: userId,
-            },
-            include: {
-              membershipSubscription: true,
+        if (!user) throw new Error("User not found")
+        
+        const customerId = await getOrCreateStripeCustomer(user, ctx.db)
+
+        const stripePaymentMethod = await setPaymentMethod(userId, ctx.db, customerId, args.paymentMethodId)
+        if (!stripePaymentMethod.card) throw new Error("Received a non-card payment method")
+        if (!user.membershipSubscription) {
+
+          // If we're in dev or stage, create subscription with a trial period
+          // that expires 5 minutes from the current time in order to test
+          // recurring payments
+          const trialEnd = (
+            process.env.NODE_ENV === 'development' ||
+            process.env.VERCEL_GIT_COMMIT_REF === 'staging'
+          ) ? ~~(Date.now() / 1000 + 300) : undefined
+
+          const stripeSubscription = await stripe.subscriptions.create({
+            items: [{
+              price: getSubscriptionPriceId(args.period),
+              metadata: {
+                journalyUserId: userId,
+              },
+            }],
+            customer: customerId,
+            trial_end: trialEnd
+          })
+  
+          const membershipSubscription = await ctx.db.membershipSubscription.create({
+            data: {
+              period: args.period,
+              // Give 2 days grace period
+              expiresAt: new Date(stripeSubscription.current_period_end * 1000 + (24 * 60 * 60 * 1000 * 2)),
+              nextBillingDate: new Date(stripeSubscription.current_period_end * 1000),
+              // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
+              stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
+              stripeSubscriptionId: stripeSubscription.id,
+              user: {
+                connect: {
+                  id: userId,
+                }, 
+              }
             },
           })
 
-          if (!user) throw new Error('User not found')
-
-          const customerId = await getOrCreateStripeCustomer(user, ctx.db)
-
-          const stripePaymentMethod = await setPaymentMethod(
+          return membershipSubscription
+        } else {
+          const membershipSubscription = await setPlan(
             userId,
             ctx.db,
-            customerId,
-            args.paymentMethodId,
+            user.membershipSubscription.stripeSubscriptionId,
+            args.period,
+            false,
           )
-          if (!stripePaymentMethod.card) throw new Error('Received a non-card payment method')
-          if (!user.membershipSubscription) {
-            // If we're in dev or stage, create subscription with a trial period
-            // that expires 5 minutes from the current time in order to test
-            // recurring payments
-            const trialEnd =
-              process.env.NODE_ENV === 'development' ||
-              process.env.VERCEL_GIT_COMMIT_REF === 'staging'
-                ? ~~(Date.now() / 1000 + 300)
-                : undefined
-
-            const stripeSubscription = await stripe.subscriptions.create({
-              items: [
-                {
-                  price: getSubscriptionPriceId(args.period),
-                  metadata: {
-                    journalyUserId: userId,
-                  },
-                },
-              ],
-              customer: customerId,
-              trial_end: trialEnd,
-            })
-
-            const membershipSubscription = await ctx.db.membershipSubscription.create({
-              data: {
-                period: args.period,
-                // Give 2 days grace period
-                expiresAt: new Date(
-                  stripeSubscription.current_period_end * 1000 + 24 * 60 * 60 * 1000 * 2,
-                ),
-                nextBillingDate: new Date(stripeSubscription.current_period_end * 1000),
-                // We weren't smart enough to make TS know that Stripe.Response & InputJsonValue are comparable :'(
-                stripeSubscription: stripeSubscription as unknown as Prisma.InputJsonValue,
-                stripeSubscriptionId: stripeSubscription.id,
-                user: {
-                  connect: {
-                    id: userId,
-                  },
-                },
-              },
-            })
-
-            return membershipSubscription
-          } else {
-            const membershipSubscription = await setPlan(
-              userId,
-              ctx.db,
-              user.membershipSubscription.stripeSubscriptionId,
-              args.period,
-              false,
-            )
-            return membershipSubscription
-          }
-        }),
+          return membershipSubscription
+        }
+      }),
     })
     t.field('updateSubscriptionRenewal', {
       type: 'MembershipSubscription',
       args: {
         cancelAtPeriodEnd: booleanArg({ required: true }),
       },
-      resolve: async (_parent, args, ctx) =>
-        paymentErrorWrapper(async () => {
-          const { userId } = ctx.request
+      resolve: async (_parent, args, ctx) => paymentErrorWrapper(async () => {
+        const { userId } = ctx.request
 
-          if (!userId) {
-            throw new Error('You must be logged in to create a subscription')
+        if (!userId) {
+          throw new Error("You must be logged in to create a subscription")
+        }
+
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: userId,
+          },
+          include: {
+            membershipSubscription: true,
           }
+        })
 
-          const user = await ctx.db.user.findUnique({
-            where: {
-              id: userId,
-            },
-            include: {
-              membershipSubscription: true,
-            },
-          })
+        if (!user) throw new Error("User not found")
+        if (!user?.membershipSubscription?.stripeSubscriptionId) {
+          throw new Error("User has no subscription to cancel")
+        }
 
-          if (!user) throw new Error('User not found')
-          if (!user?.membershipSubscription?.stripeSubscriptionId) {
-            throw new Error('User has no subscription to cancel')
+        const updatedSubscription = await stripe.subscriptions.update(user.membershipSubscription.stripeSubscriptionId, {
+          cancel_at_period_end: args.cancelAtPeriodEnd,
+        })
+
+        // simply update our equivalent of cancel_at_period_end and let expire at end of current period
+        return await ctx.db.membershipSubscription.update({
+          where: {
+            userId,
+          },
+          data: {
+            cancelAtPeriodEnd: args.cancelAtPeriodEnd,
+            nextBillingDate: args.cancelAtPeriodEnd ? null : new Date(updatedSubscription.current_period_end * 1000),
           }
-
-          const updatedSubscription = await stripe.subscriptions.update(
-            user.membershipSubscription.stripeSubscriptionId,
-            {
-              cancel_at_period_end: args.cancelAtPeriodEnd,
-            },
-          )
-
-          // simply update our equivalent of cancel_at_period_end and let expire at end of current period
-          return await ctx.db.membershipSubscription.update({
-            where: {
-              userId,
-            },
-            data: {
-              cancelAtPeriodEnd: args.cancelAtPeriodEnd,
-              nextBillingDate: args.cancelAtPeriodEnd
-                ? null
-                : new Date(updatedSubscription.current_period_end * 1000),
-            },
-          })
-        }),
+        })
+      }),
     })
     t.field('updateSubscriptionPlan', {
       type: 'MembershipSubscription',
@@ -261,7 +254,7 @@ const MembershipSubscriptionMutations = extendType({
         const { userId } = ctx.request
 
         if (!userId) {
-          throw new Error('You must be logged in to update a subscription')
+          throw new Error("You must be logged in to update a subscription")
         }
 
         const user = await ctx.db.user.findUnique({
@@ -270,12 +263,12 @@ const MembershipSubscriptionMutations = extendType({
           },
           include: {
             membershipSubscription: true,
-          },
+          }
         })
 
-        if (!user) throw new Error('User not found')
+        if (!user) throw new Error("User not found")
         if (!user?.membershipSubscription?.stripeSubscriptionId) {
-          throw new Error('User has no subscription to update')
+          throw new Error("User has no subscription to update")
         }
 
         return setPlan(
@@ -285,45 +278,47 @@ const MembershipSubscriptionMutations = extendType({
           args.period,
           false,
         )
-      },
+      }
     })
     t.field('updateSubscriptionPaymentMethod', {
       type: 'MembershipSubscription',
       args: {
         paymentMethodId: stringArg({ required: true }),
       },
-      resolve: async (_parent, args, ctx) =>
-        paymentErrorWrapper(async () => {
-          const { userId } = ctx.request
+      resolve: async (_parent, args, ctx) => paymentErrorWrapper(async () => {
+        const { userId } = ctx.request
 
-          if (!userId) {
-            throw new Error('You must be logged in to update a payment method')
+        if (!userId) {
+          throw new Error("You must be logged in to update a payment method")
+        }
+
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: userId,
+          },
+          include: {
+            membershipSubscription: true,
           }
+        })
 
-          const user = await ctx.db.user.findUnique({
-            where: {
-              id: userId,
-            },
-            include: {
-              membershipSubscription: true,
-            },
-          })
+        if (!user) throw new Error("User not found")
+        if (!user?.membershipSubscription?.stripeSubscriptionId) {
+          throw new Error("User has no subscription to update")
+        }
 
-          if (!user) throw new Error('User not found')
-          if (!user?.membershipSubscription?.stripeSubscriptionId) {
-            throw new Error('User has no subscription to update')
-          }
-
-          await setPaymentMethod(
-            userId,
-            ctx.db,
-            user.membershipSubscription.stripeSubscriptionId,
-            args.paymentMethodId,
-          )
-          return user.membershipSubscription
-        }),
+        await setPaymentMethod(
+          userId,
+          ctx.db,
+          user.membershipSubscription.stripeSubscriptionId,
+          args.paymentMethodId,
+        )
+        return user.membershipSubscription
+      }),
     })
-  },
+  }
 })
 
-export default [MembershipSubscription, MembershipSubscriptionMutations]
+export default [
+  MembershipSubscription,
+  MembershipSubscriptionMutations,
+]

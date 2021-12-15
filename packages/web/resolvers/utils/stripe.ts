@@ -1,12 +1,19 @@
 import Stripe from 'stripe'
 
-import { User, PrismaClient } from '@journaly/j-db-client'
+import {
+  User,
+  PrismaClient,
+} from '@journaly/j-db-client'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2020-08-27',
 })
 
-const logPaymentsError = (message: string, error?: Error | undefined | null, event?: any) => {
+const logPaymentsError = (
+  message: string,
+  error?: Error | undefined | null,
+  event?: any
+) => {
   console.error(
     'PAYMENTS ERROR:',
     JSON.stringify({
@@ -15,7 +22,7 @@ const logPaymentsError = (message: string, error?: Error | undefined | null, eve
       stack: error ? error.stack : new Error().stack,
       event,
     }),
-    'PAYMENTS ERROR END',
+    'PAYMENTS ERROR END'
   )
 }
 
@@ -26,13 +33,19 @@ const paymentErrorWrapper: PaymentErrorWrapperType = async (fn) => {
   try {
     return await fn()
   } catch (err) {
-    logPaymentsError(err.message, err)
+    logPaymentsError(
+      err.message,
+      err,
+    )
 
     throw err
   }
 }
 
-const getOrCreateStripeCustomer = async (user: User, db: PrismaClient): Promise<string> => {
+const getOrCreateStripeCustomer = async (
+  user: User,
+  db: PrismaClient
+): Promise<string> => {
   if (user.stripeCustomerId) {
     return user.stripeCustomerId
   }
@@ -59,4 +72,8 @@ const getOrCreateStripeCustomer = async (user: User, db: PrismaClient): Promise<
 }
 
 export default stripe
-export { logPaymentsError, paymentErrorWrapper, getOrCreateStripeCustomer }
+export {
+  logPaymentsError,
+  paymentErrorWrapper,
+  getOrCreateStripeCustomer,
+}

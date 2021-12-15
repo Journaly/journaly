@@ -1,4 +1,11 @@
-import { BaseEditor, BaseElement, Node, ImageElement, LinkElement, TableFamilyElement } from 'slate'
+import {
+  BaseEditor,
+  BaseElement,
+  Node,
+  ImageElement,
+  LinkElement,
+  TableFamilyElement,
+} from 'slate'
 
 import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
@@ -26,7 +33,7 @@ declare module 'slate' {
     type: 'image'
     url: string
     uploaded: boolean
-  }
+  } 
 
   type TableFamilyElement = {
     type: 'table' | 'tr' | 'td' | 'th'
@@ -34,9 +41,15 @@ declare module 'slate' {
 
   type CustomEditor = BaseEditor & ReactEditor & HistoryEditor
 
-  type CustomElement = CustomBaseElement | LinkElement | ImageElement
+  type CustomElement = 
+    | CustomBaseElement
+    | LinkElement
+    | ImageElement
 
-  type CustomNode = CustomEditor | Text | CustomElement
+  type CustomNode =
+    | CustomEditor
+    | Text
+    | CustomElement
 
   interface CustomTypes {
     Editor: CustomEditor
@@ -62,6 +75,14 @@ const isTableFamilyNode = (arg: Node): arg is TableFamilyNode => {
   return 'type' in arg && ['table', 'td', 'th', 'tr'].includes(arg.type || '')
 }
 
-export type { LinkElement, ImageNode, LinkNode }
+export type {
+  LinkElement,
+  ImageNode,
+  LinkNode,
+}
 
-export { isImageNode, isLinkNode, isTableFamilyNode }
+export {
+  isImageNode,
+  isLinkNode,
+  isTableFamilyNode,
+}

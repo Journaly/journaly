@@ -1,4 +1,9 @@
-import { intArg, stringArg, objectType, extendType } from 'nexus'
+import {
+  intArg,
+  stringArg,
+  objectType,
+  extendType,
+} from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
@@ -22,7 +27,7 @@ const DatedActivityCount = objectType({
     t.int('postCount')
     t.int('threadCommentCount')
     t.int('postCommentCount')
-  },
+  }
 })
 
 const User = objectType({
@@ -81,23 +86,23 @@ const User = objectType({
     })
     t.int('languagesPostedInCount', {
       async resolve(parent, _args, ctx, _info) {
-        const q = await ctx.db.$queryRaw`
+        const q = await (ctx.db.$queryRaw`
           SELECT COUNT(DISTINCT "languageId") as count
           FROM "Post"
           WHERE
             "authorId" = ${parent.id}
             AND "status" = 'PUBLISHED'
           ;
-        `
+        `)
 
         return q[0].count
-      },
+      }
     })
     t.int('thanksReceivedCount', {
       resolve(parent, _args, ctx, _info) {
         return ctx.db.commentThanks.count({
           where: {
-            comment: { authorId: parent.id },
+            comment: { authorId: parent.id, },
           },
         })
       },
@@ -189,7 +194,7 @@ const UserBadge = objectType({
     t.model.id()
     t.model.type()
     t.model.createdAt()
-  },
+  }
 })
 
 const UserQueries = extendType({
@@ -274,11 +279,9 @@ const UserMutations = extendType({
           // Prisma's error code for unique constraint violation
           if (ex.code === 'P2002') {
             if (ex.meta.target.find((x: string) => x === 'email')) {
-              throw new UserInputError(
-                'This email address is already in use. Please try logging in',
-              )
+              throw new UserInputError("This email address is already in use. Please try logging in")
             } else if (ex.meta.target.find((x: string) => x === 'handle')) {
-              throw new UserInputError('This handle is already in use')
+              throw new UserInputError("This handle is already in use")
             } else {
               throw ex
             }

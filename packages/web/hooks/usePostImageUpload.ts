@@ -7,7 +7,7 @@ import {
 const usePostImageUpload: UploadHook<InitiatePostImageUploadResponse> = () => {
   const [initiatePostImageUpload] = useInitiatePostImageUploadMutation()
 
-  const getUploadData = async () => {
+  const getUploadData = async () =>  {
     const resp = await initiatePostImageUpload()
 
     return resp?.data?.initiatePostImageUpload

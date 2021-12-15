@@ -1,5 +1,10 @@
 import isUrl from 'is-url'
-import { Editor, Transforms, Element as SlateElement, Range } from 'slate'
+import {
+  Editor,
+  Transforms,
+  Element as SlateElement,
+  Range,
+} from 'slate'
 import { toast } from 'react-toastify'
 import { TFunction } from 'next-i18next'
 import { DEFAULTS_TABLE, setDefaults, someNode, insertTable } from '@udecode/slate-plugins'
@@ -29,6 +34,7 @@ type ElementType =
   | 'tr'
   | 'th'
   */
+
 
 type IsTypeActiveArgs = {
   type: ButtonType
@@ -74,7 +80,11 @@ export const isMarkActive = (editor: Editor, type: MarkType) => {
 
 const isBlockActive = (editor: Editor, format: string) => {
   const [match] = Editor.nodes(editor, {
-    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format,
+    match: (n) => (
+      !Editor.isEditor(n) &&
+      SlateElement.isElement(n) &&
+      n.type === format
+    ),
   })
 
   return !!match
@@ -112,8 +122,11 @@ const toggleBlock = ({ editor, format }: ToggleArgs) => {
   const isList = LIST_TYPES.includes(format)
 
   Transforms.unwrapNodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && SlateElement.isElement(n) && LIST_TYPES.includes(n.type as string),
+    match: (n) => (
+      !Editor.isEditor(n) &&
+      SlateElement.isElement(n) &&
+      LIST_TYPES.includes(n.type as string)
+    ),
     split: true,
   })
 
@@ -192,7 +205,7 @@ export const withLinks = (editor: Editor) => {
 
 const dataUrlizeFile = (file: File): Promise<string> => {
   const reader = new FileReader()
-  return new Promise((res, rej) => {
+  return (new Promise((res, rej) => {
     reader.addEventListener('load', () => {
       if (reader.result) {
         // `results`'s type depends on what `.read*` method was called, in this
@@ -205,7 +218,8 @@ const dataUrlizeFile = (file: File): Promise<string> => {
     })
 
     reader.readAsDataURL(file)
-  })
+  }))
+
 }
 
 export const insertImage = async (editor: Editor, file: File) => {
@@ -216,12 +230,12 @@ export const insertImage = async (editor: Editor, file: File) => {
       type: 'image',
       url,
       uploaded: false,
-      children: [{ text: '' }],
+      children: [{ text: '' }]
     },
     // Insert an empty paragraph after the image so typing can continue.
     {
       type: 'paragraph',
-      children: [{ text: '' }],
+      children: [{text: ''}]
     },
   ]
 
@@ -231,11 +245,11 @@ export const insertImage = async (editor: Editor, file: File) => {
 export const withImages = (editor: Editor) => {
   const { insertData, isVoid } = editor
 
-  editor.isVoid = (element) => {
+  editor.isVoid = element => {
     return element.type === 'image' ? true : isVoid(element)
   }
 
-  editor.insertData = (data) => {
+  editor.insertData = data => {
     const { files } = data
 
     if (files && files.length > 0) {
@@ -252,6 +266,7 @@ export const withImages = (editor: Editor) => {
   }
 
   return editor
+  
 }
 
 export const toogleByType = ({ type, editor, format, t }: ToggleByTypeArgs) => {

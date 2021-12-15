@@ -7,7 +7,7 @@ import { schema } from '../../resolvers'
 
 const server = new ApolloServer({
   schema,
-  context: ({ req, res }) => {
+  context: ({ req, res }) => { 
     const db = getClient()
 
     return {
@@ -16,16 +16,16 @@ const server = new ApolloServer({
       request: req,
       response: res,
     }
-  },
+  }
 })
 
 const graphqlHandler = server.createHandler({ path: '/api/graphql' })
 
 export const config = {
   api: {
-    bodyParser: false,
-  },
-}
+    bodyParser: false
+  }
+};
 
 const handler = async (req: any, res: any) => {
   const { token } = req.cookies

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 
 import { useTranslation } from '@/config/i18n'
 import { sanitize } from '@/utils'
@@ -46,6 +46,8 @@ const Thread: React.FC<ThreadProps> = ({
   const [loading, setLoading] = React.useState(false)
   const [createComment] = useCreateCommentMutation()
   const [createThread] = useCreateThreadMutation()
+
+  useEffect(() => textareaRef.current?.focus(), [])
 
   const createNewComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

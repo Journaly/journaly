@@ -6,7 +6,10 @@ const onKeyPress = (e: React.KeyboardEvent) => {
 
     const nativeEvent = e.nativeEvent as any
     if (nativeEvent?.target?.form) {
-      nativeEvent.target.form.dispatchEvent(new Event('submit'))
+      nativeEvent.target.form.dispatchEvent(new Event('submit', {
+        bubbles:  true,
+        cancelable: true,
+      }))
     }
   }
 }

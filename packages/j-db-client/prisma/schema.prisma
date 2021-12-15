@@ -294,8 +294,8 @@ model ThreadSubscription {
   createdAt DateTime @default(now())
   userId    Int
   threadId  Int
-  thread    Thread   @relation(fields: [threadId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, threadId])
 }

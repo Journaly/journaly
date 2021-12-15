@@ -5,7 +5,6 @@ import { sanitize } from '@/utils'
 import {
   useCreateCommentMutation,
   useCreateThreadMutation,
-  useDeleteThreadMutation,
   UserFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
 } from '@/generated/graphql'
@@ -29,7 +28,7 @@ export type ThreadOrHighlightProps =
 type ThreadProps = {
   onNewComment: (threadId: number) => void
   onUpdateComment: () => void
-  onDeleteThread: () => void
+  close: () => void
   currentUser: UserType | null | undefined
 } & ThreadOrHighlightProps
 
@@ -38,7 +37,7 @@ const Thread: React.FC<ThreadProps> = ({
   pendingThreadData,
   onNewComment,
   onUpdateComment,
-  onDeleteThread,
+  close,
   currentUser,
 }) => {
   const { t } = useTranslation('comment')
@@ -47,11 +46,6 @@ const Thread: React.FC<ThreadProps> = ({
   const [commentBody, setCommentBody] = React.useState<string>('')
   const [createComment] = useCreateCommentMutation()
   const [createThread] = useCreateThreadMutation()
-  const [deleteThread] = useDeleteThreadMutation({
-    onCompleted: () => {
-      onDeleteThread()
-    },
-  })
 
   const createNewComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -89,19 +83,6 @@ const Thread: React.FC<ThreadProps> = ({
     }
 
     setLoading(false)
-  }
-
-  const cancelNewComment = () => {
-    if (!thread)
-      return
-
-    if (thread.comments.length === 0) {
-      deleteThread({
-        variables: {
-          threadId: thread.id,
-        },
-      })
-    }
   }
 
   const comments = thread?.comments || []
@@ -157,15 +138,13 @@ const Thread: React.FC<ThreadProps> = ({
                   >
                     {t('submit')}
                   </Button>
-                  {thread && comments.length === 0 && (
-                    <Button
-                      onClick={() => cancelNewComment()}
-                      disabled={loading}
-                      variant={ButtonVariant.Secondary}
-                    >
-                      {t('cancel')}
-                    </Button>
-                  )}
+                  <Button
+                    onClick={close}
+                    disabled={loading}
+                    variant={ButtonVariant.Secondary}
+                  >
+                    {t('cancel')}
+                  </Button>
                 </div>
               </div>
             </fieldset>

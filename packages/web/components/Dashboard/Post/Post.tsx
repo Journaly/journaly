@@ -707,7 +707,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           currentUser={currentUser}
           onNewComment={handleNewComment}
           onUpdateComment={refetch}
-          onDeleteThread={refetch}
+          close={closeThread}
           ref={popoverRef}
         />
       )) || (pendingThreadData && (
@@ -717,7 +717,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           currentUser={currentUser}
           onNewComment={handleNewComment}
           onUpdateComment={refetch}
-          onDeleteThread={refetch}
+          close={closeThread}
           ref={popoverRef}
         />
       ))}

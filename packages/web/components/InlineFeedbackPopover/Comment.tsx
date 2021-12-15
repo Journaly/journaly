@@ -389,8 +389,8 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           cursor: pointer;
           fill: ${theme.colors.blueLight};
         }
-        // TODO: Fix hover state color
-        .delete-btn :global(svg:hover) {
+
+        .delete-btn :global(svg:hover path) {
           cursor: pointer;
           fill: ${theme.colors.red};
         }

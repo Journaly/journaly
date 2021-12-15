@@ -64,6 +64,12 @@ const defaultImages = [
     largeSize:
       'https://d2ieewwzq5w1x7.cloudfront.net/post-image/77cc91d6-7b9c-4c02-9233-1bea2dc1f674-large',
   },
+  {
+    smallSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/ee047239-f255-49cf-beb2-d73aa4cfdcb3-small',
+    largeSize:
+      'https://d2ieewwzq5w1x7.cloudfront.net/post-image/ee047239-f255-49cf-beb2-d73aa4cfdcb3-large',
+  },
 ]
 
 const selectDefaultImage = () => {

@@ -78,6 +78,13 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
     cancelAnimationFrame(swipe.current.animationId)
   }
 
+  const handleCloseActions = () => {
+    swipe.current.currentTranslate = 0
+    swipe.current.isSwiping = false
+    swipe.current.translateStart = 0
+    animation()
+  }
+
   // Make sure menu doesn't pop up when clicking & holding
   const onContextMenuClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -95,13 +102,25 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
       >
         {children}
         <div className="right-hand-actions" ref={rightHandActionsRef}>
-          <Button variant={ButtonVariant.Icon} onClick={nonDestructiveAction}>
+          <Button
+            variant={ButtonVariant.Icon}
+            onClick={() => {
+              handleCloseActions()
+              nonDestructiveAction()
+            }}
+          >
             <div className="action-btn non-destructive">
               <CheckmarkIcon size={24} />
               {t('notifications.actions.markAsRead')}
             </div>
           </Button>
-          <Button variant={ButtonVariant.Icon} onClick={destructiveAction}>
+          <Button
+            variant={ButtonVariant.Icon}
+            onClick={() => {
+              handleCloseActions()
+              destructiveAction()
+            }}
+          >
             <div className="action-btn destructive">
               <DeleteIcon color={theme.colors.white} size={24} />
               {t('notifications.actions.delete')}

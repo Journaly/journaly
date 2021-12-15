@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react'
 import { findEventTargetParent, isChildOf } from '@/utils'
 
-const useOnClickOut = (containerRef: React.RefObject<HTMLElement>, onClickOut: () => void) => {
+const useOnClickOut = (
+  containerRef: React.RefObject<HTMLElement>,
+  onClickOut: (e: MouseEvent) => void,
+) => {
   useEffect(() => {
     const onDocumentMouseDown = (e: MouseEvent) => {
       if (!e.target || !containerRef.current || isChildOf(e.target as Node, containerRef.current)) {
@@ -13,7 +16,7 @@ const useOnClickOut = (containerRef: React.RefObject<HTMLElement>, onClickOut: (
         return
       }
 
-      onClickOut()
+      onClickOut(e)
     }
 
     document.addEventListener('mousedown', onDocumentMouseDown)

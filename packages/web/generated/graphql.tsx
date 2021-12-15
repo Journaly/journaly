@@ -1127,7 +1127,10 @@ export type UpdateInAppNotificationMutationVariables = Exact<{
 }>
 
 export type UpdateInAppNotificationMutation = { __typename?: 'Mutation' } & {
-  updateInAppNotification: { __typename?: 'InAppNotification' } & Pick<InAppNotification, 'id'>
+  updateInAppNotification: { __typename?: 'InAppNotification' } & Pick<
+    InAppNotification,
+    'id' | 'readStatus'
+  >
 }
 
 export type PostPageQueryVariables = Exact<{
@@ -2945,6 +2948,7 @@ export const UpdateInAppNotificationDocument = gql`
   mutation updateInAppNotification($notificationId: Int!, $readStatus: NotificationReadStatus) {
     updateInAppNotification(notificationId: $notificationId, readStatus: $readStatus) {
       id
+      readStatus
     }
   }
 `

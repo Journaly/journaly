@@ -503,18 +503,20 @@ const PostMutations = extendType({
           await Promise.all(insertPromises)
         }
 
-        await Promise.all(user.followedBy.map((follower) => {
-          return createInAppNotification(ctx.db, {
-            userId: follower.id,
-            type: InAppNotificationType.NEW_POST,
-            key: {},
-            subNotification: {
-              postId: post.id,
-            }
+        if (isPublished) {
+          const promises: Promise<unknown>[] = user.followedBy.map((follower) => {
+            return createInAppNotification(ctx.db, {
+              userId: follower.id,
+              type: InAppNotificationType.NEW_POST,
+              key: {},
+              subNotification: {
+                postId: post.id,
+              },
+            })
           })
-        }))
-
-        if (isPublished) await assignPostCountBadges(ctx.db, userId)
+          promises.push(assignPostCountBadges(ctx.db, userId))
+          await Promise.all(promises)
+        }
 
         return post
       },
@@ -544,6 +546,7 @@ const PostMutations = extendType({
             include: {
               languages: true,
               membershipSubscription: true,
+              followedBy: true,
             },
           }),
           ctx.db.post.findUnique({
@@ -656,7 +659,20 @@ const PostMutations = extendType({
           data,
         })
 
-        if (post.status === PostStatus.PUBLISHED) await assignPostCountBadges(ctx.db, userId)
+        if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
+          const promises: Promise<unknown>[] = currentUser.followedBy.map((follower) => {
+            return createInAppNotification(ctx.db, {
+              userId: follower.id,
+              type: InAppNotificationType.NEW_POST,
+              key: {},
+              subNotification: {
+                postId: post.id,
+              },
+            })
+          })
+          promises.push(assignPostCountBadges(ctx.db, userId))
+          await Promise.all(promises)
+        }
 
         return post
       },

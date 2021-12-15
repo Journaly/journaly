@@ -122,7 +122,7 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
           width: 100%;
           padding: 16px;
           border-bottom: 1px solid ${theme.colors.gray600};
-          align-items: center;
+          align-items: stretch;
           min-height: 100px;
           cursor: pointer;
           filter: opacity(${readStatus === NotificationReadStatus.Read ? 0.5 : 1});
@@ -133,13 +133,15 @@ const BaseNotificationLayout: React.FC<BaseNotificationLayoutProps> = ({
         }
 
         .left-section {
-          display: ${left ? '' : 'none'};
+          display: ${left ? 'flex' : 'none'};
         }
 
         .middle-section {
-          display: ${middle ? '' : 'none'};
+          display: ${middle ? 'flex' : 'none'};
           padding: 0 16px;
           flex: 1;
+          align-items: center;
+          overflow: hidden;
         }
 
         .right-section {

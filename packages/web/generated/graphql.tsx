@@ -236,6 +236,7 @@ export type MutationCreateThreadArgs = {
   startIndex: Scalars['Int']
   endIndex: Scalars['Int']
   highlightedContent: Scalars['String']
+  body: Scalars['String']
 }
 
 export type MutationDeleteThreadArgs = {
@@ -718,6 +719,7 @@ export type CreateThreadMutationVariables = Exact<{
   startIndex: Scalars['Int']
   endIndex: Scalars['Int']
   highlightedContent: Scalars['String']
+  body: Scalars['String']
 }>
 
 export type CreateThreadMutation = { __typename?: 'Mutation' } & {
@@ -2186,12 +2188,14 @@ export const CreateThreadDocument = gql`
     $startIndex: Int!
     $endIndex: Int!
     $highlightedContent: String!
+    $body: String!
   ) {
     createThread(
       postId: $postId
       startIndex: $startIndex
       endIndex: $endIndex
       highlightedContent: $highlightedContent
+      body: $body
     ) {
       ...ThreadFragment
     }
@@ -2220,6 +2224,7 @@ export type CreateThreadMutationFn = ApolloReactCommon.MutationFunction<
  *      startIndex: // value for 'startIndex'
  *      endIndex: // value for 'endIndex'
  *      highlightedContent: // value for 'highlightedContent'
+ *      body: // value for 'body'
  *   },
  * });
  */

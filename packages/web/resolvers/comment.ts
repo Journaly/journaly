@@ -11,7 +11,10 @@ import {
   InAppNotificationType,
   EmailNotificationType,
   BadgeType,
-  LanguageLevel
+  LanguageLevel,
+  PrismaClient,
+  ThreadGetPayload,
+  UserGetPayload,
 } from '@journaly/j-db-client'
 
 import {
@@ -64,6 +67,100 @@ const PostComment = objectType({
   },
 })
 
+
+type CreateCommentArg = {
+  thread: ThreadGetPayload<{
+    include: {
+      subscriptions: {
+        include: {
+          user: true,
+        },
+      },
+      post: {
+        include: {
+          author: true,
+        },
+      },
+    }
+  }>
+  author: UserGetPayload<{ inclue: { languages: true } }>
+  body: string
+  db: PrismaClient
+}
+
+const createComment = async ({
+  db,
+  thread,
+  author,
+  body,
+}: CreateCommentArg) => {
+  const authorHasPostLanguage =
+    author &&
+    author.languages.find((language) => language.languageId === thread.post.languageId)
+
+  const authorLanguageLevel = authorHasPostLanguage?.level || LanguageLevel.BEGINNER
+
+  const comment = await db.comment.create({
+    data: {
+      body,
+      authorLanguageLevel,
+      author: {
+        connect: { id: author.id },
+      },
+      thread: {
+        connect: { id: thread.id },
+      },
+    },
+    include: {
+      author: true,
+    },
+  })
+
+  const subData = {
+    user: { connect: { id: author.id } },
+    thread: { connect: { id: thread.id } },
+  }
+  await db.threadSubscription.upsert({
+    create: subData,
+    update: subData,
+    where: {
+      userId_threadId: {
+        threadId: thread.id,
+        userId: author.id,
+      },
+    },
+  })
+
+  await Promise.all(thread.subscriptions.map(async ({ user }: { user: User }) => {
+    if (user.id === author.id) {
+      // This is the user creating the comment, do not notify them.
+      return new Promise((res) => res(null))
+    }
+
+    await createEmailNotification(db, user, {
+      type: EmailNotificationType.THREAD_COMMENT,
+      comment,
+    })
+
+    await createInAppNotification(db, {
+      userId: user.id,
+      type: InAppNotificationType.THREAD_COMMENT,
+      key: { postId: thread.post.id, },
+      subNotification: {
+        commentId: comment.id
+      }
+    })
+  }))
+
+  // Check to see if we should assign a badge
+  if (thread.post.author.id !== author.id && isPast(add(thread.post.createdAt, { weeks: 1 }))) {
+    await assignBadge(db, author.id, BadgeType.NECROMANCER)
+  }
+
+  return comment
+}
+
+
 const CommentMutations = extendType({
   type: 'Mutation',
   definition(t) {
@@ -74,6 +171,7 @@ const CommentMutations = extendType({
         startIndex: intArg({ required: true }),
         endIndex: intArg({ required: true }),
         highlightedContent: stringArg({ required: true }),
+        body: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -82,7 +180,14 @@ const CommentMutations = extendType({
           throw new Error('You must be logged in to create threads.')
         }
 
-        const { postId, startIndex, endIndex, highlightedContent } = args
+        const author = await ctx.db.user.findUnique({
+          where: { id: userId },
+          include: {
+            languages: true,
+          },
+        })
+
+        const { postId, startIndex, endIndex, highlightedContent, body } = args
         const post = await ctx.db.post.findUnique({ where: { id: postId } })
 
         if (!post) {
@@ -96,22 +201,25 @@ const CommentMutations = extendType({
             highlightedContent,
             post: { connect: { id: postId } },
           },
-        })
-
-        // Subscribe the post author to every thread made on their posts
-        const subData = {
-          user: { connect: { id: post.authorId } },
-          thread: { connect: { id: thread.id } },
-        }
-        await ctx.db.threadSubscription.upsert({
-          create: subData,
-          update: subData,
-          where: {
-            userId_threadId: {
-              userId: post.authorId,
-              threadId: thread.id,
+          include: {
+            subscriptions: {
+              include: {
+                user: true,
+              },
+            },
+            post: {
+              include: {
+                author: true,
+              },
             },
           },
+        })
+
+        await createComment({
+          db: ctx.db,
+          thread,
+          author,
+          body,
         })
 
         return thread
@@ -183,79 +291,19 @@ const CommentMutations = extendType({
           throw new NotFoundError('thread')
         }
 
-        const commentAuthor = await ctx.db.user.findUnique({
+        const author = await ctx.db.user.findUnique({
           where: { id: userId },
           include: {
             languages: true,
           },
         })
 
-        const authorHasPostLanguage =
-          commentAuthor &&
-          commentAuthor.languages.find((language) => language.languageId === thread.post.languageId)
-
-        const authorLanguageLevel = authorHasPostLanguage?.level || LanguageLevel.BEGINNER
-
-        const comment = await ctx.db.comment.create({
-          data: {
-            body: args.body,
-            authorLanguageLevel,
-            author: {
-              connect: { id: userId },
-            },
-            thread: {
-              connect: { id: thread.id },
-            },
-          },
-          include: {
-            author: true,
-          },
+        return await createComment({
+          db: ctx.db,
+          thread,
+          author,
+          body: args.body,
         })
-
-        const subData = {
-          user: { connect: { id: userId } },
-          thread: { connect: { id: thread.id } },
-        }
-        await ctx.db.threadSubscription.upsert({
-          create: subData,
-          update: subData,
-          where: {
-            userId_threadId: {
-              threadId: thread.id,
-              userId,
-            },
-          },
-        })
-
-        const promises = thread.subscriptions.map(async ({ user }: { user: User }) => {
-          if (user.id === userId) {
-            // This is the user creating the comment, do not notify them.
-            return new Promise((res) => res(null))
-          }
-
-          await createEmailNotification(ctx.db, user, {
-            type: EmailNotificationType.THREAD_COMMENT,
-            comment,
-          })
-
-          await createInAppNotification(ctx.db, {
-            userId: user.id,
-            type: InAppNotificationType.THREAD_COMMENT,
-            key: { postId: thread.post.id, },
-            subNotification: {
-              commentId: comment.id
-            }
-          })
-        })
-
-        await Promise.all(promises)
-
-        // Check to see if we should assign a badge
-        if (thread.post.author.id !== userId && isPast(add(thread.post.createdAt, { weeks: 1 }))) {
-          await assignBadge(ctx.db, userId, BadgeType.NECROMANCER)
-        }
-
-        return comment
       },
     })
 

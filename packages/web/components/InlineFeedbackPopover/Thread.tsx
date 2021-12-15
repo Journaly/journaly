@@ -57,25 +57,29 @@ const Thread: React.FC<ThreadProps> = ({
   const createNewComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
-    let threadId: number = 0
 
     try {
       if (pendingThreadData) {
-        const { data } = await createThread({ variables: pendingThreadData })
+        const { data } = await createThread({
+          variables: {
+            ...pendingThreadData,
+            body: commentBody
+          }
+        })
 
-        threadId = data.createThread.id
+        onNewComment(data.createThread.id)
       } else if (thread) {
-        threadId = thread.id
+        await createComment({
+          variables: {
+            threadId: thread.id,
+            body: commentBody,
+          },
+        })
+
+        onNewComment(thread.id)
       }
 
-      await createComment({
-        variables: {
-          threadId,
-          body: commentBody,
-        },
-      })
 
-      onNewComment(threadId)
       setCommentBody('')
     } catch (e: Error) {
       console.error('Error creating comment or thread: ', e)

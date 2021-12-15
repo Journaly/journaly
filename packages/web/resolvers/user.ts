@@ -1,18 +1,9 @@
-import {
-  intArg,
-  stringArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { intArg, stringArg, objectType, extendType } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 import { isAcademic } from 'swot-node'
-import {
-  PostStatus,
-  EmailVerificationStatus,
-  InAppNotificationType,
-} from '@journaly/j-db-client'
+import { PostStatus, EmailVerificationStatus, InAppNotificationType } from '@journaly/j-db-client'
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
@@ -147,15 +138,12 @@ const User = objectType({
 
         return ctx.db.inAppNotification.findMany({
           where: {
-            userId: userId
+            userId: userId,
           },
           take: 99,
-          orderBy: [
-            { readStatus: 'desc' },
-            { bumpedAt: 'desc' },
-          ]
+          orderBy: [{ readStatus: 'desc' }, { bumpedAt: 'desc' }],
         })
-      }
+      },
     })
     t.list.field('activityGraphData', {
       type: 'DatedActivityCount',
@@ -209,7 +197,7 @@ const User = objectType({
             ON post_activity.date = post_comment_activity.date
           ;
         `
-        return stats as any || []
+        return (stats as any) || []
       },
     })
   },
@@ -667,8 +655,8 @@ const UserMutations = extendType({
           type: InAppNotificationType.NEW_FOLLOWER,
           key: {},
           subNotification: {
-            followingUserId: follower.id
-          }
+            followingUserId: follower.id,
+          },
         })
 
         return follower

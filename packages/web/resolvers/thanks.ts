@@ -3,11 +3,7 @@ import { intArg, objectType, extendType } from 'nexus'
 
 import { EmailNotificationType } from '@journaly/j-db-client'
 
-import {
-  createInAppNotification, 
-  createEmailNotification,
-  hasAuthorPermissions
-} from './utils'
+import { createInAppNotification, createEmailNotification, hasAuthorPermissions } from './utils'
 
 const CommentThanks = objectType({
   name: 'CommentThanks',
@@ -82,7 +78,7 @@ const ThanksMutations = extendType({
           },
           subNotification: {
             thanksId: commentThanks.id,
-          }
+          },
         })
 
         return commentThanks

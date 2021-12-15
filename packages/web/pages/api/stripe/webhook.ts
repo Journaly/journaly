@@ -90,7 +90,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const subscriptionLine = stripeInvoice.lines.data.find(
         (item: any) => item.type === 'subscription',
       )
-      let customerId: string =
+      const customerId: string =
         typeof stripeInvoiceCustomer === 'string' ? stripeInvoiceCustomer : stripeInvoiceCustomer.id
 
       if (!subscriptionLine?.price) {

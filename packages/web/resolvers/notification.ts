@@ -129,7 +129,7 @@ const NotificationMutations = extendType({
             id: args.notificationId,
           },
         })
-        
+
         if (!notification) {
           throw new Error('Notification not found')
         }

@@ -1,4 +1,4 @@
-const CopyPlugin = require("copy-webpack-plugin")
+const CopyPlugin = require('copy-webpack-plugin')
 
 let config = {
   target: 'serverless',

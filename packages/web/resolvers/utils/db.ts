@@ -1,11 +1,9 @@
-import {
-  PrismaClient,
-} from '@journaly/j-db-client'
+import { PrismaClient } from '@journaly/j-db-client'
 
 declare global {
   namespace NodeJS {
     interface Global {
-      prisma: PrismaClient;
+      prisma: PrismaClient
     }
   }
 }
@@ -19,9 +17,8 @@ const getClient = (): PrismaClient => {
   if (process.env.NODE_ENV === 'development') {
     if (!global.prisma) {
       console.log('Creating new database client [DEV]')
-      global.prisma = new PrismaClient(SQL_DEBUG
-        ? { log: ['query', 'info', 'warn', 'error'] }
-        : undefined
+      global.prisma = new PrismaClient(
+        SQL_DEBUG ? { log: ['query', 'info', 'warn', 'error'] } : undefined,
       )
     }
 
@@ -29,9 +26,8 @@ const getClient = (): PrismaClient => {
   } else {
     if (!_prisma) {
       console.log('Creating new database client [PROD]')
-      _prisma = new PrismaClient(SQL_DEBUG
-        ? { log: ['query', 'info', 'warn', 'error'] }
-        : undefined
+      _prisma = new PrismaClient(
+        SQL_DEBUG ? { log: ['query', 'info', 'warn', 'error'] } : undefined,
       )
     }
 

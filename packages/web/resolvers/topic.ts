@@ -16,7 +16,7 @@ const UserInterest = objectType({
     t.model.id()
     t.model.user()
     t.model.topic()
-  }
+  },
 })
 
 const Topic = objectType({
@@ -183,7 +183,7 @@ const TopicMutations = extendType({
         return ctx.db.userInterest.delete(interestFilter)
       },
     })
-  }
+  },
 })
 
 export default [TopicTranslation, UserInterest, Topic, TopicQueries, TopicMutations]

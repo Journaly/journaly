@@ -3,7 +3,7 @@ const NextI18Next = require('next-i18next').default
 
 // Hack because of vercel funkiness with loading files of the FS
 const getLocalePath = () =>
-  (typeof window === 'undefined' && process.env.NODE_ENV === 'production')
+  typeof window === 'undefined' && process.env.NODE_ENV === 'production'
     ? path.resolve(process.cwd(), '.next/server/chunks/public/static/locales')
     : path.resolve('./public/static/locales')
 

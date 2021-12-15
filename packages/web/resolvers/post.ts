@@ -1,11 +1,4 @@
-import {
-  arg,
-  intArg,
-  stringArg,
-  booleanArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { arg, intArg, stringArg, booleanArg, objectType, extendType } from 'nexus'
 
 import {
   processEditorDocument,
@@ -19,7 +12,6 @@ import {
   generatePostPrivateShareId,
   createInAppNotification,
 } from './utils'
-
 
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {

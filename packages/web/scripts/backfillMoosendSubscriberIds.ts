@@ -10,14 +10,16 @@ const main = async () => {
 
   while (morePages) {
     const url = `https://api.moosend.com/v3/lists/${process.env.MOOSEND_PRODUCT_UPDATES_MAILING_LIST_ID}/subscribers/Subscribed.json?apikey=${process.env.MOOSEND_API_KEY}&Page=${pageNum}&PageSize=100`
-    const page = await fetch(url).then(r => r.json())
+    const page = await fetch(url).then((r) => r.json())
 
     const updatePromises = []
     for (const sub of page.Context.Subscribers) {
-      updatePromises.push(db.user.updateMany({
-        where: { email: sub.Email },
-        data: { moosendSubscriberId: sub.ID }
-      }))
+      updatePromises.push(
+        db.user.updateMany({
+          where: { email: sub.Email },
+          data: { moosendSubscriberId: sub.ID },
+        }),
+      )
     }
     await Promise.all(updatePromises)
     updateCount += updatePromises.length
@@ -31,5 +33,7 @@ const main = async () => {
 }
 
 main()
-  .catch((e) => { throw e })
+  .catch((e) => {
+    throw e
+  })
   .then(() => process.exit(0))

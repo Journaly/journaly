@@ -1,9 +1,4 @@
-import {
-  intArg,
-  stringArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { intArg, stringArg, objectType, extendType } from 'nexus'
 import { add, isPast } from 'date-fns'
 
 import {
@@ -11,7 +6,7 @@ import {
   InAppNotificationType,
   EmailNotificationType,
   BadgeType,
-  LanguageLevel
+  LanguageLevel,
 } from '@journaly/j-db-client'
 
 import {
@@ -241,10 +236,10 @@ const CommentMutations = extendType({
           await createInAppNotification(ctx.db, {
             userId: user.id,
             type: InAppNotificationType.THREAD_COMMENT,
-            key: { postId: thread.post.id, },
+            key: { postId: thread.post.id },
             subNotification: {
-              commentId: comment.id
-            }
+              commentId: comment.id,
+            },
           })
         })
 
@@ -411,9 +406,8 @@ const CommentMutations = extendType({
           },
         })
 
-        await Promise.all(post.postCommentSubscriptions.map(
-            async ({ user }: { user: User }
-          ) => {
+        await Promise.all(
+          post.postCommentSubscriptions.map(async ({ user }: { user: User }) => {
             if (user.id === userId) {
               // This is the user creating the comment, do not notify them.
               return
@@ -427,12 +421,13 @@ const CommentMutations = extendType({
             await createInAppNotification(ctx.db, {
               userId: user.id,
               type: InAppNotificationType.POST_COMMENT,
-              key: { postId: post.id, },
+              key: { postId: post.id },
               subNotification: {
                 postCommentId: postComment.id,
-              }
+              },
             })
-        }))
+          }),
+        )
 
         // TODO: Set up logging and check for successful `mailResponse`
         return postComment
@@ -518,9 +513,4 @@ const CommentMutations = extendType({
   },
 })
 
-export default [
-  Thread,
-  Comment,
-  PostComment,
-  CommentMutations,
-]
+export default [Thread, Comment, PostComment, CommentMutations]

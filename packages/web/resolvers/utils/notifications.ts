@@ -78,20 +78,17 @@ type InAppNotificationSubtypes = {
 }
 
 type BaseInAppNotificationCreationInput = {
-  userId: number,
-  key: Partial<Pick<Prisma.InAppNotificationUncheckedCreateInput, 'postId' | 'triggeringUserId' >>
+  userId: number
+  key: Partial<Pick<Prisma.InAppNotificationUncheckedCreateInput, 'postId' | 'triggeringUserId'>>
 }
 
-type InAppNotificationCreationInput = (
-  BaseInAppNotificationCreationInput
-  & InAppNotificationSubtypes[keyof InAppNotificationSubtypes]
-)
-
+type InAppNotificationCreationInput = BaseInAppNotificationCreationInput &
+  InAppNotificationSubtypes[keyof InAppNotificationSubtypes]
 
 const createInAppNotification = async (
   db: PrismaClient,
   input: InAppNotificationCreationInput,
-  notificationTime?: Date
+  notificationTime?: Date,
 ) => {
   const timestamp = notificationTime || new Date()
 
@@ -104,54 +101,65 @@ const createInAppNotification = async (
     },
   })
 
-  let subnoteData: Partial<Pick<Prisma.InAppNotificationCreateInput, 'threadCommentNotifications' | 'postCommentNotifications' | 'newFollowerNotifications' | 'postClapNotifications' | 'threadCommentThanksNotifications' | 'newPostNotifications' | 'newFollowerNotifications'>>
+  let subnoteData: Partial<
+    Pick<
+      Prisma.InAppNotificationCreateInput,
+      | 'threadCommentNotifications'
+      | 'postCommentNotifications'
+      | 'newFollowerNotifications'
+      | 'postClapNotifications'
+      | 'threadCommentThanksNotifications'
+      | 'newPostNotifications'
+      | 'newFollowerNotifications'
+    >
+  >
 
   switch (input.type) {
     case 'THREAD_COMMENT': {
       subnoteData = {
         threadCommentNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
     case 'THREAD_COMMENT_THANKS': {
       subnoteData = {
         threadCommentThanksNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
     case 'POST_CLAP': {
       subnoteData = {
         postClapNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
     case 'POST_COMMENT': {
       subnoteData = {
         postCommentNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
     case 'NEW_POST': {
       subnoteData = {
         newPostNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
     case 'NEW_FOLLOWER': {
       subnoteData = {
         newFollowerNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
@@ -163,7 +171,7 @@ const createInAppNotification = async (
       data: {
         ...subnoteData,
         bumpedAt: timestamp,
-      }
+      },
     })
   } else {
     ian = await db.inAppNotification.create({
@@ -173,14 +181,11 @@ const createInAppNotification = async (
         bumpedAt: timestamp,
         userId: input.userId,
         type: input.type,
-      }
+      },
     })
   }
 
   return ian
 }
 
-export {
-  createEmailNotification,
-  createInAppNotification
-}
+export { createEmailNotification, createInAppNotification }

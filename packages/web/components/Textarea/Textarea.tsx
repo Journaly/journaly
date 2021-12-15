@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo, forwardRef } from 'react'
 
 const onKeyPress = (e: React.KeyboardEvent) => {
   if (e.which === 13 && (e.ctrlKey)) {
@@ -12,8 +12,11 @@ const onKeyPress = (e: React.KeyboardEvent) => {
 }
 
 
-const Textarea = (props: JSX.IntrinsicElements['textarea']) => (
-  <textarea {...props} onKeyPress={onKeyPress} />
-)
+const Textarea = forwardRef<
+  HTMLTextAreaElement,
+  JSX.IntrinsicElements['textarea']
+>((props, ref) => (
+  <textarea {...props} onKeyPress={onKeyPress} ref={ref} />
+))
 
-export default Textarea
+export default memo(Textarea)

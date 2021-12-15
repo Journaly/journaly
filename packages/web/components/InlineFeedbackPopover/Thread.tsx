@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 
 import { useTranslation } from '@/config/i18n'
 import { sanitize } from '@/utils'
@@ -42,13 +42,17 @@ const Thread: React.FC<ThreadProps> = ({
 }) => {
   const { t } = useTranslation('comment')
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [loading, setLoading] = React.useState(false)
-  const [commentBody, setCommentBody] = React.useState<string>('')
   const [createComment] = useCreateCommentMutation()
   const [createThread] = useCreateThreadMutation()
 
   const createNewComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    const commentBody = textareaRef.current?.value
+    if (!textareaRef.current || !commentBody) return
+
     setLoading(true)
 
     try {
@@ -77,7 +81,7 @@ const Thread: React.FC<ThreadProps> = ({
       }
 
 
-      setCommentBody('')
+      textareaRef.current.value = ''
     } catch (e) {
       console.error('Error creating comment or thread: ', e)
     }
@@ -124,9 +128,8 @@ const Thread: React.FC<ThreadProps> = ({
               <div className="new-comment-block">
                 <Textarea
                   placeholder={t('addCommentPlaceholder')}
-                  value={commentBody}
-                  onChange={(e) => setCommentBody(e.target.value)}
                   disabled={loading}
+                  ref={textareaRef}
                 />
                 <div className="btn-container">
                   <Button

@@ -1,3 +1,5 @@
+/* eslint-disable import/no-anonymous-default-export */
+
 import { objectType } from 'nexus'
 
 const HeadlineImage = objectType({

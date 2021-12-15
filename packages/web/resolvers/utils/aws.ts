@@ -1,3 +1,5 @@
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
+
 import * as AWS from 'aws-sdk'
 
 AWS.config.credentials = new AWS.Credentials(

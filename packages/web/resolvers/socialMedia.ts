@@ -1,3 +1,5 @@
+/* eslint-disable import/no-anonymous-default-export */
+
 import { stringArg, objectType, extendType } from 'nexus'
 import { NotAuthorizedError, UserInputError } from './errors'
 import { validateSocialMediaInput } from './utils/socialMedia'

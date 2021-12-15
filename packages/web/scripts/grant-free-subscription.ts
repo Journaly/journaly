@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/camelcase */
+
 import { getClient } from '@/nexus/utils/db'
 import stripe, { getOrCreateStripeCustomer } from '@/nexus/utils/stripe'
 import { Prisma, MembershipSubscriptionPeriod } from '@journaly/j-db-client'

@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable import/no-anonymous-default-export */
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
+/* eslint-disable  @typescript-eslint/no-unused-vars */
+
 import { PostStatus } from '@journaly/j-db-client'
 import { arg, booleanArg, objectType, extendType, intArg } from 'nexus'
 

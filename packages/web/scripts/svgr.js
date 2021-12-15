@@ -18,6 +18,26 @@ const svgrConfig = {
 let componentName
 const svgComponentsDirectory = path.join(__dirname, '../components/Icons')
 
+function writeComponentToFile(component) {
+  const newFileName = `${componentName}.tsx`
+  const outputPath = `${svgComponentsDirectory}/${newFileName}`
+
+  fs.writeFile(outputPath, component, (err) => {
+    if (err) return console.log(err)
+    console.log(`Success! ${newFileName} has been written to ${svgComponentsDirectory}/`)
+  })
+}
+
+function convertSvgToReactComponent(svg) {
+  svgr(svg, svgrConfig, { componentName })
+    .then((svgReactComponent) => {
+      writeComponentToFile(svgReactComponent)
+    })
+    .catch((error) => {
+      throw error
+    })
+}
+
 function importSvg(svgPath) {
   fs.readFile(svgPath, { encoding: 'utf8' }, (err, data) => {
     if (err) {
@@ -32,26 +52,6 @@ function importSvg(svgPath) {
     }
 
     convertSvgToReactComponent(data)
-  })
-}
-
-function convertSvgToReactComponent(svg) {
-  svgr(svg, svgrConfig, { componentName })
-    .then((svgReactComponent) => {
-      writeComponentToFile(svgReactComponent)
-    })
-    .catch((error) => {
-      throw error
-    })
-}
-
-function writeComponentToFile(component) {
-  const newFileName = `${componentName}.tsx`
-  const outputPath = `${svgComponentsDirectory}/${newFileName}`
-
-  fs.writeFile(outputPath, component, (err) => {
-    if (err) return console.log(err)
-    console.log(`Success! ${newFileName} has been written to ${svgComponentsDirectory}/`)
   })
 }
 

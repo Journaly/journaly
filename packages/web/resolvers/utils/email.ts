@@ -1,7 +1,7 @@
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
+
 import fetch from 'isomorphic-unfetch'
-
 import { User, BadgeType, PrismaClient } from '@journaly/j-db-client'
-
 import { AWS } from './aws'
 
 const sqs = new AWS.SQS({ region: 'us-east-2' })

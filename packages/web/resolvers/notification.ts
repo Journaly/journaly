@@ -1,3 +1,5 @@
+/* eslint-disable import/no-anonymous-default-export */
+
 import { arg, extendType, intArg, objectType } from 'nexus'
 
 const InAppNotification = objectType({

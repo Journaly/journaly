@@ -1,3 +1,8 @@
+// TODO: Check
+/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable import/no-anonymous-default-export */
+
 import { Prisma, MembershipSubscriptionPeriod, PrismaClient } from '@journaly/j-db-client'
 import { arg, booleanArg, extendType, objectType, stringArg } from 'nexus'
 import stripe, { getOrCreateStripeCustomer, paymentErrorWrapper } from '@/nexus/utils/stripe'

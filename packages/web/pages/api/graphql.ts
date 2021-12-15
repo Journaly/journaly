@@ -1,3 +1,5 @@
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
+
 require('dotenv').config()
 import jwt from 'jsonwebtoken'
 import { ApolloServer } from 'apollo-server-micro'

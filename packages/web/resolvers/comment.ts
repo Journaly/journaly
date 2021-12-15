@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable import/no-anonymous-default-export */
 import { intArg, stringArg, objectType, extendType } from 'nexus'
 import { add, isPast } from 'date-fns'
 

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable import/no-anonymous-default-export */
+
 import { LanguageLevel } from '@/generated/graphql'
 
 type LanguageName = {

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable import/no-anonymous-default-export */
+
 import { arg, intArg, stringArg, booleanArg, objectType, extendType } from 'nexus'
 
 import {

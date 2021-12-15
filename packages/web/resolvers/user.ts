@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable import/no-anonymous-default-export */
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
+/* eslint-disable  @typescript-eslint/no-unused-vars */
+
 import { intArg, stringArg, objectType, extendType } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'

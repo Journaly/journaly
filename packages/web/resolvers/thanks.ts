@@ -1,3 +1,5 @@
+/* eslint-disable import/no-anonymous-default-export */
+
 import { InAppNotificationType } from '.prisma/client'
 import { intArg, objectType, extendType } from 'nexus'
 

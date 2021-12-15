@@ -283,22 +283,6 @@ const slurpFile = async (path) => {
   return await fs.readFile(path, { encoding: 'UTF-8' })
 }
 
-const getTranslations = (jsonStr) => {
-  const tree = jsonParser.parseTree(jsonStr)
-  const lineByOffset = new Array(jsonStr.length)
-  let lineNo = 1
-
-  for (let i = 0; i < jsonStr.length; i++) {
-    lineByOffset[i] = lineNo
-
-    if (jsonStr[i] === '\n') {
-      lineNo++
-    }
-  }
-
-  return getProperties(tree, lineByOffset)
-}
-
 const getProperties = (tree, lineByOffset, path = []) => {
   const properties = []
 
@@ -323,6 +307,22 @@ const getProperties = (tree, lineByOffset, path = []) => {
   }
 
   return properties
+}
+
+const getTranslations = (jsonStr) => {
+  const tree = jsonParser.parseTree(jsonStr)
+  const lineByOffset = new Array(jsonStr.length)
+  let lineNo = 1
+
+  for (let i = 0; i < jsonStr.length; i++) {
+    lineByOffset[i] = lineNo
+
+    if (jsonStr[i] === '\n') {
+      lineNo++
+    }
+  }
+
+  return getProperties(tree, lineByOffset)
 }
 
 const getAnnotatedTranslations = async (repo, filePath) => {
@@ -472,7 +472,8 @@ const generateTemplates = async (report) => {
 
 const ingestFile = async (locale, file) => {
   const inputStream = cbfs.createReadStream(file, 'utf8')
-  const records = await new Promise((res, rej) => {
+  // TODO: check
+  const records = await new Promise((res) => {
     const records = []
 
     inputStream

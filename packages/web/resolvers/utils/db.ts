@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-namespace */
+
 import { PrismaClient } from '@journaly/j-db-client'
 
 declare global {

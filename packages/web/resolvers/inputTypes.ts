@@ -1,3 +1,5 @@
+/* eslint-disable import/no-anonymous-default-export */
+
 import { inputObjectType } from 'nexus'
 
 // Input type modeling the FE editor data structure. Not the best typing as this

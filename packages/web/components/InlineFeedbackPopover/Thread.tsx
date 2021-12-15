@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { useTranslation } from '@/config/i18n'
 import { sanitize } from '@/utils'
@@ -27,7 +27,6 @@ export type ThreadOrHighlightProps =
   | { thread?: never; pendingThreadData?: PendingThreadData }
 
 type ThreadProps = {
-  thread: ThreadType | undefined
   onNewComment: (threadId: number) => void
   onUpdateComment: () => void
   onDeleteThread: () => void
@@ -67,6 +66,10 @@ const Thread: React.FC<ThreadProps> = ({
           }
         })
 
+        if (!data) {
+          throw new Error('Thread creation failed!')
+        }
+
         onNewComment(data.createThread.id)
       } else if (thread) {
         await createComment({
@@ -81,7 +84,7 @@ const Thread: React.FC<ThreadProps> = ({
 
 
       setCommentBody('')
-    } catch (e: Error) {
+    } catch (e) {
       console.error('Error creating comment or thread: ', e)
     }
 
@@ -103,7 +106,12 @@ const Thread: React.FC<ThreadProps> = ({
 
   const comments = thread?.comments || []
   const archived = thread?.archived || false
-  const sanitizedHTML = sanitize((pendingThreadData || thread).highlightedContent)
+  const highlightedContent = (pendingThreadData || thread)?.highlightedContent || ''
+
+  const sanitizedHTML = useMemo(
+    () => sanitize(highlightedContent),
+    [highlightedContent]
+  )
 
   return (
     <div className="thread">
@@ -234,3 +242,4 @@ const Thread: React.FC<ThreadProps> = ({
 }
 
 export default Thread
+export type { ThreadProps }

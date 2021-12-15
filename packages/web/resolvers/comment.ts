@@ -13,8 +13,6 @@ import {
   BadgeType,
   LanguageLevel,
   PrismaClient,
-  ThreadGetPayload,
-  UserGetPayload,
 } from '@journaly/j-db-client'
 
 import {
@@ -22,6 +20,8 @@ import {
   createEmailNotification,
   createInAppNotification,
   assignBadge,
+  UserWithRels,
+  ThreadWithRels,
 } from './utils'
 import { NotFoundError } from './errors'
 
@@ -69,21 +69,11 @@ const PostComment = objectType({
 
 
 type CreateCommentArg = {
-  thread: ThreadGetPayload<{
-    include: {
-      subscriptions: {
-        include: {
-          user: true,
-        },
-      },
-      post: {
-        include: {
-          author: true,
-        },
-      },
-    }
+  thread: ThreadWithRels<{
+    subscriptions: { user: true }
+    post: true
   }>
-  author: UserGetPayload<{ inclue: { languages: true } }>
+  author: UserWithRels<{ languages: true }>
   body: string
   db: PrismaClient
 }
@@ -153,7 +143,7 @@ const createComment = async ({
   }))
 
   // Check to see if we should assign a badge
-  if (thread.post.author.id !== author.id && isPast(add(thread.post.createdAt, { weeks: 1 }))) {
+  if (thread.post.authorId !== author.id && isPast(add(thread.post.createdAt, { weeks: 1 }))) {
     await assignBadge(db, author.id, BadgeType.NECROMANCER)
   }
 
@@ -186,6 +176,10 @@ const CommentMutations = extendType({
             languages: true,
           },
         })
+
+        if (!author) {
+          throw new NotFoundError('user')
+        }
 
         const { postId, startIndex, endIndex, highlightedContent, body } = args
         const post = await ctx.db.post.findUnique({ where: { id: postId } })
@@ -297,6 +291,10 @@ const CommentMutations = extendType({
             languages: true,
           },
         })
+
+        if (!author) {
+          throw new NotFoundError('user')
+        }
 
         return await createComment({
           db: ctx.db,

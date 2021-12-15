@@ -1,0 +1,56 @@
+{
+  "login": {
+    "title": "Log into your account",
+    "submitButtonText": "Log In",
+    "userNotFoundError": "User not found"
+  },
+  "signup": {
+    "title": "Sign up for an account",
+    "submitButtonText": "Sign Up!",
+    "goToLoginText": "Already have an account?",
+    "goToLoginLink": "Log in",
+    "emailInUseError": "This email address is already in use. Please try logging in",
+    "handleInUseError": "This handle is already in use",
+    "invalidPasswordError": "Invalid password",
+    "invalidHandleError": "Invalid handle"
+  },
+  "requestReset": {
+    "title": "Request Password Reset Email",
+    "helperText": "Enter your email address and we'll send you a link to reset your password.",
+    "submitButtonText": "Request Reset Email",
+    "successMessage": "Reset password link has been sent to your email address!",
+    "goToLoginText": "Remembered your password?",
+    "goToLoginLink": "Log in"
+  },
+  "resetPassword": {
+    "title": "Reset Your Password",
+    "submitButtonText": "Reset Password",
+    "successMessage": "You successfully reset your password! Please log in",
+    "invalidOldPasswordError": "Old password is incorrect",
+    "passwordsDoNotMatchError": "Passwords do not match",
+    "invalidResetTokenError": "This reset token is either invalid or has expired"
+  },
+  "handleInputLabel": "Handle",
+  "handleInputHelperMessage": "Can be letters, numbers, -, _, and cannot contain spaces",
+  "handleInputPlaceholder": "Your name, or perhaps a fun pseudonym!",
+  "handleRequiredErrorMessage": "Handle is required",
+  "handleValidationErrorMessage": "Handle may only contain letters, numbers, _, -, with no spaces",
+  "handleMinimumErrorMessage": "Your handle must be at least 3 characters",
+  "emailInputLabel": "Email",
+  "emailInputPlaceholder": "Your email address",
+  "emailRequiredErrorMessage": "Email is required",
+  "emailValidationErrorMessage": "Invalid email address",
+  "passwordInputLabel": "Password",
+  "passwordInputPlaceholder": "A secure password",
+  "passwordRequiredErrorMessage": "Password is required",
+  "passwordValidationErrorMessage": "Invalid password",
+  "passwordMinimumErrorMessage": "Password must be at least 6 characters",
+  "confirmPasswordInputLabel": "Confirm Password",
+  "confirmPasswordInputPlaceholder": "Re-enter your new password",
+  "confirmPasswordRequiredErrorMessage": "Confirm password is required",
+  "confirmPasswordValidationErrorMessage": "Invalid confirmPassword address",
+  "goToSignupText": "Don't have an account?",
+  "goToSignupLink": "Sign up",
+  "goToRequestResetText": "Having trouble logging in?",
+  "goToRequestResetLink": "Reset your password"
+}

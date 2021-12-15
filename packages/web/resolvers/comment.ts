@@ -366,6 +366,13 @@ const CommentMutations = extendType({
           where: {
             id: args.commentId,
           },
+          include: {
+            thread: {
+              include: {
+                comments: true
+              }
+            }
+          }
         })
 
         if (!originalComment) throw new Error('Comment not found.')
@@ -377,6 +384,12 @@ const CommentMutations = extendType({
             id: args.commentId,
           },
         })
+
+        if (originalComment.thread.comments.length <= 1) {
+          await ctx.db.thread.delete({
+            where: { id: originalComment.threadId },
+          })
+        }
 
         return comment
       },

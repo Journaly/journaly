@@ -466,9 +466,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         endIndex,
         highlightedContent,
       })
-
-      /*
-      */
     }
   }
 

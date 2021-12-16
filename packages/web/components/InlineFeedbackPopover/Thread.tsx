@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 
 import { useTranslation } from '@/config/i18n'
 import { sanitize } from '@/utils'
 import {
   useCreateCommentMutation,
+  useCreateThreadMutation,
   UserFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
-  useDeleteThreadMutation,
 } from '@/generated/graphql'
 
 import theme from '@/theme'
@@ -14,58 +14,91 @@ import Comment from './Comment'
 import Button, { ButtonVariant } from '@/components/Button'
 import Textarea from '@/components/Textarea'
 
-type ThreadProps = {
-  thread: ThreadType
-  onNewComment: () => void
-  onUpdateComment: () => void
-  onDeleteThread: () => void
-  currentUser: UserType | null | undefined
+export type PendingThreadData = {
+  postId: number
+  startIndex: number
+  endIndex: number
+  highlightedContent: string
 }
+
+export type ThreadOrHighlightProps =
+  | { thread: ThreadType; pendingThreadData?: never }
+  | { thread?: never; pendingThreadData?: PendingThreadData }
+
+type ThreadProps = {
+  onNewComment: (threadId: number) => void
+  onUpdateComment: () => void
+  close: () => void
+  currentUser: UserType | null | undefined
+} & ThreadOrHighlightProps
 
 const Thread: React.FC<ThreadProps> = ({
   thread,
+  pendingThreadData,
   onNewComment,
   onUpdateComment,
-  onDeleteThread,
+  close,
   currentUser,
 }) => {
   const { t } = useTranslation('comment')
 
-  const [commentBody, setCommentBody] = React.useState<string>('')
-  const [createComment, { loading }] = useCreateCommentMutation({
-    onCompleted: () => {
-      onNewComment()
-      setCommentBody('')
-    },
-  })
-  const [deleteThread] = useDeleteThreadMutation({
-    onCompleted: () => {
-      onDeleteThread()
-    },
-  })
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [loading, setLoading] = React.useState(false)
+  const [createComment] = useCreateCommentMutation()
+  const [createThread] = useCreateThreadMutation()
 
-  const createNewComment = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => textareaRef.current?.focus(), [])
+
+  const createNewComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    createComment({
-      variables: {
-        threadId: thread.id,
-        body: commentBody,
-      },
-    })
-  }
+    const commentBody = textareaRef.current?.value
+    if (!textareaRef.current || !commentBody) return
 
-  const cancelNewComment = () => {
-    if (thread.comments.length === 0) {
-      deleteThread({
-        variables: {
-          threadId: thread.id,
-        },
-      })
+    setLoading(true)
+
+    try {
+      if (pendingThreadData) {
+        const { data } = await createThread({
+          variables: {
+            ...pendingThreadData,
+            body: commentBody
+          }
+        })
+
+        if (!data) {
+          throw new Error('Thread creation failed!')
+        }
+
+        onNewComment(data.createThread.id)
+      } else if (thread) {
+        await createComment({
+          variables: {
+            threadId: thread.id,
+            body: commentBody,
+          },
+        })
+
+        onNewComment(thread.id)
+      }
+
+
+      textareaRef.current.value = ''
+    } catch (e) {
+      console.error('Error creating comment or thread: ', e)
     }
+
+    setLoading(false)
   }
 
-  const sanitizedHTML = sanitize(thread.highlightedContent)
+  const comments = thread?.comments || []
+  const archived = thread?.archived || false
+  const highlightedContent = (pendingThreadData || thread)?.highlightedContent || ''
+
+  const sanitizedHTML = useMemo(
+    () => sanitize(highlightedContent),
+    [highlightedContent]
+  )
 
   return (
     <div className="thread">
@@ -74,7 +107,7 @@ const Thread: React.FC<ThreadProps> = ({
       </div>
       <div className="thread-body">
         <div className="comments">
-          {thread.comments.map((comment, idx) => {
+          {comments.map((comment, idx) => {
             const canEdit = currentUser?.id === comment.author.id
             return (
               <Comment
@@ -87,38 +120,36 @@ const Thread: React.FC<ThreadProps> = ({
             )
           })}
 
-          {!thread.comments.length && (
+          {!comments.length && (
             <div className="empty-notice">{t('noCommentsYetMessage')}</div>
           )}
         </div>
-        {currentUser && !thread.archived && (
+        {currentUser && !archived && (
           <form onSubmit={createNewComment}>
             <fieldset>
               <div className="new-comment-block">
                 <Textarea
                   placeholder={t('addCommentPlaceholder')}
-                  value={commentBody}
-                  onChange={(e) => setCommentBody(e.target.value)}
                   disabled={loading}
+                  ref={textareaRef}
                 />
                 <div className="btn-container">
                   <Button
                     type="submit"
                     disabled={loading}
+                    loading={loading}
                     className="new-comment-btn"
                     variant={ButtonVariant.PrimaryDark}
                   >
                     {t('submit')}
                   </Button>
-                  {thread.comments.length === 0 && (
-                    <Button
-                      onClick={() => cancelNewComment()}
-                      disabled={loading}
-                      variant={ButtonVariant.Secondary}
-                    >
-                      {t('cancel')}
-                    </Button>
-                  )}
+                  <Button
+                    onClick={close}
+                    disabled={loading}
+                    variant={ButtonVariant.Secondary}
+                  >
+                    {t('cancel')}
+                  </Button>
                 </div>
               </div>
             </fieldset>
@@ -195,3 +226,4 @@ const Thread: React.FC<ThreadProps> = ({
 }
 
 export default Thread
+export type { ThreadProps }

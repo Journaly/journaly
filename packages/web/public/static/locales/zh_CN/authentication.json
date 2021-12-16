@@ -1,6 +1,6 @@
 {
   "login": {
-    "title": "Log into your account",
+    "title": "登录你的账户",
     "submitButtonText": "Log In",
     "userNotFoundError": "User not found"
   },

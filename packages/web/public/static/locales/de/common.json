@@ -1,7 +1,7 @@
 {
   "signInPrompt": "Bitte einloggen, um fortzufahren",
   "error": "Auf dem Server ist ein Fehler aufgetreten",
-  "loading": "Lädt...",
+  "loading": "Lädt ...",
   "home": {
     "reasonsHeader": "Drei Gründe, Journaly zu verwenden",
     "elevatorPitch": "Verbessere deine Sprachkenntnisse und verbinde dich mit anderen durch Journaling.",
@@ -24,8 +24,8 @@
     "clearFilters": "Filter löschen",
     "myLanguages": "Meine Sprachen",
     "followedUsers": "Journaler, denen ich folge",
-    "needsFeedback": "needs feedback",
-    "hasInteracted": "commented posts",
+    "needsFeedback": "benötigt Feedback",
+    "hasInteracted": "kommentierte Beiträge",
     "textSearchPlaceholder": "Beiträge durchsuchen",
     "topicSelectPlaceholder": "Themen",
     "showAdvancedFilters": "Zeige erweiterte Filter",
@@ -88,7 +88,7 @@
     "allDoneChecksFailed": "Beim Hochladen deines Bildes ist ein Fehler aufgetreten. Bitte versuche es später noch einmal."
   },
   "editor": {
-    "placeholderPrompt": "Alles begann heute früh, als..."
+    "placeholderPrompt": "Alles begann heute früh, als ..."
   },
   "notifications": {
     "feedTitle": "Benachrichtigungen",
@@ -103,12 +103,12 @@
       "postComments": "Du hast einen neuen allgemeinen Kommentar zu deinem Beitrag",
       "postComments_plural": "Du hast {{count}} neue allgemeine Kommentare zu deinem Beitrag",
       "postCommentsSubscribed": "Es gibt einen neuen allgemeinen Kommentar zu diesem Beitrag",
-      "postCommentsSubscribed_plural": "Es gibt {{count}} neue allgemeine Kommetare zu diesem Beitrag",
+      "postCommentsSubscribed_plural": "Es gibt {{count}} neue allgemeine Kommentare zu diesem Beitrag",
       "postClaps": "Ein Journaler hat diesem Beitrag applaudiert",
       "postClaps_plural": "{{count}} Journaler haben diesem Beitrag applaudiert",
       "threadCommentThanks": "hat für einen Feedback-Kommentar Danke gesagt",
       "threadCommentThanks_plural": "hat für {{count}} Feedback-Kommentare Danke gesagt",
-      "newPosts": "Journaler, denen du folgst, haben einen neuen Beitrag veröffentlicht",
+      "newPosts": "Dieser Journaler, dem du folgst, hat einen neuen Beitrag veröffentlicht",
       "newPosts_plural": "Journaler, denen du folgst, haben {{count}} neue Beiträge veröffentlicht"
     },
     "levelTwo": {

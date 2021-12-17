@@ -164,8 +164,8 @@ const PostComments = ({
                   thread={thread}
                   currentUser={currentUser}
                   onNewComment={() => {}}
-                  onDeleteThread={() => {}}
                   onUpdateComment={onUpdateComment}
+                  close={() => {}}
                 />
               </div>
             ))}

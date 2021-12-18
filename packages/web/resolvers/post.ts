@@ -327,7 +327,6 @@ const PostQueries = extendType({
           where.push(Prisma.sql`
             p.title ILIKE ${likeExpr}
             OR p.body ILIKE ${likeExpr}
-
           `)
         }
 
@@ -382,9 +381,9 @@ const PostQueries = extendType({
           where.push(Prisma.sql`p."status" = ${args.status}`)
         }
 
-        let whereQueryFragment = where[0] ? Prisma.sql`WHERE ${where[0]}` : Prisma.empty
+        let whereQueryFragment = where[0] ? Prisma.sql`WHERE (${where[0]})` : Prisma.empty
         for (let i = 1; i < where.length; i++) {
-          whereQueryFragment = Prisma.sql`${whereQueryFragment} AND ${where[i]}`
+          whereQueryFragment = Prisma.sql`${whereQueryFragment} AND (${where[i]})`
         }
 
         let joinQueryFragment = joins[0] || Prisma.empty

@@ -203,12 +203,15 @@ export const updatedThreadPositions = (
     (t) => [t.startIndex, t.endIndex, t.id] as [number, number, number],
   )
 
-  // Move thread fenceposts according to inserts and deletes. Mark threads that
-  // experienced a delete op over either of their fence posts as archived.
+  // Move thread fenceposts according to inserts and deletes. Inserts move all
+  // subsequent fenceposts forwards, deletes move them backwards. If a delete
+  // spans a thread's fencepost, mark that thread as archived (signaled by
+  // both fenceposts set to -1). If a delete perfectly spans a thread, also
+  // mark it as archived.
   let idx = 0
   for (let ci = 0; ci < changes.length; ci++) {
     const { count = 0, added, removed } = changes[ci]
-    const changeEnd = idx + count - 1
+    const changeEnd = idx + count
 
     if (added) {
       for (let ti = 0; ti < threadsRepr.length; ti++) {
@@ -223,9 +226,15 @@ export const updatedThreadPositions = (
         const t = threadsRepr[ti]
 
         if (t[0] > idx && t[0] < changeEnd) {
+          // Starting fencepost deleted
           t[0] = -1
           t[1] = -1
         } else if (t[1] > idx && t[1] < changeEnd) {
+          // Ending fencepost deleted
+          t[0] = -1
+          t[1] = -1
+        } else if (t[0] === idx && t[1] === changeEnd) {
+          // Delete perfectly spans the thread
           t[0] = -1
           t[1] = -1
         } else {

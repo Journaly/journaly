@@ -293,14 +293,16 @@ const PostQueries = extendType({
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
-        const currentUser = await ctx.db.user.findUnique({
-          where: {
-            id: userId,
-          },
-          include: {
-            following: true,
-          },
-        })
+        const currentUser = userId
+          ? await ctx.db.user.findUnique({
+              where: {
+                id: userId,
+              },
+              include: {
+                following: true,
+              },
+            })
+          : null
 
         if (!args.first) args.first = 10
         if (args.first > 50) args.first = 50

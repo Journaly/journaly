@@ -179,7 +179,6 @@ const PostComments = ({
           width: 100%;
           height: 100%;
           padding: 20px;
-          text-align: center;
           display: flex;
           flex-direction: column;
           max-height: 100%;
@@ -194,6 +193,7 @@ const PostComments = ({
         h1 {
           ${theme.typography.headingLG};
           margin-bottom: 20px;
+          text-align: center;
         }
 
         .post-comments {

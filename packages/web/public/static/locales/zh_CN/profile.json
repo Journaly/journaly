@@ -1,32 +1,32 @@
 {
   "card": {
-    "speaks": "speaks",
-    "learns": "learns",
-    "likes": "likes"
+    "speaks": "母语",
+    "learns": "目标语言",
+    "likes": "爱好"
   },
   "stats": {
     "summary": {
-      "title": "Summary",
-      "userAge": "{{name}} has been journaling on Journaly since {{joinDate}} (that's {{age}}).",
-      "postCount": "In that time they've published {{postCount}} posts in {{languageCount}} different languages.",
-      "noPosts": "So far they haven't written any posts.",
-      "commentCounts": "They've also left {{postCommentCount}} general comments on posts and {{threadCommentCount}} inline feedback comments, helping other users improve their language skills.",
-      "noComments": "They haven't left any feedback on other journalers' posts yet.",
-      "thanksCount": "For their hard work helping others, they've been thanked {{thanksCount}} times."
+      "title": "概要",
+      "userAge": "{{name}} 在 {{joinDate}} 开启了Journaly的旅程 (至今已经 {{age}}了！).",
+      "postCount": "在此期间共发布了{{postCount}} 篇日志，使用了 {{languageCount}} 种语言。",
+      "noPosts": "目前还没有发布日志。",
+      "commentCounts": "他/她还在其他用户的日志中留下了 {{postCommentCount}} 条评论和 {{threadCommentCount}} 条点评，帮助他们提高了语言水平。",
+      "noComments": "他/她暂时还没有对其他用户的日志做出反馈。",
+      "thanksCount": "他/她的热心帮助共收到了 {{thanksCount}} 次感谢。"
     },
     "activity": {
-      "title": "Activity History",
+      "title": "活跃记录",
       "types": {
-        "posts": "Posts",
-        "postComments": "Post Comments",
-        "threadComments": "Inline Comments"
+        "posts": "日志",
+        "postComments": "评论",
+        "threadComments": "点评"
       }
     }
   },
-  "statsTitle": "Stats",
-  "postsTitle": "Recent Posts",
-  "emptyPosts": "{{user}} hasn't written any posts yet.",
-  "loggedInUserEmptyPosts": "You have no recent posts. <1>Write a new post</1>!",
-  "follow": "Follow",
-  "unfollow": "Unfollow"
+  "statsTitle": "数据",
+  "postsTitle": "近期日志",
+  "emptyPosts": "{{user}} 暂时还没有发布日志",
+  "loggedInUserEmptyPosts": "您没有近期日志。 <1>写新日志吧</1>!",
+  "follow": "关注",
+  "unfollow": "取消关注"
 }

@@ -23,7 +23,7 @@
     "goToLoginLink": "登录"
   },
   "resetPassword": {
-    "title": "重置你的密码",
+    "title": "重置您的密码",
     "submitButtonText": "重置密码",
     "successMessage": "重置密码成功！请登录",
     "invalidOldPasswordError": "旧密码不正确",
@@ -32,12 +32,12 @@
   },
   "handleInputLabel": "昵称",
   "handleInputHelperMessage": "使用字母、数字、-、_，不可含有空格",
-  "handleInputPlaceholder": "你的名字，或是有趣的笔名！",
+  "handleInputPlaceholder": "您的名字，或是有趣的笔名！",
   "handleRequiredErrorMessage": "昵称必须填写",
   "handleValidationErrorMessage": "昵称只能包含字母、数字、_、-，不可含有空格",
   "handleMinimumErrorMessage": "昵称需要至少三个字符",
   "emailInputLabel": "邮箱",
-  "emailInputPlaceholder": "你的邮箱地址",
+  "emailInputPlaceholder": "您的邮箱地址",
   "emailRequiredErrorMessage": "邮箱必须填写",
   "emailValidationErrorMessage": "邮箱地址无效",
   "passwordInputLabel": "密码",

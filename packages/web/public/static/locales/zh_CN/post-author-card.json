@@ -1,10 +1,10 @@
 {
   "languagesHeader": "语言",
-  "hasWritten": "日志语言",
-  "postsWrittenCountSingular": "写日志",
-  "postsWrittenCountPlural": "写多篇日志",
-  "thanksReceivedCountSingular": "收到感谢",
-  "thanksReceivedCountPlural": "收到多个感谢",
+  "hasWritten": "篇日志",
+  "postsWrittenCountSingular": "篇日志",
+  "postsWrittenCountPlural": "篇日志",
+  "thanksReceivedCountSingular": "次被感谢",
+  "thanksReceivedCountPlural": "次被感谢",
   "follow": "关注",
   "unfollow": "取消关注"
 }

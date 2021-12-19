@@ -5,5 +5,5 @@
   "publishedEmptyState": "您还没有发布日志。您可以发布草稿 <1> 或新建日志 </1>。",
   "draftEmptyState": "您还没有草稿。",
   "privateEmptyState": "您还没有发布私密日志。",
-  "errorLoadingPostsMessage": "找回日志出现错误"
+  "errorLoadingPostsMessage": "找回日志失败"
 }

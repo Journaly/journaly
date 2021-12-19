@@ -17,7 +17,7 @@
   "requestReset": {
     "title": "通过邮箱重置密码",
     "helperText": "输入邮箱地址，获取链接以重置密码",
-    "submitButtonText": "请求重置密码",
+    "submitButtonText": "重置密码邮箱地址",
     "successMessage": "密码重置链接已成功发送至邮箱！",
     "goToLoginText": "想起密码了？",
     "goToLoginLink": "登录"

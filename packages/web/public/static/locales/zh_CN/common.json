@@ -45,7 +45,7 @@
     "header": "帮助",
     "bodyOne": "需要帮助？我们在这里！",
     "bodyTwo": "请发送邮件至 ",
-    "bodyThree": " 详细描述您的问题，我们将尽快回复！",
+    "bodyThree": " 并详细描述您的问题，我们将尽快回复！",
     "footer": "谢谢您帮助Journaly成为更好的社区！"
   },
   "badge": {
@@ -102,9 +102,9 @@
     "emptyFeed": "暂时……还没有收到消息",
     "levelOne": {
       "newFollowers": "1位Journaler最近关注了您",
-      "newFollowers_plural": " {{count}} 位Journalers最近关注了您。",
+      "newFollowers_plural": " {{count}} 位Journalers最近关注了您",
       "threadComments": "您的日志收到了 1 条新的点评",
-      "threadComments_plural": "您的日志收到了 {{count}} 条新的点评。",
+      "threadComments_plural": "您的日志收到了 {{count}} 条新的点评",
       "threadCommentsSubscribed": "这篇日志收到了 1 条新的点评",
       "threadCommentsSubscribed_plural": "这篇日志收到了 {{count}} 条新的点评",
       "postComments": "您的日志收到了 1 条新的评论",
@@ -115,7 +115,7 @@
       "postClaps_plural": "{{count}} 位Journalers点赞了您的日志",
       "threadCommentThanks": "{{userIdentifier}} 感谢了您的点评",
       "threadCommentThanks_plural": "{{userIdentifier}} 感谢了您的 {{count}} 条点评",
-      "newPosts": "您关注的一位Journaler发布了新日志",
+      "newPosts": "您关注的 1 位Journaler发布了新日志",
       "newPosts_plural": "您关注的Journalers发布了 {{count}} 篇新日志"
     },
     "levelTwo": {

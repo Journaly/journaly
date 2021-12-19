@@ -2,12 +2,12 @@
   "breadcrumbs": {
     "settings": "设置",
     "profile": "编辑您的个人信息",
-    "account": "账户",
+    "account": "账号",
     "subscription": "订阅"
   },
   "nav": {
     "profile": "个人信息",
-    "account": "账户",
+    "account": "账号",
     "subscription": "订阅"
   },
   "updateButton": "更新",
@@ -26,11 +26,11 @@
       "resendEmailVerificationText": "重新获取验证邮件",
       "resendEmailVerificationToastSuccess": "验证邮件已再次发送！",
       "resendEmailVerificationToastError": "验证邮件再次发送失败",
-      "locationLabel": "所在地区（选填）",
+      "locationLabel": "地区（选填）",
       "updateSuccess": "个人信息更新成功",
-      "cityLabel": "所在城市（选填）",
+      "cityLabel": "城市（选填）",
       "cityPlaceholder": "您生活在哪个城市？",
-      "countryLabel": "所在国家（选填）",
+      "countryLabel": "国家（选填）",
       "countryPlaceholder": "您生活在哪个国家？",
       "updateHandleWarning": "提示：更新昵称将会使您简介中的链接失效，若继续操作，我们推荐您在更改昵称后更新这些链接。"
     },
@@ -39,7 +39,7 @@
       "nativeLanguagesLabel": "您的哪些语言达到了母语水平？",
       "learningLanguagesLabel": "您正在学习哪些语言？",
       "welcomeModalFormLabel": "告诉我们您的母语和目标语言",
-      "languageSelectPlaceholder": "选择语言",
+      "languageSelectPlaceholder": "选择语言……",
       "levelSelectPlaceholder": "选择水平……",
       "addLanguageButtonText": "添加",
       "levels": {
@@ -64,7 +64,7 @@
     "interests": {
       "legend": "爱好",
       "topicsLabel": "告诉我们您感兴趣的话题! 这能帮助我们甄选您可能喜欢的日志，找到与您志趣相投的朋友。",
-      "interestSelectPlaceholder": "选择话题",
+      "interestSelectPlaceholder": "选择话题……",
       "addInterestButtonText": "添加"
     },
     "social": {
@@ -125,7 +125,7 @@
     "planSelectPlaceholder": "您想选择哪种订阅计划？",
     "cardOnFile": "银行卡",
     "updateCard": "更新银行卡信息",
-    "subscriptionStatus": "订阅状态",
+    "subscriptionStatus": "订阅状态：",
     "nextBillingDate": "下次账单日期：",
     "premiumUser": "会员",
     "freeUser": "普通用户",
@@ -135,7 +135,7 @@
     "paymentInfo": "付款信息",
     "cancelSubscriptionConfirmationTitle": "取消您的会员订阅",
     "cancelSubscriptionConfirmationBody": "确认取消会员订阅？",
-    "cancellationSuccess": "您已成功取消会员订阅",
+    "cancellationSuccess": "您已取消会员订阅",
     "cancellationError": "取消订阅失败",
     "updateCardSuccess": "更新银行卡信息成功",
     "updateCardError": "更新银行卡信息失败",
@@ -153,20 +153,20 @@
       "advancedFiltering": "日志高级筛选",
       "badges": "获取成就勋章",
       "stats": "活动 & 数据记录",
-      "unsplashIntegration": "使用 Unsplash (即将推出)",
-      "directMessaging": "私人消息 (即将推出)",
-      "userGroups": "用户小组 (即将推出)",
+      "unsplashIntegration": "使用 Unsplash（即将推出）",
+      "directMessaging": "私人消息（即将推出）",
+      "userGroups": "用户小组（即将推出）",
       "inlineImages": "插入图片",
       "postBumping": "主页置顶",
       "postSaving": "收藏日志",
       "supportTheCreators": "支持创作者",
       "supportFreeLearning": "支持语言学习",
-      "writingPrompts": "完善写作 (即将推出)",
-      "focusMode": "专注模式 (即将推出)",
-      "postThemes": "主题日志 (即将推出)",
-      "audioPosts": "声音日志 (即将推出)",
-      "weeklyGoals": "每周目标 (即将推出)",
-      "privateShareLinks": "私密链接"
+      "writingPrompts": "完善写作（即将推出）",
+      "focusMode": "专注模式（即将推出）",
+      "postThemes": "主题日志（即将推出）",
+      "audioPosts": "声音日志（即将推出）",
+      "weeklyGoals": "每周目标（即将推出）",
+      "privateShareLinks": "私密分享链接"
     }
   }
 }

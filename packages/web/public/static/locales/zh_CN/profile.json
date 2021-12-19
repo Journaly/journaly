@@ -7,7 +7,7 @@
   "stats": {
     "summary": {
       "title": "概要",
-      "userAge": "{{name}} 在 {{joinDate}} 开启了Journaly的旅程 (至今已经 {{age}}了！).",
+      "userAge": "{{name}} 在 {{joinDate}} 开启了Journaly的旅程（至今已经 {{age}}了！）",
       "postCount": "在此期间共发布了{{postCount}} 篇日志，使用了 {{languageCount}} 种语言。",
       "noPosts": "目前还没有发布日志。",
       "commentCounts": "他/她还在其他用户的日志中留下了 {{postCommentCount}} 条评论和 {{threadCommentCount}} 条点评，帮助他们提高了语言水平。",
@@ -26,7 +26,7 @@
   "statsTitle": "数据",
   "postsTitle": "近期日志",
   "emptyPosts": "{{user}} 暂时还没有发布日志",
-  "loggedInUserEmptyPosts": "您没有近期日志。 <1>写新日志吧</1>!",
+  "loggedInUserEmptyPosts": "您没有近期日志。 <1>写新日志吧</1>！",
   "follow": "关注",
   "unfollow": "取消关注"
 }

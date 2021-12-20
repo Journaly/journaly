@@ -1,7 +1,8 @@
 {
   "pageTitle": "我的日誌",
   "publishedTab": "已發布",
-  "draftsTab": "私密",
+  "draftsTab": "草稿箱",
+  "privateTab": "私密",
   "publishedEmptyState": "您還沒有發布日誌。您可以發布草稿 <1> 或新建日誌 </1>。",
   "draftEmptyState": "您還沒有草稿。",
   "privateEmptyState": "您還沒有發布私密日誌。",

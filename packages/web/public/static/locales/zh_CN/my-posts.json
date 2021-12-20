@@ -2,6 +2,7 @@
   "pageTitle": "我的日志",
   "publishedTab": "已发布",
   "draftsTab": "草稿箱",
+  "privateTab": "私密",
   "publishedEmptyState": "您还没有发布日志。您可以发布草稿 <1> 或新建日志 </1>。",
   "draftEmptyState": "您还没有草稿。",
   "privateEmptyState": "您还没有发布私密日志。",

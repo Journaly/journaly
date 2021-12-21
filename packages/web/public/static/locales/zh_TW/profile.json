@@ -7,9 +7,9 @@
   "stats": {
     "summary": {
       "title": "概要",
-      "userAge": "{{name}} 在 {{joinDate}} 開啟了Journaly的旅程（至今已經 {{age}}了！）",
-      "postCount": "在此期間共發布了{{postCount}} 篇日誌，使用了 {{languageCount}} 種語言。",
-      "noPosts": "目前還沒有發布日誌。",
+      "userAge": "{{name}} 在 {{joinDate}} 開啟了Journaly的旅程（至今已經 {{age}}了！）。",
+      "postCount": "在此期間他/她共發布了{{postCount}} 篇日誌，使用了 {{languageCount}} 種語言。",
+      "noPosts": "他/她目前還沒有發布日誌。",
       "commentCounts": "他/她還在其他用戶的日誌中留下了 {{postCommentCount}} 條評論和 {{threadCommentCount}} 條點評，幫助他們提高了語言水平。",
       "noComments": "他/她暫時還沒有對其他用戶的日誌做出反饋。",
       "thanksCount": "他/她的熱心幫助共收到了 {{thanksCount}} 次感謝。"

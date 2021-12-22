@@ -20,7 +20,7 @@ type PostHeaderProps = {
   publishDate?: string
   publishedLanguageLevel?: LanguageLevel
   authorName: string
-  authorId: number
+  authorHandle: string
   postImage: string
   topics?: TopicType[]
   language?: LanguageType
@@ -32,7 +32,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
   postTitle,
   postStatus,
   authorName,
-  authorId,
+  authorHandle,
   publishDate,
   publishedLanguageLevel,
   postImage,
@@ -65,7 +65,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           <p> &mdash; </p>
           <p>
             {t('postBy')}{' '}
-            <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${authorId}`}>
+            <Link href={`/dashboard/user/[handle]`} as={`/dashboard/user/${authorHandle}`}>
               <a className="author-name" rel="author">
                 {authorName}
               </a>

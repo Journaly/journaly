@@ -13,7 +13,7 @@ const UserList: React.FC<UserListProps> = ({ users, colorScheme = 'light-mode' }
   return (
     <div className="list-container">
       {users.map((user) => (
-        <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${user.id}`} key={user.id}>
+        <Link href={`/dashboard/user/[handle]`} as={`/dashboard/user/${user.handle}`} key={user.id}>
           <a className="user-container">
             <UserAvatar user={user} size={50} />
             <div className="name-handle-container">
@@ -38,7 +38,9 @@ const UserList: React.FC<UserListProps> = ({ users, colorScheme = 'light-mode' }
         }
 
         .user-container:hover {
-          background-color: ${colorScheme === 'light-mode' ? theme.colors.gray200 : theme.colors.gray800};
+          background-color: ${colorScheme === 'light-mode'
+            ? theme.colors.gray200
+            : theme.colors.gray800};
         }
 
         .name-handle-container {

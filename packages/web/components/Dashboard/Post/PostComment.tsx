@@ -79,7 +79,7 @@ const PostComment: React.FC<PostCommentProps> = ({
     <div className="comment" id={`pc-${comment.id}`}>
       <div className="author-body-container">
         <div className="author-block">
-          <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${comment.author.id}`}>
+          <Link href={`/dashboard/user/[handle]`} as={`/dashboard/user/${comment.author.handle}`}>
             <a className="author-info">
               <UserAvatar size={30} user={comment.author} />
             </a>

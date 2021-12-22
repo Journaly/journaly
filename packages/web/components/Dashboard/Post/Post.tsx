@@ -587,7 +587,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           publishDate={post.publishedAt ? post.publishedAt : post.createdAt}
           publishedLanguageLevel={post.publishedLanguageLevel}
           authorName={post.author.name ? post.author.name : post.author.handle}
-          authorId={post.author.id}
+          authorHandle={post.author.handle}
           postImage={post.headlineImage.largeSize}
           language={post.language}
           topics={post.postTopics.map(({ topic }) => topic)}
@@ -707,17 +707,18 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           close={closeThread}
           ref={popoverRef}
         />
-      )) || (pendingThreadData && (
-        <InlineFeedbackPopover
-          pendingThreadData={pendingThreadData}
-          target={popoverPosition}
-          currentUser={currentUser}
-          onNewComment={handleNewComment}
-          onUpdateComment={refetch}
-          close={closeThread}
-          ref={popoverRef}
-        />
-      ))}
+      )) ||
+        (pendingThreadData && (
+          <InlineFeedbackPopover
+            pendingThreadData={pendingThreadData}
+            target={popoverPosition}
+            currentUser={currentUser}
+            onNewComment={handleNewComment}
+            onUpdateComment={refetch}
+            close={closeThread}
+            ref={popoverRef}
+          />
+        ))}
       <ConfirmationModal
         onConfirm={() => {
           deletePost({ variables: { postId: post.id } })

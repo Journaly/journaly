@@ -270,15 +270,21 @@ const UserQueries = extendType({
         if (!args.id && !args.handle) throw new Error('You must provide an ID or handle')
         if (args.id && args.handle) throw new Error('Expected one argument, received two')
 
-        const where = args.handle
-          ? {
-              handle: args.handle,
-            }
-          : {
-              id: args.id,
-            }
+        let user
 
-        const user = await ctx.db.user.findUnique({ where })
+        if (args.handle) {
+          user = await ctx.db.user.findUnique({
+            where: {
+              handle: args.handle,
+            },
+          })
+        } else if (args.id) {
+          user = await ctx.db.user.findUnique({
+            where: {
+              id: args.id,
+            },
+          })
+        }
 
         if (!user) {
           throw new Error('User not found')

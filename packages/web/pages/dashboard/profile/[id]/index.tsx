@@ -3,18 +3,18 @@ import { useRouter } from 'next/router'
 
 import { withApollo } from '@/lib/apollo'
 import LoadingWrapper from '@/components/LoadingWrapper'
-import { useUserByIdQuery } from '@/generated/graphql'
+import { useUserByIdentifier } from '@/generated/graphql'
 
 const ProfilePage = () => {
   const router = useRouter()
   const idStr = router.query.id as string
   const userId = parseInt(idStr, 10)
 
-  const { data, loading, error } = useUserByIdQuery({ variables: { id: userId } })
+  const { data, loading, error } = useUserByIdentifier({ variables: { id: userId } })
 
-  if (data?.userById && typeof window !== 'undefined') {
+  if (data?.useUserByIdentifier && typeof window !== 'undefined') {
     router.push({
-      pathname: `/dashboard/user/${data.userById.handle}`,
+      pathname: `/dashboard/user/${data.useUserByIdentifier.handle}`,
     })
     return null
   }

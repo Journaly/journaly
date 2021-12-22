@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { withApollo } from '@/lib/apollo'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
-import { useProfilePageQuery, useUserByHandleQuery } from '@/generated/graphql'
+import { useProfilePageQuery, useUserByIdentifierQuery } from '@/generated/graphql'
 import useUILanguage from '@/hooks/useUILanguage'
 import Profile from '@/components/Dashboard/Profile'
 
@@ -22,7 +22,7 @@ const ProfilePage: NextPage<InitialProps> = () => {
     data: userData,
     loading: userLoading,
     error: userError,
-  } = useUserByHandleQuery({
+  } = useUserByIdentifierQuery({
     variables: {
       handle: userHandle,
     },
@@ -37,19 +37,19 @@ const ProfilePage: NextPage<InitialProps> = () => {
     loading: profileLoading,
     error: profileError,
   } = useProfilePageQuery({
-    variables: { uiLanguage, userId: userData?.userByHandle.id, handle: userHandle },
+    variables: { uiLanguage, userId: userData?.userByIdentifier.id },
   })
 
-  const { userByHandle, currentUser } = profileData || {}
+  const { userByIdentifier, currentUser } = profileData || {}
   const posts = profileData?.posts?.posts
 
   return (
     <LoadingWrapper loading={userLoading || profileLoading} error={userError || profileError}>
       <DashboardLayout pad="never">
-        {userByHandle && posts && (
+        {userByIdentifier && posts && (
           <Profile
-            isLoggedInUser={currentUser?.handle === userData.userByHandle.handle}
-            user={userByHandle}
+            isLoggedInUser={currentUser?.handle === userData.userByIdentifier.handle}
+            user={userByIdentifier}
             posts={posts}
           />
         )}

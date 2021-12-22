@@ -161,6 +161,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   name="handle"
                   className={`j-field ${errors.handle ? 'is-invalid' : ''}`}
                   defaultValue={currentUser.handle}
+                  onChange={() => setShowHandleChangeWarning(true)}
                   ref={register({
                     required: `${t('profile.details.displayNameError')}`,
                     pattern: {
@@ -281,7 +282,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
             >
               {t('updateButton')}
             </Button>
-            {true && (
+            {showHandleChangeWarning && (
               <p className="update-handle-warning">{t('profile.details.updateHandleWarning')}</p>
             )}
           </div>

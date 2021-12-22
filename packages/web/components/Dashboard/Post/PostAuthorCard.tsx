@@ -58,7 +58,7 @@ const PostAuthorCard: React.FC<PostAuthorCardProps> = ({ author }) => {
   return (
     <div className="container">
       <div className="author-info-container">
-        <Link href={`/dashboard/user/[handle]`} as={`/dashboard/user/${author.handle}`}>
+        <Link href={`/dashboard/user/[handle]`}>
           <a className="author-info">
             <UserAvatar user={author} size={60} />
           </a>

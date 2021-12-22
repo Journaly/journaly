@@ -46,7 +46,7 @@ const PostCard: React.FC<Props> = ({ post, avatar = false, stacked = false }) =>
 
   return (
     <>
-      <Link href={'/post/[id]'} as={`/post/${id}`}>
+      <Link href={'/post/[id]'}>
         <a className={postCardStyles} data-testid="my-feed-post-card">
           <img
             className={`post-image ${isPrivate ? 'private' : ''}`}

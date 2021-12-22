@@ -130,7 +130,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           {currentUser && (
             <>
               <div className="nav-top">
-                <Link href={`/dashboard/user/[handle]`}>
+                <Link href={`/dashboard/user/${currentUser.handle}`}>
                   <a onClick={handleCollapse}>
                     <UserAvatar size={60} user={currentUser} />
                     <p className="current-user-name">{currentUser.handle}</p>

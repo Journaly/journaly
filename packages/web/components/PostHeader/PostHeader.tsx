@@ -65,7 +65,7 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           <p> &mdash; </p>
           <p>
             {t('postBy')}{' '}
-            <Link href={`/dashboard/user/[handle]`}>
+            <Link href={`/dashboard/user/${authorHandle}`}>
               <a className="author-name" rel="author">
                 {authorName}
               </a>

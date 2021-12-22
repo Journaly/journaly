@@ -2310,17 +2310,17 @@ COPY public."TopicTranslation" (id, "uiLanguage", name, "topicId") FROM stdin;
 --
 
 COPY public."User" (id, name, email, handle, "userRole", bio, "createdAt", "updatedAt", "profileImage", city, country, "stripeCustomerId", "moosendSubscriberId", "lastFourCardNumbers", "cardBrand", "isStudent") FROM stdin;
-2	\N	jon@arryn.net	HandyMan	MODERATOR	\N	2021-07-28 21:29:23.535	2021-07-28 21:29:24.175	\N	\N	\N	\N	9b525bfd-a224-4816-b406-209e1f33f216	\N	\N	f
-4	\N	gold@gold.gold	TheLannyster	USER	\N	2021-07-28 23:21:51.833	2021-11-19 14:24:42.16	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/d4876a80-b5bf-4401-994a-e6ffaad1b9c3-large	\N	\N	\N	45b510f8-e131-49c5-97f8-c3b2831ab243	\N	\N	f
-3	\N	j@n.com	jsno	USER	\N	2021-07-28 21:31:53.623	2021-11-19 14:29:24.769	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/6758b20c-6d0b-44b5-83b5-2f59f8368305-large	\N	\N	cus_JwCmGeU4Hqiwmn	a010a2ec-6266-42c0-9a54-ce4ee81060cb	NONE	visa	f
-5	\N	s@ndor.com	the_bloody_hound	USER	\N	2021-11-19 14:30:10.529	2021-11-19 14:34:06.992	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/3b0de0b8-d0a2-4dd9-b20a-356cc5d43641-large	\N	\N	\N	\N	\N	\N	f
-1	\N	robert@baratheon.net	RobertBaratheon	ADMIN	\N	2021-07-28 21:25:42.74	2021-11-19 14:54:49.584	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/fe19cc0a-8661-4a0c-9005-413f1981491b-large	\N	\N	cus_JwCnTV2oSgERHO	0b6fe694-9298-4aef-b7af-895329b60ed9	NONE	visa	f
-6	\N	petyr@baelish.co.uk	little_finger	USER	\N	2021-11-19 14:56:34.037	2021-11-19 14:59:11.785	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/5d914d2b-44f4-43df-bb5f-9a772b7b43dd-large	\N	\N	\N	\N	\N	\N	f
-7		arya@harvard.edu	faceless_one	USER	Now you see me... Now you don't.	2021-11-19 15:02:26.403	2021-11-19 15:05:04.285	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/ab7f791a-309e-4367-b10e-ca047cc5c30d-large	Winterfell		\N	\N	\N	\N	f
-8		ned@stark.coffee	true_stark	USER	The Man Who Passes The Sentence Should Swing The Sword. Oh and, for God's sake, winter is coming!	2021-11-19 15:11:09.472	2021-11-19 15:14:01.098	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/12d2f0ec-02f3-4a80-be21-e5f11f9593b9-large	Winterfell		\N	\N	\N	\N	f
-9		tyrion@stark.com	smartest_man_in_westeros	USER	I really am the smartest man in Westeros, and also the most modest!	2021-11-19 15:19:48.545	2021-11-19 15:22:27.069	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/482cfb85-907e-431b-a01f-0fb429b2f5ab-large	Casterly Rock		\N	\N	\N	\N	f
-10	\N	drogon@fire.com	drogon	USER	\N	2021-11-19 18:55:34.072	2021-11-19 19:00:29.249	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/14ed7bec-9016-4c14-9b65-edce13bdf9f1-large	\N	\N	\N	\N	\N	\N	f
-11	\N	rhaegal@fire.com	rhaegal_1991	USER	\N	2021-11-19 19:09:38.651	2021-11-19 19:10:01.511	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/e45bd6bc-a92a-410e-b02c-aa3fc9699fab-large	\N	\N	\N	\N	\N	\N	f
+4	Tywin Lannister	gold@gold.gold	TheLannyster	USER	\N	2021-07-28 23:21:51.833	2021-12-22 17:13:58.482	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/d4876a80-b5bf-4401-994a-e6ffaad1b9c3-large			\N	45b510f8-e131-49c5-97f8-c3b2831ab243	\N	\N	f
+1	Robert Baratheon	robert@baratheon.net	RobertBaratheon	ADMIN	\N	2021-07-28 21:25:42.74	2021-12-22 17:14:48.908	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/fe19cc0a-8661-4a0c-9005-413f1981491b-large			cus_JwCnTV2oSgERHO	0b6fe694-9298-4aef-b7af-895329b60ed9	NONE	visa	f
+2	Jon Arryn	jon@arryn.net	HandyMan	MODERATOR	\N	2021-07-28 21:29:23.535	2021-12-22 17:15:27.68	\N			\N	9b525bfd-a224-4816-b406-209e1f33f216	\N	\N	f
+5	Sandor Clegane	s@ndor.com	the_bloody_hound	USER	\N	2021-11-19 14:30:10.529	2021-12-22 17:16:24.538	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/3b0de0b8-d0a2-4dd9-b20a-356cc5d43641-large			\N	\N	\N	\N	f
+6	Petyr Baelish	petyr@baelish.co.uk	little_finger	USER	\N	2021-11-19 14:56:34.037	2021-12-22 17:16:53.677	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/5d914d2b-44f4-43df-bb5f-9a772b7b43dd-large			\N	\N	\N	\N	f
+7	Arya Stark	arya@harvard.edu	faceless_one	USER	Now you see me... Now you don't.	2021-11-19 15:02:26.403	2021-12-22 17:17:20.797	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/ab7f791a-309e-4367-b10e-ca047cc5c30d-large	Winterfell		\N	\N	\N	\N	t
+8	Ned Stark	ned@stark.coffee	true_stark	USER	The Man Who Passes The Sentence Should Swing The Sword. Oh and, for God's sake, winter is coming!	2021-11-19 15:11:09.472	2021-12-22 17:17:39.673	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/12d2f0ec-02f3-4a80-be21-e5f11f9593b9-large	Winterfell		\N	\N	\N	\N	f
+9	Tyrion Lannister	tyrion@stark.com	smartest_man_in_westeros	USER	I really am the smartest man in Westeros, and also the most modest!	2021-11-19 15:19:48.545	2021-12-22 17:17:59.321	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/482cfb85-907e-431b-a01f-0fb429b2f5ab-large	Casterly Rock		\N	\N	\N	\N	f
+10	Drogon	drogon@fire.com	drogon	USER	\N	2021-11-19 18:55:34.072	2021-12-22 17:18:20.029	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/14ed7bec-9016-4c14-9b65-edce13bdf9f1-large			\N	\N	\N	\N	f
+11	Rhaegal	rhaegal@fire.com	rhaegal_1991	USER	\N	2021-11-19 19:09:38.651	2021-12-22 17:18:41.607	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/e45bd6bc-a92a-410e-b02c-aa3fc9699fab-large			\N	\N	\N	\N	f
+3	Jon Snow	j@n.com	jsno	ADMIN	\N	2021-07-28 21:31:53.623	2021-12-22 17:12:37.75	https://d1tjf7rcyn4hkr.cloudfront.net/avatar-image/6758b20c-6d0b-44b5-83b5-2f59f8368305-large			cus_JwCmGeU4Hqiwmn	a010a2ec-6266-42c0-9a54-ce4ee81060cb	NONE	visa	f
 \.
 
 

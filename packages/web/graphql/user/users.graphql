@@ -1,12 +1,5 @@
 query users {
   users {
-    id
-    name
-    email
-    posts {
-      id
-      title
-      body
-    }
+    ...UserWithLanguagesFragment
   }
 }

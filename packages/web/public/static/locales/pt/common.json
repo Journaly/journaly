@@ -1,21 +1,21 @@
 {
-  "signInPrompt": "Please sign in to continue.",
-  "error": "An error occurred on the server",
-  "loading": "Loading...",
+  "signInPrompt": "Inscreva-se para continuar",
+  "error": "Erro no servidor",
+  "loading": "Carregando...",
   "home": {
-    "reasonsHeader": "Three Reasons To Use Journaly",
-    "elevatorPitch": "Improve your language skills and connect with others through journaling.",
-    "getStartedText": "Get started!",
-    "reasonOneText": "Writing is such a powerful tool for improving your language skills, but it takes effort and is best when you can get feedback. Journaly is a home for your writing and great feedback from fellow language learners!",
-    "reasonTwoText": "There are many personal benefits to keeping a journal, and it is one of the most desired positive habits for many people. Journaly supercharges your language learning while helping you get all the benefits of keeping a journal!",
-    "reasonThreeText": "Many sites help you find a language exchange partner by simply matching your language interests - but that’s not good enough for us. Journaly helps you find people who also share the same interests as you!",
-    "videoHeader": "A Delightful Writing Experience",
-    "testimonialsHeader": "What Journalers are saying",
+    "reasonsHeader": "Três motivos para usar o Journaly",
+    "elevatorPitch": "Melhore suas habilidades linguísticas e conecte-se com outras pessoas através de Journaling",
+    "getStartedText": "Vamos lá!",
+    "reasonOneText": "A escrita é uma ferramenta muito poderosa para melhorar suas habilidades linguísticas, porém requer esforço e é mais proveitosa quando se recebe feedback. Journaly é a plataforma que abarca sua escrita e o feedback de aprendizes de idiomas como você!",
+    "reasonTwoText": "Existem muitos benefícios pessoais em escrever um diário e esse é um dos hábitos saudáveis mais desejados por muitas pessoas. Journaly intensifica sua aprendizagem de línguas enquanto te ajuda a ter todos os benefícios de escrever um diário!",
+    "reasonThreeText": "Muitos sites te ajudam a encontrar companheiros de intercâmbio de línguas simplesmente comparando seus interesses linguísticos - mas isso não é bom o suficiente para nós. Journaly te ajuda a encontrar pessoas que também compartilham dos mesmos interesses que você!",
+    "videoHeader": "Uma experiência de escrita maravilhosa",
+    "testimonialsHeader": "O que dizem os usuários do Journaly",
     "nav": {
-      "about": "About",
+      "about": "Sobre",
       "pricing": "Pricing",
-      "logIn": "Log in",
-      "signUp": "Sign up",
+      "logIn": "Entrar",
+      "signUp": "Increver-se",
       "dashboard": "Dashboard"
     }
   },
@@ -34,40 +34,40 @@
     "savePostPremiumFeatureExplanation": "Saved Posts is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!"
   },
   "dashboardNav": {
-    "myFeed": "My Feed",
-    "myPosts": "My Posts",
-    "newPost": "New Post",
+    "myFeed": "Meu feed",
+    "myPosts": "Minhas postagens",
+    "newPost": "Nova postagem",
     "notifications": "Notifications",
-    "settings": "Settings",
-    "logOut": "Log Out"
+    "settings": "Configurações",
+    "logOut": "Sair"
   },
   "helpModal": {
-    "header": "Support",
-    "bodyOne": "Need help? We've got your back!",
-    "bodyTwo": "Please send an email to ",
-    "bodyThree": " with a detailed description of your issue and we will get back to you as soon as we can!",
-    "footer": "Thanks for helping us make Journaly a better place for everyone"
+    "header": "Ajuda",
+    "bodyOne": "Precisa de ajuda? Nós te ajudamos!",
+    "bodyTwo": "Por favor envie um email para",
+    "bodyThree": "com uma descrição detalhada de seu problema e responderemos o mais rápido possível!",
+    "footer": "Obrigado por ajudar a deixar o Journaly melhor para todos."
   },
   "badge": {
     "ALPHA_USER": {
-      "title": "Alpha User",
-      "description": "Participated in the Journaly Alpha test. We've come a long way since then, but this user was on the front lines helping catch early bugs and shape Journally since the beginning!"
+      "title": "Usuário Alfa",
+      "description": "Participou no teste Alfa do Journaly. Percorremos um longo caminho desde então, mas esse usuário esteve na linha de frente ajudando a detectar bugs e a moldar o Journaly desde o começo."
     },
     "BETA_USER": {
-      "title": "Beta User",
-      "description": "Participated in the Journaly Beta test. The hero Journaly needs."
+      "title": "Usuário Beta",
+      "description": "Participou no teste Beta do Journaly. O herói que o Journaly precisa."
     },
     "CODE_CONTRIBUTOR": {
-      "title": "Code Contributor",
-      "description": "Has contributed code to the Journaly codebase. You can find the Journaly source code, and contribute yourself, at https://github.com/Journaly/journaly"
+      "title": "Colaborador de código",
+      "description": "Contribuiu para a base de códigos do Journaly. Você pode encontrar a fonte de códigos do Journaly e contribuir você mesmo em: https://github.com/Journaly/journaly"
     },
     "TEN_POSTS": {
-      "title": "10 Posts",
-      "description": "Published 10 posts. Really starting to get going now!"
+      "title": "10 postagens",
+      "description": "Publicou 10 postagens. Começando a avançar!"
     },
     "ONEHUNDRED_POSTS": {
-      "title": "100 Posts",
-      "description": "Published 100 posts. Talk about sticking with it!"
+      "title": "100 postagens",
+      "description": "Publicou 100 postagens. Isso que chamamos de perseverança!"
     },
     "NECROMANCER": {
       "title": "Necromancer",
@@ -78,24 +78,24 @@
       "description": "Did something that has no apparent function."
     }
   },
-  "emptyMessage": "Empty...",
-  "e404": "Resource not found",
-  "e403": "Not Authorized",
+  "emptyMessage": "Vazio...",
+  "e404": "Recurso não encontrado",
+  "e403": "Não autorizado",
   "modal": {
-    "confirm": "Confirm",
-    "cancel": "Cancel",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
     "acknowledge": "Got it",
     "goToPremium": "Check Out Premium",
     "generalPremiumFeatureExplanation": "{{featureName}} is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!",
     "unnamedPremiumFeatureExplanation": "This is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!"
   },
   "imageErrors": {
-    "initial": "Error communicating with Journaly server. Please try again later.",
-    "dataUpload": "Error transfering image to storage medium. Please try again later.",
-    "allDoneChecksFailed": "An error occurred while uploading your image. Please try again later."
+    "initial": "Erro de comunicação com o servidor do Journaly. Por favor, tente novamente mais tarde.",
+    "dataUpload": "Erro de transferência de imagem ao suporte de armanezamento. Por favor, tente novamente mais tarde.",
+    "allDoneChecksFailed": "Erro ao carregar sua imagem. Por favor, tente novamente mais tarde."
   },
   "editor": {
-    "placeholderPrompt": "It all started this morning when..."
+    "placeholderPrompt": "Tudo começou essa manhã quando..."
   },
   "notifications": {
     "feedTitle": "Notifications",

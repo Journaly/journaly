@@ -31,7 +31,8 @@
       "cityLabel": "City (optional)",
       "cityPlaceholder": "What city do you live in?",
       "countryLabel": "Country (optional)",
-      "countryPlaceholder": "What country do you live in?"
+      "countryPlaceholder": "What country do you live in?",
+      "updateHandleWarning": "Warning：updating your handle will break any existing links you have shared to your profile. If you continue, we recommend you update those links to have your new handle"
     },
     "languages": {
       "legend": "Languages",

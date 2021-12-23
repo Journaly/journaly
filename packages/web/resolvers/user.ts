@@ -12,6 +12,7 @@ import {
   PostStatus,
   EmailVerificationStatus,
   InAppNotificationType,
+  UserRole,
 } from '@journaly/j-db-client'
 
 import { NotAuthorizedError, UserInputError } from './errors'
@@ -41,10 +42,19 @@ const User = objectType({
     t.model.name()
     t.string('email', {
       nullable: true,
-      resolve(parent, _args, ctx) {
+      async resolve(parent, _args, ctx) {
         const { userId } = ctx.request
 
-        if (userId && userId === parent.id) {
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (
+          (userId && userId === parent.id) ||
+          user?.userRole === (UserRole.ADMIN || UserRole.MODERATOR)
+        ) {
           return parent.email
         }
 
@@ -147,15 +157,12 @@ const User = objectType({
 
         return ctx.db.inAppNotification.findMany({
           where: {
-            userId: userId
+            userId: userId,
           },
           take: 99,
-          orderBy: [
-            { readStatus: 'desc' },
-            { bumpedAt: 'desc' },
-          ]
+          orderBy: [{ readStatus: 'desc' }, { bumpedAt: 'desc' }],
         })
-      }
+      },
     })
     t.list.field('activityGraphData', {
       type: 'DatedActivityCount',
@@ -209,7 +216,7 @@ const User = objectType({
             ON post_activity.date = post_comment_activity.date
           ;
         `
-        return stats as any || []
+        return (stats as any) || []
       },
     })
   },

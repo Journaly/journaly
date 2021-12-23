@@ -1,6 +1,6 @@
 import React from 'react'
 import { NextPage } from 'next'
-import AuthGate from '@/components/AuthGate'
+// import AuthGate from '@/components/AuthGate'
 import JAdmin from '@/components/Dashboard/JAdmin'
 import { withApollo } from '@/lib/apollo'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
@@ -19,7 +19,7 @@ const JAdminPage: NextPage<InitialProps> = () => {
   )
 }
 
-JAdminPage.getInitialProps = async (ctx) => {
+JAdminPage.getInitialProps = async () => {
   return {
     namespacesRequired: ['common'],
   }

@@ -1,25 +1,24 @@
 import React from 'react'
-import Link from 'next/link'
 import theme from '@/theme'
-import { useUsersQuery, UserWithLanguagesFragmentFragment as UserType } from '@/generated/graphql'
+import {
+  PostCardFragmentFragment as PostType,
+  usePostsQuery,
+  PostStatus,
+  useUserByIdQuery,
+} from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
+import { useRouter } from 'next/router'
 
-type UserInfoProps = {
-  user: UserType
+type PostInfoProps = {
+  post: PostType
 }
 
-const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
+const PostInfo: React.FC<PostInfoProps> = ({ post }) => {
   return (
     <tr>
-      <td className="id-col">
-        <Link href={`/dashboard/jadmin/posts?id=${user.id}`}>
-          <a className="j-link">{user.id}</a>
-        </Link>
-      </td>
-      <td>{user.handle}</td>
-      <td>{user.name}</td>
-      <td>{user.email}</td>
-      <td>{user.userRole}</td>
+      <td className="id-col">{post.id}</td>
+      <td>{post.title}</td>
+      <td>{post.createdAt}</td>
       <td>
         <Button className="user-action-btn" variant={ButtonVariant.Link}>
           Update
@@ -50,28 +49,41 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
   )
 }
 
-const JAdmin = () => {
-  const { data } = useUsersQuery()
+const JAdminPosts = () => {
+  const router = useRouter()
+  const authorIdParam = router.query.id as string
+  const authorId = parseInt(authorIdParam, 10)
+
+  const { data: authorData } = useUserByIdQuery({
+    variables: {
+      id: authorId,
+    },
+  })
+
+  const { data } = usePostsQuery({
+    variables: {
+      first: 10,
+      skip: 0,
+      authorId,
+      status: PostStatus.Published,
+    },
+  })
 
   return (
     <div>
       <div>
-        <h2>Manage Users</h2>
+        <h2>Manage Posts By: {authorData?.userById.handle}</h2>
         <table>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Handle</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Permissions</th>
+              <th>Title</th>
+              <th>Created At</th>
               <th>⬇︎</th>
             </tr>
           </thead>
           <tbody>
-            {data?.users.map((user) => (
-              <UserInfo user={user} key={user.id} />
-            ))}
+            {data?.posts && data.posts.posts.map((post) => <PostInfo post={post} key={post.id} />)}
           </tbody>
         </table>
       </div>
@@ -115,4 +127,4 @@ const JAdmin = () => {
   )
 }
 
-export default JAdmin
+export default JAdminPosts

@@ -1,10 +1,13 @@
 {
-  "pageTitle": "My Posts",
-  "publishedTab": "Published",
-  "draftsTab": "Drafts",
+  "pageTitle": "Minhas postagens",
+  "publishedTab": "Publicados",
+  "draftsTab": "Rascunhos",
   "privateTab": "Private",
-  "publishedEmptyState": "You have no published posts. You can either publish a draft or <1>create a new post</1>.",
-  "draftEmptyState": "You have not drafts at this time.",
+  "publishedEmptyState": "Você não tem nenhuma postagem publicada. Você pode publicar um rascunho ou <1> criar uma nova postagem</1>.",
+  "draftEmptyState": "Você não tem rascunhos.",
   "privateEmptyState": "You have not published any private posts yet.",
   "errorLoadingPostsMessage": "There was an error retrieving your posts."
 }
+
+
+

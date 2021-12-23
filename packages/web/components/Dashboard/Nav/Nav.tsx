@@ -22,6 +22,9 @@ import NotificationFeed from '@/components/NotificationFeed'
 import NotificationFeedMobile from '@/components/NotificationFeed/NotificationFeedMobile'
 import { useNotificationContext } from '@/components/NotificationFeed/NotificationContext'
 import UserAvatar from '@/components/UserAvatar'
+import NewPostIcon from '@/components/Icons/NewPostIcon'
+import SettingsIcon from '@/components/Icons/SettingsIcon'
+import LogOutIcon from '@/components/Icons/LogOutIcon'
 
 interface Props {
   expanded: boolean
@@ -152,7 +155,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                 </NavLink>
                 <NavLink href="/dashboard/new-post">
                   <a className="nav-link" onClick={handleCollapse} data-testid="new-post-nav-link">
-                    <img src="/images/icons/new-post-icon.svg" alt="" />
+                    <NewPostIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.newPost')}</span>
                   </a>
                 </NavLink>
@@ -173,7 +176,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                 </div>
                 <NavLink href="/dashboard/settings/profile">
                   <a className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
-                    <img src="/images/icons/settings-icon.svg" alt="" />
+                    <SettingsIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.settings')}</span>
                   </a>
                 </NavLink>
@@ -184,7 +187,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                   onClick={handleLogOut}
                   data-testid="log-out-nav-link"
                 >
-                  <img src="/images/icons/logout-icon.svg" alt="Log out" />
+                  <LogOutIcon aria-hidden="true" />
                   <span className="nav-link-text">{t('dashboardNav.logOut')}</span>
                 </a>
               </div>
@@ -407,10 +410,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         .nav-link:hover {
           background-color: #5a5a5a;
           cursor: pointer;
-        }
-
-        .nav-link img {
-          width: 25px;
         }
 
         .nav-link-text {

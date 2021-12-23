@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { width } from '@/utils'
 import theme from '@/theme'
 import Button, { ButtonSize } from '@/components/Button'
 import { useTranslation } from '@/config/i18n'
@@ -24,7 +23,7 @@ const TopSection = () => {
           justify-content: space-between;
           padding: 30px 20px;
           margin: 0 auto;
-          max-width: ${width.desktopHD}px;
+          max-width: 1364px;
         }
 
         h1 {

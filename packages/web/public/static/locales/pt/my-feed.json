@@ -1,10 +1,10 @@
 {
-  "pageTitle": "My Feed",
-  "noPostsMessage": "Nothing to see yet...",
+  "pageTitle": "Meu feed",
+  "noPostsMessage": "Nada para ver ainda...",
   "pagination": {
-    "previous": "Prev",
-    "next": "Next",
-    "page": "Page",
-    "of": "of"
+    "previous": "Anterior",
+    "next": "Próxima",
+    "page": "Página",
+    "of": "de"
   }
 }

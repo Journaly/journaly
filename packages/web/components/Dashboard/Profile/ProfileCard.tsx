@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from '@/config/i18n'
 import FacebookIcon from '@/components/Icons/FacebookIcon'
 import InstagramIcon from '@/components/Icons/InstagramIcon'
@@ -14,10 +14,11 @@ import {
   useFollowUserMutation,
   useUnfollowUserMutation,
   LanguageLevel,
-  ProfileUserFragmentFragment
+  ProfileUserFragmentFragment,
 } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
 import UserAvatar from '@/components/UserAvatar'
+import UserListModal from '@/components/Modals/UserListModal'
 
 type Props = {
   user: ProfileUserFragmentFragment
@@ -26,7 +27,8 @@ type Props = {
 const ProfileCard: React.FC<Props> = ({ user }) => {
   const { t } = useTranslation('profile')
 
-
+  const [displayFollowerListModal, setDisplayFollowerListModal] = useState(false)
+  const [displayFollowingListModal, setDisplayFollowingListModal] = useState(false)
 
   const name = user.name || user.handle
   const showSeparator =
@@ -121,14 +123,18 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           {/* User is logged in viewing their own profile */}
           {currentUser && currentUser.id === user.id && (
             <div className="follower-stats-container">
-              <div className="follower-stat">
-                <span>{105}</span>
-                <span>Followers</span>
-              </div>
-              <div className="follower-stat">
-                <span>{53}</span>
-                <span>Following</span>
-              </div>
+              <Button
+                variant={ButtonVariant.Link}
+                onClick={() => setDisplayFollowerListModal(true)}
+              >
+                <span className="follower-stat">{user.followedBy?.length} Followers</span>
+              </Button>
+              <Button
+                variant={ButtonVariant.Link}
+                onClick={() => setDisplayFollowingListModal(true)}
+              >
+                <span className="follower-stat">{user.following?.length} Following</span>
+              </Button>
             </div>
           )}
 
@@ -175,7 +181,20 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           </div>
         </div>
       </div>
-
+      {displayFollowerListModal && (
+        <UserListModal
+          title={`${user.followedBy.length} Followers`}
+          users={user.followedBy}
+          onClose={() => setDisplayFollowerListModal(false)}
+        />
+      )}
+      {displayFollowingListModal && (
+        <UserListModal
+          title={`${user.following.length} Following`}
+          users={user.following}
+          onClose={() => setDisplayFollowingListModal(false)}
+        />
+      )}
       <style jsx>{`
         .profile-card {
           position: relative;
@@ -342,13 +361,10 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           display: flex;
           justify-content: center;
           gap: 12px;
-          color: ${theme.colors.blueLight};
-          font-weight: 600;
         }
 
         .follower-stat {
-          display: flex;
-          flex-direction: column;
+          font-weight: 600;
         }
       `}</style>
     </div>

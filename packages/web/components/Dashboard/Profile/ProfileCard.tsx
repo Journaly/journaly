@@ -107,7 +107,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           <div className="profile-image-desktop">
             <UserAvatar user={user} size={150} />
           </div>
-
+          {/* User is logged in viewing another user's profile */}
           {currentUser && currentUser.id !== user.id && (
             <Button
               className="follow-btn"
@@ -117,6 +117,19 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
             >
               {hasFollowedAuthor ? t('unfollow') : t('follow')}
             </Button>
+          )}
+          {/* User is logged in viewing their own profile */}
+          {currentUser && currentUser.id === user.id && (
+            <div className="follower-stats-container">
+              <div className="follower-stat">
+                <span>{105}</span>
+                <span>Followers</span>
+              </div>
+              <div className="follower-stat">
+                <span>{53}</span>
+                <span>Following</span>
+              </div>
+            </div>
           )}
 
           {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
@@ -323,6 +336,19 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         }
         :global(.social-link:last-child) {
           margin-right: 0;
+        }
+
+        .follower-stats-container {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          color: ${theme.colors.blueLight};
+          font-weight: 600;
+        }
+
+        .follower-stat {
+          display: flex;
+          flex-direction: column;
         }
       `}</style>
     </div>

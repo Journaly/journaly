@@ -57,9 +57,39 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
         FROM posts WHERE posts.count >= 10
       ) UNION (
         SELECT
+          ${BadgeType.TWENTY_POSTS} AS "type",
+          ${userId} AS "userId"
+        FROM posts WHERE posts.count >= 20
+      ) UNION (
+        SELECT
+          ${BadgeType.FIFTY_POSTS} AS "type",
+          ${userId} AS "userId"
+        FROM posts WHERE posts.count >= 50
+      ) UNION (
+        SELECT
+          ${BadgeType.SEVENTYFIVE_POSTS} AS "type",
+          ${userId} AS "userId"
+        FROM posts WHERE posts.count >= 75
+      ) UNION (
+        SELECT
           ${BadgeType.ONEHUNDRED_POSTS} AS "type",
           ${userId} AS "userId"
         FROM posts WHERE posts.count >= 100
+      ) UNION (
+        SELECT
+          ${BadgeType.ONEHUNDREDFIFTY_POSTS} AS "type",
+          ${userId} AS "userId"
+        FROM posts WHERE posts.count >= 150
+      ) UNION (
+        SELECT
+          ${BadgeType.TWOHUNDRED_POSTS} AS "type",
+          ${userId} AS "userId"
+        FROM posts WHERE posts.count >= 200
+      ) UNION (
+        SELECT
+          ${BadgeType.TWOHUNDREDFIFTY_POSTS} AS "type",
+          ${userId} AS "userId"
+        FROM posts WHERE posts.count >= 250
       )
     )
     ON CONFLICT DO NOTHING

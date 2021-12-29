@@ -121,26 +121,39 @@ const createComment = async ({
     },
   })
 
-  await Promise.all(thread.subscriptions.map(async ({ user }: { user: User }) => {
-    if (user.id === author.id) {
-      // This is the user creating the comment, do not notify them.
-      return new Promise((res) => res(null))
-    }
+  const updatedThreadData = await db.thread.findUnique({
+    where: {
+      id: thread.id,
+    },
+    include: {
+      subscriptions: true,
+    },
+  })
 
-    await createEmailNotification(db, user, {
-      type: EmailNotificationType.THREAD_COMMENT,
-      comment,
-    })
+  if (!updatedThreadData) throw new Error('Error fetching updated thread data')
 
-    await createInAppNotification(db, {
-      userId: user.id,
-      type: InAppNotificationType.THREAD_COMMENT,
-      key: { postId: thread.post.id, },
-      subNotification: {
-        commentId: comment.id
+  await Promise.all(
+    updatedThreadData.subscriptions.map(async ({ user }: { user: User }) => {
+      if (user.id === author.id) {
+        // This is the user creating the comment, do not notify them.
+        return new Promise((res) => res(null))
       }
-    })
-  }))
+
+      await createEmailNotification(db, user, {
+        type: EmailNotificationType.THREAD_COMMENT,
+        comment,
+      })
+
+      await createInAppNotification(db, {
+        userId: user.id,
+        type: InAppNotificationType.THREAD_COMMENT,
+        key: { postId: thread.post.id },
+        subNotification: {
+          commentId: comment.id,
+        },
+      })
+    }),
+  )
 
   // Check to see if we should assign a badge
   if (thread.post.authorId !== author.id && isPast(add(thread.post.createdAt, { weeks: 1 }))) {

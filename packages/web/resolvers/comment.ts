@@ -121,19 +121,15 @@ const createComment = async ({
     },
   })
 
-  const updatedThreadData = await db.thread.findUnique({
-    where: {
-      id: thread.id,
-    },
-    include: {
-      subscriptions: true,
-    },
+  const subscriptions = await db.threadSubscription.findMany({
+    where: { threadId: thread.id },
+    include: { user: true },
   })
 
-  if (!updatedThreadData) throw new Error('Error fetching updated thread data')
+  if (!subscriptions) throw new Error('Error fetching updated subscriptions')
 
   await Promise.all(
-    updatedThreadData.subscriptions.map(async ({ user }: { user: User }) => {
+    subscriptions.map(async ({ user }: { user: User }) => {
       if (user.id === author.id) {
         // This is the user creating the comment, do not notify them.
         return new Promise((res) => res(null))

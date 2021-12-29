@@ -1,0 +1,138 @@
+{
+  "ALPHA_USER": {
+    "title": "Alpha User",
+    "description": "Participated in the Journaly Alpha test. We've come a long way since then, but this user was on the front lines helping catch early bugs and shape Journally since the beginning!"
+  },
+  "BETA_USER": {
+    "title": "Beta User",
+    "description": "Participated in the Journaly Beta test. The hero Journaly needs."
+  },
+  "CODE_CONTRIBUTOR": {
+    "title": "Code Contributor",
+    "description": "Has contributed code to the Journaly codebase. You can find the Journaly source code, and contribute yourself, at https://github.com/Journaly/journaly"
+  },
+  "NECROMANCER": {
+    "title": "Necromancer",
+    "description": "Gave new feedback on a post that's over a week old."
+  },
+  "ODRADEK": {
+    "title": "Odradek",
+    "description": "Did something that has no apparent function."
+  },
+  "TEN_POSTS": {
+    "title": "10 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "TWENTY_POSTS": {
+    "title": "20 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "FIFTY_POSTS": {
+    "title": "50 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "SEVENTYFIVE_POSTS": {
+    "title": "75 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "ONEHUNDRED_POSTS": {
+    "title": "100 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "ONEHUNDREDFIFTY_POSTS": {
+    "title": "150 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "TWOHUNDRED_POSTS": {
+    "title": "200 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "TWOHUNDREDFIFTY_POSTS": {
+    "title": "250 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "TEN_COMMENTS": {
+    "title": "10 Comments",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "FIFTY_COMMENTS": {
+    "title": "50 Comments",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "ONEHUNDRED_COMMENTS": {
+    "title": "100 Comments",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "TWOHUNDREDFIFTY_COMMENTS": {
+    "title": "250 Comments",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "FIVEHUNDRED_COMMENTS": {
+    "title": "500 Comments",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "ONETHOUSAND_COMMENTS": {
+    "title": "1000 Comments",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "CORRECT_TEN_POSTS": {
+    "title": "Correct 10 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "CORRECT_TWENTYFIVE_POSTS": {
+    "title": "Correct 25 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "CORRECT_FIFTY_POSTS": {
+    "title": "Correct 50 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "CORRECT_ONEHUNDRED_POSTS": {
+    "title": "Correct 100 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "CORRECT_ONEHUNDREDFIFTY_POSTS": {
+    "title": "Correct 150 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "CORRECT_TWOHUNDREDFIFTY_POSTS": {
+    "title": "Correct 250 Posts",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "TEN_THANKS": {
+    "title": "Receive 10 Thanks",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "FIFTY_THANKS": {
+    "title": "Receive 50 Thanks",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "ONEHUNDRED_THANKS": {
+    "title": "Receive 100 Thanks",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "TWOHUNDREDFIFTY_THANKS": {
+    "title": "Receive 250 Thanks",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "FIVEHUNDRED_THANKS": {
+    "title": "Receive 500 Thanks",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "ONETHOUSAND_THANKS": {
+    "title": "Receive 1,000 Thanks",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "ONETHOUSANDTWOHUNDREDFIFTY_THANKS": {
+    "title": "Receive 1,250 Thanks",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "ONETHOUSANDFIVEHUNDRED_THANKS": {
+    "title": "Receive 1,500 Thanks",
+    "description": "Published 10 posts. Really starting to get going now!"
+  },
+  "HIKER": {
+    "title": "Hiker",
+    "description": "Published 10 posts. Really starting to get going now!"
+  }
+}

@@ -22,8 +22,79 @@ import {
   assignBadge,
   UserWithRels,
   ThreadWithRels,
+  sendNewBadgeEmail,
 } from './utils'
 import { NotFoundError } from './errors'
+
+const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {
+  // Use a raw query here because we'll soon have a number of post count
+  // badges and we could end up with quite a bit of back and fourth
+  // querying, whereas here we can just make one roundtrip.
+  const newBadgeCount = await db.$executeRaw`
+    WITH comments AS (
+        SELECT COUNT(*) AS count
+        FROM "Comment"
+        WHERE
+          "authorId" = ${userId}
+    )
+    INSERT INTO "UserBadge" ("type", "userId") (
+      (
+        SELECT
+          ${BadgeType.TEN_COMMENTS}::"BadgeType" AS "type",
+          ${userId}::integer AS "userId"
+        FROM comments WHERE comments.count >= 10
+      ) UNION (
+        SELECT
+          ${BadgeType.FIFTY_COMMENTS} AS "type",
+          ${userId} AS "userId"
+        FROM comments WHERE comments.count >= 20
+      ) UNION (
+        SELECT
+          ${BadgeType.ONEHUNDRED_COMMENTS} AS "type",
+          ${userId} AS "userId"
+        FROM comments WHERE comments.count >= 50
+      ) UNION (
+        SELECT
+          ${BadgeType.TWOHUNDREDFIFTY_COMMENTS} AS "type",
+          ${userId} AS "userId"
+        FROM comments WHERE comments.count >= 75
+      ) UNION (
+        SELECT
+          ${BadgeType.FIVEHUNDRED_COMMENTS} AS "type",
+          ${userId} AS "userId"
+        FROM comments WHERE comments.count >= 100
+      ) UNION (
+        SELECT
+          ${BadgeType.ONETHOUSAND_COMMENTS} AS "type",
+          ${userId} AS "userId"
+        FROM comments WHERE comments.count >= 150
+      )
+    )
+    ON CONFLICT DO NOTHING
+  `
+  // This is a horrible hack because of this bug in prisma where `RETURNING`
+  // is basically ignored and we get a row count instead. See:
+  // https://github.com/prisma/prisma/issues/2208 . This is fixed in newer
+  // prisma versions by replacing `db.raw` with `db.queryRaw` but we don't have
+  // new prisma versions because nexus is dead. Woo!
+  if (newBadgeCount) {
+    const newBadges = await db.userBadge.findMany({
+      where: { user: { id: userId } },
+      include: { user: true },
+      orderBy: { createdAt: 'desc' },
+      take: newBadgeCount,
+    })
+
+    await Promise.all(
+      newBadges.map((badge) => {
+        return sendNewBadgeEmail({
+          badgeType: badge.type,
+          user: badge.user,
+        })
+      }),
+    )
+  }
+}
 
 const Thread = objectType({
   name: 'Thread',
@@ -296,12 +367,17 @@ const CommentMutations = extendType({
           throw new NotFoundError('user')
         }
 
-        return await createComment({
-          db: ctx.db,
-          thread,
-          author,
-          body: args.body,
-        })
+        const promises: Promise<unknown>[] = [
+          createComment({
+            db: ctx.db,
+            thread,
+            author,
+            body: args.body,
+          }),
+          assignCommentCountBadges(ctx.db, userId),
+        ]
+
+        return Promise.all(promises) 
       },
     })
 

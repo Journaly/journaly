@@ -493,6 +493,10 @@ enum BadgeType {
   ONEHUNDREDFIFTY_POSTS
   TWOHUNDRED_POSTS
   TWOHUNDREDFIFTY_POSTS
+  NOVELIST // Wrote a post over X num words
+  MULTILINGUAL // Write posts in 2 languages
+  POLYGLOT // Wrote in X num languages
+  HELPER // Wrote a post in their native language
   // Feedback - Comments
   TEN_COMMENTS
   FIFTY_COMMENTS
@@ -517,7 +521,9 @@ enum BadgeType {
   ONETHOUSANDTWOHUNDREDFIFTY_THANKS
   ONETHOUSANDFIVEHUNDRED_THANKS
   // Goals
-  HIKER
+  HIKER // Achieved weekly goal 4 weeks in a row
+  TRAIL_RUNNER // Achieved weekly goal 6 weeks in a row
+  MOUNTAIN_CLIMBER // Achieved weekly goal 8 weeks in a row
 }
 
 enum EmailNotificationType {

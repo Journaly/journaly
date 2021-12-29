@@ -7,6 +7,10 @@
     "title": "Beta User",
     "description": "Participated in the Journaly Beta test. The hero Journaly needs."
   },
+  "BUG_HUNTER": {
+    "title": "Bug Hunter",
+    "description": "Has reported and helped us track down bugs, making Journaly better for everyone!"
+  },
   "CODE_CONTRIBUTOR": {
     "title": "Code Contributor",
     "description": "Has contributed code to the Journaly codebase. You can find the Journaly source code, and contribute yourself, at https://github.com/Journaly/journaly"
@@ -25,114 +29,114 @@
   },
   "TWENTY_POSTS": {
     "title": "20 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 20 posts."
   },
   "FIFTY_POSTS": {
     "title": "50 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 50 posts."
   },
   "SEVENTYFIVE_POSTS": {
     "title": "75 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 75 posts."
   },
   "ONEHUNDRED_POSTS": {
     "title": "100 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 100 posts."
   },
   "ONEHUNDREDFIFTY_POSTS": {
     "title": "150 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 150 posts."
   },
   "TWOHUNDRED_POSTS": {
     "title": "200 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 200 posts."
   },
   "TWOHUNDREDFIFTY_POSTS": {
     "title": "250 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 250 posts."
   },
   "TEN_COMMENTS": {
     "title": "10 Comments",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 10 feedback comments."
   },
   "FIFTY_COMMENTS": {
     "title": "50 Comments",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 50 feedback comments."
   },
   "ONEHUNDRED_COMMENTS": {
     "title": "100 Comments",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 100 feedback comments."
   },
   "TWOHUNDREDFIFTY_COMMENTS": {
     "title": "250 Comments",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 250 feedback comments."
   },
   "FIVEHUNDRED_COMMENTS": {
     "title": "500 Comments",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 500 feedback comments."
   },
   "ONETHOUSAND_COMMENTS": {
     "title": "1000 Comments",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Published 1000 feedback comments."
   },
   "CORRECT_TEN_POSTS": {
     "title": "Correct 10 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Corrected 10 posts."
   },
   "CORRECT_TWENTYFIVE_POSTS": {
     "title": "Correct 25 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Corrected 10 posts."
   },
   "CORRECT_FIFTY_POSTS": {
     "title": "Correct 50 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Corrected 10 posts."
   },
   "CORRECT_ONEHUNDRED_POSTS": {
     "title": "Correct 100 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Corrected 10 posts."
   },
   "CORRECT_ONEHUNDREDFIFTY_POSTS": {
     "title": "Correct 150 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Corrected 10 posts."
   },
   "CORRECT_TWOHUNDREDFIFTY_POSTS": {
     "title": "Correct 250 Posts",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Corrected 10 posts."
   },
   "TEN_THANKS": {
     "title": "Receive 10 Thanks",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Received 10 thanks."
   },
   "FIFTY_THANKS": {
     "title": "Receive 50 Thanks",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Received 50 thanks."
   },
   "ONEHUNDRED_THANKS": {
     "title": "Receive 100 Thanks",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Received 100 thanks."
   },
   "TWOHUNDREDFIFTY_THANKS": {
     "title": "Receive 250 Thanks",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Received 250 thanks."
   },
   "FIVEHUNDRED_THANKS": {
     "title": "Receive 500 Thanks",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Received 500 thanks."
   },
   "ONETHOUSAND_THANKS": {
     "title": "Receive 1,000 Thanks",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Received 1,000 thanks."
   },
   "ONETHOUSANDTWOHUNDREDFIFTY_THANKS": {
     "title": "Receive 1,250 Thanks",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Received 1,250 thanks."
   },
   "ONETHOUSANDFIVEHUNDRED_THANKS": {
     "title": "Receive 1,500 Thanks",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "Received 1,500 thanks."
   },
   "HIKER": {
     "title": "Hiker",
-    "description": "Published 10 posts. Really starting to get going now!"
+    "description": "This user hit their weekly goal 4 weeks in a row!"
   }
 }

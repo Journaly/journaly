@@ -24,7 +24,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/6ewE7L2CHBk"
+                  src="https://www.youtube-nocookie.com/embed/6ewE7L2CHBk"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -41,7 +41,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/KdSCZp1TxN4"
+                  src="https://www.youtube-nocookie.com/embed/KdSCZp1TxN4"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -57,7 +57,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/cEW29YmtJ30"
+                  src="https://www.youtube-nocookie.com/embed/cEW29YmtJ30"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -75,7 +75,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/Apd0YztoYYw"
+                  src="https://www.youtube-nocookie.com/embed/Apd0YztoYYw"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -92,7 +92,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/vxV-5562uf8"
+                  src="https://www.youtube-nocookie.com/embed/vxV-5562uf8"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -110,7 +110,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/N0qo90BvBiQ"
+                  src="https://www.youtube-nocookie.com/embed/N0qo90BvBiQ"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -130,7 +130,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/eLhbauVIA6E"
+                  src="https://www.youtube-nocookie.com/embed/eLhbauVIA6E"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -148,7 +148,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/6WbkjKqpwiI"
+                  src="https://www.youtube-nocookie.com/embed/6WbkjKqpwiI"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -166,7 +166,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/DVmX9RDvCLs"
+                  src="https://www.youtube-nocookie.com/embed/DVmX9RDvCLs"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -183,7 +183,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/yTZYYZHSh6k"
+                  src="https://www.youtube-nocookie.com/embed/yTZYYZHSh6k"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -200,7 +200,7 @@ const Tutorials: NextPage = () => {
                   className="j-video"
                   width="560"
                   height="315"
-                  src="https://youtu.be/limFXKC9BSQ"
+                  src="https://www.youtube-nocookie.com/embed/limFXKC9BSQ"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen

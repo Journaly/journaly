@@ -1,7 +1,6 @@
 import * as path from 'path'
 
 import { makeSchema, declarativeWrappingPlugin } from 'nexus'
-import { nexusPrisma } from 'nexus-plugin-prisma'
 
 import CommentTypes from './comment'
 import TopicTypes from './topic'
@@ -51,12 +50,7 @@ const schemaOpts: Parameters<typeof makeSchema>[0] = {
     ...NotificationTypes,
   ],
   shouldGenerateArtifacts: reflectionRun,
-  plugins: [
-    nexusPrisma({
-      shouldGenerateArtifacts: reflectionRun,
-    }),
-    declarativeWrappingPlugin(),
-  ],
+  plugins: [declarativeWrappingPlugin()],
 }
 
 if (reflectionRun) {

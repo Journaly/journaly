@@ -14,6 +14,8 @@ import {
   InAppNotificationType,
 } from '@journaly/j-db-client'
 
+import { User, UserBadge } from 'nexus-prisma'
+
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
   generateThumbbusterUrl,
@@ -34,13 +36,11 @@ const DatedActivityCount = objectType({
 })
 
 const User = objectType({
-  name: 'User',
-  sourceType: 'prisma.User',
+  name: User.$name,
   definition(t) {
-    t.model.id()
-    t.model.name()
-    t.string('email', {
-      nullable: true,
+    t.field(User.id)
+    t.field(User.name)
+    t.nullable.string('email', {
       resolve(parent, _args, ctx) {
         const { userId } = ctx.request
 
@@ -51,19 +51,19 @@ const User = objectType({
         return null
       },
     })
-    t.model.handle()
-    t.model.bio()
-    t.model.userRole()
-    t.model.city()
-    t.model.country()
-    t.model.badges({ pagination: false })
-    t.model.posts({ pagination: false })
-    t.model.savedPosts({ pagination: false })
-    t.model.profileImage()
-    t.model.createdAt()
-    t.model.membershipSubscription()
-    t.model.isStudent()
-    t.model.socialMedia({
+    t.field(User.handle)
+    t.field(User.bio)
+    t.field(User.userRole)
+    t.field(User.city)
+    t.field(User.country)
+    t.field(User.badges)
+    t.field(User.posts)
+    t.field(User.savedPosts)
+    t.field(User.profileImage)
+    t.field(User.createdAt)
+    t.field(User.membershipSubscription)
+    t.field(User.isStudent)
+    t.field(User.socialMedia, {
       type: 'SocialMedia',
       resolve: async (parent, _args, ctx) => {
         return ctx.db.socialMedia.findFirst({
@@ -73,12 +73,14 @@ const User = objectType({
         })
       },
     })
-    t.model.languages({ pagination: false })
-    t.model.following({ pagination: false })
-    t.model.followedBy({ pagination: false })
-    t.model.lastFourCardNumbers()
-    t.model.cardBrand()
-    t.model.userInterests({ type: 'UserInterest', pagination: false })
+    t.field(User.languages)
+    t.field(User.following)
+    t.field(User.followedBy)
+    t.field(User.lastFourCardNumbers)
+    t.field(User.cardBrand)
+    t.field(User.userInterests, {
+      type: 'UserInterests',
+    })
     t.boolean('emailAddressVerified', {
       async resolve(parent, _args, ctx, _info) {
         const auth = await ctx.db.auth.findUnique({
@@ -147,15 +149,12 @@ const User = objectType({
 
         return ctx.db.inAppNotification.findMany({
           where: {
-            userId: userId
+            userId: userId,
           },
           take: 99,
-          orderBy: [
-            { readStatus: 'desc' },
-            { bumpedAt: 'desc' },
-          ]
+          orderBy: [{ readStatus: 'desc' }, { bumpedAt: 'desc' }],
         })
-      }
+      },
     })
     t.list.field('activityGraphData', {
       type: 'DatedActivityCount',
@@ -209,7 +208,7 @@ const User = objectType({
             ON post_activity.date = post_comment_activity.date
           ;
         `
-        return stats as any || []
+        return (stats as any) || []
       },
     })
   },
@@ -225,11 +224,11 @@ const InitiateAvatarImageUploadResponse = objectType({
 })
 
 const UserBadge = objectType({
-  name: 'UserBadge',
+  name: UserBadge.$name,
   definition(t) {
-    t.model.id()
-    t.model.type()
-    t.model.createdAt()
+    t.field(UserBadge.id)
+    t.field(UserBadge.type)
+    t.field(UserBadge.createdAt)
   },
 })
 

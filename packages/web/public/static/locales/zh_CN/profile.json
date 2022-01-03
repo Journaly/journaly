@@ -28,5 +28,9 @@
   "emptyPosts": "{{user}} 暂时还没有发布日志",
   "loggedInUserEmptyPosts": "您没有近期日志。 <1>写新日志吧</1>！",
   "follow": "关注",
-  "unfollow": "取消关注"
+  "unfollow": "取消关注",
+  "followerCount": "{{count}} 粉丝",
+  "followerCount_plural": "{{count}} 粉丝",
+  "followingCount": "{{count}} 已关注",
+  "followingCount_plural": "{{count}} 已关注"
 }

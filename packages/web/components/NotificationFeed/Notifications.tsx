@@ -238,7 +238,8 @@ export const ThreadCommentThanksNotificationLevelOne: React.FC<LevelOneNotificat
   onMarkRead,
 }) => {
   const { t } = useTranslation('common')
-  const thanksAuthor = notification.threadCommentThanksNotifications[0].thanks.author
+  const thanksAuthor = notification.triggeringUser
+  if (!thanksAuthor) return null
   const count = notification.threadCommentThanksNotifications.length
 
   return (
@@ -359,7 +360,8 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
   closeNotificationFeed,
 }) => {
   const { t } = useTranslation('common')
-  const thanksAuthor = notification.threadCommentThanksNotifications[0].thanks.author
+  const thanksAuthor = notification.triggeringUser
+  if (!thanksAuthor) return null
   const count = notification.threadCommentThanksNotifications.length
   // Separate the different threads
   const threadGroupedThanks: ThreadGroupedThanksType = {}

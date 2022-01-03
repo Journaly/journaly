@@ -1,0 +1,16 @@
+{
+  "postCommentsTitle": "评论",
+  "relativeTimeWord": "以前",
+  "save": "保存",
+  "cancel": "取消",
+  "submit": "提交",
+  "addCommentPlaceholder": "评论文字现已支持Markdown！尝试输入**粗体**或*斜体*！",
+  "noCommentsYetMessage": "暂时……还没有评论",
+  "tabGeneralKey": "综合",
+  "tabOutdatedKey": "过期",
+  "noOutdatedThreadsMessage": "没有过期话题",
+  "deleteCommentConfirmModalTitle": "删除评论",
+  "deleteCommentConfirmModalBody": "确认删除评论？",
+  "numUsersGaveThanks": "{{numThanks}} 用户点赞了你的评论",
+  "nativeBadgeText": "母语用户"
+}

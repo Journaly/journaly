@@ -7,7 +7,6 @@ import { useTranslation } from '@/config/i18n'
 import { useCreateUserMutation, useCurrentUserQuery } from '@/generated/graphql'
 import FormError from '@/components/FormError'
 import Button from '@/components/Button'
-import { brandBlue } from '@/utils'
 import theme from '@/theme'
 
 const SignupForm: React.FC = () => {
@@ -141,12 +140,12 @@ const SignupForm: React.FC = () => {
         textarea,
         select:focus {
           outline: 0;
-          border-color: ${brandBlue};
+          border-color: ${theme.colors.blueLight};
         }
         button,
         input[type='submit'] {
           width: auto;
-          background: ${brandBlue};
+          background: ${theme.colors.blueLight};
           color: white;
           border: 0;
           font-size: 2rem;
@@ -165,7 +164,12 @@ const SignupForm: React.FC = () => {
           height: 10px;
           content: '';
           display: block;
-          background-image: linear-gradient(to right, #32567e 0%, #4391c9 50%, #32567e 100%);
+          background-image: linear-gradient(
+            to right,
+            #32567e 0%,
+            ${theme.colors.blueLight} 50%,
+            #32567e 100%
+          );
         }
         @keyframes loading {
           from {

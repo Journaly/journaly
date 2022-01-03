@@ -293,14 +293,16 @@ const PostQueries = extendType({
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
 
-        const currentUser = await ctx.db.user.findUnique({
-          where: {
-            id: userId,
-          },
-          include: {
-            following: true,
-          },
-        })
+        const currentUser = userId
+          ? await ctx.db.user.findUnique({
+              where: {
+                id: userId,
+              },
+              include: {
+                following: true,
+              },
+            })
+          : null
 
         if (!args.first) args.first = 10
         if (args.first > 50) args.first = 50
@@ -327,7 +329,6 @@ const PostQueries = extendType({
           where.push(Prisma.sql`
             p.title ILIKE ${likeExpr}
             OR p.body ILIKE ${likeExpr}
-
           `)
         }
 
@@ -382,9 +383,9 @@ const PostQueries = extendType({
           where.push(Prisma.sql`p."status" = ${args.status}`)
         }
 
-        let whereQueryFragment = where[0] ? Prisma.sql`WHERE ${where[0]}` : Prisma.empty
+        let whereQueryFragment = where[0] ? Prisma.sql`WHERE (${where[0]})` : Prisma.empty
         for (let i = 1; i < where.length; i++) {
-          whereQueryFragment = Prisma.sql`${whereQueryFragment} AND ${where[i]}`
+          whereQueryFragment = Prisma.sql`${whereQueryFragment} AND (${where[i]})`
         }
 
         let joinQueryFragment = joins[0] || Prisma.empty

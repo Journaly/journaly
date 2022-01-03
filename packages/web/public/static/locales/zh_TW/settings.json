@@ -1,0 +1,172 @@
+{
+  "breadcrumbs": {
+    "settings": "設置",
+    "profile": "編輯您的個人信息",
+    "account": "賬號",
+    "subscription": "訂閱"
+  },
+  "nav": {
+    "profile": "個人信息",
+    "account": "賬號",
+    "subscription": "訂閱"
+  },
+  "updateButton": "更新",
+  "profile": {
+    "details": {
+      "legend": "詳情",
+      "submitImage": "上傳頭像",
+      "nameLabel": "您的名字（選填）",
+      "displayNameLabel": "昵稱",
+      "displayNameError": "必須填寫昵稱",
+      "emailLabel": "郵箱",
+      "emailError": "請填寫郵箱",
+      "emailVerifiedBadgeText": "驗證",
+      "emailUnverifiedBadgeText": "等待驗證",
+      "resendEmailVerificationButtonText": "點擊此處",
+      "resendEmailVerificationText": "重新獲取驗證郵件",
+      "resendEmailVerificationToastSuccess": "驗證郵件已再次發送！",
+      "resendEmailVerificationToastError": "驗證郵件再次發送失敗",
+      "locationLabel": "地區（選填）",
+      "updateSuccess": "個人信息更新成功",
+      "cityLabel": "城市（選填",
+      "cityPlaceholder": "您生活在哪個城市？",
+      "countryLabel": "國家（選填）",
+      "countryPlaceholder": "您生活在哪個國家？",
+      "updateHandleWarning": "提示：更新昵稱將會使您簡介中的鏈接失效，若繼續操作，我們推薦您在更改昵稱後更新這些鏈接。"
+    },
+    "languages": {
+      "legend": "語言",
+      "nativeLanguagesLabel": "您的哪些語言達到了母語水平？",
+      "learningLanguagesLabel": "您正在學習哪些語言？",
+      "welcomeModalFormLabel": "告訴我們您的母語和目標語言",
+      "languageSelectPlaceholder": "選擇語言……",
+      "levelSelectPlaceholder": "選擇水平……",
+      "addLanguageButtonText": "添加",
+      "levels": {
+        "beginner": "初級",
+        "intermediate": "中級",
+        "advanced": "高級",
+        "native": "母語"
+      }
+    },
+    "uiLanguage": {
+      "legend": "界面語言",
+      "placeholder": "選擇界面語言……",
+      "description": "選擇您喜歡的界面顯示語言"
+    },
+    "bio": {
+      "legend": "自我介紹",
+      "bioLabel": "介紹一下自己吧！",
+      "bioError": "您的自我介紹不能超過{{characters}} 字",
+      "bioInputDescription": "字數上限為 {{characters}} 字",
+      "bioSuccess": "自我介紹更新成功"
+    },
+    "interests": {
+      "legend": "愛好",
+      "topicsLabel": "告訴我們您感興趣的話題! 這能幫助我們甄選您可能喜歡的日誌，找到與您誌趣相投的朋友。",
+      "interestSelectPlaceholder": "選擇話題……",
+      "addInterestButtonText": "添加"
+    },
+    "social": {
+      "legend": "社交",
+      "socialLabel": "想和其他Journalers通過社交媒體建立聯系？或完善自己的成果？告訴大家在哪裏可以找到你。",
+      "facebookPlaceholder": "facebook.com/YourPage",
+      "youtubePlaceholder": "youtube.com/channel/YourChannel",
+      "instagramPlaceholder": "instagram.com/YourPage",
+      "websitePlaceholder": "您有個人網站嗎？",
+      "success": "社交媒體更新成功"
+    },
+    "error": {
+      "updateError": "個人信息更新失敗",
+      "handleValidationErrorMessage": "昵稱只能包含字母、數字、_、-，不可含有空格。",
+      "handleAlreadyinUseError": "此昵稱已被使用",
+      "handleMinimumErrorMessage": "您的昵稱需要至少3個字符",
+      "emailValidationErrorMessage": "郵箱地址無效",
+      "emailAlreadyinUseError": "此郵箱地址已被使用",
+      "websitePatternError": "無效網頁鏈接  url. e.g. yourdomain.com or yoursub.domain.com",
+      "youtubePatternError": "無效Youtube鏈接 url. e.g. youtube.com/channel/YourChannel or youtube.com/user/YourUserName",
+      "facebookPatternError": "無效Facebook鏈接 url. e.g. facebook.com/YourPage or fb.com/YourPage",
+      "instagramPatternError": "無效Instagram鏈接 url. e.g. instagram.com/YourPage"
+    }
+  },
+  "account": {
+    "updatePasswordForm": {
+      "legend": "更改密碼",
+      "submitButton": "更新",
+      "oldPasswordLabel": "輸入舊密碼",
+      "oldPasswordPlaceholder": "舊密碼",
+      "oldPasswordError": "輸入您的舊密碼",
+      "newPasswordLabel": "選擇新密碼",
+      "newPasswordPlaceholder": "新密碼",
+      "newPasswordError": "輸入您的新密碼",
+      "confirmNewPasswordLabel": "再次輸入新密碼",
+      "confirmNewPasswordPlaceholder": "確認密碼",
+      "confirmNewPasswordError": "確認您的新密碼",
+      "confirmNewPasswordMatchError": "密碼不一致",
+      "newPasswordMinimumErrorMessage": "密碼需要至少6位字符",
+      "passwordChangeSuccess": "密碼更改成功",
+      "updateError": "密碼更新失敗",
+      "newPasswordCannotBeTheSameError": "新密碼不可與舊密碼相同"
+    }
+  },
+  "subscription": {
+    "title": "Journaly會員",
+    "subscribeCta": "訂閱！",
+    "subscribeSuccessMessage": "恭喜！您現已成為Jounaly會員！",
+    "subscribeFailureMessage": "Oh no！訂閱時出現錯誤，請重試。",
+    "premiumGeneralCopy": "成為會員後您將暢享所有精彩會員功能，使您在Journaly的體驗更加極致和個性化，每月只需要一杯咖啡的費用！下面是免費用戶 vs 會員的功能對比：",
+    "premiumFeatureCopy": "您的會員訂閱支持了可愛和辛勤工作的幕後團隊，維持了Journaly的持續運作，使其核心體驗能夠繼續開放給所有人 ❤︎",
+    "currentPlan": "當前套餐：",
+    "changePlan": "更改套餐",
+    "cancelSubscription": "取消訂閱",
+    "subscriptionEndsOn": "您的訂閱結束時間為",
+    "subscriptionRenewsOn": "您的訂閱更新時間為",
+    "reactivateSubscription": "重新訂閱",
+    "planSelectPlaceholder": "您想選擇哪種訂閱計劃？",
+    "cardOnFile": "銀行卡",
+    "updateCard": "更新銀行卡信息",
+    "subscriptionStatus": "訂閱狀態：",
+    "nextBillingDate": "下次賬單日期：",
+    "premiumUser": "會員",
+    "freeUser": "普通用戶",
+    "monthlyPrice": "1 月 / £5",
+    "annualPrice": "1 年 / £42",
+    "studentPrice": "學生折扣： 1 年 / £15",
+    "paymentInfo": "付款信息",
+    "cancelSubscriptionConfirmationTitle": "取消您的會員訂閱",
+    "cancelSubscriptionConfirmationBody": "確認取消會員訂閱？",
+    "cancellationSuccess": "您已取消會員訂閱",
+    "cancellationError": "取消訂閱失敗",
+    "updateCardSuccess": "更新銀行卡信息成功",
+    "updateCardError": "更新銀行卡信息失敗",
+    "studentEmailVerificationNeededMsg": "註冊後，請點擊郵件中的鏈接驗證學生郵箱地址，以獲取學生折扣。前往 設置 > 個人信息 重新獲取驗證郵件。",
+    "freePlan": "免費",
+    "premiumPlan": "會員",
+    "paidAnnually": "年度用戶",
+    "only": "僅",
+    "onlyPrice": "£3.50/月",
+    "features": {
+      "unlimitedLanguages": "寫作語言無上限",
+      "unlimitedPosts": "發布日誌數量無上限",
+      "unlimitedFeedback": "獲取反饋數量無上限",
+      "customHeaderImages": "個性化日誌封面圖片",
+      "advancedFiltering": "日誌高級篩選",
+      "badges": "獲取成就勛章",
+      "stats": "活動 & 數據記錄",
+      "unsplashIntegration": "使用 Unsplash（即將推出）",
+      "directMessaging": "私人消息（即將推出）",
+      "userGroups": "用戶小組（即將推出）",
+      "inlineImages": "插入圖片",
+      "postBumping": "主頁置頂",
+      "postSaving": "收藏日誌",
+      "supportTheCreators": "支持創作者",
+      "supportFreeLearning": "支持語言學習",
+      "writingPrompts": "完善寫作（即將推出）",
+      "focusMode": "專註模式（即將推出）",
+      "postThemes": "主題日誌（即將推出）",
+      "audioPosts": "聲音日誌（即將推出）",
+      "weeklyGoals": "每周目標（即將推出）",
+      "privateShareLinks": "私密分享鏈接"
+    }
+  }
+}

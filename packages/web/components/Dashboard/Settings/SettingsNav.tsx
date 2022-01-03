@@ -8,7 +8,8 @@ const SettingsNav: React.FC = () => {
   const links = {
     profile: t('nav.profile'),
     account: t('nav.account'),
-    subscription: t('nav.subscription')
+    subscription: t('nav.subscription'),
+    tutorials: t('nav.tutorials'),
   }
 
   return (
@@ -75,7 +76,7 @@ const SettingsNav: React.FC = () => {
         }
 
         .settings-nav-item.active {
-          border-color: #4391c9;
+          border-color: ${theme.colors.blueLight};
           pointer-events: none;
         }
       `}</style>

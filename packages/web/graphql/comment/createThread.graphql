@@ -3,12 +3,14 @@ mutation createThread(
   $startIndex: Int!
   $endIndex: Int!
   $highlightedContent: String!
+  $body: String!
 ) {
   createThread(
     postId: $postId
     startIndex: $startIndex
     endIndex: $endIndex
     highlightedContent: $highlightedContent
+    body: $body
   ) {
     ...ThreadFragment
   }

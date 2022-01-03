@@ -1,0 +1,135 @@
+{
+  "signInPrompt": "请注册以继续",
+  "error": "服务器出现错误",
+  "loading": "加载中……",
+  "home": {
+    "reasonsHeader": "使用Journaly的三个理由",
+    "elevatorPitch": "通过写日志，提高你的语言能力，结交更多朋友。",
+    "getStartedText": "开启旅程！",
+    "reasonOneText": "写作是提高语言水平的有效途径，但这需要我们付出努力，而且在我们能够得到反馈时效果最佳。Journaly是你写作的家园，在这里，你可以获得其他语言学习者们热情的反馈！",
+    "reasonTwoText": "坚持写日志对个体而言益处多多，这也是许多人希望养成的良好习惯之一。Journaly在帮助你深化语言学习的同时，帮助你从坚持写日志的习惯中获益！",
+    "reasonThreeText": "许多网站通过简单地匹配语言兴趣来为你寻找语言学习伙伴————这在我们看来还远远不够。Journaly还能帮你找到志趣相投的朋友！",
+    "videoHeader": "一段美妙的写作之旅",
+    "testimonialsHeader": "Journalers在讨论什么？",
+    "nav": {
+      "about": "关于",
+      "pricing": "价格",
+      "logIn": "登录",
+      "signUp": "注册",
+      "dashboard": "概览"
+    }
+  },
+  "ui": {
+    "languageSelectPlaceholder": "语言",
+    "clearFilters": "清空筛选",
+    "myLanguages": "我的语言",
+    "followedUsers": "我关注的journalers",
+    "needsFeedback": "需要反馈",
+    "hasInteracted": "我评论的日志",
+    "textSearchPlaceholder": "搜索日志",
+    "topicSelectPlaceholder": "话题",
+    "showAdvancedFilters": "显示高级搜索",
+    "hideAdvancedFilters": "隐藏高级搜索",
+    "savedPosts": "收藏的日志",
+    "savePostPremiumFeatureExplanation": "收藏日志是一项尊享会员功能，您将可以收藏日志，稍后通过 我的页面 > 高级筛选 找到它们！点击下方了解Journaly会员详情，或继续使用我们所有精彩的免费功能！"
+  },
+  "dashboardNav": {
+    "myFeed": "我的页面",
+    "myPosts": "我的日志",
+    "newPost": "新建日志",
+    "notifications": "消息中心",
+    "settings": "设置",
+    "logOut": "退出登录"
+  },
+  "helpModal": {
+    "header": "帮助",
+    "bodyOne": "需要帮助？我们在这里！",
+    "bodyTwo": "请发送邮件至 ",
+    "bodyThree": " 并详细描述您的问题，我们将尽快回复！",
+    "footer": "谢谢您帮助Journaly成为更好的社区！"
+  },
+  "badge": {
+    "ALPHA_USER": {
+      "title": "Alpha用户",
+      "description": "参与了Journaly的Alpha测试。从那时到现在，我们走过了漫长的旅程，而该用户从一开始就活跃在前线，帮助我们寻找bugs，是他塑造了Journaly！"
+    },
+    "BETA_USER": {
+      "title": "Beta用户",
+      "description": "参与了Journaly的Beta测试。他是Journaly的英雄！"
+    },
+    "CODE_CONTRIBUTOR": {
+      "title": "代码贡献者",
+      "description": "为Journaly数据库贡献了代码。如果你也想查看Journaly的源代码，并作出自己的贡献，请前往 https://github.com/Journaly/journaly"
+    },
+    "TEN_POSTS": {
+      "title": "10篇日志",
+      "description": "已发布10篇日志，已经准备好扬帆远航了！"
+    },
+    "ONEHUNDRED_POSTS": {
+      "title": "100篇日志",
+      "description": "已发布100篇日志，继续保持好习惯！"
+    },
+    "NECROMANCER": {
+      "title": "役亡师",
+      "description": "曾反馈发布日期在一周以前的日志。"
+    },
+    "ODRADEK": {
+      "title": "Odradek",
+      "description": "曾经出现意义不明的操作。"
+    }
+  },
+  "emptyMessage": "空白……",
+  "e404": "资源未找到",
+  "e403": "未授权",
+  "modal": {
+    "confirm": "确认",
+    "cancel": "取消",
+    "acknowledge": "明白了",
+    "goToPremium": "查看会员详情",
+    "generalPremiumFeatureExplanation": "{{featureName}} 是一项尊享会员功能！ 点击下方了解Journaly会员详情，或继续尽情地写日志吧！",
+    "unnamedPremiumFeatureExplanation": "这是一项尊享会员功能！ 点击下方了解Journaly会员详情，或继续尽情地写日志吧！"
+  },
+  "imageErrors": {
+    "initial": "服务器连接错误，请稍后重试。",
+    "dataUpload": "加载图片到媒体库时出现错误，请稍后重试。",
+    "allDoneChecksFailed": "上传图片失败，请稍后重试。"
+  },
+  "editor": {
+    "placeholderPrompt": "这一切都要从今天早上说起……"
+  },
+  "notifications": {
+    "feedTitle": "消息中心",
+    "emptyFeed": "暂时……还没有收到消息",
+    "levelOne": {
+      "newFollowers": "1位Journaler最近关注了您",
+      "newFollowers_plural": " {{count}} 位Journalers最近关注了您",
+      "threadComments": "您的日志收到了 1 条新的点评",
+      "threadComments_plural": "您的日志收到了 {{count}} 条新的点评",
+      "threadCommentsSubscribed": "这篇日志收到了 1 条新的点评",
+      "threadCommentsSubscribed_plural": "这篇日志收到了 {{count}} 条新的点评",
+      "postComments": "您的日志收到了 1 条新的评论",
+      "postComments_plural": "您的日志收到了 {{count}} 条新的评论",
+      "postCommentsSubscribed": "这篇日志收到了 1 条新的评论",
+      "postCommentsSubscribed_plural": "这篇日志收到了 {{count}} 条新的评论",
+      "postClaps": "1 位Journaler点赞了您的日志",
+      "postClaps_plural": "{{count}} 位Journalers点赞了您的日志",
+      "threadCommentThanks": "{{userIdentifier}} 感谢了您的点评",
+      "threadCommentThanks_plural": "{{userIdentifier}} 感谢了您的 {{count}} 条点评",
+      "newPosts": "您关注的 1 位Journaler发布了新日志",
+      "newPosts_plural": "您关注的Journalers发布了 {{count}} 篇新日志"
+    },
+    "levelTwo": {
+      "newFollowers": "这位超棒的Jounaler正在关注您",
+      "newFollowers_plural": "这 {{count}} 位超棒的Journalers正在关注您",
+      "threadCommentThanks": "{{userIdentifier}}感谢了您的这条点评，非常有帮助！",
+      "threadCommentThanks_plural": "{{userIdentifier}} 感谢了您的 {{count}} 条点评，非常有帮助！",
+      "postClaps": "这位Journaler点赞了您的日志",
+      "postClaps_plural": "这 {{count}} 位Journalers点赞了您的日志",
+      "newPosts": "您的社区有新日志发布"
+    },
+    "actions": {
+      "markAsRead": "已读",
+      "delete": "删除"
+    }
+  }
+}

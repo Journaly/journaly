@@ -20,7 +20,7 @@ function LikeIcon({
         fill={filled ? theme.colors.blueLight : theme.colors.white}
         fillRule="evenodd"
         data-name="Group 383"
-        stroke="#4391c9"
+        stroke={theme.colors.blueLight}
       />
     </svg>
   )

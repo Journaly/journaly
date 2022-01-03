@@ -2,6 +2,7 @@
   "pageTitle": "Meine Beiträge",
   "publishedTab": "Veröffentlicht",
   "draftsTab": "Entwürfe",
+  "privateTab": "Private",
   "publishedEmptyState": "Du hast noch keine Beiträge veröffentlicht. Du kannst entweder einen Entwurf veröffentlichen oder <1>einen neuen Post</1>.",
   "draftEmptyState": "Du hast keine Entwürfe.",
   "errorLoadingPostsMessage": "Beim Abrufen deiner Beiträge ist ein Fehler aufgetreten."

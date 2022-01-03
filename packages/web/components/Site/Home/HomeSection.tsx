@@ -1,4 +1,3 @@
-import { width, lightGrey } from '@/utils'
 import theme from '@/theme'
 
 type Props = {
@@ -19,12 +18,12 @@ const HomeSection: React.FC<Props> = ({ sectionHeading, grey = false, children }
       <style jsx>{`
         .home-section {
           width: 100%;
-          ${grey && `background-color: ${lightGrey};`}
+          ${grey && `background-color: ${theme.colors.gray500};`}
         }
 
         .home-section > div {
           margin: 0 auto;
-          max-width: ${width.desktopHD}px;
+          max-width: 1364px;
           padding: 30px 20px;
         }
 

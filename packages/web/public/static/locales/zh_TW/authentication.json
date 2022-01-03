@@ -1,0 +1,56 @@
+{
+  "login": {
+    "title": "登錄你的賬戶",
+    "submitButtonText": "登錄",
+    "userNotFoundError": "用戶不存在"
+  },
+  "signup": {
+    "title": "註冊新賬號",
+    "submitButtonText": "註冊！",
+    "goToLoginText": "已經擁有賬號？",
+    "goToLoginLink": "登錄",
+    "emailInUseError": "此郵箱已註冊，請登錄",
+    "handleInUseError": "此昵稱已註冊",
+    "invalidPasswordError": "密碼無效",
+    "invalidHandleError": "昵稱無效"
+  },
+  "requestReset": {
+    "title": "通過郵箱重置密碼",
+    "helperText": "輸入郵箱地址，獲取鏈接以重置密碼",
+    "submitButtonText": "重置密碼郵箱地址",
+    "successMessage": "密碼重置鏈接已成功發送至郵箱！",
+    "goToLoginText": "想起密碼了？",
+    "goToLoginLink": "登錄"
+  },
+  "resetPassword": {
+    "title": "重置您的密碼",
+    "submitButtonText": "重置密碼",
+    "successMessage": "重置密碼成功！請登錄",
+    "invalidOldPasswordError": "舊密碼不正確",
+    "passwordsDoNotMatchError": "密碼不一致",
+    "invalidResetTokenError": "重置令牌無效或過期"
+  },
+  "handleInputLabel": "昵稱",
+  "handleInputHelperMessage": "使用字母、數字、-、_，不可含有空格",
+  "handleInputPlaceholder": "您的名字，或是有趣的筆名！",
+  "handleRequiredErrorMessage": "昵稱必須填寫",
+  "handleValidationErrorMessage": "昵稱只能包含字母、數字、_、-，不可含有空格",
+  "handleMinimumErrorMessage": "昵稱需要至少三個字符",
+  "emailInputLabel": "郵箱",
+  "emailInputPlaceholder": "您的郵箱地址",
+  "emailRequiredErrorMessage": "郵箱必須填寫",
+  "emailValidationErrorMessage": "郵箱地址無效",
+  "passwordInputLabel": "密碼",
+  "passwordInputPlaceholder": "密碼安全有效",
+  "passwordRequiredErrorMessage": "密碼必須填寫",
+  "passwordValidationErrorMessage": "密碼無效",
+  "passwordMinimumErrorMessage": "密碼需要至少六位字符",
+  "confirmPasswordInputLabel": "確認密碼",
+  "confirmPasswordInputPlaceholder": "再次輸入你的新密碼",
+  "confirmPasswordRequiredErrorMessage": "必須輸入確認密碼",
+  "confirmPasswordValidationErrorMessage": "確認密碼無效",
+  "goToSignupText": "還沒有賬號？",
+  "goToSignupLink": "註冊",
+  "goToRequestResetText": "登錄遇到困難？",
+  "goToRequestResetLink": "重置密碼"
+}

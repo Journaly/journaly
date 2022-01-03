@@ -1,0 +1,36 @@
+{
+  "card": {
+    "speaks": "母語",
+    "learns": "目標語言",
+    "likes": "愛好"
+  },
+  "stats": {
+    "summary": {
+      "title": "概要",
+      "userAge": "{{name}} 在 {{joinDate}} 開啟了Journaly的旅程（至今已經 {{age}}了！）。",
+      "postCount": "在此期間他/她共發布了{{postCount}} 篇日誌，使用了 {{languageCount}} 種語言。",
+      "noPosts": "他/她目前還沒有發布日誌。",
+      "commentCounts": "他/她還在其他用戶的日誌中留下了 {{postCommentCount}} 條評論和 {{threadCommentCount}} 條點評，幫助他們提高了語言水平。",
+      "noComments": "他/她暫時還沒有對其他用戶的日誌做出反饋。",
+      "thanksCount": "他/她的熱心幫助共收到了 {{thanksCount}} 次感謝。"
+    },
+    "activity": {
+      "title": "活躍記錄",
+      "types": {
+        "posts": "日誌",
+        "postComments": "評論",
+        "threadComments": "點評"
+      }
+    }
+  },
+  "statsTitle": "數據",
+  "postsTitle": "近期日誌",
+  "emptyPosts": "{{user}} 暫時還沒有發布日誌",
+  "loggedInUserEmptyPosts": "您沒有近期日誌。 <1>寫新日誌吧</1>！",
+  "follow": "關註",
+  "unfollow": "取消關註",
+  "followerCount": "{{count}} 粉絲",
+  "followerCount_plural": "{{count}} 粉絲",
+  "followingCount": "{{count}} 追蹤中",
+  "followingCount_plural": "{{count}} 追蹤中"
+}

@@ -127,13 +127,17 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
                 variant={ButtonVariant.Link}
                 onClick={() => setDisplayFollowerListModal(true)}
               >
-                <span className="follower-stat">{user.followedBy?.length} Followers</span>
+                <span className="follower-stat">
+                  {t('followerCount', { count: user.followedBy?.length })}
+                </span>
               </Button>
               <Button
                 variant={ButtonVariant.Link}
                 onClick={() => setDisplayFollowingListModal(true)}
               >
-                <span className="follower-stat">{user.following?.length} Following</span>
+                <span className="follower-stat">
+                  {t('followingCount', { count: user.following?.length })}
+                </span>
               </Button>
             </div>
           )}
@@ -183,14 +187,14 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
       </div>
       {displayFollowerListModal && (
         <UserListModal
-          title={`${user.followedBy.length} Followers`}
+          title={t('followerCount', { count: user.followedBy.length })}
           users={user.followedBy}
           onClose={() => setDisplayFollowerListModal(false)}
         />
       )}
       {displayFollowingListModal && (
         <UserListModal
-          title={`${user.following.length} Following`}
+          title={t('followingCount', { count: user.following.length })}
           users={user.following}
           onClose={() => setDisplayFollowingListModal(false)}
         />

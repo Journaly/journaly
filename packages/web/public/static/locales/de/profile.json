@@ -8,5 +8,9 @@
   "emptyPosts": "{{user}} hat noch keine Beiträge verfasst.",
   "loggedInUserEmptyPosts": "Du hast noch keine Beiträge. <1>Schreibe einen Beitrag</1>!",
   "follow": "Folgen",
-  "unfollow": "Nicht mehr folgen"
+  "unfollow": "Nicht mehr folgen",
+  "followerCount": "{{count}} Follower",
+  "followerCount_plural": "{{count}} Followers",
+  "followingCount": "{{count}} Following",
+  "followingCount_plural": "{{count}} Following"
 }

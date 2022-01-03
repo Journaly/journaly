@@ -1168,6 +1168,8 @@ export type ProfilePageQuery = { __typename?: 'Query' } & {
 }
 
 export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
+  followedBy: Array<{ __typename?: 'User' } & UserFragmentFragment>
+  following: Array<{ __typename?: 'User' } & UserFragmentFragment>
   badges: Array<{ __typename?: 'UserBadge' } & UserBadgeFragmentFragment>
   userInterests: Array<{ __typename?: 'UserInterest' } & UserInterestFragmentFragment>
 } & UserWithLanguagesFragmentFragment &
@@ -1963,6 +1965,12 @@ export const SocialMediaFragmentFragmentDoc = gql`
 export const ProfileUserFragmentFragmentDoc = gql`
   fragment ProfileUserFragment on User {
     ...UserWithLanguagesFragment
+    followedBy {
+      ...UserFragment
+    }
+    following {
+      ...UserFragment
+    }
     badges {
       ...UserBadgeFragment
     }
@@ -1972,6 +1980,7 @@ export const ProfileUserFragmentFragmentDoc = gql`
     ...SocialMediaFragment
   }
   ${UserWithLanguagesFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
   ${UserBadgeFragmentFragmentDoc}
   ${UserInterestFragmentFragmentDoc}
   ${SocialMediaFragmentFragmentDoc}

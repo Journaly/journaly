@@ -8,5 +8,9 @@
   "emptyPosts": "{{usuario}} todavía no ha escrito publicaciones.",
   "loggedInUserEmptyPosts": "No tiene publicaciones recientes. <1>Escriba una nueva publicación</1>!",
   "follow": "Seguir",
-  "unfollow": "Dejar de seguir"
+  "unfollow": "Dejar de seguir",
+  "followerCount": "{{count}} Seguidor",
+  "followerCount_plural": "{{count}} Seguidores",
+  "followingCount": "{{count}} Siguiendo",
+  "followingCount_plural": "{{count}} Siguiendo"
 }

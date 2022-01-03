@@ -28,5 +28,9 @@
   "emptyPosts": "{{user}} 暫時還沒有發布日誌",
   "loggedInUserEmptyPosts": "您沒有近期日誌。 <1>寫新日誌吧</1>！",
   "follow": "關註",
-  "unfollow": "取消關註"
+  "unfollow": "取消關註",
+  "followerCount": "{{count}} 粉絲",
+  "followerCount_plural": "{{count}} 粉絲",
+  "followingCount": "{{count}} 追蹤中",
+  "followingCount_plural": "{{count}} 追蹤中"
 }

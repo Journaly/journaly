@@ -78,15 +78,9 @@ type CreateCommentArg = {
   db: PrismaClient
 }
 
-const createComment = async ({
-  db,
-  thread,
-  author,
-  body,
-}: CreateCommentArg) => {
+const createComment = async ({ db, thread, author, body }: CreateCommentArg) => {
   const authorHasPostLanguage =
-    author &&
-    author.languages.find((language) => language.languageId === thread.post.languageId)
+    author && author.languages.find((language) => language.languageId === thread.post.languageId)
 
   const authorLanguageLevel = authorHasPostLanguage?.level || LanguageLevel.BEGINNER
 
@@ -121,26 +115,35 @@ const createComment = async ({
     },
   })
 
-  await Promise.all(thread.subscriptions.map(async ({ user }: { user: User }) => {
-    if (user.id === author.id) {
-      // This is the user creating the comment, do not notify them.
-      return new Promise((res) => res(null))
-    }
+  const subscriptions = await db.threadSubscription.findMany({
+    where: { threadId: thread.id },
+    include: { user: true },
+  })
 
-    await createEmailNotification(db, user, {
-      type: EmailNotificationType.THREAD_COMMENT,
-      comment,
-    })
+  if (!subscriptions) throw new Error('Error fetching updated subscriptions')
 
-    await createInAppNotification(db, {
-      userId: user.id,
-      type: InAppNotificationType.THREAD_COMMENT,
-      key: { postId: thread.post.id, },
-      subNotification: {
-        commentId: comment.id
+  await Promise.all(
+    subscriptions.map(async ({ user }: { user: User }) => {
+      if (user.id === author.id) {
+        // This is the user creating the comment, do not notify them.
+        return new Promise((res) => res(null))
       }
-    })
-  }))
+
+      await createEmailNotification(db, user, {
+        type: EmailNotificationType.THREAD_COMMENT,
+        comment,
+      })
+
+      await createInAppNotification(db, {
+        userId: user.id,
+        type: InAppNotificationType.THREAD_COMMENT,
+        key: { postId: thread.post.id },
+        subNotification: {
+          commentId: comment.id,
+        },
+      })
+    }),
+  )
 
   // Check to see if we should assign a badge
   if (thread.post.authorId !== author.id && isPast(add(thread.post.createdAt, { weeks: 1 }))) {
@@ -149,7 +152,6 @@ const createComment = async ({
 
   return comment
 }
-
 
 const CommentMutations = extendType({
   type: 'Mutation',
@@ -205,6 +207,22 @@ const CommentMutations = extendType({
               include: {
                 author: true,
               },
+            },
+          },
+        })
+
+        // Subscribe the post author to every thread made on their posts
+        const subData = {
+          user: { connect: { id: post.authorId } },
+          thread: { connect: { id: thread.id } },
+        }
+        await ctx.db.threadSubscription.upsert({
+          create: subData,
+          update: subData,
+          where: {
+            userId_threadId: {
+              userId: post.authorId,
+              threadId: thread.id,
             },
           },
         })
@@ -369,10 +387,10 @@ const CommentMutations = extendType({
           include: {
             thread: {
               include: {
-                comments: true
-              }
-            }
-          }
+                comments: true,
+              },
+            },
+          },
         })
 
         if (!originalComment) throw new Error('Comment not found.')
@@ -470,9 +488,8 @@ const CommentMutations = extendType({
           },
         })
 
-        await Promise.all(post.postCommentSubscriptions.map(
-            async ({ user }: { user: User }
-          ) => {
+        await Promise.all(
+          post.postCommentSubscriptions.map(async ({ user }: { user: User }) => {
             if (user.id === userId) {
               // This is the user creating the comment, do not notify them.
               return
@@ -486,12 +503,13 @@ const CommentMutations = extendType({
             await createInAppNotification(ctx.db, {
               userId: user.id,
               type: InAppNotificationType.POST_COMMENT,
-              key: { postId: post.id, },
+              key: { postId: post.id },
               subNotification: {
                 postCommentId: postComment.id,
-              }
+              },
             })
-        }))
+          }),
+        )
 
         // TODO: Set up logging and check for successful `mailResponse`
         return postComment

@@ -25,7 +25,7 @@ const SignupForm: React.FC = () => {
     onCompleted: async () => {
       await refetch()
       router.push({
-        pathname: '/dashboard/my-feed',
+        pathname: '/my-feed',
       })
     },
   })
@@ -106,7 +106,7 @@ const SignupForm: React.FC = () => {
       </fieldset>
       <em>
         {t('signup.goToLoginText')}
-        <Link href="/dashboard/login">
+        <Link href="/login">
           <a className="j-link"> {t('signup.goToLoginLink')}</a>
         </Link>
       </em>

@@ -1,21 +1,14 @@
-import { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { withApollo } from '@/lib/apollo'
-import RequestResetPasswordForm from '@/components/RequestResetPasswordForm'
-import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 
-const RequestResetPasswordPage: NextPage = () => (
-  <LandingPageLayout>
-    <RequestResetPasswordForm />
-    <style jsx>{`
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      grid-gap: 20px;
-    `}</style>
-  </LandingPageLayout>
-)
+const OldRequestResetPasswordPage = () => {
+  const router = useRouter()
+  if (typeof window !== 'undefined') {
+    router.push({
+      pathname: `/my-feed`,
+    })
+  }
+  return null
+}
 
-RequestResetPasswordPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'authentication'],
-})
-
-export default withApollo(RequestResetPasswordPage)
+export default withApollo(OldRequestResetPasswordPage)

@@ -1,21 +1,14 @@
-import { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { withApollo } from '@/lib/apollo'
-import LoginForm from '@/components/LoginForm'
-import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 
-const LoginPage: NextPage = () => (
-  <LandingPageLayout>
-    <LoginForm />
-    <style jsx>{`
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      grid-gap: 20px;
-    `}</style>
-  </LandingPageLayout>
-)
+const OldLoginPage = () => {
+  const router = useRouter()
+  if (typeof window !== 'undefined') {
+    router.push({
+      pathname: `/login`,
+    })
+  }
+  return null
+}
 
-LoginPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'authentication'],
-})
-
-export default withApollo(LoginPage)
+export default withApollo(OldLoginPage)

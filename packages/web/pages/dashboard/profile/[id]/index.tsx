@@ -5,7 +5,7 @@ import { withApollo } from '@/lib/apollo'
 import { useUserByIdentifierQuery } from '@/generated/graphql'
 import theme from '@/theme'
 
-const ProfilePage = () => {
+const OldProfilePage = () => {
   const router = useRouter()
   const idStr = router.query.id as string
   const userId = parseInt(idStr, 10)
@@ -14,7 +14,7 @@ const ProfilePage = () => {
 
   if (data?.userByIdentifier && typeof window !== 'undefined') {
     router.push({
-      pathname: `/dashboard/user/${data.userByIdentifier.handle}`,
+      pathname: `/user/${data.userByIdentifier.handle}`,
     })
     return null
   }
@@ -55,4 +55,4 @@ const ProfilePage = () => {
   return null
 }
 
-export default withApollo(ProfilePage)
+export default withApollo(OldProfilePage)

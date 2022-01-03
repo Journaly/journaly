@@ -1,1 +1,1 @@
-export { default } from './my-feed'
+export { default } from '../my-feed'

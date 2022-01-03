@@ -244,7 +244,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [deletePost] = useDeletePostMutation({
     onCompleted: () => {
       toast.success(t('deletePostSuccess'))
-      Router.push('/dashboard/my-posts')
+      Router.push('/my-posts')
     },
     onError: () => {
       toast.error(t('deletePostError'))
@@ -564,7 +564,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           numRemaining: POST_BUMP_LIMIT - (post.bumpCount + 1),
         }),
       )
-      Router.push('/dashboard/my-feed')
+      Router.push('/my-feed')
     },
   })
 
@@ -739,7 +739,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={() => {
-            Router.push('/dashboard/settings/subscription')
+            Router.push('/settings/subscription')
             setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}

@@ -1553,11 +1553,7 @@ export type UserStatsQuery = { __typename?: 'Query' } & {
 export type UsersQueryVariables = Exact<{ [key: string]: never }>
 
 export type UsersQuery = { __typename?: 'Query' } & {
-  users: Array<
-    { __typename?: 'User' } & Pick<User, 'id' | 'name' | 'email'> & {
-        posts: Array<{ __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body'>>
-      }
-  >
+  users: Array<{ __typename?: 'User' } & UserWithLanguagesFragmentFragment>
 }
 
 export const UserFragmentFragmentDoc = gql`
@@ -5014,16 +5010,10 @@ export type UserStatsQueryResult = ApolloReactCommon.QueryResult<
 export const UsersDocument = gql`
   query users {
     users {
-      id
-      name
-      email
-      posts {
-        id
-        title
-        body
-      }
+      ...UserWithLanguagesFragment
     }
   }
+  ${UserWithLanguagesFragmentFragmentDoc}
 `
 
 /**

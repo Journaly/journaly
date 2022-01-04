@@ -9,7 +9,7 @@ import AuthGate from '@/components/AuthGate'
 import WelcomeModal from '@/components/Modals/WelcomeModal'
 import { InitialSearchFilters } from '@/components/Dashboard/MyFeed'
 
-interface InitialProps {
+type InitialProps = {
   namespacesRequired: string[]
   initialSearchFilters: InitialSearchFilters | null
 }

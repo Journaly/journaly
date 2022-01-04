@@ -205,6 +205,11 @@ const Toolbar = ({
           margin-left: 10px;
         }
 
+        /* Hide "Typewriter Sounds" when Toolbar is floating */
+        .editor-toolbar-container.is-fixed .typewriter-sounds-switch-container {
+          display: none;
+        }
+
         @media (${navConstants.skinnyNavToDesktop}) {
           .is-fixed .editor-toolbar {
             top: ${fixedDistanceFromTop}px;
@@ -218,8 +223,7 @@ const Toolbar = ({
             left: calc(50% + ${navConstants.navWidth / 2}px);
           }
         }
-      `}</style>
-      <style>{`
+
         .editor-toolbar-popover-item {
           width: 100%;
           justify-content: left;

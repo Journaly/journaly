@@ -30,6 +30,7 @@ import ToolbarButton from './ToolbarButton'
 import InsertImageButton from './InsertImageButton'
 import { options, isTableActive } from '../helpers'
 import SwitchToggle from '@/components/SwitchToggle'
+import { useTranslation } from '@/config/i18n'
 
 type ToolbarProps = {
   allowInlineImages: boolean
@@ -42,6 +43,8 @@ const Toolbar = ({
   shouldPlayTypewriterSounds,
   onToggleShouldPlayTypewriterSounds,
 }: ToolbarProps) => {
+  const { t } = useTranslation('j-editor')
+
   const editor = useSlate()
   const isEditorFocused = useFocused()
   const toolbarRef = useRef<HTMLDivElement>(null)
@@ -160,8 +163,7 @@ const Toolbar = ({
         </div>
         <div className="toolbar-row">
           <div className="typewriter-sounds-switch-container">
-            {/* TODO: translation */}
-            <span>Typewriter Sounds</span>
+            <span>{t('typewriterSounds')}</span>
             <SwitchToggle
               isToggled={shouldPlayTypewriterSounds}
               onToggle={onToggleShouldPlayTypewriterSounds}

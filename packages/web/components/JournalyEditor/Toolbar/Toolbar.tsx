@@ -176,6 +176,7 @@ const Toolbar = ({
         .editor-toolbar-container {
           position: sticky;
           top: 200px;
+          top: calc(${headerHeight} + ${fixedDistanceFromTop}px);
         }
 
         .editor-toolbar {
@@ -186,8 +187,6 @@ const Toolbar = ({
           border-bottom: 2px solid #eee;
           z-index: 1;
           gap: 10px;
-          position: sticky;
-          top: 100px;
         }
 
         .is-fixed .editor-toolbar {

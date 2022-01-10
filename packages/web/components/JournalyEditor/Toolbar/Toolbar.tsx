@@ -12,6 +12,7 @@ import {
 import { useSlate, useFocused } from 'slate-react'
 
 import theme from '@/theme'
+
 import { headerHeight } from '@/components/Dashboard/dashboardConstants'
 import { navConstants } from '@/components/Dashboard/Nav'
 import FormatBoldIcon from '@/components/Icons/FormatBoldIcon'
@@ -54,8 +55,8 @@ const Toolbar = ({
   // Save height of toolbar so that when it's fixed and removed from document flow,
   // the parent takes the same height and surrounding content won't collapse
   const fixedDistanceFromTop = 20
-  const toolbarHeight = toolbarRef.current?.getBoundingClientRect().height || 56
-  const toolbarClasses = classNames('editor-toolbar-container', { 'is-fixed': isFixed })
+  const toolbarClasses = classNames('editor-toolbar-container')
+  // const toolbarClasses = classNames('editor-toolbar-container', { 'is-fixed': isFixed })
   const isTableActivated = isEditorFocused && isTableActive(editor)
   const tableIcon = (
     <ToolbarButton type="table" format="insert-table">
@@ -161,7 +162,7 @@ const Toolbar = ({
             tableIcon
           )}
         </div>
-        <div className="toolbar-row">
+        <div className="typewriter-sounds toolbar-row">
           <div className="typewriter-sounds-switch-container">
             <span>{t('typewriterSounds')}</span>
             <SwitchToggle
@@ -173,7 +174,8 @@ const Toolbar = ({
       </div>
       <style jsx>{`
         .editor-toolbar-container {
-          height: ${toolbarHeight}px;
+          position: sticky;
+          top: 200px;
         }
 
         .editor-toolbar {
@@ -184,18 +186,19 @@ const Toolbar = ({
           border-bottom: 2px solid #eee;
           z-index: 1;
           gap: 10px;
+          position: sticky;
+          top: 100px;
         }
 
         .is-fixed .editor-toolbar {
-          position: fixed;
-          top: calc(${headerHeight} + ${fixedDistanceFromTop}px);
-          left: 50%;
-          transform: translateX(-50%);
-          padding: 15px;
+          /* top: calc(${headerHeight} + ${fixedDistanceFromTop}px); */
+          /* left: 50%; */
+          /* transform: translateX(50%); */
+          /* padding: 15px;
           background: ${theme.colors.white};
           border-radius: 5px;
           box-shadow: 0px 8px 10px #00000029;
-          border: 1px solid #eee;
+          border: 1px solid #eee; */
         }
 
         .typewriter-sounds-switch-container {
@@ -208,23 +211,23 @@ const Toolbar = ({
         }
 
         /* Hide "Typewriter Sounds" when Toolbar is floating */
-        .editor-toolbar-container.is-fixed .typewriter-sounds-switch-container {
+        .editor-toolbar-container.is-fixed .typewriter-sounds.toolbar-row {
           display: none;
         }
 
-        @media (${navConstants.skinnyNavToDesktop}) {
+        /* @media (${navConstants.skinnyNavToDesktop}) {
           .is-fixed .editor-toolbar {
             top: ${fixedDistanceFromTop}px;
             left: calc(50% + ${navConstants.skinnyNavWidth / 2}px);
           }
-        }
+        } */
 
-        @media (${navConstants.aboveDesktopNav}) {
+        /* @media (${navConstants.aboveDesktopNav}) {
           .is-fixed .editor-toolbar {
             top: ${fixedDistanceFromTop}px;
             left: calc(50% + ${navConstants.navWidth / 2}px);
           }
-        }
+        } */
 
         .editor-toolbar-popover-item {
           width: 100%;
@@ -234,6 +237,11 @@ const Toolbar = ({
 
         .editor-toolbar-popover-item:hover {
           font-weight: 600;
+        }
+
+        .toolbar-row {
+          display: flex;
+          gap: 10px;
         }
       `}</style>
     </div>

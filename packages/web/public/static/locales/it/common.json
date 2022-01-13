@@ -1,22 +1,22 @@
 {
-  "signInPrompt": "Please sign in to continue.",
-  "error": "An error occurred on the server",
-  "loading": "Loading...",
+  "signInPrompt": "Si prega di effettuare l'accesso per continare.",
+  "error": "Si è verificato un errore del server",
+  "loading": "Caricamento...",
   "home": {
-    "reasonsHeader": "Three Reasons To Use Journaly",
-    "elevatorPitch": "Improve your language skills and connect with others through journaling.",
-    "getStartedText": "Get started!",
-    "reasonOneText": "Writing is such a powerful tool for improving your language skills, but it takes effort and is best when you can get feedback. Journaly is a home for your writing and great feedback from fellow language learners!",
-    "reasonTwoText": "There are many personal benefits to keeping a journal, and it is one of the most desired positive habits for many people. Journaly supercharges your language learning while helping you get all the benefits of keeping a journal!",
-    "reasonThreeText": "Many sites help you find a language exchange partner by simply matching your language interests - but that’s not good enough for us. Journaly helps you find people who also share the same interests as you!",
-    "videoHeader": "A Delightful Writing Experience",
-    "testimonialsHeader": "What Journalers are saying",
+    "reasonsHeader": "Tre ragioni per usare Journaly",
+    "elevatorPitch": "Migliora le tue abilità linguistiche e connettiti con il prossimo attraverso la scrittura.",
+    "getStartedText": "Cominciamo!",
+    "reasonOneText": "La scrittura è uno strumento potente per migliorare le tue abilità linguistiche, ma richiede un grosso sforzo e funziona meglio se hai del feedback. Journaly è un luogo dove scrivere e ricevere feedback di qualità da altri appassionati di lingue!",
+    "reasonTwoText": "Tenere un diario procura molti benefici sul piano personale, ed è una delle buone abitudini che tante persone ambiscono a mantenere. Journaly ti aiuta ad imparare le lingue offrendoti allo stesso tempo tutti i benefici di tenere un diario!",
+    "reasonThreeText": "Molti siti web aiutano a trovare partner per scambi linguistici basandosi esclusivamente sulle lingue in comune - per noi, questo non basta. Journaly ti aiuterà a trovare persone che hanno anche i tuoi stessi interessi!",
+    "videoHeader": "Una splendida esperienza di scrittura",
+    "testimonialsHeader": "Cosa dicono gli altri Journalisti", // do you prefer leaving it in English (Journalers)?
     "nav": {
-      "about": "About",
-      "pricing": "Pricing",
-      "logIn": "Log in",
-      "signUp": "Sign up",
-      "dashboard": "Dashboard"
+      "about": "Info",
+      "pricing": "Prezzi",
+      "logIn": "Accesso",
+      "signUp": "Registrazione",
+      "dashboard": "Bacheca"
     }
   },
   "ui": {

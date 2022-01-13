@@ -2,7 +2,7 @@
   "login": {
     "title": "Accedi al tuo account",
     "submitButtonText": "Accedi",
-    "userNotFoundError": "Utente not trovato"
+    "userNotFoundError": "Utente non trovato"
   },
   "signup": {
     "title": "Crea un nuovo account",
@@ -16,7 +16,7 @@
   },
   "requestReset": {
     "title": "Richiedi un'email di ripristino della password",
-    "helperText": "Inserisci il tuo indirizzo email. Ti invieremo un link per riprostinare la tua password.",
+    "helperText": "Inserisci il tuo indirizzo email. Ti invieremo un link per ripristinare la tua password.",
     "submitButtonText": "Richiedi un'email di ripristino",
     "successMessage": "Il link per il ripristino della password è stato inviato al tuo indirizzo email!",
     "goToLoginText": "Ti sei ricordato la tua password?",
@@ -28,27 +28,27 @@
     "successMessage": "La tua password è stata ripristinata con successo! Prova ad accedere",
     "invalidOldPasswordError": "La vecchia password non è corretta",
     "passwordsDoNotMatchError": "Le password non corrispondono",
-    "invalidResetTokenError": "Questo token di reset è non valido o scaduto"
+    "invalidResetTokenError": "Questo token di reset è invalido o scaduto"
   },
   "handleInputLabel": "Nome utente",
-  "handleInputHelperMessage": "Può contenere lettere, numeri, -, _, ma non spazi",
-  "handleInputPlaceholder": "Il tuo nome, o magari uno pseudonimo divertente!",
-  "handleRequiredErrorMessage": "Nome utente è un campo obbligatorio",
+  "handleInputHelperMessage": "Può contenere lettere, numeri, - e _, ma non spazi",
+  "handleInputPlaceholder": "Il tuo nome, o magari uno pseudonimo simpatico!",
+  "handleRequiredErrorMessage": "'Nome utente' è un campo obbligatorio",
   "handleValidationErrorMessage": "Il nome utente può contenere solo lettere, numeri, _, -, ma nessuno spazio",
   "handleMinimumErrorMessage": "Il tuo nome utente deve avere almeno tre caratteri",
   "emailInputLabel": "Email",
   "emailInputPlaceholder": "Il tuo indirizzo email",
-  "emailRequiredErrorMessage": "Email è un campo obbligatorio",
+  "emailRequiredErrorMessage": "'Email' è un campo obbligatorio",
   "emailValidationErrorMessage": "Indirizzo email non valido",
   "passwordInputLabel": "Password",
   "passwordInputPlaceholder": "Una password sicura",
-  "passwordRequiredErrorMessage": "Password è un campo obbligatorio",
+  "passwordRequiredErrorMessage": "'Password' è un campo obbligatorio",
   "passwordValidationErrorMessage": "Password non valida",
   "passwordMinimumErrorMessage": "La tua password deve avere almeno sei caratteri",
   "confirmPasswordInputLabel": "Conferma password",
   "confirmPasswordInputPlaceholder": "Reinserisci la tua nuova password",
-  "confirmPasswordRequiredErrorMessage": "Conferma password è un campo obbligatorio",
-  "confirmPasswordValidationErrorMessage": "Indirizzo confirmPassword non valido", // ???
+  "confirmPasswordRequiredErrorMessage": "'Conferma password' è un campo obbligatorio",
+  "confirmPasswordValidationErrorMessage": "Indirizzo confirmPassword non valido", // what is it?
   "goToSignupText": "Non hai un account?",
   "goToSignupLink": "Registrati",
   "goToRequestResetText": "Problemi con l'accesso?",

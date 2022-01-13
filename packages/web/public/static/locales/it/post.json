@@ -47,9 +47,9 @@
   "claps": {
     "currentUserPronoun": "Tu",
     "noUsersClapped": "Nessuno ha applaudito questo post... per il momento!",
-    "oneUserClapped": "{{name1}} ha applaudito per questo post.",
-    "twoUsersClapped": "{{name1}} e {{name2}} hanno applaudito per questo post.",
-    "manyUsersClapped": "{{name1}}, {{name2}}, e altri {{numOthers}} utenti hanno applaudito per questo post."
+    "oneUserClapped": "{{name1}} ha applaudito questo post.",
+    "twoUsersClapped": "{{name1}} e {{name2}} hanno applaudito questo post.",
+    "manyUsersClapped": "{{name1}}, {{name2}}, e altri {{numOthers}} utenti hanno applaudito questo post."
   },
   "emailVerificationWarning": "Perfavore, per iniziare a pubblicare post verifica il tuo indirizzo email cliccando il link che trovi nell'email che hai ricevuto dopo la registrazione. Vai su Impostazioni > Info Profilo per ricevere nuovamente l'email di verifica",
   "savePostSuccess": "Post salvato! Visualizza la tua lista dai filtri avanzati della pagina Il Mio Feed",

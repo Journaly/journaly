@@ -28,8 +28,13 @@
   "emptyPosts": "{{user}} non ha ancora scritto nessun post.",
   "loggedInUserEmptyPosts": "Non ci sono post recenti. <1>Scrivi un nuovo post</1>!",
   "follow": "Segui",
+<<<<<<< HEAD
   "unfollow": "Smetti di seguire",
   "followerCount": "{{count}} Follower",
   "followerCount_plural": "{{count}} Seguaci",
   "followingCount": "{{count}} Seguiti",
   "followingCount_plural": "{{count}} Seguiti"
+=======
+  "unfollow": "Smetti di seguire"
+}
+>>>>>>> 7237e1433dbd54220b481d4c2a5c86944322fbd5

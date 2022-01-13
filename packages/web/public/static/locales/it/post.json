@@ -43,7 +43,7 @@
     "body": "Sei sicuro di voler eliminare le modifiche apportate a questo post? I progressi non salvati verranno persi."
   },
   "enterUrlPrompt": "Inserisci l'URL del link:",
-  "websitePatternError": "URL del sito non valido. Esempi: domain.com o sub.domain.com",
+  "websitePatternError": "URL del sito non valido. Esempi: dominio.com o sotto.dominio.com",
   "claps": {
     "currentUserPronoun": "Tu",
     "noUsersClapped": "Nessuno ha applaudito questo post... per il momento!",

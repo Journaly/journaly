@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { withApollo } from '@/lib/apollo'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
-import { useProfilePageQuery, useUserByIdentifierQuery } from '@/generated/graphql'
+import { useProfilePageQuery } from '@/generated/graphql'
 import useUILanguage from '@/hooks/useUILanguage'
 import Profile from '@/components/Dashboard/Profile'
 
@@ -18,37 +18,19 @@ const ProfilePage: NextPage<InitialProps> = () => {
   const userHandle = useRouter().query.handle as string
   const uiLanguage = useUILanguage()
 
-  const {
-    data: userData,
-    loading: userLoading,
-    error: userError,
-  } = useUserByIdentifierQuery({
-    variables: {
-      handle: userHandle,
-    },
+  const { data, loading, error } = useProfilePageQuery({
+    variables: { uiLanguage, userHandle },
   })
 
-  if (!userData) {
-    return null
-  }
-
-  const {
-    data: profileData,
-    loading: profileLoading,
-    error: profileError,
-  } = useProfilePageQuery({
-    variables: { uiLanguage, userId: userData?.userByIdentifier.id },
-  })
-
-  const { userByIdentifier, currentUser } = profileData || {}
-  const posts = profileData?.posts?.posts
+  const { userByIdentifier, currentUser } = data || {}
+  const posts = data?.posts?.posts
 
   return (
-    <LoadingWrapper loading={userLoading || profileLoading} error={userError || profileError}>
+    <LoadingWrapper loading={loading} error={error}>
       <DashboardLayout pad="never">
         {userByIdentifier && posts && (
           <Profile
-            isLoggedInUser={currentUser?.handle === userData.userByIdentifier.handle}
+            isLoggedInUser={currentUser?.handle === userByIdentifier?.handle}
             user={userByIdentifier}
             posts={posts}
           />

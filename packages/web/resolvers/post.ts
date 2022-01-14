@@ -285,6 +285,10 @@ const PostQueries = extendType({
           description: 'Return posts by a given author.',
           required: false,
         }),
+        authorHandle: stringArg({
+          description: 'Return posts by a given author.',
+          required: false,
+        }),
         savedPosts: booleanArg({
           description: 'If true, return only posts that the user has saved.',
           required: false,
@@ -369,6 +373,14 @@ const PostQueries = extendType({
               )
             ) "interactedPostIds" ON p.id = "interactedPostIds"."postId"
           `)
+        }
+
+        if (args.authorHandle) {
+          joins.push(Prisma.sql`
+            JOIN "User" AS "postAuthor"
+              ON p."authorId" = "postAuthor".id
+          `)
+          where.push(Prisma.sql`"postAuthor".handle = ${args.authorHandle}`)
         }
 
         if (args.authorId) {

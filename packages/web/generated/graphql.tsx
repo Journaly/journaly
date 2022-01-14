@@ -539,6 +539,7 @@ export type QueryPostsArgs = {
   hasInteracted?: Maybe<Scalars['Boolean']>
   status: PostStatus
   authorId?: Maybe<Scalars['Int']>
+  authorHandle?: Maybe<Scalars['String']>
   savedPosts?: Maybe<Scalars['Boolean']>
 }
 
@@ -1155,7 +1156,7 @@ export type PrivatePostPageQuery = { __typename?: 'Query' } & {
 }
 
 export type ProfilePageQueryVariables = Exact<{
-  userId: Scalars['Int']
+  userHandle: Scalars['String']
   uiLanguage: UiLanguage
 }>
 
@@ -3117,11 +3118,11 @@ export type PrivatePostPageQueryResult = ApolloReactCommon.QueryResult<
   PrivatePostPageQueryVariables
 >
 export const ProfilePageDocument = gql`
-  query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
-    userByIdentifier(id: $userId) {
+  query profilePage($userHandle: String!, $uiLanguage: UILanguage!) {
+    userByIdentifier(handle: $userHandle) {
       ...ProfileUserFragment
     }
-    posts(first: 20, skip: 0, status: PUBLISHED, authorId: $userId) {
+    posts(first: 20, skip: 0, status: PUBLISHED, authorHandle: $userHandle) {
       posts {
         ...PostCardFragment
       }
@@ -3148,7 +3149,7 @@ export const ProfilePageDocument = gql`
  * @example
  * const { data, loading, error } = useProfilePageQuery({
  *   variables: {
- *      userId: // value for 'userId'
+ *      userHandle: // value for 'userHandle'
  *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });

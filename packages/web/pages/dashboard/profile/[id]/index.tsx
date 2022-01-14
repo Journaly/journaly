@@ -5,6 +5,11 @@ import { withApollo } from '@/lib/apollo'
 import { useUserByIdentifierQuery } from '@/generated/graphql'
 import theme from '@/theme'
 
+/**
+ * This page is part of the deprecated URL pattern: `/dashboard/*` and should not be used.
+ * See the `redirects` config property in `next.config.js` for all redirect paths.ss
+ */
+
 const OldProfilePage = () => {
   const router = useRouter()
   const idStr = router.query.id as string

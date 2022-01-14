@@ -31,7 +31,8 @@
       "cityLabel": "Stadt (optional)",
       "cityPlaceholder": "In welcher Stadt lebst du?",
       "countryLabel": "Land (optional)",
-      "countryPlaceholder": "In welchem Land lebst du?"
+      "countryPlaceholder": "In welchem Land lebst du?",
+      "updateHandleWarning": "Warnung: Das Ändern des Benutzernamens führt dazu, dass die alten Links zu deinem Profil, die du bereits geteilt hast, nicht mehr funktionieren werden. Wenn du deinen Benutzernamen trotzdem ändern möchtest, empfehlen wir diese Links zu aktualisieren."
     },
     "languages": {
       "legend": "Sprachen",

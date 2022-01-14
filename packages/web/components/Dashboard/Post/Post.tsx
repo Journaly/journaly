@@ -244,7 +244,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [deletePost] = useDeletePostMutation({
     onCompleted: () => {
       toast.success(t('deletePostSuccess'))
-      Router.push('/dashboard/my-posts')
+      Router.push('/my-posts')
     },
     onError: () => {
       toast.error(t('deletePostError'))
@@ -564,7 +564,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           numRemaining: POST_BUMP_LIMIT - (post.bumpCount + 1),
         }),
       )
-      Router.push('/dashboard/my-feed')
+      Router.push('/my-feed')
     },
   })
 
@@ -587,7 +587,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           publishDate={post.publishedAt ? post.publishedAt : post.createdAt}
           publishedLanguageLevel={post.publishedLanguageLevel}
           authorName={post.author.name ? post.author.name : post.author.handle}
-          authorId={post.author.id}
+          authorHandle={post.author.handle}
           postImage={post.headlineImage.largeSize}
           language={post.language}
           topics={post.postTopics.map(({ topic }) => topic)}
@@ -707,17 +707,18 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           close={closeThread}
           ref={popoverRef}
         />
-      )) || (pendingThreadData && (
-        <InlineFeedbackPopover
-          pendingThreadData={pendingThreadData}
-          target={popoverPosition}
-          currentUser={currentUser}
-          onNewComment={handleNewComment}
-          onUpdateComment={refetch}
-          close={closeThread}
-          ref={popoverRef}
-        />
-      ))}
+      )) ||
+        (pendingThreadData && (
+          <InlineFeedbackPopover
+            pendingThreadData={pendingThreadData}
+            target={popoverPosition}
+            currentUser={currentUser}
+            onNewComment={handleNewComment}
+            onUpdateComment={refetch}
+            close={closeThread}
+            ref={popoverRef}
+          />
+        ))}
       <ConfirmationModal
         onConfirm={() => {
           deletePost({ variables: { postId: post.id } })
@@ -738,7 +739,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={() => {
-            Router.push('/dashboard/settings/subscription')
+            Router.push('/settings/subscription')
             setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}

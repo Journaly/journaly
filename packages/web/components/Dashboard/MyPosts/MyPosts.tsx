@@ -106,7 +106,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
             <Trans i18nKey="publishedEmptyState">
               <div className="empty-state-container">
                 You have no published posts. You can either publish a draft or{' '}
-                <TranslationLink href="/dashboard/new-post">create a new post</TranslationLink>.
+                <TranslationLink href="/new-post">create a new post</TranslationLink>.
               </div>
             </Trans>
           ) : (

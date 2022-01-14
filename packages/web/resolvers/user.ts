@@ -260,19 +260,31 @@ const UserQueries = extendType({
       },
     })
 
-    t.field('userById', {
+    t.field('userByIdentifier', {
       type: 'User',
       args: {
-        id: intArg({ required: true }),
+        id: intArg({ required: false }),
+        handle: stringArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
-        if (!args.id) throw new Error('ID is required')
+        if (!args.id && !args.handle) throw new Error('You must provide an ID or handle')
+        if (args.id && args.handle) throw new Error('Expected one argument, received two')
 
-        const user = await ctx.db.user.findUnique({
-          where: {
-            id: args.id,
-          },
-        })
+        let user
+
+        if (args.handle) {
+          user = await ctx.db.user.findUnique({
+            where: {
+              handle: args.handle,
+            },
+          })
+        } else if (args.id) {
+          user = await ctx.db.user.findUnique({
+            where: {
+              id: args.id,
+            },
+          })
+        }
 
         if (!user) {
           throw new Error('User not found')

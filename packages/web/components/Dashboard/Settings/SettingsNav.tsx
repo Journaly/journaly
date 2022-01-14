@@ -17,7 +17,7 @@ const SettingsNav: React.FC = () => {
       <ul className="settings-nav-items">
         {Object.entries(links).map(([page, navText]) => {
           return (
-            <NavLink href={`/dashboard/settings/${page}`} key={`${page}-nav-link`}>
+            <NavLink href={`/settings/${page}`} key={`${page}-nav-link`}>
               <li className="settings-nav-item">
                 <a>{navText}</a>
               </li>

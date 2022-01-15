@@ -65,10 +65,10 @@ const Toolbar = ({
       : -stickyToolbarOffset
 
   const [toolbarObserverRef, toolbarShouldFloat] = useIntersectionObserver({
-    rootMargin: `0px 0px ${toolbarStickyOffset}px 0px`,
+    rootMargin: `${toolbarStickyOffset}px 0px 0px 0px`,
   })
 
-  const toolbarClasses = classNames('editor-toolbar-container', { 'is-fixed': toolbarShouldFloat })
+  const toolbarClasses = classNames('editor-toolbar-container', { 'is-fixed': !toolbarShouldFloat })
 
   return (
     <>

@@ -34,6 +34,7 @@ type FormData = {
 
 const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
   const { t } = useTranslation('settings')
+  const [showHandleChangeWarning, setShowHandleChangeWarning] = useState(false)
   const [previousState, setPreviousFormData] = useState<FormData>()
   const fileInput = useRef<HTMLInputElement>(null)
 
@@ -160,6 +161,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
                   name="handle"
                   className={`j-field ${errors.handle ? 'is-invalid' : ''}`}
                   defaultValue={currentUser.handle}
+                  onChange={() => setShowHandleChangeWarning(true)}
                   ref={register({
                     required: `${t('profile.details.displayNameError')}`,
                     pattern: {
@@ -280,6 +282,9 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
             >
               {t('updateButton')}
             </Button>
+            {showHandleChangeWarning && (
+              <p className="update-handle-warning">{t('profile.details.updateHandleWarning')}</p>
+            )}
           </div>
         </div>
       </SettingsFieldset>
@@ -365,6 +370,12 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
         .email-label-container {
           display: flex;
           gap: 10px;
+        }
+        .update-handle-warning {
+          color: ${theme.colors.red};
+          font-size: 12px;
+          line-height: 1.2;
+          margin-top: 10px;
         }
       `}</style>
     </SettingsForm>

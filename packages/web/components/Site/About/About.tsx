@@ -35,7 +35,13 @@ const About = () => {
         .about-wrapper {
           max-width: 900px;
           margin: 50px auto 0;
-          padding: 0 50px;
+          padding: 50px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          background: ${theme.colors.white};
+          box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05);
         }
 
         h1 {

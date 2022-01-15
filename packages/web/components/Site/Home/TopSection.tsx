@@ -10,7 +10,7 @@ const TopSection = () => {
     <div className="home-section-top">
       <h1 data-testid="landing-elevator-pitch">{t('home.elevatorPitch')}</h1>
 
-      <Link href="/dashboard/signup">
+      <Link href="/signup">
         <Button className="get-started-btn" size={ButtonSize.Large}>
           {t('home.getStartedText')}
         </Button>

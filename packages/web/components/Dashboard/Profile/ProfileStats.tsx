@@ -74,35 +74,24 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
 
   const denseData = useMemo(() => {
     const indexable: { [key: string]: ActivityCounts } = {}
-    if (data?.userById?.activityGraphData) {
-      const { activityGraphData } = data.userById
-      for (var i=0; i < activityGraphData.length; i++) {
-        const {
-          date,
-          postCount,
-          postCommentCount,
-          threadCommentCount
-        } = activityGraphData[i]
+    if (data?.userByIdentifier?.activityGraphData) {
+      const { activityGraphData } = data.userByIdentifier
+      for (var i = 0; i < activityGraphData.length; i++) {
+        const { date, postCount, postCommentCount, threadCommentCount } = activityGraphData[i]
         indexable[date] = {
           postCount,
           postCommentCount,
-          threadCommentCount
+          threadCommentCount,
         }
       }
     }
 
     const rightEdge = NUM_WEEKS * (CELL_WIDTH + CELL_PADDING)
-    const days = eachDayOfInterval({ start, end }).map(date => {
-      const x = (
-        rightEdge
-        - (CELL_WIDTH + CELL_PADDING)
-        * differenceInCalendarWeeks(end, date))
+    const days = eachDayOfInterval({ start, end }).map((date) => {
+      const x = rightEdge - (CELL_WIDTH + CELL_PADDING) * differenceInCalendarWeeks(end, date)
       const y = (CELL_WIDTH + CELL_PADDING) * getDay(date)
-      const {
-        postCount,
-        postCommentCount,
-        threadCommentCount
-      } = indexable[formatISO(date, { representation: 'date' })] || {}
+      const { postCount, postCommentCount, threadCommentCount } =
+        indexable[formatISO(date, { representation: 'date' })] || {}
 
       return {
         x,
@@ -114,11 +103,8 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
       }
     })
 
-    const months = eachMonthOfInterval({ start, end }).map(date => {
-      const x = (
-        rightEdge
-        - (CELL_WIDTH + CELL_PADDING)
-        * differenceInCalendarWeeks(end, date))
+    const months = eachMonthOfInterval({ start, end }).map((date) => {
+      const x = rightEdge - (CELL_WIDTH + CELL_PADDING) * differenceInCalendarWeeks(end, date)
       return {
         name: MONTH_SHORT_NAMES[getMonth(date)],
         x,
@@ -135,7 +121,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
   }, [data, start, end])
 
   const { maxValue, days } = useMemo(() => {
-    let max =  0
+    let max = 0
     const days = denseData.days.map((d) => {
       const count = getCount(d)
       max = Math.max(max, count)
@@ -155,7 +141,7 @@ const ProfileStats = ({ userId }: ProfileStatsProps) => {
     return <span>Loading...</span>
   }
 
-  const user = data.userById
+  const user = data.userByIdentifier
   const joinDate = parseISO(user.createdAt)
   const age = formatDuration(intervalToDuration({ start: joinDate, end: new Date()}), { format: ['years', 'months', 'days'] })
 

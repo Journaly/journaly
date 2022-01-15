@@ -55,7 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   })
   await subscribeUserToProductUpdates(user, db)
 
-  return res.redirect(`/dashboard/my-feed?email-verification=success&id=${updatedUser.id}`)
+  return res.redirect(`/my-feed?email-verification=success&id=${updatedUser.id}`)
 }
 
 export default handler

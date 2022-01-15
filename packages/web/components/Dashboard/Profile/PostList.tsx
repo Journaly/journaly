@@ -25,7 +25,7 @@ const PostList: React.FC<Props> = ({ isLoggedInUser, user, posts }) => {
           {isLoggedInUser ? (
             <Trans>
               You have no recent posts.{' '}
-              <TranslationLink href="/dashboard/new-post">Write a new post</TranslationLink>!
+              <TranslationLink href="/new-post">Write a new post</TranslationLink>!
             </Trans>
           ) : (
             t('emptyPosts', { user: user.name || user.handle })

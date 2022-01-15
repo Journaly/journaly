@@ -19,6 +19,70 @@ let config = {
 
     return config
   },
+  async redirects() {
+    return [
+      {
+        source: '/dashboard',
+        destination: '/my-feed',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/my-feed',
+        destination: '/my-feed',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/my-posts',
+        destination: '/my-posts',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/settings/account',
+        destination: '/settings/account',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/settings/profile',
+        destination: '/settings/profile',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/settings/subscription',
+        destination: '/settings/subscription',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/settings/tutorials',
+        destination: '/settings/tutorials',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/login',
+        destination: '/login',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/signup',
+        destination: '/signup',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/new-post',
+        destination: '/new-post',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/request-reset',
+        destination: '/request-reset',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/reset-password',
+        destination: '/reset-password',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 if (process.env.ANALYZE === '1') {

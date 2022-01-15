@@ -10,7 +10,7 @@ const useAuthCheck = (callback: () => boolean, ready: boolean) => {
 
   if (typeof window === 'undefined' && ready) {
     if (!callback()) {
-      ssrContext.redirectTarget = '/dashboard/login'
+      ssrContext.redirectTarget = '/login'
     }
   }
 }

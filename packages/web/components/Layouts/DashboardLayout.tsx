@@ -41,7 +41,6 @@ const DashboardLayout: React.FC<Props> = ({ children, pad = 'always' }) => {
             position: relative;
             height: 100%;
             width: 100%;
-            overflow: hidden;
           }
 
           .dashboard-container {
@@ -62,7 +61,6 @@ const DashboardLayout: React.FC<Props> = ({ children, pad = 'always' }) => {
 
           .dashboard-container {
             height: 100%;
-            overflow-y: auto;
             transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;
           }
 

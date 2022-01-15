@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React from 'react'
 import classNames from 'classnames'
 import { Popup } from 'reactjs-popup'
 import {
@@ -13,7 +13,6 @@ import { useSlate, useFocused } from 'slate-react'
 
 import theme from '@/theme'
 
-import { headerHeight } from '@/components/Dashboard/dashboardConstants'
 import { navConstants } from '@/components/Dashboard/Nav'
 import FormatBoldIcon from '@/components/Icons/FormatBoldIcon'
 import FormatItalicIcon from '@/components/Icons/FormatItalicIcon'
@@ -32,6 +31,8 @@ import InsertImageButton from './InsertImageButton'
 import { options, isTableActive } from '../helpers'
 import SwitchToggle from '@/components/SwitchToggle'
 import { useTranslation } from '@/config/i18n'
+import useGetWindowSize from '@/hooks/useGetWindowSize'
+import useIntersectionObserver from '@/hooks/userIntersectionObserver'
 
 type ToolbarProps = {
   allowInlineImages: boolean
@@ -48,202 +49,177 @@ const Toolbar = ({
 
   const editor = useSlate()
   const isEditorFocused = useFocused()
-  const toolbarRef = useRef<HTMLDivElement>(null)
-  const [isFixed, setIsFixed] = useState(false)
-  // Save the initial distance that the toolbar is from the top of the page
-  const originalElementOffsetTop = toolbarRef?.current?.offsetTop as number
-  // Save height of toolbar so that when it's fixed and removed from document flow,
-  // the parent takes the same height and surrounding content won't collapse
-  const fixedDistanceFromTop = 20
-  const toolbarClasses = classNames('editor-toolbar-container')
-  // const toolbarClasses = classNames('editor-toolbar-container', { 'is-fixed': isFixed })
+  const stickyToolbarOffset = 20
   const isTableActivated = isEditorFocused && isTableActive(editor)
   const tableIcon = (
     <ToolbarButton type="table" format="insert-table">
       <FormatTableIcon title="Insert table" titleId="toolbar-insert-table-icon" />
     </ToolbarButton>
   )
-  const handleScroll = () => {
-    if (toolbarRef.current) {
-      if (!isFixed && window.pageYOffset >= toolbarRef.current.offsetTop - fixedDistanceFromTop) {
-        setIsFixed(true)
-        return
-      }
 
-      if (isFixed && window.pageYOffset + fixedDistanceFromTop < originalElementOffsetTop) {
-        setIsFixed(false)
-        return
-      }
-    }
-  }
+  const windowSize = useGetWindowSize()
 
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
+  let toolbarStickyOffset =
+    windowSize.width && windowSize.width < navConstants.mobileBreakpoint
+      ? -stickyToolbarOffset - 72
+      : -stickyToolbarOffset
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [isFixed, originalElementOffsetTop])
+  const [toolbarObserverRef, toolbarShouldFloat] = useIntersectionObserver({
+    rootMargin: `0px 0px ${toolbarStickyOffset}px 0px`,
+  })
+
+  const toolbarClasses = classNames('editor-toolbar-container', { 'is-fixed': toolbarShouldFloat })
 
   return (
-    <div className={toolbarClasses} ref={toolbarRef}>
-      <div className="editor-toolbar">
-        <div className="toolbar-row">
-          <ToggleMarkButton type="bold">
-            <FormatBoldIcon title="Bold" titleId="toolbar-bold-icon" />
-          </ToggleMarkButton>
-          <ToggleMarkButton type="italic">
-            <FormatItalicIcon title="Italic" titleId="toolbar-italic-icon" />
-          </ToggleMarkButton>
-          <ToggleMarkButton type="underline">
-            <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
-          </ToggleMarkButton>
-          <InsertImageButton allowInlineImages={allowInlineImages}>
-            <ImageIcon title="Insert image" />
-          </InsertImageButton>
-          <ToolbarButton type="link" format="link">
-            <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
-          </ToolbarButton>
-        </div>
-        <div className="toolbar-row">
-          <ToolbarButton type="block" format="heading-two">
-            <FormatTitleIcon title="Apply heading" titleId="toolbar-title-icon" />
-          </ToolbarButton>
-          <ToolbarButton type="block" format="block-quote">
-            <FormatQuoteIcon title="Block quote" titleId="toolbar-quote-icon" />
-          </ToolbarButton>
-          <ToolbarButton type="block" format="numbered-list">
-            <FormatListNumberedIcon title="Numbered list" titleId="toolbar-list-numbered-icon" />
-          </ToolbarButton>
-          <ToolbarButton type="block" format="bulleted-list">
-            <FormatListBulletedIcon title="Bulleted list" titleId="toolbar-list-bulleted-icon" />
-          </ToolbarButton>
+    <>
+      <div ref={toolbarObserverRef} />
+      <div className={toolbarClasses}>
+        <div className="editor-toolbar">
+          <div className="toolbar-row">
+            <ToggleMarkButton type="bold">
+              <FormatBoldIcon title="Bold" titleId="toolbar-bold-icon" />
+            </ToggleMarkButton>
+            <ToggleMarkButton type="italic">
+              <FormatItalicIcon title="Italic" titleId="toolbar-italic-icon" />
+            </ToggleMarkButton>
+            <ToggleMarkButton type="underline">
+              <FormatUnderlinedIcon title="Underline" titleId="toolbar-underlined-icon" />
+            </ToggleMarkButton>
+            <InsertImageButton allowInlineImages={allowInlineImages}>
+              <ImageIcon title="Insert image" />
+            </InsertImageButton>
+            <ToolbarButton type="link" format="link">
+              <FormatLinkIcon title="Hyperlink" titleId="toolbar-link-icon" />
+            </ToolbarButton>
+          </div>
+          <div className="toolbar-row">
+            <ToolbarButton type="block" format="heading-two">
+              <FormatTitleIcon title="Apply heading" titleId="toolbar-title-icon" />
+            </ToolbarButton>
+            <ToolbarButton type="block" format="block-quote">
+              <FormatQuoteIcon title="Block quote" titleId="toolbar-quote-icon" />
+            </ToolbarButton>
+            <ToolbarButton type="block" format="numbered-list">
+              <FormatListNumberedIcon title="Numbered list" titleId="toolbar-list-numbered-icon" />
+            </ToolbarButton>
+            <ToolbarButton type="block" format="bulleted-list">
+              <FormatListBulletedIcon title="Bulleted list" titleId="toolbar-list-bulleted-icon" />
+            </ToolbarButton>
 
-          {isTableActivated ? (
-            <Popup
-              trigger={<span>{tableIcon}</span>}
-              position="bottom center"
-              on={['hover', 'focus']}
-              closeOnDocumentClick
-              className="editor-toolbar-popover"
-            >
-              <ToolbarTable
-                {...options}
-                className="editor-toolbar-popover-item"
-                transform={addRow}
-                icon="Add row"
+            {isTableActivated ? (
+              <Popup
+                trigger={<span>{tableIcon}</span>}
+                position="bottom center"
+                on={['hover', 'focus']}
+                closeOnDocumentClick
+                className="editor-toolbar-popover"
+              >
+                <ToolbarTable
+                  {...options}
+                  className="editor-toolbar-popover-item"
+                  transform={addRow}
+                  icon="Add row"
+                />
+                <ToolbarTable
+                  {...options}
+                  className="editor-toolbar-popover-item"
+                  transform={deleteRow}
+                  icon="Delete row"
+                />
+                <ToolbarTable
+                  {...options}
+                  className="editor-toolbar-popover-item"
+                  transform={addColumn}
+                  icon="Add column"
+                />
+                <ToolbarTable
+                  {...options}
+                  className="editor-toolbar-popover-item"
+                  transform={deleteColumn}
+                  icon="Delete column"
+                />
+                <ToolbarTable
+                  {...options}
+                  className="editor-toolbar-popover-item"
+                  transform={deleteTable}
+                  icon="Delete table"
+                />
+              </Popup>
+            ) : (
+              tableIcon
+            )}
+          </div>
+          <div className="typewriter-sounds toolbar-row">
+            <div className="typewriter-sounds-switch-container">
+              <span>{t('typewriterSounds')}</span>
+              <SwitchToggle
+                isToggled={shouldPlayTypewriterSounds}
+                onToggle={onToggleShouldPlayTypewriterSounds}
               />
-              <ToolbarTable
-                {...options}
-                className="editor-toolbar-popover-item"
-                transform={deleteRow}
-                icon="Delete row"
-              />
-              <ToolbarTable
-                {...options}
-                className="editor-toolbar-popover-item"
-                transform={addColumn}
-                icon="Add column"
-              />
-              <ToolbarTable
-                {...options}
-                className="editor-toolbar-popover-item"
-                transform={deleteColumn}
-                icon="Delete column"
-              />
-              <ToolbarTable
-                {...options}
-                className="editor-toolbar-popover-item"
-                transform={deleteTable}
-                icon="Delete table"
-              />
-            </Popup>
-          ) : (
-            tableIcon
-          )}
-        </div>
-        <div className="typewriter-sounds toolbar-row">
-          <div className="typewriter-sounds-switch-container">
-            <span>{t('typewriterSounds')}</span>
-            <SwitchToggle
-              isToggled={shouldPlayTypewriterSounds}
-              onToggle={onToggleShouldPlayTypewriterSounds}
-            />
+            </div>
           </div>
         </div>
+        <style jsx>{`
+          .editor-toolbar-container {
+            position: sticky;
+            top: ${stickyToolbarOffset}px;
+            z-index: 1;
+            background-color: ${theme.colors.white};
+          }
+
+          .editor-toolbar {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 15px 0;
+            border-bottom: 2px solid #eee;
+            gap: 10px;
+          }
+
+          .editor-toolbar-container.is-fixed {
+            border-radius: 5px;
+            box-shadow: 0px 8px 10px #00000029;
+            border: 1px solid #eee;
+            background-color: ${theme.colors.white};
+          }
+
+          .typewriter-sounds-switch-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            height: 100%;
+            margin-left: 10px;
+          }
+
+          /* Hide "Typewriter Sounds" when Toolbar is floating */
+          .editor-toolbar-container.is-fixed .typewriter-sounds.toolbar-row {
+            display: none;
+          }
+
+          @media (${navConstants.mobileNavOnly}) {
+            .editor-toolbar-container {
+              top: 80px;
+            }
+          }
+
+          .editor-toolbar-popover-item {
+            width: 100%;
+            justify-content: left;
+            padding-left: 7px;
+          }
+
+          .editor-toolbar-popover-item:hover {
+            font-weight: 600;
+          }
+
+          .toolbar-row {
+            display: flex;
+            gap: 10px;
+          }
+        `}</style>
       </div>
-      <style jsx>{`
-        .editor-toolbar-container {
-          position: sticky;
-          top: 200px;
-          top: calc(${headerHeight} + ${fixedDistanceFromTop}px);
-        }
-
-        .editor-toolbar {
-          display: flex;
-          justify-content: center;
-          flex-wrap: wrap;
-          padding: 15px 0;
-          border-bottom: 2px solid #eee;
-          z-index: 1;
-          gap: 10px;
-        }
-
-        .is-fixed .editor-toolbar {
-          /* top: calc(${headerHeight} + ${fixedDistanceFromTop}px); */
-          /* left: 50%; */
-          /* transform: translateX(50%); */
-          /* padding: 15px;
-          background: ${theme.colors.white};
-          border-radius: 5px;
-          box-shadow: 0px 8px 10px #00000029;
-          border: 1px solid #eee; */
-        }
-
-        .typewriter-sounds-switch-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 10px;
-          height: 100%;
-          margin-left: 10px;
-        }
-
-        /* Hide "Typewriter Sounds" when Toolbar is floating */
-        .editor-toolbar-container.is-fixed .typewriter-sounds.toolbar-row {
-          display: none;
-        }
-
-        /* @media (${navConstants.skinnyNavToDesktop}) {
-          .is-fixed .editor-toolbar {
-            top: ${fixedDistanceFromTop}px;
-            left: calc(50% + ${navConstants.skinnyNavWidth / 2}px);
-          }
-        } */
-
-        /* @media (${navConstants.aboveDesktopNav}) {
-          .is-fixed .editor-toolbar {
-            top: ${fixedDistanceFromTop}px;
-            left: calc(50% + ${navConstants.navWidth / 2}px);
-          }
-        } */
-
-        .editor-toolbar-popover-item {
-          width: 100%;
-          justify-content: left;
-          padding-left: 7px;
-        }
-
-        .editor-toolbar-popover-item:hover {
-          font-weight: 600;
-        }
-
-        .toolbar-row {
-          display: flex;
-          gap: 10px;
-        }
-      `}</style>
-    </div>
+    </>
   )
 }
 

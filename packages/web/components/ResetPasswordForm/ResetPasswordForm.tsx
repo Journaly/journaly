@@ -27,7 +27,7 @@ const ResetPasswordForm: React.FC<Props> = ({ resetToken }) => {
     onCompleted: async () => {
       toast.success(t('resetPassword.successMessage'))
       router.push({
-        pathname: '/dashboard/login',
+        pathname: '/login',
       })
     },
   })

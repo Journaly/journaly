@@ -27,7 +27,7 @@ const LoginForm: React.FC = () => {
       gtag('event', 'login', { method: 'Journaly' })
       await refetch()
       router.push({
-        pathname: '/dashboard/my-feed',
+        pathname: '/my-feed',
       })
     },
   })
@@ -86,14 +86,14 @@ const LoginForm: React.FC = () => {
       </fieldset>
       <em>
         {t('goToSignupText')}
-        <Link href="/dashboard/signup">
+        <Link href="/signup">
           <a className="j-link"> {t('goToSignupLink')}</a>
         </Link>
       </em>
       <br />
       <em>
         {t('goToRequestResetText')}
-        <Link href="/dashboard/request-reset">
+        <Link href="/request-reset">
           <a className="j-link"> {t('goToRequestResetLink')}</a>
         </Link>
       </em>

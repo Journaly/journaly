@@ -24,7 +24,7 @@ const RequestResetPasswordForm: React.FC = () => {
     onCompleted: async () => {
       toast.success(t('requestReset.successMessage'))
       router.push({
-        pathname: '/dashboard/login',
+        pathname: '/login',
       })
     },
   })
@@ -66,7 +66,7 @@ const RequestResetPasswordForm: React.FC = () => {
       </fieldset>
       <em>
         {t('requestReset.goToLoginText')}
-        <Link href="/dashboard/login">
+        <Link href="/login">
           <a className="j-link"> {t('requestReset.goToLoginLink')}</a>
         </Link>
       </em>

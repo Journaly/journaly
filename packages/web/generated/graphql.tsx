@@ -542,7 +542,7 @@ export type Query = {
   posts: PostPage
   users: Array<User>
   currentUser?: Maybe<User>
-  userById: User
+  userByIdentifier: User
   languages: Array<Language>
 }
 
@@ -567,11 +567,13 @@ export type QueryPostsArgs = {
   hasInteracted?: Maybe<Scalars['Boolean']>
   status: PostStatus
   authorId?: Maybe<Scalars['Int']>
+  authorHandle?: Maybe<Scalars['String']>
   savedPosts?: Maybe<Scalars['Boolean']>
 }
 
-export type QueryUserByIdArgs = {
-  id: Scalars['Int']
+export type QueryUserByIdentifierArgs = {
+  id?: Maybe<Scalars['Int']>
+  handle?: Maybe<Scalars['String']>
 }
 
 export type QueryLanguagesArgs = {
@@ -1182,12 +1184,12 @@ export type PrivatePostPageQuery = { __typename?: 'Query' } & {
 }
 
 export type ProfilePageQueryVariables = Exact<{
-  userId: Scalars['Int']
+  userHandle: Scalars['String']
   uiLanguage: UiLanguage
 }>
 
 export type ProfilePageQuery = { __typename?: 'Query' } & {
-  userById: { __typename?: 'User' } & ProfileUserFragmentFragment
+  userByIdentifier: { __typename?: 'User' } & ProfileUserFragmentFragment
   posts: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
       posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
     }
@@ -1195,6 +1197,8 @@ export type ProfilePageQuery = { __typename?: 'Query' } & {
 }
 
 export type ProfileUserFragmentFragment = { __typename?: 'User' } & {
+  followedBy: Array<{ __typename?: 'User' } & UserFragmentFragment>
+  following: Array<{ __typename?: 'User' } & UserFragmentFragment>
   badges: Array<{ __typename?: 'UserBadge' } & UserBadgeFragmentFragment>
   userInterests: Array<{ __typename?: 'UserInterest' } & UserInterestFragmentFragment>
 } & UserWithLanguagesFragmentFragment &
@@ -1542,12 +1546,13 @@ export type UpdateUserMutation = { __typename?: 'Mutation' } & {
   updateUser: { __typename?: 'User' } & UserFragmentFragment
 }
 
-export type UserByIdQueryVariables = Exact<{
-  id: Scalars['Int']
+export type UserByIdentifierQueryVariables = Exact<{
+  handle?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['Int']>
 }>
 
-export type UserByIdQuery = { __typename?: 'Query' } & {
-  userById: { __typename?: 'User' } & UserWithLanguagesFragmentFragment
+export type UserByIdentifierQuery = { __typename?: 'Query' } & {
+  userByIdentifier: { __typename?: 'User' } & UserWithLanguagesFragmentFragment
 }
 
 export type UserStatsQueryVariables = Exact<{
@@ -1555,7 +1560,7 @@ export type UserStatsQueryVariables = Exact<{
 }>
 
 export type UserStatsQuery = { __typename?: 'Query' } & {
-  userById: { __typename?: 'User' } & Pick<
+  userByIdentifier: { __typename?: 'User' } & Pick<
     User,
     | 'id'
     | 'name'
@@ -1989,6 +1994,12 @@ export const SocialMediaFragmentFragmentDoc = gql`
 export const ProfileUserFragmentFragmentDoc = gql`
   fragment ProfileUserFragment on User {
     ...UserWithLanguagesFragment
+    followedBy {
+      ...UserFragment
+    }
+    following {
+      ...UserFragment
+    }
     badges {
       ...UserBadgeFragment
     }
@@ -1998,6 +2009,7 @@ export const ProfileUserFragmentFragmentDoc = gql`
     ...SocialMediaFragment
   }
   ${UserWithLanguagesFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
   ${UserBadgeFragmentFragmentDoc}
   ${UserInterestFragmentFragmentDoc}
   ${SocialMediaFragmentFragmentDoc}
@@ -3134,11 +3146,11 @@ export type PrivatePostPageQueryResult = ApolloReactCommon.QueryResult<
   PrivatePostPageQueryVariables
 >
 export const ProfilePageDocument = gql`
-  query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
-    userById(id: $userId) {
+  query profilePage($userHandle: String!, $uiLanguage: UILanguage!) {
+    userByIdentifier(handle: $userHandle) {
       ...ProfileUserFragment
     }
-    posts(first: 20, skip: 0, status: PUBLISHED, authorId: $userId) {
+    posts(first: 20, skip: 0, status: PUBLISHED, authorHandle: $userHandle) {
       posts {
         ...PostCardFragment
       }
@@ -3165,7 +3177,7 @@ export const ProfilePageDocument = gql`
  * @example
  * const { data, loading, error } = useProfilePageQuery({
  *   variables: {
- *      userId: // value for 'userId'
+ *      userHandle: // value for 'userHandle'
  *      uiLanguage: // value for 'uiLanguage'
  *   },
  * });
@@ -4923,9 +4935,9 @@ export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
 >
-export const UserByIdDocument = gql`
-  query userById($id: Int!) {
-    userById(id: $id) {
+export const UserByIdentifierDocument = gql`
+  query userByIdentifier($handle: String, $id: Int) {
+    userByIdentifier(handle: $handle, id: $id) {
       ...UserWithLanguagesFragment
     }
   }
@@ -4933,46 +4945,53 @@ export const UserByIdDocument = gql`
 `
 
 /**
- * __useUserByIdQuery__
+ * __useUserByIdentifierQuery__
  *
- * To run a query within a React component, call `useUserByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUserByIdentifierQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserByIdentifierQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserByIdQuery({
+ * const { data, loading, error } = useUserByIdentifierQuery({
  *   variables: {
+ *      handle: // value for 'handle'
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useUserByIdQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<UserByIdQuery, UserByIdQueryVariables>,
+export function useUserByIdentifierQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    UserByIdentifierQuery,
+    UserByIdentifierQueryVariables
+  >,
 ) {
-  return ApolloReactHooks.useQuery<UserByIdQuery, UserByIdQueryVariables>(
-    UserByIdDocument,
+  return ApolloReactHooks.useQuery<UserByIdentifierQuery, UserByIdentifierQueryVariables>(
+    UserByIdentifierDocument,
     baseOptions,
   )
 }
-export function useUserByIdLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserByIdQuery, UserByIdQueryVariables>,
+export function useUserByIdentifierLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    UserByIdentifierQuery,
+    UserByIdentifierQueryVariables
+  >,
 ) {
-  return ApolloReactHooks.useLazyQuery<UserByIdQuery, UserByIdQueryVariables>(
-    UserByIdDocument,
+  return ApolloReactHooks.useLazyQuery<UserByIdentifierQuery, UserByIdentifierQueryVariables>(
+    UserByIdentifierDocument,
     baseOptions,
   )
 }
-export type UserByIdQueryHookResult = ReturnType<typeof useUserByIdQuery>
-export type UserByIdLazyQueryHookResult = ReturnType<typeof useUserByIdLazyQuery>
-export type UserByIdQueryResult = ApolloReactCommon.QueryResult<
-  UserByIdQuery,
-  UserByIdQueryVariables
+export type UserByIdentifierQueryHookResult = ReturnType<typeof useUserByIdentifierQuery>
+export type UserByIdentifierLazyQueryHookResult = ReturnType<typeof useUserByIdentifierLazyQuery>
+export type UserByIdentifierQueryResult = ApolloReactCommon.QueryResult<
+  UserByIdentifierQuery,
+  UserByIdentifierQueryVariables
 >
 export const UserStatsDocument = gql`
   query userStats($id: Int!) {
-    userById(id: $id) {
+    userByIdentifier(id: $id) {
       id
       name
       handle

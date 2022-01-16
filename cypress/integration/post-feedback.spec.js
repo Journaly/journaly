@@ -2,7 +2,7 @@ describe('Inline Feedback Comments', () => {
   beforeEach(() => {
     cy.login()
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
-    cy.visit('/dashboard/post/1')
+    cy.visit('/post/1')
   })
   it('User leaves comment', () => {
     // TODO: Write test
@@ -20,10 +20,10 @@ describe('Inline Feedback Comments', () => {
 
 describe('Post Comments', () => {
   beforeEach(() => {
-    cy.visit('/dashboard/login')
+    cy.visit('/login')
     cy.login()
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
-    cy.visit('/dashboard/post/1')
+    cy.visit('/post/1')
   })
   it('User leaves comment', () => {
     // TODO: Write test

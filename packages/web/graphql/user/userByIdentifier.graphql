@@ -1,0 +1,5 @@
+query userByIdentifier($handle: String, $id: Int) {
+  userByIdentifier(handle: $handle, id: $id) {
+    ...UserWithLanguagesFragment
+  }
+}

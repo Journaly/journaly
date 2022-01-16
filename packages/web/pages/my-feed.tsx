@@ -32,7 +32,9 @@ MyFeedPage.getInitialProps = async (ctx) => {
   if (typeof window !== 'undefined') {
     try {
       const defaultSearchFilters = cookie.parse(document.cookie).default_search_filters
-      initialSearchFilters = defaultSearchFilters ? JSON.parse(defaultSearchFilters) as InitialSearchFilters : null
+      initialSearchFilters = defaultSearchFilters
+        ? (JSON.parse(defaultSearchFilters) as InitialSearchFilters)
+        : null
     } catch (e) {
       console.log('Error parsing default_search_filters cookie', e)
     }
@@ -40,7 +42,9 @@ MyFeedPage.getInitialProps = async (ctx) => {
     try {
       const request = ctx.req as Request
       const defaultSearchFilters = request.cookies.default_search_filters
-      initialSearchFilters = defaultSearchFilters ? JSON.parse(defaultSearchFilters) as InitialSearchFilters : null
+      initialSearchFilters = defaultSearchFilters
+        ? (JSON.parse(defaultSearchFilters) as InitialSearchFilters)
+        : null
     } catch (e) {
       console.log('Error parsing default_search_filters cookie', e)
     }
@@ -50,6 +54,5 @@ MyFeedPage.getInitialProps = async (ctx) => {
     initialSearchFilters,
   }
 }
-
 
 export default withApollo(MyFeedPage)

@@ -3,7 +3,7 @@ describe('New post flow', () => {
     const postTitle = `The Battle Of The Bastards ${Math.random()}`
     cy.login()
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
-    cy.visit('/dashboard/new-post')
+    cy.visit('/new-post')
     cy.get('[data-testid=post-title]').type(postTitle)
     // Will fail until DB situation is figured out
     cy.get('[data-testid=post-language-select]').select('7')
@@ -17,7 +17,7 @@ describe('New post flow', () => {
     const postTitle = `The Battle Of The Beards ${Math.random()}`
     cy.login()
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
-    cy.visit('/dashboard/new-post')
+    cy.visit('/new-post')
     cy.get('[data-testid=post-title]').type(postTitle)
     cy.get('[data-testid=post-body]').type("Ramsay doesn't even have a bloody beard!.")
     cy.get('[data-testid=post-submit]').click()

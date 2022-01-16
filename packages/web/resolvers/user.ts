@@ -35,7 +35,7 @@ const DatedActivityCount = objectType({
   },
 })
 
-const User = objectType({
+const UserType = objectType({
   name: User.$name,
   definition(t) {
     t.field(User.id)
@@ -223,7 +223,7 @@ const InitiateAvatarImageUploadResponse = objectType({
   },
 })
 
-const UserBadge = objectType({
+const UserBadgeType = objectType({
   name: UserBadge.$name,
   definition(t) {
     t.field(UserBadge.id)
@@ -678,8 +678,8 @@ const UserMutations = extendType({
           type: InAppNotificationType.NEW_FOLLOWER,
           key: {},
           subNotification: {
-            followingUserId: follower.id
-          }
+            followingUserId: follower.id,
+          },
         })
 
         return follower
@@ -784,8 +784,8 @@ const UserMutations = extendType({
 })
 
 export default [
-  User,
-  UserBadge,
+  UserType,
+  UserBadgeType,
   UserQueries,
   UserMutations,
   InitiateAvatarImageUploadResponse,

@@ -12,6 +12,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// Journaly Users.
 model User {
   id                            Int                             @id @default(autoincrement())
   name                          String?
@@ -56,6 +57,7 @@ model User {
   isStudent Boolean @default(false)
 }
 
+/// Contains authentication-related data for each User.
 model Auth {
   id                      Int                     @id @default(autoincrement())
   userId                  Int                     @unique
@@ -67,50 +69,7 @@ model Auth {
   user                    User                    @relation(fields: [userId], references: [id])
 }
 
-model LanguageLearning {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  languageId Int
-  createdAt  DateTime @default(now())
-  language   Language @relation(fields: [languageId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
-
-  @@unique([userId, languageId])
-}
-
-model LanguageRelation {
-  id         Int           @id @default(autoincrement())
-  userId     Int
-  languageId Int
-  createdAt  DateTime      @default(now())
-  level      LanguageLevel
-  language   Language      @relation(fields: [languageId], references: [id])
-  user       User          @relation(fields: [userId], references: [id])
-
-  @@unique([userId, languageId])
-}
-
-model LanguageNative {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  languageId Int
-  createdAt  DateTime @default(now())
-  language   Language @relation(fields: [languageId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
-
-  @@unique([userId, languageId])
-}
-
-model SocialMedia {
-  id        Int    @id @default(autoincrement())
-  userId    Int    @unique
-  website   String
-  youtube   String
-  instagram String
-  facebook  String
-  user      User   @relation(fields: [userId], references: [id])
-}
-
+/// Journaly Posts, which Users can create and publish on the platform.
 model Post {
   id                       Int                       @id @default(autoincrement())
   title                    String
@@ -146,97 +105,20 @@ model Post {
   newPostNotifications     NewPostNotification[]
 }
 
-model Language {
-  id               Int                @id @default(autoincrement())
-  name             String
-  dialect          String?
-  devName          String?
-  learningUsers    LanguageLearning[]
-  nativeUsers      LanguageNative[]
-  LanguageRelation LanguageRelation[]
-  posts            Post[]
-
-  @@unique([name, dialect])
+/// Threads can contain many Comments that correspond to a conversation around some particular inline feedback in a Post.
+model Thread {
+  id                 Int                  @id @default(autoincrement())
+  startIndex         Int
+  endIndex           Int
+  highlightedContent String
+  postId             Int
+  archived           Boolean              @default(false)
+  post               Post                 @relation(fields: [postId], references: [id])
+  comments           Comment[]
+  subscriptions      ThreadSubscription[]
 }
 
-model Topic {
-  id                Int                @id @default(autoincrement())
-  devName           String
-  postTopics        PostTopic[]
-  prompt            Prompt[]
-  topicTranslations TopicTranslation[]
-  userInterests     UserInterest[]
-}
-
-model TopicTranslation {
-  id         Int        @id @default(autoincrement())
-  uiLanguage UILanguage
-  name       String
-  topicId    Int
-  topic      Topic      @relation(fields: [topicId], references: [id])
-
-  @@unique([uiLanguage, topicId])
-}
-
-model UserInterest {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  topicId   Int
-  createdAt DateTime @default(now())
-  topic     Topic    @relation(fields: [topicId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-
-  @@unique([userId, topicId])
-}
-
-model PostTopic {
-  id      Int   @id @default(autoincrement())
-  postId  Int
-  topicId Int
-  post    Post  @relation(fields: [postId], references: [id])
-  topic   Topic @relation(fields: [topicId], references: [id])
-
-  @@unique([postId, topicId])
-}
-
-model PostClap {
-  id                    Int                    @id @default(autoincrement())
-  createdAt             DateTime               @default(now())
-  postId                Int
-  authorId              Int
-  author                User                   @relation(fields: [authorId], references: [id])
-  post                  Post                   @relation(fields: [postId], references: [id])
-  PendingNotification   PendingNotification[]
-  postClapNotifications PostClapNotification[]
-
-  @@unique([authorId, postId])
-}
-
-model CommentThanks {
-  id                              Int                               @id @default(autoincrement())
-  createdAt                       DateTime                          @default(now())
-  authorId                        Int
-  commentId                       Int
-  author                          User                              @relation(fields: [authorId], references: [id])
-  comment                         Comment                           @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  PendingNotification             PendingNotification[]
-  ThreadCommentThanksNotification ThreadCommentThanksNotification[]
-
-  @@unique([authorId, commentId])
-}
-
-model PostCommentThanks {
-  id                  Int                   @id @default(autoincrement())
-  createdAt           DateTime              @default(now())
-  authorId            Int
-  postCommentId       Int?
-  author              User                  @relation(fields: [authorId], references: [id])
-  PostComment         PostComment?          @relation(fields: [postCommentId], references: [id])
-  PendingNotification PendingNotification[]
-
-  @@unique([authorId, postCommentId])
-}
-
+/// Represents inline feedback Comments specifically, those which appear inside of Threads within a Post.
 model Comment {
   id                         Int                         @id @default(autoincrement())
   createdAt                  DateTime                    @default(now())
@@ -252,6 +134,7 @@ model Comment {
   threadCommentNotifications ThreadCommentNotification[]
 }
 
+/// General Comments that are left underneath a Post and do not appear inside of Threads.
 model PostComment {
   id                       Int                       @id @default(autoincrement())
   createdAt                DateTime                  @default(now())
@@ -267,18 +150,48 @@ model PostComment {
   authorLanguageLevel      LanguageLevel             @default(BEGINNER)
 }
 
-model Thread {
-  id                 Int                  @id @default(autoincrement())
-  startIndex         Int
-  endIndex           Int
-  highlightedContent String
-  postId             Int
-  archived           Boolean              @default(false)
-  post               Post                 @relation(fields: [postId], references: [id])
-  comments           Comment[]
-  subscriptions      ThreadSubscription[]
+/// Thanks that an inline feedback Comment receives from Users in the community.
+model CommentThanks {
+  id                              Int                               @id @default(autoincrement())
+  createdAt                       DateTime                          @default(now())
+  authorId                        Int
+  commentId                       Int
+  author                          User                              @relation(fields: [authorId], references: [id])
+  comment                         Comment                           @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  PendingNotification             PendingNotification[]
+  ThreadCommentThanksNotification ThreadCommentThanksNotification[]
+
+  @@unique([authorId, commentId])
 }
 
+/// Thanks that a general PostComment receives from Users in the community.
+model PostCommentThanks {
+  id                  Int                   @id @default(autoincrement())
+  createdAt           DateTime              @default(now())
+  authorId            Int
+  postCommentId       Int?
+  author              User                  @relation(fields: [authorId], references: [id])
+  PostComment         PostComment?          @relation(fields: [postCommentId], references: [id])
+  PendingNotification PendingNotification[]
+
+  @@unique([authorId, postCommentId])
+}
+
+/// Claps that a Post has received from Users in the community.
+model PostClap {
+  id                    Int                    @id @default(autoincrement())
+  createdAt             DateTime               @default(now())
+  postId                Int
+  authorId              Int
+  author                User                   @relation(fields: [authorId], references: [id])
+  post                  Post                   @relation(fields: [postId], references: [id])
+  PendingNotification   PendingNotification[]
+  postClapNotifications PostClapNotification[]
+
+  @@unique([authorId, postId])
+}
+
+/// Images that are used in the headline/title section of a Post, which also appear in any kind of Post feed (My Feed, My Posts, Profile)
 model HeadlineImage {
   id        Int    @id @default(autoincrement())
   smallSize String
@@ -286,6 +199,102 @@ model HeadlineImage {
   Post      Post[]
 }
 
+/// Represents A Many-To-Many Relationship between Languages and other models, such as Users LEARNING a Language.
+model Language {
+  id               Int                @id @default(autoincrement())
+  name             String
+  dialect          String?
+  devName          String?
+  learningUsers    LanguageLearning[]
+  nativeUsers      LanguageNative[]
+  LanguageRelation LanguageRelation[]
+  posts            Post[]
+
+  @@unique([name, dialect])
+}
+
+/// The intermediary table for our M2M relationship with Languages.
+model LanguageRelation {
+  id         Int           @id @default(autoincrement())
+  userId     Int
+  languageId Int
+  createdAt  DateTime      @default(now())
+  level      LanguageLevel
+  language   Language      @relation(fields: [languageId], references: [id])
+  user       User          @relation(fields: [userId], references: [id])
+
+  @@unique([userId, languageId])
+}
+
+/// Each record represents a Language a User is learning.
+model LanguageLearning {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  languageId Int
+  createdAt  DateTime @default(now())
+  language   Language @relation(fields: [languageId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, languageId])
+}
+
+/// Each Record represents a Language a User speaks natively.
+model LanguageNative {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  languageId Int
+  createdAt  DateTime @default(now())
+  language   Language @relation(fields: [languageId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, languageId])
+}
+
+///  A core Topic which can have a M2M relationship with, for example, PostTopics or UserInterests.
+model Topic {
+  id                Int                @id @default(autoincrement())
+  devName           String
+  postTopics        PostTopic[]
+  prompt            Prompt[]
+  topicTranslations TopicTranslation[]
+  userInterests     UserInterest[]
+}
+
+/// Topics a User is interested in.
+model UserInterest {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  topicId   Int
+  createdAt DateTime @default(now())
+  topic     Topic    @relation(fields: [topicId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, topicId])
+}
+
+/// Topics that a Post has been written about.
+model PostTopic {
+  id      Int   @id @default(autoincrement())
+  postId  Int
+  topicId Int
+  post    Post  @relation(fields: [postId], references: [id])
+  topic   Topic @relation(fields: [topicId], references: [id])
+
+  @@unique([postId, topicId])
+}
+
+/// Translations of core Topics.
+model TopicTranslation {
+  id         Int        @id @default(autoincrement())
+  uiLanguage UILanguage
+  name       String
+  topicId    Int
+  topic      Topic      @relation(fields: [topicId], references: [id])
+
+  @@unique([uiLanguage, topicId])
+}
+
+/// Writing Prompts that can be shown to Users to help them think of Topics to write about.
 model Prompt {
   id      Int    @id @default(autoincrement())
   text    String
@@ -293,6 +302,7 @@ model Prompt {
   topic   Topic  @relation(fields: [topicId], references: [id])
 }
 
+/// Represents a subscription that any User has to a given Thread. Users are subscribed if they authored the post or left comments in that Thread.
 model ThreadSubscription {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -304,6 +314,7 @@ model ThreadSubscription {
   @@unique([userId, threadId])
 }
 
+/// Represents a subscription that any User has to PostComments in given Post. Users are subscribed if they authored the post or left any PostComments on it.
 model PostCommentSubscription {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -315,6 +326,7 @@ model PostCommentSubscription {
   @@unique([userId, postId])
 }
 
+/// Represents a Journaly Premium Subscription.
 model MembershipSubscription {
   id                   Int                          @id @default(autoincrement())
   period               MembershipSubscriptionPeriod
@@ -330,6 +342,7 @@ model MembershipSubscription {
   user                 User                         @relation(fields: [userId], references: [id])
 }
 
+/// Each record contains information from an individual Journaly Premium invoice, which would be created on every recurring MembershipSubscription payment.
 model MembershipSubscriptionInvoice {
   id                                Int                                 @id @default(autoincrement())
   userId                            Int
@@ -342,6 +355,7 @@ model MembershipSubscriptionInvoice {
   MembershipSubscriptionInvoiceItem MembershipSubscriptionInvoiceItem[]
 }
 
+/// Each record contains individual items from a MembershipSubscriptionInvoice and corresponds heavily to Stripe's subscription datamodel.
 model MembershipSubscriptionInvoiceItem {
   id                    Int                           @id @default(autoincrement())
   createdAt             DateTime                      @default(now())
@@ -356,6 +370,7 @@ model MembershipSubscriptionInvoiceItem {
   invoice               MembershipSubscriptionInvoice @relation(fields: [invoiceId], references: [id])
 }
 
+/// Each record is a badge that a User has earned for a particular accomplishment, corresponding to a BadgeType.
 model UserBadge {
   id        Int       @id @default(autoincrement())
   type      BadgeType
@@ -366,6 +381,7 @@ model UserBadge {
   @@unique([userId, type])
 }
 
+/// Each record represents a single occurence on the platform that a User will be notified about in the Daily Digest Email. Table is cleared daily when the notifications are processed and emails are sent out.
 model PendingNotification {
   id                  Int                   @id @default(autoincrement())
   type                EmailNotificationType
@@ -386,6 +402,7 @@ model PendingNotification {
   user                User                  @relation(fields: [userId], references: [id])
 }
 
+/// Each record corresponds to a single, top-level In App Notification within the Notification Feed, which groups individual notifications together based on their InAppNotificationType.
 model InAppNotification {
   id                               Int                               @id @default(autoincrement())
   type                             InAppNotificationType
@@ -406,6 +423,7 @@ model InAppNotification {
   newPostNotifications             NewPostNotification[]
 }
 
+/// A single notification instance of a Comment within a Thread receiving CommentThanks from a User in the community.
 model ThreadCommentThanksNotification {
   id Int @id @default(autoincrement())
 
@@ -415,6 +433,7 @@ model ThreadCommentThanksNotification {
   notification InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
 }
 
+/// A single notification instance of an inline feedback Comment being left within a Thread that a User is subscribed to on a Post.
 model ThreadCommentNotification {
   id             Int               @id @default(autoincrement())
   notificationId Int
@@ -423,6 +442,7 @@ model ThreadCommentNotification {
   comment        Comment           @relation(fields: [commentId], references: [id], onDelete: Cascade)
 }
 
+/// A single notification instance of a PostComment being left on a Post that a User is subscribed to.
 model PostCommentNotification {
   id             Int               @id @default(autoincrement())
   notificationId Int
@@ -431,6 +451,7 @@ model PostCommentNotification {
   postComment    PostComment       @relation(fields: [postCommentId], references: [id], onDelete: Cascade)
 }
 
+/// A single notification a User receives when a new User follows them.
 model NewFollowerNotification {
   id              Int               @id @default(autoincrement())
   notificationId  Int
@@ -439,6 +460,7 @@ model NewFollowerNotification {
   followingUser   User              @relation(fields: [followingUserId], references: [id], onDelete: Cascade)
 }
 
+/// A single notification a User receives when a User claps for one of their Posts.
 model PostClapNotification {
   id             Int               @id @default(autoincrement())
   notificationId Int
@@ -447,6 +469,7 @@ model PostClapNotification {
   postClap       PostClap          @relation(fields: [postClapId], references: [id], onDelete: Cascade)
 }
 
+/// A single notification a User receives when another User they follow publishes a new Post.
 model NewPostNotification {
   id             Int               @id @default(autoincrement())
   notificationId Int
@@ -455,6 +478,18 @@ model NewPostNotification {
   post           Post              @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
+/// Contains social media information that each User can optionally include on their profile.
+model SocialMedia {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  website   String
+  youtube   String
+  instagram String
+  facebook  String
+  user      User   @relation(fields: [userId], references: [id])
+}
+
+/// The different levels to which a User may speak a language.
 enum LanguageLevel {
   BEGINNER
   INTERMEDIATE
@@ -462,24 +497,28 @@ enum LanguageLevel {
   NATIVE
 }
 
+/// The role of each User in the administrative hierarchy.
 enum UserRole {
   ADMIN
   MODERATOR
   USER
 }
 
+/// The publishing status of a Post.
 enum PostStatus {
   DRAFT
   PUBLISHED
   PRIVATE
 }
 
+/// The different Languages we support within the U.I.
 enum UILanguage {
   ENGLISH
   GERMAN
   SPANISH
 }
 
+/// The various types of badges that Users can earn.
 enum BadgeType {
   ALPHA_USER
   BETA_USER
@@ -490,6 +529,7 @@ enum BadgeType {
   NECROMANCER
 }
 
+/// Each type of notification a User may receive within an email, such as the Daily Digest Email.
 enum EmailNotificationType {
   THREAD_COMMENT
   POST_COMMENT
@@ -498,6 +538,7 @@ enum EmailNotificationType {
   POST_CLAP
 }
 
+/// Each type of notification a User may receive within the In-App Notification Feed.
 enum InAppNotificationType {
   THREAD_COMMENT
   POST_COMMENT
@@ -507,11 +548,13 @@ enum InAppNotificationType {
   NEW_FOLLOWER
 }
 
+/// The read/unread status of a notification a User may receive within the In-App Notification Feed.
 enum NotificationReadStatus {
   READ
   UNREAD
 }
 
+/// The different Journaly Premium Membership recurring payment periods that we offer.
 enum MembershipSubscriptionPeriod {
   MONTHLY
   QUARTERLY
@@ -519,6 +562,7 @@ enum MembershipSubscriptionPeriod {
   STUDENT_ANNUALLY
 }
 
+/// The status indicating whether or not a User has verified their email address.
 enum EmailVerificationStatus {
   PENDING
   VERIFIED

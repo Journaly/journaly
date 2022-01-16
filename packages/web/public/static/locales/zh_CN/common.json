@@ -46,6 +46,8 @@
     "bodyOne": "需要帮助？我们在这里！",
     "bodyTwo": "请发送邮件至 ",
     "bodyThree": " 并详细描述您的问题，我们将尽快回复！",
+    "bodyFour": "Have you seen concerning behavior on the platform? Please refer to our Terms of Service and always feel free to report anything you feel may be misaligned with our guidelines:",
+    "termsOfService": "Terms of Service",
     "footer": "谢谢您帮助Journaly成为更好的社区！"
   },
   "badge": {

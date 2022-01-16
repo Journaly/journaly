@@ -4,6 +4,7 @@ import { LanguageRelation, Language } from 'nexus-prisma'
 
 const LanguageRelationType = objectType({
   name: LanguageRelation.$name,
+  description: LanguageRelation.$description,
   definition(t) {
     t.field(LanguageRelation.id)
     t.field(LanguageRelation.language)
@@ -13,6 +14,7 @@ const LanguageRelationType = objectType({
 
 const LanguageType = objectType({
   name: Language.$name,
+  description: Language.$description,
   definition(t) {
     t.field(Language.id)
     t.field(Language.name)

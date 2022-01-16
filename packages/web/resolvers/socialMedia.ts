@@ -5,6 +5,7 @@ import { SocialMedia } from 'nexus-prisma'
 
 const SocialMediaType = objectType({
   name: SocialMedia.$name,
+  description: SocialMedia.$description,
   definition(t) {
     t.field(SocialMedia.id)
     t.field(SocialMedia.facebook)

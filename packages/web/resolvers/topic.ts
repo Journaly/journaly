@@ -13,6 +13,7 @@ const TopicTranslationType = objectType({
 
 const UserInterestType = objectType({
   name: UserInterest.$name,
+  description: UserInterest.$description,
   definition(t) {
     t.field(UserInterest.id)
     t.field(UserInterest.user)
@@ -22,6 +23,7 @@ const UserInterestType = objectType({
 
 const TopicType = objectType({
   name: Topic.$name,
+  description: Topic.$description,
   sourceType: 'prisma.Topic',
   definition(t) {
     t.field(Topic.id)

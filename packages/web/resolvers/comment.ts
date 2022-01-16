@@ -28,6 +28,7 @@ import { NotFoundError } from './errors'
 
 const ThreadType = objectType({
   name: Thread.$name,
+  description: Thread.$description,
   definition(t) {
     t.field(Thread.id)
     t.field(Thread.archived)
@@ -46,6 +47,7 @@ const ThreadType = objectType({
 
 const CommentType = objectType({
   name: Comment.$name,
+  description: Comment.$description,
   definition(t) {
     t.field(Comment.id)
     t.field(Comment.author)
@@ -59,6 +61,7 @@ const CommentType = objectType({
 
 const PostCommentType = objectType({
   name: PostComment.$name,
+  description: PostComment.$description,
   definition(t) {
     t.field(PostComment.id)
     t.field(PostComment.author)

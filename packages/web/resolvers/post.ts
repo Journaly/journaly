@@ -90,6 +90,7 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
 
 const PostTopicType = objectType({
   name: PostTopic.$name,
+  description: PostTopic.$description,
   definition(t) {
     t.field(PostTopic.id)
     t.field(PostTopic.post)
@@ -99,6 +100,7 @@ const PostTopicType = objectType({
 
 const PostType = objectType({
   name: Post.$name,
+  description: Post.$description,
   definition(t) {
     t.field(Post.id)
     t.field(Post.title)

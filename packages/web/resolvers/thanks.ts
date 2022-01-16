@@ -12,6 +12,7 @@ import { CommentThanks } from 'nexus-prisma'
 
 const CommentThanksType = objectType({
   name: CommentThanks.$name,
+  description: CommentThanks.$description,
   definition(t) {
     t.field(CommentThanks.id)
     t.field(CommentThanks.commentId)

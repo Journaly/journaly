@@ -19,6 +19,7 @@ import { MembershipSubscription } from 'nexus-prisma'
 
 const MembershipSubscriptionType = objectType({
   name: MembershipSubscription.$name,
+  description: MembershipSubscription.$description,
   definition(t) {
     t.field(MembershipSubscription.id)
     t.field(MembershipSubscription.period)

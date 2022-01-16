@@ -37,6 +37,7 @@ const DatedActivityCount = objectType({
 
 const UserType = objectType({
   name: User.$name,
+  description: User.$description,
   definition(t) {
     t.field(User.id)
     t.field(User.name)
@@ -225,6 +226,7 @@ const InitiateAvatarImageUploadResponse = objectType({
 
 const UserBadgeType = objectType({
   name: UserBadge.$name,
+  description: UserBadge.$description,
   definition(t) {
     t.field(UserBadge.id)
     t.field(UserBadge.type)

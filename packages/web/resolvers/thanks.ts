@@ -8,14 +8,15 @@ import {
   createEmailNotification,
   hasAuthorPermissions
 } from './utils'
+import { CommentThanks } from 'nexus-prisma'
 
-const CommentThanks = objectType({
-  name: 'CommentThanks',
+const CommentThanksType = objectType({
+  name: CommentThanks.$name,
   definition(t) {
-    t.model.id()
-    t.model.commentId()
-    t.model.author()
-    t.model.comment()
+    t.field(CommentThanks.id)
+    t.field(CommentThanks.commentId)
+    t.field(CommentThanks.author)
+    t.field(CommentThanks.comment)
   },
 })
 
@@ -82,7 +83,7 @@ const ThanksMutations = extendType({
           },
           subNotification: {
             thanksId: commentThanks.id,
-          }
+          },
         })
 
         return commentThanks
@@ -142,4 +143,4 @@ const ThanksMutations = extendType({
   },
 })
 
-export default [CommentThanks, ThanksMutations]
+export default [CommentThanksType, ThanksMutations]

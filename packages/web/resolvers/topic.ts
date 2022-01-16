@@ -1,29 +1,30 @@
 import { PostStatus } from '@journaly/j-db-client'
 import { arg, booleanArg, objectType, extendType, intArg } from 'nexus'
+import { Topic, TopicTranslation, UserInterest } from 'nexus-prisma'
 
-const TopicTranslation = objectType({
-  name: 'TopicTranslation',
+const TopicTranslationType = objectType({
+  name: TopicTranslation.$name,
   definition(t) {
-    t.model.id()
-    t.model.name()
-    t.model.uiLanguage()
+    t.field(TopicTranslation.id)
+    t.field(TopicTranslation.name)
+    t.field(TopicTranslation.uiLanguage)
   },
 })
 
-const UserInterest = objectType({
-  name: 'UserInterest',
+const UserInterestType = objectType({
+  name: UserInterest.$name,
   definition(t) {
-    t.model.id()
-    t.model.user()
-    t.model.topic()
-  }
+    t.field(UserInterest.id)
+    t.field(UserInterest.user)
+    t.field(UserInterest.topic)
+  },
 })
 
-const Topic = objectType({
-  name: 'Topic',
+const TopicType = objectType({
+  name: Topic.$name,
   sourceType: 'prisma.Topic',
   definition(t) {
-    t.model.id()
+    t.field(Topic.id)
     t.string('name', {
       nullable: true,
       args: {
@@ -183,7 +184,7 @@ const TopicMutations = extendType({
         return ctx.db.userInterest.delete(interestFilter)
       },
     })
-  }
+  },
 })
 
-export default [TopicTranslation, UserInterest, Topic, TopicQueries, TopicMutations]
+export default [TopicTranslationType, UserInterestType, TopicType, TopicQueries, TopicMutations]

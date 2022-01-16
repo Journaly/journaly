@@ -24,7 +24,6 @@ import {
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
   Prisma,
-  Post,
   PostStatus,
   BadgeType,
   PrismaClient,
@@ -34,6 +33,7 @@ import {
   EmailVerificationStatus,
   InAppNotificationType,
 } from '@journaly/j-db-client'
+import { Post, PostTopic } from 'nexus-prisma'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
 
@@ -88,45 +88,47 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
   }
 }
 
-const PostTopic = objectType({
-  name: 'PostTopic',
+const PostTopicType = objectType({
+  name: PostTopic.$name,
   definition(t) {
-    t.model.id()
-    t.model.post()
-    t.model.topic()
+    t.field(PostTopic.id)
+    t.field(PostTopic.post)
+    t.field(PostTopic.topic)
   },
 })
 
-const PostObjectType = objectType({
-  name: 'Post',
+const PostType = objectType({
+  name: Post.$name,
   definition(t) {
-    t.model.id()
-    t.model.title()
-    t.model.body()
-    t.model.excerpt()
-    t.model.readTime()
-    t.model.author()
-    t.model.authorId()
-    t.model.status()
-    t.model.claps({ pagination: false })
-    t.model.threads({ pagination: false })
-    t.model.postTopics({ type: 'PostTopic', pagination: false })
-    t.model.postComments({
-      pagination: false,
-      ordering: {
-        createdAt: true,
-      },
-    })
-    t.model.language()
-    t.model.publishedLanguageLevel()
-    t.model.privateShareId()
-    t.model.createdAt()
-    t.model.updatedAt()
-    t.model.bodySrc()
-    t.model.headlineImage()
-    t.model.publishedAt()
-    t.model.bumpedAt()
-    t.model.bumpCount()
+    t.field(Post.id)
+    t.field(Post.title)
+    t.field(Post.body)
+    t.field(Post.excerpt)
+    t.field(Post.readTime)
+    t.field(Post.author)
+    t.field(Post.authorId)
+    t.field(Post.status)
+    t.field(Post.claps({ pagination: false }))
+    t.field(Post.threads({ pagination: false }))
+    t.field(Post.postTopics({ type: 'PostTopic', pagination: false }))
+    t.field(
+      Post.postComments({
+        pagination: false,
+        ordering: {
+          createdAt: true,
+        },
+      }),
+    )
+    t.field(Post.language)
+    t.field(Post.publishedLanguageLevel)
+    t.field(Post.privateShareId)
+    t.field(Post.createdAt)
+    t.field(Post.updatedAt)
+    t.field(Post.bodySrc)
+    t.field(Post.headlineImage)
+    t.field(Post.publishedAt)
+    t.field(Post.bumpedAt)
+    t.field(Post.bumpCount)
     t.int('commentCount', {
       resolve: async (parent, _args, ctx, _info) => {
         const [threadCommentCount, postCommentCount] = await Promise.all([
@@ -931,7 +933,7 @@ const PostMutations = extendType({
 
 export default [
   PostTopic,
-  PostObjectType,
+  PostType,
   PostPage,
   InitiatePostImageUploadResponse,
   InitiateInlinePostImageUploadResponse,

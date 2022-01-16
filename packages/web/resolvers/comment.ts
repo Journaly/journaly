@@ -14,6 +14,7 @@ import {
   LanguageLevel,
   PrismaClient,
 } from '@journaly/j-db-client'
+import { Comment, PostComment, Thread } from 'nexus-prisma'
 
 import {
   hasAuthorPermissions,
@@ -25,16 +26,16 @@ import {
 } from './utils'
 import { NotFoundError } from './errors'
 
-const Thread = objectType({
-  name: 'Thread',
+const ThreadType = objectType({
+  name: Thread.$name,
   definition(t) {
-    t.model.id()
-    t.model.archived()
-    t.model.startIndex()
-    t.model.endIndex()
-    t.model.highlightedContent()
-    t.model.postId()
-    t.model.comments({
+    t.field(Thread.id)
+    t.field(Thread.archived)
+    t.field(Thread.startIndex)
+    t.field(Thread.endIndex)
+    t.field(Thread.highlightedContent)
+    t.field(Thread.postId)
+    t.field(Thread.comments, {
       pagination: false,
       ordering: {
         createdAt: true,
@@ -43,30 +44,29 @@ const Thread = objectType({
   },
 })
 
-const Comment = objectType({
-  name: 'Comment',
+const CommentType = objectType({
+  name: Comment.$name,
   definition(t) {
-    t.model.id()
-    t.model.author()
-    t.model.body()
-    t.model.createdAt()
-    t.model.authorLanguageLevel()
-    t.model.thanks({ pagination: false })
-    t.model.thread()
+    t.field(Comment.id)
+    t.field(Comment.author)
+    t.field(Comment.body)
+    t.field(Comment.createdAt)
+    t.field(Comment.authorLanguageLevel)
+    t.field(Comment.thanks, { pagination: false })
+    t.field(Comment.thread)
   },
 })
 
-const PostComment = objectType({
-  name: 'PostComment',
+const PostCommentType = objectType({
+  name: PostComment.$name,
   definition(t) {
-    t.model.id()
-    t.model.author()
-    t.model.body()
-    t.model.createdAt()
-    t.model.authorLanguageLevel()
+    t.field(PostComment.id)
+    t.field(PostComment.author)
+    t.field(PostComment.body)
+    t.field(PostComment.createdAt)
+    t.field(PostComment.authorLanguageLevel)
   },
 })
-
 
 type CreateCommentArg = {
   thread: ThreadWithRels<{
@@ -595,9 +595,4 @@ const CommentMutations = extendType({
   },
 })
 
-export default [
-  Thread,
-  Comment,
-  PostComment,
-  CommentMutations,
-]
+export default [ThreadType, CommentType, PostCommentType, CommentMutations]

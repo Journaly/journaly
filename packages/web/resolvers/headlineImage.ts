@@ -1,12 +1,13 @@
 import { objectType } from 'nexus'
+import { HeadlineImage } from 'nexus-prisma'
 
-const HeadlineImage = objectType({
-  name: 'HeadlineImage',
+const HeadlineImageType = objectType({
+  name: HeadlineImage.$name,
   definition(t) {
-    t.model.id()
-    t.model.smallSize()
-    t.model.largeSize()
+    t.field(HeadlineImage.id)
+    t.field(HeadlineImage.smallSize)
+    t.field(HeadlineImage.largeSize)
   },
 })
 
-export default [HeadlineImage]
+export default [HeadlineImageType]

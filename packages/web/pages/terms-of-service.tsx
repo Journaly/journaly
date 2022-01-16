@@ -1,13 +1,8 @@
 import { NextPage } from 'next'
-import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 import TermsOfService from '@/components/Site/TermsOfService'
 import { withApollo } from '@/lib/apollo'
 
-const TermsOfServicePage: NextPage = () => (
-  <LandingPageLayout>
-    <TermsOfService />
-  </LandingPageLayout>
-)
+const TermsOfServicePage: NextPage = () => <TermsOfService />
 
 TermsOfServicePage.getInitialProps = async () => ({
   namespacesRequired: ['common'],

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from '@/config/i18n'
 import FacebookIcon from '@/components/Icons/FacebookIcon'
 import InstagramIcon from '@/components/Icons/InstagramIcon'
@@ -14,10 +14,11 @@ import {
   useFollowUserMutation,
   useUnfollowUserMutation,
   LanguageLevel,
-  ProfileUserFragmentFragment
+  ProfileUserFragmentFragment,
 } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
 import UserAvatar from '@/components/UserAvatar'
+import UserListModal from '@/components/Modals/UserListModal'
 
 type Props = {
   user: ProfileUserFragmentFragment
@@ -26,7 +27,8 @@ type Props = {
 const ProfileCard: React.FC<Props> = ({ user }) => {
   const { t } = useTranslation('profile')
 
-
+  const [displayFollowerListModal, setDisplayFollowerListModal] = useState(false)
+  const [displayFollowingListModal, setDisplayFollowingListModal] = useState(false)
 
   const name = user.name || user.handle
   const showSeparator =
@@ -107,7 +109,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           <div className="profile-image-desktop">
             <UserAvatar user={user} size={150} />
           </div>
-
+          {/* User is logged in viewing another user's profile */}
           {currentUser && currentUser.id !== user.id && (
             <Button
               className="follow-btn"
@@ -117,6 +119,27 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
             >
               {hasFollowedAuthor ? t('unfollow') : t('follow')}
             </Button>
+          )}
+          {/* User is logged in viewing their own profile */}
+          {currentUser && currentUser.id === user.id && (
+            <div className="follower-stats-container">
+              <Button
+                variant={ButtonVariant.Link}
+                onClick={() => setDisplayFollowerListModal(true)}
+              >
+                <span className="follower-stat">
+                  {t('followerCount', { count: user.followedBy?.length })}
+                </span>
+              </Button>
+              <Button
+                variant={ButtonVariant.Link}
+                onClick={() => setDisplayFollowingListModal(true)}
+              >
+                <span className="follower-stat">
+                  {t('followingCount', { count: user.following?.length })}
+                </span>
+              </Button>
+            </div>
           )}
 
           {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
@@ -162,7 +185,20 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           </div>
         </div>
       </div>
-
+      {displayFollowerListModal && (
+        <UserListModal
+          title={t('followerCount', { count: user.followedBy.length })}
+          users={user.followedBy}
+          onClose={() => setDisplayFollowerListModal(false)}
+        />
+      )}
+      {displayFollowingListModal && (
+        <UserListModal
+          title={t('followingCount', { count: user.following.length })}
+          users={user.following}
+          onClose={() => setDisplayFollowingListModal(false)}
+        />
+      )}
       <style jsx>{`
         .profile-card {
           position: relative;
@@ -323,6 +359,16 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         }
         :global(.social-link:last-child) {
           margin-right: 0;
+        }
+
+        .follower-stats-container {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+        }
+
+        .follower-stat {
+          font-weight: 600;
         }
       `}</style>
     </div>

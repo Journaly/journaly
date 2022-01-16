@@ -1,10 +1,10 @@
 {
-  "languagesHeader": "Languages",
-  "hasWritten": "posts written",
-  "postsWrittenCountSingular": "post written",
-  "postsWrittenCountPlural": "posts written",
-  "thanksReceivedCountSingular": "thanks received",
-  "thanksReceivedCountPlural": "thanks received",
-  "follow": "Follow",
-  "unfollow": "Unfollow"
+  "languagesHeader": "語言",
+  "hasWritten": "篇日誌",
+  "postsWrittenCountSingular": "篇日誌",
+  "postsWrittenCountPlural": "篇日誌",
+  "thanksReceivedCountSingular": "次被感謝",
+  "thanksReceivedCountPlural": "次被感謝",
+  "follow": "關註",
+  "unfollow": "取消關註"
 }

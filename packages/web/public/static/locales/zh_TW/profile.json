@@ -1,32 +1,36 @@
 {
   "card": {
-    "speaks": "speaks",
-    "learns": "learns",
-    "likes": "likes"
+    "speaks": "母語",
+    "learns": "目標語言",
+    "likes": "愛好"
   },
   "stats": {
     "summary": {
-      "title": "Summary",
-      "userAge": "{{name}} has been journaling on Journaly since {{joinDate}} (that's {{age}}).",
-      "postCount": "In that time they've published {{postCount}} posts in {{languageCount}} different languages.",
-      "noPosts": "So far they haven't written any posts.",
-      "commentCounts": "They've also left {{postCommentCount}} general comments on posts and {{threadCommentCount}} inline feedback comments, helping other users improve their language skills.",
-      "noComments": "They haven't left any feedback on other journalers' posts yet.",
-      "thanksCount": "For their hard work helping others, they've been thanked {{thanksCount}} times."
+      "title": "概要",
+      "userAge": "{{name}} 在 {{joinDate}} 開啟了Journaly的旅程（至今已經 {{age}}了！）。",
+      "postCount": "在此期間他/她共發布了{{postCount}} 篇日誌，使用了 {{languageCount}} 種語言。",
+      "noPosts": "他/她目前還沒有發布日誌。",
+      "commentCounts": "他/她還在其他用戶的日誌中留下了 {{postCommentCount}} 條評論和 {{threadCommentCount}} 條點評，幫助他們提高了語言水平。",
+      "noComments": "他/她暫時還沒有對其他用戶的日誌做出反饋。",
+      "thanksCount": "他/她的熱心幫助共收到了 {{thanksCount}} 次感謝。"
     },
     "activity": {
-      "title": "Activity History",
+      "title": "活躍記錄",
       "types": {
-        "posts": "Posts",
-        "postComments": "Post Comments",
-        "threadComments": "Inline Comments"
+        "posts": "日誌",
+        "postComments": "評論",
+        "threadComments": "點評"
       }
     }
   },
-  "statsTitle": "Stats",
-  "postsTitle": "Recent Posts",
-  "emptyPosts": "{{user}} hasn't written any posts yet.",
-  "loggedInUserEmptyPosts": "You have no recent posts. <1>Write a new post</1>!",
-  "follow": "Follow",
-  "unfollow": "Unfollow"
+  "statsTitle": "數據",
+  "postsTitle": "近期日誌",
+  "emptyPosts": "{{user}} 暫時還沒有發布日誌",
+  "loggedInUserEmptyPosts": "您沒有近期日誌。 <1>寫新日誌吧</1>！",
+  "follow": "關註",
+  "unfollow": "取消關註",
+  "followerCount": "{{count}} 粉絲",
+  "followerCount_plural": "{{count}} 粉絲",
+  "followingCount": "{{count}} 追蹤中",
+  "followingCount_plural": "{{count}} 追蹤中"
 }

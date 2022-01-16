@@ -1,8 +1,8 @@
-query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
-  userById(id: $userId) {
+query profilePage($userHandle: String!, $uiLanguage: UILanguage!) {
+  userByIdentifier(handle: $userHandle) {
     ...ProfileUserFragment
   }
-  posts(first: 20, skip: 0, status: PUBLISHED, authorId: $userId) {
+  posts(first: 20, skip: 0, status: PUBLISHED, authorHandle: $userHandle) {
     posts {
       ...PostCardFragment
     }
@@ -15,6 +15,12 @@ query profilePage($userId: Int!, $uiLanguage: UILanguage!) {
 
 fragment ProfileUserFragment on User {
   ...UserWithLanguagesFragment
+  followedBy {
+    ...UserFragment
+  }
+  following {
+    ...UserFragment
+  }
   badges {
     ...UserBadgeFragment
   }

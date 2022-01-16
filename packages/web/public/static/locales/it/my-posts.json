@@ -2,6 +2,7 @@
   "pageTitle": "My Posts",
   "publishedTab": "Published",
   "draftsTab": "Drafts",
+  "privateTab": "Private",
   "publishedEmptyState": "You have no published posts. You can either publish a draft or <1>create a new post</1>.",
   "draftEmptyState": "You have not drafts at this time.",
   "privateEmptyState": "You have not published any private posts yet.",

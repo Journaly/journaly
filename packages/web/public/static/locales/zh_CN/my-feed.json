@@ -1,10 +1,10 @@
 {
-  "pageTitle": "My Feed",
-  "noPostsMessage": "Nothing to see yet...",
+  "pageTitle": "我的页面",
+  "noPostsMessage": "暂时还没有内容……",
   "pagination": {
-    "previous": "Prev",
-    "next": "Next",
-    "page": "Page",
-    "of": "of"
+    "previous": "上一页",
+    "next": "下一页",
+    "page": "当前页",
+    "of": "共计"
   }
 }

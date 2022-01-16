@@ -1,6 +1,6 @@
 describe('User signs up', () => {
   beforeEach(() => {
-    cy.visit('/dashboard/signup')
+    cy.visit('/signup')
   })
 
   it('Form requires handle', () => {
@@ -33,7 +33,7 @@ describe('User signs up', () => {
   it('User successfully signs up and is redirected "My Feed" page with welcome modal', () => {
     cy.get('[data-testid=email]').type('j@n.com')
     cy.get('[data-testid=password]').type('password{enter}')
-    cy.url().should('include', '/dashboard/my-feed')
+    cy.url().should('include', '/my-feed')
     cy.get('[data-testid=welcome-modal]').should('exist')
   })
 })

@@ -58,7 +58,7 @@ const InsertImageButton = ({ children, allowInlineImages }: InsertImageButtonPro
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={(): void => {
-            Router.push('/dashboard/settings/subscription')
+            Router.push('/settings/subscription')
             setDisplayPremiumFeatureModal(false)
           }}
         />

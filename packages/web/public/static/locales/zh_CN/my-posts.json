@@ -1,9 +1,10 @@
 {
-  "pageTitle": "My Posts",
-  "publishedTab": "Published",
-  "draftsTab": "Drafts",
-  "publishedEmptyState": "You have no published posts. You can either publish a draft or <1>create a new post</1>.",
-  "draftEmptyState": "You have not drafts at this time.",
-  "privateEmptyState": "You have not published any private posts yet.",
-  "errorLoadingPostsMessage": "There was an error retrieving your posts."
+  "pageTitle": "我的日志",
+  "publishedTab": "已发布",
+  "draftsTab": "草稿箱",
+  "privateTab": "私密",
+  "publishedEmptyState": "您还没有发布日志。您可以发布草稿 <1> 或新建日志 </1>。",
+  "draftEmptyState": "您还没有草稿。",
+  "privateEmptyState": "您还没有发布私密日志。",
+  "errorLoadingPostsMessage": "找回日志失败"
 }

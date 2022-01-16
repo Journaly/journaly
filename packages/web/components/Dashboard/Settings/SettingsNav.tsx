@@ -8,7 +8,8 @@ const SettingsNav: React.FC = () => {
   const links = {
     profile: t('nav.profile'),
     account: t('nav.account'),
-    subscription: t('nav.subscription')
+    subscription: t('nav.subscription'),
+    tutorials: t('nav.tutorials'),
   }
 
   return (
@@ -16,7 +17,7 @@ const SettingsNav: React.FC = () => {
       <ul className="settings-nav-items">
         {Object.entries(links).map(([page, navText]) => {
           return (
-            <NavLink href={`/dashboard/settings/${page}`} key={`${page}-nav-link`}>
+            <NavLink href={`/settings/${page}`} key={`${page}-nav-link`}>
               <li className="settings-nav-item">
                 <a>{navText}</a>
               </li>

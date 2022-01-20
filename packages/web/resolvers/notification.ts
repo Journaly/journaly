@@ -1,26 +1,26 @@
 import { arg, extendType, intArg, nonNull, objectType } from 'nexus'
 import {
-  InAppNotification as InAppNotificationType,
-  ThreadCommentNotification as ThreadCommentNotificationType,
-  PostCommentNotification as PostCommentNotificationType,
-  NewPostNotification as NewPostNotificationType,
-  NewFollowerNotification as NewFollowerNotificationType,
-  PostClapNotification as PostClapNotificationType,
-  ThreadCommentThanksNotification as ThreadCommentThanksNotificationType,
+  InAppNotification,
+  ThreadCommentNotification,
+  PostCommentNotification,
+  NewPostNotification,
+  NewFollowerNotification,
+  PostClapNotification,
+  ThreadCommentThanksNotification,
 } from 'nexus-prisma'
 
-const InAppNotification = objectType({
-  name: InAppNotificationType.$name,
-  description: InAppNotificationType.$description,
+const InAppNotificationType = objectType({
+  name: InAppNotification.$name,
+  description: InAppNotification.$description,
   definition(t) {
-    t.field(InAppNotificationType.id)
-    t.field(InAppNotificationType.userId)
-    t.field(InAppNotificationType.type)
-    t.field(InAppNotificationType.bumpedAt)
-    t.field(InAppNotificationType.readStatus)
-    t.field(InAppNotificationType.post)
-    t.field(InAppNotificationType.readStatus)
-    t.field(InAppNotificationType.triggeringUser)
+    t.field(InAppNotification.id)
+    t.field(InAppNotification.userId)
+    t.field(InAppNotification.type)
+    t.field(InAppNotification.bumpedAt)
+    t.field(InAppNotification.readStatus)
+    t.field(InAppNotification.post)
+    t.field(InAppNotification.readStatus)
+    t.field(InAppNotification.triggeringUser)
     t.nonNull.list.nonNull.field('threadCommentNotifications', {
       type: 'ThreadCommentNotification',
       resolve: (parent, _, ctx) => {
@@ -84,57 +84,57 @@ const InAppNotification = objectType({
   },
 })
 
-const ThreadCommentNotification = objectType({
-  name: ThreadCommentNotificationType.$name,
-  description: ThreadCommentNotificationType.$description,
+const ThreadCommentNotificationType = objectType({
+  name: ThreadCommentNotification.$name,
+  description: ThreadCommentNotification.$description,
   definition(t) {
-    t.field(ThreadCommentNotificationType.id)
-    t.field(ThreadCommentNotificationType.comment)
+    t.field(ThreadCommentNotification.id)
+    t.field(ThreadCommentNotification.comment)
   },
 })
 
-const PostCommentNotification = objectType({
-  name: PostCommentNotificationType.$name,
-  description: PostCommentNotificationType.$description,
+const PostCommentNotificationType = objectType({
+  name: PostCommentNotification.$name,
+  description: PostCommentNotification.$description,
   definition(t) {
-    t.field(PostCommentNotificationType.id)
-    t.field(PostCommentNotificationType.postComment)
+    t.field(PostCommentNotification.id)
+    t.field(PostCommentNotification.postComment)
   },
 })
 
-const NewFollowerNotification = objectType({
-  name: NewFollowerNotificationType.$name,
-  description: NewFollowerNotificationType.$description,
+const NewFollowerNotificationType = objectType({
+  name: NewFollowerNotification.$name,
+  description: NewFollowerNotification.$description,
   definition(t) {
-    t.field(NewFollowerNotificationType.id)
-    t.field(NewFollowerNotificationType.followingUser)
+    t.field(NewFollowerNotification.id)
+    t.field(NewFollowerNotification.followingUser)
   },
 })
 
-const PostClapNotification = objectType({
-  name: PostClapNotificationType.$name,
-  description: PostClapNotificationType.$description,
+const PostClapNotificationType = objectType({
+  name: PostClapNotification.$name,
+  description: PostClapNotification.$description,
   definition(t) {
-    t.field(PostClapNotificationType.id)
-    t.field(PostClapNotificationType.postClap)
+    t.field(PostClapNotification.id)
+    t.field(PostClapNotification.postClap)
   },
 })
 
-const ThreadCommentThanksNotification = objectType({
-  name: ThreadCommentThanksNotificationType.$name,
-  description: ThreadCommentThanksNotificationType.$description,
+const ThreadCommentThanksNotificationType = objectType({
+  name: ThreadCommentThanksNotification.$name,
+  description: ThreadCommentThanksNotification.$description,
   definition(t) {
-    t.field(ThreadCommentThanksNotificationType.id)
-    t.field(ThreadCommentThanksNotificationType.thanks)
+    t.field(ThreadCommentThanksNotification.id)
+    t.field(ThreadCommentThanksNotification.thanks)
   },
 })
 
-const NewPostNotification = objectType({
-  name: NewPostNotificationType.$name,
-  description: NewPostNotificationType.$description,
+const NewPostNotificationType = objectType({
+  name: NewPostNotification.$name,
+  description: NewPostNotification.$description,
   definition(t) {
-    t.field(NewPostNotificationType.id)
-    t.field(NewPostNotificationType.post)
+    t.field(NewPostNotification.id)
+    t.field(NewPostNotification.post)
   },
 })
 
@@ -216,12 +216,12 @@ const NotificationMutations = extendType({
 })
 
 export default [
-  InAppNotification,
-  ThreadCommentNotification,
-  PostCommentNotification,
-  NewFollowerNotification,
-  PostClapNotification,
-  ThreadCommentThanksNotification,
-  NewPostNotification,
+  InAppNotificationType,
+  ThreadCommentNotificationType,
+  PostCommentNotificationType,
+  NewFollowerNotificationType,
+  PostClapNotificationType,
+  ThreadCommentThanksNotificationType,
+  NewPostNotificationType,
   NotificationMutations,
 ]

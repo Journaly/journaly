@@ -1,24 +1,24 @@
-import { arg, booleanArg, intArg, objectType, extendType, nonNull } from 'nexus'
+import { arg, booleanArg, intArg, objectType, extendType, nonNull, enumType } from 'nexus'
 import { PostStatus } from '@journaly/j-db-client'
-import { LanguageRelation as LanguageRelationType, Language as LanguageType } from 'nexus-prisma'
+import { LanguageRelation, Language, LanguageLevel, UILanguage } from 'nexus-prisma'
 
-const LanguageRelation = objectType({
-  name: LanguageRelationType.$name,
-  description: LanguageRelationType.$description,
+const LanguageRelationType = objectType({
+  name: LanguageRelation.$name,
+  description: LanguageRelation.$description,
   definition(t) {
-    t.field(LanguageRelationType.id)
-    t.field(LanguageRelationType.language)
-    t.field(LanguageRelationType.level)
+    t.field(LanguageRelation.id)
+    t.field(LanguageRelation.language)
+    t.field(LanguageRelation.level)
   },
 })
 
-const Language = objectType({
-  name: LanguageType.$name,
-  description: LanguageType.$description,
+const LanguageType = objectType({
+  name: Language.$name,
+  description: Language.$description,
   definition(t) {
-    t.field(LanguageType.id)
-    t.field(LanguageType.name)
-    t.field(LanguageType.devName)
+    t.field(Language.id)
+    t.field(Language.name)
+    t.field(Language.devName)
     t.nonNull.list.nonNull.field('posts', {
       type: 'Post',
       resolve: (parent, _, ctx) => {
@@ -29,7 +29,7 @@ const Language = objectType({
           .posts()
       },
     })
-    t.field(LanguageType.dialect)
+    t.field(Language.dialect)
     t.int('postCount', {
       resolve(parent, _, ctx) {
         return ctx.db.post.count({
@@ -43,6 +43,18 @@ const Language = objectType({
       },
     })
   },
+})
+
+const UILanguageType = enumType({
+  name: UILanguage.name,
+  description: UILanguage.description,
+  members: UILanguage.members,
+})
+
+const LanguageLevelType = enumType({
+  name: LanguageLevel.name,
+  description: LanguageLevel.description,
+  members: LanguageLevel.members,
 })
 
 const LanguageQueries = extendType({
@@ -153,4 +165,11 @@ const LanguageMutations = extendType({
   },
 })
 
-export default [LanguageRelation, Language, LanguageQueries, LanguageMutations]
+export default [
+  LanguageRelationType,
+  LanguageType,
+  UILanguageType,
+  LanguageLevelType,
+  LanguageQueries,
+  LanguageMutations,
+]

@@ -50,7 +50,6 @@ const schemaOpts: Parameters<typeof makeSchema>[0] = {
     ...NotificationTypes,
   ],
   shouldGenerateArtifacts: reflectionRun,
-  plugins: [declarativeWrappingPlugin()],
 }
 
 if (reflectionRun) {

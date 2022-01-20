@@ -1,11 +1,11 @@
-import { intArg, stringArg, objectType, extendType, nonNull } from 'nexus'
+import { intArg, stringArg, objectType, extendType, nonNull, enumType } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 import { isAcademic } from 'swot-node'
 import { PostStatus, EmailVerificationStatus, InAppNotificationType } from '@journaly/j-db-client'
 
-import { User as UserType, UserBadge as UserBadgeType } from 'nexus-prisma'
+import { User, UserBadge, UserRole } from 'nexus-prisma'
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
@@ -16,7 +16,7 @@ import {
 } from './utils'
 import { generateToken, validateUpdateUserMutationData } from './utils/userValidation'
 
-const DatedActivityCount = objectType({
+const DatedActivityCountType = objectType({
   name: 'DatedActivityCount',
   definition(t) {
     t.string('date')
@@ -26,12 +26,12 @@ const DatedActivityCount = objectType({
   },
 })
 
-const User = objectType({
-  name: UserType.$name,
-  description: UserType.$description,
+const UserType = objectType({
+  name: User.$name,
+  description: User.$description,
   definition(t) {
-    t.field(UserType.id)
-    t.field(UserType.name)
+    t.field(User.id)
+    t.field(User.name)
     t.string('email', {
       resolve(parent, _args, ctx) {
         const { userId } = ctx.request
@@ -43,25 +43,25 @@ const User = objectType({
         return null
       },
     })
-    t.field(UserType.handle)
-    t.field(UserType.bio)
-    t.field(UserType.userRole)
-    t.field(UserType.city)
-    t.field(UserType.country)
-    t.field(UserType.badges)
-    t.field(UserType.posts)
-    t.field(UserType.savedPosts)
-    t.field(UserType.profileImage)
-    t.field(UserType.createdAt)
-    t.field(UserType.membershipSubscription)
-    t.field(UserType.isStudent)
-    t.field(UserType.socialMedia)
-    t.field(UserType.languages)
-    t.field(UserType.following)
-    t.field(UserType.followedBy)
-    t.field(UserType.lastFourCardNumbers)
-    t.field(UserType.cardBrand)
-    t.field(UserType.userInterests)
+    t.field(User.handle)
+    t.field(User.bio)
+    t.field(User.userRole)
+    t.field(User.city)
+    t.field(User.country)
+    t.field(User.badges)
+    t.field(User.posts)
+    t.field(User.savedPosts)
+    t.field(User.profileImage)
+    t.field(User.createdAt)
+    t.field(User.membershipSubscription)
+    t.field(User.isStudent)
+    t.field(User.socialMedia)
+    t.field(User.languages)
+    t.field(User.following)
+    t.field(User.followedBy)
+    t.field(User.lastFourCardNumbers)
+    t.field(User.cardBrand)
+    t.field(User.userInterests)
     t.boolean('emailAddressVerified', {
       async resolve(parent, _args, ctx, _info) {
         const auth = await ctx.db.auth.findUnique({
@@ -195,7 +195,7 @@ const User = objectType({
   },
 })
 
-const InitiateAvatarImageUploadResponse = objectType({
+const InitiateAvatarImageUploadResponseType = objectType({
   name: 'InitiateAvatarImageUploadResponse',
   definition(t) {
     t.string('uploadUrl', { description: 'URL for the client to PUT an image to' })
@@ -204,14 +204,20 @@ const InitiateAvatarImageUploadResponse = objectType({
   },
 })
 
-const UserBadge = objectType({
-  name: UserBadgeType.$name,
-  description: UserBadgeType.$description,
+const UserBadgeType = objectType({
+  name: UserBadge.$name,
+  description: UserBadge.$description,
   definition(t) {
-    t.field(UserBadgeType.id)
-    t.field(UserBadgeType.type)
-    t.field(UserBadgeType.createdAt)
+    t.field(UserBadge.id)
+    t.field(UserBadge.type)
+    t.field(UserBadge.createdAt)
   },
+})
+
+const UserRoleType = enumType({
+  name: UserRole.name,
+  description: UserRole.description,
+  members: UserRole.members,
 })
 
 const UserQueries = extendType({
@@ -765,10 +771,11 @@ const UserMutations = extendType({
 })
 
 export default [
-  User,
-  UserBadge,
+  UserType,
+  UserBadgeType,
+  UserRoleType,
+  InitiateAvatarImageUploadResponseType,
+  DatedActivityCountType,
   UserQueries,
   UserMutations,
-  InitiateAvatarImageUploadResponse,
-  DatedActivityCount,
 ]

@@ -4,16 +4,16 @@ import { intArg, objectType, extendType, nonNull } from 'nexus'
 import { EmailNotificationType } from '@journaly/j-db-client'
 
 import { createInAppNotification, createEmailNotification, hasAuthorPermissions } from './utils'
-import { CommentThanks as CommentThanksType } from 'nexus-prisma'
+import { CommentThanks } from 'nexus-prisma'
 
-const CommentThanks = objectType({
-  name: CommentThanksType.$name,
-  description: CommentThanksType.$description,
+const CommentThanksType = objectType({
+  name: CommentThanks.$name,
+  description: CommentThanks.$description,
   definition(t) {
-    t.field(CommentThanksType.id)
-    t.field(CommentThanksType.commentId)
-    t.field(CommentThanksType.author)
-    t.field(CommentThanksType.comment)
+    t.field(CommentThanks.id)
+    t.field(CommentThanks.commentId)
+    t.field(CommentThanks.author)
+    t.field(CommentThanks.comment)
   },
 })
 
@@ -140,4 +140,4 @@ const ThanksMutations = extendType({
   },
 })
 
-export default [CommentThanks, ThanksMutations]
+export default [CommentThanksType, ThanksMutations]

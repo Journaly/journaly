@@ -1,4 +1,14 @@
-import { arg, intArg, stringArg, booleanArg, objectType, extendType, nonNull, list } from 'nexus'
+import {
+  arg,
+  intArg,
+  stringArg,
+  booleanArg,
+  objectType,
+  extendType,
+  nonNull,
+  list,
+  enumType,
+} from 'nexus'
 
 import {
   processEditorDocument,
@@ -16,7 +26,6 @@ import {
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
   Prisma,
-  PostStatus,
   BadgeType,
   PrismaClient,
   LanguageRelation,
@@ -24,9 +33,10 @@ import {
   UserRole,
   EmailVerificationStatus,
   InAppNotificationType,
+  PostStatus as PostStatusEnum,
 } from '@journaly/j-db-client'
-import { Post as PostType, PostTopic as PostTopicType } from 'nexus-prisma'
-import { EditorNode, HeadlineImageInput } from './inputTypes'
+import { Post, PostTopic, PostStatus } from 'nexus-prisma'
+import { EditorNodeType, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
 
 const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {
@@ -39,7 +49,7 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
         FROM "Post"
         WHERE
           "authorId" = ${userId}
-          AND "status" = ${PostStatus.PUBLISHED}
+          AND "status" = ${PostStatusEnum.PUBLISHED}
     )
     INSERT INTO "UserBadge" ("type", "userId") (
       (
@@ -80,28 +90,34 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
   }
 }
 
-const PostTopic = objectType({
-  name: PostTopicType.$name,
-  description: PostTopicType.$description,
+const PostTopicType = objectType({
+  name: PostTopic.$name,
+  description: PostTopic.$description,
   definition(t) {
-    t.field(PostTopicType.id)
-    t.field(PostTopicType.post)
-    t.field(PostTopicType.topic)
+    t.field(PostTopic.id)
+    t.field(PostTopic.post)
+    t.field(PostTopic.topic)
   },
 })
 
-const Post = objectType({
-  name: PostType.$name,
-  description: PostType.$description,
+const PostStatusType = enumType({
+  name: PostStatus.name,
+  description: PostStatus.description,
+  members: PostStatus.members,
+})
+
+const PostType = objectType({
+  name: Post.$name,
+  description: Post.$description,
   definition(t) {
-    t.field(PostType.id)
-    t.field(PostType.title)
-    t.field(PostType.body)
-    t.field(PostType.excerpt)
-    t.field(PostType.readTime)
-    t.field(PostType.author)
-    t.field(PostType.authorId)
-    t.field(PostType.status)
+    t.field(Post.id)
+    t.field(Post.title)
+    t.field(Post.body)
+    t.field(Post.excerpt)
+    t.field(Post.readTime)
+    t.field(Post.author)
+    t.field(Post.authorId)
+    t.field(Post.status)
     t.nonNull.list.nonNull.field('claps', {
       type: 'PostClap',
       resolve: (parent, _, ctx) => {
@@ -145,16 +161,16 @@ const Post = objectType({
           .postComments()
       },
     })
-    t.field(PostType.language)
-    t.field(PostType.publishedLanguageLevel)
-    t.field(PostType.privateShareId)
-    t.field(PostType.createdAt)
-    t.field(PostType.updatedAt)
-    t.field(PostType.bodySrc)
-    t.field(PostType.headlineImage)
-    t.field(PostType.publishedAt)
-    t.field(PostType.bumpedAt)
-    t.field(PostType.bumpCount)
+    t.field(Post.language)
+    t.field(Post.publishedLanguageLevel)
+    t.field(Post.privateShareId)
+    t.field(Post.createdAt)
+    t.field(Post.updatedAt)
+    t.field(Post.bodySrc)
+    t.field(Post.headlineImage)
+    t.field(Post.publishedAt)
+    t.field(Post.bumpedAt)
+    t.field(Post.bumpCount)
     t.int('commentCount', {
       resolve: async (parent, _args, ctx, _info) => {
         const [threadCommentCount, postCommentCount] = await Promise.all([
@@ -181,7 +197,7 @@ const Post = objectType({
 // Includes 1 page and the total number of posts.
 // posts: the returned page after filtering.
 // count: the total posts matching the filter.
-const PostPage = objectType({
+const PostPageType = objectType({
   name: 'PostPage',
   definition(t) {
     t.list.field('posts', {
@@ -191,7 +207,7 @@ const PostPage = objectType({
   },
 })
 
-const InitiatePostImageUploadResponse = objectType({
+const InitiatePostImageUploadResponseType = objectType({
   name: 'InitiatePostImageUploadResponse',
   definition(t) {
     t.string('uploadUrl', { description: 'URL for the client to PUT an image to' })
@@ -201,7 +217,7 @@ const InitiatePostImageUploadResponse = objectType({
   },
 })
 
-const InitiateInlinePostImageUploadResponse = objectType({
+const InitiateInlinePostImageUploadResponseType = objectType({
   name: 'InitiateInlinePostImageUploadResponse',
   definition(t) {
     t.string('uploadUrl', { description: 'URL for the client to PUT an image to' })
@@ -240,7 +256,7 @@ const PostQueries = extendType({
               author: true,
             },
           })
-          if (post?.status === PostStatus.PRIVATE && post?.authorId !== userId) {
+          if (post?.status === PostStatusEnum.PRIVATE && post?.authorId !== userId) {
             throw new NotAuthorizedError()
           }
         }
@@ -456,7 +472,7 @@ const PostMutations = extendType({
       type: 'Post',
       args: {
         title: nonNull(stringArg()),
-        body: nonNull(list(EditorNode.asArg())),
+        body: nonNull(list(EditorNodeType.asArg())),
         languageId: nonNull(intArg()),
         topicIds: list(intArg()),
         status: nonNull(arg({ type: 'PostStatus' })),
@@ -465,8 +481,8 @@ const PostMutations = extendType({
       resolve: async (_parent, args, ctx) => {
         const { title, body, languageId, status, headlineImage } = args
         const { userId } = ctx.request
-        const isPublished = status === PostStatus.PUBLISHED
-        const isPrivate = status === PostStatus.PRIVATE
+        const isPublished = status === PostStatusEnum.PUBLISHED
+        const isPrivate = status === PostStatusEnum.PRIVATE
 
         if (!body) {
           throw new ResolverError('We need a body!', {})
@@ -526,7 +542,7 @@ const PostMutations = extendType({
         })
 
         if (args.topicIds) {
-          const insertPromises = args.topicIds.map((topicId) => {
+          const insertPromises = args.topicIds.map((topicId: number) => {
             return ctx.db.postTopic.create({
               data: {
                 post: { connect: { id: post.id } },
@@ -539,7 +555,7 @@ const PostMutations = extendType({
         }
 
         if (isPublished) {
-          const promises: Promise<unknown>[] = user.followedBy.map((follower) => {
+          const promises: Promise<unknown>[] = user.followedBy.map((follower: User) => {
             return createInAppNotification(ctx.db, {
               userId: follower.id,
               type: InAppNotificationType.NEW_POST,
@@ -564,7 +580,7 @@ const PostMutations = extendType({
         title: stringArg(),
         languageId: intArg(),
         topicIds: list(intArg()),
-        body: list(EditorNode.asArg()),
+        body: list(EditorNodeType.asArg()),
         status: arg({ type: 'PostStatus' }),
         headlineImage: nonNull(HeadlineImageInput.asArg()),
       },
@@ -611,7 +627,7 @@ const PostMutations = extendType({
         }
 
         if (args.status) {
-          if (args.status === PostStatus.PRIVATE) {
+          if (args.status === PostStatusEnum.PRIVATE) {
             data.privateShareId = generatePostPrivateShareId()
           }
           data.status = args.status
@@ -677,7 +693,7 @@ const PostMutations = extendType({
             where: { postId: args.postId },
           })
 
-          const insertPromises = args.topicIds.map((topicId) => {
+          const insertPromises = args.topicIds.map((topicId: number) => {
             return ctx.db.postTopic.create({
               data: {
                 post: { connect: { id: args.postId } },
@@ -695,7 +711,7 @@ const PostMutations = extendType({
         })
 
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
-          const promises: Promise<unknown>[] = currentUser.followedBy.map((follower) => {
+          const promises: Promise<unknown>[] = currentUser.followedBy.map((follower: User) => {
             return createInAppNotification(ctx.db, {
               userId: follower.id,
               type: InAppNotificationType.NEW_POST,
@@ -952,11 +968,12 @@ const PostMutations = extendType({
 })
 
 export default [
-  PostTopic,
-  Post,
-  PostPage,
-  InitiatePostImageUploadResponse,
-  InitiateInlinePostImageUploadResponse,
+  PostTopicType,
+  PostType,
+  PostPageType,
+  InitiatePostImageUploadResponseType,
+  InitiateInlinePostImageUploadResponseType,
   PostQueries,
   PostMutations,
+  PostStatusType,
 ]

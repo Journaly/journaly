@@ -4,7 +4,7 @@ import { inputObjectType } from 'nexus'
 // is concepturally the untion of two types, internal nodes and leaf nodes, but
 // AFAIK GQL does not have a native union type, so we simply unify all the fields
 // and make them all nullable.
-export const EditorNode = inputObjectType({
+export const EditorNodeType = inputObjectType({
   name: 'EditorNode',
   definition(t) {
     t.string('type')
@@ -17,7 +17,7 @@ export const EditorNode = inputObjectType({
     t.string('url')
     t.boolean('hyperlink')
     t.list.field('children', {
-      type: EditorNode,
+      type: EditorNodeType,
     })
   },
 })
@@ -30,4 +30,4 @@ export const HeadlineImageInput = inputObjectType({
   },
 })
 
-export default [EditorNode, HeadlineImageInput]
+export default [EditorNodeType, HeadlineImageInput]

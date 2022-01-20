@@ -21,12 +21,66 @@ const InAppNotificationType = objectType({
     t.field(InAppNotification.post)
     t.field(InAppNotification.readStatus)
     t.field(InAppNotification.triggeringUser)
-    t.field(InAppNotification.threadCommentNotifications, { pagination: false })
-    t.field(InAppNotification.postCommentNotifications, { pagination: false })
-    t.field(InAppNotification.newFollowerNotifications, { pagination: false })
-    t.field(InAppNotification.postClapNotifications, { pagination: false })
-    t.field(InAppNotification.threadCommentThanksNotifications, { pagination: false })
-    t.field(InAppNotification.newPostNotifications, { pagination: false })
+    t.nonNull.list.nonNull.field('threadCommentNotifications', {
+      type: 'ThreadCommentNotification',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.inAppNotification
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .threadCommentNotifications()
+      },
+    })
+    t.nonNull.list.nonNull.field('postCommentNotifications', {
+      type: 'PostCommentNotification',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.inAppNotification
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .postCommentNotifications()
+      },
+    })
+    t.nonNull.list.nonNull.field('newFollowerNotifications', {
+      type: 'NewFollowerNotification',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.inAppNotification
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .newFollowerNotifications()
+      },
+    })
+    t.nonNull.list.nonNull.field('postClapNotifications', {
+      type: 'PostClapNotification',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.inAppNotification
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .postClapNotifications()
+      },
+    })
+    t.nonNull.list.nonNull.field('threadCommentThanksNotifications', {
+      type: 'ThreadCommentThanksNotification',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.inAppNotification
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .threadCommentThanksNotifications()
+      },
+    })
+    t.nonNull.list.nonNull.field('newPostNotifications', {
+      type: 'NewPostNotification',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.inAppNotification
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .newPostNotifications()
+      },
+    })
   },
 })
 

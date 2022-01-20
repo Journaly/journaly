@@ -31,11 +31,17 @@ const ThreadType = objectType({
     t.field(Thread.endIndex)
     t.field(Thread.highlightedContent)
     t.field(Thread.postId)
-    t.list.field({
-      ...Thread.comments,
-      pagination: false,
-      ordering: {
-        createdAt: true,
+    t.nonNull.list.nonNull.field('comments', {
+      type: 'Comment',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.thread
+          .findUnique({
+            where: { id: parent.id },
+            orderBy: {
+              createdAt: true,
+            },
+          })
+          .comments()
       },
     })
   },
@@ -50,7 +56,16 @@ const CommentType = objectType({
     t.field(Comment.body)
     t.field(Comment.createdAt)
     t.field(Comment.authorLanguageLevel)
-    t.field(Comment.thanks, { pagination: false })
+    t.nonNull.list.nonNull.field('thanks', {
+      type: 'CommentThanks',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.comment
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .thanks()
+      },
+    })
     t.field(Comment.thread)
   },
 })

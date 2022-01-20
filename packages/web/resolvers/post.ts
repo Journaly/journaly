@@ -1,4 +1,4 @@
-import { arg, intArg, stringArg, booleanArg, objectType, extendType, nonNull } from 'nexus'
+import { arg, intArg, stringArg, booleanArg, objectType, extendType, nonNull, list } from 'nexus'
 
 import {
   processEditorDocument,
@@ -102,26 +102,49 @@ const PostType = objectType({
     t.field(Post.author)
     t.field(Post.authorId)
     t.field(Post.status)
-    t.field(Post.claps({ pagination: false }))
+    t.nonNull.list.nonNull.field('claps', {
+      type: 'PostClap',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.post
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .claps()
+      },
+    })
     t.nonNull.list.nonNull.field('threads', {
       type: 'Thread',
-      resolve: (parent, _, context) => {
-        return context.db.post
+      resolve: (parent, _, ctx) => {
+        return ctx.db.post
           .findUnique({
             where: { id: parent.id },
           })
           .threads()
       },
     })
-    t.field(Post.postTopics({ type: 'PostTopic', pagination: false }))
-    t.field(
-      Post.postComments({
-        pagination: false,
-        ordering: {
-          createdAt: true,
-        },
-      }),
-    )
+    t.nonNull.list.nonNull.field('postTopics', {
+      type: 'PostTopic',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.post
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .postTopics()
+      },
+    })
+    t.nonNull.list.nonNull.field('postComments', {
+      type: 'PostComment',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.post
+          .findUnique({
+            where: { id: parent.id },
+            orderBy: {
+              createdAt: true,
+            },
+          })
+          .postComments()
+      },
+    })
     t.field(Post.language)
     t.field(Post.publishedLanguageLevel)
     t.field(Post.privateShareId)
@@ -247,14 +270,16 @@ const PostQueries = extendType({
         search: stringArg({
           description: 'Search phrase to filter posts by.',
         }),
-        languages: intArg({
-          description: 'Language IDs to filter posts by. No value means all languages.',
-          list: true,
-        }),
-        topics: intArg({
-          description: 'topics IDs to filter posts by. No value means all topics.',
-          list: true,
-        }),
+        languages: list(
+          intArg({
+            description: 'Language IDs to filter posts by. No value means all languages.',
+          }),
+        ),
+        topics: list(
+          intArg({
+            description: 'topics IDs to filter posts by. No value means all topics.',
+          }),
+        ),
         skip: nonNull(
           intArg({
             description: 'Offset into the feed post list to return',

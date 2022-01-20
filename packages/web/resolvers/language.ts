@@ -19,7 +19,16 @@ const LanguageType = objectType({
     t.field(Language.id)
     t.field(Language.name)
     t.field(Language.devName)
-    t.field(Language.posts, { pagination: false })
+    t.nonNull.list.nonNull.field('posts', {
+      type: 'Post',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.language
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .posts()
+      },
+    })
     t.field(Language.dialect)
     t.int('postCount', {
       resolve(parent, _, ctx) {

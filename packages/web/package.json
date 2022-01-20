@@ -70,7 +70,7 @@
     "lodash": "^4.17.20",
     "next": "^11.1.0",
     "next-i18next": "^7.0.1",
-    "nexus": "^1.0.0",
+    "nexus": "^1.1.0",
     "nexus-prisma": "^0.35.0",
     "node-fetch": "^2.6.1",
     "nprogress": "^0.2.0",

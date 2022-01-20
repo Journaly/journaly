@@ -32,7 +32,7 @@ const UserType = objectType({
   definition(t) {
     t.field(User.id)
     t.field(User.name)
-    t.nullable.string('email', {
+    t.string('email', {
       resolve(parent, _args, ctx) {
         const { userId } = ctx.request
 

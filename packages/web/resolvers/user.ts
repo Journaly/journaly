@@ -1,18 +1,9 @@
-import {
-  intArg,
-  stringArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { intArg, stringArg, objectType, extendType, nonNull } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 import { isAcademic } from 'swot-node'
-import {
-  PostStatus,
-  EmailVerificationStatus,
-  InAppNotificationType,
-} from '@journaly/j-db-client'
+import { PostStatus, EmailVerificationStatus, InAppNotificationType } from '@journaly/j-db-client'
 
 import { User, UserBadge } from 'nexus-prisma'
 
@@ -64,24 +55,13 @@ const UserType = objectType({
     t.field(User.createdAt)
     t.field(User.membershipSubscription)
     t.field(User.isStudent)
-    t.field(User.socialMedia, {
-      type: 'SocialMedia',
-      resolve: async (parent, _args, ctx) => {
-        return ctx.db.socialMedia.findFirst({
-          where: {
-            userId: parent.id,
-          },
-        })
-      },
-    })
+    t.field(User.socialMedia)
     t.field(User.languages)
     t.field(User.following)
     t.field(User.followedBy)
     t.field(User.lastFourCardNumbers)
     t.field(User.cardBrand)
-    t.field(User.userInterests, {
-      type: 'UserInterests',
-    })
+    t.field(User.userInterests)
     t.boolean('emailAddressVerified', {
       async resolve(parent, _args, ctx, _info) {
         const auth = await ctx.db.auth.findUnique({
@@ -246,7 +226,6 @@ const UserQueries = extendType({
 
     t.field('currentUser', {
       type: 'User',
-      nullable: true,
       resolve: async (_parent, _args, ctx) => {
         const userId = ctx.request.userId
         // check for current userId
@@ -264,8 +243,8 @@ const UserQueries = extendType({
     t.field('userByIdentifier', {
       type: 'User',
       args: {
-        id: intArg({ required: false }),
-        handle: stringArg({ required: false }),
+        id: intArg(),
+        handle: stringArg(),
       },
       resolve: async (_parent, args, ctx) => {
         if (!args.id && !args.handle) throw new Error('You must provide an ID or handle')
@@ -303,9 +282,9 @@ const UserMutations = extendType({
     t.field('createUser', {
       type: 'User',
       args: {
-        handle: stringArg({ required: true }),
-        email: stringArg({ required: true }),
-        password: stringArg({ required: true }),
+        handle: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+        password: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         if (!args.handle.match(/^[a-zA-Z0-9_-]+$/)) {
@@ -364,13 +343,13 @@ const UserMutations = extendType({
     t.field('updateUser', {
       type: 'User',
       args: {
-        email: stringArg({ required: false }),
-        name: stringArg({ required: false }),
-        profileImage: stringArg({ required: false }),
-        bio: stringArg({ required: false }),
-        handle: stringArg({ required: false }),
-        country: stringArg({ required: false }),
-        city: stringArg({ required: false }),
+        email: stringArg(),
+        name: stringArg(),
+        profileImage: stringArg(),
+        bio: stringArg(),
+        handle: stringArg(),
+        country: stringArg(),
+        city: stringArg(),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -456,8 +435,8 @@ const UserMutations = extendType({
     t.field('updatePassword', {
       type: 'User',
       args: {
-        oldPassword: stringArg({ required: true }),
-        newPassword: stringArg({ required: true }),
+        oldPassword: nonNull(stringArg()),
+        newPassword: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx: any) => {
         const { userId } = ctx.request
@@ -499,8 +478,8 @@ const UserMutations = extendType({
     t.field('loginUser', {
       type: 'User',
       args: {
-        identifier: stringArg({ required: true }),
-        password: stringArg({ required: true }),
+        identifier: nonNull(stringArg()),
+        password: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx: any) => {
         const user = await ctx.db.user.findUnique({
@@ -536,7 +515,7 @@ const UserMutations = extendType({
     t.field('requestResetPassword', {
       type: 'User',
       args: {
-        identifier: stringArg({ required: true }),
+        identifier: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx, _info) => {
         const user = await ctx.db.user.findUnique({
@@ -576,9 +555,9 @@ const UserMutations = extendType({
     t.field('resetPassword', {
       type: 'User',
       args: {
-        resetToken: stringArg({ required: true }),
-        password: stringArg({ required: true }),
-        confirmPassword: stringArg({ required: true }),
+        resetToken: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+        confirmPassword: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx, _info) => {
         const { password, confirmPassword, resetToken } = args
@@ -659,7 +638,7 @@ const UserMutations = extendType({
     t.field('followUser', {
       type: 'User',
       args: {
-        followedUserId: intArg({ required: true }),
+        followedUserId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx, _info) => {
         const { userId: followerId } = ctx.request
@@ -691,7 +670,7 @@ const UserMutations = extendType({
     t.field('unfollowUser', {
       type: 'User',
       args: {
-        followedUserId: intArg({ required: true }),
+        followedUserId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx, _info) => {
         const { userId: followerId } = ctx.request
@@ -740,7 +719,7 @@ const UserMutations = extendType({
     t.field('savePost', {
       type: 'User',
       args: {
-        postId: intArg({ required: true }),
+        postId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -763,7 +742,7 @@ const UserMutations = extendType({
     t.field('unsavePost', {
       type: 'User',
       args: {
-        postId: intArg({ required: true }),
+        postId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request

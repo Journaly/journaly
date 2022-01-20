@@ -1,12 +1,14 @@
-import { arg, extendType, intArg, nonNull, objectType } from 'nexus'
+import { arg, enumType, extendType, intArg, nonNull, objectType } from 'nexus'
 import {
   InAppNotification,
+  InAppNotificationType as InAppNotificationEnum,
   ThreadCommentNotification,
   PostCommentNotification,
   NewPostNotification,
   NewFollowerNotification,
   PostClapNotification,
   ThreadCommentThanksNotification,
+  NotificationReadStatus,
 } from 'nexus-prisma'
 
 const InAppNotificationType = objectType({
@@ -84,6 +86,12 @@ const InAppNotificationType = objectType({
   },
 })
 
+const InAppNotificationTypeEnumType = enumType({
+  name: InAppNotificationEnum.name,
+  description: InAppNotificationEnum.description,
+  members: InAppNotificationEnum.members,
+})
+
 const ThreadCommentNotificationType = objectType({
   name: ThreadCommentNotification.$name,
   description: ThreadCommentNotification.$description,
@@ -136,6 +144,12 @@ const NewPostNotificationType = objectType({
     t.field(NewPostNotification.id)
     t.field(NewPostNotification.post)
   },
+})
+
+const NotificationReadStatusType = enumType({
+  name: NotificationReadStatus.name,
+  description: NotificationReadStatus.description,
+  members: NotificationReadStatus.members,
 })
 
 const NotificationMutations = extendType({
@@ -217,6 +231,7 @@ const NotificationMutations = extendType({
 
 export default [
   InAppNotificationType,
+  InAppNotificationTypeEnumType,
   ThreadCommentNotificationType,
   PostCommentNotificationType,
   NewFollowerNotificationType,
@@ -224,4 +239,5 @@ export default [
   ThreadCommentThanksNotificationType,
   NewPostNotificationType,
   NotificationMutations,
+  NotificationReadStatusType,
 ]

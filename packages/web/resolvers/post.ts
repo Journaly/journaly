@@ -154,11 +154,12 @@ const PostType = objectType({
         return ctx.db.post
           .findUnique({
             where: { id: parent.id },
+          })
+          .postComments({
             orderBy: {
-              createdAt: true,
+              createdAt: 'desc',
             },
           })
-          .postComments()
       },
     })
     t.field(Post.language)

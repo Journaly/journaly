@@ -1,6 +1,6 @@
 import * as path from 'path'
 
-import { makeSchema, declarativeWrappingPlugin } from 'nexus'
+import { makeSchema } from 'nexus'
 
 import CommentTypes from './comment'
 import TopicTypes from './topic'
@@ -14,6 +14,8 @@ import ClapTypes from './clap'
 import ThanksTypes from './thanks'
 import SubscriptionTypes from './subscription'
 import NotificationTypes from './notification'
+import BadgeTypes from './badge'
+import { DateTime } from './utils/dateTime'
 
 const reflectionRun = !!parseInt(process.env.NEXUS_REFLECTION || '0')
 
@@ -48,6 +50,8 @@ const schemaOpts: Parameters<typeof makeSchema>[0] = {
     ...ThanksTypes,
     ...SubscriptionTypes,
     ...NotificationTypes,
+    ...BadgeTypes,
+    DateTime,
   ],
   shouldGenerateArtifacts: reflectionRun,
 }

@@ -37,11 +37,12 @@ const ThreadType = objectType({
         return ctx.db.thread
           .findUnique({
             where: { id: parent.id },
+          })
+          .comments({
             orderBy: {
-              createdAt: true,
+              createdAt: 'desc',
             },
           })
-          .comments()
       },
     })
   },

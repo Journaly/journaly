@@ -3,10 +3,13 @@ import {
   MembershipSubscriptionPeriod,
   PrismaClient,
 } from '@journaly/j-db-client'
-import { arg, booleanArg, extendType, nonNull, objectType, stringArg } from 'nexus'
+import { arg, booleanArg, enumType, extendType, nonNull, objectType, stringArg } from 'nexus'
 import stripe, { getOrCreateStripeCustomer, paymentErrorWrapper } from '@/nexus/utils/stripe'
 import { sendPremiumWelcomeEmail } from './utils'
-import { MembershipSubscription } from 'nexus-prisma'
+import {
+  MembershipSubscription,
+  MembershipSubscriptionPeriod as MembershipSubscriptionPeriodEnum,
+} from 'nexus-prisma'
 
 const MembershipSubscriptionType = objectType({
   name: MembershipSubscription.$name,
@@ -25,6 +28,12 @@ const MembershipSubscriptionType = objectType({
       },
     })
   },
+})
+
+const MembershipSubscriptionPeriodEnumType = enumType({
+  name: MembershipSubscriptionPeriodEnum.name,
+  description: MembershipSubscriptionPeriodEnum.description,
+  members: MembershipSubscriptionPeriodEnum.members,
 })
 
 const getSubscriptionPriceId = (subType: MembershipSubscriptionPeriod) => {
@@ -363,4 +372,8 @@ const MembershipSubscriptionMutations = extendType({
   },
 })
 
-export default [MembershipSubscriptionType, MembershipSubscriptionMutations]
+export default [
+  MembershipSubscriptionType,
+  MembershipSubscriptionPeriodEnumType,
+  MembershipSubscriptionMutations,
+]

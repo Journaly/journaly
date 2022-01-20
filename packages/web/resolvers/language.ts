@@ -1,24 +1,24 @@
 import { arg, booleanArg, intArg, objectType, extendType, nonNull } from 'nexus'
 import { PostStatus } from '@journaly/j-db-client'
-import { LanguageRelation, Language } from 'nexus-prisma'
+import { LanguageRelation as LanguageRelationType, Language as LanguageType } from 'nexus-prisma'
 
-const LanguageRelationType = objectType({
-  name: LanguageRelation.$name,
-  description: LanguageRelation.$description,
+const LanguageRelation = objectType({
+  name: LanguageRelationType.$name,
+  description: LanguageRelationType.$description,
   definition(t) {
-    t.field(LanguageRelation.id)
-    t.field(LanguageRelation.language)
-    t.field(LanguageRelation.level)
+    t.field(LanguageRelationType.id)
+    t.field(LanguageRelationType.language)
+    t.field(LanguageRelationType.level)
   },
 })
 
-const LanguageType = objectType({
-  name: Language.$name,
-  description: Language.$description,
+const Language = objectType({
+  name: LanguageType.$name,
+  description: LanguageType.$description,
   definition(t) {
-    t.field(Language.id)
-    t.field(Language.name)
-    t.field(Language.devName)
+    t.field(LanguageType.id)
+    t.field(LanguageType.name)
+    t.field(LanguageType.devName)
     t.nonNull.list.nonNull.field('posts', {
       type: 'Post',
       resolve: (parent, _, ctx) => {
@@ -29,7 +29,7 @@ const LanguageType = objectType({
           .posts()
       },
     })
-    t.field(Language.dialect)
+    t.field(LanguageType.dialect)
     t.int('postCount', {
       resolve(parent, _, ctx) {
         return ctx.db.post.count({
@@ -153,4 +153,4 @@ const LanguageMutations = extendType({
   },
 })
 
-export default [LanguageRelationType, LanguageType, LanguageQueries, LanguageMutations]
+export default [LanguageRelation, Language, LanguageQueries, LanguageMutations]

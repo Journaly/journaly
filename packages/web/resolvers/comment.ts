@@ -9,7 +9,11 @@ import {
   LanguageLevel,
   PrismaClient,
 } from '@journaly/j-db-client'
-import { Comment, PostComment, Thread } from 'nexus-prisma'
+import {
+  Comment as CommentType,
+  PostComment as PostCommentType,
+  Thread as ThreadType,
+} from 'nexus-prisma'
 
 import {
   hasAuthorPermissions,
@@ -21,16 +25,16 @@ import {
 } from './utils'
 import { NotFoundError } from './errors'
 
-const ThreadType = objectType({
-  name: Thread.$name,
-  description: Thread.$description,
+const Thread = objectType({
+  name: ThreadType.$name,
+  description: ThreadType.$description,
   definition(t) {
-    t.field(Thread.id)
-    t.field(Thread.archived)
-    t.field(Thread.startIndex)
-    t.field(Thread.endIndex)
-    t.field(Thread.highlightedContent)
-    t.field(Thread.postId)
+    t.field(ThreadType.id)
+    t.field(ThreadType.archived)
+    t.field(ThreadType.startIndex)
+    t.field(ThreadType.endIndex)
+    t.field(ThreadType.highlightedContent)
+    t.field(ThreadType.postId)
     t.nonNull.list.nonNull.field('comments', {
       type: 'Comment',
       resolve: (parent, _, ctx) => {
@@ -47,15 +51,15 @@ const ThreadType = objectType({
   },
 })
 
-const CommentType = objectType({
-  name: Comment.$name,
-  description: Comment.$description,
+const Comment = objectType({
+  name: CommentType.$name,
+  description: CommentType.$description,
   definition(t) {
-    t.field(Comment.id)
-    t.field(Comment.author)
-    t.field(Comment.body)
-    t.field(Comment.createdAt)
-    t.field(Comment.authorLanguageLevel)
+    t.field(CommentType.id)
+    t.field(CommentType.author)
+    t.field(CommentType.body)
+    t.field(CommentType.createdAt)
+    t.field(CommentType.authorLanguageLevel)
     t.nonNull.list.nonNull.field('thanks', {
       type: 'CommentThanks',
       resolve: (parent, _, ctx) => {
@@ -66,19 +70,19 @@ const CommentType = objectType({
           .thanks()
       },
     })
-    t.field(Comment.thread)
+    t.field(CommentType.thread)
   },
 })
 
-const PostCommentType = objectType({
-  name: PostComment.$name,
-  description: PostComment.$description,
+const PostComment = objectType({
+  name: PostCommentType.$name,
+  description: PostCommentType.$description,
   definition(t) {
-    t.field(PostComment.id)
-    t.field(PostComment.author)
-    t.field(PostComment.body)
-    t.field(PostComment.createdAt)
-    t.field(PostComment.authorLanguageLevel)
+    t.field(PostCommentType.id)
+    t.field(PostCommentType.author)
+    t.field(PostCommentType.body)
+    t.field(PostCommentType.createdAt)
+    t.field(PostCommentType.authorLanguageLevel)
   },
 })
 
@@ -609,4 +613,4 @@ const CommentMutations = extendType({
   },
 })
 
-export default [ThreadType, CommentType, PostCommentType, CommentMutations]
+export default [Thread, Comment, PostComment, CommentMutations]

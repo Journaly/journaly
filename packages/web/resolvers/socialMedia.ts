@@ -1,17 +1,17 @@
 import { stringArg, objectType, extendType } from 'nexus'
 import { NotAuthorizedError, UserInputError } from './errors'
 import { validateSocialMediaInput } from './utils/socialMedia'
-import { SocialMedia } from 'nexus-prisma'
+import { SocialMedia as SocialMediaType } from 'nexus-prisma'
 
-const SocialMediaType = objectType({
-  name: SocialMedia.$name,
-  description: SocialMedia.$description,
+const SocialMedia = objectType({
+  name: SocialMediaType.$name,
+  description: SocialMediaType.$description,
   definition(t) {
-    t.field(SocialMedia.id)
-    t.field(SocialMedia.facebook)
-    t.field(SocialMedia.youtube)
-    t.field(SocialMedia.instagram)
-    t.field(SocialMedia.website)
+    t.field(SocialMediaType.id)
+    t.field(SocialMediaType.facebook)
+    t.field(SocialMediaType.youtube)
+    t.field(SocialMediaType.instagram)
+    t.field(SocialMediaType.website)
   },
 })
 
@@ -70,4 +70,4 @@ const SocialMediaMutations = extendType({
   },
 })
 
-export default [SocialMediaType, SocialMediaMutations]
+export default [SocialMedia, SocialMediaMutations]

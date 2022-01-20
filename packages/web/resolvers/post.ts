@@ -25,7 +25,7 @@ import {
   EmailVerificationStatus,
   InAppNotificationType,
 } from '@journaly/j-db-client'
-import { Post, PostTopic, Thread } from 'nexus-prisma'
+import { Post as PostType, PostTopic as PostTopicType } from 'nexus-prisma'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
 
@@ -80,28 +80,28 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
   }
 }
 
-const PostTopicType = objectType({
-  name: PostTopic.$name,
-  description: PostTopic.$description,
+const PostTopic = objectType({
+  name: PostTopicType.$name,
+  description: PostTopicType.$description,
   definition(t) {
-    t.field(PostTopic.id)
-    t.field(PostTopic.post)
-    t.field(PostTopic.topic)
+    t.field(PostTopicType.id)
+    t.field(PostTopicType.post)
+    t.field(PostTopicType.topic)
   },
 })
 
-const PostType = objectType({
-  name: Post.$name,
-  description: Post.$description,
+const Post = objectType({
+  name: PostType.$name,
+  description: PostType.$description,
   definition(t) {
-    t.field(Post.id)
-    t.field(Post.title)
-    t.field(Post.body)
-    t.field(Post.excerpt)
-    t.field(Post.readTime)
-    t.field(Post.author)
-    t.field(Post.authorId)
-    t.field(Post.status)
+    t.field(PostType.id)
+    t.field(PostType.title)
+    t.field(PostType.body)
+    t.field(PostType.excerpt)
+    t.field(PostType.readTime)
+    t.field(PostType.author)
+    t.field(PostType.authorId)
+    t.field(PostType.status)
     t.nonNull.list.nonNull.field('claps', {
       type: 'PostClap',
       resolve: (parent, _, ctx) => {
@@ -145,16 +145,16 @@ const PostType = objectType({
           .postComments()
       },
     })
-    t.field(Post.language)
-    t.field(Post.publishedLanguageLevel)
-    t.field(Post.privateShareId)
-    t.field(Post.createdAt)
-    t.field(Post.updatedAt)
-    t.field(Post.bodySrc)
-    t.field(Post.headlineImage)
-    t.field(Post.publishedAt)
-    t.field(Post.bumpedAt)
-    t.field(Post.bumpCount)
+    t.field(PostType.language)
+    t.field(PostType.publishedLanguageLevel)
+    t.field(PostType.privateShareId)
+    t.field(PostType.createdAt)
+    t.field(PostType.updatedAt)
+    t.field(PostType.bodySrc)
+    t.field(PostType.headlineImage)
+    t.field(PostType.publishedAt)
+    t.field(PostType.bumpedAt)
+    t.field(PostType.bumpCount)
     t.int('commentCount', {
       resolve: async (parent, _args, ctx, _info) => {
         const [threadCommentCount, postCommentCount] = await Promise.all([
@@ -456,9 +456,9 @@ const PostMutations = extendType({
       type: 'Post',
       args: {
         title: nonNull(stringArg()),
-        body: nonNull(EditorNode.asArg({ list: true })),
+        body: nonNull(list(EditorNode.asArg())),
         languageId: nonNull(intArg()),
-        topicIds: intArg({ list: true }),
+        topicIds: list(intArg()),
         status: nonNull(arg({ type: 'PostStatus' })),
         headlineImage: nonNull(HeadlineImageInput.asArg()),
       },
@@ -563,8 +563,8 @@ const PostMutations = extendType({
         postId: nonNull(intArg()),
         title: stringArg(),
         languageId: intArg(),
-        topicIds: intArg({ list: true }),
-        body: EditorNode.asArg({ list: true }),
+        topicIds: list(intArg()),
+        body: list(EditorNode.asArg()),
         status: arg({ type: 'PostStatus' }),
         headlineImage: nonNull(HeadlineImageInput.asArg()),
       },
@@ -953,7 +953,7 @@ const PostMutations = extendType({
 
 export default [
   PostTopic,
-  PostType,
+  Post,
   PostPage,
   InitiatePostImageUploadResponse,
   InitiateInlinePostImageUploadResponse,

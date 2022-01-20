@@ -1,15 +1,15 @@
 import { extendType, intArg, objectType, nonNull } from 'nexus'
 import { EmailNotificationType, InAppNotificationType } from '@journaly/j-db-client'
 import { createInAppNotification, createEmailNotification, hasAuthorPermissions } from './utils'
-import { PostClap } from 'nexus-prisma'
+import { PostClap as PostClapType } from 'nexus-prisma'
 
-const PostClapType = objectType({
-  name: PostClap.$name,
-  description: PostClap.$description,
+const PostClap = objectType({
+  name: PostClapType.$name,
+  description: PostClapType.$description,
   definition(t) {
-    t.field(PostClap.id)
-    t.field(PostClap.author)
-    t.field(PostClap.post)
+    t.field(PostClapType.id)
+    t.field(PostClapType.author)
+    t.field(PostClapType.post)
   },
 })
 
@@ -116,4 +116,4 @@ const PostClapMutations = extendType({
   },
 })
 
-export default [PostClapType, PostClapMutations]
+export default [PostClap, PostClapMutations]

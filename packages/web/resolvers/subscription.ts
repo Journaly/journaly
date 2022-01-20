@@ -6,18 +6,18 @@ import {
 import { arg, booleanArg, extendType, nonNull, objectType, stringArg } from 'nexus'
 import stripe, { getOrCreateStripeCustomer, paymentErrorWrapper } from '@/nexus/utils/stripe'
 import { sendPremiumWelcomeEmail } from './utils'
-import { MembershipSubscription } from 'nexus-prisma'
+import { MembershipSubscription as MembershipSubscriptionType } from 'nexus-prisma'
 
-const MembershipSubscriptionType = objectType({
-  name: MembershipSubscription.$name,
-  description: MembershipSubscription.$description,
+const MembershipSubscription = objectType({
+  name: MembershipSubscriptionType.$name,
+  description: MembershipSubscriptionType.$description,
   definition(t) {
-    t.field(MembershipSubscription.id)
-    t.field(MembershipSubscription.period)
-    t.field(MembershipSubscription.userId)
-    t.field(MembershipSubscription.expiresAt)
-    t.field(MembershipSubscription.nextBillingDate)
-    t.field(MembershipSubscription.cancelAtPeriodEnd)
+    t.field(MembershipSubscriptionType.id)
+    t.field(MembershipSubscriptionType.period)
+    t.field(MembershipSubscriptionType.userId)
+    t.field(MembershipSubscriptionType.expiresAt)
+    t.field(MembershipSubscriptionType.nextBillingDate)
+    t.field(MembershipSubscriptionType.cancelAtPeriodEnd)
     t.boolean('isActive', {
       resolve: async (parent, _args, _ctx, _info) => {
         if (parent.expiresAt && parent.expiresAt < new Date(Date.now())) return false
@@ -363,4 +363,4 @@ const MembershipSubscriptionMutations = extendType({
   },
 })
 
-export default [MembershipSubscriptionType, MembershipSubscriptionMutations]
+export default [MembershipSubscription, MembershipSubscriptionMutations]

@@ -1,32 +1,35 @@
 import { PostStatus } from '@journaly/j-db-client'
-import { arg, booleanArg, objectType, extendType, intArg, nonNull } from 'nexus'
-import { Topic, TopicTranslation, UserInterest } from 'nexus-prisma'
+import { arg, booleanArg, objectType, extendType, intArg, nonNull, list } from 'nexus'
+import {
+  Topic as TopicType,
+  TopicTranslation as TopicTranslationType,
+  UserInterest as UserInterestType,
+} from 'nexus-prisma'
 
-const TopicTranslationType = objectType({
-  name: TopicTranslation.$name,
+const TopicTranslation = objectType({
+  name: TopicTranslationType.$name,
   definition(t) {
-    t.field(TopicTranslation.id)
-    t.field(TopicTranslation.name)
-    t.field(TopicTranslation.uiLanguage)
+    t.field(TopicTranslationType.id)
+    t.field(TopicTranslationType.name)
+    t.field(TopicTranslationType.uiLanguage)
   },
 })
 
-const UserInterestType = objectType({
-  name: UserInterest.$name,
-  description: UserInterest.$description,
+const UserInterest = objectType({
+  name: UserInterestType.$name,
+  description: UserInterestType.$description,
   definition(t) {
-    t.field(UserInterest.id)
-    t.field(UserInterest.user)
-    t.field(UserInterest.topic)
+    t.field(UserInterestType.id)
+    t.field(UserInterestType.user)
+    t.field(UserInterestType.topic)
   },
 })
 
-const TopicType = objectType({
-  name: Topic.$name,
-  description: Topic.$description,
-  sourceType: 'prisma.Topic',
+const Topic = objectType({
+  name: TopicType.$name,
+  description: TopicType.$description,
   definition(t) {
-    t.field(Topic.id)
+    t.field(TopicType.id)
     t.string('name', {
       args: {
         uiLanguage: nonNull(arg({ type: 'UILanguage' })),
@@ -46,10 +49,11 @@ const TopicType = objectType({
     })
     t.int('postCount', {
       args: {
-        languages: intArg({
-          description: 'Language IDs to filter topics. No value means all languages.',
-          list: true,
-        }),
+        languages: list(
+          intArg({
+            description: 'Language IDs to filter topics. No value means all languages.',
+          }),
+        ),
       },
       resolve(parent, args, ctx) {
         let filter = {}
@@ -185,4 +189,4 @@ const TopicMutations = extendType({
   },
 })
 
-export default [TopicTranslationType, UserInterestType, TopicType, TopicQueries, TopicMutations]
+export default [TopicTranslation, UserInterest, Topic, TopicQueries, TopicMutations]

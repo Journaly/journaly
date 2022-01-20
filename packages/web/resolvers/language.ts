@@ -1,4 +1,4 @@
-import { arg, booleanArg, intArg, objectType, extendType } from 'nexus'
+import { arg, booleanArg, intArg, objectType, extendType, nonNull } from 'nexus'
 import { PostStatus } from '@journaly/j-db-client'
 import { LanguageRelation, Language } from 'nexus-prisma'
 
@@ -44,11 +44,9 @@ const LanguageQueries = extendType({
       args: {
         hasPosts: booleanArg({
           description: 'If true, only return languages that have at least one post',
-          required: false,
         }),
         authoredOnly: booleanArg({
           description: 'If true, return only languages with posts authored by currentUser.',
-          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -92,8 +90,8 @@ const LanguageMutations = extendType({
     t.field('addLanguageRelation', {
       type: 'LanguageRelation',
       args: {
-        languageId: intArg({ required: true }),
-        level: arg({ type: 'LanguageLevel', required: true }),
+        languageId: nonNull(intArg()),
+        level: nonNull(arg({ type: 'LanguageLevel' })),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -122,7 +120,7 @@ const LanguageMutations = extendType({
     t.field('removeLanguageRelation', {
       type: 'LanguageRelation',
       args: {
-        languageId: intArg({ required: true }),
+        languageId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request

@@ -1,4 +1,4 @@
-import { extendType, intArg, objectType } from 'nexus'
+import { extendType, intArg, objectType, nonNull } from 'nexus'
 import { EmailNotificationType, InAppNotificationType } from '@journaly/j-db-client'
 import { createInAppNotification, createEmailNotification, hasAuthorPermissions } from './utils'
 import { PostClap } from 'nexus-prisma'
@@ -19,7 +19,7 @@ const PostClapMutations = extendType({
     t.field('createPostClap', {
       type: 'PostClap',
       args: {
-        postId: intArg({ required: true }),
+        postId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -77,7 +77,7 @@ const PostClapMutations = extendType({
       t.field('deletePostClap', {
         type: 'PostClap',
         args: {
-          postClapId: intArg({ required: true }),
+          postClapId: nonNull(intArg()),
         },
         resolve: async (_parent, args, ctx) => {
           const { userId } = ctx.request

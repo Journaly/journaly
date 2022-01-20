@@ -3,17 +3,8 @@ import {
   MembershipSubscriptionPeriod,
   PrismaClient,
 } from '@journaly/j-db-client'
-import {
-  arg,
-  booleanArg,
-  extendType,
-  objectType,
-  stringArg,
-} from 'nexus'
-import stripe, {
-  getOrCreateStripeCustomer,
-  paymentErrorWrapper
-} from '@/nexus/utils/stripe'
+import { arg, booleanArg, extendType, nonNull, objectType, stringArg } from 'nexus'
+import stripe, { getOrCreateStripeCustomer, paymentErrorWrapper } from '@/nexus/utils/stripe'
 import { sendPremiumWelcomeEmail } from './utils'
 import { MembershipSubscription } from 'nexus-prisma'
 
@@ -134,8 +125,8 @@ const MembershipSubscriptionMutations = extendType({
     t.field('purchaseMembershipSubscription', {
       type: 'MembershipSubscription',
       args: {
-        period: arg({ type: 'MembershipSubscriptionPeriod', required: true }),
-        paymentMethodId: stringArg({ required: true }),
+        period: nonNull(arg({ type: 'MembershipSubscriptionPeriod' })),
+        paymentMethodId: nonNull(stringArg()),
       },
       resolve: (_parent, args, ctx) =>
         paymentErrorWrapper(async () => {
@@ -255,7 +246,7 @@ const MembershipSubscriptionMutations = extendType({
     t.field('updateSubscriptionRenewal', {
       type: 'MembershipSubscription',
       args: {
-        cancelAtPeriodEnd: booleanArg({ required: true }),
+        cancelAtPeriodEnd: nonNull(booleanArg()),
       },
       resolve: async (_parent, args, ctx) =>
         paymentErrorWrapper(async () => {
@@ -303,7 +294,7 @@ const MembershipSubscriptionMutations = extendType({
     t.field('updateSubscriptionPlan', {
       type: 'MembershipSubscription',
       args: {
-        period: arg({ type: 'MembershipSubscriptionPeriod', required: true }),
+        period: nonNull(arg({ type: 'MembershipSubscriptionPeriod' })),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -338,7 +329,7 @@ const MembershipSubscriptionMutations = extendType({
     t.field('updateSubscriptionPaymentMethod', {
       type: 'MembershipSubscription',
       args: {
-        paymentMethodId: stringArg({ required: true }),
+        paymentMethodId: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) =>
         paymentErrorWrapper(async () => {

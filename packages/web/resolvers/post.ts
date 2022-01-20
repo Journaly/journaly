@@ -1,11 +1,4 @@
-import {
-  arg,
-  intArg,
-  stringArg,
-  booleanArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { arg, intArg, stringArg, booleanArg, objectType, extendType, nonNull } from 'nexus'
 
 import {
   processEditorDocument,
@@ -19,7 +12,6 @@ import {
   generatePostPrivateShareId,
   createInAppNotification,
 } from './utils'
-
 
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
@@ -194,11 +186,9 @@ const PostQueries = extendType({
       args: {
         id: intArg({
           description: 'ID of the post to be retreived',
-          required: false,
         }),
         privateShareId: stringArg({
           description: 'Private share ID of the post to be retrived',
-          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -247,55 +237,49 @@ const PostQueries = extendType({
       args: {
         search: stringArg({
           description: 'Search phrase to filter posts by.',
-          required: false,
         }),
         languages: intArg({
           description: 'Language IDs to filter posts by. No value means all languages.',
-          required: false,
           list: true,
         }),
         topics: intArg({
           description: 'topics IDs to filter posts by. No value means all topics.',
-          required: false,
           list: true,
         }),
-        skip: intArg({
-          description: 'Offset into the feed post list to return',
-          required: true,
-        }),
-        first: intArg({
-          description: 'Number of posts to return',
-          required: true,
-        }),
+        skip: nonNull(
+          intArg({
+            description: 'Offset into the feed post list to return',
+          }),
+        ),
+        first: nonNull(
+          intArg({
+            description: 'Number of posts to return',
+          }),
+        ),
         followedAuthors: booleanArg({
           description: 'Author IDs to filter posts by. No value means all authors.',
-          required: false,
         }),
         needsFeedback: booleanArg({
           description: 'If true, return only posts with 0 comments.',
-          required: false,
         }),
         hasInteracted: booleanArg({
           description: 'If true, return only posts that the user has commented on in any way.',
-          required: false,
         }),
-        status: arg({
-          type: 'PostStatus',
-          description:
-            'The post status, indicating Published or Draft. Param is ignored unless the current user is specified in `authorId`',
-          required: true,
-        }),
+        status: nonNull(
+          arg({
+            type: 'PostStatus',
+            description:
+              'The post status, indicating Published or Draft. Param is ignored unless the current user is specified in `authorId`',
+          }),
+        ),
         authorId: intArg({
           description: 'Return posts by a given author.',
-          required: false,
         }),
         authorHandle: stringArg({
           description: 'Return posts by a given author.',
-          required: false,
         }),
         savedPosts: booleanArg({
           description: 'If true, return only posts that the user has saved.',
-          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -437,12 +421,12 @@ const PostMutations = extendType({
     t.field('createPost', {
       type: 'Post',
       args: {
-        title: stringArg({ required: true }),
-        body: EditorNode.asArg({ list: true, required: true }),
-        languageId: intArg({ required: true }),
-        topicIds: intArg({ list: true, required: false }),
-        status: arg({ type: 'PostStatus', required: true }),
-        headlineImage: HeadlineImageInput.asArg({ required: true }),
+        title: nonNull(stringArg()),
+        body: nonNull(EditorNode.asArg({ list: true })),
+        languageId: nonNull(intArg()),
+        topicIds: intArg({ list: true }),
+        status: nonNull(arg({ type: 'PostStatus' })),
+        headlineImage: nonNull(HeadlineImageInput.asArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { title, body, languageId, status, headlineImage } = args
@@ -542,13 +526,13 @@ const PostMutations = extendType({
     t.field('updatePost', {
       type: 'Post',
       args: {
-        postId: intArg({ required: true }),
-        title: stringArg({ required: false }),
-        languageId: intArg({ required: false }),
-        topicIds: intArg({ list: true, required: false }),
-        body: EditorNode.asArg({ list: true, required: false }),
-        status: arg({ type: 'PostStatus', required: false }),
-        headlineImage: HeadlineImageInput.asArg({ required: true }),
+        postId: nonNull(intArg()),
+        title: stringArg(),
+        languageId: intArg(),
+        topicIds: intArg({ list: true }),
+        body: EditorNode.asArg({ list: true }),
+        status: arg({ type: 'PostStatus' }),
+        headlineImage: nonNull(HeadlineImageInput.asArg()),
       },
       resolve: async (_parent, args, ctx) => {
         // Check user can actually do this
@@ -698,7 +682,7 @@ const PostMutations = extendType({
     t.field('deletePost', {
       type: 'Post',
       args: {
-        postId: intArg({ required: true }),
+        postId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { postId } = args
@@ -878,7 +862,7 @@ const PostMutations = extendType({
     t.field('bumpPost', {
       type: 'Post',
       args: {
-        postId: intArg({ required: true }),
+        postId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request

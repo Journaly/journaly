@@ -1,5 +1,5 @@
 import { PostStatus } from '@journaly/j-db-client'
-import { arg, booleanArg, objectType, extendType, intArg } from 'nexus'
+import { arg, booleanArg, objectType, extendType, intArg, nonNull } from 'nexus'
 import { Topic, TopicTranslation, UserInterest } from 'nexus-prisma'
 
 const TopicTranslationType = objectType({
@@ -28,9 +28,8 @@ const TopicType = objectType({
   definition(t) {
     t.field(Topic.id)
     t.string('name', {
-      nullable: true,
       args: {
-        uiLanguage: arg({ type: 'UILanguage', required: true }),
+        uiLanguage: nonNull(arg({ type: 'UILanguage' })),
       },
       async resolve(parent, args, ctx, _info) {
         const translation = await ctx.db.topicTranslation.findUnique({
@@ -49,7 +48,6 @@ const TopicType = objectType({
       args: {
         languages: intArg({
           description: 'Language IDs to filter topics. No value means all languages.',
-          required: false,
           list: true,
         }),
       },
@@ -82,11 +80,9 @@ const TopicQueries = extendType({
       args: {
         hasPosts: booleanArg({
           description: 'If true, only return topics that have at least one post',
-          required: false,
         }),
         authoredOnly: booleanArg({
           description: 'If true, return only topics with posts authored by currentUser.',
-          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -137,7 +133,7 @@ const TopicMutations = extendType({
     t.field('addUserInterest', {
       type: 'UserInterest',
       args: {
-        topicId: intArg({ required: true }),
+        topicId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -165,7 +161,7 @@ const TopicMutations = extendType({
     t.field('removeUserInterest', {
       type: 'UserInterest',
       args: {
-        topicId: intArg({ required: true }),
+        topicId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request

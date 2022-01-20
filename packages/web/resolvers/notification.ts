@@ -1,4 +1,4 @@
-import { arg, extendType, intArg, objectType } from 'nexus'
+import { arg, extendType, intArg, nonNull, objectType } from 'nexus'
 import {
   InAppNotification,
   ThreadCommentNotification,
@@ -90,11 +90,10 @@ const NotificationMutations = extendType({
     t.field('updateInAppNotification', {
       type: 'InAppNotification',
       args: {
-        notificationId: intArg({ required: true }),
+        notificationId: nonNull(intArg()),
         readStatus: arg({
           type: 'NotificationReadStatus',
           description: 'Has the notification been read or not',
-          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -130,9 +129,9 @@ const NotificationMutations = extendType({
     })
 
     t.field('deleteInAppNotification', {
-      type: InAppNotification,
+      type: 'InAppNotification',
       args: {
-        notificationId: intArg({ required: true }),
+        notificationId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request

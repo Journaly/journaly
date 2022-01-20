@@ -1,9 +1,4 @@
-import {
-  intArg,
-  stringArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { intArg, stringArg, objectType, extendType, nonNull } from 'nexus'
 import { add, isPast } from 'date-fns'
 
 import {
@@ -36,7 +31,8 @@ const ThreadType = objectType({
     t.field(Thread.endIndex)
     t.field(Thread.highlightedContent)
     t.field(Thread.postId)
-    t.field(Thread.comments, {
+    t.list.field({
+      ...Thread.comments,
       pagination: false,
       ordering: {
         createdAt: true,
@@ -162,11 +158,11 @@ const CommentMutations = extendType({
     t.field('createThread', {
       type: 'Thread',
       args: {
-        postId: intArg({ required: true }),
-        startIndex: intArg({ required: true }),
-        endIndex: intArg({ required: true }),
-        highlightedContent: stringArg({ required: true }),
-        body: stringArg({ required: true }),
+        postId: nonNull(intArg()),
+        startIndex: nonNull(intArg()),
+        endIndex: nonNull(intArg()),
+        highlightedContent: nonNull(stringArg()),
+        body: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -244,7 +240,7 @@ const CommentMutations = extendType({
     t.field('deleteThread', {
       type: 'Thread',
       args: {
-        threadId: intArg({ required: true }),
+        threadId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const thread = await ctx.db.thread.findUnique({
@@ -278,8 +274,8 @@ const CommentMutations = extendType({
     t.field('createComment', {
       type: 'Comment',
       args: {
-        threadId: intArg({ required: true }),
-        body: stringArg({ required: true }),
+        threadId: nonNull(intArg()),
+        body: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -329,8 +325,8 @@ const CommentMutations = extendType({
     t.field('updateComment', {
       type: 'Comment',
       args: {
-        commentId: intArg({ required: true }),
-        body: stringArg({ required: true }),
+        commentId: nonNull(intArg()),
+        body: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -369,7 +365,7 @@ const CommentMutations = extendType({
     t.field('deleteComment', {
       type: 'Comment',
       args: {
-        commentId: intArg({ required: true }),
+        commentId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -419,8 +415,8 @@ const CommentMutations = extendType({
     t.field('createPostComment', {
       type: 'PostComment',
       args: {
-        postId: intArg({ required: true }),
-        body: stringArg({ required: true }),
+        postId: nonNull(intArg()),
+        body: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -522,8 +518,8 @@ const CommentMutations = extendType({
     t.field('updatePostComment', {
       type: 'PostComment',
       args: {
-        postCommentId: intArg({ required: true }),
-        body: stringArg({ required: true }),
+        postCommentId: nonNull(intArg()),
+        body: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -562,7 +558,7 @@ const CommentMutations = extendType({
     t.field('deletePostComment', {
       type: 'PostComment',
       args: {
-        postCommentId: intArg({ required: true }),
+        postCommentId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request

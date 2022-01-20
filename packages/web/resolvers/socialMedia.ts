@@ -21,10 +21,10 @@ const SocialMediaMutations = extendType({
     t.field('updateSocialMedia', {
       type: 'SocialMedia',
       args: {
-        facebook: stringArg({ required: false }),
-        instagram: stringArg({ required: false }),
-        youtube: stringArg({ required: false }),
-        website: stringArg({ required: false }),
+        facebook: stringArg(),
+        instagram: stringArg(),
+        youtube: stringArg(),
+        website: stringArg(),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request

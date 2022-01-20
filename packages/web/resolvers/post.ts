@@ -25,7 +25,7 @@ import {
   EmailVerificationStatus,
   InAppNotificationType,
 } from '@journaly/j-db-client'
-import { Post, PostTopic } from 'nexus-prisma'
+import { Post, PostTopic, Thread } from 'nexus-prisma'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
 
@@ -103,7 +103,16 @@ const PostType = objectType({
     t.field(Post.authorId)
     t.field(Post.status)
     t.field(Post.claps({ pagination: false }))
-    t.field(Post.threads({ pagination: false }))
+    t.nonNull.list.nonNull.field('threads', {
+      type: 'Thread',
+      resolve: (parent, _, context) => {
+        return context.db.post
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .threads()
+      },
+    })
     t.field(Post.postTopics({ type: 'PostTopic', pagination: false }))
     t.field(
       Post.postComments({

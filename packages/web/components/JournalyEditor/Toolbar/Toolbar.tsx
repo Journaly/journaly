@@ -49,7 +49,6 @@ const Toolbar = ({
 
   const editor = useSlate()
   const isEditorFocused = useFocused()
-  const stickyToolbarOffset = 20
   const isTableActivated = isEditorFocused && isTableActive(editor)
   const tableIcon = (
     <ToolbarButton type="table" format="insert-table">
@@ -59,10 +58,9 @@ const Toolbar = ({
 
   const windowSize = useGetWindowSize()
 
-  let toolbarStickyOffset =
-    windowSize.width && windowSize.width < navConstants.mobileBreakpoint
-      ? -stickyToolbarOffset - 72
-      : -stickyToolbarOffset
+  // This is to accounnt for the nav which appears at the top on mobile and has a height of 72px
+  const toolbarStickyOffset =
+    windowSize.width && windowSize.width < navConstants.mobileBreakpoint ? -92 : -20
 
   const [toolbarObserverRef, toolbarShouldFloat] = useIntersectionObserver({
     rootMargin: `${toolbarStickyOffset}px 0px 0px 0px`,
@@ -162,7 +160,7 @@ const Toolbar = ({
         <style jsx>{`
           .editor-toolbar-container {
             position: sticky;
-            top: ${stickyToolbarOffset}px;
+            top: 20px;
             z-index: 1;
             background-color: ${theme.colors.white};
           }

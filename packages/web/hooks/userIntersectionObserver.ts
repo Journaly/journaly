@@ -25,7 +25,7 @@ const useIntersectionObserver = ({
   rootMargin = '0px',
   threshold = 0,
 }: IntersectionObserverOptions) => {
-  const [observedElementRef, setObservedElementRef] = useState(null)
+  const [observedElementRef, setObservedElementRef] = useState<HTMLElement | null>(null)
   const [isIntersecting, setIsIntersecting] = useState(false)
 
   useEffect(() => {

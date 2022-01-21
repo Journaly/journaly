@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
 /**
  * A simple hook to get dimensions of window.
@@ -12,25 +12,16 @@ import { useState, useEffect } from 'react'
  * }
  */
 
-type WindowSize = {
-  width: number | null
-  height: number | null
-}
-
 const useWindowSize = () => {
   // Make sure we're client-side / not server-side
   const isClient = typeof window === 'object'
 
-  const [windowSize, setWindowSize] = useState<WindowSize>({
-    width: isClient ? window.innerWidth : null,
-    height: isClient ? window.innerHeight : null,
-  })
+  const [windowWidth, setWindowWidth] = useState(isClient ? window.innerWidth : null)
+  const [windowHeight, setWindowHeight] = useState(isClient ? window.innerHeight : null)
 
   const handleResize = () => {
-    setWindowSize({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    })
+    setWindowWidth(window.innerWidth)
+    setWindowHeight(window.innerHeight)
   }
 
   useEffect(() => {
@@ -39,7 +30,13 @@ const useWindowSize = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  return windowSize
+  return useMemo(
+    () => ({
+      width: windowWidth,
+      height: windowHeight,
+    }),
+    [windowWidth, windowHeight],
+  )
 }
 
 export default useWindowSize

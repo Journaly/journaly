@@ -218,25 +218,18 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               title={t('helpModal.header')}
               body={
                 <>
-                  <p
-                    style={{
-                      marginTop: '25px',
-                    }}
-                  >
-                    {t('helpModal.bodyOne')}
-                  </p>
-                  <p>
+                  <p className="help-modal-copy">{t('helpModal.bodyOne')}</p>
+                  <p className="help-modal-copy">
                     {t('helpModal.bodyTwo')}
-                    <a
-                      href="mailto:hello@journaly.com"
-                      style={{
-                        color: theme.colors.blueLight,
-                      }}
-                    >
+                    <a href="mailto:hello@journaly.com" className="j-link">
                       hello@journaly.com
                     </a>
                     {t('helpModal.bodyThree')}
                   </p>
+                  <p className="help-modal-copy">{t('helpModal.bodyFour')}</p>
+                  <Link href="/terms-of-service">
+                    <a className="j-link">{t('helpModal.termsOfService')}</a>
+                  </Link>
                 </>
               }
               footer={
@@ -557,6 +550,10 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             margin-left: 15px;
             font-size: 16px;
           }
+        }
+
+        .help-modal-copy {
+          margin: 16px 0;
         }
       `}</style>
     </>

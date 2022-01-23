@@ -50,7 +50,7 @@ const useIntersectionObserver = ({
     } catch (e) {}
   }, [observedElementRef, root, rootMargin, threshold])
 
-  return [setObservedElementRef, isIntersecting]
+  return [setObservedElementRef, isIntersecting] as const
 }
 
 export default useIntersectionObserver

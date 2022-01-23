@@ -122,3 +122,6 @@ api.graphql
 snapshot.sql
 
 packages/web/translation-site
+
+# Nexus Generated Files
+**/generated/nexus.ts

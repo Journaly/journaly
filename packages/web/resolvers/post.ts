@@ -95,9 +95,9 @@ const PostTopicType = objectType({
   name: PostTopic.$name,
   description: PostTopic.$description,
   definition(t) {
-    t.field(PostTopic.id)
-    t.field(PostTopic.post)
-    t.field(PostTopic.topic)
+    t.nonNull.field(PostTopic.id)
+    t.nonNull.field(PostTopic.post)
+    t.nonNull.field(PostTopic.topic)
   },
 })
 
@@ -113,7 +113,7 @@ const PostType = objectType({
   definition(t) {
     t.field(Post.id)
     t.field(Post.title)
-    t.field(Post.body)
+    t.nonNull.field(Post.body)
     t.field(Post.excerpt)
     t.field(Post.readTime)
     t.field(Post.author)
@@ -544,7 +544,7 @@ const PostMutations = extendType({
         })
 
         if (args.topicIds) {
-          const insertPromises = args.topicIds.map((topicId: number) => {
+          const insertPromises = args.topicIds.map((topicId) => {
             return ctx.db.postTopic.create({
               data: {
                 post: { connect: { id: post.id } },
@@ -695,7 +695,7 @@ const PostMutations = extendType({
             where: { postId: args.postId },
           })
 
-          const insertPromises = args.topicIds.map((topicId: number) => {
+          const insertPromises = args.topicIds.map((topicId) => {
             return ctx.db.postTopic.create({
               data: {
                 post: { connect: { id: args.postId } },

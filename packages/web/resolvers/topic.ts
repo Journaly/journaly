@@ -5,7 +5,7 @@ import { Topic, TopicTranslation, UserInterest } from 'nexus-prisma'
 const TopicTranslationType = objectType({
   name: TopicTranslation.$name,
   definition(t) {
-    t.field(TopicTranslation.id)
+    t.nonNull.field(TopicTranslation.id)
     t.field(TopicTranslation.name)
     t.field(TopicTranslation.uiLanguage)
   },
@@ -15,7 +15,7 @@ const UserInterestType = objectType({
   name: UserInterest.$name,
   description: UserInterest.$description,
   definition(t) {
-    t.field(UserInterest.id)
+    t.nonNull.field(UserInterest.id)
     t.field(UserInterest.user)
     t.field(UserInterest.topic)
   },
@@ -26,6 +26,7 @@ const TopicType = objectType({
   description: Topic.$description,
   definition(t) {
     t.field(Topic.id)
+    t.nonNull.field(Topic.devName)
     t.string('name', {
       args: {
         uiLanguage: nonNull(arg({ type: 'UILanguage' })),

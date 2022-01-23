@@ -1,6 +1,6 @@
 import * as path from 'path'
 
-import { makeSchema } from 'nexus'
+import { fieldAuthorizePlugin, makeSchema } from 'nexus'
 
 import CommentTypes from './comment'
 import TopicTypes from './topic'
@@ -53,6 +53,7 @@ const schemaOpts: Parameters<typeof makeSchema>[0] = {
     ...BadgeTypes,
     DateTime,
   ],
+  plugins: [fieldAuthorizePlugin()],
   shouldGenerateArtifacts: reflectionRun,
 }
 

@@ -30,20 +30,28 @@ const UserType = objectType({
   name: User.$name,
   description: User.$description,
   definition(t) {
-    t.field(User.id)
+    t.nonNull.field(User.id)
     t.field(User.name)
-    t.string('email', {
-      resolve(parent, _args, ctx) {
-        const { userId } = ctx.request
+    t.field(User.email)
+    // t.field('email', {
+    //   type: 'String',
+    //   authorize: (parent, _, ctx) => ctx.request.userId === parent.id,
+    //   resolve: (parent, _, ctx) => {
+    //     return parent.email
+    //   },
+    // })
+    // t.string('email', {
+    //   resolve(parent, _args, ctx) {
+    //     const { userId } = ctx.request
 
-        if (userId && userId === parent.id) {
-          return parent.email
-        }
+    //     if (userId && userId === parent.id) {
+    //       return parent.email
+    //     }
 
-        return null
-      },
-    })
-    t.field(User.handle)
+    //     return null
+    //   },
+    // })
+    t.nonNull.field(User.handle)
     t.field(User.bio)
     t.field(User.userRole)
     t.field(User.city)

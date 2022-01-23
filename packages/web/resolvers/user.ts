@@ -1,4 +1,4 @@
-import { intArg, stringArg, objectType, extendType, nonNull, enumType } from 'nexus'
+import { intArg, stringArg, objectType, extendType, nonNull, enumType, nullable } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
@@ -230,7 +230,7 @@ const UserQueries = extendType({
       },
     })
 
-    t.field('currentUser', {
+    t.nullable.field('currentUser', {
       type: 'User',
       resolve: async (_parent, _args, ctx) => {
         const userId = ctx.request.userId
@@ -246,11 +246,11 @@ const UserQueries = extendType({
       },
     })
 
-    t.field('userByIdentifier', {
+    t.nullable.field('userByIdentifier', {
       type: 'User',
       args: {
-        id: intArg(),
-        handle: stringArg(),
+        id: nullable(intArg()),
+        handle: nullable(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         if (!args.id && !args.handle) throw new Error('You must provide an ID or handle')

@@ -34,6 +34,7 @@ import {
   EmailVerificationStatus,
   InAppNotificationType,
   PostStatus as PostStatusEnum,
+  Post as PostDBType,
 } from '@journaly/j-db-client'
 import { Post, PostTopic, PostStatus } from 'nexus-prisma'
 import { EditorNodeType, HeadlineImageInput } from './inputTypes'
@@ -451,7 +452,7 @@ const PostQueries = extendType({
         `
 
         const [posts, [{ count }]] = await Promise.all([
-          ctx.db.$queryRaw<Post[]>`
+          ctx.db.$queryRaw<PostDBType[]>`
             SELECT p.* ${queryPred}
             ORDER BY p."bumpedAt" DESC
             LIMIT ${args.first}

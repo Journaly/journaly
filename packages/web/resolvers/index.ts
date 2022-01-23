@@ -59,7 +59,7 @@ const schemaOpts: Parameters<typeof makeSchema>[0] = {
 if (reflectionRun) {
   schemaOpts.shouldExitAfterGenerateArtifacts = true
   schemaOpts.outputs = {
-    typegen: path.join(__dirname, '../node_modules/@types/typegen-nexus/index.d.ts'),
+    typegen: path.join(__dirname, './generated/nexus.ts'),
     schema: path.join(__dirname, './api.graphql'),
   }
 }

@@ -152,7 +152,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
     <div className="comment">
       <div className="author-body-container">
         <div className="author-block">
-          <Link href={`/user/${comment.author.id}`}>
+          <Link href={`/user/${comment.author.handle}`}>
             <a className="author-info">
               <UserAvatar user={comment.author} size={30} />
             </a>

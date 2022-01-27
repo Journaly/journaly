@@ -15,7 +15,7 @@ const LandingPageLayout: React.FC = ({ children }) => {
 
   if (currentUser && typeof window !== 'undefined') {
     router.push({
-      pathname: '/dashboard/my-feed',
+      pathname: '/my-feed',
     })
 
     return null

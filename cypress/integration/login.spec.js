@@ -1,6 +1,6 @@
 describe('User logs in', () => {
   beforeEach(() => {
-    cy.visit('/dashboard/login')
+    cy.visit('/login')
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
   })
 

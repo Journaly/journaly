@@ -46,6 +46,8 @@
     "bodyOne": "Need help? We've got your back!",
     "bodyTwo": "Please send an email to ",
     "bodyThree": " with a detailed description of your issue and we will get back to you as soon as we can!",
+    "bodyFour": "Have you seen concerning behavior on the platform? Please refer to our Terms of Service and always feel free to report anything you feel may be misaligned with our guidelines:",
+    "termsOfService": "Terms of Service",
     "footer": "Thanks for helping us make Journaly a better place for everyone"
   },
   "badge": {

@@ -42,7 +42,7 @@ const AuthGate: React.FC<Props> = ({ children }) => {
 
   if (!currentUser && typeof window !== 'undefined') {
     router.push({
-      pathname: '/dashboard/login',
+      pathname: '/login',
     })
 
     return null

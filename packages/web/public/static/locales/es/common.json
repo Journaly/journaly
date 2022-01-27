@@ -71,6 +71,8 @@
     "bodyOne": "¿Necesita ayuda? ¡Nosotros le ayudamos!",
     "bodyTwo": "Por favor envíe un correo a",
     "bodyThree": "¡Da una descripción detallada de tu problema y te brindaremos una respuesta tan pronto como nos sea posible!",
+    "bodyFour": "Have you seen concerning behavior on the platform? Please refer to our Terms of Service and always feel free to report anything you feel may be misaligned with our guidelines:",
+    "termsOfService": "Terms of Service",
     "footer": "Gracias por ayudarnos a hacer de Journaly un mejor lugar para todos"
   },
   "editor": {

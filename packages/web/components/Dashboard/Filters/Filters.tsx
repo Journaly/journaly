@@ -264,7 +264,7 @@ const Filters: React.FC<Props> = ({
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={() => {
-            Router.push('/dashboard/settings/subscription')
+            Router.push('/settings/subscription')
             setDisplayPremiumFeatureModal(false)
           }}
         />

@@ -133,7 +133,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           {currentUser && (
             <>
               <div className="nav-top">
-                <Link href={`/dashboard/profile/[id]`} as={`/dashboard/profile/${currentUser.id}`}>
+                <Link href={`/user/${currentUser.handle}`}>
                   <a onClick={handleCollapse}>
                     <UserAvatar size={60} user={currentUser} />
                     <p className="current-user-name">{currentUser.handle}</p>
@@ -141,19 +141,19 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                 </Link>
               </div>
               <div className="nav-bottom">
-                <NavLink href="/dashboard/my-feed">
+                <NavLink href="/my-feed">
                   <a className="nav-link" onClick={handleCollapse} data-testid="my-feed-nav-link">
                     <FeedIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.myFeed')}</span>
                   </a>
                 </NavLink>
-                <NavLink href="/dashboard/my-posts">
+                <NavLink href="/my-posts">
                   <a className="nav-link" onClick={handleCollapse} data-testid="my-posts-nav-link">
                     <FeedIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.myPosts')}</span>
                   </a>
                 </NavLink>
-                <NavLink href="/dashboard/new-post">
+                <NavLink href="/new-post">
                   <a className="nav-link" onClick={handleCollapse} data-testid="new-post-nav-link">
                     <NewPostIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.newPost')}</span>
@@ -174,7 +174,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                   />
                   <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
                 </div>
-                <NavLink href="/dashboard/settings/profile">
+                <NavLink href="/settings/profile">
                   <a className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
                     <SettingsIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.settings')}</span>
@@ -218,25 +218,18 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               title={t('helpModal.header')}
               body={
                 <>
-                  <p
-                    style={{
-                      marginTop: '25px',
-                    }}
-                  >
-                    {t('helpModal.bodyOne')}
-                  </p>
-                  <p>
+                  <p className="help-modal-copy">{t('helpModal.bodyOne')}</p>
+                  <p className="help-modal-copy">
                     {t('helpModal.bodyTwo')}
-                    <a
-                      href="mailto:hello@journaly.com"
-                      style={{
-                        color: theme.colors.blueLight,
-                      }}
-                    >
+                    <a href="mailto:hello@journaly.com" className="j-link">
                       hello@journaly.com
                     </a>
                     {t('helpModal.bodyThree')}
                   </p>
+                  <p className="help-modal-copy">{t('helpModal.bodyFour')}</p>
+                  <Link href="/terms-of-service">
+                    <a className="j-link">{t('helpModal.termsOfService')}</a>
+                  </Link>
                 </>
               }
               footer={
@@ -557,6 +550,10 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
             margin-left: 15px;
             font-size: 16px;
           }
+        }
+
+        .help-modal-copy {
+          margin: 16px 0;
         }
       `}</style>
     </>

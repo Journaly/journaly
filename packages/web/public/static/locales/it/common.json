@@ -10,7 +10,7 @@
     "reasonTwoText": "Tenere un diario procura molti benefici sul piano personale, ed è una delle buone abitudini che tante persone ambiscono a mantenere. Journaly ti aiuta ad imparare le lingue offrendoti allo stesso tempo tutti i benefici di tenere un diario!",
     "reasonThreeText": "Molti siti web aiutano a trovare partner per scambi linguistici basandosi esclusivamente sulle lingue in comune - per noi, questo non basta. Journaly ti aiuterà a trovare persone che hanno anche i tuoi stessi interessi!",
     "videoHeader": "Una splendida esperienza di scrittura",
-    "testimonialsHeader": "Cosa dicono gli altri Journalisti", // do you prefer leaving it in English (Journalers)?
+    "testimonialsHeader": "Cosa dicono gli altri Journalisti",
     "nav": {
       "about": "Info",
       "pricing": "Prezzi",
@@ -23,7 +23,7 @@
     "languageSelectPlaceholder": "Lingue",
     "clearFilters": "resetta filtri",
     "myLanguages": "le mie lingue",
-    "followedUsers": "journalisti seguiti", // or journalers
+    "followedUsers": "journalisti seguiti",
     "needsFeedback": "necessita feedback",
     "hasInteracted": "post commentati",
     "textSearchPlaceholder": "Cerca post",
@@ -103,7 +103,7 @@
     "feedTitle": "Notifiche",
     "emptyFeed": "Non ci sono notifiche... per il momento!",
     "levelOne": {
-      "newFollowers": "1 nuovo Journalista ha iniziato a seguirti", // or Journaler
+      "newFollowers": "1 nuovo Journalista ha iniziato a seguirti",
       "newFollowers_plural": "{{count}} nuovi Journalisti hanno iniziato a seguirti",
       "threadComments": "C'è 1 nuovo commento di feedback sul tuo post",
       "threadComments_plural": "Ci sono {{count}} nuovi commenti di feedback sul tuo post",
@@ -113,21 +113,21 @@
       "postComments_plural": "Ci sono {{count}} nuovi commenti generali sul tuo post",
       "postCommentsSubscribed": "C'è 1 nuovo commento generale su questo post",
       "postCommentsSubscribed_plural": "Ci sono {{count}} nuovi commenti generali su questo post",
-      "postClaps": "1 Journalista ha applaudito il tuo post", // Journaler?
+      "postClaps": "1 Journalista ha applaudito il tuo post", 
       "postClaps_plural": "{{count}} Journalisti hanno applaudito questo post",
       "threadCommentThanks": "{{userIdentifier}} ha ringraziato per 1 commento di feedback",
       "threadCommentThanks_plural": "{{userIdentifier}} ha ringraziato per {{count}} commenti di feedback",
-      "newPosts": "Un Journalista che segui ha pubblicato un nuovo post", // Journaler?
-      "newPosts_plural": "Dei Journalisti che segui hanno pubblicato {{count}} nuovi post" // Journaler?
+      "newPosts": "Un Journalista che segui ha pubblicato un nuovo post",
+      "newPosts_plural": "Dei Journalisti che segui hanno pubblicato {{count}} nuovi post"
     },
     "levelTwo": {
-      "newFollowers": "Questo fantastico Journalista ha iniziato a seguirti", // Journaler?
-      "newFollowers_plural": "Questi {{count}} fantastici Journalisti hanno iniziato a seguirti", // Journaler?
+      "newFollowers": "Questo fantastico Journalista ha iniziato a seguirti",
+      "newFollowers_plural": "Questi {{count}} fantastici Journalisti hanno iniziato a seguirti",
       "threadCommentThanks": "{{userIdentifier}} ti ha ringraziato per questo utile commento di feedback",
       "threadCommentThanks_plural": "{{userIdentifier}} ti ha ringraziato per questi {{count}} utili commenti di feedback",
-      "postClaps": "Questo Journalista ha applaudito il tuo post", // Journaler?
+      "postClaps": "Questo Journalista ha applaudito il tuo post",
       "postClaps_plural": "Questi {{count}} Journalisti hanno applaudito il tuo post",
-      "newPosts": "Nuovi post dalla tua comunità" // Journaler?
+      "newPosts": "Nuovi post dalla tua comunità"
     },
     "actions": {
       "markAsRead": "Leggi",

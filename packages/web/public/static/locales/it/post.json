@@ -7,7 +7,7 @@
   "uploadImageButtonText": "Carica Immagine",
   "draft": "bozza",
   "private": "privato",
-  "publishDraft": "Rendi pubblico", // maybe "make public" would be clearer then "publish publicly" in English too?
+  "publishDraft": "Rendi pubblico",
   "publishPost": "Pubblica Post",
   "saveDraftCTA": "Salva Bozza",
   "publishCTA": "Pubblica!",
@@ -15,10 +15,10 @@
   "readAction": "Leggi post",
   "editPost": "Modifica Post",
   "editPostAction": "Modifica Post",
-  "bumpPostAction": "Promuovi Post", // is this kinda like "promote"?
-  "bumpPostSuccess": "Il tuo post è stato spostato con successo in cima al feed! Potrai ripetere l'operazione altre {{numRemaining}} volte",
-  "postBumpLimitError": "Hai raggiunto il limite di volte in cui puoi promuovere questo post",
-  "postBumpingPremiumFeatureExplanation": "Promuovi Post è una fantastica funzionalità Premium che ti permette di riportare il tuo post in cima al feed per avere ulteriore visibilità e ricevere più feedback! Clicca qui sotto per sapere di più su tutte le funzionalità di Journaly Premium o sentiti libero di continuare a usare tutte le fantastiche funzionalità gratuite di Journaly!",
+  "bumpPostAction": "Riporta il Post all'Inizio del Feed",
+  "bumpPostSuccess": "Il tuo post è stato riportato con successo all'Inizio al feed! Potrai ripetere l'operazione altre {{numRemaining}} volte",
+  "postBumpLimitError": "Hai raggiunto il limite di volte in cui puoi riportare questo post in all'inizio del feed",
+  "postBumpingPremiumFeatureExplanation": "Riporta il Post all'Inizio del Feed è una fantastica funzionalità Premium che ti permette di riportare il tuo post in cima al feed per avere ulteriore visibilità e ricevere più feedback! Clicca qui sotto per sapere di più su tutte le funzionalità di Journaly Premium o sentiti libero di continuare a usare tutte le fantastiche funzionalità gratuite di Journaly!",
   "inlineImagesPremiumFeatureExplanation": "Aggiungi Immagini Inline è una fantastica funzionalità Premium che ti permette di includere un numero illimitato di immagini nel corpo dei tuoi post! È un'ottimo modo di personalizzare i tuoi post e rendeli più interessanti da leggere. Clicca qui sotto per sapere di più su tutte le funzionalità di Journaly Premium o sentiti libero di continuare a usare tutte le fantastiche funzionalità gratuite di Journaly!",
   "deletePostAction": "Elimina Post",
   "deletePostSuccess": "Post eliminato con successo!",

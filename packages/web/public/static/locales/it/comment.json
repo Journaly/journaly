@@ -7,7 +7,7 @@
   "addCommentPlaceholder": "Markdown è ora supportato nei commenti! Prova ad usare il **grassetto** o il *corsivo*!",
   "noCommentsYetMessage": "Nessun commento... per ora!",
   "tabGeneralKey": "Tutti", 
-  "tabOutdatedKey": "Vecchi", // when do threads become outated?
+  "tabOutdatedKey": "Obsoleti",
   "noOutdatedThreadsMessage": "Nessun thread troppo vecchio",
   "deleteCommentConfirmModalTitle": "Elimina Commento",
   "deleteCommentConfirmModalBody": "Sei sicuro di voler eliminare questo commento?",

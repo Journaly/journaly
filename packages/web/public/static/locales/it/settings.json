@@ -68,7 +68,7 @@
     },
     "social": {
       "legend": "Social",
-      "socialLabel": "Vuoi rimanere in contatto con altri Journalisti tramite i social media? Vuoi promuovere il tuo lavoro? Dì a tutti dove possono trovarti.", // or Journalers?
+      "socialLabel": "Vuoi rimanere in contatto con altri Journalisti tramite i social media? Vuoi promuovere il tuo lavoro? Dì a tutti dove possono trovarti.",
       "facebookPlaceholder": "facebook.com/LaTuaPagina",
       "youtubePlaceholder": "youtube.com/channel/IlTuoCanale",
       "instagramPlaceholder": "instagram.com/LaTuaPagina",
@@ -156,7 +156,7 @@
       "directMessaging": "Messaggi privati (presto disponibile)",
       "userGroups": "Gruppi (presto disponibile)",
       "inlineImages": "Immagini inline all'interno dei post",
-      "postBumping": "Promozione dei post",
+      "postBumping": "Riporta il Post all'Inizio del Feeds",
       "postSaving": "Salvataggio post preferiti",
       "supportTheCreators": "Supporta i creatori",
       "supportFreeLearning": "Supporta l'apprendimento delle lingue in forma gratuita",

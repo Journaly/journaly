@@ -2,16 +2,16 @@
   "card": {
     "speaks": "parla",
     "learns": "studia",
-    "likes": "interessi" // oh damn, the literal translation "piace" this is intransitive, so I replaced this with ("interessi") "interests"
+    "likes": "adora" 
   },
   "stats": {
     "summary": {
       "title": "In breve",
-      "userAge": "{{name}} è utente di Journaly dal {{joinDate}} ({{age}} anni).", // is {{age}} a number, and if so is it actually expressed in years?
+      "userAge": "{{name}} è utente di Journaly dal {{joinDate}} ({{age}}).",
       "postCount": "Fino ad ora ha pubblicato {{postCount}} post in {{languageCount}} lingue diverse.",
       "noPosts": "Non ha ancora scritto nessun post.",
       "commentCounts": "Ha anche lasciato {{postCommentCount}} commenti generali a post e {{threadCommentCount}} commenti di feeback inline, aiutando altri utenti a migliorare le loro abilità linguistiche.",
-      "noComments": "Non ha ancora lasciato commenti sui post di altri journalisti.", // journalisti or journalers?
+      "noComments": "Non ha ancora lasciato commenti sui post di altri journalisti.",
       "thanksCount": "Per il loro gran lavoro di aiuto agli altri, sono stati ringraziati {{thanksCount}} volte."
     },
     "activity": {
@@ -28,13 +28,8 @@
   "emptyPosts": "{{user}} non ha ancora scritto nessun post.",
   "loggedInUserEmptyPosts": "Non ci sono post recenti. <1>Scrivi un nuovo post</1>!",
   "follow": "Segui",
-<<<<<<< HEAD
   "unfollow": "Smetti di seguire",
   "followerCount": "{{count}} Follower",
   "followerCount_plural": "{{count}} Seguaci",
   "followingCount": "{{count}} Seguiti",
   "followingCount_plural": "{{count}} Seguiti"
-=======
-  "unfollow": "Smetti di seguire"
-}
->>>>>>> 7237e1433dbd54220b481d4c2a5c86944322fbd5

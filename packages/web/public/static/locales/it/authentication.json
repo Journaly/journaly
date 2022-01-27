@@ -48,7 +48,7 @@
   "confirmPasswordInputLabel": "Conferma password",
   "confirmPasswordInputPlaceholder": "Reinserisci la tua nuova password",
   "confirmPasswordRequiredErrorMessage": "'Conferma password' è un campo obbligatorio",
-  "confirmPasswordValidationErrorMessage": "Indirizzo confirmPassword non valido", // what is it?
+  "confirmPasswordValidationErrorMessage": "Le due password non corrispondono",
   "goToSignupText": "Non hai un account?",
   "goToSignupLink": "Registrati",
   "goToRequestResetText": "Problemi con l'accesso?",

@@ -167,7 +167,7 @@ const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {
       <p>Congratulations! You just earned the "${getBadgeName(badgeType)}" badge on Journaly.</p>
       <p>This badge will now be displayed on your <a href="https://${
         process.env.SITE_DOMAIN
-      }/user/${user.id}">profile page</a>.</p>
+      }/user/${user.handle}">profile page</a>.</p>
     `),
   })
 }

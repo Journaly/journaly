@@ -72,7 +72,7 @@
     "next-i18next": "^7.0.1",
     "nexus": "^1.0.0",
     "nexus-plugin-prisma": "^0.35.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "nprogress": "^0.2.0",
     "query-string": "^7.0.1",
     "react": "^17.0.2",

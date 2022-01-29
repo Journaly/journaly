@@ -85,7 +85,7 @@
     "slate": "^0.72.3",
     "slate-history": "^0.66.0",
     "slate-hyperscript": "^0.67.0",
-    "slate-react": "^0.72.4",
+    "slate-react": "^0.72.7",
     "stripe": "^8.137.0",
     "swot-node": "^2.0.173",
     "ts-node": "^9.0.0",

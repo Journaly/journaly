@@ -128,7 +128,23 @@ const PostObjectType = objectType({
     t.model.bumpedAt()
     t.model.bumpCount()
     t.int('commentCount', {
-      resolve: () => 0,
+      resolve: async (parent, _args, ctx, _info) => {
+        const [threadCommentCount, postCommentCount] = await Promise.all([
+          ctx.db.comment.count({
+            where: {
+              thread: {
+                postId: parent.id,
+              },
+            },
+          }),
+          ctx.db.postComment.count({
+            where: {
+              postId: parent.id,
+            },
+          }),
+        ])
+        return threadCommentCount + postCommentCount
+      },
     })
   },
 })

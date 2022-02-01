@@ -1,33 +1,35 @@
 import { PostStatus } from '@journaly/j-db-client'
-import { arg, booleanArg, objectType, extendType, intArg } from 'nexus'
+import { arg, booleanArg, objectType, extendType, intArg, nonNull, list } from 'nexus'
+import { Topic, TopicTranslation, UserInterest } from 'nexus-prisma'
 
-const TopicTranslation = objectType({
-  name: 'TopicTranslation',
+const TopicTranslationType = objectType({
+  name: TopicTranslation.$name,
   definition(t) {
-    t.model.id()
-    t.model.name()
-    t.model.uiLanguage()
+    t.nonNull.field(TopicTranslation.id)
+    t.field(TopicTranslation.name)
+    t.field(TopicTranslation.uiLanguage)
   },
 })
 
-const UserInterest = objectType({
-  name: 'UserInterest',
+const UserInterestType = objectType({
+  name: UserInterest.$name,
+  description: UserInterest.$description,
   definition(t) {
-    t.model.id()
-    t.model.user()
-    t.model.topic()
-  }
+    t.nonNull.field(UserInterest.id)
+    t.field(UserInterest.user)
+    t.field(UserInterest.topic)
+  },
 })
 
-const Topic = objectType({
-  name: 'Topic',
-  sourceType: 'prisma.Topic',
+const TopicType = objectType({
+  name: Topic.$name,
+  description: Topic.$description,
   definition(t) {
-    t.model.id()
+    t.field(Topic.id)
+    t.nonNull.field(Topic.devName)
     t.string('name', {
-      nullable: true,
       args: {
-        uiLanguage: arg({ type: 'UILanguage', required: true }),
+        uiLanguage: nonNull(arg({ type: 'UILanguage' })),
       },
       async resolve(parent, args, ctx, _info) {
         const translation = await ctx.db.topicTranslation.findUnique({
@@ -44,11 +46,11 @@ const Topic = objectType({
     })
     t.int('postCount', {
       args: {
-        languages: intArg({
-          description: 'Language IDs to filter topics. No value means all languages.',
-          required: false,
-          list: true,
-        }),
+        languages: list(
+          intArg({
+            description: 'Language IDs to filter topics. No value means all languages.',
+          }),
+        ),
       },
       resolve(parent, args, ctx) {
         let filter = {}
@@ -79,11 +81,9 @@ const TopicQueries = extendType({
       args: {
         hasPosts: booleanArg({
           description: 'If true, only return topics that have at least one post',
-          required: false,
         }),
         authoredOnly: booleanArg({
           description: 'If true, return only topics with posts authored by currentUser.',
-          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -134,7 +134,7 @@ const TopicMutations = extendType({
     t.field('addUserInterest', {
       type: 'UserInterest',
       args: {
-        topicId: intArg({ required: true }),
+        topicId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -162,7 +162,7 @@ const TopicMutations = extendType({
     t.field('removeUserInterest', {
       type: 'UserInterest',
       args: {
-        topicId: intArg({ required: true }),
+        topicId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -183,7 +183,7 @@ const TopicMutations = extendType({
         return ctx.db.userInterest.delete(interestFilter)
       },
     })
-  }
+  },
 })
 
-export default [TopicTranslation, UserInterest, Topic, TopicQueries, TopicMutations]
+export default [TopicTranslationType, UserInterestType, TopicType, TopicQueries, TopicMutations]

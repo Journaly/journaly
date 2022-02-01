@@ -1,9 +1,4 @@
-import {
-  intArg,
-  stringArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { intArg, stringArg, objectType, extendType, nonNull } from 'nexus'
 import { add, isPast } from 'date-fns'
 
 import {
@@ -14,6 +9,7 @@ import {
   LanguageLevel,
   PrismaClient,
 } from '@journaly/j-db-client'
+import { Comment, PostComment, Thread } from 'nexus-prisma'
 
 import {
   hasAuthorPermissions,
@@ -25,48 +21,67 @@ import {
 } from './utils'
 import { NotFoundError } from './errors'
 
-const Thread = objectType({
-  name: 'Thread',
+const ThreadType = objectType({
+  name: Thread.$name,
+  description: Thread.$description,
   definition(t) {
-    t.model.id()
-    t.model.archived()
-    t.model.startIndex()
-    t.model.endIndex()
-    t.model.highlightedContent()
-    t.model.postId()
-    t.model.comments({
-      pagination: false,
-      ordering: {
-        createdAt: true,
+    t.field(Thread.id)
+    t.field(Thread.archived)
+    t.field(Thread.startIndex)
+    t.field(Thread.endIndex)
+    t.field(Thread.highlightedContent)
+    t.field(Thread.postId)
+    t.nonNull.list.nonNull.field('comments', {
+      type: 'Comment',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.thread
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .comments({
+            orderBy: {
+              createdAt: 'desc',
+            },
+          })
       },
     })
   },
 })
 
-const Comment = objectType({
-  name: 'Comment',
+const CommentType = objectType({
+  name: Comment.$name,
+  description: Comment.$description,
   definition(t) {
-    t.model.id()
-    t.model.author()
-    t.model.body()
-    t.model.createdAt()
-    t.model.authorLanguageLevel()
-    t.model.thanks({ pagination: false })
-    t.model.thread()
+    t.field(Comment.id)
+    t.field(Comment.author)
+    t.field(Comment.body)
+    t.field(Comment.createdAt)
+    t.field(Comment.authorLanguageLevel)
+    t.nonNull.list.nonNull.field('thanks', {
+      type: 'CommentThanks',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.comment
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .thanks()
+      },
+    })
+    t.field(Comment.thread)
   },
 })
 
-const PostComment = objectType({
-  name: 'PostComment',
+const PostCommentType = objectType({
+  name: PostComment.$name,
+  description: PostComment.$description,
   definition(t) {
-    t.model.id()
-    t.model.author()
-    t.model.body()
-    t.model.createdAt()
-    t.model.authorLanguageLevel()
+    t.field(PostComment.id)
+    t.field(PostComment.author)
+    t.field(PostComment.body)
+    t.field(PostComment.createdAt)
+    t.field(PostComment.authorLanguageLevel)
   },
 })
-
 
 type CreateCommentArg = {
   thread: ThreadWithRels<{
@@ -159,11 +174,11 @@ const CommentMutations = extendType({
     t.field('createThread', {
       type: 'Thread',
       args: {
-        postId: intArg({ required: true }),
-        startIndex: intArg({ required: true }),
-        endIndex: intArg({ required: true }),
-        highlightedContent: stringArg({ required: true }),
-        body: stringArg({ required: true }),
+        postId: nonNull(intArg()),
+        startIndex: nonNull(intArg()),
+        endIndex: nonNull(intArg()),
+        highlightedContent: nonNull(stringArg()),
+        body: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -241,7 +256,7 @@ const CommentMutations = extendType({
     t.field('deleteThread', {
       type: 'Thread',
       args: {
-        threadId: intArg({ required: true }),
+        threadId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const thread = await ctx.db.thread.findUnique({
@@ -275,8 +290,8 @@ const CommentMutations = extendType({
     t.field('createComment', {
       type: 'Comment',
       args: {
-        threadId: intArg({ required: true }),
-        body: stringArg({ required: true }),
+        threadId: nonNull(intArg()),
+        body: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -326,8 +341,8 @@ const CommentMutations = extendType({
     t.field('updateComment', {
       type: 'Comment',
       args: {
-        commentId: intArg({ required: true }),
-        body: stringArg({ required: true }),
+        commentId: nonNull(intArg()),
+        body: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -366,7 +381,7 @@ const CommentMutations = extendType({
     t.field('deleteComment', {
       type: 'Comment',
       args: {
-        commentId: intArg({ required: true }),
+        commentId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -416,8 +431,8 @@ const CommentMutations = extendType({
     t.field('createPostComment', {
       type: 'PostComment',
       args: {
-        postId: intArg({ required: true }),
-        body: stringArg({ required: true }),
+        postId: nonNull(intArg()),
+        body: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -519,8 +534,8 @@ const CommentMutations = extendType({
     t.field('updatePostComment', {
       type: 'PostComment',
       args: {
-        postCommentId: intArg({ required: true }),
-        body: stringArg({ required: true }),
+        postCommentId: nonNull(intArg()),
+        body: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -559,7 +574,7 @@ const CommentMutations = extendType({
     t.field('deletePostComment', {
       type: 'PostComment',
       args: {
-        postCommentId: intArg({ required: true }),
+        postCommentId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -595,9 +610,4 @@ const CommentMutations = extendType({
   },
 })
 
-export default [
-  Thread,
-  Comment,
-  PostComment,
-  CommentMutations,
-]
+export default [ThreadType, CommentType, PostCommentType, CommentMutations]

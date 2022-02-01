@@ -1,18 +1,11 @@
-import {
-  intArg,
-  stringArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { intArg, stringArg, objectType, extendType, nonNull, enumType, nullable } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 import { isAcademic } from 'swot-node'
-import {
-  PostStatus,
-  EmailVerificationStatus,
-  InAppNotificationType,
-} from '@journaly/j-db-client'
+import { PostStatus, EmailVerificationStatus, InAppNotificationType } from '@journaly/j-db-client'
+
+import { User, UserBadge, UserRole } from 'nexus-prisma'
 
 import { NotAuthorizedError, UserInputError } from './errors'
 import {
@@ -23,7 +16,7 @@ import {
 } from './utils'
 import { generateToken, validateUpdateUserMutationData } from './utils/userValidation'
 
-const DatedActivityCount = objectType({
+const DatedActivityCountType = objectType({
   name: 'DatedActivityCount',
   definition(t) {
     t.string('date')
@@ -33,52 +26,50 @@ const DatedActivityCount = objectType({
   },
 })
 
-const User = objectType({
-  name: 'User',
-  sourceType: 'prisma.User',
+const UserType = objectType({
+  name: User.$name,
+  description: User.$description,
   definition(t) {
-    t.model.id()
-    t.model.name()
-    t.string('email', {
-      nullable: true,
-      resolve(parent, _args, ctx) {
-        const { userId } = ctx.request
+    t.nonNull.field(User.id)
+    t.field(User.name)
+    t.field(User.email)
+    // t.field('email', {
+    //   type: 'String',
+    //   authorize: (parent, _, ctx) => ctx.request.userId === parent.id,
+    //   resolve: (parent, _, ctx) => {
+    //     return parent.email
+    //   },
+    // })
+    // t.string('email', {
+    //   resolve(parent, _args, ctx) {
+    //     const { userId } = ctx.request
 
-        if (userId && userId === parent.id) {
-          return parent.email
-        }
+    //     if (userId && userId === parent.id) {
+    //       return parent.email
+    //     }
 
-        return null
-      },
-    })
-    t.model.handle()
-    t.model.bio()
-    t.model.userRole()
-    t.model.city()
-    t.model.country()
-    t.model.badges({ pagination: false })
-    t.model.posts({ pagination: false })
-    t.model.savedPosts({ pagination: false })
-    t.model.profileImage()
-    t.model.createdAt()
-    t.model.membershipSubscription()
-    t.model.isStudent()
-    t.model.socialMedia({
-      type: 'SocialMedia',
-      resolve: async (parent, _args, ctx) => {
-        return ctx.db.socialMedia.findFirst({
-          where: {
-            userId: parent.id,
-          },
-        })
-      },
-    })
-    t.model.languages({ pagination: false })
-    t.model.following({ pagination: false })
-    t.model.followedBy({ pagination: false })
-    t.model.lastFourCardNumbers()
-    t.model.cardBrand()
-    t.model.userInterests({ type: 'UserInterest', pagination: false })
+    //     return null
+    //   },
+    // })
+    t.nonNull.field(User.handle)
+    t.field(User.bio)
+    t.field(User.userRole)
+    t.field(User.city)
+    t.field(User.country)
+    t.field(User.badges)
+    t.field(User.posts)
+    t.field(User.savedPosts)
+    t.field(User.profileImage)
+    t.field(User.createdAt)
+    t.field(User.membershipSubscription)
+    t.field(User.isStudent)
+    t.field(User.socialMedia)
+    t.field(User.languages)
+    t.field(User.following)
+    t.field(User.followedBy)
+    t.field(User.lastFourCardNumbers)
+    t.field(User.cardBrand)
+    t.field(User.userInterests)
     t.boolean('emailAddressVerified', {
       async resolve(parent, _args, ctx, _info) {
         const auth = await ctx.db.auth.findUnique({
@@ -147,15 +138,12 @@ const User = objectType({
 
         return ctx.db.inAppNotification.findMany({
           where: {
-            userId: userId
+            userId: userId,
           },
           take: 99,
-          orderBy: [
-            { readStatus: 'desc' },
-            { bumpedAt: 'desc' },
-          ]
+          orderBy: [{ readStatus: 'desc' }, { bumpedAt: 'desc' }],
         })
-      }
+      },
     })
     t.list.field('activityGraphData', {
       type: 'DatedActivityCount',
@@ -209,13 +197,13 @@ const User = objectType({
             ON post_activity.date = post_comment_activity.date
           ;
         `
-        return stats as any || []
+        return (stats as any) || []
       },
     })
   },
 })
 
-const InitiateAvatarImageUploadResponse = objectType({
+const InitiateAvatarImageUploadResponseType = objectType({
   name: 'InitiateAvatarImageUploadResponse',
   definition(t) {
     t.string('uploadUrl', { description: 'URL for the client to PUT an image to' })
@@ -224,13 +212,20 @@ const InitiateAvatarImageUploadResponse = objectType({
   },
 })
 
-const UserBadge = objectType({
-  name: 'UserBadge',
+const UserBadgeType = objectType({
+  name: UserBadge.$name,
+  description: UserBadge.$description,
   definition(t) {
-    t.model.id()
-    t.model.type()
-    t.model.createdAt()
+    t.field(UserBadge.id)
+    t.field(UserBadge.type)
+    t.field(UserBadge.createdAt)
   },
+})
+
+const UserRoleType = enumType({
+  name: UserRole.name,
+  description: UserRole.description,
+  members: UserRole.members,
 })
 
 const UserQueries = extendType({
@@ -243,9 +238,8 @@ const UserQueries = extendType({
       },
     })
 
-    t.field('currentUser', {
+    t.nullable.field('currentUser', {
       type: 'User',
-      nullable: true,
       resolve: async (_parent, _args, ctx) => {
         const userId = ctx.request.userId
         // check for current userId
@@ -260,11 +254,11 @@ const UserQueries = extendType({
       },
     })
 
-    t.field('userByIdentifier', {
+    t.nullable.field('userByIdentifier', {
       type: 'User',
       args: {
-        id: intArg({ required: false }),
-        handle: stringArg({ required: false }),
+        id: nullable(intArg()),
+        handle: nullable(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         if (!args.id && !args.handle) throw new Error('You must provide an ID or handle')
@@ -302,9 +296,9 @@ const UserMutations = extendType({
     t.field('createUser', {
       type: 'User',
       args: {
-        handle: stringArg({ required: true }),
-        email: stringArg({ required: true }),
-        password: stringArg({ required: true }),
+        handle: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+        password: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx) => {
         if (!args.handle.match(/^[a-zA-Z0-9_-]+$/)) {
@@ -363,13 +357,13 @@ const UserMutations = extendType({
     t.field('updateUser', {
       type: 'User',
       args: {
-        email: stringArg({ required: false }),
-        name: stringArg({ required: false }),
-        profileImage: stringArg({ required: false }),
-        bio: stringArg({ required: false }),
-        handle: stringArg({ required: false }),
-        country: stringArg({ required: false }),
-        city: stringArg({ required: false }),
+        email: stringArg(),
+        name: stringArg(),
+        profileImage: stringArg(),
+        bio: stringArg(),
+        handle: stringArg(),
+        country: stringArg(),
+        city: stringArg(),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -455,8 +449,8 @@ const UserMutations = extendType({
     t.field('updatePassword', {
       type: 'User',
       args: {
-        oldPassword: stringArg({ required: true }),
-        newPassword: stringArg({ required: true }),
+        oldPassword: nonNull(stringArg()),
+        newPassword: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx: any) => {
         const { userId } = ctx.request
@@ -498,8 +492,8 @@ const UserMutations = extendType({
     t.field('loginUser', {
       type: 'User',
       args: {
-        identifier: stringArg({ required: true }),
-        password: stringArg({ required: true }),
+        identifier: nonNull(stringArg()),
+        password: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx: any) => {
         const user = await ctx.db.user.findUnique({
@@ -535,7 +529,7 @@ const UserMutations = extendType({
     t.field('requestResetPassword', {
       type: 'User',
       args: {
-        identifier: stringArg({ required: true }),
+        identifier: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx, _info) => {
         const user = await ctx.db.user.findUnique({
@@ -575,9 +569,9 @@ const UserMutations = extendType({
     t.field('resetPassword', {
       type: 'User',
       args: {
-        resetToken: stringArg({ required: true }),
-        password: stringArg({ required: true }),
-        confirmPassword: stringArg({ required: true }),
+        resetToken: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+        confirmPassword: nonNull(stringArg()),
       },
       resolve: async (_parent, args, ctx, _info) => {
         const { password, confirmPassword, resetToken } = args
@@ -658,7 +652,7 @@ const UserMutations = extendType({
     t.field('followUser', {
       type: 'User',
       args: {
-        followedUserId: intArg({ required: true }),
+        followedUserId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx, _info) => {
         const { userId: followerId } = ctx.request
@@ -679,8 +673,8 @@ const UserMutations = extendType({
           type: InAppNotificationType.NEW_FOLLOWER,
           key: {},
           subNotification: {
-            followingUserId: follower.id
-          }
+            followingUserId: follower.id,
+          },
         })
 
         return follower
@@ -690,7 +684,7 @@ const UserMutations = extendType({
     t.field('unfollowUser', {
       type: 'User',
       args: {
-        followedUserId: intArg({ required: true }),
+        followedUserId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx, _info) => {
         const { userId: followerId } = ctx.request
@@ -739,7 +733,7 @@ const UserMutations = extendType({
     t.field('savePost', {
       type: 'User',
       args: {
-        postId: intArg({ required: true }),
+        postId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -762,7 +756,7 @@ const UserMutations = extendType({
     t.field('unsavePost', {
       type: 'User',
       args: {
-        postId: intArg({ required: true }),
+        postId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -785,10 +779,11 @@ const UserMutations = extendType({
 })
 
 export default [
-  User,
-  UserBadge,
+  UserType,
+  UserBadgeType,
+  UserRoleType,
+  InitiateAvatarImageUploadResponseType,
+  DatedActivityCountType,
   UserQueries,
   UserMutations,
-  InitiateAvatarImageUploadResponse,
-  DatedActivityCount,
 ]

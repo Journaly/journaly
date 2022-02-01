@@ -1,23 +1,35 @@
-import { arg, booleanArg, intArg, objectType, extendType } from 'nexus'
+import { arg, booleanArg, intArg, objectType, extendType, nonNull, enumType } from 'nexus'
 import { PostStatus } from '@journaly/j-db-client'
+import { LanguageRelation, Language, LanguageLevel, UILanguage } from 'nexus-prisma'
 
-const LanguageRelation = objectType({
-  name: 'LanguageRelation',
+const LanguageRelationType = objectType({
+  name: LanguageRelation.$name,
+  description: LanguageRelation.$description,
   definition(t) {
-    t.model.id()
-    t.model.language()
-    t.model.level()
+    t.field(LanguageRelation.id)
+    t.field(LanguageRelation.language)
+    t.field(LanguageRelation.level)
   },
 })
 
-const Language = objectType({
-  name: 'Language',
+const LanguageType = objectType({
+  name: Language.$name,
+  description: Language.$description,
   definition(t) {
-    t.model.id()
-    t.model.name()
-    t.model.devName()
-    t.model.posts({ pagination: false })
-    t.model.dialect()
+    t.field(Language.id)
+    t.field(Language.name)
+    t.field(Language.devName)
+    t.nonNull.list.nonNull.field('posts', {
+      type: 'Post',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.language
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .posts()
+      },
+    })
+    t.field(Language.dialect)
     t.int('postCount', {
       resolve(parent, _, ctx) {
         return ctx.db.post.count({
@@ -33,6 +45,18 @@ const Language = objectType({
   },
 })
 
+const UILanguageType = enumType({
+  name: UILanguage.name,
+  description: UILanguage.description,
+  members: UILanguage.members,
+})
+
+const LanguageLevelType = enumType({
+  name: LanguageLevel.name,
+  description: LanguageLevel.description,
+  members: LanguageLevel.members,
+})
+
 const LanguageQueries = extendType({
   type: 'Query',
   definition(t) {
@@ -41,11 +65,9 @@ const LanguageQueries = extendType({
       args: {
         hasPosts: booleanArg({
           description: 'If true, only return languages that have at least one post',
-          required: false,
         }),
         authoredOnly: booleanArg({
           description: 'If true, return only languages with posts authored by currentUser.',
-          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -89,8 +111,8 @@ const LanguageMutations = extendType({
     t.field('addLanguageRelation', {
       type: 'LanguageRelation',
       args: {
-        languageId: intArg({ required: true }),
-        level: arg({ type: 'LanguageLevel', required: true }),
+        languageId: nonNull(intArg()),
+        level: nonNull(arg({ type: 'LanguageLevel' })),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -119,7 +141,7 @@ const LanguageMutations = extendType({
     t.field('removeLanguageRelation', {
       type: 'LanguageRelation',
       args: {
-        languageId: intArg({ required: true }),
+        languageId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -143,4 +165,11 @@ const LanguageMutations = extendType({
   },
 })
 
-export default [LanguageRelation, Language, LanguageQueries, LanguageMutations]
+export default [
+  LanguageRelationType,
+  LanguageType,
+  UILanguageType,
+  LanguageLevelType,
+  LanguageQueries,
+  LanguageMutations,
+]

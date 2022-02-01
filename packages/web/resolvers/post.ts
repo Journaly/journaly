@@ -5,6 +5,9 @@ import {
   booleanArg,
   objectType,
   extendType,
+  nonNull,
+  list,
+  enumType,
 } from 'nexus'
 
 import {
@@ -20,12 +23,9 @@ import {
   createInAppNotification,
 } from './utils'
 
-
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
   Prisma,
-  Post,
-  PostStatus,
   BadgeType,
   PrismaClient,
   LanguageRelation,
@@ -33,8 +33,11 @@ import {
   UserRole,
   EmailVerificationStatus,
   InAppNotificationType,
+  PostStatus as PostStatusEnum,
+  Post as PostDBType,
 } from '@journaly/j-db-client'
-import { EditorNode, HeadlineImageInput } from './inputTypes'
+import { Post, PostTopic, PostStatus } from 'nexus-prisma'
+import { EditorNodeType, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
 
 const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {
@@ -47,7 +50,7 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
         FROM "Post"
         WHERE
           "authorId" = ${userId}
-          AND "status" = ${PostStatus.PUBLISHED}
+          AND "status" = ${PostStatusEnum.PUBLISHED}
     )
     INSERT INTO "UserBadge" ("type", "userId") (
       (
@@ -88,45 +91,88 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
   }
 }
 
-const PostTopic = objectType({
-  name: 'PostTopic',
+const PostTopicType = objectType({
+  name: PostTopic.$name,
+  description: PostTopic.$description,
   definition(t) {
-    t.model.id()
-    t.model.post()
-    t.model.topic()
+    t.nonNull.field(PostTopic.id)
+    t.nonNull.field(PostTopic.post)
+    t.nonNull.field(PostTopic.topic)
   },
 })
 
-const PostObjectType = objectType({
-  name: 'Post',
+const PostStatusType = enumType({
+  name: PostStatus.name,
+  description: PostStatus.description,
+  members: PostStatus.members,
+})
+
+const PostType = objectType({
+  name: Post.$name,
+  description: Post.$description,
   definition(t) {
-    t.model.id()
-    t.model.title()
-    t.model.body()
-    t.model.excerpt()
-    t.model.readTime()
-    t.model.author()
-    t.model.authorId()
-    t.model.status()
-    t.model.claps({ pagination: false })
-    t.model.threads({ pagination: false })
-    t.model.postTopics({ type: 'PostTopic', pagination: false })
-    t.model.postComments({
-      pagination: false,
-      ordering: {
-        createdAt: true,
+    t.field(Post.id)
+    t.field(Post.title)
+    t.nonNull.field(Post.body)
+    t.field(Post.excerpt)
+    t.field(Post.readTime)
+    t.field(Post.author)
+    t.field(Post.authorId)
+    t.field(Post.status)
+    t.nonNull.list.nonNull.field('claps', {
+      type: 'PostClap',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.post
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .claps()
       },
     })
-    t.model.language()
-    t.model.publishedLanguageLevel()
-    t.model.privateShareId()
-    t.model.createdAt()
-    t.model.updatedAt()
-    t.model.bodySrc()
-    t.model.headlineImage()
-    t.model.publishedAt()
-    t.model.bumpedAt()
-    t.model.bumpCount()
+    t.nonNull.list.nonNull.field('threads', {
+      type: 'Thread',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.post
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .threads()
+      },
+    })
+    t.nonNull.list.nonNull.field('postTopics', {
+      type: 'PostTopic',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.post
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .postTopics()
+      },
+    })
+    t.nonNull.list.nonNull.field('postComments', {
+      type: 'PostComment',
+      resolve: (parent, _, ctx) => {
+        return ctx.db.post
+          .findUnique({
+            where: { id: parent.id },
+          })
+          .postComments({
+            orderBy: {
+              createdAt: 'desc',
+            },
+          })
+      },
+    })
+    t.field(Post.language)
+    t.field(Post.publishedLanguageLevel)
+    t.field(Post.privateShareId)
+    t.field(Post.createdAt)
+    t.field(Post.updatedAt)
+    t.field(Post.bodySrc)
+    t.field(Post.headlineImage)
+    t.field(Post.publishedAt)
+    t.field(Post.bumpedAt)
+    t.field(Post.bumpCount)
     t.int('commentCount', {
       resolve: async (parent, _args, ctx, _info) => {
         const [threadCommentCount, postCommentCount] = await Promise.all([
@@ -153,7 +199,7 @@ const PostObjectType = objectType({
 // Includes 1 page and the total number of posts.
 // posts: the returned page after filtering.
 // count: the total posts matching the filter.
-const PostPage = objectType({
+const PostPageType = objectType({
   name: 'PostPage',
   definition(t) {
     t.list.field('posts', {
@@ -163,7 +209,7 @@ const PostPage = objectType({
   },
 })
 
-const InitiatePostImageUploadResponse = objectType({
+const InitiatePostImageUploadResponseType = objectType({
   name: 'InitiatePostImageUploadResponse',
   definition(t) {
     t.string('uploadUrl', { description: 'URL for the client to PUT an image to' })
@@ -173,7 +219,7 @@ const InitiatePostImageUploadResponse = objectType({
   },
 })
 
-const InitiateInlinePostImageUploadResponse = objectType({
+const InitiateInlinePostImageUploadResponseType = objectType({
   name: 'InitiateInlinePostImageUploadResponse',
   definition(t) {
     t.string('uploadUrl', { description: 'URL for the client to PUT an image to' })
@@ -190,11 +236,9 @@ const PostQueries = extendType({
       args: {
         id: intArg({
           description: 'ID of the post to be retreived',
-          required: false,
         }),
         privateShareId: stringArg({
           description: 'Private share ID of the post to be retrived',
-          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -214,7 +258,7 @@ const PostQueries = extendType({
               author: true,
             },
           })
-          if (post?.status === PostStatus.PRIVATE && post?.authorId !== userId) {
+          if (post?.status === PostStatusEnum.PRIVATE && post?.authorId !== userId) {
             throw new NotAuthorizedError()
           }
         }
@@ -243,55 +287,51 @@ const PostQueries = extendType({
       args: {
         search: stringArg({
           description: 'Search phrase to filter posts by.',
-          required: false,
         }),
-        languages: intArg({
-          description: 'Language IDs to filter posts by. No value means all languages.',
-          required: false,
-          list: true,
-        }),
-        topics: intArg({
-          description: 'topics IDs to filter posts by. No value means all topics.',
-          required: false,
-          list: true,
-        }),
-        skip: intArg({
-          description: 'Offset into the feed post list to return',
-          required: true,
-        }),
-        first: intArg({
-          description: 'Number of posts to return',
-          required: true,
-        }),
+        languages: list(
+          intArg({
+            description: 'Language IDs to filter posts by. No value means all languages.',
+          }),
+        ),
+        topics: list(
+          intArg({
+            description: 'topics IDs to filter posts by. No value means all topics.',
+          }),
+        ),
+        skip: nonNull(
+          intArg({
+            description: 'Offset into the feed post list to return',
+          }),
+        ),
+        first: nonNull(
+          intArg({
+            description: 'Number of posts to return',
+          }),
+        ),
         followedAuthors: booleanArg({
           description: 'Author IDs to filter posts by. No value means all authors.',
-          required: false,
         }),
         needsFeedback: booleanArg({
           description: 'If true, return only posts with 0 comments.',
-          required: false,
         }),
         hasInteracted: booleanArg({
           description: 'If true, return only posts that the user has commented on in any way.',
-          required: false,
         }),
-        status: arg({
-          type: 'PostStatus',
-          description:
-            'The post status, indicating Published or Draft. Param is ignored unless the current user is specified in `authorId`',
-          required: true,
-        }),
+        status: nonNull(
+          arg({
+            type: 'PostStatus',
+            description:
+              'The post status, indicating Published or Draft. Param is ignored unless the current user is specified in `authorId`',
+          }),
+        ),
         authorId: intArg({
           description: 'Return posts by a given author.',
-          required: false,
         }),
         authorHandle: stringArg({
           description: 'Return posts by a given author.',
-          required: false,
         }),
         savedPosts: booleanArg({
           description: 'If true, return only posts that the user has saved.',
-          required: false,
         }),
       },
       resolve: async (_parent, args, ctx) => {
@@ -412,7 +452,7 @@ const PostQueries = extendType({
         `
 
         const [posts, [{ count }]] = await Promise.all([
-          ctx.db.$queryRaw<Post[]>`
+          ctx.db.$queryRaw<PostDBType[]>`
             SELECT p.* ${queryPred}
             ORDER BY p."bumpedAt" DESC
             LIMIT ${args.first}
@@ -433,18 +473,18 @@ const PostMutations = extendType({
     t.field('createPost', {
       type: 'Post',
       args: {
-        title: stringArg({ required: true }),
-        body: EditorNode.asArg({ list: true, required: true }),
-        languageId: intArg({ required: true }),
-        topicIds: intArg({ list: true, required: false }),
-        status: arg({ type: 'PostStatus', required: true }),
-        headlineImage: HeadlineImageInput.asArg({ required: true }),
+        title: nonNull(stringArg()),
+        body: nonNull(list(EditorNodeType.asArg())),
+        languageId: nonNull(intArg()),
+        topicIds: list(intArg()),
+        status: nonNull(arg({ type: 'PostStatus' })),
+        headlineImage: nonNull(HeadlineImageInput.asArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { title, body, languageId, status, headlineImage } = args
         const { userId } = ctx.request
-        const isPublished = status === PostStatus.PUBLISHED
-        const isPrivate = status === PostStatus.PRIVATE
+        const isPublished = status === PostStatusEnum.PUBLISHED
+        const isPrivate = status === PostStatusEnum.PRIVATE
 
         if (!body) {
           throw new ResolverError('We need a body!', {})
@@ -517,7 +557,7 @@ const PostMutations = extendType({
         }
 
         if (isPublished) {
-          const promises: Promise<unknown>[] = user.followedBy.map((follower) => {
+          const promises: Promise<unknown>[] = user.followedBy.map((follower: User) => {
             return createInAppNotification(ctx.db, {
               userId: follower.id,
               type: InAppNotificationType.NEW_POST,
@@ -538,13 +578,13 @@ const PostMutations = extendType({
     t.field('updatePost', {
       type: 'Post',
       args: {
-        postId: intArg({ required: true }),
-        title: stringArg({ required: false }),
-        languageId: intArg({ required: false }),
-        topicIds: intArg({ list: true, required: false }),
-        body: EditorNode.asArg({ list: true, required: false }),
-        status: arg({ type: 'PostStatus', required: false }),
-        headlineImage: HeadlineImageInput.asArg({ required: true }),
+        postId: nonNull(intArg()),
+        title: stringArg(),
+        languageId: intArg(),
+        topicIds: list(intArg()),
+        body: list(EditorNodeType.asArg()),
+        status: arg({ type: 'PostStatus' }),
+        headlineImage: nonNull(HeadlineImageInput.asArg()),
       },
       resolve: async (_parent, args, ctx) => {
         // Check user can actually do this
@@ -589,7 +629,7 @@ const PostMutations = extendType({
         }
 
         if (args.status) {
-          if (args.status === PostStatus.PRIVATE) {
+          if (args.status === PostStatusEnum.PRIVATE) {
             data.privateShareId = generatePostPrivateShareId()
           }
           data.status = args.status
@@ -673,7 +713,7 @@ const PostMutations = extendType({
         })
 
         if (args.status === 'PUBLISHED' && !originalPost.publishedAt) {
-          const promises: Promise<unknown>[] = currentUser.followedBy.map((follower) => {
+          const promises: Promise<unknown>[] = currentUser.followedBy.map((follower: User) => {
             return createInAppNotification(ctx.db, {
               userId: follower.id,
               type: InAppNotificationType.NEW_POST,
@@ -694,7 +734,7 @@ const PostMutations = extendType({
     t.field('deletePost', {
       type: 'Post',
       args: {
-        postId: intArg({ required: true }),
+        postId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { postId } = args
@@ -874,7 +914,7 @@ const PostMutations = extendType({
     t.field('bumpPost', {
       type: 'Post',
       args: {
-        postId: intArg({ required: true }),
+        postId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -930,11 +970,12 @@ const PostMutations = extendType({
 })
 
 export default [
-  PostTopic,
-  PostObjectType,
-  PostPage,
-  InitiatePostImageUploadResponse,
-  InitiateInlinePostImageUploadResponse,
+  PostTopicType,
+  PostType,
+  PostPageType,
+  InitiatePostImageUploadResponseType,
+  InitiateInlinePostImageUploadResponseType,
   PostQueries,
   PostMutations,
+  PostStatusType,
 ]

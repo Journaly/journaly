@@ -1,15 +1,17 @@
 import { stringArg, objectType, extendType } from 'nexus'
 import { NotAuthorizedError, UserInputError } from './errors'
 import { validateSocialMediaInput } from './utils/socialMedia'
+import { SocialMedia } from 'nexus-prisma'
 
-const SocialMedia = objectType({
-  name: 'SocialMedia',
+const SocialMediaType = objectType({
+  name: SocialMedia.$name,
+  description: SocialMedia.$description,
   definition(t) {
-    t.model.id()
-    t.model.facebook()
-    t.model.youtube()
-    t.model.instagram()
-    t.model.website()
+    t.field(SocialMedia.id)
+    t.field(SocialMedia.facebook)
+    t.field(SocialMedia.youtube)
+    t.field(SocialMedia.instagram)
+    t.field(SocialMedia.website)
   },
 })
 
@@ -19,10 +21,10 @@ const SocialMediaMutations = extendType({
     t.field('updateSocialMedia', {
       type: 'SocialMedia',
       args: {
-        facebook: stringArg({ required: false }),
-        instagram: stringArg({ required: false }),
-        youtube: stringArg({ required: false }),
-        website: stringArg({ required: false }),
+        facebook: stringArg(),
+        instagram: stringArg(),
+        youtube: stringArg(),
+        website: stringArg(),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -68,4 +70,4 @@ const SocialMediaMutations = extendType({
   },
 })
 
-export default [SocialMedia, SocialMediaMutations]
+export default [SocialMediaType, SocialMediaMutations]

@@ -4,22 +4,20 @@ import { inputObjectType } from 'nexus'
 // is concepturally the untion of two types, internal nodes and leaf nodes, but
 // AFAIK GQL does not have a native union type, so we simply unify all the fields
 // and make them all nullable.
-export const EditorNode = inputObjectType({
+export const EditorNodeType = inputObjectType({
   name: 'EditorNode',
   definition(t) {
-    t.string('type', { nullable: true })
-    t.string('text', { nullable: true })
-    t.boolean('italic', { nullable: true })
-    t.boolean('bold', { nullable: true })
-    t.boolean('underline', { nullable: true })
-    t.boolean('uploaded', { nullable: true })
-    t.string('link', { nullable: true })
-    t.string('url', { nullable: true })
-    t.boolean('hyperlink', { nullable: true })
-    t.field('children', {
-      type: EditorNode,
-      list: true,
-      nullable: true,
+    t.string('type')
+    t.string('text')
+    t.boolean('italic')
+    t.boolean('bold')
+    t.boolean('underline')
+    t.boolean('uploaded')
+    t.string('link')
+    t.string('url')
+    t.boolean('hyperlink')
+    t.list.field('children', {
+      type: EditorNodeType,
     })
   },
 })
@@ -27,9 +25,9 @@ export const EditorNode = inputObjectType({
 export const HeadlineImageInput = inputObjectType({
   name: 'HeadlineImageInput',
   definition(t) {
-    t.string('smallSize', { nullable: false })
-    t.string('largeSize', { nullable: false })
+    t.nonNull.string('smallSize')
+    t.nonNull.string('largeSize')
   },
 })
 
-export default [EditorNode, HeadlineImageInput]
+export default [EditorNodeType, HeadlineImageInput]

@@ -1,21 +1,19 @@
 import { InAppNotificationType } from '.prisma/client'
-import { intArg, objectType, extendType } from 'nexus'
+import { intArg, objectType, extendType, nonNull } from 'nexus'
 
 import { EmailNotificationType } from '@journaly/j-db-client'
 
-import {
-  createInAppNotification, 
-  createEmailNotification,
-  hasAuthorPermissions
-} from './utils'
+import { createInAppNotification, createEmailNotification, hasAuthorPermissions } from './utils'
+import { CommentThanks } from 'nexus-prisma'
 
-const CommentThanks = objectType({
-  name: 'CommentThanks',
+const CommentThanksType = objectType({
+  name: CommentThanks.$name,
+  description: CommentThanks.$description,
   definition(t) {
-    t.model.id()
-    t.model.commentId()
-    t.model.author()
-    t.model.comment()
+    t.field(CommentThanks.id)
+    t.field(CommentThanks.commentId)
+    t.field(CommentThanks.author)
+    t.field(CommentThanks.comment)
   },
 })
 
@@ -25,7 +23,7 @@ const ThanksMutations = extendType({
     t.field('createCommentThanks', {
       type: 'CommentThanks',
       args: {
-        commentId: intArg({ required: true }),
+        commentId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -82,7 +80,7 @@ const ThanksMutations = extendType({
           },
           subNotification: {
             thanksId: commentThanks.id,
-          }
+          },
         })
 
         return commentThanks
@@ -91,7 +89,7 @@ const ThanksMutations = extendType({
       t.field('deleteCommentThanks', {
         type: 'CommentThanks',
         args: {
-          commentThanksId: intArg({ required: true }),
+          commentThanksId: nonNull(intArg()),
         },
         resolve: async (_parent, args, ctx) => {
           const { userId } = ctx.request
@@ -142,4 +140,4 @@ const ThanksMutations = extendType({
   },
 })
 
-export default [CommentThanks, ThanksMutations]
+export default [CommentThanksType, ThanksMutations]

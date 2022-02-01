@@ -1,13 +1,15 @@
-import { extendType, intArg, objectType } from 'nexus'
+import { extendType, intArg, objectType, nonNull } from 'nexus'
 import { EmailNotificationType, InAppNotificationType } from '@journaly/j-db-client'
 import { createInAppNotification, createEmailNotification, hasAuthorPermissions } from './utils'
+import { PostClap } from 'nexus-prisma'
 
-const PostClap = objectType({
-  name: 'PostClap',
+const PostClapType = objectType({
+  name: PostClap.$name,
+  description: PostClap.$description,
   definition(t) {
-    t.model.id()
-    t.model.author()
-    t.model.post()
+    t.field(PostClap.id)
+    t.field(PostClap.author)
+    t.field(PostClap.post)
   },
 })
 
@@ -17,7 +19,7 @@ const PostClapMutations = extendType({
     t.field('createPostClap', {
       type: 'PostClap',
       args: {
-        postId: intArg({ required: true }),
+        postId: nonNull(intArg()),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
@@ -60,14 +62,13 @@ const PostClapMutations = extendType({
           postClap,
         })
 
-
         await createInAppNotification(ctx.db, {
           userId: post.authorId,
           type: InAppNotificationType.POST_CLAP,
-          key: { postId: post.id, },
+          key: { postId: post.id },
           subNotification: {
             postClapId: postClap.id,
-          }
+          },
         })
 
         return postClap
@@ -76,7 +77,7 @@ const PostClapMutations = extendType({
       t.field('deletePostClap', {
         type: 'PostClap',
         args: {
-          postClapId: intArg({ required: true }),
+          postClapId: nonNull(intArg()),
         },
         resolve: async (_parent, args, ctx) => {
           const { userId } = ctx.request
@@ -115,4 +116,4 @@ const PostClapMutations = extendType({
   },
 })
 
-export default [PostClap, PostClapMutations]
+export default [PostClapType, PostClapMutations]

@@ -1,7 +1,6 @@
 import * as path from 'path'
 
-import { makeSchema, declarativeWrappingPlugin } from 'nexus'
-import { nexusPrisma } from 'nexus-plugin-prisma'
+import { fieldAuthorizePlugin, makeSchema } from 'nexus'
 
 import CommentTypes from './comment'
 import TopicTypes from './topic'
@@ -15,6 +14,8 @@ import ClapTypes from './clap'
 import ThanksTypes from './thanks'
 import SubscriptionTypes from './subscription'
 import NotificationTypes from './notification'
+import BadgeTypes from './badge'
+import { DateTime } from './utils/dateTime'
 
 const reflectionRun = !!parseInt(process.env.NEXUS_REFLECTION || '0')
 
@@ -49,20 +50,17 @@ const schemaOpts: Parameters<typeof makeSchema>[0] = {
     ...ThanksTypes,
     ...SubscriptionTypes,
     ...NotificationTypes,
+    ...BadgeTypes,
+    DateTime,
   ],
+  plugins: [fieldAuthorizePlugin()],
   shouldGenerateArtifacts: reflectionRun,
-  plugins: [
-    nexusPrisma({
-      shouldGenerateArtifacts: reflectionRun,
-    }),
-    declarativeWrappingPlugin(),
-  ],
 }
 
 if (reflectionRun) {
   schemaOpts.shouldExitAfterGenerateArtifacts = true
   schemaOpts.outputs = {
-    typegen: path.join(__dirname, '../node_modules/@types/typegen-nexus/index.d.ts'),
+    typegen: path.join(__dirname, './generated/nexus.ts'),
     schema: path.join(__dirname, './api.graphql'),
   }
 }

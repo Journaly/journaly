@@ -1,137 +1,137 @@
 {
-  "signInPrompt": "Please sign in to continue.",
-  "error": "An error occurred on the server",
-  "loading": "Loading...",
+  "signInPrompt": "Si prega di effettuare l'accesso per continare.",
+  "error": "Si è verificato un errore del server",
+  "loading": "Caricamento...",
   "home": {
-    "reasonsHeader": "Three Reasons To Use Journaly",
-    "elevatorPitch": "Improve your language skills and connect with others through journaling.",
-    "getStartedText": "Get started!",
-    "reasonOneText": "Writing is such a powerful tool for improving your language skills, but it takes effort and is best when you can get feedback. Journaly is a home for your writing and great feedback from fellow language learners!",
-    "reasonTwoText": "There are many personal benefits to keeping a journal, and it is one of the most desired positive habits for many people. Journaly supercharges your language learning while helping you get all the benefits of keeping a journal!",
-    "reasonThreeText": "Many sites help you find a language exchange partner by simply matching your language interests - but that’s not good enough for us. Journaly helps you find people who also share the same interests as you!",
-    "videoHeader": "A Delightful Writing Experience",
-    "testimonialsHeader": "What Journalers are saying",
+    "reasonsHeader": "Tre ragioni per usare Journaly",
+    "elevatorPitch": "Migliora le tue abilità linguistiche e connettiti con il prossimo attraverso la scrittura.",
+    "getStartedText": "Cominciamo!",
+    "reasonOneText": "La scrittura è uno strumento potente per migliorare le tue abilità linguistiche, ma richiede un grosso sforzo e funziona meglio se hai del feedback. Journaly è un luogo dove scrivere e ricevere feedback di qualità da altri appassionati di lingue!",
+    "reasonTwoText": "Tenere un diario procura molti benefici sul piano personale, ed è una delle buone abitudini che tante persone ambiscono a mantenere. Journaly ti aiuta ad imparare le lingue offrendoti allo stesso tempo tutti i benefici di tenere un diario!",
+    "reasonThreeText": "Molti siti web aiutano a trovare partner per scambi linguistici basandosi esclusivamente sulle lingue in comune - per noi, questo non basta. Journaly ti aiuterà a trovare persone che hanno anche i tuoi stessi interessi!",
+    "videoHeader": "Una splendida esperienza di scrittura",
+    "testimonialsHeader": "Cosa dicono gli altri Journalisti",
     "nav": {
-      "about": "About",
-      "pricing": "Pricing",
-      "logIn": "Log in",
-      "signUp": "Sign up",
-      "dashboard": "Dashboard"
+      "about": "Info",
+      "pricing": "Prezzi",
+      "logIn": "Accesso",
+      "signUp": "Registrazione",
+      "dashboard": "Bacheca"
     }
   },
   "ui": {
-    "languageSelectPlaceholder": "Languages",
-    "clearFilters": "clear filters",
-    "myLanguages": "my languages",
-    "followedUsers": "followed journalers",
-    "needsFeedback": "needs feedback",
-    "hasInteracted": "commented posts",
-    "textSearchPlaceholder": "Search posts",
-    "topicSelectPlaceholder": "Topics",
-    "showAdvancedFilters": "Show Advanced Filters",
-    "hideAdvancedFilters": "Hide Advanced Filters",
-    "savedPosts": "saved posts",
-    "savePostPremiumFeatureExplanation": "Saved Posts is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!"
+    "languageSelectPlaceholder": "Lingue",
+    "clearFilters": "resetta filtri",
+    "myLanguages": "le mie lingue",
+    "followedUsers": "journalisti seguiti",
+    "needsFeedback": "necessita feedback",
+    "hasInteracted": "post commentati",
+    "textSearchPlaceholder": "Cerca post",
+    "topicSelectPlaceholder": "Argomenti",
+    "showAdvancedFilters": "Mostra Filtri Avanzati",
+    "hideAdvancedFilters": "Nascondi Filtri Avanzati",
+    "savedPosts": "post salvati",
+    "savePostPremiumFeatureExplanation": "Post Salvati è una splendida funzionalità Premium che ti permette di  salvare post per leggerli più tardi. Puoi accedere alla tua lista dai filtri avanzati della pagina Il Mio Feed! Clicca qui sotto per sapere di più su tutte le funzionalità di Journaly Premium o sentiti libero di continuare a usare tutte le fantastiche funzionalità gratuite di Journaly!"
   },
   "dashboardNav": {
-    "myFeed": "My Feed",
-    "myPosts": "My Posts",
-    "newPost": "New Post",
-    "notifications": "Notifications",
-    "settings": "Settings",
-    "logOut": "Log Out"
+    "myFeed": "Il Mio Feed",
+    "myPosts": "I Miei Post",
+    "newPost": "Nuovo Post",
+    "notifications": "Notifiche",
+    "settings": "Impostazioni",
+    "logOut": "Uscita"
   },
   "helpModal": {
-    "header": "Support",
-    "bodyOne": "Need help? We've got your back!",
-    "bodyTwo": "Please send an email to ",
-    "bodyThree": " with a detailed description of your issue and we will get back to you as soon as we can!",
-    "bodyFour": "Have you seen concerning behavior on the platform? Please refer to our Terms of Service and always feel free to report anything you feel may be misaligned with our guidelines:",
-    "termsOfService": "Terms of Service",
-    "footer": "Thanks for helping us make Journaly a better place for everyone"
+    "header": "Supporto",
+    "bodyOne": "Serve aiuto? Siamo qui per te!",
+    "bodyTwo": "Perfavore, invia un'email a ",
+    "bodyThree": " con una descrizione dettagliata del problema a cui sei andato incontro e ti risponderemo il prima possibile!",
+    "bodyFour": "Hai notato comportamenti preoccupanti sulla piattaforma? Fai riferimento ai nostri Termini di Servizio e sentiti sempre libero di segnalare qualsiasi cosa tu ritenga non conforme alle nostre linee guida:",
+    "termsOfService": "Termini di Servizio",
+    "footer": "Grazie per aiutarci a rendere Journaly un posto migliore per tutti"
   },
   "badge": {
     "ALPHA_USER": {
-      "title": "Alpha User",
-      "description": "Participated in the Journaly Alpha test. We've come a long way since then, but this user was on the front lines helping catch early bugs and shape Journally since the beginning!"
+      "title": "Utente Alfa",
+      "description": "Ha partecipato al testing di Journaly Alfa. Ne abbiamo fatta di strada da allora, ma questo utente era in prima linea ad aiutarci a risolvere i primi bug e dar forma a Journaly sin dall'inizio!"
     },
     "BETA_USER": {
       "title": "Beta User",
-      "description": "Participated in the Journaly Beta test. The hero Journaly needs."
+      "description": "Ha partecipato al testing di Journaly Beta. L'eroe di cui Journaly ha bisogno."
     },
     "CODE_CONTRIBUTOR": {
-      "title": "Code Contributor",
-      "description": "Has contributed code to the Journaly codebase. You can find the Journaly source code, and contribute yourself, at https://github.com/Journaly/journaly"
+      "title": "Collaboratore al codide",
+      "description": "Ha contribuito al codice sorgente di Journaly. Puoi trovarlo e contribuire tu stesso su https://github.com/Journaly/journaly"
     },
     "TEN_POSTS": {
-      "title": "10 Posts",
-      "description": "Published 10 posts. Really starting to get going now!"
+      "title": "10 Post",
+      "description": "Ha pubblicato 10 post. E' qui che si inizia a fare sul serio!"
     },
     "ONEHUNDRED_POSTS": {
-      "title": "100 Posts",
-      "description": "Published 100 posts. Talk about sticking with it!"
+      "title": "100 Post",
+      "description": "Ha pubblicato 100 post. Questa sì che è costanza!"
     },
     "NECROMANCER": {
-      "title": "Necromancer",
-      "description": "Gave new feedback on a post that's over a week old."
+      "title": "Necromante",
+      "description": "Ha lasciato del feedback su un post di più di una settimana fa."
     },
     "ODRADEK": {
       "title": "Odradek",
-      "description": "Did something that has no apparent function."
+      "description": "Ha fatto qualcosa che apparentemente non serve a nulla."
     }
   },
-  "emptyMessage": "Empty...",
-  "e404": "Resource not found",
-  "e403": "Not Authorized",
+  "emptyMessage": "Vuoto...",
+  "e404": "Risorsa non trovata",
+  "e403": "Non Autorizzato",
   "modal": {
-    "confirm": "Confirm",
-    "cancel": "Cancel",
-    "acknowledge": "Got it",
-    "goToPremium": "Check Out Premium",
-    "generalPremiumFeatureExplanation": "{{featureName}} is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!",
-    "unnamedPremiumFeatureExplanation": "This is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!"
+    "confirm": "Conferma",
+    "cancel": "Cancella",
+    "acknowledge": "Capito",
+    "goToPremium": "Scopri Premium",
+    "generalPremiumFeatureExplanation": "{{featureName}} è una fantastica funzionalità Premium! Clicca qui sotto per sapere di più su tutte le funzionalità di Journaly Premium o sentiti libero di continuare a usare tutte le fantastiche funzionalità gratuite di Journaly!",
+    "unnamedPremiumFeatureExplanation": "Questa è una fantastica funzionalità Premium! Clicca qui sotto per sapere di più su tutte le funzionalità di Journaly Premium o sentiti libero di continuare a usare tutte le fantastiche funzionalità gratuite di Journaly!"
   },
   "imageErrors": {
-    "initial": "Error communicating with Journaly server. Please try again later.",
-    "dataUpload": "Error transfering image to storage medium. Please try again later.",
-    "allDoneChecksFailed": "An error occurred while uploading your image. Please try again later."
+    "initial": "Errore di comunicazione con il server di Journaly. Si prega di riprovare più tardi.",
+    "dataUpload": "Errore nel trasferimento dell'immagine sul supporto di memorizzazione. Si prega di riprovare più tardi.",
+    "allDoneChecksFailed": "Errore nel caricamento dell'immagine. Si prega di riprovare più tardi."
   },
   "editor": {
-    "placeholderPrompt": "It all started this morning when..."
+    "placeholderPrompt": "Tutto è cominciato questa mattina, quando..."
   },
   "notifications": {
-    "feedTitle": "Notifications",
-    "emptyFeed": "You have no notifications... yet!",
+    "feedTitle": "Notifiche",
+    "emptyFeed": "Non ci sono notifiche... per il momento!",
     "levelOne": {
-      "newFollowers": "1 new Journaler followed you",
-      "newFollowers_plural": "{{count}} new Journalers followed you",
-      "threadComments": "There is 1 new feedback comment on your post",
-      "threadComments_plural": "There are {{count}} new feedback comments on your post",
-      "threadCommentsSubscribed": "There is 1 new feedback comment on this post",
-      "threadCommentsSubscribed_plural": "There are {{count}} new feedback comments on this post",
-      "postComments": "There is 1 new general comment on your post",
-      "postComments_plural": "There are {{count}} new general comments on your post",
-      "postCommentsSubscribed": "There is 1 new general comment on this post",
-      "postCommentsSubscribed_plural": "There are {{count}} new general comments on this post",
-      "postClaps": "1 Journaler clapped for your post",
-      "postClaps_plural": "{{count}} Journalers clapped for your post",
-      "threadCommentThanks": "{{userIdentifier}} said thanks for 1 feedback comment",
-      "threadCommentThanks_plural": "{{userIdentifier}} said thanks for {{count}} feedback comments",
-      "newPosts": "A Journaler you follow published a new post",
-      "newPosts_plural": "Journalers you follow published {{count}} new posts"
+      "newFollowers": "1 nuovo Journalista ha iniziato a seguirti",
+      "newFollowers_plural": "{{count}} nuovi Journalisti hanno iniziato a seguirti",
+      "threadComments": "C'è 1 nuovo commento di feedback sul tuo post",
+      "threadComments_plural": "Ci sono {{count}} nuovi commenti di feedback sul tuo post",
+      "threadCommentsSubscribed": "C'è un nuovo commento di feedback su questo post",
+      "threadCommentsSubscribed_plural": "Ci sono {{count}} nuovi commenti di feedback su questo post",
+      "postComments": "C'è 1 nuovo commento generale sul tuo post",
+      "postComments_plural": "Ci sono {{count}} nuovi commenti generali sul tuo post",
+      "postCommentsSubscribed": "C'è 1 nuovo commento generale su questo post",
+      "postCommentsSubscribed_plural": "Ci sono {{count}} nuovi commenti generali su questo post",
+      "postClaps": "1 Journalista ha applaudito il tuo post", 
+      "postClaps_plural": "{{count}} Journalisti hanno applaudito questo post",
+      "threadCommentThanks": "{{userIdentifier}} ha ringraziato per 1 commento di feedback",
+      "threadCommentThanks_plural": "{{userIdentifier}} ha ringraziato per {{count}} commenti di feedback",
+      "newPosts": "Un Journalista che segui ha pubblicato un nuovo post",
+      "newPosts_plural": "Dei Journalisti che segui hanno pubblicato {{count}} nuovi post"
     },
     "levelTwo": {
-      "newFollowers": "This awesome Journaler is now following you",
-      "newFollowers_plural": "These {{count}} awesome Journalers are now following you",
-      "threadCommentThanks": "{{userIdentifier}} said thank you for this helpful feedback comment",
-      "threadCommentThanks_plural": "{{userIdentifier}} said thank you for the following {{count}} helpful feedback comments",
-      "postClaps": "This Journaler clapped for your post",
-      "postClaps_plural": "These {{count}} Journalers clapped for your post",
-      "newPosts": "New posts from your community"
+      "newFollowers": "Questo fantastico Journalista ha iniziato a seguirti",
+      "newFollowers_plural": "Questi {{count}} fantastici Journalisti hanno iniziato a seguirti",
+      "threadCommentThanks": "{{userIdentifier}} ti ha ringraziato per questo utile commento di feedback",
+      "threadCommentThanks_plural": "{{userIdentifier}} ti ha ringraziato per questi {{count}} utili commenti di feedback",
+      "postClaps": "Questo Journalista ha applaudito il tuo post",
+      "postClaps_plural": "Questi {{count}} Journalisti hanno applaudito il tuo post",
+      "newPosts": "Nuovi post dalla tua comunità"
     },
     "actions": {
-      "markAsRead": "Read",
-      "delete": "Delete"
+      "markAsRead": "Leggi",
+      "delete": "Elimina"
     }
   }
 }

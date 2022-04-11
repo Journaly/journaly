@@ -304,6 +304,11 @@ export const NewPostNotificationLevelOne: React.FC<LevelOneNotificationProps> = 
   const { t } = useTranslation('common')
   const count = notification.newPostNotifications.length
 
+  const a = notification.newPostNotifications.map((notification) => notification.post.author)
+  if (!a.length || a.some(x => !x)) {
+    console.log(notification)
+  }
+
   return (
     <BaseNotificationLayout
       left={

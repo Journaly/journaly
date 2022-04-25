@@ -120,14 +120,21 @@ const Thread: React.FC<ThreadProps> = ({
             )
           })}
 
-          {!comments.length && (
-            <div className="empty-notice">{t('noCommentsYetMessage')}</div>
-          )}
+          {!comments.length && <div className="empty-notice">{t('noCommentsYetMessage')}</div>}
         </div>
         {currentUser && !archived && (
           <form onSubmit={createNewComment}>
             <fieldset>
               <div className="new-comment-block">
+                <div className="new-comment-toolbar">
+                  <Button
+                    variant={ButtonVariant.Link}
+                    className="new-comment-toolbar-btn"
+                    onClick={handleClickInsertComment}
+                  >
+                    Insert Suggestion
+                  </Button>
+                </div>
                 <Textarea
                   placeholder={t('addCommentPlaceholder')}
                   disabled={loading}
@@ -143,11 +150,7 @@ const Thread: React.FC<ThreadProps> = ({
                   >
                     {t('submit')}
                   </Button>
-                  <Button
-                    onClick={close}
-                    disabled={loading}
-                    variant={ButtonVariant.Secondary}
-                  >
+                  <Button onClick={close} disabled={loading} variant={ButtonVariant.Secondary}>
                     {t('cancel')}
                   </Button>
                 </div>
@@ -196,7 +199,7 @@ const Thread: React.FC<ThreadProps> = ({
         .new-comment-block {
           border-top: 1px solid ${theme.colors.gray400};
           margin-top: 5px;
-          padding-top: 10px;
+          padding-top: 5px;
         }
 
         .new-comment-block :global(textarea) {
@@ -206,6 +209,9 @@ const Thread: React.FC<ThreadProps> = ({
           padding: 5px 0;
           margin-right: 10px;
           resize: vertical;
+          border: 1px solid ${theme.colors.gray400};
+          border-radius: 5px;
+          padding: 0 5px;
         }
 
         .new-comment-block :global(textarea:focus) {
@@ -219,6 +225,16 @@ const Thread: React.FC<ThreadProps> = ({
 
         .btn-container :global(.new-comment-btn) {
           margin-right: 10px;
+        }
+
+        .new-comment-toolbar {
+          text-align: center;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .new-comment-toolbar-btn {
+          text-transform: uppercase;
         }
       `}</style>
     </div>

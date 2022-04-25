@@ -240,6 +240,7 @@ model Comment {
   body                       String
   authorId                   Int
   threadId                   Int
+  isSuggestion               Boolean                     @default(false)
   author                     User                        @relation(fields: [authorId], references: [id])
   thread                     Thread                      @relation(fields: [threadId], references: [id])
   thanks                     CommentThanks[]

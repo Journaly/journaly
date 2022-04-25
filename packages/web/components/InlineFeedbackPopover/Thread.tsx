@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useTranslation } from '@/config/i18n'
 import { sanitize } from '@/utils'
@@ -13,6 +13,7 @@ import theme from '@/theme'
 import Comment from './Comment'
 import Button, { ButtonVariant } from '@/components/Button'
 import Textarea from '@/components/Textarea'
+import { longestCommonSubsequence } from '@/nexus/utils/suggestionDiff'
 
 export type PendingThreadData = {
   postId: number
@@ -43,14 +44,21 @@ const Thread: React.FC<ThreadProps> = ({
   const { t } = useTranslation('comment')
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = useState(false)
   const [createComment] = useCreateCommentMutation()
   const [createThread] = useCreateThreadMutation()
+  const [isSuggestionMode, setIsSuggestionMode] = useState(false)
 
   useEffect(() => textareaRef.current?.focus(), [])
 
   const createNewComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    // TODO: Temporary for testing
+    if (isSuggestionMode) {
+      handleSubmitSuggestion()
+      return
+    }
 
     const commentBody = textareaRef.current?.value
     if (!textareaRef.current || !commentBody) return
@@ -62,8 +70,8 @@ const Thread: React.FC<ThreadProps> = ({
         const { data } = await createThread({
           variables: {
             ...pendingThreadData,
-            body: commentBody
-          }
+            body: commentBody,
+          },
         })
 
         if (!data) {
@@ -82,7 +90,6 @@ const Thread: React.FC<ThreadProps> = ({
         onNewComment(thread.id)
       }
 
-
       textareaRef.current.value = ''
     } catch (e) {
       console.error('Error creating comment or thread: ', e)
@@ -95,10 +102,22 @@ const Thread: React.FC<ThreadProps> = ({
   const archived = thread?.archived || false
   const highlightedContent = (pendingThreadData || thread)?.highlightedContent || ''
 
-  const sanitizedHTML = useMemo(
-    () => sanitize(highlightedContent),
-    [highlightedContent]
-  )
+  const sanitizedHTML = useMemo(() => sanitize(highlightedContent), [highlightedContent])
+
+  const handleClickInsertComment = () => {
+    if (textareaRef.current) {
+      setIsSuggestionMode(true)
+      textareaRef.current.value = highlightedContent
+    }
+  }
+
+  // TODO: This is just for testing purposes, integrate this functionality into `createNewComment`
+  const handleSubmitSuggestion = () => {
+    if (textareaRef.current) {
+      const lcs = longestCommonSubsequence(textareaRef.current.value, highlightedContent)
+      console.log(lcs)
+    }
+  }
 
   return (
     <div className="thread">

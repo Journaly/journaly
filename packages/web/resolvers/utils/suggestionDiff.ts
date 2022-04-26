@@ -2,6 +2,40 @@ type Memo = {
   [a: string]: string
 }
 
+const suggestionDiff = (originalStr: string, suggestedStr: string) => {
+  const lcs = longestCommonSubsequence(originalStr, suggestedStr)
+
+  let idx1 = 0
+  let idx1Next = 0
+  let idx2 = 0
+  let idx2Next = 0
+  const additions = []
+  const deletions = []
+
+  for (let idx = 0; idx < lcs.length; idx += 1) {
+    idx1Next = originalStr.indexOf(lcs[idx], idx1)
+    idx2Next = suggestedStr.indexOf(lcs[idx], idx2)
+
+    deletions.push(`x${originalStr.substring(idx1, idx1Next)}x`)
+    additions.push(`+${suggestedStr.substring(idx2, idx2Next)}+`)
+
+    additions.push(lcs[idx])
+    deletions.push(lcs[idx])
+
+    idx1 = idx1Next + 1
+    idx2 = idx2Next + 1
+  }
+
+  additions.push(`+${suggestedStr.substring(idx2)}+`)
+  deletions.push(`x${originalStr.substring(idx1)}x`)
+
+  return {
+    lcs,
+    additions: additions.join(''),
+    deletions: deletions.join(''),
+  }
+}
+
 // TODO: Optimize string concatentation
 const longestCommonSubsequence = (
   str1: string,
@@ -30,4 +64,4 @@ const longestCommonSubsequence = (
   return memo[position]
 }
 
-export { longestCommonSubsequence }
+export { longestCommonSubsequence, suggestionDiff }

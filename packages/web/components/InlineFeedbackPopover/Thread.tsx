@@ -13,7 +13,7 @@ import theme from '@/theme'
 import Comment from './Comment'
 import Button, { ButtonVariant } from '@/components/Button'
 import Textarea from '@/components/Textarea'
-import { longestCommonSubsequence } from '@/nexus/utils/suggestionDiff'
+import { suggestionDiff } from '@/nexus/utils/suggestionDiff'
 
 export type PendingThreadData = {
   postId: number
@@ -114,8 +114,8 @@ const Thread: React.FC<ThreadProps> = ({
   // TODO: This is just for testing purposes, integrate this functionality into `createNewComment`
   const handleSubmitSuggestion = () => {
     if (textareaRef.current) {
-      const lcs = longestCommonSubsequence(textareaRef.current.value, highlightedContent)
-      console.log(lcs)
+      const diff = suggestionDiff(highlightedContent, textareaRef.current.value)
+      console.log(diff)
     }
   }
 

@@ -159,20 +159,20 @@ const Thread: React.FC<ThreadProps> = ({
                   disabled={loading}
                   ref={textareaRef}
                 />
-                <div className="btn-container">
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    loading={loading}
-                    className="new-comment-btn"
-                    variant={ButtonVariant.PrimaryDark}
-                  >
-                    {t('submit')}
-                  </Button>
-                  <Button onClick={close} disabled={loading} variant={ButtonVariant.Secondary}>
-                    {t('cancel')}
-                  </Button>
-                </div>
+              </div>
+              <div className="btn-container">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  loading={loading}
+                  className="new-comment-btn"
+                  variant={ButtonVariant.PrimaryDark}
+                >
+                  {t('submit')}
+                </Button>
+                <Button onClick={close} disabled={loading} variant={ButtonVariant.Secondary}>
+                  {t('cancel')}
+                </Button>
               </div>
             </fieldset>
           </form>
@@ -215,16 +215,17 @@ const Thread: React.FC<ThreadProps> = ({
           font-style: italic;
         }
 
-        .new-comment-block {
-          border-top: 1px solid ${theme.colors.gray400};
-          margin-top: 5px;
-          padding-top: 5px;
+        fieldset {
+          padding: 0 5px 5px;
+          border: 1px solid ${theme.colors.gray400};
+          border-radius: 5px;
+          background-color: ${theme.colors.gray100};
         }
 
         .new-comment-block :global(textarea) {
           min-height: 4em;
           width: 100%;
-          background-color: transparent;
+          background-color: white;
           padding: 5px 0;
           margin-right: 10px;
           resize: vertical;
@@ -250,6 +251,7 @@ const Thread: React.FC<ThreadProps> = ({
           text-align: center;
           font-size: 12px;
           font-weight: 600;
+          /* background-color: ${theme.colors.gray100}; */
         }
 
         .new-comment-toolbar-btn {

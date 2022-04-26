@@ -169,12 +169,19 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
             </span>
           </div>
         </div>
-        <EditableMarkdown
-          body={comment.body}
-          updatingCommentBody={updatingCommentBody}
-          setUpdatingCommentBody={setUpdatingCommentBody}
-          editing={isEditMode}
-        />
+        {comment.isSuggestion ? (
+          <div>
+            <p>Suggested Changes:</p>
+            <p>{comment.body}</p>
+          </div>
+        ) : (
+          <EditableMarkdown
+            body={comment.body}
+            updatingCommentBody={updatingCommentBody}
+            setUpdatingCommentBody={setUpdatingCommentBody}
+            editing={isEditMode}
+          />
+        )}
       </div>
       {canEdit && !isEditMode && (
         <div className="edit-thanks-block">

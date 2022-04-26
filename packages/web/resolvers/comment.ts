@@ -49,6 +49,7 @@ const Comment = objectType({
     t.model.id()
     t.model.author()
     t.model.body()
+    t.model.isSuggestion()
     t.model.createdAt()
     t.model.authorLanguageLevel()
     t.model.thanks({ pagination: false })

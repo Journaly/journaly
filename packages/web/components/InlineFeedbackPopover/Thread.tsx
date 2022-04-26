@@ -71,6 +71,7 @@ const Thread: React.FC<ThreadProps> = ({
           variables: {
             ...pendingThreadData,
             body: commentBody,
+            isSuggestion: isSuggestionMode,
           },
         })
 

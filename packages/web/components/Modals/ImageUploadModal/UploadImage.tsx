@@ -5,14 +5,15 @@ import { ButtonVariant } from '@/components/Button'
 
 type UploadImageProps = {
   onFileInputChange: () => void
+  loading: boolean
 }
 
-const UploadImage: React.FC<UploadImageProps> = ({ onFileInputChange, uploadingImage }) => {
+const UploadImage: React.FC<UploadImageProps> = ({ onFileInputChange, loading }) => {
   return (
     <FileInput
       variant={ButtonVariant.Primary}
       className="image-upload-btn"
-      loading={uploadingImage}
+      loading={loading}
       onChange={onFileInputChange}
     >
       Choose image to upload

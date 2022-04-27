@@ -253,6 +253,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
           onImageSelect={() => {}}
           onFileInputChange={onFileInputChange}
           onCancel={() => setDisplayImageUploadModal(false)}
+          imageUploadLoading={uploadingImage}
         />
       )}
 

@@ -10,6 +10,7 @@ type ImageUploadModalProps = {
   onCancel: () => void
   onUnsplashSelect: (smallUrl: string, largeUrl: string) => void
   onFileInputChange: () => void
+  imageUploadLoading: boolean
 }
 
 enum UploadMethod {
@@ -20,6 +21,7 @@ enum UploadMethod {
 const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   onImageSelect,
   onFileInputChange,
+  imageUploadLoading,
   onCancel,
 }) => {
   const { t } = useTranslation('common')
@@ -47,7 +49,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             </div>
             <div>
               {uploadMethod === UploadMethod.UPLOAD ? (
-                <UploadImage onFileInputChange={onFileInputChange} />
+                <UploadImage onFileInputChange={onFileInputChange} loading={imageUploadLoading} />
               ) : (
                 <SearchUnsplash onImageSelect={onImageSelect} />
               )}

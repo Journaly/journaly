@@ -8,6 +8,9 @@ type SearchUnsplashProps = {
   onImageSelect: () => void
 }
 
+type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
+type SearchResponse = Awaited<ReturnType<ReturnType<typeof createApi>['search']['getPhotos']>>
+
 type ImageType = {
   id: number
   width: number
@@ -63,7 +66,7 @@ const ImageComp: React.FC<{ image: ImageType; onImageSelect: any }> = ({
 }
 
 const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
-  const [data, setPhotosResponse] = React.useState<any>()
+  const [data, setPhotosResponse] = React.useState<SearchResponse>()
 
   const onSearchChange = (query: string) => {
     unsplashApi.search

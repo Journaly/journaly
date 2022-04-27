@@ -6,7 +6,10 @@ import UploadImage from './UploadImage'
 import SearchUnsplash from './SearchUnsplash'
 
 type ImageUploadModalProps = {
-  onClose: () => void
+  onImageSelect: () => void
+  onCancel: () => void
+  onUnsplashSelect: (smallUrl: string, largeUrl: string) => void
+  onFileInputChange: () => void
 }
 
 enum UploadMethod {
@@ -14,7 +17,11 @@ enum UploadMethod {
   UNSPLASH,
 }
 
-const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ onClose }) => {
+const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
+  onImageSelect,
+  onFileInputChange,
+  onCancel,
+}) => {
   const { t } = useTranslation('common')
   const [uploadMethod, setUploadMethod] = useState<UploadMethod>(UploadMethod.UPLOAD)
 
@@ -38,7 +45,13 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ onClose }) => {
                 Search Unsplash
               </Button>
             </div>
-            <div>{uploadMethod === UploadMethod.UPLOAD ? <UploadImage /> : <SearchUnsplash />}</div>
+            <div>
+              {uploadMethod === UploadMethod.UPLOAD ? (
+                <UploadImage onFileInputChange={onFileInputChange} />
+              ) : (
+                <SearchUnsplash onImageSelect={onImageSelect} />
+              )}
+            </div>
           </div>
           <style jsx>{`
             .upload-method-toolbar {
@@ -47,7 +60,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ onClose }) => {
           `}</style>
         </>
       }
-      onClose={onClose}
+      onClose={onCancel}
     />
   )
 }

@@ -1,11 +1,22 @@
 import React from 'react'
-import Button from '@/components/Button'
 
-const UploadImage = () => {
+import FileInput from '@/components/FileInput'
+import { ButtonVariant } from '@/components/Button'
+
+type UploadImageProps = {
+  onFileInputChange: () => void
+}
+
+const UploadImage: React.FC<UploadImageProps> = ({ onFileInputChange, uploadingImage }) => {
   return (
-    <div>
-      <Button>Choose an image</Button>
-    </div>
+    <FileInput
+      variant={ButtonVariant.Primary}
+      className="image-upload-btn"
+      loading={uploadingImage}
+      onChange={onFileInputChange}
+    >
+      Choose image to upload
+    </FileInput>
   )
 }
 

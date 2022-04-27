@@ -5,9 +5,7 @@ import SearchInput from '@/components/Dashboard/Filters/SearchInput'
 import Button from '@/components/Button'
 
 type SearchUnsplashProps = {
-  onCancel: () => void
-  onUnsplashSelect: (smallUrl: string, largeUrl: string) => void
-  show: boolean
+  onImageSelect: () => void
 }
 
 type ImageType = {
@@ -64,7 +62,7 @@ const ImageComp: React.FC<{ image: ImageType; onImageSelect: any }> = ({
   )
 }
 
-const SearchUnsplash = () => {
+const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
   const [data, setPhotosResponse] = React.useState<any>()
 
   const onSearchChange = (query: string) => {

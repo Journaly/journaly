@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createApi } from 'unsplash-js'
 
 import SearchInput from '@/components/Dashboard/Filters/SearchInput'
@@ -27,7 +27,7 @@ const unsplashApi = createApi({
   accessKey: process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY as string,
 })
 
-const ImageComp: React.FC<{ image: ImageType; onImageSelect: any }> = ({
+const ImageComp: React.FC<{ image: ImageType; onImageSelect: () => void }> = ({
   image,
   onImageSelect,
 }) => {
@@ -35,23 +35,19 @@ const ImageComp: React.FC<{ image: ImageType; onImageSelect: any }> = ({
 
   return (
     <>
-      <img
-        className="img"
-        src={urls.thumb}
-        onClick={() => onImageSelect(urls.small, urls.regular)}
-      />
+      <img src={urls.thumb} onClick={() => onImageSelect(urls.small, urls.regular)} />
       <a className="credit" target="_blank" href={`https://unsplash.com/@${user.username}`}>
         {user.name}
       </a>
       <style jsx>{`
-        .img {
+        img {
           position: relative;
           margin-bottom: 4px;
           width: 100%;
           max-height: 300px;
           object-fit: cover;
         }
-        .img:hover {
+        img:hover {
           cursor: pointer;
         }
         .credit {
@@ -66,17 +62,21 @@ const ImageComp: React.FC<{ image: ImageType; onImageSelect: any }> = ({
 }
 
 const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
-  const [data, setPhotosResponse] = React.useState<SearchResponse>()
+  const [imageData, setImageData] = React.useState<SearchResponse>()
 
-  const onSearchChange = (query: string) => {
-    unsplashApi.search
-      .getPhotos({ query, orientation: 'landscape' })
-      .then((result) => {
-        setPhotosResponse(result.response?.results)
+  const onSearchChange = async (query: string) => {
+    try {
+      const images = await unsplashApi.search.getPhotos({
+        query,
+        orientation: 'landscape',
+        page: 1,
+        perPage: 25,
       })
-      .catch(() => {
-        console.log('something went wrong!')
-      })
+
+      setImageData(images.response?.results)
+    } catch (error) {
+      console.log('There was an error:', error)
+    }
   }
 
   return (
@@ -85,7 +85,7 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
       <SearchInput debounceTime={500} defaultValue="" onChange={onSearchChange} />
       <div className="image-feed">
         <ul className="col">
-          {data?.map((image: ImageType) => (
+          {imageData?.map((image: ImageType) => (
             <li key={image.id}>
               <ImageComp image={image} onImageSelect={onImageSelect} />
             </li>

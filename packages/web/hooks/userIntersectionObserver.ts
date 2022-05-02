@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react'
  */
 
 type IntersectionObserverOptions = {
-  root?: HTMLElement | null
+  root?: HTMLElement | Document | null
   rootMargin?: string
   threshold?: number
 }

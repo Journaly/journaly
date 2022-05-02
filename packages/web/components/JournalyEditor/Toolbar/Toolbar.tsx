@@ -64,6 +64,7 @@ const Toolbar = ({
 
   const [toolbarObserverRef, toolbarShouldFloat] = useIntersectionObserver({
     rootMargin: `${toolbarStickyOffset}px 0px 0px 0px`,
+    root: window.visualViewport,
   })
 
   const toolbarClasses = classNames('editor-toolbar-container', { 'is-fixed': !toolbarShouldFloat })
@@ -160,6 +161,8 @@ const Toolbar = ({
         <style jsx>{`
           .editor-toolbar-container {
             position: sticky;
+            // Update this value when visualViewport (diff between viewport & visualViewport)
+            // listen to changes to size of visualViewport
             top: 20px;
             z-index: 1;
             background-color: ${theme.colors.white};

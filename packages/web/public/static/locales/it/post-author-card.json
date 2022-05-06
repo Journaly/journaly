@@ -1,10 +1,10 @@
 {
-  "languagesHeader": "Languages",
-  "hasWritten": "posts written",
-  "postsWrittenCountSingular": "post written",
-  "postsWrittenCountPlural": "posts written",
-  "thanksReceivedCountSingular": "thanks received",
-  "thanksReceivedCountPlural": "thanks received",
-  "follow": "Follow",
-  "unfollow": "Unfollow"
+  "languagesHeader": "Lingue",
+  "hasWritten": "post scritti",
+  "postsWrittenCountSingular": "post scritto",
+  "postsWrittenCountPlural": "post scritti",
+  "thanksReceivedCountSingular": "ringraziamenti ricevuti",
+  "thanksReceivedCountPlural": "ringraziamenti ricevuti",
+  "follow": "Segui",
+  "unfollow": "Smetti di seguire"
 }

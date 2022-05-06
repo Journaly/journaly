@@ -127,7 +127,7 @@ const sendPasswordResetTokenEmail = ({ user, resetToken }: sendPasswordResetToke
     subject: 'Your Password Reset Link',
     html: makeEmail(`
       <p>I heard you were having some trouble logging in.</>
-      <p>Click <a href="https://${process.env.SITE_DOMAIN}/dashboard/reset-password?resetToken=${resetToken}">here</a> to reset your password!</p>
+      <p>Click <a href="https://${process.env.SITE_DOMAIN}/reset-password?resetToken=${resetToken}">here</a> to reset your password!</p>
       <p>Please note that the link will expire in 1 hour.</p>
     `),
   })
@@ -167,7 +167,7 @@ const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {
       <p>Congratulations! You just earned the "${getBadgeName(badgeType)}" badge on Journaly.</p>
       <p>This badge will now be displayed on your <a href="https://${
         process.env.SITE_DOMAIN
-      }/dashboard/profile/${user.id}">profile page</a>.</p>
+      }/user/${user.handle}">profile page</a>.</p>
     `),
   })
 }

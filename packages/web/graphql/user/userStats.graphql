@@ -1,5 +1,5 @@
 query userStats($id: Int!) {
-  userById(id: $id) {
+  userByIdentifier(id: $id) {
     id
     name
     handle

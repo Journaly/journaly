@@ -7,7 +7,7 @@ describe('Subscribe to Premium', () => {
   beforeEach(() => {
     cy.login()
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
-    cy.visit('/dashboard/settings/subscription')
+    cy.visit('/settings/subscription')
   })
   it('User enters invalid card number', () => {
     // TODO: Write test

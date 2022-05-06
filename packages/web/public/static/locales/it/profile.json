@@ -1,32 +1,35 @@
 {
   "card": {
-    "speaks": "speaks",
-    "learns": "learns",
-    "likes": "likes"
+    "speaks": "parla",
+    "learns": "studia",
+    "likes": "adora" 
   },
   "stats": {
     "summary": {
-      "title": "Summary",
-      "userAge": "{{name}} has been journaling on Journaly since {{joinDate}} (that's {{age}}).",
-      "postCount": "In that time they've published {{postCount}} posts in {{languageCount}} different languages.",
-      "noPosts": "So far they haven't written any posts.",
-      "commentCounts": "They've also left {{postCommentCount}} general comments on posts and {{threadCommentCount}} inline feedback comments, helping other users improve their language skills.",
-      "noComments": "They haven't left any feedback on other journalers' posts yet.",
-      "thanksCount": "For their hard work helping others, they've been thanked {{thanksCount}} times."
+      "title": "In breve",
+      "userAge": "{{name}} è utente di Journaly dal {{joinDate}} ({{age}}).",
+      "postCount": "Fino ad ora ha pubblicato {{postCount}} post in {{languageCount}} lingue diverse.",
+      "noPosts": "Non ha ancora scritto nessun post.",
+      "commentCounts": "Ha anche lasciato {{postCommentCount}} commenti generali a post e {{threadCommentCount}} commenti di feeback inline, aiutando altri utenti a migliorare le loro abilità linguistiche.",
+      "noComments": "Non ha ancora lasciato commenti sui post di altri journalisti.",
+      "thanksCount": "Per il loro gran lavoro di aiuto agli altri, sono stati ringraziati {{thanksCount}} volte."
     },
     "activity": {
-      "title": "Activity History",
+      "title": "Cronologia attività",
       "types": {
-        "posts": "Posts",
-        "postComments": "Post Comments",
-        "threadComments": "Inline Comments"
+        "posts": "Post",
+        "postComments": "Commenti ai Post",
+        "threadComments": "Commenti Inline"
       }
     }
   },
-  "statsTitle": "Stats",
-  "postsTitle": "Recent Posts",
-  "emptyPosts": "{{user}} hasn't written any posts yet.",
-  "loggedInUserEmptyPosts": "You have no recent posts. <1>Write a new post</1>!",
-  "follow": "Follow",
-  "unfollow": "Unfollow"
-}
+  "statsTitle": "Statistiche",
+  "postsTitle": "Post Recenti",
+  "emptyPosts": "{{user}} non ha ancora scritto nessun post.",
+  "loggedInUserEmptyPosts": "Non ci sono post recenti. <1>Scrivi un nuovo post</1>!",
+  "follow": "Segui",
+  "unfollow": "Smetti di seguire",
+  "followerCount": "{{count}} Follower",
+  "followerCount_plural": "{{count}} Seguaci",
+  "followingCount": "{{count}} Seguiti",
+  "followingCount_plural": "{{count}} Seguiti"

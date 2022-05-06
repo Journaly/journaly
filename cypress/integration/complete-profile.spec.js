@@ -2,7 +2,7 @@ describe('User completes their profile', () => {
   beforeEach(() => {
     cy.login()
     cy.setLocalStorage('welcome-modal-july-2020', 'seen')
-    cy.visit('/dashboard/settings/profile')
+    cy.visit('/settings/profile')
   })
   it('User fills out personal details and bio', () => {
     // TODO: Write test

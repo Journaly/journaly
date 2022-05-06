@@ -22,15 +22,15 @@ const Nav = () => {
             <a className="nav-link">{t('home.nav.pricing')}</a>
           </NavLink>
           {currentUser ? (
-            <NavLink href="/dashboard/my-feed">
+            <NavLink href="/my-feed">
               <a className="nav-link">{t('home.nav.dashboard')}</a>
             </NavLink>
           ) : (
             <>
-              <NavLink href="/dashboard/login">
+              <NavLink href="/login">
                 <a className="nav-link">{t('home.nav.logIn')}</a>
               </NavLink>
-              <NavLink href="/dashboard/signup">
+              <NavLink href="/signup">
                 <a className="nav-link">{t('home.nav.signUp')}</a>
               </NavLink>
             </>

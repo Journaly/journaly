@@ -13,7 +13,7 @@
     "testimonialsHeader": "O que dizem os usuários do Journaly",
     "nav": {
       "about": "Sobre",
-      "pricing": "Pricing",
+      "pricing": "Preços",
       "logIn": "Entrar",
       "signUp": "Increver-se",
       "dashboard": "Dashboard"
@@ -31,13 +31,13 @@
     "showAdvancedFilters": "Show Advanced Filters",
     "hideAdvancedFilters": "Hide Advanced Filters",
     "savedPosts": "saved posts",
-    "savePostPremiumFeatureExplanation": "Saved Posts is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!"
+    "savePostPremiumFeatureExplanation": "Publicações salvas é uma funcionalidade Premium que te deixa salvar publicações para ler mais tarde. Para lê-las, acesse sua lista no seu Feed com o uso dos filtros avançados! Clique no link abaixo para ver todos os detalhes do Journaly Premium, ou fique a vontade para continuar escrevendo no Journaly com todas as fantásticas funcionabilidades gratuitas!"
   },
   "dashboardNav": {
     "myFeed": "Meu feed",
     "myPosts": "Minhas postagens",
     "newPost": "Nova postagem",
-    "notifications": "Notifications",
+    "notifications": "Notificações",
     "settings": "Configurações",
     "logOut": "Sair"
   },
@@ -70,8 +70,8 @@
       "description": "Publicou 100 postagens. Isso que chamamos de perseverança!"
     },
     "NECROMANCER": {
-      "title": "Necromancer",
-      "description": "Gave new feedback on a post that's over a week old."
+      "title": "Necromante",
+      "description": "Fez alguma coisa que não tem nenhuma função óbvia."
     },
     "ODRADEK": {
       "title": "Odradek",
@@ -84,10 +84,10 @@
   "modal": {
     "confirm": "Confirmar",
     "cancel": "Cancelar",
-    "acknowledge": "Got it",
-    "goToPremium": "Check Out Premium",
-    "generalPremiumFeatureExplanation": "{{featureName}} is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!",
-    "unnamedPremiumFeatureExplanation": "This is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!"
+    "acknowledge": "Entendi",
+    "goToPremium": "Venha conhecer o Premium",
+    "generalPremiumFeatureExplanation": "{{featureName}} é uma funcionabilidade Premium incrível! Clique abaixo para conhecer todos os detalhes do Journaly Premium ou fique a vontade para continuar escrevendo no Journaly!",
+    "unnamedPremiumFeatureExplanation": "Isso é uma funcionabilidade Premium incrível! Clique abaixo para conhecer todos os detalhes do Journaly Premium ou fique a vontade para continuar escrevendo no Journaly!"
   },
   "imageErrors": {
     "initial": "Erro de comunicação com o servidor do Journaly. Por favor, tente novamente mais tarde.",
@@ -98,7 +98,7 @@
     "placeholderPrompt": "Tudo começou essa manhã quando..."
   },
   "notifications": {
-    "feedTitle": "Notifications",
+    "feedTitle": "Notificações",
     "emptyFeed": "You have no notifications... yet!",
     "levelOne": {
       "newFollowers": "1 new Journaler followed you",

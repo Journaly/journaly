@@ -1,10 +1,10 @@
 {
   "languagesHeader": "Línguas",
-  "hasWritten": "Postagens escritas",
-  "postsWrittenCountSingular": "Postagem",
-  "postsWrittenCountPlural": "Postagens",
-  "thanksReceivedCountSingular": "Recebeu",
-  "thanksReceivedCountPlural": "Obrigados",
+  "hasWritten": "Publicações escritas",
+  "postsWrittenCountSingular": "publicação escrita",
+  "postsWrittenCountPlural": "publicações escritas",
+  "thanksReceivedCountSingular": "Recebeu 1 obrigado",
+  "thanksReceivedCountPlural": "Recebeu {{}} obrigados",
   "follow": "Seguir",
   "unfollow": "Deixar de seguir"
 }

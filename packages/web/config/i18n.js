@@ -10,7 +10,7 @@ const getLocalePath = () =>
 module.exports = new NextI18Next({
   defaultLanguage: 'en',
   // Other languages will be added here once there are translations for them, e.g. ['es', 'de']
-  otherLanguages: ['de', 'es', 'zh_CN', 'zh_TW'],
+  otherLanguages: ['de', 'es', 'zh_CN', 'zh_TW', 'pt_BR'],
   // The "dev" fallback language will show the translation key, indicating there is a missing translation
   fallbackLng: process.env.NODE_ENV === 'production' ? 'en' : 'dev',
   // Help nexti18next figure out how to load in a serverless env

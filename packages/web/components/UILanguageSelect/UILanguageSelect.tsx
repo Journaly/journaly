@@ -10,6 +10,7 @@ const uiLanguageOptions = [
   { value: 'es', displayName: 'Español' },
   { value: 'zh_CN', displayName: '中文 (Simplified)' },
   { value: 'zh_TW', displayName: '中文 (Traditional)' },
+  { value: 'pt_BR', displayName: 'Português Brasileiro' },
 ]
 
 const UILanguageSelect = () => {

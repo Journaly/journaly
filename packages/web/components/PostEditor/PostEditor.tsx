@@ -103,6 +103,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
     return { value, displayName }
   })
 
+  // TOOD: When selecting an image from Unsplash, do we want to only get the regular size
+  // image and simply upload that and then let Thumbbuster handle the thumbnailing?
   const [image, uploadingImage, onFileInputChange, resetImage] = usePostImageUpload()
   const postImage = image?.finalUrlLarge || initialData.headlineImage.largeSize
 

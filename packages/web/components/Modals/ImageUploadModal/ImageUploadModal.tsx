@@ -4,11 +4,12 @@ import Button, { ButtonVariant } from '@/components/Button'
 import Modal from '@/components/Modal'
 import UploadImage from './UploadImage'
 import SearchUnsplash from './SearchUnsplash'
+import theme from '@/theme'
 
 type ImageUploadModalProps = {
   onImageSelect: () => void
   onCancel: () => void
-  onUnsplashSelect: (smallUrl: string, largeUrl: string) => void
+  onUnsplashSelect: (smallSizeUrl: string, largeSizeUrl: string) => void
   onFileInputChange: () => void
   imageUploadLoading: boolean
 }
@@ -32,7 +33,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       title="Upload An Image"
       body={
         <>
-          <div>
+          <div className="upload-method-container">
             <div className="upload-method-toolbar">
               <Button
                 variant={ButtonVariant.Link}
@@ -47,7 +48,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                 Search Unsplash
               </Button>
             </div>
-            <div>
+            <div className="upload-method-content">
               {uploadMethod === UploadMethod.UPLOAD ? (
                 <UploadImage onFileInputChange={onFileInputChange} loading={imageUploadLoading} />
               ) : (
@@ -56,8 +57,33 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             </div>
           </div>
           <style jsx>{`
+            .upload-method-container {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            }
+
             .upload-method-toolbar {
               display: flex;
+              gap: 10px;
+              padding: 8px;
+              width: 100%;
+            }
+
+            .upload-method-toolbar > :global(button) {
+              color: black;
+              border-radius: 0;
+              transition: border-bottom 200ms ease;
+            }
+
+            .upload-method-toolbar
+              > :global(button:nth-child(${uploadMethod === UploadMethod.UPLOAD ? 1 : 2})) {
+              border-bottom: 1px solid ${theme.colors.black};
+            }
+
+            .upload-method-content {
+              display: flex;
+              width: 100%;
             }
           `}</style>
         </>

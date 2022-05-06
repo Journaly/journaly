@@ -5,7 +5,7 @@ import SearchInput from '@/components/Dashboard/Filters/SearchInput'
 import Button from '@/components/Button'
 
 type SearchUnsplashProps = {
-  onImageSelect: () => void
+  onImageSelect: (smallSizeUrl: string, largeSizeUrl: string) => void
 }
 
 type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
@@ -81,7 +81,7 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
 
   return (
     <div>
-      <h3>Find an image on Unsplash</h3>
+      {/* TODO: Figure out adding a param for making the placeholder text more flexible */}
       <SearchInput debounceTime={500} defaultValue="" onChange={onSearchChange} />
       <div className="image-feed">
         <ul className="col">

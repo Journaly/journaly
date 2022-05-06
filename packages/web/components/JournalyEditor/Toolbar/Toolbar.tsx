@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { Popup } from 'reactjs-popup'
 import {
@@ -46,6 +46,8 @@ const Toolbar = ({
   onToggleShouldPlayTypewriterSounds,
 }: ToolbarProps) => {
   const { t } = useTranslation('j-editor')
+  // The diff between viewport & visualViewport sizes
+  const [viewportsDiff, setViewportsDiff] = useState(0)
 
   const editor = useSlate()
   const isEditorFocused = useFocused()
@@ -64,8 +66,27 @@ const Toolbar = ({
 
   const [toolbarObserverRef, toolbarShouldFloat] = useIntersectionObserver({
     rootMargin: `${toolbarStickyOffset}px 0px 0px 0px`,
-    root: window.visualViewport,
   })
+
+  useEffect(() => {
+    const onVisualViewportChange = () => {
+      setViewportsDiff(visualViewport.offsetTop)
+      console.log(window.innerHeight, visualViewport.height)
+      console.log(visualViewport.offsetTop)
+    }
+
+    onVisualViewportChange()
+
+    visualViewport.addEventListener('resize', onVisualViewportChange)
+    visualViewport.addEventListener('scroll', onVisualViewportChange)
+
+    return () => {
+      visualViewport.removeEventListener('resize', onVisualViewportChange)
+      visualViewport.removeEventListener('scroll', onVisualViewportChange)
+    }
+  }, [])
+
+  console.log('outer', viewportsDiff)
 
   const toolbarClasses = classNames('editor-toolbar-container', { 'is-fixed': !toolbarShouldFloat })
 
@@ -163,9 +184,10 @@ const Toolbar = ({
             position: sticky;
             // Update this value when visualViewport (diff between viewport & visualViewport)
             // listen to changes to size of visualViewport
-            top: 20px;
+            top: ${viewportsDiff + 20}px;
             z-index: 1;
             background-color: ${theme.colors.white};
+            transition: top 0.25s ease;
           }
 
           .editor-toolbar {
@@ -200,7 +222,7 @@ const Toolbar = ({
 
           @media (${navConstants.mobileNavOnly}) {
             .editor-toolbar-container {
-              top: 80px;
+              top: ${viewportsDiff + 80}px;
             }
           }
 

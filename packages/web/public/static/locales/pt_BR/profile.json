@@ -23,10 +23,10 @@
       }
     }
   },
-  "statsTitle": "Stats",
+  "statsTitle": "Estatísticas",
   "postsTitle": "Postagens recentes",
   "emptyPosts": "{{user}} não escreveu postagens ainda.",
   "loggedInUserEmptyPosts": "Você não tem nenhuma postagem recente. <1> Escrever uma nova postagem</1>!",
-  "follow": "Follow",
-  "unfollow": "Unfollow"
+  "follow": "Seguir",
+  "unfollow": "Deixar de seguir"
 }

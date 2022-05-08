@@ -38,7 +38,7 @@ const ModalBody: React.FC<Props> = (props) => {
         }
         @media (min-width: ${modalConstants.modalBreakpoint}) {
           #modal-body {
-            padding: 0 64px 64px;
+            padding: 0 40px 40px;
           }
         }
 

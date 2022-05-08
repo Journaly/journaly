@@ -44,7 +44,10 @@ const ModalBody: React.FC<Props> = (props) => {
 
         h1 {
           margin-bottom: 16px;
-          ${theme.typography.headingXL};
+          ${theme.typography.fontFamilySansSerif};
+          font-size: 24px;
+          text-align: center;
+          font-weight: 600;
         }
       `}</style>
     </div>

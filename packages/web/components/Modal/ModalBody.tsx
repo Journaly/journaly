@@ -38,13 +38,16 @@ const ModalBody: React.FC<Props> = (props) => {
         }
         @media (min-width: ${modalConstants.modalBreakpoint}) {
           #modal-body {
-            padding: 0 64px 64px;
+            padding: 0 40px 40px;
           }
         }
 
         h1 {
           margin-bottom: 16px;
-          ${theme.typography.headingXL};
+          ${theme.typography.fontFamilySansSerif};
+          font-size: 24px;
+          text-align: center;
+          font-weight: 600;
         }
       `}</style>
     </div>

@@ -18,19 +18,21 @@ export default function useAutosavedState<T>(
   const storage: any = (typeof window !== 'undefined' && window.localStorage) || {}
   const storageKey = `autosave-v1[${mergedOpts.key || 'default'}]`
 
-  const [value, setValue] = React.useState<T>(initialValue)
-  const valueRef = React.useRef({ savePending: false, value })
-
-  React.useEffect(() => {
+  const initializer = React.useMemo(() => {
     if (storageKey in storage) {
       const { value, timestamp } = JSON.parse(storage[storageKey])
 
       if (timestamp > mergedOpts.initialTimestamp) {
-        console.info('Restoring value from storage')
-        setValue(value)
+        console.info('Restoring value from storage', storageKey)
+        return value
       }
     }
+
+    return initialValue
   }, [])
+
+  const [value, setValue] = React.useState<T>(initializer)
+  const valueRef = React.useRef({ savePending: false, value })
 
   React.useEffect(() => {
     valueRef.current.value = value

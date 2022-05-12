@@ -98,6 +98,10 @@ const JournalyEditor = ({
     ;(slateRef as React.MutableRefObject<Editor>).current = editor
   }, [editor])
 
+  if (typeof window === 'undefined') {
+    return null
+  }
+
   return (
     <div className="editor-wrapper">
       <div className="editor-container">

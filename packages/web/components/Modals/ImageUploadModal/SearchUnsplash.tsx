@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { createApi } from 'unsplash-js'
 
 import SearchInput from '@/components/Dashboard/Filters/SearchInput'
-import Button from '@/components/Button'
 
 type SearchUnsplashProps = {
   onImageSelect: (smallSizeUrl: string, largeSizeUrl: string) => void
@@ -80,7 +79,7 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
   }
 
   return (
-    <div>
+    <div className="container">
       {/* TODO: Figure out adding a param for making the placeholder text more flexible */}
       <SearchInput debounceTime={500} defaultValue="" onChange={onSearchChange} />
       <div className="image-feed">
@@ -93,6 +92,10 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
         </ul>
       </div>
       <style jsx>{`
+        .container {
+          width: 100%;
+        }
+
         .col {
           width: 100%;
           list-style: none;
@@ -101,6 +104,7 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
           display: flex;
           flex-direction: column;
         }
+
         li {
           margin-bottom: 12px;
         }

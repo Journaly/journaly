@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import Nav, { navConstants } from '@/components/Dashboard/Nav'
-import { layoutPadding, headerHeight } from '@/components/Dashboard/dashboardConstants'
+import { layoutPadding } from '@/components/Dashboard/dashboardConstants'
 import Header from '@/components/Dashboard/Header'
 import NotificationContextProvider from '../NotificationFeed/NotificationContext'
 

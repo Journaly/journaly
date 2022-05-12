@@ -187,7 +187,7 @@ const Toolbar = ({
             top: ${viewportsDiff + 20}px;
             z-index: 1;
             background-color: ${theme.colors.white};
-            transition: top 0.25s ease;
+            transition: top 0.35s ease-in-out;
           }
 
           .editor-toolbar {
@@ -203,7 +203,6 @@ const Toolbar = ({
             border-radius: 5px;
             box-shadow: 0px 8px 10px #00000029;
             border: 1px solid #eee;
-            background-color: ${theme.colors.white};
           }
 
           .typewriter-sounds-switch-container {
@@ -218,12 +217,6 @@ const Toolbar = ({
           /* Hide "Typewriter Sounds" when Toolbar is floating */
           .editor-toolbar-container.is-fixed .typewriter-sounds.toolbar-row {
             display: none;
-          }
-
-          @media (${navConstants.mobileNavOnly}) {
-            .editor-toolbar-container {
-              top: ${viewportsDiff + 80}px;
-            }
           }
 
           .editor-toolbar-popover-item {

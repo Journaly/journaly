@@ -53,12 +53,6 @@ const DashboardLayout: React.FC<Props> = ({ children, pad = 'always' }) => {
             }
           }
 
-          @media (${navConstants.mobileNavOnly}) {
-            .dashboard {
-              padding-top: ${headerHeight};
-            }
-          }
-
           .dashboard-container {
             height: 100%;
             transition: margin-left ${navConstants.transitionDuration}ms ease-in-out;

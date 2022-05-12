@@ -12,6 +12,7 @@ import RenderElement from './RenderElement'
 import RenderLeaf from './RenderLeaf'
 import { withLinks, withImages, toggleMark, options, MarkType } from './helpers'
 import usePlayPolyphonicSound from '@/hooks/usePlayPolyphonicSound'
+import useAutosavedState from '@/hooks/useAutosavedState'
 
 /**
  * The Journaly Rich Text Editor
@@ -72,7 +73,9 @@ const JournalyEditor = ({
     return pipe(withReact(createEditor()), ...withPlugins)
   }, [])
 
-  const [shouldPlayTypewriterSounds, setShouldPlayTypewriterSounds] = useState(false)
+  const [shouldPlayTypewriterSounds, setShouldPlayTypewriterSounds] = useAutosavedState(false, {
+    key: 'shouldPlayTypewriterSounds',
+  })
 
   const playTypewriterSound = usePlayPolyphonicSound('/static/sounds/typewriter-key-sound.wav', 3)
   const playTypewriterReturnSound = usePlayPolyphonicSound(

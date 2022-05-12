@@ -71,8 +71,6 @@ const Toolbar = ({
   useEffect(() => {
     const onVisualViewportChange = () => {
       setViewportsDiff(visualViewport.offsetTop)
-      console.log(window.innerHeight, visualViewport.height)
-      console.log(visualViewport.offsetTop)
     }
 
     onVisualViewportChange()
@@ -85,8 +83,6 @@ const Toolbar = ({
       visualViewport.removeEventListener('scroll', onVisualViewportChange)
     }
   }, [])
-
-  console.log('outer', viewportsDiff)
 
   const toolbarClasses = classNames('editor-toolbar-container', { 'is-fixed': !toolbarShouldFloat })
 

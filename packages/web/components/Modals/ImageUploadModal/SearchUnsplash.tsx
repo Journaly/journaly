@@ -92,7 +92,6 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
           ))}
         </ul>
       </div>
-      <Button>Choose Image</Button>
       <style jsx>{`
         .col {
           width: 100%;

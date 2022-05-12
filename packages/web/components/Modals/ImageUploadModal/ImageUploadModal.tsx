@@ -61,6 +61,9 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               display: flex;
               flex-direction: column;
               align-items: center;
+              min-width: 320px;
+              width: 480px;
+              min-height: 240px;
             }
 
             .upload-method-toolbar {
@@ -68,6 +71,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               gap: 10px;
               padding: 8px;
               width: 100%;
+              justify-content: center;
             }
 
             .upload-method-toolbar > :global(button) {
@@ -84,6 +88,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             .upload-method-content {
               display: flex;
               width: 100%;
+              justify-content: center;
             }
           `}</style>
         </>

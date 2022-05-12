@@ -24,12 +24,12 @@ const ModalHeader: React.FC<Props> = ({ onClose, title, showTitle }) => {
       <style jsx>{`
         .modal-header {
           position: relative;
-          padding: 14px 64px;
+          padding: ${showTitle ? '14px 64px' : '0'};
           border-bottom: ${showTitle ? '1px solid #d4d8db' : 0};
         }
         @media (min-width: ${modalConstants.modalBreakpoint}) {
           .modal-header {
-            padding: 22px 64px;
+            padding: ${showTitle ? '14px 64px' : '0'};
           }
         }
 
@@ -49,11 +49,12 @@ const ModalHeader: React.FC<Props> = ({ onClose, title, showTitle }) => {
         }
 
         h1 {
+          ${theme.typography.fontFamilySansSerif};
           margin: 0 auto;
           opacity: ${showTitle ? 1 : 0};
           font-size: 20px;
           line-height: 28px;
-          font-weight: 500;
+          font-weight: 600;
           text-align: center;
           transition: opacity 150ms ease-in, border 150ms ease-in;
           ${truncate(247)};

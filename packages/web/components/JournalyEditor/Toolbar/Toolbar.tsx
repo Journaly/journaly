@@ -178,8 +178,7 @@ const Toolbar = ({
         <style jsx>{`
           .editor-toolbar-container {
             position: sticky;
-            // Update this value when visualViewport (diff between viewport & visualViewport)
-            // listen to changes to size of visualViewport
+            // Push toolbar down from the top of the logical viewport to the degree that the logical viewport is outside the visual viewport
             top: ${viewportsDiff + 20}px;
             z-index: 1;
             background-color: ${theme.colors.white};

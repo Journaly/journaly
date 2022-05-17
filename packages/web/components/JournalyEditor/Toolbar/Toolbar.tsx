@@ -13,7 +13,6 @@ import { useSlate, useFocused } from 'slate-react'
 
 import theme from '@/theme'
 
-import { navConstants } from '@/components/Dashboard/Nav'
 import FormatBoldIcon from '@/components/Icons/FormatBoldIcon'
 import FormatItalicIcon from '@/components/Icons/FormatItalicIcon'
 import FormatUnderlinedIcon from '@/components/Icons/FormatUnderlinedIcon'
@@ -31,7 +30,6 @@ import InsertImageButton from './InsertImageButton'
 import { options, isTableActive } from '../helpers'
 import SwitchToggle from '@/components/SwitchToggle'
 import { useTranslation } from '@/config/i18n'
-import useGetWindowSize from '@/hooks/useGetWindowSize'
 import useIntersectionObserver from '@/hooks/userIntersectionObserver'
 
 type ToolbarProps = {
@@ -58,14 +56,8 @@ const Toolbar = ({
     </ToolbarButton>
   )
 
-  const windowSize = useGetWindowSize()
-
-  // This is to accounnt for the nav which appears at the top on mobile and has a height of 72px
-  const toolbarStickyOffset =
-    windowSize.width && windowSize.width < navConstants.mobileBreakpoint ? -92 : -20
-
   const [toolbarObserverRef, toolbarShouldFloat] = useIntersectionObserver({
-    rootMargin: `${toolbarStickyOffset}px 0px 0px 0px`,
+    rootMargin: '-20px 0px 0px 0px',
   })
 
   useEffect(() => {

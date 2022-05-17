@@ -21,7 +21,6 @@ const BaseToolbarButton = ({ onClick, active, children }: ButtonProps) => {
           height: 100%;
           padding: 1px;
           border: none;
-          margin-right: 10px;
           border-radius: 5px;
           background-color: ${theme.colors.gray800};
           cursor: pointer;

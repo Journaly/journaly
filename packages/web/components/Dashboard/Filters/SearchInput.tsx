@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react'
-import _ from 'lodash'
+import React, { useState } from 'react'
 import { useTranslation } from '@/config/i18n'
+import useDebouncedCallback from '@/hooks/useDebouncedCallback'
 
 type Props = {
   defaultValue: string
@@ -18,12 +18,9 @@ const SearchInput: React.FC<Props> = ({ defaultValue, onChange, debounceTime }) 
     setValue(defaultValue)
   }
 
-  const debounceSearch = useCallback(
-    _.debounce((_searchVal: string) => {
-      onChange(_searchVal)
-    }, debounceTime),
-    [],
-  )
+  const debounceSearch = useDebouncedCallback((searchVal: string) => {
+    onChange(searchVal)
+  }, debounceTime)
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setValue(e.target.value)

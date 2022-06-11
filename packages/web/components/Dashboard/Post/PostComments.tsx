@@ -83,6 +83,8 @@ const PostComments = ({
   const createNewPostComment = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    if (!postCommentBody) return
+
     createPostComment({
       variables: {
         postId,
@@ -145,6 +147,7 @@ const PostComments = ({
                   <Button
                     type="submit"
                     loading={loading}
+                    disabled={!postCommentBody}
                     className="submit-btn"
                     variant={ButtonVariant.PrimaryDark}
                     title="ctrl + enter"

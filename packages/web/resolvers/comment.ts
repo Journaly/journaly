@@ -284,6 +284,8 @@ const CommentMutations = extendType({
           throw new Error('You must be logged in to post comments.')
         }
 
+        if(!args.body) throw new Error('Body cannot be empty!')
+
         const thread = await ctx.db.thread.findUnique({
           where: { id: args.threadId },
           include: {
@@ -333,6 +335,8 @@ const CommentMutations = extendType({
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
 
+        if(!args.body) throw new Error('Body cannot be empty!')
+        
         const [currentUser, originalComment] = await Promise.all([
           ctx.db.user.findUnique({
             where: {
@@ -424,6 +428,8 @@ const CommentMutations = extendType({
         if (!userId) {
           throw new Error('You must be logged in to post comments.')
         }
+
+        if(!args.body) throw new Error('Body cannot be empty!')
 
         const post = await ctx.db.post.findUnique({
           where: {
@@ -525,6 +531,8 @@ const CommentMutations = extendType({
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
         if (!userId) throw new Error('You must be logged in to do that.')
+
+        if(!args.body) throw new Error('Body cannot be empty!')
 
         const [currentUser, originalPostComment] = await Promise.all([
           ctx.db.user.findUnique({

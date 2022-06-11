@@ -48,6 +48,13 @@ const PostComment: React.FC<PostCommentProps> = ({
   })
 
   const updateExistingComment = () => {
+    if (!updatingCommentBody) return
+
+    if (updatingCommentBody == comment.body) {
+      setIsEditMode(false)
+      return
+    }
+
     updateComment({
       variables: {
         postCommentId: comment.id,
@@ -125,6 +132,7 @@ const PostComment: React.FC<PostCommentProps> = ({
             size={ButtonSize.Small}
             onClick={updateExistingComment}
             loading={loading}
+            disabled={!updatingCommentBody}
             variant={ButtonVariant.PrimaryDark}
             style={{
               marginRight: '5px',

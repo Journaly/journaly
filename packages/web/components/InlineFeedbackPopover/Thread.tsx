@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useTranslation } from '@/config/i18n'
 import { sanitize } from '@/utils'
@@ -43,6 +43,7 @@ const Thread: React.FC<ThreadProps> = ({
   const { t } = useTranslation('comment')
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [commentBody, setCommentBody] = useState('')
   const [loading, setLoading] = React.useState(false)
   const [createComment] = useCreateCommentMutation()
   const [createThread] = useCreateThreadMutation()
@@ -52,8 +53,7 @@ const Thread: React.FC<ThreadProps> = ({
   const createNewComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const commentBody = textareaRef.current?.value
-    if (!textareaRef.current || !commentBody) return
+    if (!commentBody) return
 
     setLoading(true)
 
@@ -83,7 +83,7 @@ const Thread: React.FC<ThreadProps> = ({
       }
 
 
-      textareaRef.current.value = ''
+      setCommentBody('')
     } catch (e) {
       console.error('Error creating comment or thread: ', e)
     }
@@ -131,12 +131,14 @@ const Thread: React.FC<ThreadProps> = ({
                 <Textarea
                   placeholder={t('addCommentPlaceholder')}
                   disabled={loading}
+                  value={commentBody}
+                  onChange={(e) => setCommentBody(e.target.value)}
                   ref={textareaRef}
                 />
                 <div className="btn-container">
                   <Button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || !commentBody}
                     loading={loading}
                     className="new-comment-btn"
                     variant={ButtonVariant.PrimaryDark}

@@ -34,17 +34,24 @@ const ImageComp: React.FC<{ image: ImageType; onImageSelect: () => void }> = ({
 
   return (
     <>
-      <img src={urls.thumb} onClick={() => onImageSelect(urls.small, urls.regular)} />
+      <div className="img-container">
+        <img src={urls.thumb} onClick={() => onImageSelect(urls.small, urls.regular)} />
+      </div>
       <a className="credit" target="_blank" href={`https://unsplash.com/@${user.username}`}>
         {user.name}
       </a>
       <style jsx>{`
+        .img-container {
+          height: 200px;
+        }
+
         img {
           position: relative;
           margin-bottom: 4px;
           width: 100%;
-          max-height: 300px;
+          height: 100%;
           object-fit: cover;
+          object-position: center;
         }
         img:hover {
           cursor: pointer;
@@ -83,7 +90,7 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
       {/* TODO: Figure out adding a param for making the placeholder text more flexible */}
       <SearchInput debounceTime={500} defaultValue="" onChange={onSearchChange} />
       <div className="image-feed">
-        <ul className="col">
+        <ul>
           {imageData?.map((image: ImageType) => (
             <li key={image.id}>
               <ImageComp image={image} onImageSelect={onImageSelect} />
@@ -96,13 +103,15 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
           width: 100%;
         }
 
-        .col {
+        ul {
           width: 100%;
           list-style: none;
           padding: 8px;
           margin: 0;
           display: flex;
-          flex-direction: column;
+          flex-wrap: wrap;
+          gap: 24px;
+          justify-content: space-around;
         }
 
         li {

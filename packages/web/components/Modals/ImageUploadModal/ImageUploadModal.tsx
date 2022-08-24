@@ -31,6 +31,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   return (
     <Modal
       title="Upload An Image"
+      maxWidth="100vw"
       body={
         <>
           <div className="upload-method-container">
@@ -61,9 +62,15 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               display: flex;
               flex-direction: column;
               align-items: center;
-              min-width: 320px;
-              width: 480px;
-              min-height: 240px;
+              width: 100%;
+            }
+
+            @media (min-width: ${theme.breakpoints.XS}) {
+              .upload-method-container {
+                width: 70vw;
+                min-height: 240px;
+                min-width: 320px;
+              }
             }
 
             .upload-method-toolbar {

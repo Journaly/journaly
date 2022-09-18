@@ -2,15 +2,16 @@ import React, { useState } from 'react'
 import { useTranslation } from '@/config/i18n'
 import Button, { ButtonVariant } from '@/components/Button'
 import Modal from '@/components/Modal'
+import theme from '@/theme'
+import { HTMLInputEvent } from '@/hooks/useImageUpload'
 import UploadImage from './UploadImage'
 import SearchUnsplash from './SearchUnsplash'
-import theme from '@/theme'
 
 type ImageUploadModalProps = {
   onImageSelect: () => void
   onCancel: () => void
   onUnsplashSelect: (smallSizeUrl: string, largeSizeUrl: string) => void
-  onFileInputChange: () => void
+  onFileInputChange: (e: HTMLInputEvent) => Promise<void>
   imageUploadLoading: boolean
 }
 
@@ -28,9 +29,14 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   const { t } = useTranslation('common')
   const [uploadMethod, setUploadMethod] = useState<UploadMethod>(UploadMethod.UPLOAD)
 
+  const handleFileInputChange = async (e: HTMLInputEvent) => {
+    await onFileInputChange(e)
+    onCancel()
+  }
+
   return (
     <Modal
-      title="Upload An Image"
+      title="Choose an Image"
       maxWidth="100vw"
       body={
         <>
@@ -51,7 +57,10 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             </div>
             <div className="upload-method-content">
               {uploadMethod === UploadMethod.UPLOAD ? (
-                <UploadImage onFileInputChange={onFileInputChange} loading={imageUploadLoading} />
+                <UploadImage
+                  onFileInputChange={handleFileInputChange}
+                  loading={imageUploadLoading}
+                />
               ) : (
                 <SearchUnsplash onImageSelect={onImageSelect} />
               )}
@@ -94,6 +103,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
             .upload-method-content {
               display: flex;
+              flex: 1;
               width: 100%;
               justify-content: center;
             }

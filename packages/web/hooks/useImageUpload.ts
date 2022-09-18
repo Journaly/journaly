@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { useTranslation } from '@/config/i18n'
 import { uploadFile, BaseUploadData } from '@/utils/images'
 
-interface HTMLInputEvent extends React.FormEvent {
+export interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
 }
 

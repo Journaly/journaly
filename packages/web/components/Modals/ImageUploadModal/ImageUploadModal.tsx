@@ -43,12 +43,14 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           <div className="upload-method-container">
             <div className="upload-method-toolbar">
               <Button
+                className="upload-method-btn"
                 variant={ButtonVariant.Link}
                 onClick={() => setUploadMethod(UploadMethod.UPLOAD)}
               >
                 Upload
               </Button>
               <Button
+                className="upload-method-btn"
                 variant={ButtonVariant.Link}
                 onClick={() => setUploadMethod(UploadMethod.UNSPLASH)}
               >
@@ -97,8 +99,20 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             }
 
             .upload-method-toolbar
-              > :global(button:nth-child(${uploadMethod === UploadMethod.UPLOAD ? 1 : 2})) {
+              > :global(button.upload-method-btn:nth-child(${uploadMethod === UploadMethod.UPLOAD
+                    ? 1
+                    : 2})) {
               border-bottom: 1px solid ${theme.colors.black};
+            }
+
+            .upload-method-toolbar
+              > :global(button.upload-method-btn:nth-child(${uploadMethod === UploadMethod.UPLOAD
+                    ? 1
+                    : 2})):focus {
+              border-bottom: 1px solid ${theme.colors.black};
+            }
+            .upload-method-toolbar > :global(button.upload-method-btn):hover:not(:disabled) {
+              text-decoration: none;
             }
 
             .upload-method-content {

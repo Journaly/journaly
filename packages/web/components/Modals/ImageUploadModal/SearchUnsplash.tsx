@@ -1,10 +1,10 @@
 import React from 'react'
 import { createApi } from 'unsplash-js'
-
+import { InitiatePostImageUploadResponse } from '@/generated/graphql'
 import SearchInput from '@/components/Dashboard/Filters/SearchInput'
 
 type SearchUnsplashProps = {
-  onImageSelect: (smallSizeUrl: string, largeSizeUrl: string) => void
+  onImageSelect: (image: InitiatePostImageUploadResponse) => void
 }
 
 type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
@@ -14,7 +14,7 @@ type ImageType = {
   id: number
   width: number
   height: number
-  urls: { full: string; regular: string; raw: string; small: string; thumb: string }
+  urls: { raw: string; thumb: string }
   color: string | null
   user: {
     username: string
@@ -26,16 +26,27 @@ const unsplashApi = createApi({
   accessKey: process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY as string,
 })
 
-const ImageComp: React.FC<{ image: ImageType; onImageSelect: () => void }> = ({
-  image,
-  onImageSelect,
-}) => {
+const ImageComp: React.FC<{
+  image: ImageType
+  onImageSelect: (image: InitiatePostImageUploadResponse) => void
+}> = ({ image, onImageSelect }) => {
   const { user, urls } = image
+
+  const handleImageClick = () => {
+    const imageData = {
+      uploadUrl: '',
+      checkUrl: '',
+      finalUrlLarge: `${urls.raw}&w=1200&fit=fill`,
+      finalUrlSmall: `${urls.raw}&w=400&fit=fill`,
+    }
+
+    onImageSelect(imageData)
+  }
 
   return (
     <>
       <div className="img-container">
-        <img src={urls.thumb} onClick={() => onImageSelect(urls.small, urls.regular)} />
+        <img src={urls.thumb} onClick={handleImageClick} />
       </div>
       <a className="credit" target="_blank" href={`https://unsplash.com/@${user.username}`}>
         {user.name}
@@ -78,7 +89,7 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
         page: 1,
         perPage: 25,
       })
-
+      console.log(images)
       setImageData(images.response?.results)
     } catch (error) {
       console.log('There was an error:', error)

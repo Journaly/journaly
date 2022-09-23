@@ -105,7 +105,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
 
   // TOOD: When selecting an image from Unsplash, do we want to only get the regular size
   // image and simply upload that and then let Thumbbuster handle the thumbnailing?
-  const [image, uploadingImage, onFileInputChange, resetImage] = usePostImageUpload()
+  const { image, uploadingImage, onFileInputChange, resetImage, setImage } = usePostImageUpload()
   const postImage = image?.finalUrlLarge || initialData.headlineImage.largeSize
 
   const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
@@ -252,7 +252,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
 
       {displayImageUploadModal && (
         <ImageUploadModal
-          onImageSelect={() => {}}
+          onImageSelect={setImage}
           onFileInputChange={onFileInputChange}
           onCancel={() => setDisplayImageUploadModal(false)}
           imageUploadLoading={uploadingImage}

@@ -4,11 +4,12 @@ import Button, { ButtonVariant } from '@/components/Button'
 import Modal from '@/components/Modal'
 import theme from '@/theme'
 import { HTMLInputEvent } from '@/hooks/useImageUpload'
+import { InitiatePostImageUploadResponse } from '@/generated/graphql'
 import UploadImage from './UploadImage'
 import SearchUnsplash from './SearchUnsplash'
 
 type ImageUploadModalProps = {
-  onImageSelect: () => void
+  onImageSelect: (image: InitiatePostImageUploadResponse) => void
   onCancel: () => void
   onUnsplashSelect: (smallSizeUrl: string, largeSizeUrl: string) => void
   onFileInputChange: (e: HTMLInputEvent) => Promise<void>

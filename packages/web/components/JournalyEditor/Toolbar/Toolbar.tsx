@@ -31,6 +31,7 @@ import { options, isTableActive } from '../helpers'
 import SwitchToggle from '@/components/SwitchToggle'
 import { useTranslation } from '@/config/i18n'
 import useIntersectionObserver from '@/hooks/userIntersectionObserver'
+import useDebouncedCallback from '@/hooks/useDebouncedCallback'
 
 type ToolbarProps = {
   allowInlineImages: boolean
@@ -65,14 +66,16 @@ const Toolbar = ({
       setViewportsDiff(visualViewport.offsetTop)
     }
 
-    onVisualViewportChange()
+    const debouncedOnVisualViewportChange = useDebouncedCallback(onVisualViewportChange, 500)
 
-    visualViewport.addEventListener('resize', onVisualViewportChange)
-    visualViewport.addEventListener('scroll', onVisualViewportChange)
+    debouncedOnVisualViewportChange()
+
+    visualViewport.addEventListener('resize', debouncedOnVisualViewportChange)
+    visualViewport.addEventListener('scroll', debouncedOnVisualViewportChange)
 
     return () => {
-      visualViewport.removeEventListener('resize', onVisualViewportChange)
-      visualViewport.removeEventListener('scroll', onVisualViewportChange)
+      visualViewport.removeEventListener('resize', debouncedOnVisualViewportChange)
+      visualViewport.removeEventListener('scroll', debouncedOnVisualViewportChange)
     }
   }, [])
 

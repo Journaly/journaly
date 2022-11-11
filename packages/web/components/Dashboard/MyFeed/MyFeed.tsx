@@ -3,8 +3,6 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 
-import _ from 'lodash'
-
 import { useTranslation } from '@/config/i18n'
 
 import PostCard from '../PostCard'

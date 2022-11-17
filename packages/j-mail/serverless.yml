@@ -12,7 +12,7 @@ provider:
     DATABASE_URL: ${file(./config.${opt:stage, ''}.json):DATABASE_URL}
     JAWS_ACCOUNT_ID: ${file(./config.${opt:stage, ''}.json):JAWS_ACCOUNT_ID}
     JMAIL_QUEUE_URL: { Ref: JMailQueue }
-  runtime: nodejs12.x
+  runtime: nodejs16.x
   profile: serverless-admin
   region: us-east-2
 

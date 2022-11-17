@@ -44,7 +44,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
     },
   })
 
-  const [image, uploadingImage, onFileInputChange] = useAvatarImageUpload()
+  const { image, uploadingImage, onFileInputChange } = useAvatarImageUpload()
   const profileImage = image?.finalUrl || currentUser.profileImage
 
   const updateUserProfileImage = async (e: HTMLInputEvent): Promise<void> => {

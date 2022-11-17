@@ -11,8 +11,7 @@ import SearchUnsplash from './SearchUnsplash'
 type ImageUploadModalProps = {
   onImageSelect: (image: InitiatePostImageUploadResponse) => void
   onCancel: () => void
-  onUnsplashSelect: (smallSizeUrl: string, largeSizeUrl: string) => void
-  onFileInputChange: (e: HTMLInputEvent) => Promise<void>
+  onFileInputChange: (e: HTMLInputEvent) => Promise<unknown>
   imageUploadLoading: boolean
 }
 
@@ -32,10 +31,6 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
   const handleFileInputChange = async (e: HTMLInputEvent) => {
     await onFileInputChange(e)
-    onCancel()
-  }
-
-  const handleUnsplashImageSelect = (image: InitiatePostImageUploadResponse) => {
     onCancel()
   }
 

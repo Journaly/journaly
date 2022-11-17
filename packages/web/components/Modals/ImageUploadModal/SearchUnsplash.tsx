@@ -8,9 +8,10 @@ type SearchUnsplashProps = {
 }
 
 type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
-type SearchResponse = Awaited<
-  ReturnType<ReturnType<typeof createApi>['search']['getPhotos']>
->['response']['results']
+type SearchResponse = Exclude<
+  Awaited<ReturnType<ReturnType<typeof createApi>['search']['getPhotos']>>['response'],
+  undefined
+>['results']
 
 type ImageType = {
   id: number
@@ -29,7 +30,7 @@ const unsplashApi = createApi({
 })
 
 const ImageComp: React.FC<{
-  image: ImageType
+  image: SearchResponse[number]
   onImageSelect: (image: InitiatePostImageUploadResponse) => void
 }> = ({ image, onImageSelect }) => {
   const { user, urls } = image
@@ -104,7 +105,7 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
       <SearchInput debounceTime={500} defaultValue="" onChange={onSearchChange} />
       <div className="image-feed">
         <ul>
-          {imageData?.map((image: ImageType) => (
+          {imageData?.map((image) => (
             <li key={image.id}>
               <ImageComp image={image} onImageSelect={onImageSelect} />
             </li>

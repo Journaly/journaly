@@ -35,6 +35,10 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     onCancel()
   }
 
+  const handleUnsplashImageSelect = (image: InitiatePostImageUploadResponse) => {
+    onCancel()
+  }
+
   return (
     <Modal
       title="Choose an Image"

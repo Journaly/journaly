@@ -8,7 +8,9 @@ type SearchUnsplashProps = {
 }
 
 type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
-type SearchResponse = Awaited<ReturnType<ReturnType<typeof createApi>['search']['getPhotos']>>
+type SearchResponse = Awaited<
+  ReturnType<ReturnType<typeof createApi>['search']['getPhotos']>
+>['response']['results']
 
 type ImageType = {
   id: number

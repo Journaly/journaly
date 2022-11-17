@@ -119,6 +119,11 @@ const PostEditor: React.FC<PostEditorProps> = ({
   const postLanguage = languages.find(({ language }) => language.id === langId)?.language
   const postTopics = topics.filter(({ id }) => selectedTopics.indexOf(id) > -1)
 
+  const onImageSelect = (image: Parameters<typeof setImage>[0]) => {
+    setImage(image)
+    setDisplayImageUploadModal(false)
+  }
+
   const resetIntialPostValues = React.useCallback(() => {
     setTitle(initialData.title)
     setLangId(initialData.languageId)
@@ -252,7 +257,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
 
       {displayImageUploadModal && (
         <ImageUploadModal
-          onImageSelect={setImage}
+          onImageSelect={onImageSelect}
           onFileInputChange={onFileInputChange}
           onCancel={() => setDisplayImageUploadModal(false)}
           imageUploadLoading={uploadingImage}

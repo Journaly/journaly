@@ -3,16 +3,13 @@ import { useTranslation } from '@/config/i18n'
 import Button, { ButtonVariant } from '@/components/Button'
 import Modal from '@/components/Modal'
 import theme from '@/theme'
-import { HTMLInputEvent } from '@/hooks/useImageUpload'
 import { InitiatePostImageUploadResponse } from '@/generated/graphql'
 import UploadImage from './UploadImage'
 import SearchUnsplash from './SearchUnsplash'
 
 type ImageUploadModalProps = {
-  onImageSelect: (image: InitiatePostImageUploadResponse) => void
+  onImageSelect: (image: InitiatePostImageUploadResponse | null) => void
   onCancel: () => void
-  onFileInputChange: (e: HTMLInputEvent) => Promise<unknown>
-  imageUploadLoading: boolean
 }
 
 enum UploadMethod {
@@ -20,19 +17,9 @@ enum UploadMethod {
   UNSPLASH,
 }
 
-const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
-  onImageSelect,
-  onFileInputChange,
-  imageUploadLoading,
-  onCancel,
-}) => {
+const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ onImageSelect, onCancel }) => {
   const { t } = useTranslation('common')
   const [uploadMethod, setUploadMethod] = useState<UploadMethod>(UploadMethod.UPLOAD)
-
-  const handleFileInputChange = async (e: HTMLInputEvent) => {
-    await onFileInputChange(e)
-    onCancel()
-  }
 
   return (
     <Modal
@@ -59,10 +46,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             </div>
             <div className="upload-method-content">
               {uploadMethod === UploadMethod.UPLOAD ? (
-                <UploadImage
-                  onFileInputChange={handleFileInputChange}
-                  loading={imageUploadLoading}
-                />
+                <UploadImage onImageSelect={onImageSelect} />
               ) : (
                 <SearchUnsplash onImageSelect={onImageSelect} />
               )}

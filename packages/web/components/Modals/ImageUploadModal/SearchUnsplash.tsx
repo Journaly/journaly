@@ -3,6 +3,13 @@ import { createApi } from 'unsplash-js'
 import { InitiatePostImageUploadResponse } from '@/generated/graphql'
 import SearchInput from '@/components/Dashboard/Filters/SearchInput'
 
+/**
+ * PostEditor
+ * -- ImageUploadModal
+ * ---- UploadImage
+ * ---- SearchUnsplash
+ */
+
 type SearchUnsplashProps = {
   onImageSelect: (image: InitiatePostImageUploadResponse) => void
 }
@@ -12,18 +19,6 @@ type SearchResponse = Exclude<
   Awaited<ReturnType<ReturnType<typeof createApi>['search']['getPhotos']>>['response'],
   undefined
 >['results']
-
-type ImageType = {
-  id: number
-  width: number
-  height: number
-  urls: { raw: string; thumb: string }
-  color: string | null
-  user: {
-    username: string
-    name: string
-  }
-}
 
 const unsplashApi = createApi({
   accessKey: process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY as string,

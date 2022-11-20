@@ -8,13 +8,13 @@ import Select from '@/components/Select'
 import MultiSelect from '@/components/MultiSelect'
 import Button from '@/components/Button'
 import theme from '@/theme'
-import usePostImageUpload from '@/hooks/usePostImageUpload'
 import useAutosavedState from '@/hooks/useAutosavedState'
 import {
   CurrentUserFragmentFragment as UserType,
   TopicFragmentFragment as TopicType,
   PostStatus as PostStatusType,
   UserRole,
+  InitiatePostImageUploadResponse,
 } from '@/generated/graphql'
 import { languageNameWithDialect } from '@/utils/languages'
 import { useTranslation } from '@/config/i18n'
@@ -104,7 +104,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
 
   // TOOD: When selecting an image from Unsplash, do we want to only get the regular size
   // image and simply upload that and then let Thumbbuster handle the thumbnailing?
-  const { image, uploadingImage, onFileInputChange, resetImage, setImage } = usePostImageUpload()
+  const [image, setImage] = React.useState<InitiatePostImageUploadResponse | null>(null)
   const postImage = image?.finalUrlLarge || initialData.headlineImage.largeSize
 
   const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
@@ -145,7 +145,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
 
       resetTitle()
       resetBody()
-      resetImage()
+      setImage(null)
       resetLangId()
     }
 
@@ -238,7 +238,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
             <XIcon
               className="cancel-image-icon"
               color={theme.colors.white}
-              onClick={() => resetImage()}
+              onClick={() => setImage(null)}
             />
           </div>
         </PostHeader>
@@ -257,9 +257,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
       {displayImageUploadModal && (
         <ImageUploadModal
           onImageSelect={onImageSelect}
-          onFileInputChange={onFileInputChange}
           onCancel={() => setDisplayImageUploadModal(false)}
-          imageUploadLoading={uploadingImage}
         />
       )}
 

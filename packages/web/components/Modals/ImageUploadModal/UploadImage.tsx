@@ -2,21 +2,29 @@ import React from 'react'
 
 import FileInput from '@/components/FileInput'
 import { ButtonVariant } from '@/components/Button'
+import usePostImageUpload from '@/hooks/usePostImageUpload'
+import { InitiatePostImageUploadResponse } from '@/generated/graphql'
 import { HTMLInputEvent } from '@/hooks/useImageUpload'
 
 type UploadImageProps = {
-  onFileInputChange: (e: HTMLInputEvent) => Promise<void>
-  loading: boolean
+  onImageSelect: (image: InitiatePostImageUploadResponse | null) => void
 }
 
-const UploadImage: React.FC<UploadImageProps> = ({ onFileInputChange, loading }) => {
+const UploadImage: React.FC<UploadImageProps> = ({ onImageSelect }) => {
+  const { image, uploadingImage, onFileInputChange } = usePostImageUpload()
+
+  const onChange = async (e: HTMLInputEvent) => {
+    const result = await onFileInputChange(e)
+    onImageSelect(result)
+  }
+
   return (
     <div>
       <FileInput
         variant={ButtonVariant.Primary}
         className="image-upload-btn"
-        loading={loading}
-        onChange={onFileInputChange}
+        loading={uploadingImage}
+        onChange={onChange}
       >
         Choose image to upload
       </FileInput>

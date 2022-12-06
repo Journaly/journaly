@@ -23,7 +23,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ onImageSelect, onCa
 
   return (
     <Modal
-      title={t('imageUploadModalTitle')}
+      title={t('modal.imageUploadModalTitle')}
       maxWidth="100vw"
       body={
         <>
@@ -34,14 +34,14 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ onImageSelect, onCa
                 variant={ButtonVariant.Link}
                 onClick={() => setUploadMethod(UploadMethod.UPLOAD)}
               >
-                {t('uploadImage')}
+                {t('modal.uploadImage')}
               </Button>
               <Button
                 className="upload-method-btn"
                 variant={ButtonVariant.Link}
                 onClick={() => setUploadMethod(UploadMethod.UNSPLASH)}
               >
-                {t('searchUnsplash')}
+                {t('modal.searchUnsplash')}
               </Button>
             </div>
             <div className="upload-method-content">

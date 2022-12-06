@@ -28,7 +28,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ onImageSelect }) => {
         loading={uploadingImage}
         onChange={onChange}
       >
-        {t('chooseAnImageToUploadText')}
+        {t('modal.chooseAnImageToUploadText')}
       </FileInput>
       <style jsx>{`
         div {

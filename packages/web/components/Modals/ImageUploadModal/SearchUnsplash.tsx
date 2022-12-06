@@ -99,8 +99,7 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
 
   return (
     <div className="container">
-      {/* TODO: Figure out adding a param for making the placeholder text more flexible */}
-      <SearchInput debounceTime={500} defaultValue="" onChange={onSearchChange} />
+      <SearchInput debounceTime={500} defaultValue="" onChange={onSearchChange} translationKey="searchImagesPlaceholder" />
       <div className="image-feed">
         <ul>
           {imageData?.map((image) => (

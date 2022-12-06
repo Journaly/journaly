@@ -136,7 +136,7 @@ export type InitiatePostImageUploadResponse = {
   /** final url of the mall size transform */
   finalUrlSmall: Scalars['String']
   /** Unsplash username of the photographer who originally uploaded the image on Unsplash */
-  unsplashPhotographer: Scalars['String']
+  unsplashPhotographer?: Maybe<Scalars['String']>
 }
 
 export type Language = {

@@ -5,13 +5,15 @@ import { ButtonVariant } from '@/components/Button'
 import usePostImageUpload from '@/hooks/usePostImageUpload'
 import { InitiatePostImageUploadResponse } from '@/generated/graphql'
 import { HTMLInputEvent } from '@/hooks/useImageUpload'
+import { useTranslation } from '@/config/i18n'
 
 type UploadImageProps = {
   onImageSelect: (image: InitiatePostImageUploadResponse | null) => void
 }
 
 const UploadImage: React.FC<UploadImageProps> = ({ onImageSelect }) => {
-  const { image, uploadingImage, onFileInputChange } = usePostImageUpload()
+  const { t } = useTranslation('common')
+  const { uploadingImage, onFileInputChange } = usePostImageUpload()
 
   const onChange = async (e: HTMLInputEvent) => {
     const result = await onFileInputChange(e)
@@ -26,7 +28,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ onImageSelect }) => {
         loading={uploadingImage}
         onChange={onChange}
       >
-        Choose image to upload
+        {t('chooseAnImageToUploadText')}
       </FileInput>
       <style jsx>{`
         div {

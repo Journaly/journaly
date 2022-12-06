@@ -157,6 +157,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
       : {
           largeSize: image.finalUrlLarge,
           smallSize: image.finalUrlSmall,
+          unsplashPhotographer: image.unsplashPhotographer ? image.unsplashPhotographer : null,
         }
 
     dataRef.current = {

@@ -28,7 +28,7 @@ const ImageComp: React.FC<{
   image: SearchResponse[number]
   onImageSelect: (image: InitiatePostImageUploadResponse) => void
 }> = ({ image, onImageSelect }) => {
-  const { user, urls } = image
+  const { user, urls, links } = image
 
   const handleImageClick = () => {
     const imageData = {
@@ -36,8 +36,12 @@ const ImageComp: React.FC<{
       checkUrl: '',
       finalUrlLarge: `${urls.raw}&w=1200&fit=fill`,
       finalUrlSmall: `${urls.raw}&w=400&fit=fill`,
+      unsplashPhotographer: user.username,
     }
 
+    unsplashApi.photos.trackDownload({
+      downloadLocation: links.download_location,
+    })
     onImageSelect(imageData)
   }
 
@@ -87,7 +91,6 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
         page: 1,
         perPage: 25,
       })
-      console.log(images)
       setImageData(images.response?.results)
     } catch (error) {
       console.log('There was an error:', error)

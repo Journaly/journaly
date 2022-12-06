@@ -279,6 +279,7 @@ model HeadlineImage {
   id        Int    @id @default(autoincrement())
   smallSize String
   largeSize String
+  unsplashPhotographer String?
   Post      Post[]
 }
 

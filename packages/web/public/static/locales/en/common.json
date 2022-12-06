@@ -89,7 +89,11 @@
     "acknowledge": "Got it",
     "goToPremium": "Check Out Premium",
     "generalPremiumFeatureExplanation": "{{featureName}} is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!",
-    "unnamedPremiumFeatureExplanation": "This is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!"
+    "unnamedPremiumFeatureExplanation": "This is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!",
+    "uploadImage": "Upload",
+    "searchUnsplash": "Search Unsplash",
+    "imageUploadModalTitle": "Choose an Image",
+    "chooseAnImageToUploadText": "Choose image to upload"
   },
   "imageErrors": {
     "initial": "Error communicating with Journaly server. Please try again later.",

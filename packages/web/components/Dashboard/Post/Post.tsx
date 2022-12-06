@@ -594,7 +594,19 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         />
         <article className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
-        </article>
+          { post.headlineImage.unsplashPhotographer && (
+            <p className="image-attribution">
+              {/* TODO (robin): discuss handling translations here */}
+              Headline image by {' '}
+                <a target="_blank" href={`https://unsplash.com/@${post.headlineImage.unsplashPhotographer}?utm_source=journaly&utm_medium=referral`}>
+                  {post.headlineImage.unsplashPhotographer}
+                </a> on {' '}
+                    <a target="_blank" href="https://unsplash.com/?utm_source=journaly&utm_medium=referral">
+                      Unsplash
+                    </a>
+            </p>  
+          )}
+          </article>
         <div className="post-controls">
           <div className="clap-container">
             {currentUser?.id === post.author.id ? (
@@ -874,6 +886,13 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           display: flex;
           align-items: center;
           gap: 5px;
+        }
+
+        .image-attribution {
+          margin-top: 20px;
+          font-size: 12px;
+          text-decoration-line: underline;
+          font-style: italic;
         }
       `}</style>
     </div>

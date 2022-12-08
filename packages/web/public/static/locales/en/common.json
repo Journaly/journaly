@@ -94,7 +94,10 @@
     "uploadImage": "Upload",
     "searchUnsplash": "Search Unsplash",
     "imageUploadModalTitle": "Choose an Image",
-    "chooseAnImageToUploadText": "Choose image to upload"
+    "chooseAnImageToUploadText": "Choose image to upload",
+    "unsplashError": "There was an error fetching images from Unsplash",
+    "uploadImageMethodExplanation": "Choose an image to upload from your device",
+    "unsplashImageMethodExplanation": "Search Unsplash for free-to-use images"
   },
   "imageErrors": {
     "initial": "Error communicating with Journaly server. Please try again later.",

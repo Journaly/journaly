@@ -46,9 +46,15 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ onImageSelect, onCa
             </div>
             <div className="upload-method-content">
               {uploadMethod === UploadMethod.UPLOAD ? (
-                <UploadImage onImageSelect={onImageSelect} />
+                <div className='upload-method-explanation'>
+                  <p>{t('modal.uploadImageMethodExplanation')}</p>
+                  <UploadImage onImageSelect={onImageSelect} />
+                </div>
               ) : (
-                <SearchUnsplash onImageSelect={onImageSelect} />
+                <div className='upload-method-explanation'>
+                  <p>{t('modal.unsplashImageMethodExplanation')}</p>
+                  <SearchUnsplash onImageSelect={onImageSelect} />
+                </div>
               )}
             </div>
           </div>
@@ -58,6 +64,17 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ onImageSelect, onCa
               flex-direction: column;
               align-items: center;
               width: 100%;
+            }
+
+            .upload-method-explanation {
+              font-size: 12px;
+              text-align: center;
+              font-style: italic;
+              width: 100%;
+            }
+
+            .upload-method-explanation > p {
+              margin: 8px 0 16px;
             }
 
             @media (min-width: ${theme.breakpoints.XS}) {

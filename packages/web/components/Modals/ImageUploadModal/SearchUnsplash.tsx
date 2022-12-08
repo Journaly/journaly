@@ -1,7 +1,9 @@
 import React from 'react'
 import { createApi } from 'unsplash-js'
+import { toast } from 'react-toastify'
 import { InitiatePostImageUploadResponse } from '@/generated/graphql'
 import SearchInput from '@/components/Dashboard/Filters/SearchInput'
+import { useTranslation } from '@/config/i18n'
 
 /**
  * PostEditor
@@ -81,6 +83,7 @@ const ImageComp: React.FC<{
 }
 
 const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
+  const { t } = useTranslation('common')
   const [imageData, setImageData] = React.useState<SearchResponse>()
 
   const onSearchChange = async (query: string) => {
@@ -93,13 +96,14 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
       })
       setImageData(images.response?.results)
     } catch (error) {
-      console.log('There was an error:', error)
+      toast.error(t('modal.unsplashError'))
+      console.error('There was an error:', error)
     }
   }
 
   return (
     <div className="container">
-      <SearchInput debounceTime={500} defaultValue="" onChange={onSearchChange} translationKey="searchImagesPlaceholder" />
+      <SearchInput debounceTime={500} defaultValue="" onChange={onSearchChange} placeholder={t('ui.searchImagesPlaceholder')} />
       <div className="image-feed">
         <ul>
           {imageData?.map((image) => (

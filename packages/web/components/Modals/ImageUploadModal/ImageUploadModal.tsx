@@ -63,7 +63,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ onImageSelect, onCa
               display: flex;
               flex-direction: column;
               align-items: center;
-              width: 100%;
+              width: 88vw;
             }
 
             .upload-method-explanation {

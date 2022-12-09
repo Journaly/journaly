@@ -153,6 +153,7 @@ fragment PostFragment on Post {
     id
     smallSize
     largeSize
+    unsplashPhotographer
   }
   claps {
     id

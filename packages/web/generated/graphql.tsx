@@ -70,11 +70,13 @@ export type HeadlineImage = {
   id: Scalars['Int']
   smallSize: Scalars['String']
   largeSize: Scalars['String']
+  unsplashPhotographer?: Maybe<Scalars['String']>
 }
 
 export type HeadlineImageInput = {
   smallSize: Scalars['String']
   largeSize: Scalars['String']
+  unsplashPhotographer?: Maybe<Scalars['String']>
 }
 
 export type InAppNotification = {
@@ -133,6 +135,8 @@ export type InitiatePostImageUploadResponse = {
   finalUrlLarge: Scalars['String']
   /** final url of the mall size transform */
   finalUrlSmall: Scalars['String']
+  /** Unsplash username of the photographer who originally uploaded the image on Unsplash */
+  unsplashPhotographer?: Maybe<Scalars['String']>
 }
 
 export type Language = {
@@ -885,7 +889,7 @@ export type PostFragmentFragment = { __typename?: 'Post' } & Pick<
     postComments: Array<{ __typename?: 'PostComment' } & PostCommentFragmentFragment>
     headlineImage: { __typename?: 'HeadlineImage' } & Pick<
       HeadlineImage,
-      'id' | 'smallSize' | 'largeSize'
+      'id' | 'smallSize' | 'largeSize' | 'unsplashPhotographer'
     >
     claps: Array<
       { __typename?: 'PostClap' } & Pick<PostClap, 'id'> & {
@@ -1258,7 +1262,7 @@ export type InitiatePostImageUploadMutationVariables = Exact<{ [key: string]: ne
 export type InitiatePostImageUploadMutation = { __typename?: 'Mutation' } & {
   initiatePostImageUpload: { __typename?: 'InitiatePostImageUploadResponse' } & Pick<
     InitiatePostImageUploadResponse,
-    'uploadUrl' | 'checkUrl' | 'finalUrlLarge' | 'finalUrlSmall'
+    'uploadUrl' | 'checkUrl' | 'finalUrlLarge' | 'finalUrlSmall' | 'unsplashPhotographer'
   >
 }
 
@@ -1851,6 +1855,7 @@ export const PostFragmentFragmentDoc = gql`
       id
       smallSize
       largeSize
+      unsplashPhotographer
     }
     claps {
       id
@@ -3517,6 +3522,7 @@ export const InitiatePostImageUploadDocument = gql`
       checkUrl
       finalUrlLarge
       finalUrlSmall
+      unsplashPhotographer
     }
   }
 `

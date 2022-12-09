@@ -170,6 +170,7 @@ const InitiatePostImageUploadResponse = objectType({
     t.string('checkUrl', { description: 'polling goes here' })
     t.string('finalUrlLarge', { description: 'final url of the large size transform' })
     t.string('finalUrlSmall', { description: 'final url of the mall size transform' })
+    t.string('unsplashPhotographer', { nullable: true, description: 'Unsplash username of the photographer who originally uploaded the image on Unsplash'})
   },
 })
 
@@ -639,10 +640,13 @@ const PostMutations = extendType({
         }
 
         if (args.headlineImage.smallSize !== originalPost.headlineImage.smallSize) {
+          const unsplashPhotographer = args.headlineImage.unsplashPhotographer
+
           const headlineImage = await ctx.db.headlineImage.create({
             data: {
               smallSize: args.headlineImage.smallSize,
               largeSize: args.headlineImage.largeSize,
+              unsplashPhotographer: unsplashPhotographer ? unsplashPhotographer : null,
             },
           })
           data.headlineImage = {

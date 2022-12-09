@@ -31,7 +31,8 @@
     "showAdvancedFilters": "Show Advanced Filters",
     "hideAdvancedFilters": "Hide Advanced Filters",
     "savedPosts": "saved posts",
-    "savePostPremiumFeatureExplanation": "Saved Posts is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!"
+    "savePostPremiumFeatureExplanation": "Saved Posts is a delightful Premium feature that allows you to save posts for later and access your list from the My Feed page's advanced filters! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!",
+    "searchImagesPlaceholder": "Search Images"
   },
   "dashboardNav": {
     "myFeed": "My Feed",
@@ -89,7 +90,14 @@
     "acknowledge": "Got it",
     "goToPremium": "Check Out Premium",
     "generalPremiumFeatureExplanation": "{{featureName}} is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!",
-    "unnamedPremiumFeatureExplanation": "This is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!"
+    "unnamedPremiumFeatureExplanation": "This is an awesome Premium feature! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling!",
+    "uploadImage": "Upload",
+    "searchUnsplash": "Search Unsplash",
+    "imageUploadModalTitle": "Choose an Image",
+    "chooseAnImageToUploadText": "Choose image to upload",
+    "unsplashError": "There was an error fetching images from Unsplash",
+    "uploadImageMethodExplanation": "Choose an image to upload from your device",
+    "unsplashImageMethodExplanation": "Search Unsplash for free-to-use images"
   },
   "imageErrors": {
     "initial": "Error communicating with Journaly server. Please try again later.",

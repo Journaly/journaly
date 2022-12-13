@@ -50,7 +50,7 @@ const ImageComp: React.FC<{
   return (
     <>
       <div className="img-container">
-        <img src={urls.thumb} onClick={handleImageClick} />
+        <img src={urls.small} onClick={handleImageClick} />
       </div>
       <a className="credit" target="_blank" href={`https://unsplash.com/@${user.username}`}>
         {user.name}
@@ -58,6 +58,8 @@ const ImageComp: React.FC<{
       <style jsx>{`
         .img-container {
           height: 200px;
+          border-radius: 3px;
+          overflow: hidden;
         }
 
         img {
@@ -125,12 +127,12 @@ const SearchUnsplash: React.FC<SearchUnsplashProps> = ({ onImageSelect }) => {
           margin: 0;
           display: flex;
           flex-wrap: wrap;
-          gap: 24px;
+          gap: 4px;
           justify-content: space-around;
         }
 
         li {
-          margin-bottom: 12px;
+          flex-grow: 1;
         }
       `}</style>
     </div>

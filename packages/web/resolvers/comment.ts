@@ -13,6 +13,7 @@ import {
   BadgeType,
   LanguageLevel,
   PrismaClient,
+  Prisma,
 } from '@journaly/j-db-client'
 
 import {
@@ -23,6 +24,7 @@ import {
   UserWithRels,
   ThreadWithRels,
   sendNewBadgeEmail,
+  assignCountBadges,
 } from './utils'
 import { NotFoundError } from './errors'
 
@@ -30,48 +32,26 @@ const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promi
   // Use a raw query here because we'll soon have a number of post count
   // badges and we could end up with quite a bit of back and fourth
   // querying, whereas here we can just make one roundtrip.
-  const newBadgeCount = await db.$executeRaw`
-    WITH comments AS (
-        SELECT COUNT(*) AS count
-        FROM "Comment"
-        WHERE
-          "authorId" = ${userId}
-    )
-    INSERT INTO "UserBadge" ("type", "userId") (
-      (
-        SELECT
-          ${BadgeType.TEN_COMMENTS}::"BadgeType" AS "type",
-          ${userId}::integer AS "userId"
-        FROM comments WHERE comments.count >= 10
-      ) UNION (
-        SELECT
-          ${BadgeType.FIFTY_COMMENTS} AS "type",
-          ${userId} AS "userId"
-        FROM comments WHERE comments.count >= 20
-      ) UNION (
-        SELECT
-          ${BadgeType.ONEHUNDRED_COMMENTS} AS "type",
-          ${userId} AS "userId"
-        FROM comments WHERE comments.count >= 50
-      ) UNION (
-        SELECT
-          ${BadgeType.TWOHUNDREDFIFTY_COMMENTS} AS "type",
-          ${userId} AS "userId"
-        FROM comments WHERE comments.count >= 75
-      ) UNION (
-        SELECT
-          ${BadgeType.FIVEHUNDRED_COMMENTS} AS "type",
-          ${userId} AS "userId"
-        FROM comments WHERE comments.count >= 100
-      ) UNION (
-        SELECT
-          ${BadgeType.ONETHOUSAND_COMMENTS} AS "type",
-          ${userId} AS "userId"
-        FROM comments WHERE comments.count >= 150
-      )
-    )
-    ON CONFLICT DO NOTHING
+  const commentCountQuery = Prisma.sql`
+    SELECT COUNT(*) AS count
+    FROM "Comment"
+    WHERE "authorId" = ${userId}
   `
+
+  const newBadgeCount = await assignCountBadges(
+    db,
+    userId,
+    commentCountQuery,
+    {
+      10: BadgeType.TEN_COMMENTS,
+      50: BadgeType.FIFTY_COMMENTS,
+      100: BadgeType.ONEHUNDRED_COMMENTS,
+      250: BadgeType.TWOHUNDREDFIFTY_COMMENTS,
+      500: BadgeType.FIVEHUNDRED_COMMENTS,
+      1000: BadgeType.ONETHOUSAND_COMMENTS,
+    }
+  )
+
   // This is a horrible hack because of this bug in prisma where `RETURNING`
   // is basically ignored and we get a row count instead. See:
   // https://github.com/prisma/prisma/issues/2208 . This is fixed in newer
@@ -385,7 +365,7 @@ const CommentMutations = extendType({
           throw new NotFoundError('user')
         }
 
-        const promises: Promise<unknown>[] = [
+        const [comment, _] = await Promise.all([
           createComment({
             db: ctx.db,
             thread,
@@ -393,9 +373,9 @@ const CommentMutations = extendType({
             body: args.body,
           }),
           assignCommentCountBadges(ctx.db, userId),
-        ]
+        ] as const)
 
-        return Promise.all(promises) 
+        return comment
       },
     })
 

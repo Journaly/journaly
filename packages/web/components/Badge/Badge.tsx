@@ -27,6 +27,7 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
       return 'badge.ODRADEK'
     case BadgeType.Necromancer:
       return 'badge.NECROMANCER'
+
     // Posts
     case BadgeType.TenPosts:
       return 'badge.TEN_POSTS'
@@ -34,14 +35,17 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
       return 'badge.TWENTY_POSTS'
     case BadgeType.FiftyPosts:
       return 'badge.FIFTY_POSTS'
-    case BadgeType.OnehundredComments:
+    case BadgeType.SeventyfivePosts:
+      return 'badge.SEVENTYFIVE_POSTS'
+    case BadgeType.OnehundredPosts:
       return 'badge.ONEHUNDRED_POSTS'
     case BadgeType.OnehundredfiftyPosts:
       return 'badge.ONEHUNDREDFIFTY_POSTS'
     case BadgeType.TwohundredPosts:
       return 'badge.TWOHUNDRED_POSTS'
-    case BadgeType.TwohundredfiftyComments:
+    case BadgeType.TwohundredfiftyPosts:
       return 'badge.TWOHUNDREDFIFTY_POSTS'
+
     // Feedback - Comments
     case BadgeType.TenComments:
       return 'badge.TEN_COMMENTS'
@@ -55,19 +59,21 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
       return 'badge.FIVEHUNDRED_COMMENTS'
     case BadgeType.OnethousandComments:
       return 'badge.ONETHOUSAND_COMMENTS'
+
     // Feedback - Posts
     case BadgeType.CorrectTenPosts:
       return 'badge.CORRECT_TEN_POSTS'
-    case BadgeType.CorrectTenPosts:
+    case BadgeType.CorrectTwentyfivePosts:
       return 'badge.CORRECT_TWENTYFIVE_POSTS'
-    case BadgeType.CorrectTenPosts:
+    case BadgeType.CorrectFiftyPosts:
       return 'badge.CORRECT_FIFTY_POSTS'
-    case BadgeType.CorrectTenPosts:
+    case BadgeType.CorrectOnehundredPosts:
       return 'badge.CORRECT_ONEHUNDRED_POSTS'
-    case BadgeType.CorrectTenPosts:
+    case BadgeType.CorrectOnehundredfiftyPosts:
       return 'badge.CORRECT_ONEHUNDREDFIFTY_POSTS'
-    case BadgeType.CorrectTenPosts:
+    case BadgeType.CorrectTwohundredfiftyPosts:
       return 'badge.CORRECT_TWOHUNDREDFIFTY_POSTS'
+
     // Thanks
     case BadgeType.TenThanks:
       return 'badge.TEN_THANKS'
@@ -85,9 +91,24 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
       return 'badge.ONETHOUSANDTWOHUNDREDFIFTY_THANKS'
     case BadgeType.OnethousandfivehundredThanks:
       return 'badge.ONETHOUSANDFIVEHUNDRED_THANKS'
+
     // Goals
     case BadgeType.Hiker:
       return 'badge.HIKER'
+    // TODO: provider real translations. Do not merge until this is done.
+    case BadgeType.TrailRunner:
+      return 'badge.TrailRunner'
+    case BadgeType.MountainClimber:
+      return 'badge.MountainClimber'
+
+    case BadgeType.Novelist:
+      return 'badge.NOVELIST'
+    case BadgeType.Multilingual:
+      return 'badge.MULTILINGUAL'
+    case BadgeType.Polyglot:
+      return 'badge.POLYGLOT'
+    case BadgeType.Helper:
+      return 'badge.HELPER'
   }
 
   return assertUnreachable(badgeType)

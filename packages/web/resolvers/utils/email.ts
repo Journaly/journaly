@@ -133,9 +133,11 @@ const sendPasswordResetTokenEmail = ({ user, resetToken }: sendPasswordResetToke
   })
 }
 
+/*
 const assertUnreachable = (x: never): never => {
   throw new Error(`Didn't expect to get here ${x}`)
 }
+*/
 
 const getBadgeName = (badgeType: BadgeType): string => {
   switch (badgeType) {
@@ -154,8 +156,9 @@ const getBadgeName = (badgeType: BadgeType): string => {
     case BadgeType.ODRADEK:
       return 'Odradek'
   }
-
-  return assertUnreachable(badgeType)
+  // TODO: don't bail out here
+  return 'NAME_PENDING'
+  //return assertUnreachable(badgeType)
 }
 
 const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {

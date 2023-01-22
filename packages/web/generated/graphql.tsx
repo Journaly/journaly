@@ -30,6 +30,10 @@ export enum BadgeType {
   OnehundredfiftyPosts = 'ONEHUNDREDFIFTY_POSTS',
   TwohundredPosts = 'TWOHUNDRED_POSTS',
   TwohundredfiftyPosts = 'TWOHUNDREDFIFTY_POSTS',
+  Novelist = 'NOVELIST',
+  Multilingual = 'MULTILINGUAL',
+  Polyglot = 'POLYGLOT',
+  Helper = 'HELPER',
   TenComments = 'TEN_COMMENTS',
   FiftyComments = 'FIFTY_COMMENTS',
   OnehundredComments = 'ONEHUNDRED_COMMENTS',
@@ -51,6 +55,8 @@ export enum BadgeType {
   OnethousandtwohundredfiftyThanks = 'ONETHOUSANDTWOHUNDREDFIFTY_THANKS',
   OnethousandfivehundredThanks = 'ONETHOUSANDFIVEHUNDRED_THANKS',
   Hiker = 'HIKER',
+  TrailRunner = 'TRAIL_RUNNER',
+  MountainClimber = 'MOUNTAIN_CLIMBER',
 }
 
 export type Comment = {

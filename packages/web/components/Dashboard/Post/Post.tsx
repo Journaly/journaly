@@ -26,6 +26,7 @@ import { Router, useTranslation } from '@/config/i18n'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
+import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
 import CommentSelectionButton from './CommentSelectionButton'
 
 import {
@@ -43,7 +44,7 @@ import BookmarkIcon from '@/components/Icons/BookmarkIcon'
 import UserListModal from '@/components/Modals/UserListModal'
 import useOnClickOut from '@/hooks/useOnClickOut'
 import { DOMOffsetTarget } from '@/components/Popover'
-
+import ReportSpamFlagIcon from '@/components/Icons/ReportSpamFlagIcon'
 
 type UseDeepLinkingArg = {
   setActiveThreadId: (arg: number) => void
@@ -168,6 +169,10 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const [displayUserListModal, setDisplayUserListModal] = useState(false)
   const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
+  const [ReportSpamConfirmationModal, confirmReportSpam] = useConfirmationModal({
+    title: t('reportSpamModal.title'),
+    body: t('reportSpamModal.confirmationText'),
+  })
 
   const imageContainerRefCallback = useDeepLinking({
     setActiveThreadId,
@@ -594,19 +599,26 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         />
         <article className="post-body selectable-text-area" dir="auto" onClick={onThreadClick}>
           <PostContent body={post.body} ref={selectableRef} />
-          { post.headlineImage.unsplashPhotographer && (
+          {post.headlineImage.unsplashPhotographer && (
             <p className="image-attribution">
               {/* TODO (robin): discuss handling translations here */}
-              Headline image by {' '}
-                <a target="_blank" href={`https://unsplash.com/@${post.headlineImage.unsplashPhotographer}?utm_source=journaly&utm_medium=referral`}>
-                  {post.headlineImage.unsplashPhotographer}
-                </a> on {' '}
-                    <a target="_blank" href="https://unsplash.com/?utm_source=journaly&utm_medium=referral">
-                      Unsplash
-                    </a>
-            </p>  
+              Headline image by{' '}
+              <a
+                target="_blank"
+                href={`https://unsplash.com/@${post.headlineImage.unsplashPhotographer}?utm_source=journaly&utm_medium=referral`}
+              >
+                {post.headlineImage.unsplashPhotographer}
+              </a>{' '}
+              on{' '}
+              <a
+                target="_blank"
+                href="https://unsplash.com/?utm_source=journaly&utm_medium=referral"
+              >
+                Unsplash
+              </a>
+            </p>
           )}
-          </article>
+        </article>
         <div className="post-controls">
           <div className="clap-container">
             {currentUser?.id === post.author.id ? (
@@ -692,6 +704,13 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
               <>
                 <Button
                   variant={ButtonVariant.Icon}
+                  onClick={confirmReportSpam}
+                  title={t('reportSpamTooltipText')}
+                >
+                  <ReportSpamFlagIcon size={22} />
+                </Button>
+                <Button
+                  variant={ButtonVariant.Icon}
                   loading={savingPost || unsavingPost}
                   onClick={() => {
                     hasSavedPost ? unsavePost({ variables: { postId: post.id } }) : handleSavePost()
@@ -743,6 +762,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         body={t('deleteModal.body')}
         show={displayDeleteModal}
       />
+      <ReportSpamConfirmationModal />
       {displayPremiumFeatureModal && (
         <PremiumFeatureModal
           featureExplanation={premiumFeatureModalExplanation}

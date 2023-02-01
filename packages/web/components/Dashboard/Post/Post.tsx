@@ -17,6 +17,7 @@ import {
   UserRole,
   useSavePostMutation,
   useUnsavePostMutation,
+  useReportSpamPostMutation,
 } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
@@ -573,6 +574,24 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     },
   })
 
+  const [reportSpamPost] = useReportSpamPostMutation({
+    variables: {
+      postId: post.id,
+      postAuthorId: post.author.id,
+    },
+    onCompleted: () => {
+      toast.success(t('reportSpamPostSuccess'))
+    },
+    onError: () => {
+      toast.error(t('reportSpamPostError'))
+    },
+  })
+
+  const reportPostAsSpam = async () => {
+    if (!(await confirmReportSpam())) return
+    reportSpamPost()
+  }
+
   return (
     <div className="post-container" ref={imageContainerRefCallback}>
       <Head>
@@ -704,7 +723,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
               <>
                 <Button
                   variant={ButtonVariant.Icon}
-                  onClick={confirmReportSpam}
+                  onClick={reportPostAsSpam}
                   title={t('reportSpamTooltipText')}
                 >
                   <ReportSpamFlagIcon size={22} />

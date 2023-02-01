@@ -29,16 +29,21 @@ import {
 import { NotFoundError } from './errors'
 
 const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {
-  // Use a raw query here because we'll soon have a number of post count
-  // badges and we could end up with quite a bit of back and fourth
-  // querying, whereas here we can just make one roundtrip.
   const commentCountQuery = Prisma.sql`
     SELECT COUNT(*) AS count
     FROM "Comment"
     WHERE "authorId" = ${userId}
   `
 
-  const newBadgeCount = await assignCountBadges(
+  const postsCorrectedCountQuery = Prisma.sql`
+    SELECT COUNT(DISTINCT t."postId") AS count
+    FROM "Comment" AS c
+    JOIN "Thread" as t
+      ON c."threadId" = t.id
+    WHERE c."authorId" = ${userId};
+  `
+
+  const newCommentBadgesPromise = assignCountBadges(
     db,
     userId,
     commentCountQuery,
@@ -51,6 +56,25 @@ const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promi
       1000: BadgeType.ONETHOUSAND_COMMENTS,
     }
   )
+
+  const newPostsCorrectedBadgesPromise = assignCountBadges(
+    db,
+    userId,
+    postsCorrectedCountQuery,
+    {
+      10: BadgeType.CORRECT_TEN_POSTS,
+      25: BadgeType.CORRECT_TWENTYFIVE_POSTS,
+      50: BadgeType.CORRECT_FIFTY_POSTS,
+      100: BadgeType.CORRECT_ONEHUNDRED_POSTS,
+      150: BadgeType.CORRECT_ONEHUNDREDFIFTY_POSTS,
+      250: BadgeType.CORRECT_TWOHUNDREDFIFTY_POSTS,
+    }
+  )
+
+  const newBadgeCount = (await Promise.all([
+    newCommentBadgesPromise,
+    newPostsCorrectedBadgesPromise
+  ])).reduce((a: number, b: number) => a + b, 0)
 
   // This is a horrible hack because of this bug in prisma where `RETURNING`
   // is basically ignored and we get a row count instead. See:

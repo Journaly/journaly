@@ -932,12 +932,11 @@ const PostMutations = extendType({
       },
     })
 
-    t.field('reportPostAsSpam', {
+    t.field('reportSpamPost', {
       type: 'Post',
       args: {
         postId: intArg({ required: true }),
         postAuthorId: intArg({ required: true }),
-        reportingUserId: intArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request

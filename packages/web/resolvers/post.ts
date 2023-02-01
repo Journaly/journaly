@@ -18,6 +18,7 @@ import {
   getThumbusterVars,
   generatePostPrivateShareId,
   createInAppNotification,
+  sendReportSpamPostEmail,
 } from './utils'
 
 
@@ -926,6 +927,31 @@ const PostMutations = extendType({
           data: {
             bumpedAt: new Date(),
             bumpCount: post.bumpCount + 1,
+          },
+        })
+      },
+    })
+
+    t.field('reportPostAsSpam', {
+      type: 'Post',
+      args: {
+        postId: intArg({ required: true }),
+        postAuthorId: intArg({ required: true }),
+        reportingUserId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new NotAuthorizedError()
+
+        await sendReportSpamPostEmail({
+          postId: args.postId,
+          postAuthorId: args.postAuthorId,
+          reportingUserId: userId,
+        })
+
+        return ctx.db.post.findUnique({
+          where: {
+            id: args.postId,
           },
         })
       },

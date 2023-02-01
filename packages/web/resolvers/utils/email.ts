@@ -25,6 +25,12 @@ type sendNewBadgeEmailArgs = {
   user: User
 }
 
+type sendReportSpamPostEmailArgs = {
+  postId: number
+  postAuthorId: number
+  reportingUserId: number
+}
+
 type EmailParams = {
   from: string
   to: string
@@ -255,6 +261,24 @@ const sendPremiumWelcomeEmail = ({ user }: sendPremiumWelcomeEmailArgs) => {
   })
 }
 
+const sendReportSpamPostEmail = ({
+  postId,
+  postAuthorId,
+  reportingUserId,
+}: sendReportSpamPostEmailArgs) => {
+  return sendJmail({
+    from: 'robin@journaly.com',
+    to: 'hello@journaly.com',
+    subject: `Spam Report: Post ${postId}`,
+    html: makeEmail(`
+      <h3>Spam Post Report:</h3>
+      <p>Post ID: ${postId}</p>
+      <p>Post Author ID: ${postAuthorId}</p>
+      <p>Reported by User ID: ${reportingUserId}</p>
+    `),
+  })
+}
+
 export {
   sendJmail,
   sendPasswordResetTokenEmail,
@@ -262,4 +286,5 @@ export {
   subscribeUserToProductUpdates,
   sendEmailAddressVerificationEmail,
   sendPremiumWelcomeEmail,
+  sendReportSpamPostEmail,
 }

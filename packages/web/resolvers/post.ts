@@ -942,17 +942,21 @@ const PostMutations = extendType({
         const { userId } = ctx.request
         if (!userId) throw new NotAuthorizedError()
 
+        const post = await ctx.db.post.findUnique({
+          where: {
+            id: args.postId,
+          },
+        })
+
+        if (!post) throw new NotFoundError()
+
         await sendReportSpamPostEmail({
           postId: args.postId,
           postAuthorId: args.postAuthorId,
           reportingUserId: userId,
         })
 
-        return ctx.db.post.findUnique({
-          where: {
-            id: args.postId,
-          },
-        })
+        return post
       },
     })
   },

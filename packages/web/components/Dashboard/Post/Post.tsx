@@ -583,7 +583,11 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       toast.success(t('reportSpamPostSuccess'))
     },
     onError: () => {
-      toast.error(t('reportSpamPostError'))
+      toast.error(
+        t('reportSpamPostError', {
+          postId: post.id,
+        }),
+      )
     },
   })
 

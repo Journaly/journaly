@@ -1,0 +1,5 @@
+mutation reportSpamPost($postId: Int!, $postAuthorId: Int!) {
+  reportSpamPost(postId: $postId, postAuthorId: $postAuthorId) {
+    id
+  }
+}

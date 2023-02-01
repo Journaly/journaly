@@ -199,6 +199,7 @@ export type Mutation = {
   initiatePostImageUpload: InitiatePostImageUploadResponse
   initiateInlinePostImageUpload: InitiateInlinePostImageUploadResponse
   bumpPost: Post
+  reportSpamPost: Post
   createUser: User
   updateUser: User
   initiateAvatarImageUpload: InitiateAvatarImageUploadResponse
@@ -300,6 +301,11 @@ export type MutationDeletePostArgs = {
 
 export type MutationBumpPostArgs = {
   postId: Scalars['Int']
+}
+
+export type MutationReportSpamPostArgs = {
+  postId: Scalars['Int']
+  postAuthorId: Scalars['Int']
 }
 
 export type MutationCreateUserArgs = {
@@ -1302,6 +1308,15 @@ export type PostsQuery = { __typename?: 'Query' } & {
   posts: { __typename?: 'PostPage' } & Pick<PostPage, 'count'> & {
       posts: Array<{ __typename?: 'Post' } & PostCardFragmentFragment>
     }
+}
+
+export type ReportSpamPostMutationVariables = Exact<{
+  postId: Scalars['Int']
+  postAuthorId: Scalars['Int']
+}>
+
+export type ReportSpamPostMutation = { __typename?: 'Mutation' } & {
+  reportSpamPost: { __typename?: 'Post' } & Pick<Post, 'id'>
 }
 
 export type SavePostMutationVariables = Exact<{
@@ -3738,6 +3753,53 @@ export function usePostsLazyQuery(
 export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>
 export type PostsQueryResult = ApolloReactCommon.QueryResult<PostsQuery, PostsQueryVariables>
+export const ReportSpamPostDocument = gql`
+  mutation reportSpamPost($postId: Int!, $postAuthorId: Int!) {
+    reportSpamPost(postId: $postId, postAuthorId: $postAuthorId) {
+      id
+    }
+  }
+`
+export type ReportSpamPostMutationFn = ApolloReactCommon.MutationFunction<
+  ReportSpamPostMutation,
+  ReportSpamPostMutationVariables
+>
+
+/**
+ * __useReportSpamPostMutation__
+ *
+ * To run a mutation, you first call `useReportSpamPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReportSpamPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [reportSpamPostMutation, { data, loading, error }] = useReportSpamPostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *      postAuthorId: // value for 'postAuthorId'
+ *   },
+ * });
+ */
+export function useReportSpamPostMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ReportSpamPostMutation,
+    ReportSpamPostMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<ReportSpamPostMutation, ReportSpamPostMutationVariables>(
+    ReportSpamPostDocument,
+    baseOptions,
+  )
+}
+export type ReportSpamPostMutationHookResult = ReturnType<typeof useReportSpamPostMutation>
+export type ReportSpamPostMutationResult = ApolloReactCommon.MutationResult<ReportSpamPostMutation>
+export type ReportSpamPostMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ReportSpamPostMutation,
+  ReportSpamPostMutationVariables
+>
 export const SavePostDocument = gql`
   mutation savePost($postId: Int!) {
     savePost(postId: $postId) {

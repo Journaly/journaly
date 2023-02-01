@@ -38,6 +38,11 @@
     "title": "Bearbeiten abbrechen",
     "body": "Bist du dir sicher, dass du das Bearbeiten des Beitrags abbrechen möchtest? Ungespeicherte Änderungen gehen verloren."
   },
+  "reportSpamModal": {
+    "title": "Report Post as Spam",
+    "confirmationText": "Are you sure you want to report this post as spam?",
+    "explanationText": "If you're not sure whether or not this post is spam, please take a look at our guidelines: "
+  },
   "enterUrlPrompt": "Gib die URL des Links ein",
   "websitePatternError": "Ungültiger Webseiten-Link, z. B. DeineDomain.com oder DeineSubdomain.domain.com",
   "claps": {
@@ -52,5 +57,11 @@
   "savePostError": "Beim Anheften dieses Beitrags ist etwas schief gegangen",
   "unsavePostSuccess": "Dieser Beitrag wurde von deiner Liste entfernt",
   "unsavePostError": "Beim Entfernen dieses Beitrags von deiner Liste ist etwas schief gegangen",
-  "savePostPremiumFeatureExplanation": "Angeheftete Beiträge ist ein angenehmes Premium-Feature, dass dir das Anheften von Beiträgen ermöglicht, sodass du diese später einfach wiederfinden und lesen kannst. Die Liste kannst du über die erweiterten Filter der Mein-Feed-Seite erreichen! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken oder nutze all die kostenfreien Features von Journaly weiterhin kostenlos."
+  "savePostPremiumFeatureExplanation": "Angeheftete Beiträge ist ein angenehmes Premium-Feature, dass dir das Anheften von Beiträgen ermöglicht, sodass du diese später einfach wiederfinden und lesen kannst. Die Liste kannst du über die erweiterten Filter der Mein-Feed-Seite erreichen! Klicke unten, um alle Vorteile von Journaly Premium zu entdecken oder nutze all die kostenfreien Features von Journaly weiterhin kostenlos.",
+  "sharePrivatelyCTA": "Publish Privately",
+  "privateShareLinkText": "Your private share link:",
+  "privatePublishingPremiumFeatureExplanation": "Private Publishing is a nifty Premium feature that generates a private share link that you can give to anybody you'd like to share your post with in private! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!",
+  "reportSpamTooltipText": "Report Spam",
+  "reportSpamPostSuccess": "Post reported successfully. Thank you for helping us keep Journaly spam-free!",
+  "reportSpamPostError": "Something went wrong reporting this post! Please email us and include this post ID: {{postId}}"
 }

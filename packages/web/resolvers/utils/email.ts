@@ -272,9 +272,9 @@ const sendReportSpamPostEmail = ({
     subject: `Spam Report: Post ${postId}`,
     html: makeEmail(`
       <h3>Spam Post Report:</h3>
-      <p>Post ID: ${postId}</p>
-      <p>Post Author ID: ${postAuthorId}</p>
-      <p>Reported by User ID: ${reportingUserId}</p>
+      <p><a href="${process.env.SITE_DOMAIN}/post/${postId}">Post ID ${postId}</a></p>
+      <p><a href="${process.env.SITE_DOMAIN}/dashboard/profile/${postAuthorId}">Post Author ID ${postAuthorId}</a></p>
+      <p><a href="${process.env.SITE_DOMAIN}/dashboard/profile/${reportingUserId}">Reporting User ID ${reportingUserId}</a></p>
     `),
   })
 }

@@ -43,9 +43,9 @@
     "body": "确认取消编辑日志？未保存的进度将丢失。"
   },
   "reportSpamModal": {
-    "title": "Report Post as Spam",
-    "confirmationText": "Are you sure you want to report this post as spam?",
-    "explanationText": "If you're not sure whether or not this post is spam, please take a look at our guidelines: "
+    "title": "举报垃圾贴文",
+    "confirmationText": "你确定你想要举报这则贴文为垃圾贴文吗?",
+    "explanationText": "如果你不确定这则贴文是否为垃圾贴文，请参考我们的守则："
   },
   "enterUrlPrompt": "输入链接地址：",
   "websitePatternError": "无效网页地址。如：domain.com 或 sub.domain.com",

@@ -43,9 +43,9 @@
     "body": "確認取消編輯日誌？未保存的進度將丟失。"
   },
   "reportSpamModal": {
-    "title": "Report Post as Spam",
-    "confirmationText": "Are you sure you want to report this post as spam?",
-    "explanationText": "If you're not sure whether or not this post is spam, please take a look at our guidelines: "
+    "title": "舉報垃圾貼文",
+    "confirmationText": "你確定你想要舉報這則貼文為垃圾貼文嗎?",
+    "explanationText": "如果你不確定這則貼文是否為垃圾貼文，請參考我們的守則： "
   },
   "enterUrlPrompt": "輸入鏈接地址：",
   "websitePatternError": "無效網頁地址。如：domain.com 或 sub.domain.com",

@@ -11,24 +11,24 @@ type Props = {
   show: boolean
 }
 
-const ConfirmationModal: React.FC<Props> = (props) => {
+const ConfirmationModal: React.FC<Props> = ({ title, body, onConfirm, onCancel, show }) => {
   const { t } = useTranslation('common')
 
-  return props.show ? (
+  return show ? (
     <Modal
-      title={props.title}
-      body={props.body}
+      title={title}
+      body={body}
       footer={
         <>
-          <Button variant={ButtonVariant.Primary} onClick={props.onConfirm}>
+          <Button variant={ButtonVariant.Primary} onClick={onConfirm}>
             {t('modal.confirm')}
           </Button>
-          <Button variant={ButtonVariant.Secondary} onClick={props.onCancel}>
+          <Button variant={ButtonVariant.Secondary} onClick={onCancel}>
             {t('modal.cancel')}
           </Button>
         </>
       }
-      onClose={props.onCancel}
+      onClose={onCancel}
     />
   ) : null
 }

@@ -42,6 +42,11 @@
     "title": "取消编辑日志",
     "body": "确认取消编辑日志？未保存的进度将丢失。"
   },
+  "reportSpamModal": {
+    "title": "举报垃圾贴文",
+    "confirmationText": "你确定你想要举报这则贴文为垃圾贴文吗?",
+    "explanationText": "如果你不确定这则贴文是否为垃圾贴文，请参考我们的守则："
+  },
   "enterUrlPrompt": "输入链接地址：",
   "websitePatternError": "无效网页地址。如：domain.com 或 sub.domain.com",
   "claps": {
@@ -59,5 +64,8 @@
   "savePostPremiumFeatureExplanation": "收藏日志是一项尊享会员功能，您将可以收藏日志，稍后通过 我的页面 > 高级筛选 找到它们！点击下方了解Journaly会员详情，或尽情享受我们所有精彩的免费功能，继续写日志吧！",
   "sharePrivatelyCTA": "私密发布",
   "privateShareLinkText": "您的私密分享链接：",
-  "privatePublishingPremiumFeatureExplanation": "私密发布是一项尊享会员功能，您将可以通过生成的私密链接将日志分享给任何人！点击下方了解Journaly会员详情，或尽情享受我们所有精彩的免费功能，继续写日志吧！"
+  "privatePublishingPremiumFeatureExplanation": "私密发布是一项尊享会员功能，您将可以通过生成的私密链接将日志分享给任何人！点击下方了解Journaly会员详情，或尽情享受我们所有精彩的免费功能，继续写日志吧！",
+  "reportSpamTooltipText": "Report Spam",
+  "reportSpamPostSuccess": "Post reported successfully. Thank you for helping us keep Journaly spam-free!",
+  "reportSpamPostError": "Something went wrong reporting this post! Please email us and include this post ID: {{postId}}"
 }

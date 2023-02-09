@@ -39,7 +39,6 @@ const assignCountBadges = (
     ON CONFLICT DO NOTHING;
   `
 
-  console.log(query)
   return db.$executeRaw(query)
 }
 

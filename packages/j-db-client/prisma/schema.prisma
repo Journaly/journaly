@@ -493,6 +493,7 @@ enum BadgeType {
   ONEHUNDREDFIFTY_POSTS
   TWOHUNDRED_POSTS
   TWOHUNDREDFIFTY_POSTS
+  // Misc
   NOVELIST // Wrote a post over X num words
   MULTILINGUAL // Write posts in 2 languages
   POLYGLOT // Wrote in X num languages

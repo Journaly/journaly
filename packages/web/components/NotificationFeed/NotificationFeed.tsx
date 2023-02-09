@@ -13,6 +13,7 @@ import NotificationLevelOne from './NotificationLevelOne'
 import theme from '@/theme'
 import BackArrowIcon from '../Icons/BackArrowIcon'
 import Button, { ButtonVariant } from '../Button'
+import GenericErrorBoundary from '@/components/GenericErrorBoundary'
 import XIcon from '../Icons/XIcon'
 import { useNotificationContext } from './NotificationContext'
 import NotificationLevelTwo from './NotificationLevelTwo'
@@ -24,6 +25,26 @@ type NotificationFeedProps = {
   onClose: () => void
   dataTestId?: string
 }
+
+type FallbackProps = {
+  notificationId: number
+}
+
+const FallbackComponent = ({ notificationId }: FallbackProps) => (
+  <div className="error-container">
+    <span>
+      Could not render notification with id {notificationId}. Please contact
+      support
+    </span>
+    <style jsx>{`
+      .error-container {
+        padding: 16px;
+        border-bottom: 1px solid #757575;
+        background-color: rgba(255, 0, 0, 0.3);
+      }
+    `}</style>
+  </div>
+)
 
 const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
   const { t } = useTranslation('common')
@@ -182,13 +203,18 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
         )}
         <div className="content">
           {notifications.map((notification) => (
-            <NotificationLevelOne
+            <GenericErrorBoundary
               key={notification.id}
-              notification={notification}
-              handleNotificationLevelChange={handleGoToLevelTwo}
-              handleDeleteNotification={handleDeleteNotification}
-              handleMarkNotificationRead={handleMarkNotificationRead}
-            />
+              FallbackComponent={FallbackComponent}
+              fallbackProps={{ notificationId: notification.id }}
+            >
+              <NotificationLevelOne
+                notification={notification}
+                handleNotificationLevelChange={handleGoToLevelTwo}
+                handleDeleteNotification={handleDeleteNotification}
+                handleMarkNotificationRead={handleMarkNotificationRead}
+              />
+            </GenericErrorBoundary>
           ))}
         </div>
       </div>

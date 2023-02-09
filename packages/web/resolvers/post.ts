@@ -19,6 +19,7 @@ import {
   getThumbusterVars,
   generatePostPrivateShareId,
   createInAppNotification,
+  sendReportSpamPostEmail,
 } from './utils'
 
 
@@ -163,6 +164,7 @@ const InitiatePostImageUploadResponse = objectType({
     t.string('checkUrl', { description: 'polling goes here' })
     t.string('finalUrlLarge', { description: 'final url of the large size transform' })
     t.string('finalUrlSmall', { description: 'final url of the mall size transform' })
+    t.string('unsplashPhotographer', { nullable: true, description: 'Unsplash username of the photographer who originally uploaded the image on Unsplash'})
   },
 })
 
@@ -632,10 +634,13 @@ const PostMutations = extendType({
         }
 
         if (args.headlineImage.smallSize !== originalPost.headlineImage.smallSize) {
+          const unsplashPhotographer = args.headlineImage.unsplashPhotographer
+
           const headlineImage = await ctx.db.headlineImage.create({
             data: {
               smallSize: args.headlineImage.smallSize,
               largeSize: args.headlineImage.largeSize,
+              unsplashPhotographer: unsplashPhotographer ? unsplashPhotographer : null,
             },
           })
           data.headlineImage = {
@@ -917,6 +922,34 @@ const PostMutations = extendType({
             bumpCount: post.bumpCount + 1,
           },
         })
+      },
+    })
+
+    t.field('reportSpamPost', {
+      type: 'Post',
+      args: {
+        postId: intArg({ required: true }),
+        postAuthorId: intArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+        if (!userId) throw new NotAuthorizedError()
+
+        const post = await ctx.db.post.findUnique({
+          where: {
+            id: args.postId,
+          },
+        })
+
+        if (!post) throw new NotFoundError()
+
+        await sendReportSpamPostEmail({
+          postId: args.postId,
+          postAuthorId: args.postAuthorId,
+          reportingUserId: userId,
+        })
+
+        return post
       },
     })
   },

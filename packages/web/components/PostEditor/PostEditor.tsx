@@ -1,24 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Editor, Descendant } from 'slate'
 
-import FileInput from '@/components/FileInput'
 import PostHeader from '@/components/PostHeader'
 import JournalyEditor from '@/components/JournalyEditor'
 import XIcon from '@/components/Icons/XIcon'
 import Select from '@/components/Select'
 import MultiSelect from '@/components/MultiSelect'
-import { ButtonVariant } from '@/components/Button'
+import Button from '@/components/Button'
 import theme from '@/theme'
-import usePostImageUpload from '@/hooks/usePostImageUpload'
 import useAutosavedState from '@/hooks/useAutosavedState'
 import {
   CurrentUserFragmentFragment as UserType,
   TopicFragmentFragment as TopicType,
   PostStatus as PostStatusType,
   UserRole,
+  InitiatePostImageUploadResponse,
 } from '@/generated/graphql'
 import { languageNameWithDialect } from '@/utils/languages'
 import { useTranslation } from '@/config/i18n'
+import ImageUploadModal from '../Modals/ImageUploadModal'
 
 type BasePostData = {
   title: string
@@ -76,6 +76,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
 }) => {
   const { t } = useTranslation('post')
   const slateRef = React.useRef<Editor>(null)
+  const [displayImageUploadModal, setDisplayImageUploadModal] = useState(false)
 
   const [langId, setLangId, resetLangId] = useAutosavedState<number>(initialData.languageId, {
     initialTimestamp: initialData.timestamp,
@@ -101,7 +102,9 @@ const PostEditor: React.FC<PostEditorProps> = ({
     return { value, displayName }
   })
 
-  const [image, uploadingImage, onFileInputChange, resetImage] = usePostImageUpload()
+  // TOOD: When selecting an image from Unsplash, do we want to only get the regular size
+  // image and simply upload that and then let Thumbbuster handle the thumbnailing?
+  const [image, setImage] = React.useState<InitiatePostImageUploadResponse | null>(null)
   const postImage = image?.finalUrlLarge || initialData.headlineImage.largeSize
 
   const [selectedTopics, setSelectedTopics] = React.useState<number[]>(initialData.topicIds)
@@ -114,6 +117,11 @@ const PostEditor: React.FC<PostEditorProps> = ({
 
   const postLanguage = languages.find(({ language }) => language.id === langId)?.language
   const postTopics = topics.filter(({ id }) => selectedTopics.indexOf(id) > -1)
+
+  const onImageSelect = (image: Parameters<typeof setImage>[0]) => {
+    setImage(image)
+    setDisplayImageUploadModal(false)
+  }
 
   const resetIntialPostValues = React.useCallback(() => {
     setTitle(initialData.title)
@@ -137,7 +145,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
 
       resetTitle()
       resetBody()
-      resetImage()
+      setImage(null)
       resetLangId()
     }
 
@@ -149,6 +157,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
       : {
           largeSize: image.finalUrlLarge,
           smallSize: image.finalUrlSmall,
+          unsplashPhotographer: image.unsplashPhotographer ? image.unsplashPhotographer : null,
         }
 
     dataRef.current = {
@@ -224,18 +233,13 @@ const PostEditor: React.FC<PostEditorProps> = ({
           topics={postTopics}
         >
           <div className="header-preview-options">
-            <FileInput
-              variant={ButtonVariant.Primary}
-              className="image-upload-btn"
-              loading={uploadingImage}
-              onChange={onFileInputChange}
-            >
+            <Button onClick={() => setDisplayImageUploadModal(true)}>
               {t('uploadImageButtonText')}
-            </FileInput>
+            </Button>
             <XIcon
               className="cancel-image-icon"
               color={theme.colors.white}
-              onClick={() => resetImage()}
+              onClick={() => setImage(null)}
             />
           </div>
         </PostHeader>
@@ -250,6 +254,13 @@ const PostEditor: React.FC<PostEditorProps> = ({
           allowInlineImages={!!isPremiumFeatureEligible}
         />
       </div>
+
+      {displayImageUploadModal && (
+        <ImageUploadModal
+          onImageSelect={onImageSelect}
+          onCancel={() => setDisplayImageUploadModal(false)}
+        />
+      )}
 
       <style jsx>{`
         .post-editor {

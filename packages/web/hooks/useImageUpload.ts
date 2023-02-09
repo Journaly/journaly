@@ -4,16 +4,17 @@ import { toast } from 'react-toastify'
 import { useTranslation } from '@/config/i18n'
 import { uploadFile, BaseUploadData } from '@/utils/images'
 
-interface HTMLInputEvent extends React.FormEvent {
+export interface HTMLInputEvent extends React.FormEvent {
   target: HTMLInputElement & EventTarget
 }
 
-type UploadHookOutput<T> = [
-  T | null,
-  boolean,
-  (e: HTMLInputEvent) => Promise<T | null>,
-  () => void,
-]
+type UploadHookOutput<T> = {
+  image: T | null
+  setImage: (image: T) => void
+  uploadingImage: boolean
+  onFileInputChange: (e: HTMLInputEvent) => Promise<T | null>
+  resetImage: () => void
+}
 
 export interface UploadHook<T> {
   (): UploadHookOutput<T>
@@ -59,7 +60,13 @@ const useImageUpload = <T extends BaseUploadData>(getUploadData: () => Promise<T
     return result.value
   }
 
-  return [image, uploadingImage, onFileInputChange, () => setImage(null)]
+  return {
+    image,
+    setImage,
+    uploadingImage,
+    onFileInputChange,
+    resetImage: () => setImage(null),
+  }
 }
 
 

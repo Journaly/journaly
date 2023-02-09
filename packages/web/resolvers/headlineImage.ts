@@ -6,6 +6,7 @@ const HeadlineImage = objectType({
     t.model.id()
     t.model.smallSize()
     t.model.largeSize()
+    t.model.unsplashPhotographer()
   },
 })
 

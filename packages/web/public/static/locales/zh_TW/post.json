@@ -42,6 +42,11 @@
     "title": "取消編輯日誌",
     "body": "確認取消編輯日誌？未保存的進度將丟失。"
   },
+  "reportSpamModal": {
+    "title": "舉報垃圾貼文",
+    "confirmationText": "你確定你想要舉報這則貼文為垃圾貼文嗎?",
+    "explanationText": "如果你不確定這則貼文是否為垃圾貼文，請參考我們的守則： "
+  },
   "enterUrlPrompt": "輸入鏈接地址：",
   "websitePatternError": "無效網頁地址。如：domain.com 或 sub.domain.com",
   "claps": {
@@ -59,5 +64,8 @@
   "savePostPremiumFeatureExplanation": "收藏日誌是一項尊享會員功能，您將可以收藏日誌，稍後通過 我的頁面 > 高級篩選 找到它們！點擊下方了解Journaly會員詳情，或盡情享受我們所有精彩的免費功能，繼續寫日誌吧！",
   "sharePrivatelyCTA": "私密發布",
   "privateShareLinkText": "您的私密分享鏈接：",
-  "privatePublishingPremiumFeatureExplanation": "私密發布是一項尊享會員功能，您將可以通過生成的私密鏈接將日誌分享給任何人！點擊下方了解Journaly會員詳情，或盡情享受我們所有精彩的免費功能，繼續寫日誌吧！"
+  "privatePublishingPremiumFeatureExplanation": "私密發布是一項尊享會員功能，您將可以通過生成的私密鏈接將日誌分享給任何人！點擊下方了解Journaly會員詳情，或盡情享受我們所有精彩的免費功能，繼續寫日誌吧！",
+  "reportSpamTooltipText": "Report Spam",
+  "reportSpamPostSuccess": "Post reported successfully. Thank you for helping us keep Journaly spam-free!",
+  "reportSpamPostError": "Something went wrong reporting this post! Please email us and include this post ID: {{postId}}"
 }

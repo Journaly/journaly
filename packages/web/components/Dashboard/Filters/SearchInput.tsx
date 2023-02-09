@@ -6,9 +6,10 @@ type Props = {
   defaultValue: string
   debounceTime: number
   onChange: (value: string) => void
+  placeholder?: string
 }
 
-const SearchInput: React.FC<Props> = ({ defaultValue, onChange, debounceTime }) => {
+const SearchInput: React.FC<Props> = ({ defaultValue, onChange, debounceTime, placeholder }) => {
   const { t } = useTranslation('common')
   const [oldDefaultValue, setOldDefaultValue] = useState(defaultValue)
   const [value, setValue] = useState(defaultValue)
@@ -34,7 +35,7 @@ const SearchInput: React.FC<Props> = ({ defaultValue, onChange, debounceTime }) 
     <>
       <input
         type="text"
-        placeholder={t('ui.textSearchPlaceholder')}
+        placeholder={placeholder ? placeholder : t('ui.textSearchPlaceholder')}
         className="search-box"
         value={value}
         maxLength={50}

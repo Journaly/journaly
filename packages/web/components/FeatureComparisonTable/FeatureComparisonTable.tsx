@@ -50,11 +50,7 @@ const FeatureComparisonTable = () => {
             <Feature name={t('subscription.features.advancedFiltering')} plan="free" />
             <Feature name={t('subscription.features.badges')} plan="free" />
             <Feature name={t('subscription.features.stats')} plan="free" />
-            <Feature
-              name={t('subscription.features.unsplashIntegration')}
-              plan="free"
-              status="coming soon"
-            />
+            <Feature name={t('subscription.features.unsplashIntegration')} plan="free" />
             <Feature
               name={t('subscription.features.directMessaging')}
               plan="free"

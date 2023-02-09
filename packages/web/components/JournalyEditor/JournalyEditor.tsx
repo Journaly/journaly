@@ -10,13 +10,9 @@ import PostBodyStyles from '@/components/PostBodyStyles'
 import Toolbar from './Toolbar'
 import RenderElement from './RenderElement'
 import RenderLeaf from './RenderLeaf'
-import {
-  withLinks,
-  withImages,
-  toggleMark,
-  options,
-  MarkType,
-} from './helpers'
+import { withLinks, withImages, toggleMark, options, MarkType } from './helpers'
+import usePlayPolyphonicSound from '@/hooks/usePlayPolyphonicSound'
+import useAutosavedState from '@/hooks/useAutosavedState'
 
 /**
  * The Journaly Rich Text Editor
@@ -32,6 +28,22 @@ const HOTKEYS: { [key in HotKey]: MarkType } = {
   'mod+i': 'italic',
   'mod+u': 'underline',
 }
+
+const KEY_BLACK_LIST = new Set([
+  'Shift',
+  'Tab',
+  'Meta',
+  'Control',
+  'Alt',
+  'ArrowUp',
+  'ArrowLeft',
+  'ArrowDown',
+  'ArrowRight',
+  'PageUp',
+  'PageDown',
+  'Home',
+  'End',
+])
 
 type JournalyEditorProps = {
   value: Descendant[]
@@ -52,10 +64,7 @@ const JournalyEditor = ({
   const renderElement = useCallback((props) => <RenderElement {...props} />, [])
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
   const editor = useMemo(() => {
-    const withPlugins: ((ed: Editor) => Editor)[] = [
-      withHistory,
-      withLinks,
-    ]
+    const withPlugins: ((ed: Editor) => Editor)[] = [withHistory, withLinks]
 
     if (allowInlineImages) {
       withPlugins.push(withImages)
@@ -64,15 +73,46 @@ const JournalyEditor = ({
     return pipe(withReact(createEditor()), ...withPlugins)
   }, [])
 
+  const [shouldPlayTypewriterSounds, setShouldPlayTypewriterSounds] = useAutosavedState(false, {
+    key: 'shouldPlayTypewriterSounds',
+  })
+
+  const playTypewriterSound = usePlayPolyphonicSound('/static/sounds/typewriter-key-sound.wav', 3)
+  const playTypewriterReturnSound = usePlayPolyphonicSound(
+    '/static/sounds/typewriter-return-sound.wav',
+    1,
+  )
+
+  const handlePlayTypewriterSound = (e: React.KeyboardEvent) => {
+    if (shouldPlayTypewriterSounds) {
+      if (KEY_BLACK_LIST.has(e.key)) return
+      else if (e.key === 'Enter') {
+        playTypewriterReturnSound()
+      } else {
+        playTypewriterSound()
+      }
+    }
+  }
+
   useEffect(() => {
     ;(slateRef as React.MutableRefObject<Editor>).current = editor
   }, [editor])
+
+  if (typeof window === 'undefined') {
+    return null
+  }
 
   return (
     <div className="editor-wrapper">
       <div className="editor-container">
         <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
-          <Toolbar allowInlineImages={allowInlineImages} />
+          <Toolbar
+            allowInlineImages={allowInlineImages}
+            shouldPlayTypewriterSounds={shouldPlayTypewriterSounds}
+            onToggleShouldPlayTypewriterSounds={() =>
+              setShouldPlayTypewriterSounds(!shouldPlayTypewriterSounds)
+            }
+          />
           <EditablePlugins
             plugins={plugins}
             renderElement={[renderElement]}
@@ -81,15 +121,17 @@ const JournalyEditor = ({
             spellCheck
             onKeyDown={[
               (event: React.KeyboardEvent) => {
+                handlePlayTypewriterSound(event)
                 Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
                   // Convert React keyboard event to native keyboard event
-                  if (isHotkey(hotkey, (event as unknown) as KeyboardEvent)) {
+                  if (isHotkey(hotkey, event as unknown as KeyboardEvent)) {
                     event.preventDefault()
                     toggleMark(editor, mark)
                   }
                 })
               },
             ]}
+            onKeyDownDeps={[shouldPlayTypewriterSounds]}
             data-testid="post-body"
           />
         </Slate>
@@ -108,7 +150,7 @@ const JournalyEditor = ({
           min-height: 200px;
         }
 
-        .editor-container > :global([contenteditable="true"]) {
+        .editor-container > :global([contenteditable='true']) {
           flex: 1;
           padding-top: 15px;
         }

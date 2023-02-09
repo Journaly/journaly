@@ -1,6 +1,9 @@
 {
   "name": "j-mail",
   "version": "1.0.0",
+  "engines": {
+    "node": "16.x"
+  },
   "description": "An email notification queueing service.",
   "main": "index.js",
   "scripts": {

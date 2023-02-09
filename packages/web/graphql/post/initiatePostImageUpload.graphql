@@ -4,5 +4,6 @@ mutation initiatePostImageUpload {
     checkUrl
     finalUrlLarge
     finalUrlSmall
+    unsplashPhotographer
   }
 }

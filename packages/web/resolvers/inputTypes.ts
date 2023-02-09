@@ -29,6 +29,7 @@ export const HeadlineImageInput = inputObjectType({
   definition(t) {
     t.string('smallSize', { nullable: false })
     t.string('largeSize', { nullable: false })
+    t.string('unsplashPhotographer', { nullable: true })
   },
 })
 

@@ -379,13 +379,13 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
 
   return (
     <div className="container">
-      <Link href={`/user/${thanksAuthor.id}`}>
+      <Link href={`/user/${thanksAuthor.handle}`}>
         <a className="thanks-author" onClick={closeNotificationFeed}>
           <UserAvatar user={thanksAuthor} size={50} />
         </a>
       </Link>
       <p className="title">
-        <Link href={`/user/${thanksAuthor.id}`}>
+        <Link href={`/user/${thanksAuthor.handle}`}>
           <a className="user-identifier" onClick={closeNotificationFeed}>
             {getUserIdentifier(thanksAuthor)}{' '}
           </a>

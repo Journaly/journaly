@@ -40,7 +40,7 @@ const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promi
     FROM "Comment" AS c
     JOIN "Thread" as t
       ON c."threadId" = t.id
-    WHERE c."authorId" = ${userId};
+    WHERE c."authorId" = ${userId}
   `
 
   const newCommentBadgesPromise = assignCountBadges(

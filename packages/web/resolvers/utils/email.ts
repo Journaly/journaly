@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-unfetch'
 
 import { User, BadgeType, PrismaClient } from '@journaly/j-db-client'
+import BadgeCopy from '../../public/static/locales/en/badge.json'
 
 import { AWS } from './aws'
 
@@ -139,32 +140,9 @@ const sendPasswordResetTokenEmail = ({ user, resetToken }: sendPasswordResetToke
   })
 }
 
-/*
-const assertUnreachable = (x: never): never => {
-  throw new Error(`Didn't expect to get here ${x}`)
-}
-*/
-
 const getBadgeName = (badgeType: BadgeType): string => {
-  switch (badgeType) {
-    case BadgeType.ALPHA_USER:
-      return 'Alpha User'
-    case BadgeType.BETA_USER:
-      return 'Beta User'
-    case BadgeType.TEN_POSTS:
-      return '10 Posts'
-    case BadgeType.ONEHUNDRED_POSTS:
-      return '100 Posts'
-    case BadgeType.CODE_CONTRIBUTOR:
-      return 'Code Contributor'
-    case BadgeType.NECROMANCER:
-      return 'Necromancer'
-    case BadgeType.ODRADEK:
-      return 'Odradek'
-  }
-  // TODO: don't bail out here
-  return 'NAME_PENDING'
-  //return assertUnreachable(badgeType)
+  // @ts-ignore
+  return BadgeCopy[badgeType]?.title
 }
 
 const sendNewBadgeEmail = ({ user, badgeType }: sendNewBadgeEmailArgs) => {

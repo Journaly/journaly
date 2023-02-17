@@ -28,7 +28,7 @@ yargs
 
       await query`
         DELETE
-        FROM "UserBadge"
+        FROM "MembershipSubscription"
         WHERE "userId" = ${userId}
       `
 
@@ -36,6 +36,31 @@ yargs
         DELETE
         FROM "PostClap"
         WHERE "authorId" = ${userId}
+      `
+
+      // We need to handle claps left by others on the post that is being deleted
+      await query`
+        DELETE
+        FROM "Post"
+        WHERE "authorId" = ${userId}
+      `
+
+      await query`
+        DELETE
+        FROM "PostComment"
+        WHERE "authorId" = ${userId}
+      `
+
+      await query`
+        DELETE
+        FROM "PostCommentSubscription"
+        WHERE "userId" = ${userId}
+      `
+
+      await query`
+        DELETE
+        FROM "UserBadge"
+        WHERE "userId" = ${userId}
       `
 
       await query`

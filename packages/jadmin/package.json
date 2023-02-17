@@ -1,0 +1,16 @@
+{
+  "name": "jadmin",
+  "version": "1.0.0",
+  "description": "Journaly admin tools.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "pg": "^8.9.0",
+    "pg-tag": "^2.2.0",
+    "yargs": "^17.6.2"
+  }
+}

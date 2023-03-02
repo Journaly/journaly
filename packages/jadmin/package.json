@@ -10,7 +10,9 @@
   "license": "UNLICENSED",
   "dependencies": {
     "pg": "^8.9.0",
+    "pg-connection-string": "^2.5.0",
     "pg-tag": "^2.2.0",
+    "prompts": "^2.4.2",
     "yargs": "^17.6.2"
   }
 }

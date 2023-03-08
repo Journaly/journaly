@@ -1,9 +1,12 @@
 require('dotenv').config()
 import jwt from 'jsonwebtoken'
 import { ApolloServer } from 'apollo-server-micro'
+import { json } from 'micro'
 import { getClient } from '@/nexus/utils'
 
 import { schema } from '../../resolvers'
+
+const LOG_QUERY_THRESHOLD = 1000
 
 const server = new ApolloServer({
   schema,
@@ -37,7 +40,12 @@ const handler = async (req: any, res: any) => {
   const start = Date.now()
   const response = await graphqlHandler(req, res)
 
-  console.log(`GraphQL request took ${Date.now() - start} ms`)
+  const gqlDuration = Date.now() - start
+  console.log(`GraphQL request took ${gqlDuration} ms`)
+
+  if (gqlDuration > LOG_QUERY_THRESHOLD) {
+    console.log(`Request ran longer than ${LOG_QUERY_THRESHOLD}ms, request body is:`, await json(req))
+  }
 
   return response
 }

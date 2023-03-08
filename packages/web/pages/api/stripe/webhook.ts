@@ -3,7 +3,7 @@ import { Prisma, MembershipSubscriptionPeriod, PrismaClient } from '@journaly/j-
 import Stripe from 'stripe'
 import stripe, { logPaymentsError } from '@/nexus/utils/stripe'
 import { getClient } from '@/nexus/utils'
-import { readBody } from '@/nexus/request'
+import { readBody } from '@/nexus/utils/request'
 
 // Disable body parsing so stripe can validate the literal string it sent us
 // against its signature.

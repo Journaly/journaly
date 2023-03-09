@@ -143,6 +143,12 @@ yargs
 
       await query`
         DELETE
+        FROM "SocialMedia"
+        WHERE "userId" = ${userId}
+      `
+
+      await query`
+        DELETE
         FROM "UserInterest"
         WHERE "userId" = ${userId}
       `

@@ -3,6 +3,7 @@ import { Prisma, MembershipSubscriptionPeriod, PrismaClient } from '@journaly/j-
 import Stripe from 'stripe'
 import stripe, { logPaymentsError } from '@/nexus/utils/stripe'
 import { getClient } from '@/nexus/utils'
+import { readBody } from '@/nexus/utils/request'
 
 // Disable body parsing so stripe can validate the literal string it sent us
 // against its signature.
@@ -10,15 +11,6 @@ export const config = {
   api: {
     bodyParser: false,
   },
-}
-
-const webhookPayloadParser = (req: NextApiRequest): Promise<string> => {
-  return new Promise((res) => {
-    const parts: string[] = []
-
-    req.on('data', (chunk: string) => parts.push(chunk))
-    req.on('end', () => res(parts.join('')))
-  })
 }
 
 const updateStripeSubscription = async (subscriptionId: string, db: PrismaClient) => {
@@ -63,7 +55,7 @@ const convertStripePriceToMembershipPeriod = (priceId: string) => {
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const db = getClient()
   const sig = req.headers['stripe-signature']
-  const body = await webhookPayloadParser(req)
+  const body = await readBody(req)
 
   let event: Stripe.Event
 

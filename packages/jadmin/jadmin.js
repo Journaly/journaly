@@ -239,11 +239,6 @@ yargs
       await db.pool.end()
     },
   })
-  .demandCommand(1)
-  .parse(process.argv.slice(2))
-
-  yargs
-  .scriptName('jadmin')
   .command({
     command: 'delete-post <postId>',
     describe: 'Hard delete a post and related records',

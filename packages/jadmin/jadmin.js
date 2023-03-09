@@ -245,5 +245,90 @@ yargs
       await db.pool.end()
     },
   })
+  .command({
+    command: 'delete-post <postId>',
+    describe: 'Hard delete a post and related records',
+    builder: (yargs) => {
+      yargs.option('force', {
+        describe: 'Bypass interactive safety checks',
+        type: 'boolean',
+      })
+      yargs.option('database-url', {
+        describe: 'The URL to connect to the database',
+        type: 'string',
+      })
+    },
+    handler: async (args) => {
+      const dbUrl = args.databaseUrl || process.env.DATABASE_URL
+
+      if (!dbUrl) {
+        console.error('No database URL has been provided')
+        process.exit(1)
+      }
+
+      const parsedDbUrl = parse(dbUrl)
+      let promptResponse
+
+      if (!['localhost', '127.0.0.1'].includes(parsedDbUrl.host) && !args.force) {
+        promptResponse = await prompts({
+          type: 'confirm',
+          name: 'confirmDbUrl',
+          message: `CAUTION: your $DATABASE_URL is currently set to a remote database: ${dbUrl}. Are you sure you want to continue?`,
+        })
+
+        if (!promptResponse.confirmDbUrl) return
+      }
+
+      const db = pgTag(
+        new Pool({
+          connectionString: dbUrl,
+        }),
+      )
+
+      const postId = parseInt(args.postId)
+      const post = await db.get`
+        SELECT *
+        FROM "Post"
+        WHERE id = ${postId}
+      `
+
+      if (!post) {
+        console.error(`No Post with ID ${postId} found`)
+        process.exit(1)
+      }
+      
+      const userId = post.authorId
+      const user = await db.get`
+        SELECT *
+        FROM "User"
+        WHERE id = ${userId}
+      `
+
+      if (!user) {
+        console.error(`No User with ID ${userId} found`)
+        process.exit(1)
+      }
+
+      if (!args.force) {
+        promptResponse = await prompts({
+          type: 'confirm',
+          name: 'confirmUserByHandle',
+          message: `Are you sure you want to delete post: ${post.title} by User handle: ${user.handle}, email: ${
+            user.email
+          }, ${user.name ? user.name : 'no name'}?`,
+        })
+
+        if (!promptResponse.confirmUserByHandle) return
+      }
+
+      const query = db.transaction()
+
+      await deletePosts([postId], query)
+      await query.commit()
+
+      console.table(post)
+      await db.pool.end()
+    },
+  })
   .demandCommand(1)
   .parse(process.argv.slice(2))

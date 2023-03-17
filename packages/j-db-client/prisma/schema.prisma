@@ -552,6 +552,7 @@ enum BadgeType {
   TWOTHOUSANDTWOHUNDREDFIFTY_THANKS_GIVEN
   TWOTHOUSANDFIVEHUNDRED_THANKS_GIVEN
   FIVETHOUSAND_THANKS_GIVEN
+  TENTHOUSAND_THANKS_GIVEN
   // Goals
   HIKER // Achieved weekly goal 4 weeks in a row
   TRAIL_RUNNER // Achieved weekly goal 6 weeks in a row

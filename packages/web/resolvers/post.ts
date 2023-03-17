@@ -60,6 +60,8 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
       150: BadgeType.ONEHUNDREDFIFTY_POSTS,
       200: BadgeType.TWOHUNDRED_POSTS,
       250: BadgeType.TWOHUNDREDFIFTY_POSTS,
+      350: BadgeType.THREEHUNDREDFIFTY_POSTS,
+      500: BadgeType.FIVEHUNDRED_POSTS,
     }
   )
 

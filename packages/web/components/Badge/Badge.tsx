@@ -27,6 +27,10 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
       return 'badge.ODRADEK'
     case BadgeType.Necromancer:
       return 'badge.NECROMANCER'
+    case BadgeType.SpamReporter:
+      return 'badge.SPAM_REPORTER'
+    case BadgeType.Default:
+      return 'badge.DEFAULT'
 
     // Posts
     case BadgeType.TenPosts:
@@ -45,6 +49,10 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
       return 'badge.TWOHUNDRED_POSTS'
     case BadgeType.TwohundredfiftyPosts:
       return 'badge.TWOHUNDREDFIFTY_POSTS'
+    case BadgeType.ThreehundredfiftyPosts:
+      return 'badge.THREEHUNDREDFIFTY_POSTS'
+    case BadgeType.FivehundredPosts:
+      return 'badge.FIVEHUNDRED_POSTS'
 
     // Feedback - Comments
     case BadgeType.TenComments:
@@ -59,6 +67,26 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
       return 'badge.FIVEHUNDRED_COMMENTS'
     case BadgeType.OnethousandComments:
       return 'badge.ONETHOUSAND_COMMENTS'
+    case BadgeType.OnethousandfivehundredComments:
+      return 'badge.ONETHOUSANDFIVEHUNDRED_COMMENTS'
+    case BadgeType.TwothousandComments:
+      return 'badge.TWOTHOUSAND_COMMENTS'
+    case BadgeType.TwothousandfivehundredComments:
+      return 'badge.TWOTHOUSANDFIVEHUNDRED_COMMENTS'
+    case BadgeType.FivethousandComments:
+      return 'badge.FIVETHOUSAND_COMMENTS'
+    
+      // Comments - Posts
+    case BadgeType.TenPostComments:
+      return 'badge.TEN_POST_COMMENTS'
+    case BadgeType.FiftyPostComments:
+      return 'badge.FIFTY_POST_COMMENTS'
+    case BadgeType.OnehundredPostComments:
+      return 'badge.ONEHUNDRED_COMMENTS'
+    case BadgeType.TwohundredPostComments:
+      return 'badge.TWOHUNDRED_POST_COMMENTS'
+    case BadgeType.ThreehundredPostComments:
+      return 'badge.THREEHUNDRED_POST_COMMENTS'
 
     // Feedback - Posts
     case BadgeType.CorrectTenPosts:
@@ -73,6 +101,10 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
       return 'badge.CORRECT_ONEHUNDREDFIFTY_POSTS'
     case BadgeType.CorrectTwohundredfiftyPosts:
       return 'badge.CORRECT_TWOHUNDREDFIFTY_POSTS'
+    case BadgeType.CorrectFivehundredPosts:
+      return 'badge.CORRECT_FIVEHUNDRED_POSTS'
+    case BadgeType.CorrectOnethousandPosts:
+      return 'badge.CORRECT_ONETHOUSAND_POSTS'
 
     // Thanks
     case BadgeType.TenThanks:
@@ -91,6 +123,36 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
       return 'badge.ONETHOUSANDTWOHUNDREDFIFTY_THANKS'
     case BadgeType.OnethousandfivehundredThanks:
       return 'badge.ONETHOUSANDFIVEHUNDRED_THANKS'
+    case BadgeType.TwothousandtwohundredfiftyThanks:
+      return 'badge.TWOTHOUSANDTWOHUNDREDFIFTY_THANKS'
+    case BadgeType.TwothousandfivehundredThanks:
+      return 'badge.TWOTHOUSANDFIVEHUNDRED_THANKS'
+    case BadgeType.FivethousandThanks:
+      return 'badge.FIVETHOUSAND_THANKS'
+    case BadgeType.TenthousandThanks:
+      return 'badge.TENTHOUSAND_THANKS'
+    
+      // Thanks Given
+    case BadgeType.TenThanksGiven:
+      return 'badge.TEN_THANKS_GIVEN'
+    case BadgeType.FiftyThanksGiven:
+      return 'badge.FIFTY_THANKS_GIVEN'
+    case BadgeType.OnehundredThanksGiven:
+      return 'badge.ONEHUNDRED_THANKS_GIVEN'
+    case BadgeType.TwohundredfiftyThanksGiven:
+      return 'badge.TWOHUNDREDFIFTY_THANKS_GIVEN'
+    case BadgeType.FivehundredThanksGiven:
+      return 'badge.FIVEHUNDRED_THANKS_GIVEN'
+    case BadgeType.OnethousandThanksGiven:
+      return 'badge.ONETHOUSAND_THANKS_GIVEN'
+    case BadgeType.TwothousandtwohundredfiftyThanksGiven:
+      return 'badge.TWOTHOUSANDTWOHUNDREDFIFTY_THANKS_GIVEN'
+    case BadgeType.TwothousandfivehundredThanksGiven:
+      return 'badge.TWOTHOUSANDFIVEHUNDRED_THANKS_GIVEN'
+    case BadgeType.FivethousandThanksGiven:
+      return 'badge.FIVETHOUSAND_THANKS_GIVEN'
+    case BadgeType.TenthousandThanksGiven:
+      return 'badge.TENTHOUSAND_THANKS_GIVEN'
 
     // Goals
     case BadgeType.Hiker:

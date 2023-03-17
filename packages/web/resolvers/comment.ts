@@ -34,6 +34,12 @@ const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promi
     FROM "Comment"
     WHERE "authorId" = ${userId}
   `
+  
+  const postCommentCountQuery = Prisma.sql`
+    SELECT COUNT(*) AS count
+    FROM "PostComment"
+    WHERE "authorId" = ${userId}
+  `
 
   const postsCorrectedCountQuery = Prisma.sql`
     SELECT COUNT(DISTINCT t."postId") AS count
@@ -54,6 +60,23 @@ const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promi
       250: BadgeType.TWOHUNDREDFIFTY_COMMENTS,
       500: BadgeType.FIVEHUNDRED_COMMENTS,
       1000: BadgeType.ONETHOUSAND_COMMENTS,
+      1500: BadgeType.ONETHOUSANDFIVEHUNDRED_COMMENTS,
+      2000: BadgeType.TWOTHOUSAND_COMMENTS,
+      2500: BadgeType.TWOTHOUSANDFIVEHUNDRED_COMMENTS,
+      5000: BadgeType.FIVETHOUSAND_COMMENTS,
+    }
+  )
+  
+  const newPostCommentBadgesPromise = assignCountBadges(
+    db,
+    userId,
+    postCommentCountQuery,
+    {
+      10: BadgeType.TEN_COMMENTS,
+      50: BadgeType.FIFTY_COMMENTS,
+      100: BadgeType.ONEHUNDRED_COMMENTS,
+      200: BadgeType.TWOHUNDRED_POST_COMMENTS,
+      300: BadgeType.THREEHUNDRED_POST_COMMENTS,
     }
   )
 
@@ -68,12 +91,15 @@ const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promi
       100: BadgeType.CORRECT_ONEHUNDRED_POSTS,
       150: BadgeType.CORRECT_ONEHUNDREDFIFTY_POSTS,
       250: BadgeType.CORRECT_TWOHUNDREDFIFTY_POSTS,
+      500: BadgeType.CORRECT_FIVEHUNDRED_POSTS,
+      1000: BadgeType.CORRECT_ONETHOUSAND_POSTS,
     }
   )
 
   const newBadgeCount = (await Promise.all([
     newCommentBadgesPromise,
-    newPostsCorrectedBadgesPromise
+    newPostCommentBadgesPromise,
+    newPostsCorrectedBadgesPromise,
   ])).reduce((a: number, b: number) => a + b, 0)
 
   // This is a horrible hack because of this bug in prisma where `RETURNING`

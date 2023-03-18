@@ -126,7 +126,7 @@ const ThanksMutations = extendType({
 
         const newThanksGivenBadgeCount = await assignCountBadges(
           ctx.db,
-          comment.author.id,
+          userId,
           thanksGivenCountQuery,
           {
             10: BadgeType.TEN_THANKS_GIVEN,

@@ -181,26 +181,23 @@ const getBadgeDescription = (badgeType: BadgeType): string =>
   `${getBadgeCopySubpath(badgeType)}.description`
 
 const BadgeComponent: React.FC<Props> = ({ badge }) => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('badge')
 
   return (
     <>
       <div className="badge" title={t(getBadgeDescription(badge.type))}>
-        <div className="badge-icon" />
-        <span className="title">{t(getBadgeTitle(badge.type))}</span>
+        {/* <div className="badge-icon" />
+        <span className="title">{t(getBadgeTitle(badge.type))}</span> */}
+        <img src={`/images/badges/${badge.type}.svg`} alt="" />
       </div>
 
       <style jsx>{`
         .badge {
-          display: flex;
+          display: flex;  
           align-items: center;
           padding: 1px 11px;
           cursor: pointer;
-
-          background-color: ${theme.colors.charcoal};
           color: ${theme.colors.white};
-          border-radius: 3px;
-          border: 1px solid #484848;
         }
 
         .badge-icon {
@@ -210,6 +207,11 @@ const BadgeComponent: React.FC<Props> = ({ badge }) => {
           background-color: ${theme.colors.copper};
           border-radius: 3px;
           margin-right: 5px;
+        }
+
+        img {
+          height: 100px;
+          width: 100px;
         }
       `}</style>
     </>

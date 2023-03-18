@@ -72,9 +72,9 @@ const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promi
     userId,
     postCommentCountQuery,
     {
-      10: BadgeType.TEN_COMMENTS,
-      50: BadgeType.FIFTY_COMMENTS,
-      100: BadgeType.ONEHUNDRED_COMMENTS,
+      10: BadgeType.TEN_POST_COMMENTS,
+      50: BadgeType.FIFTY_POST_COMMENTS,
+      100: BadgeType.ONEHUNDRED_POST_COMMENTS,
       200: BadgeType.TWOHUNDRED_POST_COMMENTS,
       300: BadgeType.THREEHUNDRED_POST_COMMENTS,
     }
@@ -335,6 +335,8 @@ const CommentMutations = extendType({
           body,
         })
 
+        await assignCommentCountBadges(ctx.db, userId)
+
         return thread
       },
     })
@@ -381,6 +383,7 @@ const CommentMutations = extendType({
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
+
         if (!userId) {
           throw new Error('You must be logged in to post comments.')
         }
@@ -400,6 +403,7 @@ const CommentMutations = extendType({
             },
           },
         })
+
         if (!thread) {
           throw new NotFoundError('thread')
         }

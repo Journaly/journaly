@@ -582,6 +582,8 @@ const CommentMutations = extendType({
           },
         })
 
+        await assignCommentCountBadges(ctx.db, userId)
+
         const subData = {
           user: { connect: { id: userId } },
           post: { connect: { id: post.id } },

@@ -143,14 +143,6 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           )}
 
           {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
-
-          <ul className="badge-list">
-            {user.badges.map((badge) => (
-              <li key={badge.type}>
-                <Badge badge={badge} />
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div className="profile-footer">
@@ -183,6 +175,14 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
               </ExternalLink>
             )}
           </div>
+          
+          <ul className="badge-list">
+            {user.badges.map((badge) => (
+              <li key={badge.type}>
+                <Badge badge={badge} />
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       {displayFollowerListModal && (

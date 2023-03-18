@@ -147,7 +147,7 @@ const ThanksMutations = extendType({
             where: { user: { id: userId } },
             include: { user: true },
             orderBy: { createdAt: 'desc' },
-            take: newBadgeCount,
+            take: newThanksGivenBadgeCount,
           })
 
           await Promise.all(

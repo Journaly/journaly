@@ -47,6 +47,7 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
       "authorId" = ${userId}
       AND "status" = ${PostStatus.PUBLISHED}
   `
+
   const newBadgeCount = await assignCountBadges(
     db,
     userId,

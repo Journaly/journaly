@@ -11,6 +11,10 @@
     "title": "Bug Hunter",
     "description": "Has reported and helped us track down bugs, making Journaly better for everyone!"
   },
+  "SPAM_REPORTER": {
+    "title": "Spam Reporter",
+    "description": "Has helped us maintain our wonderful community and culture of meaningful content by reporting a spam post!"
+  },
   "CODE_CONTRIBUTOR": {
     "title": "Code Contributor",
     "description": "Has contributed code to the Journaly codebase. You can find the Journaly source code, and contribute yourself, at https://github.com/Journaly/journaly"
@@ -41,19 +45,27 @@
   },
   "ONEHUNDRED_POSTS": {
     "title": "100 Posts",
-    "description": "Published 100 posts."
+    "description": "Published 100 posts - wow!"
   },
   "ONEHUNDREDFIFTY_POSTS": {
     "title": "150 Posts",
-    "description": "Published 150 posts."
+    "description": "Published 150 posts - wow!"
   },
   "TWOHUNDRED_POSTS": {
     "title": "200 Posts",
-    "description": "Published 200 posts."
+    "description": "Published 200 posts - wow!"
   },
   "TWOHUNDREDFIFTY_POSTS": {
     "title": "250 Posts",
-    "description": "Published 250 posts."
+    "description": "Published 250 posts - incredible!"
+  },
+  "THREEHUNDREDFIFTY_POSTS": {
+    "title": "350 Posts",
+    "description": "Published 350 posts - incredible!"
+  },
+  "FIVEHUNDRED_POSTS": {
+    "title": "500 Posts",
+    "description": "Published 500 posts - incredible!"
   },
   "TEN_COMMENTS": {
     "title": "10 Comments",
@@ -79,29 +91,69 @@
     "title": "1000 Comments",
     "description": "Published 1000 feedback comments."
   },
+  "ONETHOUSANDFIVEHUNDRED_COMMENTS": {
+    "title": "1500 Comments",
+    "description": "Published 1500 feedback comments."
+  },
+  "TWOTHOUSAND_COMMENTS": {
+    "title": "2000 Comments",
+    "description": "Published 2000 feedback comments."
+  },
+  "TWOTHOUSANDFIVEHUNDRED_COMMENTS": {
+    "title": "2500 Comments",
+    "description": "Published 2500 feedback comments."
+  },
+  "TEN_POST_COMMENTS": {
+    "title": "10 Post Comments",
+    "description": "Published 10 post comments."
+  },
+  "FIFTY_POST_COMMENTS": {
+    "title": "50 Post Comments",
+    "description": "Published 50 post comments."
+  },
+  "ONEHUNDRED_POST_COMMENTS": {
+    "title": "100 Post Comments",
+    "description": "Published 100 post comments."
+  },
+  "TWOHUNDRED_POST_COMMENTS": {
+    "title": "200 Post Comments",
+    "description": "Published 200 post comments."
+  },
+  "THREEHUNDRED_POST_COMMENTS": {
+    "title": "300 Post Comments",
+    "description": "Published 300 post comments."
+  },
   "CORRECT_TEN_POSTS": {
     "title": "Correct 10 Posts",
     "description": "Corrected 10 posts."
   },
   "CORRECT_TWENTYFIVE_POSTS": {
     "title": "Correct 25 Posts",
-    "description": "Corrected 10 posts."
+    "description": "Corrected 25 posts."
   },
   "CORRECT_FIFTY_POSTS": {
     "title": "Correct 50 Posts",
-    "description": "Corrected 10 posts."
+    "description": "Corrected 50 posts."
   },
   "CORRECT_ONEHUNDRED_POSTS": {
     "title": "Correct 100 Posts",
-    "description": "Corrected 10 posts."
+    "description": "Corrected 100 posts."
   },
   "CORRECT_ONEHUNDREDFIFTY_POSTS": {
     "title": "Correct 150 Posts",
-    "description": "Corrected 10 posts."
+    "description": "Corrected 150 posts."
   },
   "CORRECT_TWOHUNDREDFIFTY_POSTS": {
     "title": "Correct 250 Posts",
-    "description": "Corrected 10 posts."
+    "description": "Corrected 250 posts."
+  },
+  "CORRECT_FIVEHUNDRED_POSTS": {
+    "title": "Correct 500 Posts",
+    "description": "Corrected 500 posts."
+  },
+  "CORRECT_ONETHOUSAND_POSTS": {
+    "title": "Correct 1000 Posts",
+    "description": "Corrected 1000 posts."
   },
   "TEN_THANKS": {
     "title": "Receive 10 Thanks",
@@ -135,8 +187,96 @@
     "title": "Receive 1,500 Thanks",
     "description": "Received 1,500 thanks."
   },
+  "TWOTHOUSANDTWOHUNDREDFIFTY_THANKS": {
+    "title": "Receive 2,250 Thanks",
+    "description": "Received 2,250 thanks."
+  },
+  "TWOTHOUSANDFIVEHUNDRED_THANKS": {
+    "title": "Receive 2,500 Thanks",
+    "description": "Received 2,500 thanks."
+  },
+  "FIVETHOUSAND_THANKS": {
+    "title": "Receive 5,000 Thanks",
+    "description": "Received 5,000 thanks."
+  },
+  "TENTHOUSAND_THANKS": {
+    "title": "Receive 10,000 Thanks",
+    "description": "Received 10,000 thanks."
+  },
+  "TEN_THANKS_GIVEN": {
+    "title": "10 Thanks Given",
+    "description": "Gave 10 thanks to other Journalers for their feedback."
+  },
+  "FIFTY_THANKS_GIVEN": {
+    "title": "50 Thanks Given",
+    "description": "Gave 50 thanks to other Journalers for their feedback."
+  },
+  "ONEHUNDRED_THANKS_GIVEN": {
+    "title": "100 Thanks Given",
+    "description": "Gave 100 thanks to other Journalers for their feedback."
+  },
+  "TWOHUNDREDFIFTY_THANKS_GIVEN": {
+    "title": "250 Thanks Given",
+    "description": "Gave 250 thanks to other Journalers for their feedback."
+  },
+  "FIVEHUNDRED_THANKS_GIVEN": {
+    "title": "500 Thanks Given",
+    "description": "Gave 500 thanks to other Journalers for their feedback."
+  },
+  "ONETHOUSAND_THANKS_GIVEN": {
+    "title": "1,000 Thanks Given",
+    "description": "Gave 1,000 thanks to other Journalers for their feedback."
+  },
+  "ONETHOUSANDTWOHUNDREDFIFTY_THANKS_GIVEN": {
+    "title": "1,250 Thanks Given",
+    "description": "Gave 1,250 thanks to other Journalers for their feedback."
+  },
+  "ONETHOUSANDFIVEHUNDRED_THANKS_GIVEN": {
+    "title": "1,500 Thanks Given",
+    "description": "Gave 1,500 thanks to other Journalers for their feedback."
+  },
+  "TWOTHOUSANDTWOHUNDREDFIFTY_THANKS_GIVEN": {
+    "title": "2,250 Thanks Given",
+    "description": "Gave 2,250 thanks to other Journalers for their feedback."
+  },
+  "TWOTHOUSANDFIVEHUNDRED_THANKS_GIVEN": {
+    "title": "2,500 Thanks Given",
+    "description": "Gave 2,500 thanks to other Journalers for their feedback."
+  },
+  "FIVETHOUSAND_THANKS_GIVEN": {
+    "title": "5,000 Thanks Given",
+    "description": "Gave 5,000 thanks to other Journalers for their feedback."
+  },
+  "TENTHOUSAND_THANKS_GIVEN": {
+    "title": "10,000 Thanks Given",
+    "description": "Gave 10,000 thanks to other Journalers for their feedback."
+  },
   "HIKER": {
     "title": "Hiker",
-    "description": "This user hit their weekly goal 4 weeks in a row!"
+    "description": "This user achieved their weekly goal 4 weeks in a row!"
+  },
+  "TRAIL_RUNNER": {
+    "title": "Trail Runner",
+    "description": "This user achieved their weekly goal 6 weeks in a row!"
+  },
+  "MOUNTAIN_CLIMBER": {
+    "title": "Mountain Climber",
+    "description": "This user achieved their weekly goal 8 weeks in a row!"
+  },
+  "NOVELIST": {
+    "title": "Novelist",
+    "description": "This user wrote a post over 1,000 words long!"
+  },
+  "MULTILINGUAL": {
+    "title": "Multilingual",
+    "description": "This user has written posts in 2 languages!"
+  },
+  "POLYGLOT": {
+    "title": "Polyglot",
+    "description": "This user has written posts in 4 or more languages!"
+  },
+  "HELPER": {
+    "title": "Helper",
+    "description": "This person has wrriten a post in their own native language which provides learners of their language authentic reading materials!"
   }
 }

@@ -185,9 +185,7 @@ const BadgeComponent: React.FC<Props> = ({ badge }) => {
 
   return (
     <>
-      <div className="badge" title={t(getBadgeDescription(badge.type))}>
-        {/* <div className="badge-icon" />
-        <span className="title">{t(getBadgeTitle(badge.type))}</span> */}
+      <div className="badge" title={`${t(getBadgeTitle(badge.type))}: ${t(getBadgeDescription(badge.type))}`}>
         <img src={`/images/badges/${badge.type}.svg`} alt="" />
       </div>
 
@@ -198,15 +196,6 @@ const BadgeComponent: React.FC<Props> = ({ badge }) => {
           padding: 1px 11px;
           cursor: pointer;
           color: ${theme.colors.white};
-        }
-
-        .badge-icon {
-          display: block;
-          width: 5px;
-          height: 5px;
-          background-color: ${theme.colors.copper};
-          border-radius: 3px;
-          margin-right: 5px;
         }
 
         img {

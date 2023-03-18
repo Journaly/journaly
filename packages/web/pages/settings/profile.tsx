@@ -70,7 +70,7 @@ const ProfileInfo: NextPage = () => {
 }
 
 ProfileInfo.getInitialProps = async () => ({
-  namespacesRequired: ['settings', 'common'],
+  namespacesRequired: ['settings', 'common', 'badge'],
 })
 
 export default withApollo(ProfileInfo)

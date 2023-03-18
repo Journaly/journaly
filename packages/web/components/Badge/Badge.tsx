@@ -16,161 +16,161 @@ const getBadgeCopySubpath = (badgeType: BadgeType): string => {
   switch (badgeType) {
     // Misc Achievements
     case BadgeType.AlphaUser:
-      return 'badge.ALPHA_USER'
+      return 'ALPHA_USER'
     case BadgeType.BetaUser:
-      return 'badge.BETA_USER'
+      return 'BETA_USER'
     case BadgeType.BugHunter:
-      return 'badge.BUG_HUNTER'
+      return 'BUG_HUNTER'
     case BadgeType.CodeContributor:
-      return 'badge.CODE_CONTRIBUTOR'
+      return 'CODE_CONTRIBUTOR'
     case BadgeType.Odradek:
-      return 'badge.ODRADEK'
+      return 'ODRADEK'
     case BadgeType.Necromancer:
-      return 'badge.NECROMANCER'
+      return 'NECROMANCER'
     case BadgeType.SpamReporter:
-      return 'badge.SPAM_REPORTER'
+      return 'SPAM_REPORTER'
     case BadgeType.Default:
-      return 'badge.DEFAULT'
+      return 'DEFAULT'
 
     // Posts
     case BadgeType.TenPosts:
-      return 'badge.TEN_POSTS'
+      return 'TEN_POSTS'
     case BadgeType.TwentyPosts:
-      return 'badge.TWENTY_POSTS'
+      return 'TWENTY_POSTS'
     case BadgeType.FiftyPosts:
-      return 'badge.FIFTY_POSTS'
+      return 'FIFTY_POSTS'
     case BadgeType.SeventyfivePosts:
-      return 'badge.SEVENTYFIVE_POSTS'
+      return 'SEVENTYFIVE_POSTS'
     case BadgeType.OnehundredPosts:
-      return 'badge.ONEHUNDRED_POSTS'
+      return 'ONEHUNDRED_POSTS'
     case BadgeType.OnehundredfiftyPosts:
-      return 'badge.ONEHUNDREDFIFTY_POSTS'
+      return 'ONEHUNDREDFIFTY_POSTS'
     case BadgeType.TwohundredPosts:
-      return 'badge.TWOHUNDRED_POSTS'
+      return 'TWOHUNDRED_POSTS'
     case BadgeType.TwohundredfiftyPosts:
-      return 'badge.TWOHUNDREDFIFTY_POSTS'
+      return 'TWOHUNDREDFIFTY_POSTS'
     case BadgeType.ThreehundredfiftyPosts:
-      return 'badge.THREEHUNDREDFIFTY_POSTS'
+      return 'THREEHUNDREDFIFTY_POSTS'
     case BadgeType.FivehundredPosts:
-      return 'badge.FIVEHUNDRED_POSTS'
+      return 'FIVEHUNDRED_POSTS'
 
     // Feedback - Comments
     case BadgeType.TenComments:
-      return 'badge.TEN_COMMENTS'
+      return 'TEN_COMMENTS'
     case BadgeType.FiftyComments:
-      return 'badge.FIFTY_COMMENTS'
+      return 'FIFTY_COMMENTS'
     case BadgeType.OnehundredComments:
-      return 'badge.ONEHUNDRED_COMMENTS'
+      return 'ONEHUNDRED_COMMENTS'
     case BadgeType.TwohundredfiftyComments:
-      return 'badge.TWOHUNDREDFIFTY_COMMENTS'
+      return 'TWOHUNDREDFIFTY_COMMENTS'
     case BadgeType.FivehundredComments:
-      return 'badge.FIVEHUNDRED_COMMENTS'
+      return 'FIVEHUNDRED_COMMENTS'
     case BadgeType.OnethousandComments:
-      return 'badge.ONETHOUSAND_COMMENTS'
+      return 'ONETHOUSAND_COMMENTS'
     case BadgeType.OnethousandfivehundredComments:
-      return 'badge.ONETHOUSANDFIVEHUNDRED_COMMENTS'
+      return 'ONETHOUSANDFIVEHUNDRED_COMMENTS'
     case BadgeType.TwothousandComments:
-      return 'badge.TWOTHOUSAND_COMMENTS'
+      return 'TWOTHOUSAND_COMMENTS'
     case BadgeType.TwothousandfivehundredComments:
-      return 'badge.TWOTHOUSANDFIVEHUNDRED_COMMENTS'
+      return 'TWOTHOUSANDFIVEHUNDRED_COMMENTS'
     case BadgeType.FivethousandComments:
-      return 'badge.FIVETHOUSAND_COMMENTS'
+      return 'FIVETHOUSAND_COMMENTS'
     
       // Comments - Posts
     case BadgeType.TenPostComments:
-      return 'badge.TEN_POST_COMMENTS'
+      return 'TEN_POST_COMMENTS'
     case BadgeType.FiftyPostComments:
-      return 'badge.FIFTY_POST_COMMENTS'
+      return 'FIFTY_POST_COMMENTS'
     case BadgeType.OnehundredPostComments:
-      return 'badge.ONEHUNDRED_COMMENTS'
+      return 'ONEHUNDRED_COMMENTS'
     case BadgeType.TwohundredPostComments:
-      return 'badge.TWOHUNDRED_POST_COMMENTS'
+      return 'TWOHUNDRED_POST_COMMENTS'
     case BadgeType.ThreehundredPostComments:
-      return 'badge.THREEHUNDRED_POST_COMMENTS'
+      return 'THREEHUNDRED_POST_COMMENTS'
 
     // Feedback - Posts
     case BadgeType.CorrectTenPosts:
-      return 'badge.CORRECT_TEN_POSTS'
+      return 'CORRECT_TEN_POSTS'
     case BadgeType.CorrectTwentyfivePosts:
-      return 'badge.CORRECT_TWENTYFIVE_POSTS'
+      return 'CORRECT_TWENTYFIVE_POSTS'
     case BadgeType.CorrectFiftyPosts:
-      return 'badge.CORRECT_FIFTY_POSTS'
+      return 'CORRECT_FIFTY_POSTS'
     case BadgeType.CorrectOnehundredPosts:
-      return 'badge.CORRECT_ONEHUNDRED_POSTS'
+      return 'CORRECT_ONEHUNDRED_POSTS'
     case BadgeType.CorrectOnehundredfiftyPosts:
-      return 'badge.CORRECT_ONEHUNDREDFIFTY_POSTS'
+      return 'CORRECT_ONEHUNDREDFIFTY_POSTS'
     case BadgeType.CorrectTwohundredfiftyPosts:
-      return 'badge.CORRECT_TWOHUNDREDFIFTY_POSTS'
+      return 'CORRECT_TWOHUNDREDFIFTY_POSTS'
     case BadgeType.CorrectFivehundredPosts:
-      return 'badge.CORRECT_FIVEHUNDRED_POSTS'
+      return 'CORRECT_FIVEHUNDRED_POSTS'
     case BadgeType.CorrectOnethousandPosts:
-      return 'badge.CORRECT_ONETHOUSAND_POSTS'
+      return 'CORRECT_ONETHOUSAND_POSTS'
 
     // Thanks
     case BadgeType.TenThanks:
-      return 'badge.TEN_THANKS'
+      return 'TEN_THANKS'
     case BadgeType.FiftyThanks:
-      return 'badge.FIFTY_THANKS'
+      return 'FIFTY_THANKS'
     case BadgeType.OnehundredThanks:
-      return 'badge.ONEHUNDRED_THANKS'
+      return 'ONEHUNDRED_THANKS'
     case BadgeType.TwohundredfiftyThanks:
-      return 'badge.TWOHUNDREDFIFTY_THANKS'
+      return 'TWOHUNDREDFIFTY_THANKS'
     case BadgeType.FivehundredThanks:
-      return 'badge.FIVEHUNDRED_THANKS'
+      return 'FIVEHUNDRED_THANKS'
     case BadgeType.OnethousandThanks:
-      return 'badge.ONETHOUSAND_THANKS'
+      return 'ONETHOUSAND_THANKS'
     case BadgeType.OnethousandtwohundredfiftyThanks:
-      return 'badge.ONETHOUSANDTWOHUNDREDFIFTY_THANKS'
+      return 'ONETHOUSANDTWOHUNDREDFIFTY_THANKS'
     case BadgeType.OnethousandfivehundredThanks:
-      return 'badge.ONETHOUSANDFIVEHUNDRED_THANKS'
+      return 'ONETHOUSANDFIVEHUNDRED_THANKS'
     case BadgeType.TwothousandtwohundredfiftyThanks:
-      return 'badge.TWOTHOUSANDTWOHUNDREDFIFTY_THANKS'
+      return 'TWOTHOUSANDTWOHUNDREDFIFTY_THANKS'
     case BadgeType.TwothousandfivehundredThanks:
-      return 'badge.TWOTHOUSANDFIVEHUNDRED_THANKS'
+      return 'TWOTHOUSANDFIVEHUNDRED_THANKS'
     case BadgeType.FivethousandThanks:
-      return 'badge.FIVETHOUSAND_THANKS'
+      return 'FIVETHOUSAND_THANKS'
     case BadgeType.TenthousandThanks:
-      return 'badge.TENTHOUSAND_THANKS'
+      return 'TENTHOUSAND_THANKS'
     
       // Thanks Given
     case BadgeType.TenThanksGiven:
-      return 'badge.TEN_THANKS_GIVEN'
+      return 'TEN_THANKS_GIVEN'
     case BadgeType.FiftyThanksGiven:
-      return 'badge.FIFTY_THANKS_GIVEN'
+      return 'FIFTY_THANKS_GIVEN'
     case BadgeType.OnehundredThanksGiven:
-      return 'badge.ONEHUNDRED_THANKS_GIVEN'
+      return 'ONEHUNDRED_THANKS_GIVEN'
     case BadgeType.TwohundredfiftyThanksGiven:
-      return 'badge.TWOHUNDREDFIFTY_THANKS_GIVEN'
+      return 'TWOHUNDREDFIFTY_THANKS_GIVEN'
     case BadgeType.FivehundredThanksGiven:
-      return 'badge.FIVEHUNDRED_THANKS_GIVEN'
+      return 'FIVEHUNDRED_THANKS_GIVEN'
     case BadgeType.OnethousandThanksGiven:
-      return 'badge.ONETHOUSAND_THANKS_GIVEN'
+      return 'ONETHOUSAND_THANKS_GIVEN'
     case BadgeType.TwothousandtwohundredfiftyThanksGiven:
-      return 'badge.TWOTHOUSANDTWOHUNDREDFIFTY_THANKS_GIVEN'
+      return 'TWOTHOUSANDTWOHUNDREDFIFTY_THANKS_GIVEN'
     case BadgeType.TwothousandfivehundredThanksGiven:
-      return 'badge.TWOTHOUSANDFIVEHUNDRED_THANKS_GIVEN'
+      return 'TWOTHOUSANDFIVEHUNDRED_THANKS_GIVEN'
     case BadgeType.FivethousandThanksGiven:
-      return 'badge.FIVETHOUSAND_THANKS_GIVEN'
+      return 'FIVETHOUSAND_THANKS_GIVEN'
     case BadgeType.TenthousandThanksGiven:
-      return 'badge.TENTHOUSAND_THANKS_GIVEN'
+      return 'TENTHOUSAND_THANKS_GIVEN'
 
     // Goals
     case BadgeType.Hiker:
-      return 'badge.HIKER'
+      return 'HIKER'
     // TODO: provider real translations. Do not merge until this is done.
     case BadgeType.TrailRunner:
-      return 'badge.TrailRunner'
+      return 'TrailRunner'
     case BadgeType.MountainClimber:
-      return 'badge.MountainClimber'
+      return 'MountainClimber'
 
     case BadgeType.Novelist:
-      return 'badge.NOVELIST'
+      return 'NOVELIST'
     case BadgeType.Multilingual:
-      return 'badge.MULTILINGUAL'
+      return 'MULTILINGUAL'
     case BadgeType.Polyglot:
-      return 'badge.POLYGLOT'
+      return 'POLYGLOT'
     case BadgeType.Helper:
-      return 'badge.HELPER'
+      return 'HELPER'
   }
 
   return assertUnreachable(badgeType)

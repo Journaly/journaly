@@ -185,8 +185,8 @@ const BadgeComponent: React.FC<Props> = ({ badge }) => {
 
   return (
     <>
-      <div className="badge" title={`${t(getBadgeTitle(badge.type))}: ${t(getBadgeDescription(badge.type))}`}>
-        <img src={`/images/badges/${badge.type}.svg`} alt="" />
+      <div className="badge">
+        <img title={`${t(getBadgeTitle(badge.type))}: ${t(getBadgeDescription(badge.type))}`} src={`/images/badges/${badge.type}.svg`} alt="" />
       </div>
 
       <style jsx>{`

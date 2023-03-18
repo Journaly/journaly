@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from '@/config/i18n'
 import FacebookIcon from '@/components/Icons/FacebookIcon'
 import InstagramIcon from '@/components/Icons/InstagramIcon'
@@ -80,6 +80,8 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
       },
     })
   }
+
+  const badges = useMemo(() => [...user.badges].sort((a, b) => a.createdAt > b.createdAt ? -1 : 1), [user.badges])
 
   return (
     <div className="profile-card">
@@ -177,10 +179,10 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           </div>
           
           <ul className="badge-list">
-            {user.badges.map((badge) => (
+          {badges.map((badge) => (
               <li key={badge.type}>
-                <Badge badge={badge} />
-              </li>
+              <Badge badge={badge} />
+            </li>
             ))}
           </ul>
         </div>

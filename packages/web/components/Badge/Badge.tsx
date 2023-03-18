@@ -210,8 +210,8 @@ const BadgeComponent: React.FC<Props> = ({ badge }) => {
         }
 
         img {
-          height: 100px;
-          width: 100px;
+          height: 110px;
+          width: 110px;
         }
       `}</style>
     </>

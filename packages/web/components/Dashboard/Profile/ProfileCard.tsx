@@ -330,6 +330,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           flex-wrap: wrap;
           margin-top: 10px;
           justify-content: center;
+          row-gap: 10px;
         }
 
         .badge-list > li {
@@ -347,7 +348,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         }
 
         .social-links {
-          margin: 0 auto;
+          margin: 0 auto 20px;
           display: flex;
           justify-content: center;
           max-width: 320px;

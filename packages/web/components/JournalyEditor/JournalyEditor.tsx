@@ -1,8 +1,17 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
-import { createEditor, Editor, Descendant } from 'slate'
+import { createEditor, Editor } from 'slate'
 import { Slate, withReact } from 'slate-react'
 import { withHistory } from 'slate-history'
-import { pipe, TablePlugin, EditablePlugins } from '@udecode/slate-plugins'
+import {
+  createTEditor,
+  withPlate,
+
+  Plate,
+  PlateProvider,
+  TElement,
+  createPlugins,
+  createTablePlugin,
+} from '@udecode/plate'
 import isHotkey from 'is-hotkey'
 
 import theme from '@/theme'
@@ -10,7 +19,7 @@ import PostBodyStyles from '@/components/PostBodyStyles'
 import Toolbar from './Toolbar'
 import RenderElement from './RenderElement'
 import RenderLeaf from './RenderLeaf'
-import { withLinks, withImages, toggleMark, options, MarkType } from './helpers'
+import { withLinks, withImages, toggleMark, MarkType } from './helpers'
 import usePlayPolyphonicSound from '@/hooks/usePlayPolyphonicSound'
 import useAutosavedState from '@/hooks/useAutosavedState'
 
@@ -46,14 +55,12 @@ const KEY_BLACK_LIST = new Set([
 ])
 
 type JournalyEditorProps = {
-  value: Descendant[]
-  setValue: (value: Descendant[]) => void
+  value: TElement[]
+  setValue: (value: TElement[]) => void
   slateRef: React.RefObject<Editor>
   allowInlineImages: boolean
   disabled?: boolean
 }
-const plugins = [TablePlugin(options)]
-
 const JournalyEditor = ({
   value,
   setValue,
@@ -63,15 +70,20 @@ const JournalyEditor = ({
 }: JournalyEditorProps) => {
   const renderElement = useCallback((props) => <RenderElement {...props} />, [])
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
-  const editor = useMemo(() => {
-    const withPlugins: ((ed: Editor) => Editor)[] = [withHistory, withLinks]
 
-    if (allowInlineImages) {
-      withPlugins.push(withImages)
-    }
-
-    return pipe(withReact(createEditor()), ...withPlugins)
+  const plugins = useMemo(() => {
+    return createPlugins(
+      [ createTablePlugin({}) ],
+      {}
+    )
   }, [])
+
+  const editor = useMemo(() => {
+    const editor = withLinks(withPlate(createTEditor()))
+
+    return allowInlineImages ? withImages(editor) : editor
+  }, [])
+
 
   const [shouldPlayTypewriterSounds, setShouldPlayTypewriterSounds] = useAutosavedState(false, {
     key: 'shouldPlayTypewriterSounds',
@@ -83,16 +95,24 @@ const JournalyEditor = ({
     1,
   )
 
-  const handlePlayTypewriterSound = (e: React.KeyboardEvent) => {
+  const onKeyDown = useCallback((event: React.KeyboardEvent) => {
     if (shouldPlayTypewriterSounds) {
-      if (KEY_BLACK_LIST.has(e.key)) return
-      else if (e.key === 'Enter') {
+      if (KEY_BLACK_LIST.has(event.key)) return
+      else if (event.key === 'Enter') {
         playTypewriterReturnSound()
       } else {
         playTypewriterSound()
       }
     }
-  }
+
+    Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
+      // Convert React keyboard event to native keyboard event
+      if (isHotkey(hotkey, event as unknown as KeyboardEvent)) {
+        event.preventDefault()
+        toggleMark(editor, mark)
+      }
+    })
+  }, [editor, playTypewriterSound, playTypewriterReturnSound])
 
   useEffect(() => {
     ;(slateRef as React.MutableRefObject<Editor>).current = editor
@@ -105,6 +125,56 @@ const JournalyEditor = ({
   return (
     <div className="editor-wrapper">
       <div className="editor-container">
+        <PlateProvider plugins={plugins} editor={editor}>
+          <Plate
+            value={value}
+            onChange={(v) => setValue(v)}
+            editableProps={{
+              spellCheck: true,
+              readOnly: disabled,
+              onKeyDown: onKeyDown,
+            }}
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            firstChildren={(
+              <Toolbar
+                allowInlineImages={allowInlineImages}
+                shouldPlayTypewriterSounds={shouldPlayTypewriterSounds}
+                onToggleShouldPlayTypewriterSounds={() =>
+                  setShouldPlayTypewriterSounds(!shouldPlayTypewriterSounds)
+                }
+              />
+            )}
+          />
+        </PlateProvider>
+      </div>
+      <PostBodyStyles parentClassName="editor-container" />
+      <style jsx>{`
+        .editor-container {
+          display: flex;
+          flex-direction: column;
+
+          padding: 0 25px 10px;
+          border: 1px solid ${theme.colors.black};
+          border-radius: 5px;
+          background-color: ${theme.colors.white};
+          opacity: ${disabled ? 0.6 : 'auto'};
+          min-height: 200px;
+        }
+
+        .editor-container > :global([contenteditable='true']) {
+          flex: 1;
+          padding-top: 15px;
+        }
+      `}</style>
+    </div>
+  )
+}
+
+export default JournalyEditor
+
+
+/*
         <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
           <Toolbar
             allowInlineImages={allowInlineImages}
@@ -135,28 +205,5 @@ const JournalyEditor = ({
             data-testid="post-body"
           />
         </Slate>
-      </div>
-      <PostBodyStyles parentClassName="editor-container" />
-      <style jsx>{`
-        .editor-container {
-          display: flex;
-          flex-direction: column;
 
-          padding: 0 25px 10px;
-          border: 1px solid ${theme.colors.black};
-          border-radius: 5px;
-          background-color: ${theme.colors.white};
-          opacity: ${disabled ? 0.6 : 'auto'};
-          min-height: 200px;
-        }
-
-        .editor-container > :global([contenteditable='true']) {
-          flex: 1;
-          padding-top: 15px;
-        }
-      `}</style>
-    </div>
-  )
-}
-
-export default JournalyEditor
+*/

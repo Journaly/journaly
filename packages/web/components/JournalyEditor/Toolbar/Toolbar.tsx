@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { Popup } from 'reactjs-popup'
 import {
-  ToolbarTable,
+  TableToolbarButton,
   deleteTable,
   deleteColumn,
-  addColumn,
+  insertTableColumn,
   deleteRow,
-  addRow,
-} from '@udecode/slate-plugins'
+  insertTableRow,
+} from '@udecode/plate'
 import { useSlate, useFocused } from 'slate-react'
 
 import theme from '@/theme'
@@ -122,31 +122,31 @@ const Toolbar = ({
                 closeOnDocumentClick
                 className="editor-toolbar-popover"
               >
-                <ToolbarTable
+                <TableToolbarButton
                   {...options}
                   className="editor-toolbar-popover-item"
-                  transform={addRow}
+                  transform={insertTableRow}
                   icon="Add row"
                 />
-                <ToolbarTable
+                <TableToolbarButton
                   {...options}
                   className="editor-toolbar-popover-item"
                   transform={deleteRow}
                   icon="Delete row"
                 />
-                <ToolbarTable
+                <TableToolbarButton
                   {...options}
                   className="editor-toolbar-popover-item"
-                  transform={addColumn}
+                  transform={insertTableColumn}
                   icon="Add column"
                 />
-                <ToolbarTable
+                <TableToolbarButton
                   {...options}
                   className="editor-toolbar-popover-item"
                   transform={deleteColumn}
                   icon="Delete column"
                 />
-                <ToolbarTable
+                <TableToolbarButton
                   {...options}
                   className="editor-toolbar-popover-item"
                   transform={deleteTable}

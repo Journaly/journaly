@@ -7,7 +7,11 @@ import {
 } from 'slate'
 import { toast } from 'react-toastify'
 import { TFunction } from 'next-i18next'
-import { DEFAULTS_TABLE, setDefaults, someNode, insertTable } from '@udecode/slate-plugins'
+import {
+  someNode,
+  insertTable,
+  ELEMENT_TABLE
+} from '@udecode/plate'
 import { LinkElement } from '@/utils/slate'
 
 export type ButtonType = 'block' | 'link' | 'table'
@@ -51,8 +55,6 @@ type ToggleByTypeArgs = {
 
 type ToggleArgs = Omit<ToggleByTypeArgs, 'type'>
 
-export const options = setDefaults(DEFAULTS_TABLE, {})
-
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 
 const validateProtocol = (href: string) => {
@@ -93,7 +95,7 @@ const isBlockActive = (editor: Editor, format: string) => {
 const isLinkActive = (editor: Editor) => isBlockActive(editor, 'link')
 
 export const isTableActive = (editor: Editor) => {
-  return someNode(editor, { match: { type: options.table.type } })
+  return someNode(editor, { match: { type: ELEMENT_TABLE } })
 }
 
 export const tableHandler = ({ editor, format }: ToggleArgs) => {
@@ -103,7 +105,7 @@ export const tableHandler = ({ editor, format }: ToggleArgs) => {
 
   const tableFormatKey = format as keyof typeof tableActions
   if (tableActions[tableFormatKey]) {
-    tableActions[tableFormatKey](editor, options)
+    tableActions[tableFormatKey](editor, {})
   }
 }
 

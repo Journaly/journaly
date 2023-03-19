@@ -13,6 +13,7 @@ import {
   BadgeType,
   LanguageLevel,
   PrismaClient,
+  Prisma,
 } from '@journaly/j-db-client'
 
 import {
@@ -22,8 +23,108 @@ import {
   assignBadge,
   UserWithRels,
   ThreadWithRels,
+  sendNewBadgeEmail,
+  assignCountBadges,
 } from './utils'
 import { NotFoundError } from './errors'
+
+const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {
+  const commentCountQuery = Prisma.sql`
+    SELECT COUNT(*) AS count
+    FROM "Comment"
+    WHERE "authorId" = ${userId}
+  `
+  
+  const postCommentCountQuery = Prisma.sql`
+    SELECT COUNT(*) AS count
+    FROM "PostComment"
+    WHERE "authorId" = ${userId}
+  `
+
+  const postsCorrectedCountQuery = Prisma.sql`
+    SELECT COUNT(DISTINCT t."postId") AS count
+    FROM "Comment" AS c
+    JOIN "Thread" as t
+      ON c."threadId" = t.id
+    WHERE c."authorId" = ${userId}
+  `
+
+  const newCommentBadgesPromise = assignCountBadges(
+    db,
+    userId,
+    commentCountQuery,
+    {
+      10: BadgeType.TEN_COMMENTS,
+      50: BadgeType.FIFTY_COMMENTS,
+      100: BadgeType.ONEHUNDRED_COMMENTS,
+      250: BadgeType.TWOHUNDREDFIFTY_COMMENTS,
+      500: BadgeType.FIVEHUNDRED_COMMENTS,
+      1000: BadgeType.ONETHOUSAND_COMMENTS,
+      1500: BadgeType.ONETHOUSANDFIVEHUNDRED_COMMENTS,
+      2000: BadgeType.TWOTHOUSAND_COMMENTS,
+      2500: BadgeType.TWOTHOUSANDFIVEHUNDRED_COMMENTS,
+      5000: BadgeType.FIVETHOUSAND_COMMENTS,
+    }
+  )
+  
+  const newPostCommentBadgesPromise = assignCountBadges(
+    db,
+    userId,
+    postCommentCountQuery,
+    {
+      10: BadgeType.TEN_POST_COMMENTS,
+      50: BadgeType.FIFTY_POST_COMMENTS,
+      100: BadgeType.ONEHUNDRED_POST_COMMENTS,
+      200: BadgeType.TWOHUNDRED_POST_COMMENTS,
+      300: BadgeType.THREEHUNDRED_POST_COMMENTS,
+    }
+  )
+
+  const newPostsCorrectedBadgesPromise = assignCountBadges(
+    db,
+    userId,
+    postsCorrectedCountQuery,
+    {
+      10: BadgeType.CORRECT_TEN_POSTS,
+      25: BadgeType.CORRECT_TWENTYFIVE_POSTS,
+      50: BadgeType.CORRECT_FIFTY_POSTS,
+      100: BadgeType.CORRECT_ONEHUNDRED_POSTS,
+      150: BadgeType.CORRECT_ONEHUNDREDFIFTY_POSTS,
+      250: BadgeType.CORRECT_TWOHUNDREDFIFTY_POSTS,
+      500: BadgeType.CORRECT_FIVEHUNDRED_POSTS,
+      1000: BadgeType.CORRECT_ONETHOUSAND_POSTS,
+    }
+  )
+
+  const newBadgeCount = (await Promise.all([
+    newCommentBadgesPromise,
+    newPostCommentBadgesPromise,
+    newPostsCorrectedBadgesPromise,
+  ])).reduce((a: number, b: number) => a + b, 0)
+
+  // This is a horrible hack because of this bug in prisma where `RETURNING`
+  // is basically ignored and we get a row count instead. See:
+  // https://github.com/prisma/prisma/issues/2208 . This is fixed in newer
+  // prisma versions by replacing `db.raw` with `db.queryRaw` but we don't have
+  // new prisma versions because nexus is dead. Woo!
+  if (newBadgeCount) {
+    const newBadges = await db.userBadge.findMany({
+      where: { user: { id: userId } },
+      include: { user: true },
+      orderBy: { createdAt: 'desc' },
+      take: newBadgeCount,
+    })
+
+    await Promise.all(
+      newBadges.map((badge) => {
+        return sendNewBadgeEmail({
+          badgeType: badge.type,
+          user: badge.user,
+        })
+      }),
+    )
+  }
+}
 
 const Thread = objectType({
   name: 'Thread',
@@ -234,6 +335,8 @@ const CommentMutations = extendType({
           body,
         })
 
+        await assignCommentCountBadges(ctx.db, userId)
+
         return thread
       },
     })
@@ -280,6 +383,7 @@ const CommentMutations = extendType({
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request
+
         if (!userId) {
           throw new Error('You must be logged in to post comments.')
         }
@@ -299,6 +403,7 @@ const CommentMutations = extendType({
             },
           },
         })
+
         if (!thread) {
           throw new NotFoundError('thread')
         }
@@ -314,12 +419,17 @@ const CommentMutations = extendType({
           throw new NotFoundError('user')
         }
 
-        return await createComment({
-          db: ctx.db,
-          thread,
-          author,
-          body: args.body,
-        })
+        const [comment, _] = await Promise.all([
+          createComment({
+            db: ctx.db,
+            thread,
+            author,
+            body: args.body,
+          }),
+          assignCommentCountBadges(ctx.db, userId),
+        ] as const)
+
+        return comment
       },
     })
 
@@ -471,6 +581,8 @@ const CommentMutations = extendType({
             author: true,
           },
         })
+
+        await assignCommentCountBadges(ctx.db, userId)
 
         const subData = {
           user: { connect: { id: userId } },

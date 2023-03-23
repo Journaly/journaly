@@ -330,5 +330,78 @@ yargs
       await db.pool.end()
     },
   })
+  .command({
+    command: 'assign-badge <userId> <badgeName>',
+    describe: 'Assign a badge to a user',
+    builder: (yargs) => {
+      yargs.option('force', {
+        describe: 'Bypass interactive safety checks',
+        type: 'boolean',
+      })
+      yargs.option('database-url', {
+        describe: 'The URL to connect to the database',
+        type: 'string',
+      })
+    },
+    handler: async (args) => {
+      const dbUrl = args.databaseUrl || process.env.DATABASE_URL
+
+      if (!dbUrl) {
+        console.error('No database URL has been provided')
+        process.exit(1)
+      }
+
+      const parsedDbUrl = parse(dbUrl)
+      let promptResponse
+
+      if (!['localhost', '127.0.0.1'].includes(parsedDbUrl.host) && !args.force) {
+        promptResponse = await prompts({
+          type: 'confirm',
+          name: 'confirmDbUrl',
+          message: `CAUTION: your $DATABASE_URL is currently set to a remote database: ${dbUrl}. Are you sure you want to continue?`,
+        })
+
+        if (!promptResponse.confirmDbUrl) return
+      }
+
+      const db = pgTag(
+        new Pool({
+          connectionString: dbUrl,
+        }),
+      )
+
+      const userId = parseInt(args.userId)
+
+      const user = await db.get`
+        SELECT *
+        FROM "User"
+        WHERE id = ${userId}
+      `
+
+      if (!user) {
+        console.error(`No User with ID ${userId} found`)
+        process.exit(1)
+      }
+
+      const badgeOptionsResponse = (await db.get`
+        SELECT enum_range(NULL::"BadgeType");
+      `).enum_range
+      const badgeOptions = badgeOptionsResponse.substr(1, badgeOptionsResponse.length - 2)
+      const badgeOptionsArray = badgeOptions.split(',')
+      
+      if (badgeOptionsArray.includes(args.badgeName)) {
+        await db.query`
+          INSERT INTO "UserBadge"
+          VALUES (DEFAULT, ${args.badgeName}, DEFAULT, ${userId});
+        `
+      } else {
+        console.error(`No badge called ${args.badgeName} found`)
+        process.exit(1)
+      }
+
+      console.log(`Successfully added badge: ${args.badgeName} for user ${user.handle}`)
+      await db.pool.end()
+    },
+  })
   .demandCommand(1)
   .parse(process.argv.slice(2))

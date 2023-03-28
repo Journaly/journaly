@@ -34,6 +34,7 @@ export type InitialSearchFilters = {
   needsFeedback: boolean
   hasInteracted: boolean
   savedPosts: boolean
+  search: string
 }
 
 const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
@@ -101,6 +102,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
       needsFeedback: postQueryVars.needsFeedback,
       hasInteracted: postQueryVars.hasInteracted,
       savedPosts: postQueryVars.savedPosts,
+      search: postQueryVars.search,
     }
     document.cookie = `default_search_filters=${JSON.stringify(searchFilters)};`
   }, [postQueryVars])

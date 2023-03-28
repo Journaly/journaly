@@ -46,12 +46,14 @@ const Filters: React.FC<Props> = ({
   const [showAdvancedFilters, setShowAdvancedFilters] = useToggle(false)
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const onSearchChange = useCallback(
-    (val): void =>
+    (val): void => {
       setPostQueryVars((prevState) => ({
         ...prevState,
         search: val,
-      })),
-    [],
+      }))
+      resetPagination()
+    },
+    [resetPagination],
   )
 
   const isPremiumFeatureEligible =
@@ -124,19 +126,31 @@ const Filters: React.FC<Props> = ({
       ...prevState,
       followedAuthors: !prevState.followedAuthors,
     }))
-  }, [])
+    resetPagination()
+  }, [resetPagination])
+
   const toggleNeedsFeedbackFilter = useCallback(() => {
     setPostQueryVars((prevState) => ({
       ...prevState,
       needsFeedback: !prevState.needsFeedback,
     }))
-  }, [])
+    resetPagination()
+  }, [resetPagination])
   const toggleHasInteractedFilter = useCallback(() => {
     setPostQueryVars((prevState) => ({
       ...prevState,
       hasInteracted: !prevState.hasInteracted,
     }))
-  }, [])
+    resetPagination()
+  }, [resetPagination])
+  
+  const toggleMyLanguagesFilter = useCallback(() => {
+    setPostQueryVars((prevState) => ({
+      ...prevState,
+      languages: [...userLanguages.values()],
+    }))
+    resetPagination()
+  }, [resetPagination])
 
   const handleToggleSavedPosts = useCallback(() => {
     if (!isPremiumFeatureEligible) {
@@ -146,8 +160,22 @@ const Filters: React.FC<Props> = ({
         ...prevState,
         savedPosts: !prevState.savedPosts,
       }))
+      resetPagination()
     }
-  }, [])
+  }, [resetPagination])
+
+  const handleClearFilters = useCallback(() => {
+    setPostQueryVars({
+      languages: [],
+      topics: [],
+      search: '',
+      followedAuthors: false,
+      needsFeedback: false,
+      hasInteracted: false,
+      savedPosts: false,
+    })
+    resetPagination()
+  }, [resetPagination])
 
   const uiLanguage = useUILanguage()
   const { data: { topics } = {} } = useTopicsQuery({
@@ -194,29 +222,14 @@ const Filters: React.FC<Props> = ({
                 <Button
                   variant={ButtonVariant.Link}
                   className="filter-action-btn"
-                  onClick={() => {
-                    setPostQueryVars({
-                      languages: [],
-                      topics: [],
-                      search: '',
-                      followedAuthors: false,
-                      needsFeedback: false,
-                      hasInteracted: false,
-                      savedPosts: false,
-                    })
-                  }}
+                  onClick={handleClearFilters}
                 >
                   {t('ui.clearFilters')}
                 </Button>
                 <Button
                   variant={ButtonVariant.Link}
                   className={`filter-action-btn ${isUserLanguagesFilterActive ? 'active' : ''}`}
-                  onClick={() => {
-                    setPostQueryVars((prevState) => ({
-                      ...prevState,
-                      languages: [...userLanguages.values()],
-                    }))
-                  }}
+                  onClick={toggleMyLanguagesFilter}
                 >
                   {t('ui.myLanguages')}
                 </Button>

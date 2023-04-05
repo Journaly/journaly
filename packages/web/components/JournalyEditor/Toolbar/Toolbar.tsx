@@ -48,12 +48,13 @@ const Toolbar = ({
   const [viewportsDiff, setViewportsDiff] = useState(0)
 
   const editor = useSlate()
-  const isEditorFocused = useFocused()
-  const isTableActivated = isEditorFocused && isTableActive(editor)
+  const isTableActivated = isTableActive(editor)
   const tableIcon = (
-    <ToolbarButton type="table" format="insert-table">
-      <FormatTableIcon title="Insert table" titleId="toolbar-insert-table-icon" />
-    </ToolbarButton>
+    <div>
+      <ToolbarButton type="table" format="insert-table">
+        <FormatTableIcon title="Insert table" titleId="toolbar-insert-table-icon" />
+      </ToolbarButton>
+    </div>
   )
 
   const [toolbarObserverRef, toolbarShouldFloat] = useIntersectionObserver({
@@ -116,9 +117,9 @@ const Toolbar = ({
 
             {isTableActivated ? (
               <Popup
-                trigger={<span>{tableIcon}</span>}
+                trigger={tableIcon}
                 position="bottom center"
-                on={['hover', 'focus']}
+                on={['hover', 'focus', 'click']}
                 closeOnDocumentClick
                 className="editor-toolbar-popover"
               >

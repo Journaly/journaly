@@ -3,6 +3,7 @@ import { createEditor, Editor } from 'slate'
 import { Slate, withReact } from 'slate-react'
 import { withHistory } from 'slate-history'
 import {
+  createPlateEditor,
   createTEditor,
   withPlate,
 
@@ -11,6 +12,9 @@ import {
   TElement,
   createPlugins,
   createTablePlugin,
+  createPlateUI,
+  PlateTableElement,
+  ELEMENT_TABLE,
 } from '@udecode/plate'
 import isHotkey from 'is-hotkey'
 
@@ -74,12 +78,16 @@ const JournalyEditor = ({
   const plugins = useMemo(() => {
     return createPlugins(
       [ createTablePlugin({}) ],
-      {}
+      {
+        components: createPlateUI()
+      }
     )
   }, [])
 
   const editor = useMemo(() => {
-    const editor = withLinks(withPlate(createTEditor()))
+    const editor = withLinks(createPlateEditor({
+      plugins: plugins as any
+    }))
 
     return allowInlineImages ? withImages(editor) : editor
   }, [])
@@ -125,7 +133,7 @@ const JournalyEditor = ({
   return (
     <div className="editor-wrapper">
       <div className="editor-container">
-        <PlateProvider plugins={plugins} editor={editor}>
+        <PlateProvider editor={editor}>
           <Plate
             value={value}
             onChange={(v) => setValue(v)}
@@ -133,9 +141,9 @@ const JournalyEditor = ({
               spellCheck: true,
               readOnly: disabled,
               onKeyDown: onKeyDown,
+              renderElement,
+              renderLeaf,
             }}
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
             firstChildren={(
               <Toolbar
                 allowInlineImages={allowInlineImages}

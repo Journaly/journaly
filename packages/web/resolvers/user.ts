@@ -63,6 +63,7 @@ const User = objectType({
     t.model.createdAt()
     t.model.membershipSubscription()
     t.model.isStudent()
+    t.model.configuration()
     t.model.socialMedia({
       type: 'SocialMedia',
       resolve: async (parent, _args, ctx) => {
@@ -231,6 +232,14 @@ const UserBadge = objectType({
     t.model.type()
     t.model.createdAt()
   },
+})
+
+const UserConfiguration = objectType({
+  name: 'UserConfiguration',
+  definition(t) {
+    t.model.id()
+    t.model.digestEmail()
+  }
 })
 
 const UserQueries = extendType({
@@ -791,4 +800,5 @@ export default [
   UserMutations,
   InitiateAvatarImageUploadResponse,
   DatedActivityCount,
+  UserConfiguration,
 ]

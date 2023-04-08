@@ -115,6 +115,12 @@ export type DatedActivityCount = {
   postCommentCount: Scalars['Int']
 }
 
+export enum DigestEmailConfiguration {
+  Daily = 'DAILY',
+  Weekly = 'WEEKLY',
+  Off = 'OFF',
+}
+
 export type EditorNode = {
   type?: Maybe<Scalars['String']>
   text?: Maybe<Scalars['String']>
@@ -716,6 +722,7 @@ export type User = {
   createdAt: Scalars['DateTime']
   membershipSubscription?: Maybe<MembershipSubscription>
   isStudent: Scalars['Boolean']
+  configuration?: Maybe<UserConfiguration>
   socialMedia?: Maybe<SocialMedia>
   languages: Array<LanguageRelation>
   following: Array<User>
@@ -738,6 +745,12 @@ export type UserBadge = {
   id: Scalars['Int']
   type: BadgeType
   createdAt: Scalars['DateTime']
+}
+
+export type UserConfiguration = {
+  __typename?: 'UserConfiguration'
+  id: Scalars['Int']
+  digestEmail: DigestEmailConfiguration
 }
 
 export type UserInterest = {
@@ -855,7 +868,9 @@ export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   | 'city'
   | 'country'
   | 'emailAddressVerified'
->
+> & {
+    configuration?: Maybe<{ __typename?: 'UserConfiguration' } & UserConfigurationFragmentFragment>
+  }
 
 export type UserWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
   User,
@@ -878,6 +893,11 @@ export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
     { __typename?: 'MembershipSubscription' } & Pick<MembershipSubscription, 'isActive'>
   >
 } & UserWithLanguagesFragmentFragment
+
+export type UserConfigurationFragmentFragment = { __typename?: 'UserConfiguration' } & Pick<
+  UserConfiguration,
+  'digestEmail'
+>
 
 export type SocialMediaFragmentFragment = { __typename?: 'User' } & {
   socialMedia?: Maybe<
@@ -1645,6 +1665,11 @@ export type UsersQuery = { __typename?: 'Query' } & {
   >
 }
 
+export const UserConfigurationFragmentFragmentDoc = gql`
+  fragment UserConfigurationFragment on UserConfiguration {
+    digestEmail
+  }
+`
 export const UserFragmentFragmentDoc = gql`
   fragment UserFragment on User {
     id
@@ -1657,7 +1682,11 @@ export const UserFragmentFragmentDoc = gql`
     city
     country
     emailAddressVerified
+    configuration {
+      ...UserConfigurationFragment
+    }
   }
+  ${UserConfigurationFragmentFragmentDoc}
 `
 export const UserWithStatsFragmentFragmentDoc = gql`
   fragment UserWithStatsFragment on User {

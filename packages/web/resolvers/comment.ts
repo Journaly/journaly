@@ -230,10 +230,15 @@ const createComment = async ({ db, thread, author, body }: CreateCommentArg) => 
         return new Promise((res) => res(null))
       }
 
-      await createEmailNotification(db, user, {
-        type: EmailNotificationType.THREAD_COMMENT,
-        comment,
-      })
+      await createEmailNotification(
+        db,
+        user,
+          {
+          type: EmailNotificationType.THREAD_COMMENT,
+          comment,
+        },
+        thread.post.author.configuration.digestEmail,
+      )
 
       await createInAppNotification(db, {
         userId: user.id,
@@ -306,12 +311,16 @@ const CommentMutations = extendType({
             },
             post: {
               include: {
-                author: true,
+                author: {
+                  include: {
+                    configuration: true,
+                  }
+                },
               },
             },
           },
         })
-
+        console.log(thread.post.author.configuration)
         // Subscribe the post author to every thread made on their posts
         const subData = {
           user: { connect: { id: post.authorId } },
@@ -398,7 +407,11 @@ const CommentMutations = extendType({
             },
             post: {
               include: {
-                author: true,
+                author: {
+                  include: {
+                    configuration: true,
+                  }
+                },
               },
             },
           },
@@ -540,7 +553,11 @@ const CommentMutations = extendType({
             id: args.postId,
           },
           include: {
-            author: true,
+            author: {
+              include: {
+                configuration: true,
+              }
+            },
             postCommentSubscriptions: {
               include: {
                 user: true,
@@ -607,10 +624,15 @@ const CommentMutations = extendType({
               return
             }
 
-            await createEmailNotification(ctx.db, user, {
-              type: EmailNotificationType.POST_COMMENT,
-              postComment,
-            })
+            await createEmailNotification(
+              ctx.db,
+              user,
+              {
+                type: EmailNotificationType.POST_COMMENT,
+                postComment,
+              },
+              post.author.configuration.digestEmail,
+            )
 
             await createInAppNotification(ctx.db, {
               userId: user.id,

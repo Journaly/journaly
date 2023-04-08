@@ -16,3 +16,13 @@ CREATE UNIQUE INDEX "UserConfiguration_userId_key" ON "UserConfiguration"("userI
 -- AddForeignKey
 ALTER TABLE "UserConfiguration" ADD CONSTRAINT "UserConfiguration_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
+-- Backfill:
+--   Create record for every user in User Configuration table,
+--   'digestEmail' column defaults to 'DAILY'.
+INSERT INTO "UserConfiguration" (
+	"userId"
+) (
+	SELECT id
+	FROM "User"
+	WHERE id IS NOT NULL
+);

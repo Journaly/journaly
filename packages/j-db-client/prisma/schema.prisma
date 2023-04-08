@@ -48,8 +48,8 @@ model User {
   notifications                 InAppNotification[]             @relation("notifications")
   notificationsTriggered        InAppNotification[]             @relation("notificationsTriggered")
   newFollowerNotifications      NewFollowerNotification[]
-
-  isStudent Boolean @default(false)
+  isStudent                     Boolean                         @default(false)
+  configuration                 UserConfiguration?
 }
 
 model Auth {
@@ -276,11 +276,11 @@ model Thread {
 }
 
 model HeadlineImage {
-  id        Int    @id @default(autoincrement())
-  smallSize String
-  largeSize String
+  id                   Int     @id @default(autoincrement())
+  smallSize            String
+  largeSize            String
   unsplashPhotographer String?
-  Post      Post[]
+  Post                 Post[]
 }
 
 model Prompt {
@@ -406,10 +406,10 @@ model InAppNotification {
 model ThreadCommentThanksNotification {
   id Int @id @default(autoincrement())
 
-  thanksId          Int
-  notificationId    Int
-  thanks            CommentThanks     @relation(fields: [thanksId], references: [id], onDelete: Cascade)
-  notification InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  thanksId       Int
+  notificationId Int
+  thanks         CommentThanks     @relation(fields: [thanksId], references: [id], onDelete: Cascade)
+  notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
 }
 
 model ThreadCommentNotification {
@@ -450,6 +450,13 @@ model NewPostNotification {
   postId         Int
   notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
   post           Post              @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model UserConfiguration {
+  id          Int                      @id @default(autoincrement())
+  userId      Int
+  digestEmail DigestEmailConfiguration @default(DAILY)
+  user        User                     @relation(fields: [userId], references: [id])
 }
 
 enum LanguageLevel {
@@ -591,4 +598,10 @@ enum MembershipSubscriptionPeriod {
 enum EmailVerificationStatus {
   PENDING
   VERIFIED
+}
+
+enum DigestEmailConfiguration {
+  DAILY
+  WEEKLY
+  OFF
 }

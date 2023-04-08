@@ -6,6 +6,7 @@ import {
   PostComment,
   CommentThanks,
   PostClap,
+  DigestEmailConfiguration,
 } from '@journaly/j-db-client'
 
 type EmailNotificationCreationType =
@@ -18,7 +19,10 @@ const createEmailNotification = (
   db: PrismaClient,
   user: User,
   note: EmailNotificationCreationType,
+  digestEmailConfiguration: DigestEmailConfiguration,
 ) => {
+  if (digestEmailConfiguration === DigestEmailConfiguration.OFF) return
+
   const data: Prisma.PendingNotificationCreateInput = {
     user: { connect: { id: user.id } },
     type: note.type,

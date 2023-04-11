@@ -1,7 +1,6 @@
 const CopyPlugin = require("copy-webpack-plugin")
 
 let config = {
-  target: 'serverless',
   productionBrowserSourceMaps: true,
   webpack: (config, { isServer }) => {
     // This is a workaround due to: https://github.com/prisma/prisma/issues/6564

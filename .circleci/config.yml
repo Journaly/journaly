@@ -10,8 +10,8 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: 14.17.4
-          npm-version: 6.14.14
+          node-version: 16.17.0
+          npm-version: 8.15.0
       - restore_cache:
           keys:
             - node-deps-v3-{{ checksum "packages/web/package-lock.json" }}

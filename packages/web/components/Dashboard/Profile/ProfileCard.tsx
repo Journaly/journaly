@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from '@/config/i18n'
 import FacebookIcon from '@/components/Icons/FacebookIcon'
 import InstagramIcon from '@/components/Icons/InstagramIcon'
@@ -81,6 +81,8 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
     })
   }
 
+  const badges = useMemo(() => [...user.badges].sort((a, b) => a.createdAt > b.createdAt ? -1 : 1), [user.badges])
+
   return (
     <div className="profile-card">
       <div className="profile-card-content">
@@ -143,14 +145,6 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           )}
 
           {user.bio && <p className="bio">{sanitize(user.bio)}</p>}
-
-          <ul className="badge-list">
-            {user.badges.map((badge) => (
-              <li key={badge.type}>
-                <Badge badge={badge} />
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div className="profile-footer">
@@ -183,6 +177,14 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
               </ExternalLink>
             )}
           </div>
+          
+          <ul className="badge-list">
+          {badges.map((badge) => (
+              <li key={badge.type}>
+              <Badge badge={badge} />
+            </li>
+            ))}
+          </ul>
         </div>
       </div>
       {displayFollowerListModal && (
@@ -330,6 +332,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
           flex-wrap: wrap;
           margin-top: 10px;
           justify-content: center;
+          row-gap: 10px;
         }
 
         .badge-list > li {
@@ -347,7 +350,7 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         }
 
         .social-links {
-          margin: 0 auto;
+          margin: 0 auto 20px;
           display: flex;
           justify-content: center;
           max-width: 320px;

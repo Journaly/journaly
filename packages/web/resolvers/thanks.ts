@@ -1,11 +1,18 @@
 import { intArg, objectType, extendType } from 'nexus'
 
-import { InAppNotificationType, EmailNotificationType } from '@journaly/j-db-client'
+import {
+  EmailNotificationType,
+  InAppNotificationType,
+  BadgeType,
+  Prisma,
+} from '@journaly/j-db-client'
 
 import {
-  createInAppNotification, 
+  createInAppNotification,
   createEmailNotification,
-  hasAuthorPermissions
+  hasAuthorPermissions,
+  assignCountBadges,
+  sendNewBadgeEmail,
 } from './utils'
 
 const CommentThanks = objectType({
@@ -83,6 +90,93 @@ const ThanksMutations = extendType({
             thanksId: commentThanks.id,
           }
         })
+
+        const thanksCountQuery = Prisma.sql`
+          SELECT COUNT(*) AS count
+          FROM "CommentThanks" AS ct
+          JOIN "Comment" AS c
+            ON ct."commentId" = c.id
+          WHERE c."authorId" = ${comment.author.id}
+        `
+        
+        const thanksGivenCountQuery = Prisma.sql`
+          SELECT COUNT(*) AS count
+          FROM "CommentThanks" AS ct
+          WHERE ct."authorId" = ${userId}
+        `
+        const newBadgeCount = await assignCountBadges(
+          ctx.db,
+          comment.author.id,
+          thanksCountQuery,
+          {
+            10: BadgeType.TEN_THANKS,
+            50: BadgeType.FIFTY_THANKS,
+            100: BadgeType.ONEHUNDRED_THANKS,
+            250: BadgeType.TWOHUNDREDFIFTY_THANKS,
+            500: BadgeType.FIVEHUNDRED_THANKS,
+            1000: BadgeType.ONETHOUSAND_THANKS,
+            1250: BadgeType.ONETHOUSANDTWOHUNDREDFIFTY_THANKS,
+            1500: BadgeType.ONETHOUSANDFIVEHUNDRED_THANKS,
+            2250: BadgeType.TWOTHOUSANDTWOHUNDREDFIFTY_THANKS,
+            2500: BadgeType.TWOTHOUSANDFIVEHUNDRED_THANKS,
+            5000: BadgeType.FIVETHOUSAND_THANKS,
+            10000: BadgeType.TENTHOUSAND_THANKS,
+          }
+        )
+
+        const newThanksGivenBadgeCount = await assignCountBadges(
+          ctx.db,
+          userId,
+          thanksGivenCountQuery,
+          {
+            10: BadgeType.TEN_THANKS_GIVEN,
+            50: BadgeType.FIFTY_THANKS_GIVEN,
+            100: BadgeType.ONEHUNDRED_THANKS_GIVEN,
+            250: BadgeType.TWOHUNDREDFIFTY_THANKS_GIVEN,
+            500: BadgeType.FIVEHUNDRED_THANKS_GIVEN,
+            1000: BadgeType.ONETHOUSAND_THANKS_GIVEN,
+            2250: BadgeType.TWOTHOUSANDTWOHUNDREDFIFTY_THANKS_GIVEN,
+            2500: BadgeType.TWOTHOUSANDFIVEHUNDRED_THANKS_GIVEN,
+            5000: BadgeType.FIVETHOUSAND_THANKS_GIVEN,
+            10000: BadgeType.TENTHOUSAND_THANKS_GIVEN,
+          }
+        )
+
+        if (newThanksGivenBadgeCount) {
+          const newBadges = await ctx.db.userBadge.findMany({
+            where: { user: { id: userId } },
+            include: { user: true },
+            orderBy: { createdAt: 'desc' },
+            take: newThanksGivenBadgeCount,
+          })
+
+          await Promise.all(
+            newBadges.map((badge) => {
+              return sendNewBadgeEmail({
+                badgeType: badge.type,
+                user: badge.user,
+              })
+            }),
+          )
+        }
+        
+        if (newBadgeCount) {
+          const newBadges = await ctx.db.userBadge.findMany({
+            where: { user: { id: comment.author.id } },
+            include: { user: true },
+            orderBy: { createdAt: 'desc' },
+            take: newBadgeCount,
+          })
+
+          await Promise.all(
+            newBadges.map((badge) => {
+              return sendNewBadgeEmail({
+                badgeType: badge.type,
+                user: badge.user,
+              })
+            }),
+          )
+        }
 
         return commentThanks
       },

@@ -9,7 +9,7 @@ import {
   deleteRow,
   insertTableRow,
 } from '@udecode/plate'
-import { useSlate, useFocused } from 'slate-react'
+import { useSlate } from 'slate-react'
 
 import theme from '@/theme'
 
@@ -27,7 +27,7 @@ import FormatListBulletedIcon from '@/components/Icons/FormatListBulletedIcon'
 import ToggleMarkButton from './ToggleMarkButton'
 import ToolbarButton from './ToolbarButton'
 import InsertImageButton from './InsertImageButton'
-import { options, isTableActive } from '../helpers'
+import { isTableActive } from '../helpers'
 import SwitchToggle from '@/components/SwitchToggle'
 import { useTranslation } from '@/config/i18n'
 import useIntersectionObserver from '@/hooks/userIntersectionObserver'
@@ -124,31 +124,26 @@ const Toolbar = ({
                 className="editor-toolbar-popover"
               >
                 <TableToolbarButton
-                  {...options}
                   className="editor-toolbar-popover-item"
                   transform={insertTableRow}
                   icon="Add row"
                 />
                 <TableToolbarButton
-                  {...options}
                   className="editor-toolbar-popover-item"
                   transform={deleteRow}
                   icon="Delete row"
                 />
                 <TableToolbarButton
-                  {...options}
                   className="editor-toolbar-popover-item"
                   transform={insertTableColumn}
                   icon="Add column"
                 />
                 <TableToolbarButton
-                  {...options}
                   className="editor-toolbar-popover-item"
                   transform={deleteColumn}
                   icon="Delete column"
                 />
                 <TableToolbarButton
-                  {...options}
                   className="editor-toolbar-popover-item"
                   transform={deleteTable}
                   icon="Delete table"

@@ -2,7 +2,7 @@ import React from 'react'
 //import { renderElementTable } from '@udecode/plate'
 import { useSelected, RenderElementProps } from 'slate-react'
 
-import { isImageNode, isLinkNode, isTableFamilyNode } from '@/utils/slate'
+import { isImageNode, isLinkNode } from '@/utils/slate'
 
 const ImageElement = ({ attributes, element, children }: RenderElementProps) => {
   const selected = useSelected()
@@ -24,15 +24,6 @@ const ImageElement = ({ attributes, element, children }: RenderElementProps) => 
 
 const RenderElement = (props: RenderElementProps) => {
   const { attributes, children, element } = props
-
-  /*
-  if (isTableFamilyNode(element)) {
-    const tableElement = renderElementTable()({ attributes, children, element })
-    if (tableElement) {
-      return tableElement
-    }
-  }
-  */
 
   switch (element.type) {
     case 'block-quote':

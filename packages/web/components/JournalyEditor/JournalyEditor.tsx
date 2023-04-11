@@ -1,20 +1,14 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
-import { createEditor, Editor } from 'slate'
-import { Slate, withReact } from 'slate-react'
-import { withHistory } from 'slate-history'
+import { Editor } from 'slate'
 import {
   createPlateEditor,
-  createTEditor,
-  withPlate,
-
   Plate,
   PlateProvider,
+  PlateEditor,
   TElement,
   createPlugins,
   createTablePlugin,
   createPlateUI,
-  PlateTableElement,
-  ELEMENT_TABLE,
 } from '@udecode/plate'
 import isHotkey from 'is-hotkey'
 
@@ -87,7 +81,7 @@ const JournalyEditor = ({
   const editor = useMemo(() => {
     const editor = withLinks(createPlateEditor({
       plugins: plugins as any
-    }))
+    }) as Editor)
 
     return allowInlineImages ? withImages(editor) : editor
   }, [])
@@ -133,7 +127,7 @@ const JournalyEditor = ({
   return (
     <div className="editor-wrapper">
       <div className="editor-container">
-        <PlateProvider editor={editor}>
+        <PlateProvider editor={editor as PlateEditor}>
           <Plate
             value={value}
             onChange={(v) => setValue(v)}

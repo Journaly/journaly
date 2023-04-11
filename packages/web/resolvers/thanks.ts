@@ -1,7 +1,6 @@
-import { InAppNotificationType } from '.prisma/client'
 import { intArg, objectType, extendType } from 'nexus'
 
-import { EmailNotificationType } from '@journaly/j-db-client'
+import { InAppNotificationType, EmailNotificationType } from '@journaly/j-db-client'
 
 import {
   createInAppNotification, 

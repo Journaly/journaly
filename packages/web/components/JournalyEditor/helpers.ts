@@ -8,6 +8,7 @@ import {
 import { toast } from 'react-toastify'
 import { TFunction } from 'next-i18next'
 import {
+  PlateEditor,
   someNode,
   insertTable,
   ELEMENT_TABLE
@@ -95,7 +96,7 @@ const isBlockActive = (editor: Editor, format: string) => {
 const isLinkActive = (editor: Editor) => isBlockActive(editor, 'link')
 
 export const isTableActive = (editor: Editor) => {
-  return someNode(editor, { match: { type: ELEMENT_TABLE } })
+  return someNode(editor as PlateEditor, { match: { type: ELEMENT_TABLE } })
 }
 
 export const tableHandler = ({ editor, format }: ToggleArgs) => {
@@ -105,7 +106,7 @@ export const tableHandler = ({ editor, format }: ToggleArgs) => {
 
   const tableFormatKey = format as keyof typeof tableActions
   if (tableActions[tableFormatKey]) {
-    tableActions[tableFormatKey](editor, {})
+    tableActions[tableFormatKey](editor as PlateEditor, {})
   }
 }
 

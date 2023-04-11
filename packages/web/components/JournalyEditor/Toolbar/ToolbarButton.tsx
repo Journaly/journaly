@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useSlate, useFocused } from 'slate-react'
+import { useSlate } from 'slate-react'
 
 import { useTranslation } from '@/config/i18n'
 

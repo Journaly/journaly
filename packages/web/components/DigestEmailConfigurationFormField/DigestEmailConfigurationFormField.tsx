@@ -6,13 +6,13 @@ import Select from '../Select'
 
 type Props = {
   digestEmailConfig: DigestEmailConfigurationType
-  handleUpdateDigestEmailConfig: () => void
+  handleUpdateUserConfiguration: () => void
   refetch: () => void
 }
 
 const DigestEmailConfigurationFormField: React.FC<Props> = ({
   digestEmailConfig,
-  handleUpdateDigestEmailConfig,
+  handleUpdateUserConfiguration,
   refetch,
 }) => {
   const { t } = useTranslation('settings')
@@ -32,12 +32,9 @@ const DigestEmailConfigurationFormField: React.FC<Props> = ({
     options.find((option) => option.displayName === digestEmailConfig)?.value ?? -1
   const [selectedOptionId, setSelectedOptionId] = useState<number>(currentConfig)
 
-  const handleAddUserInterest = async () => {
-    // await addUserInterest({
-    //   variables: {
-    //     topicId: selectedTopicId,
-    //   },
-    // })
+  const handleUpdateDigestEmailConfig = async () => {
+    // TODO: Add args/finish this part
+    await handleUpdateUserConfiguration()
     refetch()
   }
 
@@ -51,9 +48,9 @@ const DigestEmailConfigurationFormField: React.FC<Props> = ({
           onChange={setSelectedOptionId}
         />
         <Button
-          onClick={handleAddUserInterest}
+          onClick={handleUpdateDigestEmailConfig}
           disabled={selectedOptionId === -1 || selectedOptionId === currentConfig}
-          loading={addingUserInterest}
+          loading={false}
           variant={ButtonVariant.Secondary}
         >
           {t('profile.notificationSettings.updateSettingsButtonText')}

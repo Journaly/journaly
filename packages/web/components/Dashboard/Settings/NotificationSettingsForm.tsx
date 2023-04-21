@@ -1,9 +1,10 @@
 import React from 'react'
 import { useTranslation } from '@/config/i18n'
-import { DigestEmailConfiguration } from '@/generated/graphql'
+import { DigestEmailConfiguration, useUpdateUserConfigurationMutation } from '@/generated/graphql'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
 import DigestEmailConfigurationFormField from '@/components/DigestEmailConfigurationFormField/DigestEmailConfigurationFormField'
+import { toast } from 'react-toastify'
 
 type Props = {
   userConfiguration: { digestEmail: DigestEmailConfiguration }
@@ -12,8 +13,12 @@ type Props = {
 
 const NotificationSettingsForm: React.FC<Props> = ({ userConfiguration, refetch }) => {
   const { t } = useTranslation('settings')
-
-  const handleUpdateNotificationSettings = () => {}
+  const [updateUserConfiguration] = useUpdateUserConfigurationMutation({
+    onCompleted: () => {
+      // TODO: add translation
+      toast.success('Your settings have been updated successfully!')
+    },
+  })
 
   return (
     <SettingsForm>
@@ -26,7 +31,7 @@ const NotificationSettingsForm: React.FC<Props> = ({ userConfiguration, refetch 
             <DigestEmailConfigurationFormField
               digestEmailConfig={userConfiguration.digestEmail}
               refetch={refetch}
-              handleUpdateDigestEmailConfig={handleUpdateNotificationSettings}
+              handleUpdateDigestEmailConfig={updateUserConfiguration}
             />
           </div>
         </div>

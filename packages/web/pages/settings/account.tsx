@@ -4,6 +4,7 @@ import { withApollo } from '@/lib/apollo'
 import useUILanguage from '@/hooks/useUILanguage'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import AuthGate from '@/components/AuthGate'
+import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import UpdatePasswordForm from '@/components/Dashboard/Settings/UpdatePasswordForm'
 import NotificationSettingsForm from '@/components/Dashboard/Settings/NotificationSettingsForm'
 import UILanguageForm from '@/components/Dashboard/Settings/UILanguageForm'
@@ -17,16 +18,22 @@ const Account: NextPage = () => {
 
   return (
     <AuthGate>
-      {() =>
-        data?.currentUser && (
+      {() => {
+        return (
           <SettingsPageLayout>
             <div className="forms-container">
-              <UpdatePasswordForm />
-              <UILanguageForm />
-              <NotificationSettingsForm
-                userConfiguration={data.currentUser.configuration!}
-                refetch={refetch}
-              />
+              {loading || !data?.currentUser ? (
+                <LoadingSpinner />
+              ) : (
+                <>
+                  <UpdatePasswordForm />
+                  <UILanguageForm />
+                  <NotificationSettingsForm
+                    userConfiguration={data.currentUser.configuration!}
+                    refetch={refetch}
+                  />
+                </>
+              )}
             </div>
             <style jsx>{`
               .forms-container {
@@ -44,7 +51,7 @@ const Account: NextPage = () => {
             `}</style>
           </SettingsPageLayout>
         )
-      }
+      }}
     </AuthGate>
   )
 }

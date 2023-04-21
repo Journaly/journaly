@@ -1,22 +1,19 @@
 import React from 'react'
 import { useTranslation } from '@/config/i18n'
-import {
-  TopicFragmentFragment as TopicType,
-  UserConfiguration,
-  UserInterestFragmentFragment as UserInterestType,
-} from '@/generated/graphql'
-import InterestFormField from '@/components/InterestFormField'
+import { DigestEmailConfiguration } from '@/generated/graphql'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
 import DigestEmailConfigurationFormField from '@/components/DigestEmailConfigurationFormField/DigestEmailConfigurationFormField'
 
 type Props = {
-  userConfiguration: UserConfiguration
+  userConfiguration: { digestEmail: DigestEmailConfiguration }
   refetch: () => void
 }
 
 const NotificationSettingsForm: React.FC<Props> = ({ userConfiguration, refetch }) => {
   const { t } = useTranslation('settings')
+
+  const handleUpdateNotificationSettings = () => {}
 
   return (
     <SettingsForm>
@@ -26,7 +23,11 @@ const NotificationSettingsForm: React.FC<Props> = ({ userConfiguration, refetch 
             <label className="settings-label" htmlFor="interests">
               {t('profile.notificationSettings.digestEmailSelectLabel')}
             </label>
-            <DigestEmailConfigurationFormField digestEmailConfig={userConfiguration.digestEmail} />
+            <DigestEmailConfigurationFormField
+              digestEmailConfig={userConfiguration.digestEmail}
+              refetch={refetch}
+              handleUpdateDigestEmailConfig={handleUpdateNotificationSettings}
+            />
           </div>
         </div>
       </SettingsFieldset>

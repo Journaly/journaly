@@ -18,5 +18,8 @@ query settingsFormData($uiLanguage: UILanguage!) {
       ...UserInterestFragment
     }
     ...SocialMediaFragment
+    configuration {
+      digestEmail
+    }
   }
 }

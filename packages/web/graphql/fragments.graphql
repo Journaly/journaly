@@ -9,9 +9,6 @@ fragment UserFragment on User {
   city
   country
   emailAddressVerified
-  configuration {
-    ...UserConfigurationFragment
-  }
 }
 
 fragment UserWithStatsFragment on User {
@@ -42,10 +39,6 @@ fragment CurrentUserFragment on User {
   membershipSubscription {
     isActive
   }
-}
-
-fragment UserConfigurationFragment on UserConfiguration {
-  digestEmail
 }
 
 fragment SocialMediaFragment on User {

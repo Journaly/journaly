@@ -391,6 +391,7 @@ export type MutationUpdateUserArgs = {
   handle?: Maybe<Scalars['String']>
   country?: Maybe<Scalars['String']>
   city?: Maybe<Scalars['String']>
+  digestEmailConfig?: Maybe<Scalars['String']>
 }
 
 export type MutationUpdatePasswordArgs = {
@@ -722,7 +723,6 @@ export type User = {
   createdAt: Scalars['DateTime']
   membershipSubscription?: Maybe<MembershipSubscription>
   isStudent: Scalars['Boolean']
-  configuration?: Maybe<UserConfiguration>
   socialMedia?: Maybe<SocialMedia>
   languages: Array<LanguageRelation>
   following: Array<User>
@@ -737,6 +737,7 @@ export type User = {
   threadCommentsCount: Scalars['Int']
   postCommentsCount: Scalars['Int']
   notifications: Array<InAppNotification>
+  configuration?: Maybe<UserConfiguration>
   activityGraphData: Array<DatedActivityCount>
 }
 
@@ -868,9 +869,7 @@ export type UserFragmentFragment = { __typename?: 'User' } & Pick<
   | 'city'
   | 'country'
   | 'emailAddressVerified'
-> & {
-    configuration?: Maybe<{ __typename?: 'UserConfiguration' } & UserConfigurationFragmentFragment>
-  }
+>
 
 export type UserWithStatsFragmentFragment = { __typename?: 'User' } & Pick<
   User,
@@ -893,11 +892,6 @@ export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
     { __typename?: 'MembershipSubscription' } & Pick<MembershipSubscription, 'isActive'>
   >
 } & UserWithLanguagesFragmentFragment
-
-export type UserConfigurationFragmentFragment = { __typename?: 'UserConfiguration' } & Pick<
-  UserConfiguration,
-  'digestEmail'
->
 
 export type SocialMediaFragmentFragment = { __typename?: 'User' } & {
   socialMedia?: Maybe<
@@ -1574,6 +1568,9 @@ export type SettingsFormDataQuery = { __typename?: 'Query' } & {
             }
         >
         userInterests: Array<{ __typename?: 'UserInterest' } & UserInterestFragmentFragment>
+        configuration?: Maybe<
+          { __typename?: 'UserConfiguration' } & Pick<UserConfiguration, 'digestEmail'>
+        >
       } & SocialMediaFragmentFragment
   >
 }
@@ -1614,6 +1611,7 @@ export type UpdateUserMutationVariables = Exact<{
   handle?: Maybe<Scalars['String']>
   city?: Maybe<Scalars['String']>
   country?: Maybe<Scalars['String']>
+  digestEmailConfig?: Maybe<Scalars['String']>
 }>
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
@@ -1665,11 +1663,6 @@ export type UsersQuery = { __typename?: 'Query' } & {
   >
 }
 
-export const UserConfigurationFragmentFragmentDoc = gql`
-  fragment UserConfigurationFragment on UserConfiguration {
-    digestEmail
-  }
-`
 export const UserFragmentFragmentDoc = gql`
   fragment UserFragment on User {
     id
@@ -1682,11 +1675,7 @@ export const UserFragmentFragmentDoc = gql`
     city
     country
     emailAddressVerified
-    configuration {
-      ...UserConfigurationFragment
-    }
   }
-  ${UserConfigurationFragmentFragmentDoc}
 `
 export const UserWithStatsFragmentFragmentDoc = gql`
   fragment UserWithStatsFragment on User {
@@ -4793,6 +4782,9 @@ export const SettingsFormDataDocument = gql`
         ...UserInterestFragment
       }
       ...SocialMediaFragment
+      configuration {
+        digestEmail
+      }
     }
   }
   ${LanguageFragmentFragmentDoc}
@@ -5007,6 +4999,7 @@ export const UpdateUserDocument = gql`
     $handle: String
     $city: String
     $country: String
+    $digestEmailConfig: String
   ) {
     updateUser(
       handle: $handle
@@ -5016,6 +5009,7 @@ export const UpdateUserDocument = gql`
       bio: $bio
       city: $city
       country: $country
+      digestEmailConfig: $digestEmailConfig
     ) {
       ...UserFragment
     }
@@ -5047,6 +5041,7 @@ export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
  *      handle: // value for 'handle'
  *      city: // value for 'city'
  *      country: // value for 'country'
+ *      digestEmailConfig: // value for 'digestEmailConfig'
  *   },
  * });
  */

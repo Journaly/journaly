@@ -9,31 +9,31 @@ import Select from '../Select'
 
 type Props = {
   digestEmailConfig: DigestEmailConfigurationType
+  handleUpdateDigestEmailConfig: () => void
   refetch: () => void
 }
 
-const DigestEmailConfigurationFormField: React.FC<Props> = ({ digestEmailConfig, refetch }) => {
+const DigestEmailConfigurationFormField: React.FC<Props> = ({
+  digestEmailConfig,
+  handleUpdateDigestEmailConfig,
+  refetch,
+}) => {
   const { t } = useTranslation('settings')
 
   // The filter operation here is just to remove the "WEEKLY" option
   // until we build support for it
-  const options = (Object.keys(DigestEmailConfigurationType) as (keyof typeof DigestEmailConfigurationType)[]).map(
-    (key, index) => ({
+  const options = (
+    Object.keys(DigestEmailConfigurationType) as (keyof typeof DigestEmailConfigurationType)[]
+  )
+    .map((key, index) => ({
       value: index,
       displayName: DigestEmailConfigurationType[key],
-    }),
-  ).filter((option) => option.displayName !== DigestEmailConfigurationType.Weekly);
+    }))
+    .filter((option) => option.displayName !== DigestEmailConfigurationType.Weekly)
 
-  // TODO: Figure out why this is -1 even though loggig everything before the OR returns 0
-  const currentConfig = options.find((option) => option.displayName === digestEmailConfig)?.value || -1
+  const currentConfig =
+    options.find((option) => option.displayName === digestEmailConfig)?.value ?? -1
   const [selectedOptionId, setSelectedOptionId] = useState<number>(currentConfig)
-  console.log(digestEmailConfig)
-  const [
-    addUserInterest,
-    { loading: addingUserInterest },
-  ] = useAddUserInterestMutation()
-  
-  console.log(currentConfig)
 
   const handleAddUserInterest = async () => {
     // await addUserInterest({
@@ -43,7 +43,6 @@ const DigestEmailConfigurationFormField: React.FC<Props> = ({ digestEmailConfig,
     // })
     refetch()
   }
-
 
   return (
     <div>
@@ -56,7 +55,7 @@ const DigestEmailConfigurationFormField: React.FC<Props> = ({ digestEmailConfig,
         />
         <Button
           onClick={handleAddUserInterest}
-          disabled={selectedOptionId === -1 || selectedOptionId === currentConfig }
+          disabled={selectedOptionId === -1 || selectedOptionId === currentConfig}
           loading={addingUserInterest}
           variant={ButtonVariant.Secondary}
         >

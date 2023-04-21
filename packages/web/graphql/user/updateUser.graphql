@@ -6,7 +6,6 @@ mutation updateUser(
   $handle: String
   $city: String
   $country: String
-  $digestEmailConfig: String
 ) {
   updateUser(
     handle: $handle
@@ -16,7 +15,6 @@ mutation updateUser(
     bio: $bio
     city: $city
     country: $country
-    digestEmailConfig: $digestEmailConfig
   ) {
     ...UserFragment
   }

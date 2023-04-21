@@ -1,8 +1,5 @@
 import React, { useState } from 'react'
-import {
-  useAddUserInterestMutation,
-  DigestEmailConfiguration as DigestEmailConfigurationType,
-} from '@/generated/graphql'
+import { DigestEmailConfiguration as DigestEmailConfigurationType } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
 import { useTranslation } from '@/config/i18n'
 import Select from '../Select'

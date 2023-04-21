@@ -271,6 +271,7 @@ export type Mutation = {
   reportSpamPost: Post
   createUser: User
   updateUser: User
+  updateUserConfiguration: UserConfiguration
   initiateAvatarImageUpload: InitiateAvatarImageUploadResponse
   updatePassword: User
   loginUser: User
@@ -391,6 +392,10 @@ export type MutationUpdateUserArgs = {
   handle?: Maybe<Scalars['String']>
   country?: Maybe<Scalars['String']>
   city?: Maybe<Scalars['String']>
+  digestEmailConfig?: Maybe<Scalars['String']>
+}
+
+export type MutationUpdateUserConfigurationArgs = {
   digestEmailConfig?: Maybe<Scalars['String']>
 }
 
@@ -723,6 +728,7 @@ export type User = {
   createdAt: Scalars['DateTime']
   membershipSubscription?: Maybe<MembershipSubscription>
   isStudent: Scalars['Boolean']
+  configuration?: Maybe<UserConfiguration>
   socialMedia?: Maybe<SocialMedia>
   languages: Array<LanguageRelation>
   following: Array<User>
@@ -737,7 +743,6 @@ export type User = {
   threadCommentsCount: Scalars['Int']
   postCommentsCount: Scalars['Int']
   notifications: Array<InAppNotification>
-  configuration?: Maybe<UserConfiguration>
   activityGraphData: Array<DatedActivityCount>
 }
 
@@ -892,6 +897,11 @@ export type CurrentUserFragmentFragment = { __typename?: 'User' } & {
     { __typename?: 'MembershipSubscription' } & Pick<MembershipSubscription, 'isActive'>
   >
 } & UserWithLanguagesFragmentFragment
+
+export type UserConfigurationFragmentFragment = { __typename?: 'UserConfiguration' } & Pick<
+  UserConfiguration,
+  'digestEmail'
+>
 
 export type SocialMediaFragmentFragment = { __typename?: 'User' } & {
   socialMedia?: Maybe<
@@ -1611,7 +1621,6 @@ export type UpdateUserMutationVariables = Exact<{
   handle?: Maybe<Scalars['String']>
   city?: Maybe<Scalars['String']>
   country?: Maybe<Scalars['String']>
-  digestEmailConfig?: Maybe<Scalars['String']>
 }>
 
 export type UpdateUserMutation = { __typename?: 'Mutation' } & {
@@ -1661,6 +1670,14 @@ export type UsersQuery = { __typename?: 'Query' } & {
         posts: Array<{ __typename?: 'Post' } & Pick<Post, 'id' | 'title' | 'body'>>
       }
   >
+}
+
+export type UpdateUserConfigurationMutationVariables = Exact<{
+  digestEmailConfig?: Maybe<Scalars['String']>
+}>
+
+export type UpdateUserConfigurationMutation = { __typename?: 'Mutation' } & {
+  updateUserConfiguration: { __typename?: 'UserConfiguration' } & UserConfigurationFragmentFragment
 }
 
 export const UserFragmentFragmentDoc = gql`
@@ -1831,6 +1848,11 @@ export const CurrentUserFragmentFragmentDoc = gql`
   }
   ${UserWithLanguagesFragmentFragmentDoc}
   ${NotificationFragmentFragmentDoc}
+`
+export const UserConfigurationFragmentFragmentDoc = gql`
+  fragment UserConfigurationFragment on UserConfiguration {
+    digestEmail
+  }
 `
 export const AuthorFragmentFragmentDoc = gql`
   fragment AuthorFragment on User {
@@ -4999,7 +5021,6 @@ export const UpdateUserDocument = gql`
     $handle: String
     $city: String
     $country: String
-    $digestEmailConfig: String
   ) {
     updateUser(
       handle: $handle
@@ -5009,7 +5030,6 @@ export const UpdateUserDocument = gql`
       bio: $bio
       city: $city
       country: $country
-      digestEmailConfig: $digestEmailConfig
     ) {
       ...UserFragment
     }
@@ -5041,7 +5061,6 @@ export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<
  *      handle: // value for 'handle'
  *      city: // value for 'city'
  *      country: // value for 'country'
- *      digestEmailConfig: // value for 'digestEmailConfig'
  *   },
  * });
  */
@@ -5219,3 +5238,53 @@ export function useUsersLazyQuery(
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>
 export type UsersQueryResult = ApolloReactCommon.QueryResult<UsersQuery, UsersQueryVariables>
+export const UpdateUserConfigurationDocument = gql`
+  mutation updateUserConfiguration($digestEmailConfig: String) {
+    updateUserConfiguration(digestEmailConfig: $digestEmailConfig) {
+      ...UserConfigurationFragment
+    }
+  }
+  ${UserConfigurationFragmentFragmentDoc}
+`
+export type UpdateUserConfigurationMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateUserConfigurationMutation,
+  UpdateUserConfigurationMutationVariables
+>
+
+/**
+ * __useUpdateUserConfigurationMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserConfigurationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserConfigurationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserConfigurationMutation, { data, loading, error }] = useUpdateUserConfigurationMutation({
+ *   variables: {
+ *      digestEmailConfig: // value for 'digestEmailConfig'
+ *   },
+ * });
+ */
+export function useUpdateUserConfigurationMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateUserConfigurationMutation,
+    UpdateUserConfigurationMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateUserConfigurationMutation,
+    UpdateUserConfigurationMutationVariables
+  >(UpdateUserConfigurationDocument, baseOptions)
+}
+export type UpdateUserConfigurationMutationHookResult = ReturnType<
+  typeof useUpdateUserConfigurationMutation
+>
+export type UpdateUserConfigurationMutationResult =
+  ApolloReactCommon.MutationResult<UpdateUserConfigurationMutation>
+export type UpdateUserConfigurationMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateUserConfigurationMutation,
+  UpdateUserConfigurationMutationVariables
+>

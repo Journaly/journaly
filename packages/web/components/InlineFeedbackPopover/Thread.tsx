@@ -120,9 +120,7 @@ const Thread: React.FC<ThreadProps> = ({
             )
           })}
 
-          {!comments.length && (
-            <div className="empty-notice">{t('noCommentsYetMessage')}</div>
-          )}
+          {!comments.length && <div className="empty-notice">{t('noCommentsYetMessage')}</div>}
         </div>
         {currentUser && !archived && (
           <form onSubmit={createNewComment}>
@@ -133,24 +131,21 @@ const Thread: React.FC<ThreadProps> = ({
                   disabled={loading}
                   ref={textareaRef}
                 />
-                <div className="btn-container">
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    loading={loading}
-                    className="new-comment-btn"
-                    variant={ButtonVariant.PrimaryDark}
-                  >
-                    {t('submit')}
-                  </Button>
-                  <Button
-                    onClick={close}
-                    disabled={loading}
-                    variant={ButtonVariant.Secondary}
-                  >
-                    {t('cancel')}
-                  </Button>
-                </div>
+              </div>
+
+              <div className="btn-container">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  loading={loading}
+                  className="new-comment-btn"
+                  variant={ButtonVariant.PrimaryDark}
+                >
+                  {t('submit')}
+                </Button>
+                <Button onClick={close} disabled={loading} variant={ButtonVariant.Secondary}>
+                  {t('cancel')}
+                </Button>
               </div>
             </fieldset>
           </form>
@@ -193,19 +188,23 @@ const Thread: React.FC<ThreadProps> = ({
           font-style: italic;
         }
 
-        .new-comment-block {
-          border-top: 1px solid ${theme.colors.gray400};
-          margin-top: 5px;
-          padding-top: 10px;
+        fieldset {
+          padding: 5px 5px;
+          border: 1px solid ${theme.colors.gray400};
+          border-radius: 5px;
+          background-color: ${theme.colors.gray100};
         }
 
         .new-comment-block :global(textarea) {
           min-height: 4em;
           width: 100%;
-          background-color: transparent;
+          background-color: ${theme.colors.white};
           padding: 5px 0;
           margin-right: 10px;
           resize: vertical;
+          border: 1px solid ${theme.colors.gray400};
+          border-radius: 5px;
+          padding: 3px 8px;
         }
 
         .new-comment-block :global(textarea:focus) {

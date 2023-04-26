@@ -4,7 +4,7 @@
   "save": "Speichern",
   "cancel": "Abbrechen",
   "submit": "Senden",
-  "addCommentPlaceholder": "Wir unterstützen nun Markdown in den Kommentaren. Versuche **fett** oder *kursiv* zu schreiben!",
+  "addCommentPlaceholder": "Wir unterstützen Markdown in den Kommentaren. Versuche **fett** oder *kursiv* zu schreiben!",
   "noCommentsYetMessage": "Noch keine Kommentare ...",
   "tabGeneralKey": "Allgemein",
   "tabOutdatedKey": "Veraltet",

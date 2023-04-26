@@ -114,7 +114,7 @@ const JournalyEditor = ({
         toggleMark(editor, mark)
       }
     })
-  }, [editor, playTypewriterSound, playTypewriterReturnSound])
+  }, [editor, shouldPlayTypewriterSounds, playTypewriterSound, playTypewriterReturnSound])
 
   useEffect(() => {
     ;(slateRef as React.MutableRefObject<Editor>).current = editor

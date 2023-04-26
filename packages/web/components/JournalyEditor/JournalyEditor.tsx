@@ -130,9 +130,9 @@ const JournalyEditor = ({
         <PlateProvider
           editor={editor as PlateEditor}
           onChange={(v) => setValue(v)}
+          value={value}
         >
           <Plate
-            value={value}
             editableProps={{
               spellCheck: true,
               readOnly: disabled,

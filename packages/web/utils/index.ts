@@ -16,6 +16,9 @@ export const sanitize = (html: string): string => {
     whiteList: {
       ...whiteList,
       a: ['href', 'target', 'rel'],
+      table: ['style'],
+      col: ['style'],
+      tr: ['style'],
     },
   })
 }

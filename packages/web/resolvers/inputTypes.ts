@@ -16,6 +16,12 @@ export const EditorNode = inputObjectType({
     t.string('link', { nullable: true })
     t.string('url', { nullable: true })
     t.boolean('hyperlink', { nullable: true })
+    t.int('size', { nullable: true })
+    t.field('colSizes', {
+      type: 'Int',
+      list: true,
+      nullable: true,
+    })
     t.field('children', {
       type: EditorNode,
       list: true,

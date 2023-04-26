@@ -376,7 +376,6 @@ const UserMutations = extendType({
         handle: stringArg({ required: false }),
         country: stringArg({ required: false }),
         city: stringArg({ required: false }),
-        digestEmailConfig: stringArg({ required: false }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request

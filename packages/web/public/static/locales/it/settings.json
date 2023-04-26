@@ -106,6 +106,14 @@
       "passwordChangeSuccess": "Password aggiornata con successo.",
       "updateError": "Si è verificato un errore nell'aggiornamento della tua password.",
       "newPasswordCannotBeTheSameError": "la nuova password non può essere uguale alla vecchia"
+    },
+    "notificationSettings": {
+      "legend": "Notifications",
+      "digestEmailSelectLabel": "Digest Email (Notifies you of all activity)",
+      "digestEmailSelectPlaceholder": "How often would you like to receive the digest email?",
+      "updateSettingsButtonText": "Update",
+      "updateDigestEmailSuccessMessage": "Your settings have been updated successfully!",
+      "updateDigestEmailErrorMessage": "Your settings have been updated successfully!"
     }
   },
   "subscription": {

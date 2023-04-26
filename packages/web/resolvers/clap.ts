@@ -31,11 +31,7 @@ const PostClapMutations = extendType({
             id: postId,
           },
           include: {
-            author: {
-              include: {
-                configuration: true,
-              }
-            },
+            author: true,
           },
         })
 
@@ -59,15 +55,10 @@ const PostClapMutations = extendType({
           },
         })
 
-        await createEmailNotification(
-          ctx.db,
-          post.author,
-          {
-            type: EmailNotificationType.POST_CLAP,
-            postClap,
-          },
-          post.author.configuration.digestEmail,
-        )
+        await createEmailNotification(ctx.db, post.author, {
+          type: EmailNotificationType.POST_CLAP,
+          postClap,
+        })
 
         await createInAppNotification(ctx.db, {
           userId: post.authorId,

@@ -1,9 +1,4 @@
-import {
-  intArg,
-  stringArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { intArg, stringArg, objectType, extendType, arg } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
@@ -434,7 +429,10 @@ const UserMutations = extendType({
     t.field('updateUserConfiguration', {
       type: 'UserConfiguration',
       args: {
-        digestEmailConfig: stringArg({ required: false }),
+        digestEmailConfig: arg({
+          type: 'DigestEmailConfiguration',
+          required: false,
+        }),
       },
       resolve: async (_parent, args, ctx) => {
         const { userId } = ctx.request

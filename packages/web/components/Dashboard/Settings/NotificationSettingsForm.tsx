@@ -21,7 +21,7 @@ type Props = {
 
 const NotificationSettingsForm: React.FC<Props> = ({ userConfiguration, refetch }) => {
   const { t } = useTranslation('settings')
-  console.log(userConfiguration)
+
   // The filter operation here is just to remove the "WEEKLY" option
   // until we build support for it
   const digestEmailOptions = (
@@ -41,16 +41,14 @@ const NotificationSettingsForm: React.FC<Props> = ({ userConfiguration, refetch 
 
   const [updateUserConfiguration, { loading }] = useUpdateUserConfigurationMutation({
     onCompleted: () => {
-      // TODO: add translation
-      toast.success('Your settings have been updated successfully!')
+      toast.success(t('account.notificationSettings.updateDigestEmailSuccessMessage'))
     },
     onError: (err) => {
-      toast.error(`There was an error updating your settings: ${err}`)
+      toast.error(`${t('account.notificationSettings.updateDigestEmailErrorMessage')}: ${err}`)
     },
   })
 
   const handleUpdateDigestEmailConfiguration = () => {
-    console.log(userConfiguration.digestEmail)
     updateUserConfiguration({
       variables: {
         digestEmailConfig: digestEmailOptions[selectedOptionId].displayName,
@@ -61,15 +59,15 @@ const NotificationSettingsForm: React.FC<Props> = ({ userConfiguration, refetch 
 
   return (
     <SettingsForm>
-      <SettingsFieldset legend={t('profile.notificationSettings.legend')}>
+      <SettingsFieldset legend={t('account.notificationSettings.legend')}>
         <div>
           <div className="form-field">
             <label className="settings-label" htmlFor="interests">
-              {t('profile.notificationSettings.digestEmailSelectLabel')}
+              {t('account.notificationSettings.digestEmailSelectLabel')}
             </label>
             <div className="select-container">
               <Select
-                placeholder={t('profile.notificationSettings.digestEmailSelectPlaceholder')}
+                placeholder={t('account.notificationSettings.digestEmailSelectPlaceholder')}
                 options={digestEmailOptions}
                 value={selectedOptionId}
                 onChange={setSelectedOptionId}
@@ -80,7 +78,7 @@ const NotificationSettingsForm: React.FC<Props> = ({ userConfiguration, refetch 
                 loading={loading}
                 variant={ButtonVariant.Secondary}
               >
-                {t('profile.notificationSettings.updateSettingsButtonText')}
+                {t('account.notificationSettings.updateSettingsButtonText')}
               </Button>
             </div>
           </div>

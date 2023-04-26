@@ -77,12 +77,6 @@
       "websitePlaceholder": "Do you have a website?",
       "success": "Social media successfully updated."
     },
-    "notificationSettings": {
-      "legend": "Notifications",
-      "digestEmailSelectLabel": "Digest Email (Notifies you of all activity)",
-      "digestEmailSelectPlaceholder": "How often would you like to receive the digest email?",
-      "updateSettingsButtonText": "Update"
-    },
     "error": {
       "updateError": "There was an error updating your profile.",
       "handleValidationErrorMessage": "Handle may only contain letters, numbers, _, -, with no spaces",
@@ -114,6 +108,14 @@
       "passwordChangeSuccess": "Password changed successfully.",
       "updateError": "There was an error updating your password.",
       "newPasswordCannotBeTheSameError": "new password cannot be the same as old"
+    },
+    "notificationSettings": {
+      "legend": "Notifications",
+      "digestEmailSelectLabel": "Digest Email (Notifies you of all activity)",
+      "digestEmailSelectPlaceholder": "How often would you like to receive the digest email?",
+      "updateSettingsButtonText": "Update",
+      "updateDigestEmailSuccessMessage": "Your settings have been updated successfully!",
+      "updateDigestEmailErrorMessage": "Your settings have been updated successfully!"
     }
   },
   "subscription": {

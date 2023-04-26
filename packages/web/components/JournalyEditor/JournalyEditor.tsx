@@ -127,10 +127,12 @@ const JournalyEditor = ({
   return (
     <div className="editor-wrapper">
       <div className="editor-container">
-        <PlateProvider editor={editor as PlateEditor}>
+        <PlateProvider
+          editor={editor as PlateEditor}
+          onChange={(v) => setValue(v)}
+        >
           <Plate
             value={value}
-            onChange={(v) => setValue(v)}
             editableProps={{
               spellCheck: true,
               readOnly: disabled,
@@ -174,38 +176,3 @@ const JournalyEditor = ({
 }
 
 export default JournalyEditor
-
-
-/*
-        <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
-          <Toolbar
-            allowInlineImages={allowInlineImages}
-            shouldPlayTypewriterSounds={shouldPlayTypewriterSounds}
-            onToggleShouldPlayTypewriterSounds={() =>
-              setShouldPlayTypewriterSounds(!shouldPlayTypewriterSounds)
-            }
-          />
-          <EditablePlugins
-            plugins={plugins}
-            renderElement={[renderElement]}
-            renderLeaf={[renderLeaf]}
-            readOnly={disabled}
-            spellCheck
-            onKeyDown={[
-              (event: React.KeyboardEvent) => {
-                handlePlayTypewriterSound(event)
-                Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
-                  // Convert React keyboard event to native keyboard event
-                  if (isHotkey(hotkey, event as unknown as KeyboardEvent)) {
-                    event.preventDefault()
-                    toggleMark(editor, mark)
-                  }
-                })
-              },
-            ]}
-            onKeyDownDeps={[shouldPlayTypewriterSounds]}
-            data-testid="post-body"
-          />
-        </Slate>
-
-*/

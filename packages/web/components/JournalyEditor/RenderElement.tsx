@@ -1,5 +1,4 @@
 import React from 'react'
-//import { renderElementTable } from '@udecode/plate'
 import { useSelected, RenderElementProps } from 'slate-react'
 
 import { isImageNode, isLinkNode } from '@/utils/slate'

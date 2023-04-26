@@ -396,7 +396,7 @@ export type MutationUpdateUserArgs = {
 }
 
 export type MutationUpdateUserConfigurationArgs = {
-  digestEmailConfig?: Maybe<Scalars['String']>
+  digestEmailConfig?: Maybe<DigestEmailConfiguration>
 }
 
 export type MutationUpdatePasswordArgs = {
@@ -1673,7 +1673,7 @@ export type UsersQuery = { __typename?: 'Query' } & {
 }
 
 export type UpdateUserConfigurationMutationVariables = Exact<{
-  digestEmailConfig?: Maybe<Scalars['String']>
+  digestEmailConfig?: Maybe<DigestEmailConfiguration>
 }>
 
 export type UpdateUserConfigurationMutation = { __typename?: 'Mutation' } & {
@@ -5239,7 +5239,7 @@ export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>
 export type UsersQueryResult = ApolloReactCommon.QueryResult<UsersQuery, UsersQueryVariables>
 export const UpdateUserConfigurationDocument = gql`
-  mutation updateUserConfiguration($digestEmailConfig: String) {
+  mutation updateUserConfiguration($digestEmailConfig: DigestEmailConfiguration) {
     updateUserConfiguration(digestEmailConfig: $digestEmailConfig) {
       ...UserConfigurationFragment
     }

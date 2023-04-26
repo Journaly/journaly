@@ -1,4 +1,4 @@
-mutation updateUserConfiguration($digestEmailConfig: String) {
+mutation updateUserConfiguration($digestEmailConfig: DigestEmailConfiguration) {
   updateUserConfiguration(digestEmailConfig: $digestEmailConfig) {
     ...UserConfigurationFragment
   }

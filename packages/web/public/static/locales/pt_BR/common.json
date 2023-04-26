@@ -1,0 +1,135 @@
+{
+  "signInPrompt": "Inscreva-se para continuar",
+  "error": "Erro no servidor",
+  "loading": "Carregando...",
+  "home": {
+    "reasonsHeader": "Três motivos para usar o Journaly",
+    "elevatorPitch": "Melhore suas habilidades linguísticas e conecte-se com outras pessoas através de Journaling",
+    "getStartedText": "Vamos lá!",
+    "reasonOneText": "A escrita é uma ferramenta muito poderosa para melhorar suas habilidades linguísticas, porém requer esforço e é mais proveitosa quando se recebe feedback. Journaly é a plataforma que abarca sua escrita e o feedback de aprendizes de idiomas como você!",
+    "reasonTwoText": "Existem muitos benefícios pessoais em escrever um diário e esse é um dos hábitos saudáveis mais desejados por muitas pessoas. Journaly intensifica sua aprendizagem de línguas enquanto te ajuda a ter todos os benefícios de escrever um diário!",
+    "reasonThreeText": "Muitos sites te ajudam a encontrar companheiros de intercâmbio de línguas simplesmente comparando seus interesses linguísticos - mas isso não é bom o suficiente para nós. Journaly te ajuda a encontrar pessoas que também compartilham dos mesmos interesses que você!",
+    "videoHeader": "Uma experiência de escrita maravilhosa",
+    "testimonialsHeader": "O que dizem os usuários do Journaly",
+    "nav": {
+      "about": "Sobre",
+      "pricing": "Preços",
+      "logIn": "Entrar",
+      "signUp": "Increver-se",
+      "dashboard": "Dashboard"
+    }
+  },
+  "ui": {
+    "languageSelectPlaceholder": "Languages",
+    "clearFilters": "clear filters",
+    "myLanguages": "my languages",
+    "followedUsers": "followed journalers",
+    "needsFeedback": "needs feedback",
+    "hasInteracted": "commented posts",
+    "textSearchPlaceholder": "Search posts",
+    "topicSelectPlaceholder": "Topics",
+    "showAdvancedFilters": "Show Advanced Filters",
+    "hideAdvancedFilters": "Hide Advanced Filters",
+    "savedPosts": "saved posts",
+    "savePostPremiumFeatureExplanation": "Publicações salvas é uma funcionalidade Premium que te deixa salvar publicações para ler mais tarde. Para lê-las, acesse sua lista no seu Feed com o uso dos filtros avançados! Clique no link abaixo para ver todos os detalhes do Journaly Premium, ou fique a vontade para continuar escrevendo no Journaly com todas as fantásticas funcionabilidades gratuitas!"
+  },
+  "dashboardNav": {
+    "myFeed": "Meu feed",
+    "myPosts": "Minhas postagens",
+    "newPost": "Nova postagem",
+    "notifications": "Notificações",
+    "settings": "Configurações",
+    "logOut": "Sair"
+  },
+  "helpModal": {
+    "header": "Ajuda",
+    "bodyOne": "Precisa de ajuda? Nós te ajudamos!",
+    "bodyTwo": "Por favor envie um email para",
+    "bodyThree": "com uma descrição detalhada de seu problema e responderemos o mais rápido possível!",
+    "footer": "Obrigado por ajudar a deixar o Journaly melhor para todos."
+  },
+  "badge": {
+    "ALPHA_USER": {
+      "title": "Usuário Alfa",
+      "description": "Participou no teste Alfa do Journaly. Percorremos um longo caminho desde então, mas esse usuário esteve na linha de frente ajudando a detectar bugs e a moldar o Journaly desde o começo."
+    },
+    "BETA_USER": {
+      "title": "Usuário Beta",
+      "description": "Participou no teste Beta do Journaly. O herói que o Journaly precisa."
+    },
+    "CODE_CONTRIBUTOR": {
+      "title": "Colaborador de código",
+      "description": "Contribuiu para a base de códigos do Journaly. Você pode encontrar a fonte de códigos do Journaly e contribuir você mesmo em: https://github.com/Journaly/journaly"
+    },
+    "TEN_POSTS": {
+      "title": "10 postagens",
+      "description": "Publicou 10 postagens. Começando a avançar!"
+    },
+    "ONEHUNDRED_POSTS": {
+      "title": "100 postagens",
+      "description": "Publicou 100 postagens. Isso que chamamos de perseverança!"
+    },
+    "NECROMANCER": {
+      "title": "Necromante",
+      "description": "Fez alguma coisa que não tem nenhuma função óbvia."
+    },
+    "ODRADEK": {
+      "title": "Odradek",
+      "description": "Did something that has no apparent function."
+    }
+  },
+  "emptyMessage": "Vazio...",
+  "e404": "Recurso não encontrado",
+  "e403": "Não autorizado",
+  "modal": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "acknowledge": "Entendi",
+    "goToPremium": "Venha conhecer o Premium",
+    "generalPremiumFeatureExplanation": "{{featureName}} é uma funcionabilidade Premium incrível! Clique abaixo para conhecer todos os detalhes do Journaly Premium ou fique a vontade para continuar escrevendo no Journaly!",
+    "unnamedPremiumFeatureExplanation": "Isso é uma funcionabilidade Premium incrível! Clique abaixo para conhecer todos os detalhes do Journaly Premium ou fique a vontade para continuar escrevendo no Journaly!"
+  },
+  "imageErrors": {
+    "initial": "Erro de comunicação com o servidor do Journaly. Por favor, tente novamente mais tarde.",
+    "dataUpload": "Erro de transferência de imagem ao suporte de armanezamento. Por favor, tente novamente mais tarde.",
+    "allDoneChecksFailed": "Erro ao carregar sua imagem. Por favor, tente novamente mais tarde."
+  },
+  "editor": {
+    "placeholderPrompt": "Tudo começou essa manhã quando..."
+  },
+  "notifications": {
+    "feedTitle": "Notificações",
+    "emptyFeed": "You have no notifications... yet!",
+    "levelOne": {
+      "newFollowers": "1 new Journaler followed you",
+      "newFollowers_plural": "{{count}} new Journalers followed you",
+      "threadComments": "There is 1 new feedback comment on your post",
+      "threadComments_plural": "There are {{count}} new feedback comments on your post",
+      "threadCommentsSubscribed": "There is 1 new feedback comment on this post",
+      "threadCommentsSubscribed_plural": "There are {{count}} new feedback comments on this post",
+      "postComments": "There is 1 new general comment on your post",
+      "postComments_plural": "There are {{count}} new general comments on your post",
+      "postCommentsSubscribed": "There is 1 new general comment on this post",
+      "postCommentsSubscribed_plural": "There are {{count}} new general comments on this post",
+      "postClaps": "1 Journaler clapped for your post",
+      "postClaps_plural": "{{count}} Journalers clapped for your post",
+      "threadCommentThanks": "{{userIdentifier}} said thanks for 1 feedback comment",
+      "threadCommentThanks_plural": "{{userIdentifier}} said thanks for {{count}} feedback comments",
+      "newPosts": "A Journaler you follow published a new post",
+      "newPosts_plural": "Journalers you follow published {{count}} new posts"
+    },
+    "levelTwo": {
+      "newFollowers": "This awesome Journaler is now following you",
+      "newFollowers_plural": "These {{count}} awesome Journalers are now following you",
+      "threadCommentThanks": "{{userIdentifier}} said thank you for this helpful feedback comment",
+      "threadCommentThanks_plural": "{{userIdentifier}} said thank you for the following {{count}} helpful feedback comments",
+      "postClaps": "This Journaler clapped for your post",
+      "postClaps_plural": "These {{count}} Journalers clapped for your post",
+      "newPosts": "New posts from your community"
+    },
+    "actions": {
+      "markAsRead": "Read",
+      "delete": "Delete"
+    }
+  }
+}

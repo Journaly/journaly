@@ -1,0 +1,172 @@
+{
+  "breadcrumbs": {
+    "settings": "Configurações",
+    "profile": "Editar seu perfil",
+    "account": "Conta",
+    "subscription": "Assinatura"
+  },
+  "nav": {
+    "profile": "Informações do perfil",
+    "account": "Conta",
+    "subscription": "Assinatura"
+  },
+  "updateButton": "Atualizar",
+  "profile": {
+    "details": {
+      "legend": "Seus detalhes",
+      "submitImage": "Carregar imagem",
+      "nameLabel": "Seu nome (opcional)",
+      "displayNameLabel": "Nome de usuário",
+      "displayNameError": "Nome de usuário obrigatório",
+      "emailLabel": "E-mail",
+      "emailError": "E-mail obrigatório",
+      "emailVerifiedBadgeText": "Verificado/a",
+      "emailUnverifiedBadgeText": "Verificação pendente",
+      "resendEmailVerificationButtonText": "Clique aqui",
+      "resendEmailVerificationText": "para enviar o e-mail de verificação novamente",
+      "resendEmailVerificationToastSuccess": "Enviamos o e-mail de verificação!",
+      "resendEmailVerificationToastError": "Erro ao enviar o e-mail de verificação",
+      "locationLabel": "Localização (opcional)",
+      "updateSuccess": "Detalhes do perfil atualizados com sucesso.",
+      "cityLabel": "Cidade (opcional)",
+      "cityPlaceholder": "Em qual cidade você mora?",
+      "countryLabel": "País (opcional)",
+      "countryPlaceholder": "Em qual país você mora?",
+      "updateHandleWarning": "Aviso: atualizar seu nome de usuário irá suspender os links que você já teve compartilhado com o seu perfil. Se você  continuar, recomendamos que você atualize os links para terem seu novo nome de usuário."
+    },
+    "languages": {
+      "legend": "Línguas",
+      "nativeLanguagesLabel": "Qual/quais língua(s) você fala em nível nativo?",
+      "learningLanguagesLabel": "Qual/quais língua(s) você está aprendendo?",
+      "welcomeModalFormLabel": "Nos diga sua(s) língua(s) nativa(s) e qual/quais língua(s) está aprendendo.",
+      "languageSelectPlaceholder": "Selecione uma língua...",
+      "levelSelectPlaceholder": "Selecione um nível...",
+      "addLanguageButtonText": "Adicionar",
+      "levels": {
+        "beginner": "Iniciante",
+        "intermediate": "Intermediário",
+        "advanced": "Avançado",
+        "native": "Nativo"
+      }
+    },
+    "uiLanguage": {
+      "legend": "UI Language",
+      "placeholder": "Select a language...",
+      "description": "Select the language you'd like the site UI to be displayed in."
+    },
+    "bio": {
+      "legend": "Biografia",
+      "bioLabel": "Nos conte sobre você!",
+      "bioError": "Sua bio deve conter {{characters}} ou menos.",
+      "bioInputDescription": "Máximo de {{characters}} caractéres.",
+      "bioSuccess": "Bio atualizada com sucesso."
+    },
+    "interests": {
+      "legend": "Interesses",
+      "topicsLabel": "Nos conte sobre os assuntos que você tem interesse! Isso nos ajudará a te mostrar postagens que irá gostar e a encontrar pessoas com interesses similares aos seus.",
+      "interestSelectPlaceholder": "Selecione um tema...",
+      "addInterestButtonText": "Adiconar"
+    },
+    "social": {
+      "legend": "Redes sociais",
+      "socialLabel": "Quer se conectar com outros Journalers pelas redes sociais? Ou promover seu trabalho? Diga a todos onde te encontrar.",
+      "facebookPlaceholder": "facebook.com/seuperfil",
+      "youtubePlaceholder": "youtube.com/channel/seucanal",
+      "instagramPlaceholder": "instagram.com/seuperfil",
+      "websitePlaceholder": "Você tem um site?",
+      "success": "Redes sociais atualizadas com sucesso"
+    },
+    "error": {
+      "updateError": "Ocorreu um erro ao atualizar o seu perfil",
+      "handleValidationErrorMessage": "Seu nome de display deve conter somente letras, números, _, - e não deve conter espaços. ",
+      "handleAlreadyinUseError": "Esse nome de usuário já está em uso.",
+      "handleMinimumErrorMessage": "Seu nome de usuário deve conter pelo menos 3 caractéres",
+      "emailValidationErrorMessage": "Endereço de e-mail inválido",
+      "emailAlreadyinUseError": "Esse endereço de e-mail já está em uso.",
+      "websitePatternError": "URL do site inválida. Ex: seudomínio.com ou seusub.domínio.com",
+      "youtubePatternError": "URL do youtube inválida. Ex: youtube.com/channel/SeuCanal or youtube.com/user/SeuUsuario",
+      "facebookPatternError": "URL do facebook inválida. Ex: facebook.com/SeuPerfil or fb.com/SeuPerfil",
+      "instagramPatternError": "URL do Instagram inválida. Ex: instagram.com/SeuPerfil"
+    }
+  },
+  "account": {
+    "updatePasswordForm": {
+      "legend": "Modificar senha",
+      "submitButton": "Atualizar",
+      "oldPasswordLabel": "Escrever senha anterior",
+      "oldPasswordPlaceholder": "Senha anterior",
+      "oldPasswordError": "Escreva sua senha anterior",
+      "newPasswordLabel": "Escolher uma nova senha",
+      "newPasswordPlaceholder": "Nova senha",
+      "newPasswordError": "Escreva sua nova senha",
+      "confirmNewPasswordLabel": "Escreva novamente sua nova senha",
+      "confirmNewPasswordPlaceholder": "Confirmar senha",
+      "confirmNewPasswordError": "Confirme sua nova senha",
+      "confirmNewPasswordMatchError": "As senhas não correspondem",
+      "newPasswordMinimumErrorMessage": "Senha deve conter pelo menos 6 caractéres",
+      "passwordChangeSuccess": "Senha modificada com sucesso",
+      "updateError": "Ocorreu um erro ao atualizar sua senha.",
+      "newPasswordCannotBeTheSameError": "A nova senha não pode ser igual à anterior."
+    }
+  },
+  "subscription": {
+    "title": "Journaly Premium",
+    "subscribeCta": "Assinar!",
+    "subscribeSuccessMessage": "Parabéns! Agora você é um membro do Journaly Premium!",
+    "subscribeFailureMessage": "Ops! Algo deu errado. Por favor, tente novamente.",
+    "premiumGeneralCopy": "Com nossa assinatura premium, você tará accesso às funcionabilidades que tornam a experiência com Journaly mais agradável e mais personalizável, só com o custo de um café por mês! Aqui está uma comparação entre as experiências \"grátis\" e \"premium\":",
+    "premiumFeatureCopy": "Sua assinatura premium apoia a equipe amarosa e trabalhadora por trás das cenas e faz Journaly uma plataforma sustenável para que a experiência principal possa ficar grátis e acessível para todo mundo ❤︎",
+    "currentPlan": "Plano atual:",
+    "changePlan": "Mudar de plano",
+    "cancelSubscription": "Cancelar a assinatura",
+    "subscriptionEndsOn": "Sua assinatura vai terminar em",
+    "subscriptionRenewsOn": "Sua assinatura vai renovar em",
+    "reactivateSubscription": "Reativar sua assinatura",
+    "planSelectPlaceholder": "Qual plano você quer?",
+    "cardOnFile": "Cartão atual:",
+    "updateCard": "Atualizar cartão",
+    "subscriptionStatus": "Estado da assinatura:",
+    "nextBillingDate": "Próxima data de pagamento:",
+    "premiumUser": "usuário premium",
+    "freeUser": "usuário padrão",
+    "monthlyPrice": "1 mês / £5",
+    "annualPrice": "1 ano / £42",
+    "studentPrice": "Desconto para estudantes: 1 ano / £15",
+    "paymentInfo": "Informações de pagamento",
+    "cancelSubscriptionConfirmationTitle": "Cancelar sua assinatura do Journaly Premium",
+    "cancelSubscriptionConfirmationBody": "Você tem certeza que quer cancelar sua assinatura?",
+    "cancellationSuccess": "Você cancelou sua assinatura",
+    "cancellationError": "Ocorreu um erro ao cancelar sua assinatura",
+    "updateCardSuccess": "Você atualizou seu cartão com sucesso",
+    "updateCardError": "Ocorreu um erro ao atualizar o cartão",
+    "studentEmailVerificationNeededMsg": "Por gentileza, verifique seu e-mail estudantil para conseguir o desconto para estudantes. Clique no link no e-mail que você recebeu após ter criado sua conta. Entre nas Configurações > Informações do Perfil para enviar o e-mail de verificação novamente.",
+    "freePlan": "Grátis",
+    "premiumPlan": "Premium",
+    "only": "Only",
+    "onlyPrice": "£3.50/month",
+    "paidAnnually": "paid annually!",
+    "features": {
+      "unlimitedLanguages": "Write in unlimited languages",
+      "unlimitedPosts": "Write unlimited posts",
+      "unlimitedFeedback": "Get unlimited feedback",
+      "customHeaderImages": "Custom post header images",
+      "advancedFiltering": "Advanced post filtering",
+      "badges": "Earn Badges for milestones",
+      "stats": "Activity & Stats Tracking",
+      "unsplashIntegration": "Unsplash integration (coming soon)",
+      "directMessaging": "Direct Messaging (coming soon)",
+      "userGroups": "User Groups (coming soon)",
+      "inlineImages": "Inline images inside posts",
+      "postBumping": "Bump posts to top of the feed",
+      "postSaving": "Save your favourite posts",
+      "supportTheCreators": "Support the creators",
+      "supportFreeLearning": "Support free language learning",
+      "writingPrompts": "Writing prompts (coming soon)",
+      "focusMode": "Focus Mode (coming soon)",
+      "postThemes": "Post Themes (coming soon)",
+      "audioPosts": "Audio posts (coming soon)",
+      "weeklyGoals": "Weekly Goals (coming soon)",
+      "privateShareLinks": "Private Share Links"
+    }
+  }
+}

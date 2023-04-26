@@ -1,0 +1,32 @@
+{
+  "card": {
+    "speaks": "Fala",
+    "learns": "Está aprendendo",
+    "likes": "Curte"
+  },
+  "stats": {
+    "summary": {
+      "title": "Summary",
+      "userAge": "{{name}} has been journaling on Journaly since {{joinDate}} (that's {{age}}).",
+      "postCount": "In that time they've published {{postCount}} posts in {{languageCount}} different languages.",
+      "noPosts": "So far they haven't written any posts.",
+      "commentCounts": "They've also left {{postCommentCount}} general comments on posts and {{threadCommentCount}} inline feedback comments, helping other users improve their language skills.",
+      "noComments": "They haven't left any feedback on other journalers' posts yet.",
+      "thanksCount": "For their hard work helping others, they've been thanked {{thanksCount}} times."
+    },
+    "activity": {
+      "title": "Activity History",
+      "types": {
+        "posts": "Posts",
+        "postComments": "Post Comments",
+        "threadComments": "Inline Comments"
+      }
+    }
+  },
+  "statsTitle": "Estatísticas",
+  "postsTitle": "Postagens recentes",
+  "emptyPosts": "{{user}} não escreveu postagens ainda.",
+  "loggedInUserEmptyPosts": "Você não tem nenhuma postagem recente. <1> Escrever uma nova postagem</1>!",
+  "follow": "Seguir",
+  "unfollow": "Deixar de seguir"
+}

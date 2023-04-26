@@ -1,0 +1,10 @@
+{
+  "pageTitle": "Meu feed",
+  "noPostsMessage": "Nada para ver ainda...",
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Próxima",
+    "page": "Página",
+    "of": "de"
+  }
+}

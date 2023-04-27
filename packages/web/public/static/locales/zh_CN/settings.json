@@ -109,12 +109,12 @@
       "newPasswordCannotBeTheSameError": "新密码不可与旧密码相同"
     },
     "notificationSettings": {
-      "legend": "Notifications",
-      "digestEmailSelectLabel": "Digest Email (Notifies you of all activity)",
-      "digestEmailSelectPlaceholder": "How often would you like to receive the digest email?",
-      "updateSettingsButtonText": "Update",
-      "updateDigestEmailSuccessMessage": "Your settings have been updated successfully!",
-      "updateDigestEmailErrorMessage": "Your settings have been updated successfully!"
+      "legend": "通知",
+      "digestEmailSelectLabel": "Email通知",
+      "digestEmailSelectPlaceholder": "你希望收到Email通知的频率?",
+      "updateSettingsButtonText": "更新",
+      "updateDigestEmailSuccessMessage": "你的设定已更新成功!",
+      "updateDigestEmailErrorMessage": "更新失败"
     }
   },
   "subscription": {

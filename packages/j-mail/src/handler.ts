@@ -138,7 +138,7 @@ export const sendUpdateEmails: Handler = async (event, context) => {
     // skip enqueueEmail if 'OFF'.
     // When we build support for 'WEEKLY' we'll need to make this
     // logic a little more sophisticated.
-    if (data.userConfig.digestEmail !== DigestEmailConfiguration.OFF) {
+    if (data?.userConfig.digestEmail !== DigestEmailConfiguration.OFF) {
       await enqueueEmail({
         from: 'robin@journaly.com',
         to: data.user.email,

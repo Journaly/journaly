@@ -5,7 +5,7 @@ import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'
 import UILanguageSelect from '@/components/UILanguageSelect'
 
-const UILanguageForm = ({}) => {
+const UILanguageForm = () => {
   const { t } = useTranslation('settings')
 
   return (

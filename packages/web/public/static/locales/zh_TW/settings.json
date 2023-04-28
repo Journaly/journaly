@@ -107,6 +107,14 @@
       "passwordChangeSuccess": "密碼更改成功",
       "updateError": "密碼更新失敗",
       "newPasswordCannotBeTheSameError": "新密碼不可與舊密碼相同"
+    },
+    "notificationSettings": {
+      "legend": "通知",
+      "digestEmailSelectLabel": "Email通知",
+      "digestEmailSelectPlaceholder": "你希望收到Email通知的頻率?",
+      "updateSettingsButtonText": "更新",
+      "updateDigestEmailSuccessMessage": "你的設定已更新成功!",
+      "updateDigestEmailErrorMessage": "更新失敗"
     }
   },
   "subscription": {

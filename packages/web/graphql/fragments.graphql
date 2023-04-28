@@ -41,6 +41,10 @@ fragment CurrentUserFragment on User {
   }
 }
 
+fragment UserConfigurationFragment on UserConfiguration {
+  digestEmail
+}
+
 fragment SocialMediaFragment on User {
   socialMedia {
     id

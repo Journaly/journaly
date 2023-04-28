@@ -173,7 +173,12 @@
       "postThemes": "Temi per i post (presto disponibile)",
       "audioPosts": "Post audio (presto disponibile)",
       "weeklyGoals": "Obiettivi settimanali (presto disponibile)",
-      "privateShareLinks": "Link di condivisione in privato"
+      "privateShareLinks": "Link di condivisione in privato",
+      "numSupportedLanguages": "115 languages supported",
+      "privateGroups": "Private Groups (coming soon)",
+      "correctionsInDms": "Corrections in DMs (coming soon)",
+      "savedMessagesInDms": "Saved messages (coming soon)",
+      "numSupportedUiLanguages": "U.I. available in 7 languages"
     }
   }
 }

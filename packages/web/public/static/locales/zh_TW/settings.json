@@ -174,7 +174,12 @@
       "postThemes": "主題日誌（即將推出）",
       "audioPosts": "聲音日誌（即將推出）",
       "weeklyGoals": "每周目標（即將推出）",
-      "privateShareLinks": "私密分享鏈接"
+      "privateShareLinks": "私密分享鏈接",
+      "numSupportedLanguages": "115 languages supported",
+      "privateGroups": "Private Groups (coming soon)",
+      "correctionsInDms": "Corrections in DMs (coming soon)",
+      "savedMessagesInDms": "Saved messages (coming soon)",
+      "numSupportedUiLanguages": "U.I. available in 7 languages"
     }
   }
 }

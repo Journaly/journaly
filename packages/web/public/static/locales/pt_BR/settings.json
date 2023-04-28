@@ -166,7 +166,12 @@
       "postThemes": "Post Themes (coming soon)",
       "audioPosts": "Audio posts (coming soon)",
       "weeklyGoals": "Weekly Goals (coming soon)",
-      "privateShareLinks": "Private Share Links"
+      "privateShareLinks": "Private Share Links",
+      "numSupportedLanguages": "115 languages supported",
+      "privateGroups": "Private Groups (coming soon)",
+      "correctionsInDms": "Corrections in DMs (coming soon)",
+      "savedMessagesInDms": "Saved messages (coming soon)",
+      "numSupportedUiLanguages": "U.I. available in 7 languages"
     }
   }
 }

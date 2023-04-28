@@ -9,6 +9,10 @@ type FeatureProps = {
   status?: string
 }
 
+type FeatureComparisonTableProps = {
+  version?: 'HOME' | 'SETTINGS'
+}
+
 const Feature = ({ name, plan, status }: FeatureProps) => {
   const color = plan === 'premium' ? 'white' : 'blue'
   return (
@@ -32,7 +36,7 @@ const Feature = ({ name, plan, status }: FeatureProps) => {
   )
 }
 
-const FeatureComparisonTable = () => {
+const FeatureComparisonTable = ({ version = 'SETTINGS' }: FeatureComparisonTableProps) => {
   const { t } = useTranslation('settings')
 
   return (
@@ -44,6 +48,7 @@ const FeatureComparisonTable = () => {
         <div className="feature-list">
           <ul>
             <Feature name={t('subscription.features.unlimitedLanguages')} plan="free" />
+            <Feature name={t('subscription.features.numSupportedLanguages')} plan="free" />
             <Feature name={t('subscription.features.unlimitedPosts')} plan="free" />
             <Feature name={t('subscription.features.unlimitedFeedback')} plan="free" />
             <Feature name={t('subscription.features.customHeaderImages')} plan="free" />
@@ -51,6 +56,7 @@ const FeatureComparisonTable = () => {
             <Feature name={t('subscription.features.badges')} plan="free" />
             <Feature name={t('subscription.features.stats')} plan="free" />
             <Feature name={t('subscription.features.unsplashIntegration')} plan="free" />
+            <Feature name={t('subscription.features.numSupportedUiLanguages')} plan="free" />
             <Feature
               name={t('subscription.features.directMessaging')}
               plan="free"
@@ -105,6 +111,21 @@ const FeatureComparisonTable = () => {
               plan="premium"
               status="coming soon"
             />
+            <Feature
+              name={t('subscription.features.privateGroups')}
+              plan="premium"
+              status="coming soon"
+            />
+            <Feature
+              name={t('subscription.features.correctionsInDms')}
+              plan="premium"
+              status="coming soon"
+            />
+            <Feature
+              name={t('subscription.features.savedMessagesInDms')}
+              plan="premium"
+              status="coming soon"
+            />
           </ul>
         </div>
       </div>
@@ -118,7 +139,7 @@ const FeatureComparisonTable = () => {
           padding: 25px;
         }
         .free {
-          background: ${theme.colors.gray200};
+          background: ${version === 'SETTINGS' ? theme.colors.gray200 : theme.colors.white};
           box-shadow: 0 7px 30px rgba(0, 0, 0, 0.05);
         }
 

@@ -41,7 +41,7 @@ const TopSection = () => {
           .home-section-top {
             flex-direction: row;
             align-items: center;
-            padding: 90px 20px;
+            padding: 90px 20px 30px;
           }
 
           .home-section-top h1 {

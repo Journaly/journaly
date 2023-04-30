@@ -160,7 +160,7 @@
       "advancedFiltering": "Filtri avanzati per i post",
       "badges": "Ottieni badge per ogni traguardo",
       "stats": "Monitoraggio attività e statistiche",
-      "unsplashIntegration": "Integrazione Unsplash (presto disponibile)", // ?!?
+      "unsplashIntegration": "Free images with Unsplash",
       "directMessaging": "Messaggi privati (presto disponibile)",
       "userGroups": "Gruppi (presto disponibile)",
       "inlineImages": "Immagini inline all'interno dei post",
@@ -173,7 +173,12 @@
       "postThemes": "Temi per i post (presto disponibile)",
       "audioPosts": "Post audio (presto disponibile)",
       "weeklyGoals": "Obiettivi settimanali (presto disponibile)",
-      "privateShareLinks": "Link di condivisione in privato"
+      "privateShareLinks": "Link di condivisione in privato",
+      "numSupportedLanguages": "115 languages supported",
+      "privateGroups": "Private Groups (coming soon)",
+      "correctionsInDms": "Corrections in DMs (coming soon)",
+      "savedMessagesInDms": "Saved messages (coming soon)",
+      "numSupportedUiLanguages": "U.I. available in 7 languages"
     }
   }
 }

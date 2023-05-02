@@ -38,8 +38,6 @@ const Nav = () => {
         </ul>
       </div>
       <style jsx>{`
-        background-color: black;
-
         .header-container {
           display: flex;
           justify-content: space-between;
@@ -48,6 +46,7 @@ const Nav = () => {
           max-width: 1364px;
           margin: 0 auto;
           padding: 0 20px;
+          background-color: black;
         }
 
         .nav-items {

@@ -3,16 +3,18 @@ import theme from '@/theme'
 
 const Logo = () => (
   <Link href="/">
-    <a>
+    <a className="logo-link">
       Journaly
       <style jsx>
         {`
-          font-family: 'Playfair Display', serif;
-          font-size: 24px;
-          color: ${theme.colors.white};
+          .logo-link {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: ${theme.colors.white};
 
-          @media (max-width: 370px) {
-            font-size: 22px;
+            @media (max-width: 370px) {
+              font-size: 22px;
+            }
           }
         `}
       </style>

@@ -101,6 +101,14 @@
       "passwordChangeSuccess": "Das Passwort wurde erfolgreich geändert.",
       "updateError": "Beim Ändern des Passworts ist ein Fehler aufgetreten.",
       "newPasswordCannotBeTheSameError": "Das neue Passwort darf nicht dasselbe wie das alte sein."
+    },
+    "notificationSettings": {
+      "legend": "Notifications",
+      "digestEmailSelectLabel": "Digest Email (Notifies you of all activity)",
+      "digestEmailSelectPlaceholder": "How often would you like to receive the digest email?",
+      "updateSettingsButtonText": "Update",
+      "updateDigestEmailSuccessMessage": "Your settings have been updated successfully!",
+      "updateDigestEmailErrorMessage": "There was an error updating your settings."
     }
   },
   "subscription": {
@@ -147,7 +155,7 @@
       "advancedFiltering": "Filtere Beiträge mit erweiterten Filtern",
       "badges": "Erhalte für Meilensteine Abzeichen",
       "stats": "Verfolge deine Aktivitäten und Statistiken",
-      "unsplashIntegration": "Wähle Bilder von Unsplash (kommt bald)",
+      "unsplashIntegration": "Free images with Unsplash",
       "directMessaging": "Schreibe Privatnachrichten (kommt bald)",
       "userGroups": "Tritt Gruppen bei (kommt bald)",
       "inlineImages": "Integriere Bilder in deinen Text",
@@ -159,7 +167,13 @@
       "focusMode": "Nutze den Fokus-Modus (kommt bald)",
       "postThemes": "Wähle ein Motiv für deinen Beitrag (kommt bald)",
       "audioPosts": "Erstelle Audio-Beiträge (kommt bald)",
-      "weeklyGoals": "Erreiche wöchentliche Ziele (kommt bald)"
+      "weeklyGoals": "Erreiche wöchentliche Ziele (kommt bald)",
+      "numSupportedLanguages": "115 languages supported",
+      "privateShareLinks": "Private Share Links",
+      "privateGroups": "Private Groups (coming soon)",
+      "correctionsInDms": "Corrections in DMs (coming soon)",
+      "savedMessagesInDms": "Saved messages (coming soon)",
+      "numSupportedUiLanguages": "U.I. available in 7 languages"
     }
   }
 }

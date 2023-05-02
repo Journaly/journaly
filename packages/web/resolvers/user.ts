@@ -1,9 +1,4 @@
-import {
-  intArg,
-  stringArg,
-  objectType,
-  extendType,
-} from 'nexus'
+import { intArg, stringArg, objectType, extendType, arg } from 'nexus'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
@@ -12,6 +7,7 @@ import {
   PostStatus,
   EmailVerificationStatus,
   InAppNotificationType,
+  DigestEmailConfiguration,
 } from '@journaly/j-db-client'
 
 import { NotAuthorizedError, UserInputError } from './errors'
@@ -22,6 +18,10 @@ import {
   createInAppNotification,
 } from './utils'
 import { generateToken, validateUpdateUserMutationData } from './utils/userValidation'
+
+type UserConfigurationUpdateData = {
+  digestEmail?: DigestEmailConfiguration
+}
 
 const DatedActivityCount = objectType({
   name: 'DatedActivityCount',
@@ -63,6 +63,7 @@ const User = objectType({
     t.model.createdAt()
     t.model.membershipSubscription()
     t.model.isStudent()
+    t.model.configuration()
     t.model.socialMedia({
       type: 'SocialMedia',
       resolve: async (parent, _args, ctx) => {
@@ -147,15 +148,12 @@ const User = objectType({
 
         return ctx.db.inAppNotification.findMany({
           where: {
-            userId: userId
+            userId: userId,
           },
           take: 99,
-          orderBy: [
-            { readStatus: 'desc' },
-            { bumpedAt: 'desc' },
-          ]
+          orderBy: [{ readStatus: 'desc' }, { bumpedAt: 'desc' }],
         })
-      }
+      },
     })
     t.list.field('activityGraphData', {
       type: 'DatedActivityCount',
@@ -209,7 +207,7 @@ const User = objectType({
             ON post_activity.date = post_comment_activity.date
           ;
         `
-        return stats as any || []
+        return (stats as any) || []
       },
     })
   },
@@ -230,6 +228,14 @@ const UserBadge = objectType({
     t.model.id()
     t.model.type()
     t.model.createdAt()
+  },
+})
+
+const UserConfiguration = objectType({
+  name: 'UserConfiguration',
+  definition(t) {
+    t.model.id()
+    t.model.digestEmail()
   },
 })
 
@@ -416,6 +422,48 @@ const UserMutations = extendType({
         }
 
         return user
+      },
+    })
+
+    t.field('updateUserConfiguration', {
+      type: 'UserConfiguration',
+      args: {
+        digestEmailConfig: arg({
+          type: 'DigestEmailConfiguration',
+          required: false,
+        }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { userId } = ctx.request
+
+        const user = await ctx.db.user.findUnique({
+          where: { id: userId },
+        })
+
+        if (!user) throw new Error('User not found')
+
+        const preUpdatedUserConfiguration = await ctx.db.userConfiguration.findUnique({
+          where: {
+            userId,
+          },
+        })
+
+        if (!preUpdatedUserConfiguration) throw new Error('User configuration not found')
+
+        const updates: UserConfigurationUpdateData = {}
+
+        if (args.digestEmailConfig) {
+          updates.digestEmail = args.digestEmailConfig
+        }
+
+        const updatedUserConfiguration = await ctx.db.userConfiguration.update({
+          data: updates,
+          where: {
+            userId,
+          },
+        })
+
+        return updatedUserConfiguration
       },
     })
 
@@ -679,8 +727,8 @@ const UserMutations = extendType({
           type: InAppNotificationType.NEW_FOLLOWER,
           key: {},
           subNotification: {
-            followingUserId: follower.id
-          }
+            followingUserId: follower.id,
+          },
         })
 
         return follower
@@ -791,4 +839,5 @@ export default [
   UserMutations,
   InitiateAvatarImageUploadResponse,
   DatedActivityCount,
+  UserConfiguration,
 ]

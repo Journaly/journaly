@@ -6,7 +6,6 @@ import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import DetailsForm from '@/components/Dashboard/Settings/DetailsForm'
 import LanguagesForm from '@/components/Dashboard/Settings/LanguagesForm'
-import UILanguageForm from '@/components/Dashboard/Settings/UILanguageForm'
 import BioForm from '@/components/Dashboard/Settings/BioForm'
 import InterestsForm from '@/components/Dashboard/Settings/InterestsForm'
 import SocialForm from '@/components/Dashboard/Settings/SocialForm'
@@ -16,7 +15,7 @@ import { useSettingsFormDataQuery } from '@/generated/graphql'
 const ProfileInfo: NextPage = () => {
   const uiLanguage = useUILanguage()
   const { loading, data, refetch } = useSettingsFormDataQuery({
-    variables: { uiLanguage }
+    variables: { uiLanguage },
   })
 
   return (
@@ -36,7 +35,6 @@ const ProfileInfo: NextPage = () => {
                     languageRelations={currentUser.languages}
                     refetch={refetch}
                   />
-                  <UILanguageForm />
                   <BioForm bio={data.currentUser?.bio || ''} />
                   <InterestsForm
                     topics={data.topics}

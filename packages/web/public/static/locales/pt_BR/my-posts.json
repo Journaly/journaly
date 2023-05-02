@@ -1,0 +1,13 @@
+{
+  "pageTitle": "Minhas postagens",
+  "publishedTab": "Publicados",
+  "draftsTab": "Rascunhos",
+  "privateTab": "Private",
+  "publishedEmptyState": "Você não tem nenhuma postagem publicada. Você pode publicar um rascunho ou <1> criar uma nova postagem</1>.",
+  "draftEmptyState": "Você não tem rascunhos.",
+  "privateEmptyState": "Você não tem nenhuma publicação privada ainda.",
+  "errorLoadingPostsMessage": "Erro ao carregar suas publicações."
+}
+
+
+

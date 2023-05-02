@@ -107,6 +107,14 @@
       "passwordChangeSuccess": "密码更改成功",
       "updateError": "密码更新失败",
       "newPasswordCannotBeTheSameError": "新密码不可与旧密码相同"
+    },
+    "notificationSettings": {
+      "legend": "通知",
+      "digestEmailSelectLabel": "Email通知",
+      "digestEmailSelectPlaceholder": "你希望收到Email通知的频率?",
+      "updateSettingsButtonText": "更新",
+      "updateDigestEmailSuccessMessage": "你的设定已更新成功!",
+      "updateDigestEmailErrorMessage": "更新失败"
     }
   },
   "subscription": {
@@ -153,7 +161,7 @@
       "advancedFiltering": "日志高级筛选",
       "badges": "获取成就勋章",
       "stats": "活动 & 数据记录",
-      "unsplashIntegration": "使用 Unsplash（即将推出）",
+      "unsplashIntegration": "Free images with Unsplash",
       "directMessaging": "私人消息（即将推出）",
       "userGroups": "用户小组（即将推出）",
       "inlineImages": "插入图片",
@@ -166,7 +174,12 @@
       "postThemes": "主题日志（即将推出）",
       "audioPosts": "声音日志（即将推出）",
       "weeklyGoals": "每周目标（即将推出）",
-      "privateShareLinks": "私密分享链接"
+      "privateShareLinks": "私密分享链接",
+      "numSupportedLanguages": "115 languages supported",
+      "privateGroups": "Private Groups (coming soon)",
+      "correctionsInDms": "Corrections in DMs (coming soon)",
+      "savedMessagesInDms": "Saved messages (coming soon)",
+      "numSupportedUiLanguages": "U.I. available in 7 languages"
     }
   }
 }

@@ -92,7 +92,7 @@ const Button: React.FC<Props> = (props) => {
           padding: 8px 16px;
           font-size: 14px;
           font-family: inherit;
-          font-weight: 400;
+          font-weight: 600;
           line-height: 24px;
           border-radius: 4px;
           color: ${theme.colors.white};

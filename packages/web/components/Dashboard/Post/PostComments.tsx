@@ -134,14 +134,17 @@ const PostComments = ({
             </div>
             {currentUser && (
               <form onSubmit={createNewPostComment}>
-                <div className="new-comment-block">
-                  <Textarea
-                    placeholder={t('addCommentPlaceholder')}
-                    value={postCommentBody}
-                    onChange={(e) => setPostCommentBody(e.target.value)}
-                    disabled={loading}
-                    rows={4}
-                  />
+                <fieldset>
+                  <div className="new-comment-block">
+                    <Textarea
+                      placeholder={t('addCommentPlaceholder')}
+                      value={postCommentBody}
+                      onChange={(e) => setPostCommentBody(e.target.value)}
+                      disabled={loading}
+                      rows={4}
+                    />
+                  </div>
+
                   <Button
                     type="submit"
                     loading={loading}
@@ -151,7 +154,7 @@ const PostComments = ({
                   >
                     {t('submit')}
                   </Button>
-                </div>
+                </fieldset>
               </form>
             )}
           </>
@@ -210,19 +213,24 @@ const PostComments = ({
           font-style: italic;
         }
 
-        .new-comment-block {
-          border-top: 1px solid ${theme.colors.gray400};
-          margin-top: 5px;
+        fieldset {
+          padding: 0 5px 5px;
+          border: 1px solid ${theme.colors.gray400};
+          border-radius: 5px;
+          background-color: ${theme.colors.gray100};
         }
 
         .new-comment-block :global(textarea) {
           min-height: 4em;
           width: 100%;
           padding: 5px;
-          background-color: transparent;
+          background-color: ${theme.colors.white};
           margin-top: 10px;
           margin-right: 10px;
           resize: vertical;
+          border: 1px solid ${theme.colors.gray400};
+          border-radius: 5px;
+          padding: 0 5px;
         }
 
         .new-comment-block :global(textarea:focus) {

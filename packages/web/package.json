@@ -42,8 +42,8 @@
   "dependencies": {
     "@apollo/client": "3.5.6",
     "@apollo/react-ssr": "4.0.0",
-    "@journaly/j-db-client": "^13.18.2",
-    "@prisma/client": "^3.6.0",
+    "@journaly/j-db-client": "^13.19.0",
+    "@prisma/client": "^3.15.2",
     "@stripe/react-stripe-js": "^1.2.2",
     "@stripe/stripe-js": "^1.12.1",
     "@types/bcryptjs": "^2.4.2",
@@ -135,8 +135,11 @@
     "yargs": "^16.2.0"
   },
   "overrides": {
+    "@journaly/j-db-client": {
+      "@prisma/client": "^3.15.2"
+    },
     "nexus-plugin-prisma": {
-      "@prisma/client": "^3.6.0"
+      "@prisma/client": "^3.15.2"
     },
     "react-hook-form": {
       "react": ">=16"

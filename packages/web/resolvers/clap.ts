@@ -60,7 +60,6 @@ const PostClapMutations = extendType({
           postClap,
         })
 
-
         await createInAppNotification(ctx.db, {
           userId: post.authorId,
           type: InAppNotificationType.POST_CLAP,

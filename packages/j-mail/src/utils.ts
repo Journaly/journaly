@@ -4,6 +4,7 @@ import { format, parseISO } from 'date-fns'
 import {
   PrismaClient,
   User,
+  UserConfiguration,
   Post,
   Thread,
   PostComment,
@@ -27,11 +28,12 @@ export type ValidatedNotification =
   | { type: 'THREAD_COMMENT', notificationDate: Date, comment: Comment, thread: Thread, post: Post, headlineImage: string, commentAuthor: string, }
 
 export type DataForUpdateEmail = {
-  user: User,
-  lastNotificationDate: Date,
-  own: ValidatedNotification[],
-  other: ValidatedNotification[],
-  thanksCount: number,
+  user: User
+  userConfig: UserConfiguration
+  lastNotificationDate: Date
+  own: ValidatedNotification[]
+  other: ValidatedNotification[]
+  thanksCount: number
   clapCount: number
 }
 

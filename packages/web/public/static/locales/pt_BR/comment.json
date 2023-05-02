@@ -1,0 +1,16 @@
+{
+  "postCommentsTitle": "Comentários",
+  "relativeTimeWord": "Há",
+  "save": "Salvar",
+  "cancel": "Cancelar",
+  "submit": "Enviar",
+  "addCommentPlaceholder": "Agora temos comentários de Markdown! Tente escrever com **negrito** ou *itálico*!",
+  "noCommentsYetMessage": "Nenhum comentário... ainda!",
+  "tabGeneralKey": "Geral",
+  "tabOutdatedKey": "Antigo",
+  "noOutdatedThreadsMessage": "Nenhum fio antigo disponível",
+  "deleteCommentConfirmModalTitle": "Apagar comentário",
+  "deleteCommentConfirmModalBody": "Deseja mesmo apagar este comentário?",
+  "numUsersGaveThanks": "{{numThanks}} usuários te agradecaram por este comentário",
+  "nativeBadgeText": "nativo"
+}

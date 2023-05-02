@@ -1,0 +1,56 @@
+{
+  "login": {
+    "title": "Entrar em sua conta",
+    "submitButtonText": "Entrar",
+    "userNotFoundError": "Usuário não encontrado"
+  },
+  "signup": {
+    "title": "Crie uma conta",
+    "submitButtonText": "Inscreva-se!",
+    "goToLoginText": "Já possui uma conta?",
+    "goToLoginLink": "Entrar",
+    "emailInUseError": "Este endereço de email já está cadastrado. Por favor, tente entrar na sua conta",
+    "handleInUseError": "Este nome de usuário já está cadastrado",
+    "invalidPasswordError": "Senha inválida",
+    "invalidHandleError": "Nome de usuário invalido"
+  },
+  "requestReset": {
+    "title": "Solicitar email de recuperação de senha",
+    "helperText": "Escreva seu endereço de e-mail e enviaremos um link para a recuperação de sua senha",
+    "submitButtonText": "Solicitar email de recuperação de senha",
+    "successMessage": "O link para a recuperação de senha foi enviado para seu e-mail!",
+    "goToLoginText": "Lembra de sua senha?",
+    "goToLoginLink": "Entrar"
+  },
+  "resetPassword": {
+    "title": "Modificar sua senha",
+    "submitButtonText": "Modificar senha",
+    "successMessage": "Você modificou sua senha com sucesso! Entre, por favor.",
+    "invalidOldPasswordError": "A senha antiga não está correta",
+    "passwordsDoNotMatchError": "As senhas estão diferentes",
+    "invalidResetTokenError": "Este código está invalido ou vencido"
+  },
+  "handleInputLabel": "Nome de usuário",
+  "handleInputHelperMessage": "Pode conter letras, números, -, _, e não pode conter espaços.",
+  "handleInputPlaceholder": "Seu nome ou talvez um pseudônimo divertido!",
+  "handleRequiredErrorMessage": "Nome de usuário é obrigatório.",
+  "handleValidationErrorMessage": "Seu nome de usuário deve conter apenas letras, números, _, - e não deve conter espaços.",
+  "handleMinimumErrorMessage": "Seu nome de usuário deve conter ao menos 3 letras.",
+  "emailInputLabel": "E-mail",
+  "emailInputPlaceholder": "Seu endereço de e-mail",
+  "emailRequiredErrorMessage": "Endereço de email obrigatório",
+  "emailValidationErrorMessage": "E-mail inválido",
+  "passwordInputLabel": "Senha",
+  "passwordInputPlaceholder": "Uma senha segura",
+  "passwordRequiredErrorMessage": "A senha é obrigatória",
+  "passwordValidationErrorMessage": "Senha inválida",
+  "passwordMinimumErrorMessage": "A senha deve conter pelo menos 6 caractéres",
+  "confirmPasswordInputLabel": "Confirmar senha",
+  "confirmPasswordInputPlaceholder": "Insira sua senha novamente",
+  "confirmPasswordRequiredErrorMessage": "É preciso confirmar sua senha",
+  "confirmPasswordValidationErrorMessage": "As duas senhas divergem",
+  "goToSignupText": "Não tem uma conta?",
+  "goToSignupLink": "Inscreva-se",
+  "goToRequestResetText": "Não consegue acessar sua conta?",
+  "goToRequestResetLink": "Recupere sua senha."
+}

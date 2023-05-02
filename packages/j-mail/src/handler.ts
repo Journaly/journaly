@@ -4,6 +4,8 @@ import { Handler, SQSHandler } from 'aws-lambda'
 import {
   EmailNotificationType,
   User,
+  UserConfiguration,
+  DigestEmailConfiguration,
 } from '@journaly/j-db-client'
 
 import updateEmail from './emails/updateEmail' 
@@ -33,10 +35,21 @@ const getDataForUpdateEmail = async (
   let thanksCount = 0
   let clapCount = 0
 
-  const user = (await prisma.user.findUnique({ where: { id: userId } })) as User
+  const user = (await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  })) as User
+
+  const userConfig = (await prisma.userConfiguration.findUnique({
+    where: {
+      userId,
+    },
+  })) as UserConfiguration
+
   const notes = await prisma.pendingNotification.findMany({
     where: {
-      userId
+      userId,
     },
     include: {
       user: true,
@@ -45,7 +58,7 @@ const getDataForUpdateEmail = async (
           post: {
             include: {
               headlineImage: true,
-            }
+            },
           },
           author: true,
         },
@@ -57,22 +70,21 @@ const getDataForUpdateEmail = async (
               post: {
                 include: {
                   headlineImage: true,
-                }
-              }
-            }
+                },
+              },
+            },
           },
           author: true,
         },
       },
       commentThanks: true,
       postClap: true,
-    }
+    },
   })
 
   notes.forEach((note) => {
-    lastNotificationDate = (lastNotificationDate < note.createdAt)
-      ? note.createdAt
-      : lastNotificationDate
+    lastNotificationDate =
+      lastNotificationDate < note.createdAt ? note.createdAt : lastNotificationDate
 
     if (note.type === EmailNotificationType.POST_COMMENT) {
       if (note.postComment) {
@@ -106,6 +118,7 @@ const getDataForUpdateEmail = async (
 
   return {
     user,
+    userConfig,
     lastNotificationDate,
     own: validated.filter(({ post }) => post.authorId === userId),
     other: validated.filter(({ post }) => post.authorId !== userId),
@@ -121,20 +134,26 @@ export const sendUpdateEmails: Handler = async (event, context) => {
     const data = await getDataForUpdateEmail(userId)
     const body = updateEmail(data)
 
-    await enqueueEmail({
-      from: 'robin@journaly.com',
-      to: data.user.email,
-      subject: 'New Activity on Journaly 📖',
-      html: body,
-    })
+    // Currently we only support 'DAILY' OR 'OFF' so we simply
+    // skip enqueueEmail if 'OFF'.
+    // When we build support for 'WEEKLY' we'll need to make this
+    // logic a little more sophisticated.
+    if (data?.userConfig.digestEmail !== DigestEmailConfiguration.OFF) {
+      await enqueueEmail({
+        from: 'robin@journaly.com',
+        to: data.user.email,
+        subject: 'New Activity on Journaly 📖',
+        html: body,
+      })
+    }
 
     return prisma.pendingNotification.deleteMany({
       where: {
         userId,
         createdAt: {
-          lte: data.lastNotificationDate
-        }
-      }
+          lte: data.lastNotificationDate,
+        },
+      },
     })
   })
 

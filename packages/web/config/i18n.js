@@ -5,7 +5,7 @@ const getLocalePath = () => {
   if (typeof window === 'undefined') {
     // Hack because of vercel funkiness with loading files of the FS
     if (process.env.NODE_ENV === 'production') {
-      return path.resolve(process.cwd(), '.next/server/chunks/public/static/locales')
+      return path.resolve(process.cwd(), '.next/public/static/locales')
     } else {
       return path.resolve('./public/static/locales')
     }

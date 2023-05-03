@@ -20,6 +20,8 @@ export type NodeType = {
   underline?: boolean | null
   type?: string | null
   url?: string | null
+  colSizes?: number[] | null
+  size?: number | null
   children?: NodeType[] | undefined | null
 }
 
@@ -115,11 +117,25 @@ const htmlifyEditorNode = (node: NodeType): string => {
     return `<img src=${node.url}>`
   } else {
     const tagName = getNodeTagName(node)
-    const content = (node.children || []).map(htmlifyEditorNode).join('')
+    let content = (node.children || []).map(htmlifyEditorNode).join('')
     const attributes: string[] = []
 
     if (node.type === 'link' && node.url) {
       attributes.push(`href="${node.url}" target="_blank" rel="noopener noreferrer"`)
+    } else if (node.type === 'tr' && node.size) {
+      attributes.push(`style="height: ${node.size}px;"`)
+    }
+
+    if (node.type === 'table' && node.colSizes) {
+      attributes.push('style="table-layout:fixed;"')
+      content = `
+        <colgroup style="width: 100%;">
+          ${node.colSizes.map(size => `<col style="min-width: 48px; width: ${size}px;">`).join('\n')}
+        </colgroup>
+        <tbody>
+          ${content}
+        </tbody>
+      `
     }
 
     return `<${tagName} ${attributes.join(' ')}>${content}</${tagName}>`

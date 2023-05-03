@@ -1,8 +1,15 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
-import { createEditor, Editor, Descendant } from 'slate'
-import { Slate, withReact } from 'slate-react'
-import { withHistory } from 'slate-history'
-import { pipe, TablePlugin, EditablePlugins } from '@udecode/slate-plugins'
+import { Editor } from 'slate'
+import {
+  createPlateEditor,
+  Plate,
+  PlateProvider,
+  PlateEditor,
+  TElement,
+  createPlugins,
+  createTablePlugin,
+  createPlateUI,
+} from '@udecode/plate'
 import isHotkey from 'is-hotkey'
 
 import theme from '@/theme'
@@ -10,7 +17,7 @@ import PostBodyStyles from '@/components/PostBodyStyles'
 import Toolbar from './Toolbar'
 import RenderElement from './RenderElement'
 import RenderLeaf from './RenderLeaf'
-import { withLinks, withImages, toggleMark, options, MarkType } from './helpers'
+import { withLinks, withImages, toggleMark, MarkType } from './helpers'
 import usePlayPolyphonicSound from '@/hooks/usePlayPolyphonicSound'
 import useAutosavedState from '@/hooks/useAutosavedState'
 
@@ -46,14 +53,12 @@ const KEY_BLACK_LIST = new Set([
 ])
 
 type JournalyEditorProps = {
-  value: Descendant[]
-  setValue: (value: Descendant[]) => void
+  value: TElement[]
+  setValue: (value: TElement[]) => void
   slateRef: React.RefObject<Editor>
   allowInlineImages: boolean
   disabled?: boolean
 }
-const plugins = [TablePlugin(options)]
-
 const JournalyEditor = ({
   value,
   setValue,
@@ -63,15 +68,24 @@ const JournalyEditor = ({
 }: JournalyEditorProps) => {
   const renderElement = useCallback((props) => <RenderElement {...props} />, [])
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
-  const editor = useMemo(() => {
-    const withPlugins: ((ed: Editor) => Editor)[] = [withHistory, withLinks]
 
-    if (allowInlineImages) {
-      withPlugins.push(withImages)
-    }
-
-    return pipe(withReact(createEditor()), ...withPlugins)
+  const plugins = useMemo(() => {
+    return createPlugins(
+      [ createTablePlugin({}) ],
+      {
+        components: createPlateUI()
+      }
+    )
   }, [])
+
+  const editor = useMemo(() => {
+    const editor = withLinks(createPlateEditor({
+      plugins: plugins as any
+    }) as Editor)
+
+    return allowInlineImages ? withImages(editor) : editor
+  }, [])
+
 
   const [shouldPlayTypewriterSounds, setShouldPlayTypewriterSounds] = useAutosavedState(false, {
     key: 'shouldPlayTypewriterSounds',
@@ -83,16 +97,24 @@ const JournalyEditor = ({
     1,
   )
 
-  const handlePlayTypewriterSound = (e: React.KeyboardEvent) => {
+  const onKeyDown = useCallback((event: React.KeyboardEvent) => {
     if (shouldPlayTypewriterSounds) {
-      if (KEY_BLACK_LIST.has(e.key)) return
-      else if (e.key === 'Enter') {
+      if (KEY_BLACK_LIST.has(event.key)) return
+      else if (event.key === 'Enter') {
         playTypewriterReturnSound()
       } else {
         playTypewriterSound()
       }
     }
-  }
+
+    Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
+      // Convert React keyboard event to native keyboard event
+      if (isHotkey(hotkey, event as unknown as KeyboardEvent)) {
+        event.preventDefault()
+        toggleMark(editor, mark)
+      }
+    })
+  }, [editor, shouldPlayTypewriterSounds, playTypewriterSound, playTypewriterReturnSound])
 
   useEffect(() => {
     ;(slateRef as React.MutableRefObject<Editor>).current = editor
@@ -105,36 +127,30 @@ const JournalyEditor = ({
   return (
     <div className="editor-wrapper">
       <div className="editor-container">
-        <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
-          <Toolbar
-            allowInlineImages={allowInlineImages}
-            shouldPlayTypewriterSounds={shouldPlayTypewriterSounds}
-            onToggleShouldPlayTypewriterSounds={() =>
-              setShouldPlayTypewriterSounds(!shouldPlayTypewriterSounds)
-            }
+        <PlateProvider
+          editor={editor as PlateEditor}
+          onChange={(v) => setValue(v)}
+          value={value}
+        >
+          <Plate
+            editableProps={{
+              spellCheck: true,
+              readOnly: disabled,
+              onKeyDown: onKeyDown,
+              renderElement,
+              renderLeaf,
+            }}
+            firstChildren={(
+              <Toolbar
+                allowInlineImages={allowInlineImages}
+                shouldPlayTypewriterSounds={shouldPlayTypewriterSounds}
+                onToggleShouldPlayTypewriterSounds={() =>
+                  setShouldPlayTypewriterSounds(!shouldPlayTypewriterSounds)
+                }
+              />
+            )}
           />
-          <EditablePlugins
-            plugins={plugins}
-            renderElement={[renderElement]}
-            renderLeaf={[renderLeaf]}
-            readOnly={disabled}
-            spellCheck
-            onKeyDown={[
-              (event: React.KeyboardEvent) => {
-                handlePlayTypewriterSound(event)
-                Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
-                  // Convert React keyboard event to native keyboard event
-                  if (isHotkey(hotkey, event as unknown as KeyboardEvent)) {
-                    event.preventDefault()
-                    toggleMark(editor, mark)
-                  }
-                })
-              },
-            ]}
-            onKeyDownDeps={[shouldPlayTypewriterSounds]}
-            data-testid="post-body"
-          />
-        </Slate>
+        </PlateProvider>
       </div>
       <PostBodyStyles parentClassName="editor-container" />
       <style jsx>{`

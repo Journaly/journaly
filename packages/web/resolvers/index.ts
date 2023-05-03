@@ -54,6 +54,9 @@ const schemaOpts: Parameters<typeof makeSchema>[0] = {
   plugins: [
     nexusPrisma({
       shouldGenerateArtifacts: reflectionRun,
+      inputs: {
+        prismaClient: '@journaly/j-db-client'
+      }
     }),
     declarativeWrappingPlugin(),
   ],

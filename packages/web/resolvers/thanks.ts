@@ -1,8 +1,8 @@
-import { InAppNotificationType } from '.prisma/client'
 import { intArg, objectType, extendType } from 'nexus'
 
 import {
   EmailNotificationType,
+  InAppNotificationType,
   BadgeType,
   Prisma,
 } from '@journaly/j-db-client'

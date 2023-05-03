@@ -18,8 +18,10 @@ const BaseToolbarButton = ({ onClick, active, children }: ButtonProps) => {
 
       <style jsx>{`
         .toolbar-button {
-          height: 100%;
+          width: 24px;
+          height: 24px;
           padding: 1px;
+          box-sizing: content-box;
           border: none;
           border-radius: 5px;
           background-color: ${theme.colors.gray800};

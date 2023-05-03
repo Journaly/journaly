@@ -1,9 +1,9 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Descendant } from 'slate'
 import { withApollo } from '@/lib/apollo'
 import { useTranslation } from '@/config/i18n'
+import { TElement } from '@udecode/plate'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import PostEditor, {
@@ -67,7 +67,7 @@ const EditPostPage: NextPage = () => {
       } = postById
 
       setInitialData({
-        body: JSON.parse(bodySrc) as Descendant[],
+        body: JSON.parse(bodySrc) as TElement[],
         topicIds: postTopics.map((x) => x.topic.id),
         title,
         languageId,

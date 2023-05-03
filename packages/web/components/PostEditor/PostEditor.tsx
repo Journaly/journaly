@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Editor, Descendant } from 'slate'
+import { Editor } from 'slate'
+import { TElement } from '@udecode/plate'
 
 import PostHeader from '@/components/PostHeader'
 import JournalyEditor from '@/components/JournalyEditor'
@@ -28,7 +29,7 @@ type BasePostData = {
     smallSize: string
     largeSize: string
   }
-  body: Descendant[]
+  body: TElement[]
 }
 
 type OutputPostData = BasePostData & {
@@ -88,7 +89,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
     key: `${autosaveKey}:title`,
     debounceTime: 1000,
   })
-  const [body, setBody, resetBody] = useAutosavedState<Descendant[]>(initialData.body, {
+  const [body, setBody, resetBody] = useAutosavedState<TElement[]>(initialData.body, {
     initialTimestamp: initialData.timestamp,
     key: `${autosaveKey}:body`,
     debounceTime: 1000,

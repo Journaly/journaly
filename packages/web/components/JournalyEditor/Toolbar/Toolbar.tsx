@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { Popup } from 'reactjs-popup'
 import {
-  ToolbarTable,
+  TableToolbarButton,
   deleteTable,
   deleteColumn,
-  addColumn,
+  insertTableColumn,
   deleteRow,
-  addRow,
-} from '@udecode/slate-plugins'
-import { useSlate, useFocused } from 'slate-react'
+  insertTableRow,
+} from '@udecode/plate'
+import { useSlate } from 'slate-react'
 
 import theme from '@/theme'
 
@@ -27,7 +27,7 @@ import FormatListBulletedIcon from '@/components/Icons/FormatListBulletedIcon'
 import ToggleMarkButton from './ToggleMarkButton'
 import ToolbarButton from './ToolbarButton'
 import InsertImageButton from './InsertImageButton'
-import { options, isTableActive } from '../helpers'
+import { isTableActive } from '../helpers'
 import SwitchToggle from '@/components/SwitchToggle'
 import { useTranslation } from '@/config/i18n'
 import useIntersectionObserver from '@/hooks/userIntersectionObserver'
@@ -48,12 +48,13 @@ const Toolbar = ({
   const [viewportsDiff, setViewportsDiff] = useState(0)
 
   const editor = useSlate()
-  const isEditorFocused = useFocused()
-  const isTableActivated = isEditorFocused && isTableActive(editor)
+  const isTableActivated = isTableActive(editor)
   const tableIcon = (
-    <ToolbarButton type="table" format="insert-table">
-      <FormatTableIcon title="Insert table" titleId="toolbar-insert-table-icon" />
-    </ToolbarButton>
+    <div>
+      <ToolbarButton type="table" format="insert-table">
+        <FormatTableIcon title="Insert table" titleId="toolbar-insert-table-icon" />
+      </ToolbarButton>
+    </div>
   )
 
   const [toolbarObserverRef, toolbarShouldFloat] = useIntersectionObserver({
@@ -116,38 +117,33 @@ const Toolbar = ({
 
             {isTableActivated ? (
               <Popup
-                trigger={<span>{tableIcon}</span>}
+                trigger={tableIcon}
                 position="bottom center"
-                on={['hover', 'focus']}
+                on={['hover', 'focus', 'click']}
                 closeOnDocumentClick
                 className="editor-toolbar-popover"
               >
-                <ToolbarTable
-                  {...options}
+                <TableToolbarButton
                   className="editor-toolbar-popover-item"
-                  transform={addRow}
+                  transform={insertTableRow}
                   icon="Add row"
                 />
-                <ToolbarTable
-                  {...options}
+                <TableToolbarButton
                   className="editor-toolbar-popover-item"
                   transform={deleteRow}
                   icon="Delete row"
                 />
-                <ToolbarTable
-                  {...options}
+                <TableToolbarButton
                   className="editor-toolbar-popover-item"
-                  transform={addColumn}
+                  transform={insertTableColumn}
                   icon="Add column"
                 />
-                <ToolbarTable
-                  {...options}
+                <TableToolbarButton
                   className="editor-toolbar-popover-item"
                   transform={deleteColumn}
                   icon="Delete column"
                 />
-                <ToolbarTable
-                  {...options}
+                <TableToolbarButton
                   className="editor-toolbar-popover-item"
                   transform={deleteTable}
                   icon="Delete table"

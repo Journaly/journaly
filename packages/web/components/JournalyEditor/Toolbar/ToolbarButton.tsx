@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useSlate, useFocused } from 'slate-react'
+import { useSlate } from 'slate-react'
 
 import { useTranslation } from '@/config/i18n'
 
@@ -15,8 +15,7 @@ type ButtonProps = {
 const ToolbarButton = ({ type, format, children }: ButtonProps) => {
   const { t } = useTranslation('post')
   const editor = useSlate()
-  const isEditorFocused = useFocused()
-  const active = isEditorFocused && isTypeActive({ type, format, editor })
+  const active = isTypeActive({ type, format, editor })
 
   const handleClick = useCallback((event: React.MouseEvent) => {
     event.preventDefault()

@@ -6,11 +6,8 @@ import {
   LinkElement,
   TableFamilyElement,
 } from 'slate'
-
 import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
-
-import { ElementWithAttributes } from '@udecode/slate-plugins'
 
 declare module 'slate' {
   interface CustomText {
@@ -61,7 +58,7 @@ declare module 'slate' {
 
 type ImageNode = ImageElement & BaseElement
 type LinkNode = LinkElement & BaseElement
-type TableFamilyNode = TableFamilyElement & ElementWithAttributes & BaseElement
+type TableFamilyNode = TableFamilyElement & BaseElement
 
 const isImageNode = (arg: Node): arg is ImageNode => {
   return 'type' in arg && arg.type === 'image'

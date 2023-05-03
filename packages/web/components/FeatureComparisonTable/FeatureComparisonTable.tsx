@@ -20,9 +20,11 @@ const Feature = ({ name, plan, status }: FeatureProps) => {
       <CheckmarkCircleIcon color={color} />
       <span className={status === 'coming soon' ? 'coming-soon' : ''}>{name}</span>
       <style jsx>{`
-        display: flex;
-        align-items: center;
-        font-weight: 600;
+        li {
+          display: flex;
+          align-items: center;
+          font-weight: 600;
+        }
 
         span {
           margin-left: 10px;

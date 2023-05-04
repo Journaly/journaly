@@ -34,7 +34,6 @@ class GenericErrorBoundary<T> extends React.Component<Props<T>, State> {
     if (this.state.hasError) {
       if (this.props.FallbackComponent) {
         const { FallbackComponent, fallbackProps } = this.props
-        // @Lanny not sure how to fix this one
         return <FallbackComponent {...fallbackProps} />
       }
 

@@ -379,13 +379,13 @@ export const ThreadCommentThanksNotificationLevelTwo: React.FC<LevelTwoNotificat
 
   return (
     <div className="container">
-      <Link href={`/user/${thanksAuthor.handle}`}>
+      <Link href={`/user/${thanksAuthor.handle}`} legacyBehavior>
         <a className="thanks-author" onClick={closeNotificationFeed}>
           <UserAvatar user={thanksAuthor} size={50} />
         </a>
       </Link>
       <p className="title">
-        <Link href={`/user/${thanksAuthor.handle}`}>
+        <Link href={`/user/${thanksAuthor.handle}`} legacyBehavior>
           <a className="user-identifier" onClick={closeNotificationFeed}>
             {getUserIdentifier(thanksAuthor)}{' '}
           </a>
@@ -706,7 +706,7 @@ export const NewPostNotificationLevelTwo: React.FC<LevelTwoNotificationProps> = 
     <div className="container">
       <p className="title">{t('notifications.levelTwo.newPosts')}</p>
       {newPosts.map((post) => (
-        <Link href={`/post/${post.id}`}>
+        <Link href={`/post/${post.id}`} legacyBehavior>
           <a className="post-container">
             <div className="left-section">
               <UserAvatar user={post.author} size={50} />

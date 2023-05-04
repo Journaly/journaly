@@ -133,7 +133,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           {currentUser && (
             <>
               <div className="nav-top">
-                <Link href={`/user/${currentUser.handle}`}>
+                <Link href={`/user/${currentUser.handle}`} legacyBehavior>
                   <a onClick={handleCollapse}>
                     <UserAvatar size={60} user={currentUser} />
                     <p className="current-user-name">{currentUser.handle}</p>
@@ -159,7 +159,6 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                     <span className="nav-link-text">{t('dashboardNav.newPost')}</span>
                   </a>
                 </NavLink>
-
                 <hr />
 
                 <div
@@ -206,7 +205,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               </span>
             )}
             <h1 className="nav-logo">
-              <Link href="/">
+              <Link href="/" legacyBehavior>
                 <a onClick={handleCollapse}>
                   J<span>ournaly</span>
                 </a>
@@ -227,7 +226,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                     {t('helpModal.bodyThree')}
                   </p>
                   <p className="help-modal-copy">{t('helpModal.bodyFour')}</p>
-                  <Link href="/terms-of-service">
+                  <Link href="/terms-of-service" legacyBehavior>
                     <a className="j-link">{t('helpModal.termsOfService')}</a>
                   </Link>
                 </>

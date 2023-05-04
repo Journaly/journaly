@@ -2,7 +2,11 @@ import React, { Children } from 'react'
 import Link, { LinkProps } from 'next/link'
 import { useRouter } from 'next/router'
 
-const NavLink: React.FC<LinkProps> = (props) => {
+type NavLinkProps = LinkProps & {
+  children: React.ReactNode
+}
+
+const NavLink: React.FC<NavLinkProps> = (props) => {
   const { href, children, ...otherProps } = props
   const router = useRouter()
   const child = Children.only(children) as React.ReactElement
@@ -14,7 +18,7 @@ const NavLink: React.FC<LinkProps> = (props) => {
   }
 
   return (
-    <Link href={href} {...otherProps}>
+    <Link href={href} {...otherProps} legacyBehavior>
       {React.cloneElement(child, { className })}
     </Link>
   )

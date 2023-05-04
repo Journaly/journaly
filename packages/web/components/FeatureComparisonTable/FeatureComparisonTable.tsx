@@ -39,95 +39,54 @@ const Feature = ({ name, plan, status }: FeatureProps) => {
 }
 
 const FeatureComparisonTable = ({ version = 'SETTINGS' }: FeatureComparisonTableProps) => {
-  const { t } = useTranslation('settings')
+  const { t } = useTranslation('marketing')
 
   return (
     <div className="container">
       <div className="col free">
         <div className="header">
-          <div className="plan">{t('subscription.freePlan')}</div>
+          <div className="plan">{t('plan.freePlan')}</div>
         </div>
         <div className="feature-list">
           <ul>
-            <Feature name={t('subscription.features.unlimitedLanguages')} plan="free" />
-            <Feature name={t('subscription.features.numSupportedLanguages')} plan="free" />
-            <Feature name={t('subscription.features.unlimitedPosts')} plan="free" />
-            <Feature name={t('subscription.features.unlimitedFeedback')} plan="free" />
-            <Feature name={t('subscription.features.customHeaderImages')} plan="free" />
-            <Feature name={t('subscription.features.advancedFiltering')} plan="free" />
-            <Feature name={t('subscription.features.badges')} plan="free" />
-            <Feature name={t('subscription.features.stats')} plan="free" />
-            <Feature name={t('subscription.features.unsplashIntegration')} plan="free" />
-            <Feature name={t('subscription.features.numSupportedUiLanguages')} plan="free" />
-            <Feature
-              name={t('subscription.features.directMessaging')}
-              plan="free"
-              status="coming soon"
-            />
-            <Feature
-              name={t('subscription.features.userGroups')}
-              plan="free"
-              status="coming soon"
-            />
+            <Feature name={t('features.unlimitedLanguages')} plan="free" />
+            <Feature name={t('features.numSupportedLanguages')} plan="free" />
+            <Feature name={t('features.unlimitedPosts')} plan="free" />
+            <Feature name={t('features.unlimitedFeedback')} plan="free" />
+            <Feature name={t('features.customHeaderImages')} plan="free" />
+            <Feature name={t('features.advancedFiltering')} plan="free" />
+            <Feature name={t('features.badges')} plan="free" />
+            <Feature name={t('features.stats')} plan="free" />
+            <Feature name={t('features.unsplashIntegration')} plan="free" />
+            <Feature name={t('features.numSupportedUiLanguages')} plan="free" />
+            <Feature name={t('features.directMessaging')} plan="free" status="coming soon" />
+            <Feature name={t('features.userGroups')} plan="free" status="coming soon" />
           </ul>
         </div>
       </div>
       <div className="col premium">
         <div className="header">
-          <div className="plan">{t('subscription.premiumPlan')}</div>
+          <div className="plan">{t('plan.premiumPlan')}</div>
           <div className="price">
-            {t('subscription.only')} <strong>{t('subscription.onlyPrice')}</strong>{' '}
-            {t('subscription.paidAnnually')}
+            {t('plan.only')} <strong>{t('plan.onlyPrice')}</strong> {t('plan.paidAnnually')}
           </div>
         </div>
         <div className="feature-list">
           <ul>
-            <Feature name={t('subscription.features.inlineImages')} plan="premium" />
-            <Feature name={t('subscription.features.postBumping')} plan="premium" />
-            <Feature name={t('subscription.features.postSaving')} plan="premium" />
-            <Feature name={t('subscription.features.privateShareLinks')} plan="premium" />
-            <Feature name={t('subscription.features.supportTheCreators')} plan="premium" />
-            <Feature name={t('subscription.features.supportFreeLearning')} plan="premium" />
-            <Feature
-              name={t('subscription.features.writingPrompts')}
-              plan="premium"
-              status="coming soon"
-            />
-            <Feature
-              name={t('subscription.features.focusMode')}
-              plan="premium"
-              status="coming soon"
-            />
-            <Feature
-              name={t('subscription.features.postThemes')}
-              plan="premium"
-              status="coming soon"
-            />
-            <Feature
-              name={t('subscription.features.audioPosts')}
-              plan="premium"
-              status="coming soon"
-            />
-            <Feature
-              name={t('subscription.features.weeklyGoals')}
-              plan="premium"
-              status="coming soon"
-            />
-            <Feature
-              name={t('subscription.features.privateGroups')}
-              plan="premium"
-              status="coming soon"
-            />
-            <Feature
-              name={t('subscription.features.correctionsInDms')}
-              plan="premium"
-              status="coming soon"
-            />
-            <Feature
-              name={t('subscription.features.savedMessagesInDms')}
-              plan="premium"
-              status="coming soon"
-            />
+            <Feature name={t('features.inlineImages')} plan="premium" />
+            <Feature name={t('features.postBumping')} plan="premium" />
+            <Feature name={t('features.postSaving')} plan="premium" />
+            <Feature name={t('features.privateShareLinks')} plan="premium" />
+            <Feature name={t('features.supportTheCreators')} plan="premium" />
+            <Feature name={t('features.supportFreeLearning')} plan="premium" />
+            <Feature name={t('features.writingPrompts')} plan="premium" status="coming soon" />
+            <Feature name={t('features.focusMode')} plan="premium" status="coming soon" />
+            <Feature name={t('features.postThemes')} plan="premium" status="coming soon" />
+            <Feature name={t('features.audioPosts')} plan="premium" status="coming soon" />
+            <Feature name={t('features.weeklyGoals')} plan="premium" status="coming soon" />
+            <Feature name={t('features.privateGroups')} plan="premium" status="coming soon" />
+            <Feature name={t('features.correctionsInDms')} plan="premium" status="coming soon" />
+            <Feature name={t('features.savedMessagesInDms')} plan="premium" status="coming soon" />
           </ul>
         </div>
       </div>

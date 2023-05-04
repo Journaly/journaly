@@ -94,7 +94,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         })
       }
     },
-    onError: (error) => toast.error(error),
+    onError: (error) => toast.error(error.message),
   })
   const createNewCommentThanks = () => {
     createCommentThanks({
@@ -132,7 +132,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         cache.evict({ id: `${data.deleteCommentThanks.__typename}:${data.deleteCommentThanks.id}` })
       }
     },
-    onError: (error) => toast.error(error),
+    onError: (error) => toast.error(error.message),
   })
 
   const deleteExistingCommentThanks = () => {

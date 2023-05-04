@@ -288,7 +288,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         })
       }
     },
-    onError: (error) => toast.error(error),
+    onError: (error) => toast.error(error.message),
   })
 
   const createNewPostClap = () => {
@@ -327,7 +327,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         cache.evict({ id: `${data.deletePostClap.__typename}:${data.deletePostClap.id}` })
       }
     },
-    onError: (error) => toast.error(error),
+    onError: (error) => toast.error(error.message),
   })
 
   const deleteExistingPostClap = () => {

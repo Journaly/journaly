@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
 import { Editor } from 'slate'
+import { RenderElementProps, RenderLeafProps } from 'slate-react'
 import {
   createPlateEditor,
   Plate,
@@ -66,26 +67,24 @@ const JournalyEditor = ({
   disabled,
   allowInlineImages,
 }: JournalyEditorProps) => {
-  const renderElement = useCallback((props) => <RenderElement {...props} />, [])
-  const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, [])
+  const renderElement = useCallback((props: RenderElementProps) => <RenderElement {...props} />, [])
+  const renderLeaf = useCallback((props: RenderLeafProps) => <RenderLeaf {...props} />, [])
 
   const plugins = useMemo(() => {
-    return createPlugins(
-      [ createTablePlugin({}) ],
-      {
-        components: createPlateUI()
-      }
-    )
+    return createPlugins([createTablePlugin({})], {
+      components: createPlateUI(),
+    })
   }, [])
 
   const editor = useMemo(() => {
-    const editor = withLinks(createPlateEditor({
-      plugins: plugins as any
-    }) as Editor)
+    const editor = withLinks(
+      createPlateEditor({
+        plugins: plugins as any,
+      }) as Editor,
+    )
 
     return allowInlineImages ? withImages(editor) : editor
   }, [])
-
 
   const [shouldPlayTypewriterSounds, setShouldPlayTypewriterSounds] = useAutosavedState(false, {
     key: 'shouldPlayTypewriterSounds',
@@ -97,24 +96,27 @@ const JournalyEditor = ({
     1,
   )
 
-  const onKeyDown = useCallback((event: React.KeyboardEvent) => {
-    if (shouldPlayTypewriterSounds) {
-      if (KEY_BLACK_LIST.has(event.key)) return
-      else if (event.key === 'Enter') {
-        playTypewriterReturnSound()
-      } else {
-        playTypewriterSound()
+  const onKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (shouldPlayTypewriterSounds) {
+        if (KEY_BLACK_LIST.has(event.key)) return
+        else if (event.key === 'Enter') {
+          playTypewriterReturnSound()
+        } else {
+          playTypewriterSound()
+        }
       }
-    }
 
-    Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
-      // Convert React keyboard event to native keyboard event
-      if (isHotkey(hotkey, event as unknown as KeyboardEvent)) {
-        event.preventDefault()
-        toggleMark(editor, mark)
-      }
-    })
-  }, [editor, shouldPlayTypewriterSounds, playTypewriterSound, playTypewriterReturnSound])
+      Object.entries(HOTKEYS).forEach(([hotkey, mark]) => {
+        // Convert React keyboard event to native keyboard event
+        if (isHotkey(hotkey, event as unknown as KeyboardEvent)) {
+          event.preventDefault()
+          toggleMark(editor, mark)
+        }
+      })
+    },
+    [editor, shouldPlayTypewriterSounds, playTypewriterSound, playTypewriterReturnSound],
+  )
 
   useEffect(() => {
     ;(slateRef as React.MutableRefObject<Editor>).current = editor
@@ -127,11 +129,7 @@ const JournalyEditor = ({
   return (
     <div className="editor-wrapper">
       <div className="editor-container">
-        <PlateProvider
-          editor={editor as PlateEditor}
-          onChange={(v) => setValue(v)}
-          value={value}
-        >
+        <PlateProvider editor={editor as PlateEditor} onChange={(v) => setValue(v)} value={value}>
           <Plate
             editableProps={{
               spellCheck: true,
@@ -140,7 +138,7 @@ const JournalyEditor = ({
               renderElement,
               renderLeaf,
             }}
-            firstChildren={(
+            firstChildren={
               <Toolbar
                 allowInlineImages={allowInlineImages}
                 shouldPlayTypewriterSounds={shouldPlayTypewriterSounds}
@@ -148,7 +146,7 @@ const JournalyEditor = ({
                   setShouldPlayTypewriterSounds(!shouldPlayTypewriterSounds)
                 }
               />
-            )}
+            }
           />
         </PlateProvider>
       </div>

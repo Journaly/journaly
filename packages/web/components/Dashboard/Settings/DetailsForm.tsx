@@ -97,6 +97,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
           },
         })
       } catch (err) {
+        // @Lanny not sure how to fix this one
         addServerErrors(err)
       }
     }

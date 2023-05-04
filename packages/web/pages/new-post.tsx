@@ -178,7 +178,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   )
 
   const handlePublishClick = React.useCallback(
-    (e) => {
+    (e: React.MouseEvent) => {
       e.preventDefault()
       if (!currentUser?.emailAddressVerified) {
         setErrorMessage(t('emailVerificationWarning'))
@@ -190,7 +190,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   )
 
   const handleSharePrivatelyClick = React.useCallback(
-    (e) => {
+    (e: React.MouseEvent) => {
       e.preventDefault()
       if (!isPremiumFeatureEligible) {
         setDisplayPremiumFeatureModal(true)
@@ -204,7 +204,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   )
 
   const handleDraftClick = React.useCallback(
-    (e) => {
+    (e: React.MouseEvent) => {
       e.preventDefault()
       createNewPost(PostStatusType.Draft)
     },

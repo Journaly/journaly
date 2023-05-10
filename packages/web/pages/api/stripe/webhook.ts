@@ -66,7 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
       event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SIGNING_SECRET!)
     } catch (err: any) {
-      logPaymentsError(err.message, err, body)
+      logPaymentsError(err, body)
 
       res.status(400).send(`Webhook Error: ${err.message}`)
       return
@@ -173,7 +173,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     // handle creating a new membershipSubscriptionTransaction when upgrading/downgrading
   } catch (err) {
-    logPaymentsError(err.message, err, event)
+    logPaymentsError(err, event)
   }
 
   res.status(200).json({

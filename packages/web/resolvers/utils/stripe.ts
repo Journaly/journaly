@@ -10,16 +10,21 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
 })
 
 const logPaymentsError = (
-  message: string,
-  error?: Error | undefined | null,
+  error: unknown,
   event?: any
 ) => {
+  const message = error instanceof Error
+    ? error.message
+    : error instanceof String
+    ? error
+    : 'Unexpect type was thrown'
+
   console.error(
     'PAYMENTS ERROR:',
     JSON.stringify({
       errorType: 'PAYMENTS_ERROR',
       errorMessage: message,
-      stack: error ? error.stack : new Error().stack,
+      stack: error instanceof Error ? error.stack : new Error().stack,
       event,
     }),
     'PAYMENTS ERROR END'
@@ -33,10 +38,14 @@ const paymentErrorWrapper: PaymentErrorWrapperType = async (fn) => {
   try {
     return await fn()
   } catch (err) {
-    logPaymentsError(
-      err.message,
-      err,
-    )
+    if (err instanceof Error) {
+      logPaymentsError(
+        err.message,
+        err,
+      )
+    } else {
+      logPaymentsError('Code threw something which doesn\'t subclass Error', null)
+    }
 
     throw err
   }

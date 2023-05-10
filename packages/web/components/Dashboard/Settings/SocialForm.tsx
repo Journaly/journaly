@@ -68,7 +68,7 @@ const SocialForm: React.FC<SocialFormProps> = ({ socialMedia, refetch }) => {
         })
         refetch()
       } catch (err) {
-        addServerErrors(err)
+        err instanceof ApolloError && addServerErrors(err)
       }
     }
   }

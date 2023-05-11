@@ -8,6 +8,7 @@ import {
   EmailVerificationStatus,
   InAppNotificationType,
   DigestEmailConfiguration,
+  Prisma,
 } from '@journaly/j-db-client'
 
 import { NotAuthorizedError, UserInputError } from './errors'
@@ -335,13 +336,17 @@ const UserMutations = extendType({
             },
           })
         } catch (ex) {
-          // Prisma's error code for unique constraint violation
-          if (ex.code === 'P2002') {
-            if (ex.meta.target.find((x: string) => x === 'email')) {
+          if (
+            ex instanceof Prisma.PrismaClientKnownRequestError &&
+            ex.code === 'P2002'
+          ) {
+            const target = ex?.meta?.target as string[] | undefined
+
+            if (target?.find((x: string) => x === 'email')) {
               throw new UserInputError(
                 'This email address is already in use. Please try logging in',
               )
-            } else if (ex.meta.target.find((x: string) => x === 'handle')) {
+            } else if (target?.find((x: string) => x === 'handle')) {
               throw new UserInputError('This handle is already in use')
             } else {
               throw ex

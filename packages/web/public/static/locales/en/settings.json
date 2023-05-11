@@ -153,34 +153,6 @@
     "premiumPlan": "Premium",
     "only": "Only",
     "onlyPrice": "$3.50/month",
-    "paidAnnually": "paid annually!",
-    "features": {
-      "unlimitedLanguages": "Write in unlimited languages",
-      "numSupportedLanguages": "115 languages supported",
-      "unlimitedPosts": "Write unlimited posts",
-      "unlimitedFeedback": "Get unlimited feedback",
-      "customHeaderImages": "Custom post header images",
-      "advancedFiltering": "Advanced post filtering",
-      "badges": "Earn badges for milestones",
-      "stats": "Activity & Stats Tracking",
-      "unsplashIntegration": "Free images with Unsplash",
-      "directMessaging": "Direct Messaging (coming soon)",
-      "userGroups": "User Groups (coming soon)",
-      "inlineImages": "Inline images inside posts",
-      "postBumping": "Bump posts to top of the feed",
-      "postSaving": "Save your favourite posts",
-      "supportTheCreators": "Support the creators",
-      "supportFreeLearning": "Support free language learning",
-      "writingPrompts": "Writing prompts (coming soon)",
-      "focusMode": "Focus Mode (coming soon)",
-      "postThemes": "Post Themes (coming soon)",
-      "audioPosts": "Audio posts (coming soon)",
-      "weeklyGoals": "Weekly Goals (coming soon)",
-      "privateShareLinks": "Private Share Links",
-      "privateGroups": "Private Groups (coming soon)",
-      "correctionsInDms": "Corrections in DMs (coming soon)",
-      "savedMessagesInDms": "Saved messages (coming soon)",
-      "numSupportedUiLanguages": "U.I. available in 7 languages"
-    }
+    "paidAnnually": "paid annually!"
   }
 }

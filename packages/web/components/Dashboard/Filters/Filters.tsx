@@ -46,7 +46,7 @@ const Filters: React.FC<Props> = ({
   const [showAdvancedFilters, setShowAdvancedFilters] = useToggle(false)
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const onSearchChange = useCallback(
-    (val): void => {
+    (val: string): void => {
       setPostQueryVars((prevState) => ({
         ...prevState,
         search: val,

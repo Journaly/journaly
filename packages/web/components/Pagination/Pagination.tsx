@@ -31,7 +31,7 @@ const Pagination: React.FC<Props> = ({ currentPage, total, numPerPage, title }) 
         </Head>
       )}
 
-      <Link href={adjacentPageUrl(-1)}>
+      <Link href={adjacentPageUrl(-1)} legacyBehavior>
         <a className="adjacent-page-link" aria-disabled={currentPage <= 1}>
           &larr; {t('pagination.previous')}
         </a>
@@ -39,7 +39,7 @@ const Pagination: React.FC<Props> = ({ currentPage, total, numPerPage, title }) 
       <p>
         {t('pagination.page')} {currentPage} {t('pagination.of')} {pages}
       </p>
-      <Link href={adjacentPageUrl(1)}>
+      <Link href={adjacentPageUrl(1)} legacyBehavior>
         <a className="adjacent-page-link" aria-disabled={currentPage >= pages}>
           {t('pagination.next')} &rarr;
         </a>

@@ -97,7 +97,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ currentUser }) => {
           },
         })
       } catch (err) {
-        addServerErrors(err)
+        err instanceof ApolloError && addServerErrors(err)
       }
     }
   }

@@ -6,6 +6,7 @@ import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import theme from '@/theme'
 
 type Props = {
+  children: React.ReactNode
   loading: boolean
   error?: ApolloError
 }

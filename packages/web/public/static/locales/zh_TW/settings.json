@@ -152,34 +152,6 @@
     "premiumPlan": "會員",
     "paidAnnually": "年度用戶",
     "only": "僅",
-    "onlyPrice": "$3.50/月",
-    "features": {
-      "unlimitedLanguages": "寫作語言無上限",
-      "unlimitedPosts": "發布日誌數量無上限",
-      "unlimitedFeedback": "獲取反饋數量無上限",
-      "customHeaderImages": "個性化日誌封面圖片",
-      "advancedFiltering": "日誌高級篩選",
-      "badges": "獲取成就勛章",
-      "stats": "活動 & 數據記錄",
-      "unsplashIntegration": "Free images with Unsplash",
-      "directMessaging": "私人消息（即將推出）",
-      "userGroups": "用戶小組（即將推出）",
-      "inlineImages": "插入圖片",
-      "postBumping": "主頁置頂",
-      "postSaving": "收藏日誌",
-      "supportTheCreators": "支持創作者",
-      "supportFreeLearning": "支持語言學習",
-      "writingPrompts": "完善寫作（即將推出）",
-      "focusMode": "專註模式（即將推出）",
-      "postThemes": "主題日誌（即將推出）",
-      "audioPosts": "聲音日誌（即將推出）",
-      "weeklyGoals": "每周目標（即將推出）",
-      "privateShareLinks": "私密分享鏈接",
-      "numSupportedLanguages": "115 languages supported",
-      "privateGroups": "Private Groups (coming soon)",
-      "correctionsInDms": "Corrections in DMs (coming soon)",
-      "savedMessagesInDms": "Saved messages (coming soon)",
-      "numSupportedUiLanguages": "U.I. available in 7 languages"
-    }
+    "onlyPrice": "$3.50/月"
   }
 }

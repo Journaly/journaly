@@ -3,7 +3,11 @@ import LoadingWrapper from '@/components/LoadingWrapper'
 import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
 import Nav from '@/components/Site/Nav'
 
-const LandingPageLayout: React.FC = ({ children }) => {
+type LandingPageLayoutProps = {
+  children: React.ReactNode
+}
+
+const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
   const router = useRouter()
   const { data, loading, error } = useCurrentUserQuery()
 

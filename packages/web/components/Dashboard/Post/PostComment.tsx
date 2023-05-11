@@ -78,7 +78,7 @@ const PostComment: React.FC<PostCommentProps> = ({
     <div className="comment" id={`pc-${comment.id}`}>
       <div className="author-body-container">
         <div className="author-block">
-          <Link href={`/user/${comment.author.handle}`}>
+          <Link href={`/user/${comment.author.handle}`} legacyBehavior>
             <a className="author-info">
               <UserAvatar size={30} user={comment.author} />
             </a>

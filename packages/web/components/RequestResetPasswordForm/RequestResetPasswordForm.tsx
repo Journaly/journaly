@@ -66,7 +66,7 @@ const RequestResetPasswordForm: React.FC = () => {
       </fieldset>
       <em>
         {t('requestReset.goToLoginText')}
-        <Link href="/login">
+        <Link href="/login" legacyBehavior>
           <a className="j-link"> {t('requestReset.goToLoginLink')}</a>
         </Link>
       </em>

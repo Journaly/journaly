@@ -1,0 +1,37 @@
+{
+  "plan": {
+    "freePlan": "Free",
+    "premiumPlan": "Premium",
+    "only": "Solo",
+    "onlyPrice": "$3.50 / mese",
+    "paidAnnually": "pagato annualmente!"
+  },
+  "features": {
+    "unlimitedLanguages": "Scrivi in qualsiasi lingua",
+    "unlimitedPosts": "Scrivi post senza limiti",
+    "unlimitedFeedback": "Ricevi feedback senza limiti",
+    "customHeaderImages": "Immagini anteprima post personalizzate",
+    "advancedFiltering": "Filtri avanzati per i post",
+    "badges": "Ottieni badge per ogni traguardo",
+    "stats": "Monitoraggio attività e statistiche",
+    "unsplashIntegration": "Free images with Unsplash",
+    "directMessaging": "Messaggi privati (presto disponibile)",
+    "userGroups": "Gruppi (presto disponibile)",
+    "inlineImages": "Immagini inline all'interno dei post",
+    "postBumping": "Riporta il Post all'Inizio del Feeds",
+    "postSaving": "Salvataggio post preferiti",
+    "supportTheCreators": "Supporta i creatori",
+    "supportFreeLearning": "Supporta l'apprendimento delle lingue in forma gratuita",
+    "writingPrompts": "Prompt di scrittura (presto disponibile)",
+    "focusMode": "Modalità focus (presto disponibile)",
+    "postThemes": "Temi per i post (presto disponibile)",
+    "audioPosts": "Post audio (presto disponibile)",
+    "weeklyGoals": "Obiettivi settimanali (presto disponibile)",
+    "privateShareLinks": "Link di condivisione in privato",
+    "numSupportedLanguages": "115 languages supported",
+    "privateGroups": "Private Groups (coming soon)",
+    "correctionsInDms": "Corrections in DMs (coming soon)",
+    "savedMessagesInDms": "Saved messages (coming soon)",
+    "numSupportedUiLanguages": "U.I. available in 7 languages"
+  }
+}

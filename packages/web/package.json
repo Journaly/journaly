@@ -41,7 +41,6 @@
   },
   "dependencies": {
     "@apollo/client": "3.7.14",
-    "@apollo/react-ssr": "4.0.0",
     "@journaly/j-db-client": "^13.19.1",
     "@prisma/client": "^3.15.2",
     "@stripe/react-stripe-js": "^1.2.2",

@@ -19,13 +19,18 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "plugins": [{ "name": "nexus/typescript-language-service" }],
+    "plugins": [
+      {
+        "name": "nexus/typescript-language-service"
+      }
+    ],
     "removeComments": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "ES6"
+    "target": "ES6",
+    "incremental": true
   },
   "exclude": [
     "node_modules",

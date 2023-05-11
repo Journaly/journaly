@@ -8,6 +8,7 @@ import { useTranslation } from '@/config/i18n'
 type SwipeableElementProps = {
   nonDestructiveAction: () => void
   destructiveAction: () => void
+  children: React.ReactNode
 }
 
 type Swipe = {

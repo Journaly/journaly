@@ -2,7 +2,7 @@ import Link from 'next/link'
 import theme from '@/theme'
 
 const Logo = () => (
-  <Link href="/">
+  <Link href="/" legacyBehavior>
     <a className="logo-link">
       Journaly
       <style jsx>

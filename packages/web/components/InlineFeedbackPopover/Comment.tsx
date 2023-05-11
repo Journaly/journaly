@@ -94,7 +94,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         })
       }
     },
-    onError: (error) => toast.error(error),
+    onError: (error) => toast.error(error.message),
   })
   const createNewCommentThanks = () => {
     createCommentThanks({
@@ -132,7 +132,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
         cache.evict({ id: `${data.deleteCommentThanks.__typename}:${data.deleteCommentThanks.id}` })
       }
     },
-    onError: (error) => toast.error(error),
+    onError: (error) => toast.error(error.message),
   })
 
   const deleteExistingCommentThanks = () => {
@@ -152,7 +152,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
     <div className="comment">
       <div className="author-body-container">
         <div className="author-block">
-          <Link href={`/user/${comment.author.handle}`}>
+          <Link href={`/user/${comment.author.handle}`} legacyBehavior>
             <a className="author-info">
               <UserAvatar user={comment.author} size={30} />
             </a>

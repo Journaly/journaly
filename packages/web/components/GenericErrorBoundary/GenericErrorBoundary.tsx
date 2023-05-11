@@ -1,12 +1,16 @@
 import React from 'react'
 
-type Props<T = {}> = {
-  fallbackProps: T
-  FallbackComponent: React.FC<T>
-} | {
-  fallbackProps?: never
-  FallbackComponent?: never
-}
+type Props<T = {}> =
+  | {
+      fallbackProps: T
+      FallbackComponent: React.FC<T>
+      children: React.ReactNode
+    }
+  | {
+      fallbackProps?: never
+      FallbackComponent?: never
+      children: React.ReactNode
+    }
 
 type State = {
   hasError: boolean
@@ -28,7 +32,6 @@ class GenericErrorBoundary<T> extends React.Component<Props<T>, State> {
 
   render() {
     if (this.state.hasError) {
-
       if (this.props.FallbackComponent) {
         const { FallbackComponent, fallbackProps } = this.props
         return <FallbackComponent {...fallbackProps} />
@@ -37,10 +40,7 @@ class GenericErrorBoundary<T> extends React.Component<Props<T>, State> {
       return (
         <div>
           <h2>Oops, there is an error!</h2>
-          <button
-            type="button"
-            onClick={() => this.setState({ hasError: false })}
-          >
+          <button type="button" onClick={() => this.setState({ hasError: false })}>
             Try again?
           </button>
         </div>

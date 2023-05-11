@@ -106,7 +106,7 @@ const SignupForm: React.FC = () => {
       </fieldset>
       <em>
         {t('signup.goToLoginText')}
-        <Link href="/login">
+        <Link href="/login" legacyBehavior>
           <a className="j-link"> {t('signup.goToLoginLink')}</a>
         </Link>
       </em>

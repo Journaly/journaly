@@ -86,14 +86,14 @@ const LoginForm: React.FC = () => {
       </fieldset>
       <em>
         {t('goToSignupText')}
-        <Link href="/signup">
+        <Link href="/signup" legacyBehavior>
           <a className="j-link"> {t('goToSignupLink')}</a>
         </Link>
       </em>
       <br />
       <em>
         {t('goToRequestResetText')}
-        <Link href="/request-reset">
+        <Link href="/request-reset" legacyBehavior>
           <a className="j-link"> {t('goToRequestResetLink')}</a>
         </Link>
       </em>

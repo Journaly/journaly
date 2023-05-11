@@ -51,7 +51,7 @@ const useNotificationContextValue = (): NotificationContextValue | null => {
 
 const NotificationContext = createContext<NotificationContextValue | null>(null)
 
-const NotificationContextProvider: React.FC<{}> = ({ children }) => {
+const NotificationContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const value = useNotificationContextValue()
   return <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>
 }

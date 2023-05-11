@@ -1,0 +1,37 @@
+{
+  "plan": {
+    "freePlan": "免费",
+    "premiumPlan": "会员",
+    "paidAnnually": "年度用户",
+    "only": "仅",
+    "onlyPrice": "$3.50/月"
+  },
+  "features": {
+    "unlimitedLanguages": "写作语言无上限",
+    "unlimitedPosts": "发布日志数量无上限",
+    "unlimitedFeedback": "获取反馈数量无上限",
+    "customHeaderImages": "个性化日志封面图片",
+    "advancedFiltering": "日志高级筛选",
+    "badges": "获取成就勋章",
+    "stats": "活动 & 数据记录",
+    "unsplashIntegration": "Free images with Unsplash",
+    "directMessaging": "私人消息（即将推出）",
+    "userGroups": "用户小组（即将推出）",
+    "inlineImages": "插入图片",
+    "postBumping": "主页置顶",
+    "postSaving": "收藏日志",
+    "supportTheCreators": "支持创作者",
+    "supportFreeLearning": "支持语言学习",
+    "writingPrompts": "完善写作（即将推出）",
+    "focusMode": "专注模式（即将推出）",
+    "postThemes": "主题日志（即将推出）",
+    "audioPosts": "声音日志（即将推出）",
+    "weeklyGoals": "每周目标（即将推出）",
+    "privateShareLinks": "私密分享链接",
+    "numSupportedLanguages": "115 languages supported",
+    "privateGroups": "Private Groups (coming soon)",
+    "correctionsInDms": "Corrections in DMs (coming soon)",
+    "savedMessagesInDms": "Saved messages (coming soon)",
+    "numSupportedUiLanguages": "U.I. available in 7 languages"
+  }
+}

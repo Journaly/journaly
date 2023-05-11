@@ -146,34 +146,6 @@
     "premiumPlan": "Premium",
     "only": "Nur",
     "onlyPrice": "3,50 $/Monat",
-    "paidAnnually": "mit einem Jahresabo!",
-    "features": {
-      "unlimitedLanguages": "Schreibe auf unbegrenzt vielen Sprachen",
-      "unlimitedPosts": "Schreibe unbegrenzt viele Beiträge",
-      "unlimitedFeedback": "Erhalte unbegrenzt Feedback",
-      "customHeaderImages": "Personalisiere die Titelbilder von Beiträgen",
-      "advancedFiltering": "Filtere Beiträge mit erweiterten Filtern",
-      "badges": "Erhalte für Meilensteine Abzeichen",
-      "stats": "Verfolge deine Aktivitäten und Statistiken",
-      "unsplashIntegration": "Free images with Unsplash",
-      "directMessaging": "Schreibe Privatnachrichten (kommt bald)",
-      "userGroups": "Tritt Gruppen bei (kommt bald)",
-      "inlineImages": "Integriere Bilder in deinen Text",
-      "postBumping": "Ziehe Beiträge im Feed nach ganz oben",
-      "postSaving": "Hefte deine Lieblingsbeiträge an",
-      "supportTheCreators": "Unterstütze die Macher von Journaly",
-      "supportFreeLearning": "Unterstütze kostenloses Sprachenlernen",
-      "writingPrompts": "Erhalte Schreibideen (kommt bald)",
-      "focusMode": "Nutze den Fokus-Modus (kommt bald)",
-      "postThemes": "Wähle ein Motiv für deinen Beitrag (kommt bald)",
-      "audioPosts": "Erstelle Audio-Beiträge (kommt bald)",
-      "weeklyGoals": "Erreiche wöchentliche Ziele (kommt bald)",
-      "numSupportedLanguages": "115 languages supported",
-      "privateShareLinks": "Private Share Links",
-      "privateGroups": "Private Groups (coming soon)",
-      "correctionsInDms": "Corrections in DMs (coming soon)",
-      "savedMessagesInDms": "Saved messages (coming soon)",
-      "numSupportedUiLanguages": "U.I. available in 7 languages"
-    }
+    "paidAnnually": "mit einem Jahresabo!"
   }
 }

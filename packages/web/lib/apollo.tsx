@@ -33,7 +33,7 @@ interface WithApolloProps extends WithApolloInitialProps {
  * @param {Object} [config]
  * @param {Boolean} [config.ssr=true]
  */
-export function withApollo<PageProps extends object, PageInitialProps = PageProps>(
+export function withApollo<PageProps extends object, PageInitialProps extends object>(
   PageComponent: NextPage<PageProps, PageInitialProps>,
   { ssr = true } = {},
 ) {

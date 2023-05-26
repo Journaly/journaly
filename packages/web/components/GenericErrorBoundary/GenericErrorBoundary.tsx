@@ -3,7 +3,7 @@ import React from 'react'
 type Props<T = {}> =
   | {
       fallbackProps: T
-      FallbackComponent: React.FC<T>
+      FallbackComponent: (props: T) => JSX.Element
       children: React.ReactNode
     }
   | {
@@ -16,7 +16,7 @@ type State = {
   hasError: boolean
 }
 
-class GenericErrorBoundary<T> extends React.Component<Props<T>, State> {
+class GenericErrorBoundary<T extends object> extends React.Component<Props<T>, State> {
   constructor(props: Props<T>) {
     super(props)
     this.state = { hasError: false }

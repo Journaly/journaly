@@ -62,18 +62,21 @@ const Toolbar = ({
   })
 
   useEffect(() => {
+    const vvp = visualViewport
+    if (!vvp) return
+
     const onVisualViewportChange = () => {
-      setViewportsDiff(visualViewport.offsetTop)
+      setViewportsDiff(vvp.offsetTop)
     }
 
     onVisualViewportChange()
 
-    visualViewport.addEventListener('resize', onVisualViewportChange)
-    visualViewport.addEventListener('scroll', onVisualViewportChange)
+    vvp.addEventListener('resize', onVisualViewportChange)
+    vvp.addEventListener('scroll', onVisualViewportChange)
 
     return () => {
-      visualViewport.removeEventListener('resize', onVisualViewportChange)
-      visualViewport.removeEventListener('scroll', onVisualViewportChange)
+      vvp.removeEventListener('resize', onVisualViewportChange)
+      vvp.removeEventListener('scroll', onVisualViewportChange)
     }
   }, [])
 

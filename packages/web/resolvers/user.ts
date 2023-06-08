@@ -356,6 +356,15 @@ const UserMutations = extendType({
           }
         }
 
+        await ctx.db.userConfiguration.create({
+          data: {
+            digestEmail: DigestEmailConfiguration.DAILY,
+            user: {
+              connect: { id: user.id },
+            },
+          },
+        })
+
         await sendEmailAddressVerificationEmail({ user, verificationToken: emailVerificationToken })
 
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)

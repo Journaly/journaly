@@ -454,7 +454,7 @@ model NewPostNotification {
 
 model UserConfiguration {
   id          Int                      @id @default(autoincrement())
-  userId      Int
+  userId      Int                      @unique
   digestEmail DigestEmailConfiguration @default(DAILY)
   user        User                     @relation(fields: [userId], references: [id])
 }

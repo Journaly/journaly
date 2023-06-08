@@ -131,30 +131,42 @@ export const sendUpdateEmails: Handler = async (event, context) => {
   const prisma = getDBClient()
   const usersToUpdate = await getUsersToNotify()
   const emailPromises = usersToUpdate.map(async ({ userId }) => {
-    const data = await getDataForUpdateEmail(userId)
-    const body = updateEmail(data)
+    try {
+      const data = await getDataForUpdateEmail(userId)
+      const body = updateEmail(data)
 
-    // Currently we only support 'DAILY' OR 'OFF' so we simply
-    // skip enqueueEmail if 'OFF'.
-    // When we build support for 'WEEKLY' we'll need to make this
-    // logic a little more sophisticated.
-    if (data?.userConfig.digestEmail !== DigestEmailConfiguration.OFF) {
-      await enqueueEmail({
-        from: 'robin@journaly.com',
-        to: data.user.email,
-        subject: 'New Activity on Journaly 📖',
-        html: body,
+      // Currently we only support 'DAILY' OR 'OFF' so we simply
+      // skip enqueueEmail if 'OFF'.
+      // When we build support for 'WEEKLY' we'll need to make this
+      // logic a little more sophisticated.
+      if (data?.userConfig?.digestEmail !== DigestEmailConfiguration.OFF) {
+        await enqueueEmail({
+          from: 'robin@journaly.com',
+          to: data.user.email,
+          subject: 'New Activity on Journaly 📖',
+          html: body,
+        })
+      }
+
+      return prisma.pendingNotification.deleteMany({
+        where: {
+          userId,
+          createdAt: {
+            lte: data.lastNotificationDate,
+          },
+        },
+      })
+    } catch (e) {
+      console.error(
+        `Encountered error sending update email to user ${userId}. Purging their pending notifications.`,
+      )
+      console.error(e)
+      return prisma.pendingNotification.deleteMany({
+        where: {
+          userId,
+        },
       })
     }
-
-    return prisma.pendingNotification.deleteMany({
-      where: {
-        userId,
-        createdAt: {
-          lte: data.lastNotificationDate,
-        },
-      },
-    })
   })
 
   await Promise.all(emailPromises)

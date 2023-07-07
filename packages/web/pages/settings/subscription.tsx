@@ -37,7 +37,7 @@ const Subscription: NextPage = () => {
 }
 
 Subscription.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'settings'],
+  namespacesRequired: ['common', 'settings', 'marketing'],
 })
 
 export default withApollo(Subscription)

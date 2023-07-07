@@ -32,6 +32,7 @@ module.exports = new NextI18Next({
     'my-feed',
     'my-posts',
     'post-author-card',
+    'marketing',
   ],
   defaultNS: 'common',
 })

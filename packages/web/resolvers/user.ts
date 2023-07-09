@@ -245,8 +245,22 @@ const UserQueries = extendType({
   definition(t) {
     t.list.field('users', {
       type: 'User',
-      resolve: async (_parent, _args, ctx) => {
-        return ctx.db.user.findMany()
+      args: {
+        search: stringArg({ required: false })
+      },
+      resolve: async (_parent, args, ctx) => {
+        if (args.search) {
+          return ctx.db.$queryRaw`
+            SELECT
+              *,
+              SIMILARITY(handle, ${args.search}) AS sim
+            FROM "User"
+            ORDER BY sim DESC
+            LIMIT 5;
+          `
+        } else {
+          return ctx.db.user.findMany()
+        }
       },
     })
 

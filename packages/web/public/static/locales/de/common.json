@@ -41,7 +41,9 @@
     "newPost": "Neuer Beitrag",
     "notifications": "Benachrichtigungen",
     "settings": "Einstellungen",
-    "logOut": "Ausloggen"
+    "logOut": "Ausloggen",
+    "goPremiumStatus": "Go Premium",
+    "premiumStatus": "Premium"
   },
   "helpModal": {
     "header": "Hilfe",

@@ -29,6 +29,7 @@ type Colors =
   | 'greenDark'
   | 'highlightColor'
   | 'highlightColorHover'
+  | 'orangeDark'
 
 type Typography =
   | 'fontFamilySansSerif'
@@ -75,6 +76,7 @@ const theme: Theme = {
     red: '#c42f14',
     greenLight: '#B0EED3',
     greenDark: '#1AAE6F',
+    orangeDark: '#c47429',
   },
   breakpoints: fromEntries(
     // Add px to breakpoint values: { XS: '600px', SM: '768px' }

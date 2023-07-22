@@ -40,7 +40,9 @@
     "newPost": "Nuovo Post",
     "notifications": "Notifiche",
     "settings": "Impostazioni",
-    "logOut": "Uscita"
+    "logOut": "Uscita",
+    "goPremiumStatus": "Go Premium",
+    "premiumStatus": "Premium"
   },
   "helpModal": {
     "header": "Supporto",

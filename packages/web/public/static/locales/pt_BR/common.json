@@ -40,7 +40,9 @@
     "newPost": "Nova postagem",
     "notifications": "Notificações",
     "settings": "Configurações",
-    "logOut": "Sair"
+    "logOut": "Sair",
+    "goPremiumStatus": "Go Premium",
+    "premiumStatus": "Premium"
   },
   "helpModal": {
     "header": "Ajuda",

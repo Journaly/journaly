@@ -40,7 +40,9 @@
     "newPost": "新建日誌",
     "notifications": "消息中心",
     "settings": "設置",
-    "logOut": "退出登錄"
+    "logOut": "退出登錄",
+    "goPremiumStatus": "Go Premium",
+    "premiumStatus": "Premium"
   },
   "helpModal": {
     "header": "幫助",

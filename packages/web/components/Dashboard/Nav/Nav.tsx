@@ -139,6 +139,17 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                     <p className="current-user-name">{currentUser.handle}</p>
                   </a>
                 </Link>
+                <Link href="/settings/subscription" legacyBehavior>
+                  <a className="premium-status">
+                    {t(
+                      `dashboardNav.${
+                        currentUser.membershipSubscription?.isActive
+                          ? 'premiumStatus'
+                          : 'goPremiumStatus'
+                      }`,
+                    )}
+                  </a>
+                </Link>
               </div>
               <div className="nav-bottom">
                 <NavLink href="/my-feed">
@@ -410,6 +421,24 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           transition: margin-left ${navConstants.transitionDuration}ms linear;
         }
 
+        .nav-top > .premium-status {
+          font-weight: 600;
+          text-transform: uppercase;
+          font-size: 16px;
+          width: fit-content;
+          margin: 12px auto;
+          color: ${currentUser?.membershipSubscription?.isActive
+            ? theme.colors.blueLight
+            : theme.colors.orangeDark};
+          padding: 4px 8px;
+          border-radius: 4px;
+          letter-spacing: 1.5px;
+          border: 1px solid
+            ${currentUser?.membershipSubscription?.isActive
+              ? theme.colors.blueLight
+              : theme.colors.orangeDark};
+        }
+
         @media (${navConstants.mobileNavOnly}) {
           :global(.mobile-hamburger-icon) {
             position: absolute;
@@ -492,6 +521,17 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           .nav-top {
             margin-top: 50px;
           }
+          /* If updating these styles, be sure to also update the same ones
+          within the @media query: ${navConstants.aboveDesktopNav} to cover
+          the use case for the settings page where the skinny nav is forced */
+          .nav-top > .premium-status {
+            font-size: 10px;
+            margin: 16px auto;
+            padding: 4px 3px;
+            letter-spacing: 1px;
+            text-align: center;
+            line-height: 1.4;
+          }
         }
 
         @media (${navConstants.aboveDesktopNav}) {
@@ -548,6 +588,17 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           .nav-wrapper:not(.disable-large-nav) .nav-link-text {
             margin-left: 15px;
             font-size: 16px;
+          }
+
+          /* We have to duplicate these styles here to cover the case where
+          a user is on the settings page which forces the skinny nav.*/
+          .nav-wrapper.disable-large-nav .premium-status {
+            font-size: 10px;
+            margin: 16px auto;
+            padding: 4px 3px;
+            letter-spacing: 1px;
+            text-align: center;
+            line-height: 1.4;
           }
         }
 

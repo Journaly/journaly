@@ -246,7 +246,7 @@ model Comment {
   PendingNotification               PendingNotification[]
   authorLanguageLevel               LanguageLevel                      @default(BEGINNER)
   threadCommentNotifications        ThreadCommentNotification[]
-  threadCommentMentionNotifications ThreadCommentMentionNotification[]
+  mentionNotifications              MentionNotification[]
 }
 
 model PostComment {
@@ -261,7 +261,7 @@ model PostComment {
   PendingNotification             PendingNotification[]
   thanks                          PostCommentThanks[]
   postCommentNotifications        PostCommentNotification[]
-  postCommentMentionNotifications PostCommentMentionNotification[]
+  mentionNotifications            MentionNotification[]
   authorLanguageLevel             LanguageLevel                    @default(BEGINNER)
 }
 
@@ -403,25 +403,25 @@ model InAppNotification {
   postClapNotifications             PostClapNotification[]
   threadCommentThanksNotifications  ThreadCommentThanksNotification[]
   newPostNotifications              NewPostNotification[]
-  threadCommentMentionNotifications ThreadCommentMentionNotification[]
-  postCommentMentionNotifications   PostCommentMentionNotification[]
+  mentionNotifications              MentionNotification[]
+}
+
+model MentionNotification {
+  id                Int               @id @default(autoincrement())
+  notificationId    Int
+  notification      InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  commentId         Int?
+  comment           Comment?           @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  postCommentId     Int?
+  postComment       PostComment?       @relation(fields: [postCommentId], references: [id], onDelete: Cascade)
 }
 
 model ThreadCommentThanksNotification {
   id Int @id @default(autoincrement())
-
   thanksId       Int
   notificationId Int
   thanks         CommentThanks     @relation(fields: [thanksId], references: [id], onDelete: Cascade)
   notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-}
-
-model ThreadCommentMentionNotification {
-  id             Int               @id @default(autoincrement())
-  notificationId Int
-  commentId      Int
-  notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-  comment        Comment           @relation(fields: [commentId], references: [id], onDelete: Cascade)
 }
 
 model ThreadCommentNotification {
@@ -433,14 +433,6 @@ model ThreadCommentNotification {
 }
 
 model PostCommentNotification {
-  id             Int               @id @default(autoincrement())
-  notificationId Int
-  postCommentId  Int
-  notification   InAppNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
-  postComment    PostComment       @relation(fields: [postCommentId], references: [id], onDelete: Cascade)
-}
-
-model PostCommentMentionNotification {
   id             Int               @id @default(autoincrement())
   notificationId Int
   postCommentId  Int
@@ -601,6 +593,7 @@ enum InAppNotificationType {
   NEW_POST
   POST_CLAP
   NEW_FOLLOWER
+  MENTION
 }
 
 enum NotificationReadStatus {

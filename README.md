@@ -19,7 +19,7 @@ Some major reasons for this are:
 **Journaly is about striving to build excellent software with beautiful, simple, and intuitive User Interface & User Experience Design that solves each of the above problems for our users:**
 
 - We make the writing experience delightful, enjoyable, and easy to engage in; helping users build healthful and sustainable writing habits.
-- We make it incredibly straightfoward to find people to provide users feedback. In fact, users just have to write and the community finds THEM.
+- We make it incredibly straightforward to find people to provide users feedback. In fact, users just have to write and the community finds THEM.
 - We build intuitive tools that make it incredibly easy to sweep through someone's post and give them feedback exactly where it belongs.
 - Feedback stays neatly organized and is easy to digest and find again later.
 

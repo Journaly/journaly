@@ -41,7 +41,9 @@
     "newPost": "New Post",
     "notifications": "Notifications",
     "settings": "Settings",
-    "logOut": "Log Out"
+    "logOut": "Log Out",
+    "goPremiumStatus": "Go Premium",
+    "premiumStatus": "Premium"
   },
   "helpModal": {
     "header": "Support",

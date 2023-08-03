@@ -2,20 +2,20 @@ import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-
 import _ from 'lodash'
 
 import { useTranslation } from '@/config/i18n'
-
-import PostCard from '../PostCard'
+import { gtag } from '@/components/GoogleAnalytics'
 import Pagination from '@/components/Pagination'
+import LoadingWrapper from '@/components/LoadingWrapper'
 import {
   User as UserType,
   usePostsQuery,
   PostCardFragmentFragment,
   PostStatus,
 } from '@/generated/graphql'
-import LoadingWrapper from '@/components/LoadingWrapper'
+
+import PostCard from '../PostCard'
 import FeedHeader from './FeedHeader'
 import Filters from '../Filters'
 import { PostQueryVarsType } from '../Filters'
@@ -72,6 +72,10 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
     search: '',
     savedPosts: initialSearchFilters?.savedPosts || false,
   })
+
+  useEffect(() => {
+    gtag('event', 'myFeedFilterSet', { filters: postQueryVars })
+  }, [postQueryVars])
 
   // fetch posts for the feed!
   const { loading, error, data } = usePostsQuery({

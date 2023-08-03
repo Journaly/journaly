@@ -31,7 +31,9 @@
     "myPosts": "Mis publicaciones",
     "newPost": "Nueva publicación",
     "settings": "Ajustes",
-    "logOut": "Cerrar sesión"
+    "logOut": "Cerrar sesión",
+    "goPremiumStatus": "Go Premium",
+    "premiumStatus": "Premium"
   },
   "badge": {
     "ALPHA_USER": {

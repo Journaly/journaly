@@ -28,6 +28,23 @@ import {
 } from './utils'
 import { NotFoundError } from './errors'
 
+// The character that triggers a "mention" search
+// TODO move this somewhere else as it will be shared with PostComment
+const MENTION_KEY_CHAR = '@'
+
+// Parse comment body for @{MENTION_KEY_CHAR} and store each
+  // handle in an array here, in case there are multiple mentions.
+  // TODO: Clean up and perhaps make more efficient
+  const parseCommentBodyForMentions = (body: string) => {
+    const bodySegments = body.split(" ")
+    
+    const mentions = bodySegments.filter((segment) => {
+      return segment[0] === MENTION_KEY_CHAR
+    })
+    
+    return mentions
+  }
+
 const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {
   const commentCountQuery = Prisma.sql`
     SELECT COUNT(*) AS count
@@ -185,6 +202,8 @@ const createComment = async ({ db, thread, author, body }: CreateCommentArg) => 
 
   const authorLanguageLevel = authorHasPostLanguage?.level || LanguageLevel.BEGINNER
 
+  const mentionedUserHandles = parseCommentBodyForMentions(body)
+
   const comment = await db.comment.create({
     data: {
       body,
@@ -243,6 +262,33 @@ const createComment = async ({ db, thread, author, body }: CreateCommentArg) => 
           commentId: comment.id,
         },
       })
+
+      if (mentionedUserHandles.length) {
+        mentionedUserHandles.forEach(async (fullHandle) => {
+          if (fullHandle[0] !== MENTION_KEY_CHAR)
+            throw new Error('Parsed incorrect mention key character')
+
+          const mentionedUserHandle = fullHandle.slice(1)
+          // If the user mentions themself, let's just do nothing here/not notify them.
+          if (mentionedUserHandle === author.handle) return
+
+          const mentionedUser = await db.user.findUnique({
+            where: {
+              handle: mentionedUserHandle,
+            },
+          })
+          if (!mentionedUser) throw new Error('Mentioned user not found.')
+
+          await createInAppNotification(db, {
+            userId: mentionedUser.id,
+            type: InAppNotificationType.MENTION,
+            key: null,
+            subNotification: {
+              commentId: comment.id,
+            },
+          })
+        })
+      }
     }),
   )
 
@@ -566,6 +612,8 @@ const CommentMutations = extendType({
 
         const authorLanguageLevel = authorHasPostLanguage?.level || LanguageLevel.BEGINNER
 
+        const mentionedUserHandles = parseCommentBodyForMentions(args.body)
+
         const postComment = await ctx.db.postComment.create({
           data: {
             body: args.body,
@@ -615,13 +663,41 @@ const CommentMutations = extendType({
             await createInAppNotification(ctx.db, {
               userId: user.id,
               type: InAppNotificationType.POST_COMMENT,
-              key: { postId: post.id },
+              // Passing null prevents notification grouping
+              key: null,
               subNotification: {
                 postCommentId: postComment.id,
               },
             })
           }),
         )
+
+        if (mentionedUserHandles.length) {
+          mentionedUserHandles.forEach(async (fullHandle) => {
+            if (fullHandle[0] !== MENTION_KEY_CHAR)
+              throw new Error('Parsed incorrect mention key character')
+
+            const mentionedUserHandle = fullHandle.slice(1)
+            // If the user mentions themself, let's just do nothing here/not notify them.
+            if (mentionedUserHandle === postComment.author.handle) return
+
+            const mentionedUser = await ctx.db.user.findUnique({
+              where: {
+                handle: mentionedUserHandle,
+              },
+            })
+            if (!mentionedUser) throw new Error('Mentioned user not found.')
+
+            await createInAppNotification(ctx.db, {
+              userId: mentionedUser.id,
+              type: InAppNotificationType.MENTION,
+              key: null,
+              subNotification: {
+                postCommentId: postComment.id,
+              },
+            })
+          })
+        }
 
         // TODO: Set up logging and check for successful `mailResponse`
         return postComment

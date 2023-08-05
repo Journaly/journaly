@@ -82,8 +82,10 @@ type InAppNotificationSubtypes = {
 }
 
 type BaseInAppNotificationCreationInput = {
-  userId: number,
-  key: Partial<Pick<Prisma.InAppNotificationUncheckedCreateInput, 'postId' | 'triggeringUserId' >>
+  userId: number
+  key: Partial<
+    Pick<Prisma.InAppNotificationUncheckedCreateInput, 'postId' | 'triggeringUserId'>
+  > | null
 }
 
 type InAppNotificationCreationInput = (
@@ -99,16 +101,35 @@ const createInAppNotification = async (
 ) => {
   const timestamp = notificationTime || new Date()
 
-  let ian = await db.inAppNotification.findFirst({
-    where: {
-      ...input.key,
-      readStatus: 'UNREAD',
-      type: input.type,
-      userId: input.userId,
-    },
-  })
+  // If you pass an empty `key` object,
+  // all notification of this type will be grouped together.
+  // If you pass a key value of `null`,
+  // no grouping will occur.
+  let ian
+  if (input.key !== null) {
+    ian = await db.inAppNotification.findFirst({
+      where: {
+        ...input.key,
+        readStatus: 'UNREAD',
+        type: input.type,
+        userId: input.userId,
+      },
+    })
+  }
 
-  let subnoteData: Partial<Pick<Prisma.InAppNotificationCreateInput, 'threadCommentNotifications' | 'postCommentNotifications' | 'newFollowerNotifications' | 'postClapNotifications' | 'threadCommentThanksNotifications' | 'newPostNotifications' | 'newFollowerNotifications'>>
+  let subnoteData: Partial<
+    Pick<
+      Prisma.InAppNotificationCreateInput,
+      | 'threadCommentNotifications'
+      | 'postCommentNotifications'
+      | 'newFollowerNotifications'
+      | 'postClapNotifications'
+      | 'threadCommentThanksNotifications'
+      | 'newPostNotifications'
+      | 'newFollowerNotifications'
+      | 'mentionNotifications'
+    >
+  >
 
   switch (input.type) {
     case 'THREAD_COMMENT': {

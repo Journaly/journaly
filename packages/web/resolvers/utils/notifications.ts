@@ -75,6 +75,10 @@ type InAppNotificationSubtypes = {
     type: 'NEW_POST'
     subNotification: Prisma.NewPostNotificationUncheckedCreateWithoutNotificationInput
   }
+  Mention: {
+    type: 'MENTION'
+    subNotification: Prisma.MentionNotificationUncheckedCreateWithoutNotificationInput
+  }
 }
 
 type BaseInAppNotificationCreationInput = {

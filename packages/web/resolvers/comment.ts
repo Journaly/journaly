@@ -36,13 +36,7 @@ const MENTION_KEY_CHAR = '@'
   // handle in an array here, in case there are multiple mentions.
   // TODO: Clean up and perhaps make more efficient
   const parseCommentBodyForMentions = (body: string) => {
-    const bodySegments = body.split(" ")
-    
-    const mentions = bodySegments.filter((segment) => {
-      return segment[0] === MENTION_KEY_CHAR
-    })
-    
-    return mentions
+   return [...body.matchAll(/@([a-zA-Z0-9_-]+)/g)].map(([_, username]) => username)
   }
 
 const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {

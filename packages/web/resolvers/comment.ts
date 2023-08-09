@@ -256,35 +256,34 @@ const createComment = async ({ db, thread, author, body }: CreateCommentArg) => 
           commentId: comment.id,
         },
       })
-
-      if (mentionedUserHandles.length) {
-        mentionedUserHandles.forEach(async (fullHandle) => {
-          if (fullHandle[0] !== MENTION_KEY_CHAR)
-            throw new Error('Parsed incorrect mention key character')
-
-          const mentionedUserHandle = fullHandle.slice(1)
-          // If the user mentions themself, let's just do nothing here/not notify them.
-          if (mentionedUserHandle === author.handle) return
-
-          const mentionedUser = await db.user.findUnique({
-            where: {
-              handle: mentionedUserHandle,
-            },
-          })
-          if (!mentionedUser) throw new Error('Mentioned user not found.')
-
-          await createInAppNotification(db, {
-            userId: mentionedUser.id,
-            type: InAppNotificationType.MENTION,
-            key: null,
-            subNotification: {
-              commentId: comment.id,
-            },
-          })
-        })
-      }
     }),
   )
+
+  if (mentionedUserHandles.length) {
+    await Promise.all(
+      mentionedUserHandles.map(async (handle) => {
+        // If the user mentions themself, let's just do nothing here/not notify them.
+        if (handle === author.handle) return
+        // TODO: clean this up before submission
+        console.log(handle)
+        const mentionedUser = await db.user.findUnique({
+          where: {
+            handle,
+          },
+        })
+        if (!mentionedUser) throw new Error('Mentioned user not found.')
+
+        await createInAppNotification(db, {
+          userId: mentionedUser.id,
+          type: InAppNotificationType.MENTION,
+          key: null,
+          subNotification: {
+            commentId: comment.id,
+          },
+        })
+      }),
+    )
+  }
 
   // Check to see if we should assign a badge
   if (thread.post.authorId !== author.id && isPast(add(thread.post.createdAt, { weeks: 1 }))) {
@@ -667,30 +666,28 @@ const CommentMutations = extendType({
         )
 
         if (mentionedUserHandles.length) {
-          mentionedUserHandles.forEach(async (fullHandle) => {
-            if (fullHandle[0] !== MENTION_KEY_CHAR)
-              throw new Error('Parsed incorrect mention key character')
+          await Promise.all(
+            mentionedUserHandles.map(async (handle) => {
+              // If the user mentions themself, let's just do nothing here/not notify them.
+              if (handle === postComment.author.handle) return
 
-            const mentionedUserHandle = fullHandle.slice(1)
-            // If the user mentions themself, let's just do nothing here/not notify them.
-            if (mentionedUserHandle === postComment.author.handle) return
+              const mentionedUser = await ctx.db.user.findUnique({
+                where: {
+                  handle,
+                },
+              })
+              if (!mentionedUser) throw new Error('Mentioned user not found.')
 
-            const mentionedUser = await ctx.db.user.findUnique({
-              where: {
-                handle: mentionedUserHandle,
-              },
-            })
-            if (!mentionedUser) throw new Error('Mentioned user not found.')
-
-            await createInAppNotification(ctx.db, {
-              userId: mentionedUser.id,
-              type: InAppNotificationType.MENTION,
-              key: null,
-              subNotification: {
-                postCommentId: postComment.id,
-              },
-            })
-          })
+              await createInAppNotification(ctx.db, {
+                userId: mentionedUser.id,
+                type: InAppNotificationType.MENTION,
+                key: null,
+                subNotification: {
+                  postCommentId: postComment.id,
+                },
+              })
+            }),
+          )
         }
 
         // TODO: Set up logging and check for successful `mailResponse`

@@ -657,7 +657,7 @@ const CommentMutations = extendType({
               userId: user.id,
               type: InAppNotificationType.POST_COMMENT,
               // Passing null prevents notification grouping
-              key: null,
+              key: { postId: post.id },
               subNotification: {
                 postCommentId: postComment.id,
               },

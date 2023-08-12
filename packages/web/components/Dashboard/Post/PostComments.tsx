@@ -22,6 +22,7 @@ import TabToggle from '@/components/TabToggle'
 import Textarea from '@/components/Textarea'
 import useUILanguage from '@/hooks/useUILanguage'
 import { generateNegativeRandomNumber } from '@/utils/number'
+import MarkdownEditor from '@/components/MarkdownEditor/MarkdownEditor'
 
 type PostCommentsProps = {
   postId: number
@@ -97,6 +98,8 @@ const PostComments = ({
             __typename: 'User',
             handle: currentUser!.handle,
             id: currentUser!.id,
+            name: currentUser!.name,
+            profileImage: currentUser!.profileImage,
           },
           id: generateNegativeRandomNumber(),
           createdAt: new Date().toISOString(),
@@ -136,7 +139,7 @@ const PostComments = ({
               <form onSubmit={createNewPostComment}>
                 <fieldset>
                   <div className="new-comment-block">
-                    <Textarea
+                    <MarkdownEditor
                       placeholder={t('addCommentPlaceholder')}
                       value={postCommentBody}
                       onChange={(e) => setPostCommentBody(e.target.value)}

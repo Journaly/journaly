@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.7.14",
+    "@github/text-expander-element": "^2.5.0",
     "@journaly/j-db-client": "^13.20.0",
     "@prisma/client": "^3.15.2",
     "@stripe/react-stripe-js": "^1.2.2",

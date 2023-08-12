@@ -60,6 +60,36 @@ async function deletePosts(postIds, query) {
   `
 }
 
+async function getDb(args) {
+  const dbUrl = args.databaseUrl || process.env.DATABASE_URL
+
+  if (!dbUrl) {
+    console.error('No database URL has been provided')
+    process.exit(1)
+  }
+
+  const parsedDbUrl = parse(dbUrl)
+  let promptResponse
+
+  if (!['localhost', '127.0.0.1'].includes(parsedDbUrl.host) && !args.force) {
+    promptResponse = await prompts({
+      type: 'confirm',
+      name: 'confirmDbUrl',
+      message: `CAUTION: your $DATABASE_URL is currently set to a remote database: ${dbUrl}. Are you sure you want to continue?`,
+    })
+
+    if (!promptResponse.confirmDbUrl) return
+  }
+
+  const db = pgTag(
+    new Pool({
+      connectionString: dbUrl,
+    }),
+  )
+
+  return db
+}
+
 yargs
   .scriptName('jadmin')
   .command({
@@ -76,32 +106,7 @@ yargs
       })
     },
     handler: async (args) => {
-      const dbUrl = args.databaseUrl || process.env.DATABASE_URL
-
-      if (!dbUrl) {
-        console.error('No database URL has been provided')
-        process.exit(1)
-      }
-
-      const parsedDbUrl = parse(dbUrl)
-      let promptResponse
-
-      if (!['localhost', '127.0.0.1'].includes(parsedDbUrl.host) && !args.force) {
-        promptResponse = await prompts({
-          type: 'confirm',
-          name: 'confirmDbUrl',
-          message: `CAUTION: your $DATABASE_URL is currently set to a remote database: ${dbUrl}. Are you sure you want to continue?`,
-        })
-
-        if (!promptResponse.confirmDbUrl) return
-      }
-
-      const db = pgTag(
-        new Pool({
-          connectionString: dbUrl,
-        }),
-      )
-
+      const db = await getDb(args)
       const userId = parseInt(args.userId)
 
       const user = await db.get`
@@ -138,7 +143,6 @@ yargs
       `
       ).map((post) => post.id)
 
-
       await deletePosts(postIds, query)
 
       await query`
@@ -158,7 +162,6 @@ yargs
         FROM "MembershipSubscription"
         WHERE "userId" = ${userId}
       `
-
 
       await query`
         DELETE
@@ -259,32 +262,7 @@ yargs
       })
     },
     handler: async (args) => {
-      const dbUrl = args.databaseUrl || process.env.DATABASE_URL
-
-      if (!dbUrl) {
-        console.error('No database URL has been provided')
-        process.exit(1)
-      }
-
-      const parsedDbUrl = parse(dbUrl)
-      let promptResponse
-
-      if (!['localhost', '127.0.0.1'].includes(parsedDbUrl.host) && !args.force) {
-        promptResponse = await prompts({
-          type: 'confirm',
-          name: 'confirmDbUrl',
-          message: `CAUTION: your $DATABASE_URL is currently set to a remote database: ${dbUrl}. Are you sure you want to continue?`,
-        })
-
-        if (!promptResponse.confirmDbUrl) return
-      }
-
-      const db = pgTag(
-        new Pool({
-          connectionString: dbUrl,
-        }),
-      )
-
+      const db = await getDb(args)
       const postId = parseInt(args.postId)
       const post = await db.get`
         SELECT *
@@ -296,7 +274,7 @@ yargs
         console.error(`No Post with ID ${postId} found`)
         process.exit(1)
       }
-      
+
       const userId = post.authorId
       const user = await db.get`
         SELECT *
@@ -313,9 +291,9 @@ yargs
         promptResponse = await prompts({
           type: 'confirm',
           name: 'confirmUserByHandle',
-          message: `Are you sure you want to delete post: ${post.title} by User handle: ${user.handle}, email: ${
-            user.email
-          }, ${user.name ? user.name : 'no name'}?`,
+          message: `Are you sure you want to delete post: ${post.title} by User handle: ${
+            user.handle
+          }, email: ${user.email}, ${user.name ? user.name : 'no name'}?`,
         })
 
         if (!promptResponse.confirmUserByHandle) return
@@ -344,32 +322,7 @@ yargs
       })
     },
     handler: async (args) => {
-      const dbUrl = args.databaseUrl || process.env.DATABASE_URL
-
-      if (!dbUrl) {
-        console.error('No database URL has been provided')
-        process.exit(1)
-      }
-
-      const parsedDbUrl = parse(dbUrl)
-      let promptResponse
-
-      if (!['localhost', '127.0.0.1'].includes(parsedDbUrl.host) && !args.force) {
-        promptResponse = await prompts({
-          type: 'confirm',
-          name: 'confirmDbUrl',
-          message: `CAUTION: your $DATABASE_URL is currently set to a remote database: ${dbUrl}. Are you sure you want to continue?`,
-        })
-
-        if (!promptResponse.confirmDbUrl) return
-      }
-
-      const db = pgTag(
-        new Pool({
-          connectionString: dbUrl,
-        }),
-      )
-
+      const db = await getDb(args)
       const userId = parseInt(args.userId)
 
       const user = await db.get`
@@ -383,12 +336,17 @@ yargs
         process.exit(1)
       }
 
-      const badgeOptionsResponse = (await db.get`
+      const badgeOptionsResponse = (
+        await db.get`
         SELECT enum_range(NULL::"BadgeType");
-      `).enum_range
+      `
+      ).enum_range
       const badgeOptions = badgeOptionsResponse.substr(1, badgeOptionsResponse.length - 2)
       const badgeOptionsArray = badgeOptions.split(',')
-      
+      console.log('badgeName', args.badgeName, typeof args.badgeName)
+      console.log('badgeOptionsResponse', badgeOptionsResponse)
+      console.log('badgeOptions', badgeOptions)
+      console.log('badgeOptionsArray', badgeOptionsArray)
       if (badgeOptionsArray.includes(args.badgeName)) {
         await db.query`
           INSERT INTO "UserBadge"

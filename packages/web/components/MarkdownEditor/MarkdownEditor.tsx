@@ -64,6 +64,7 @@ const MarkdownEditor = (props: React.ComponentProps<typeof TextArea>) => {
           }
 
           :global(.user-name-search) {
+            margin-top: 24px;
             position: absolute;
             z-index: 1;
             background: white;

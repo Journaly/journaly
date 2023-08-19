@@ -216,7 +216,7 @@ const PostComments = ({
         }
 
         fieldset {
-          padding: 0 5px 5px;
+          padding: 5px;
           border: 1px solid ${theme.colors.gray400};
           border-radius: 5px;
           background-color: ${theme.colors.gray100};
@@ -227,8 +227,6 @@ const PostComments = ({
           width: 100%;
           padding: 5px;
           background-color: ${theme.colors.white};
-          margin-top: 10px;
-          margin-right: 10px;
           resize: vertical;
           border: 1px solid ${theme.colors.gray400};
           border-radius: 5px;

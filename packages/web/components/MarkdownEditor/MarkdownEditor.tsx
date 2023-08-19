@@ -1,38 +1,41 @@
 import React, { useEffect, useRef } from 'react'
 import TextArea from '@/components/Textarea'
+import { useUserSearchLazyQuery } from '@/generated/graphql'
 
 export const MENTION_KEY_CHAR = '@'
 
 const MarkdownEditor = (props: React.ComponentProps<typeof TextArea>) => {
   const textExpanderRef = useRef()
+  const [getUsers] = useUserSearchLazyQuery()
 
   useEffect(() => {
     import('@github/text-expander-element')
 
     const handleTextExpanderChange = (event: any) => {
-      console.log(event)
       const { key, provide, text } = event.detail
       if (key !== MENTION_KEY_CHAR) return
-      console.log('provide ready')
       provide(
         (async () => {
+          const { data } = await getUsers({ variables: { search: text } })
+
+          if (!data?.users)
+            return
+
+          const { users } = data
           const fragment = document.createElement('ul')
           fragment.classList.add('user-name-search')
-          ;['foo', 'bee', 'bar'].forEach((item) => {
-            console.log(item)
+          users.forEach((user) => {
             const el = document.createElement('li')
             el.role = 'option'
-            el.dataset.value = item
-            el.textContent = item
+            el.dataset.value = user.id.toString()
+            el.textContent = user.handle
 
             fragment.appendChild(el)
           })
 
-          console.log('frag', fragment)
-
           return {
             fragment,
-            matched: true,
+            matched: users.length,
           }
         })(),
       )
@@ -54,6 +57,10 @@ const MarkdownEditor = (props: React.ComponentProps<typeof TextArea>) => {
         {`
           .text-expander-container {
             position: relative;
+          }
+
+          .text-expander-container > :global(:first-child) {
+            display: block;
           }
 
           :global(.user-name-search) {

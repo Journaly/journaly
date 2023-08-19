@@ -3722,6 +3722,15 @@ export type UserByIdentifierQuery = {
   }
 }
 
+export type UserSearchQueryVariables = Exact<{
+  search: Scalars['String']
+}>
+
+export type UserSearchQuery = {
+  __typename?: 'Query'
+  users: Array<{ __typename?: 'User'; id: number; handle: string; name?: string | null }>
+}
+
 export type UserStatsQueryVariables = Exact<{
   id: Scalars['Int']
 }>
@@ -7142,6 +7151,47 @@ export type UserByIdentifierQueryResult = Apollo.QueryResult<
   UserByIdentifierQuery,
   UserByIdentifierQueryVariables
 >
+export const UserSearchDocument = gql`
+  query userSearch($search: String!) {
+    users(search: $search) {
+      id
+      handle
+      name
+    }
+  }
+`
+
+/**
+ * __useUserSearchQuery__
+ *
+ * To run a query within a React component, call `useUserSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserSearchQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *   },
+ * });
+ */
+export function useUserSearchQuery(
+  baseOptions: Apollo.QueryHookOptions<UserSearchQuery, UserSearchQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<UserSearchQuery, UserSearchQueryVariables>(UserSearchDocument, options)
+}
+export function useUserSearchLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<UserSearchQuery, UserSearchQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<UserSearchQuery, UserSearchQueryVariables>(UserSearchDocument, options)
+}
+export type UserSearchQueryHookResult = ReturnType<typeof useUserSearchQuery>
+export type UserSearchLazyQueryHookResult = ReturnType<typeof useUserSearchLazyQuery>
+export type UserSearchQueryResult = Apollo.QueryResult<UserSearchQuery, UserSearchQueryVariables>
 export const UserStatsDocument = gql`
   query userStats($id: Int!) {
     userByIdentifier(id: $id) {

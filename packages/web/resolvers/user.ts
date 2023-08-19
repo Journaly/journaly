@@ -249,14 +249,18 @@ const UserQueries = extendType({
         search: stringArg({ required: false })
       },
       resolve: async (_parent, args, ctx) => {
-        if (args.search) {
+        if (args.search !== undefined) {
           return ctx.db.$queryRaw`
-            SELECT
-              *,
-              SIMILARITY(handle, ${args.search}) AS sim
-            FROM "User"
-            ORDER BY sim DESC
-            LIMIT 5;
+            SELECT * FROM (
+              SELECT
+                *,
+                SIMILARITY(handle, ${args.search}) AS sim
+              FROM "User"
+              ORDER BY sim DESC
+              LIMIT 5
+            ) as sq
+            WHERE sim > 0.03
+            LIMIT 5
           `
         } else {
           return ctx.db.user.findMany()

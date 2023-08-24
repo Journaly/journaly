@@ -18,6 +18,7 @@ import Button, { ButtonVariant } from '@/components/Button'
 import CheckmarkIcon from '../Icons/CheckmarkIcon'
 import DeleteIcon from '../Icons/DeleteIcon'
 import { navConstants } from '../Dashboard/Nav'
+import comment from '@/nexus/comment'
 
 export type LevelOneNotificationProps = {
   notification: NotificationType
@@ -340,6 +341,48 @@ export const NewFollowerNotificationLevelOne: React.FC<LevelOneNotificationProps
       }
       middle={<p>{t('notifications.levelOne.newFollowers', { count })}</p>}
       onNotificationClick={onNotificationClick}
+      readStatus={notification.readStatus}
+      onDelete={() => onDelete(notification.id)}
+      onMarkRead={() => onMarkRead(notification.id)}
+    />
+  )
+}
+
+export const MentionNotificationLevelOne: React.FC<LevelOneNotificationProps> = ({
+  notification,
+  onDelete,
+  onMarkRead,
+}) => {
+  const router = useRouter()
+  const { t } = useTranslation('common')
+  // There will only ever be ONE element
+  const mention = notification.mentionNotifications[0]
+
+  let mentioner
+  let post
+  let mentionTarget: string
+  if (mention.comment) {
+    mentioner = mention.comment.author
+    post = mention.comment.thread.post
+    mentionTarget = `/post/${post.id}#t=${mention.comment.thread.id}`
+  } else if (mention.postComment) {
+    mentioner = mention.postComment.author
+    post = mention.postComment.post
+    mentionTarget = `/post/${post.id}`
+  }
+
+  return (
+    <BaseNotificationLayout
+      left={<UserAvatar user={mentioner} size={50} />}
+      middle={<p>{t(`notifications.levelOne.mention`, { mentioner: mentioner.handle })}</p>}
+      right={
+        <img
+          className="post-image"
+          src={post?.headlineImage.smallSize}
+          alt={`post "${post?.title}"'s image`}
+        />
+      }
+      onNotificationClick={() => router.push(mentionTarget)}
       readStatus={notification.readStatus}
       onDelete={() => onDelete(notification.id)}
       onMarkRead={() => onMarkRead(notification.id)}

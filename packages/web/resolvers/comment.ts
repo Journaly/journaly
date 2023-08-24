@@ -146,6 +146,7 @@ const Thread = objectType({
     t.model.endIndex()
     t.model.highlightedContent()
     t.model.postId()
+    t.model.post()
     t.model.comments({
       pagination: false,
       ordering: {
@@ -176,9 +177,9 @@ const PostComment = objectType({
     t.model.body()
     t.model.createdAt()
     t.model.authorLanguageLevel()
+    t.model.post()
   },
 })
-
 
 type CreateCommentArg = {
   thread: ThreadWithRels<{
@@ -264,8 +265,7 @@ const createComment = async ({ db, thread, author, body }: CreateCommentArg) => 
       mentionedUserHandles.map(async (handle) => {
         // If the user mentions themself, let's just do nothing here/not notify them.
         if (handle === author.handle) return
-        // TODO: clean this up before submission
-        console.log(handle)
+
         const mentionedUser = await db.user.findUnique({
           where: {
             handle,

@@ -11,6 +11,7 @@ import {
   LevelOneNotificationProps,
   NewPostNotificationLevelOne,
   NewFollowerNotificationLevelOne,
+  MentionNotificationLevelOne,
 } from './Notifications'
 import SwipeableElement from '../SwipeableElement'
 
@@ -37,6 +38,8 @@ const getNotificationComponent = (
       return NewPostNotificationLevelOne
     case InAppNotificationType.NewFollower:
       return NewFollowerNotificationLevelOne
+    case InAppNotificationType.Mention:
+      return MentionNotificationLevelOne
   }
 }
 

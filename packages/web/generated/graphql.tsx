@@ -155,6 +155,7 @@ export type InAppNotification = {
   __typename?: 'InAppNotification'
   bumpedAt?: Maybe<Scalars['DateTime']>
   id: Scalars['Int']
+  mentionNotifications: Array<MentionNotification>
   newFollowerNotifications: Array<NewFollowerNotification>
   newPostNotifications: Array<NewPostNotification>
   post?: Maybe<Post>
@@ -252,6 +253,13 @@ export enum MembershipSubscriptionPeriod {
   Monthly = 'MONTHLY',
   Quarterly = 'QUARTERLY',
   StudentAnnually = 'STUDENT_ANNUALLY',
+}
+
+export type MentionNotification = {
+  __typename?: 'MentionNotification'
+  comment?: Maybe<Comment>
+  id: Scalars['Int']
+  postComment?: Maybe<PostComment>
 }
 
 export type Mutation = {
@@ -564,6 +572,7 @@ export type PostComment = {
   body: Scalars['String']
   createdAt: Scalars['DateTime']
   id: Scalars['Int']
+  post: Post
 }
 
 export type PostCommentNotification = {
@@ -666,6 +675,7 @@ export type Thread = {
   endIndex: Scalars['Int']
   highlightedContent: Scalars['String']
   id: Scalars['Int']
+  post: Post
   postId: Scalars['Int']
   startIndex: Scalars['Int']
 }
@@ -1145,6 +1155,37 @@ export type CurrentUserFragmentFragment = {
           profileImage?: string | null
         }
       }
+    }>
+    mentionNotifications: Array<{
+      __typename?: 'MentionNotification'
+      comment?: {
+        __typename?: 'Comment'
+        id: number
+        body: string
+        author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+        thread: {
+          __typename?: 'Thread'
+          id: number
+          post: {
+            __typename?: 'Post'
+            id: number
+            title: string
+            headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+          }
+        }
+      } | null
+      postComment?: {
+        __typename?: 'PostComment'
+        id: number
+        body: string
+        author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+        post: {
+          __typename?: 'Post'
+          id: number
+          title: string
+          headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+        }
+      } | null
     }>
   }>
   savedPosts: Array<{ __typename?: 'Post'; id: number }>
@@ -1690,6 +1731,37 @@ export type NotificationFragmentFragment = {
       }
     }
   }>
+  mentionNotifications: Array<{
+    __typename?: 'MentionNotification'
+    comment?: {
+      __typename?: 'Comment'
+      id: number
+      body: string
+      author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+      thread: {
+        __typename?: 'Thread'
+        id: number
+        post: {
+          __typename?: 'Post'
+          id: number
+          title: string
+          headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+        }
+      }
+    } | null
+    postComment?: {
+      __typename?: 'PostComment'
+      id: number
+      body: string
+      author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+      post: {
+        __typename?: 'Post'
+        id: number
+        title: string
+        headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+      }
+    } | null
+  }>
 }
 
 export type AddLanguageRelationMutationVariables = Exact<{
@@ -2058,6 +2130,37 @@ export type PostPageQuery = {
           }
         }
       }>
+      mentionNotifications: Array<{
+        __typename?: 'MentionNotification'
+        comment?: {
+          __typename?: 'Comment'
+          id: number
+          body: string
+          author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+          thread: {
+            __typename?: 'Thread'
+            id: number
+            post: {
+              __typename?: 'Post'
+              id: number
+              title: string
+              headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+            }
+          }
+        } | null
+        postComment?: {
+          __typename?: 'PostComment'
+          id: number
+          body: string
+          author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+          post: {
+            __typename?: 'Post'
+            id: number
+            title: string
+            headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+          }
+        } | null
+      }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
     membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
@@ -2310,6 +2413,37 @@ export type PrivatePostPageQuery = {
             profileImage?: string | null
           }
         }
+      }>
+      mentionNotifications: Array<{
+        __typename?: 'MentionNotification'
+        comment?: {
+          __typename?: 'Comment'
+          id: number
+          body: string
+          author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+          thread: {
+            __typename?: 'Thread'
+            id: number
+            post: {
+              __typename?: 'Post'
+              id: number
+              title: string
+              headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+            }
+          }
+        } | null
+        postComment?: {
+          __typename?: 'PostComment'
+          id: number
+          body: string
+          author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+          post: {
+            __typename?: 'Post'
+            id: number
+            title: string
+            headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+          }
+        } | null
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
@@ -2781,6 +2915,37 @@ export type EditPostQuery = {
           }
         }
       }>
+      mentionNotifications: Array<{
+        __typename?: 'MentionNotification'
+        comment?: {
+          __typename?: 'Comment'
+          id: number
+          body: string
+          author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+          thread: {
+            __typename?: 'Thread'
+            id: number
+            post: {
+              __typename?: 'Post'
+              id: number
+              title: string
+              headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+            }
+          }
+        } | null
+        postComment?: {
+          __typename?: 'PostComment'
+          id: number
+          body: string
+          author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+          post: {
+            __typename?: 'Post'
+            id: number
+            title: string
+            headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+          }
+        } | null
+      }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
     membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
@@ -2960,6 +3125,37 @@ export type NewPostQuery = {
             profileImage?: string | null
           }
         }
+      }>
+      mentionNotifications: Array<{
+        __typename?: 'MentionNotification'
+        comment?: {
+          __typename?: 'Comment'
+          id: number
+          body: string
+          author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+          thread: {
+            __typename?: 'Thread'
+            id: number
+            post: {
+              __typename?: 'Post'
+              id: number
+              title: string
+              headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+            }
+          }
+        } | null
+        postComment?: {
+          __typename?: 'PostComment'
+          id: number
+          body: string
+          author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+          post: {
+            __typename?: 'Post'
+            id: number
+            title: string
+            headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+          }
+        } | null
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
@@ -3476,6 +3672,37 @@ export type CurrentUserQuery = {
           }
         }
       }>
+      mentionNotifications: Array<{
+        __typename?: 'MentionNotification'
+        comment?: {
+          __typename?: 'Comment'
+          id: number
+          body: string
+          author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+          thread: {
+            __typename?: 'Thread'
+            id: number
+            post: {
+              __typename?: 'Post'
+              id: number
+              title: string
+              headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+            }
+          }
+        } | null
+        postComment?: {
+          __typename?: 'PostComment'
+          id: number
+          body: string
+          author: { __typename?: 'User'; id: number; handle: string; profileImage?: string | null }
+          post: {
+            __typename?: 'Post'
+            id: number
+            title: string
+            headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
+          }
+        } | null
+      }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
     membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
@@ -3931,6 +4158,43 @@ export const NotificationFragmentFragmentDoc = gql`
           name
           handle
           profileImage
+        }
+      }
+    }
+    mentionNotifications {
+      comment {
+        id
+        body
+        author {
+          id
+          handle
+          profileImage
+        }
+        thread {
+          id
+          post {
+            id
+            headlineImage {
+              smallSize
+            }
+            title
+          }
+        }
+      }
+      postComment {
+        id
+        body
+        author {
+          id
+          handle
+          profileImage
+        }
+        post {
+          id
+          headlineImage {
+            smallSize
+          }
+          title
         }
       }
     }

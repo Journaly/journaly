@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/Journaly/journaly#readme",
   "devDependencies": {
-    "cypress": "^7.6.0",
+    "cypress": "^13.0.0",
     "cypress-dark": "^1.7.14",
     "cypress-dotenv": "^1.2.2",
     "cypress-localstorage-commands": "^1.4.5",

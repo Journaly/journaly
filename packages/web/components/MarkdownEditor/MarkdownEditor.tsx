@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import TextArea from '@/components/Textarea'
 import { useUserSearchLazyQuery } from '@/generated/graphql'
 import theme from '@/theme'
+import _ from 'lodash'
 
 export const MENTION_KEY_CHAR = '@'
 
@@ -13,6 +14,7 @@ const MarkdownEditor = (props: React.ComponentProps<typeof TextArea>) => {
     import('@github/text-expander-element')
 
     const handleTextExpanderChange = (event: any) => {
+      console.log('called!')
       const { key, provide, text } = event.detail
 
       if (key !== MENTION_KEY_CHAR) return
@@ -58,7 +60,10 @@ const MarkdownEditor = (props: React.ComponentProps<typeof TextArea>) => {
     }
 
     if (textExpanderRef.current) {
-      textExpanderRef.current.addEventListener('text-expander-change', handleTextExpanderChange)
+      textExpanderRef.current.addEventListener(
+        'text-expander-change',
+        _.throttle(handleTextExpanderChange, 400),
+      )
       textExpanderRef.current.addEventListener('text-expander-value', handleTextExpanderValue)
       textExpanderRef.current.addEventListener(
         'text-expander-committed',

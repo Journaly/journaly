@@ -10,8 +10,20 @@ type MarkdownEditorProps = Omit<React.ComponentProps<typeof TextArea>, 'onChange
   onChange?: (value: string) => void
 }
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      ['text-expander']: {
+        children: React.ReactNode
+        keys: string
+        ref: React.RefObject<HTMLElement>
+      }
+    }
+  }
+}
+
 const MarkdownEditor = ({ onChange, ...props }: MarkdownEditorProps) => {
-  const textExpanderRef = useRef()
+  const textExpanderRef = useRef<HTMLElement>(null)
   const [getUsers] = useUserSearchLazyQuery()
 
   const handleChange = useCallback(

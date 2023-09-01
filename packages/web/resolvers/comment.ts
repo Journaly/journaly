@@ -28,10 +28,6 @@ import {
 } from './utils'
 import { NotFoundError } from './errors'
 
-// The character that triggers a "mention" search
-// TODO move this somewhere else as it will be shared with PostComment
-const MENTION_KEY_CHAR = '@'
-
 // Parse comment body for @{MENTION_KEY_CHAR} and store each
   // handle in an array here, in case there are multiple mentions.
   // TODO: Clean up and perhaps make more efficient

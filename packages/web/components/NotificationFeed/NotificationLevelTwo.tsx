@@ -18,6 +18,8 @@ type NotificationProps = {
   handleCloseNotificationFeed: () => void
 }
 
+const NullNotification = () => null
+
 const getNotificationComponent = (
   notificationType: InAppNotificationType,
 ): React.FC<LevelTwoNotificationProps> => {
@@ -34,6 +36,9 @@ const getNotificationComponent = (
       return NewPostNotificationLevelTwo
     case InAppNotificationType.NewFollower:
       return NewFollowerNotificationLevelTwo
+    case InAppNotificationType.Mention:
+      // No level 2 for mention notifications
+      return NullNotification
   }
 }
 

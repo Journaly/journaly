@@ -18,7 +18,6 @@ import Button, { ButtonVariant } from '@/components/Button'
 import CheckmarkIcon from '../Icons/CheckmarkIcon'
 import DeleteIcon from '../Icons/DeleteIcon'
 import { navConstants } from '../Dashboard/Nav'
-import comment from '@/nexus/comment'
 
 export type LevelOneNotificationProps = {
   notification: NotificationType
@@ -369,6 +368,9 @@ export const MentionNotificationLevelOne: React.FC<LevelOneNotificationProps> = 
     mentioner = mention.postComment.author
     post = mention.postComment.post
     mentionTarget = `/post/${post.id}`
+  } else {
+    console.error('Mention notification had neither a comment nor post comment link')
+    return null
   }
 
   return (

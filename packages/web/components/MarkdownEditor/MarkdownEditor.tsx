@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import TextArea from '@/components/Textarea'
 import { useUserSearchLazyQuery } from '@/generated/graphql'
 import theme from '@/theme'
@@ -6,15 +6,25 @@ import _ from 'lodash'
 
 export const MENTION_KEY_CHAR = '@'
 
-const MarkdownEditor = (props: React.ComponentProps<typeof TextArea>) => {
+type MarkdownEditorProps = Omit<React.ComponentProps<typeof TextArea>, 'onChange'> & {
+  onChange?: (value: string) => void
+}
+
+const MarkdownEditor = ({ onChange, ...props }: MarkdownEditorProps) => {
   const textExpanderRef = useRef()
   const [getUsers] = useUserSearchLazyQuery()
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      onChange && onChange(event.target.value)
+    },
+    [onChange],
+  )
 
   useEffect(() => {
     import('@github/text-expander-element')
 
     const handleTextExpanderChange = (event: any) => {
-      console.log('called!')
       const { key, provide, text } = event.detail
 
       if (key !== MENTION_KEY_CHAR) return
@@ -57,13 +67,11 @@ const MarkdownEditor = (props: React.ComponentProps<typeof TextArea>) => {
 
     const handleTextExpanderCommitted = (event: any) => {
       const { input } = event.detail
+      onChange && onChange(input.value)
     }
 
     if (textExpanderRef.current) {
-      textExpanderRef.current.addEventListener(
-        'text-expander-change',
-        _.throttle(handleTextExpanderChange, 400),
-      )
+      textExpanderRef.current.addEventListener('text-expander-change', handleTextExpanderChange)
       textExpanderRef.current.addEventListener('text-expander-value', handleTextExpanderValue)
       textExpanderRef.current.addEventListener(
         'text-expander-committed',
@@ -77,7 +85,7 @@ const MarkdownEditor = (props: React.ComponentProps<typeof TextArea>) => {
     // as a way to mention Groups?
     <div className="text-expander-container">
       <text-expander keys={MENTION_KEY_CHAR} ref={textExpanderRef}>
-        <TextArea {...props} />
+        <TextArea onChange={handleChange} {...props} />
       </text-expander>
       <style jsx>
         {`

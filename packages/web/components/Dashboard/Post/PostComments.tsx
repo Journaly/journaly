@@ -141,7 +141,7 @@ const PostComments = ({
                     <MarkdownEditor
                       placeholder={t('addCommentPlaceholder')}
                       value={postCommentBody}
-                      onChange={(e) => setPostCommentBody(e.target.value)}
+                      onChange={setPostCommentBody}
                       disabled={loading}
                       rows={4}
                     />

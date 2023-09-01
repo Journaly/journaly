@@ -85,6 +85,7 @@
     "react-toastify": "^6.0.8",
     "reactjs-popup": "^2.0.4",
     "remark-gfm": "^2.0.0",
+    "remark-mentions": "^1.1.0",
     "slate": "^0.91.4",
     "slate-history": "^0.86.0",
     "slate-hyperscript": "^0.77.0",

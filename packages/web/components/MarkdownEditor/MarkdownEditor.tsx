@@ -22,120 +22,122 @@ declare global {
   }
 }
 
-const MarkdownEditor = ({ onChange, ...props }: MarkdownEditorProps) => {
-  const textExpanderRef = useRef<HTMLElement>(null)
-  const [getUsers] = useUserSearchLazyQuery()
+const MarkdownEditor = React.forwardRef<HTMLTextAreaElement, MarkdownEditorProps>(
+  ({ onChange, ...props }: MarkdownEditorProps, ref) => {
+    const textExpanderRef = useRef<HTMLElement>(null)
+    const [getUsers] = useUserSearchLazyQuery()
 
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      onChange && onChange(event.target.value)
-    },
-    [onChange],
-  )
+    const handleChange = useCallback(
+      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        onChange && onChange(event.target.value)
+      },
+      [onChange],
+    )
 
-  useEffect(() => {
-    import('@github/text-expander-element')
+    useEffect(() => {
+      import('@github/text-expander-element')
 
-    const handleTextExpanderChange = (event: any) => {
-      const { key, provide, text } = event.detail
+      const handleTextExpanderChange = (event: any) => {
+        const { key, provide, text } = event.detail
 
-      if (key !== MENTION_KEY_CHAR) return
+        if (key !== MENTION_KEY_CHAR) return
 
-      provide(
-        (async () => {
-          const { data } = await getUsers({ variables: { search: text } })
+        provide(
+          (async () => {
+            const { data } = await getUsers({ variables: { search: text } })
 
-          if (!data?.users) return
+            if (!data?.users) return
 
-          const { users } = data
-          const fragment = document.createElement('ul')
-          fragment.classList.add('user-name-search')
-          fragment.role = 'listbox'
+            const { users } = data
+            const fragment = document.createElement('ul')
+            fragment.classList.add('user-name-search')
+            fragment.role = 'listbox'
 
-          users.forEach((user) => {
-            const el = document.createElement('li')
-            el.role = 'option'
-            el.dataset.value = `@${user.handle}`
-            el.textContent = user.handle
+            users.forEach((user) => {
+              const el = document.createElement('li')
+              el.role = 'option'
+              el.dataset.value = `@${user.handle}`
+              el.textContent = user.handle
 
-            fragment.appendChild(el)
-          })
+              fragment.appendChild(el)
+            })
 
-          return {
-            fragment,
-            matched: users.length,
-          }
-        })(),
-      )
-    }
-
-    const handleTextExpanderValue = (event: any) => {
-      const { key, item } = event.detail
-
-      if (key === MENTION_KEY_CHAR) {
-        event.detail.value = item.getAttribute('data-value')
+            return {
+              fragment,
+              matched: users.length,
+            }
+          })(),
+        )
       }
-    }
 
-    const handleTextExpanderCommitted = (event: any) => {
-      const { input } = event.detail
-      onChange && onChange(input.value)
-    }
+      const handleTextExpanderValue = (event: any) => {
+        const { key, item } = event.detail
 
-    if (textExpanderRef.current) {
-      textExpanderRef.current.addEventListener('text-expander-change', handleTextExpanderChange)
-      textExpanderRef.current.addEventListener('text-expander-value', handleTextExpanderValue)
-      textExpanderRef.current.addEventListener(
-        'text-expander-committed',
-        handleTextExpanderCommitted,
-      )
-    }
-  }, [])
+        if (key === MENTION_KEY_CHAR) {
+          event.detail.value = item.getAttribute('data-value')
+        }
+      }
 
-  return (
-    // TODO: In the future, we could potentially use `#` for the `multiword` arg
-    // as a way to mention Groups?
-    <div className="text-expander-container">
-      <text-expander keys={MENTION_KEY_CHAR} ref={textExpanderRef}>
-        <TextArea onChange={handleChange} {...props} />
-      </text-expander>
-      <style jsx>
-        {`
-          .text-expander-container {
-            position: relative;
-          }
+      const handleTextExpanderCommitted = (event: any) => {
+        const { input } = event.detail
+        onChange && onChange(input.value)
+      }
 
-          .text-expander-container > :global(:first-child) {
-            display: block;
-          }
+      if (textExpanderRef.current) {
+        textExpanderRef.current.addEventListener('text-expander-change', handleTextExpanderChange)
+        textExpanderRef.current.addEventListener('text-expander-value', handleTextExpanderValue)
+        textExpanderRef.current.addEventListener(
+          'text-expander-committed',
+          handleTextExpanderCommitted,
+        )
+      }
+    }, [])
 
-          :global(.user-name-search) {
-            margin-top: 24px;
-            position: absolute;
-            z-index: 1;
-            background: white;
-            border: 1px solid black;
-            border-radius: 5px;
-            min-width: 250px;
-          }
+    return (
+      // TODO: In the future, we could potentially use `#` for the `multiword` arg
+      // as a way to mention Groups?
+      <div className="text-expander-container">
+        <text-expander keys={MENTION_KEY_CHAR} ref={textExpanderRef}>
+          <TextArea onChange={handleChange} ref={ref} {...props} />
+        </text-expander>
+        <style jsx>
+          {`
+            .text-expander-container {
+              position: relative;
+            }
 
-          :global(.user-name-search > li) {
-            font-weight: 600;
-            border-bottom: 1px solid ${theme.colors.gray500};
-          }
+            .text-expander-container > :global(:first-child) {
+              display: block;
+            }
 
-          :global(.user-name-search > li:hover) {
-            cursor: pointer;
-            background: ${theme.colors.highlightColor};
-          }
+            :global(.user-name-search) {
+              margin-top: 24px;
+              position: absolute;
+              z-index: 1;
+              background: white;
+              border: 1px solid black;
+              border-radius: 5px;
+              min-width: 250px;
+            }
 
-          :global(.user-name-search > li[aria-selected='true']) {
-            background: ${theme.colors.highlightColor};
-          }
-        `}
-      </style>
-    </div>
-  )
-}
+            :global(.user-name-search > li) {
+              font-weight: 600;
+              border-bottom: 1px solid ${theme.colors.gray500};
+            }
+
+            :global(.user-name-search > li:hover) {
+              cursor: pointer;
+              background: ${theme.colors.highlightColor};
+            }
+
+            :global(.user-name-search > li[aria-selected='true']) {
+              background: ${theme.colors.highlightColor};
+            }
+          `}
+        </style>
+      </div>
+    )
+  },
+)
 
 export default MarkdownEditor

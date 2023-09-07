@@ -350,7 +350,9 @@ yargs
       if (badgeOptionsArray.includes(args.badgeName)) {
         await db.query`
           INSERT INTO "UserBadge"
-          VALUES (DEFAULT, ${args.badgeName}, DEFAULT, ${userId});
+          ("type", "userId")
+          VALUES
+          (${args.badgeName}, ${userId});
         `
       } else {
         console.error(`No badge called ${args.badgeName} found`)

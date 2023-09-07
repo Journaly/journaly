@@ -116,12 +116,13 @@
       "postComments_plural": "Ci sono {{count}} nuovi commenti generali sul tuo post",
       "postCommentsSubscribed": "C'è 1 nuovo commento generale su questo post",
       "postCommentsSubscribed_plural": "Ci sono {{count}} nuovi commenti generali su questo post",
-      "postClaps": "1 Journalista ha applaudito il tuo post", 
+      "postClaps": "1 Journalista ha applaudito il tuo post",
       "postClaps_plural": "{{count}} Journalisti hanno applaudito questo post",
       "threadCommentThanks": "{{userIdentifier}} ha ringraziato per 1 commento di feedback",
       "threadCommentThanks_plural": "{{userIdentifier}} ha ringraziato per {{count}} commenti di feedback",
       "newPosts": "Un Journalista che segui ha pubblicato un nuovo post",
-      "newPosts_plural": "Dei Journalisti che segui hanno pubblicato {{count}} nuovi post"
+      "newPosts_plural": "Dei Journalisti che segui hanno pubblicato {{count}} nuovi post",
+      "mention": "{{mentioner}} mentioned you in a comment"
     },
     "levelTwo": {
       "newFollowers": "Questo fantastico Journalista ha iniziato a seguirti",

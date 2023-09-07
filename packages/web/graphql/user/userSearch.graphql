@@ -1,0 +1,9 @@
+query userSearch(
+  $search: String!
+) {
+  users( search: $search ) {
+    id
+    handle
+    name
+  }
+}

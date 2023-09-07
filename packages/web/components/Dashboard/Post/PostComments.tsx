@@ -19,9 +19,9 @@ import PostComment from './PostComment'
 import Thread from '@/components/InlineFeedbackPopover/Thread'
 import Button, { ButtonVariant } from '@/components/Button'
 import TabToggle from '@/components/TabToggle'
-import Textarea from '@/components/Textarea'
 import useUILanguage from '@/hooks/useUILanguage'
 import { generateNegativeRandomNumber } from '@/utils/number'
+import MarkdownEditor from '@/components/MarkdownEditor/MarkdownEditor'
 
 type PostCommentsProps = {
   postId: number
@@ -97,6 +97,8 @@ const PostComments = ({
             __typename: 'User',
             handle: currentUser!.handle,
             id: currentUser!.id,
+            name: currentUser!.name,
+            profileImage: currentUser!.profileImage,
           },
           id: generateNegativeRandomNumber(),
           createdAt: new Date().toISOString(),
@@ -136,10 +138,10 @@ const PostComments = ({
               <form onSubmit={createNewPostComment}>
                 <fieldset>
                   <div className="new-comment-block">
-                    <Textarea
+                    <MarkdownEditor
                       placeholder={t('addCommentPlaceholder')}
                       value={postCommentBody}
-                      onChange={(e) => setPostCommentBody(e.target.value)}
+                      onChange={setPostCommentBody}
                       disabled={loading}
                       rows={4}
                     />
@@ -214,7 +216,7 @@ const PostComments = ({
         }
 
         fieldset {
-          padding: 0 5px 5px;
+          padding: 5px;
           border: 1px solid ${theme.colors.gray400};
           border-radius: 5px;
           background-color: ${theme.colors.gray100};
@@ -225,8 +227,6 @@ const PostComments = ({
           width: 100%;
           padding: 5px;
           background-color: ${theme.colors.white};
-          margin-top: 10px;
-          margin-right: 10px;
           resize: vertical;
           border: 1px solid ${theme.colors.gray400};
           border-radius: 5px;

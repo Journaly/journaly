@@ -353,4 +353,41 @@ fragment NotificationFragment on InAppNotification {
       }
     }
   }
+  mentionNotifications {
+    comment {
+      id
+      body
+      author {
+        id
+        handle
+        profileImage
+      }
+      thread {
+        id
+        post {
+          id
+          headlineImage {
+            smallSize
+          }
+          title
+        }
+      }
+    }
+    postComment {
+      id
+      body
+      author {
+        id
+        handle
+        profileImage
+      }
+      post {
+        id
+        headlineImage {
+          smallSize
+        }
+        title
+      }
+    }
+  }
 }

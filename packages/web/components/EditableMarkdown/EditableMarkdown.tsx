@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkMentions from 'remark-mentions'
 
 import theme from '@/theme'
 
@@ -44,7 +45,10 @@ const EditableMarkdown = ({
       ) : (
         <Markdown
           disallowedElements={['img']}
-          remarkPlugins={[remarkGfm]}
+          remarkPlugins={[
+            remarkGfm,
+            [remarkMentions, { usernameLink: (handle: string) => `/user/${handle}` }],
+          ]}
         >
           {body}
         </Markdown>

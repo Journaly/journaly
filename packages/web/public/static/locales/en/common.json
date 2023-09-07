@@ -99,7 +99,8 @@
       "threadCommentThanks": "{{userIdentifier}} said thanks for 1 feedback comment",
       "threadCommentThanks_plural": "{{userIdentifier}} said thanks for {{count}} feedback comments",
       "newPosts": "A Journaler you follow published a new post",
-      "newPosts_plural": "Journalers you follow published {{count}} new posts"
+      "newPosts_plural": "Journalers you follow published {{count}} new posts",
+      "mention": "{{mentioner}} mentioned you in a comment"
     },
     "levelTwo": {
       "newFollowers": "This awesome Journaler is now following you",

@@ -41,7 +41,8 @@
   },
   "dependencies": {
     "@apollo/client": "3.7.14",
-    "@journaly/j-db-client": "^13.19.1",
+    "@github/text-expander-element": "^2.5.0",
+    "@journaly/j-db-client": "^13.20.0",
     "@prisma/client": "^3.15.2",
     "@stripe/react-stripe-js": "^1.2.2",
     "@stripe/stripe-js": "^1.12.1",
@@ -84,6 +85,7 @@
     "react-toastify": "^6.0.8",
     "reactjs-popup": "^2.0.4",
     "remark-gfm": "^2.0.0",
+    "remark-mentions": "^1.1.0",
     "slate": "^0.91.4",
     "slate-history": "^0.86.0",
     "slate-hyperscript": "^0.77.0",

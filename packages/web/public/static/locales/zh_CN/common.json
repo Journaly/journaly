@@ -121,7 +121,8 @@
       "threadCommentThanks": "{{userIdentifier}} 感谢了您的点评",
       "threadCommentThanks_plural": "{{userIdentifier}} 感谢了您的 {{count}} 条点评",
       "newPosts": "您关注的 1 位Journaler发布了新日志",
-      "newPosts_plural": "您关注的Journalers发布了 {{count}} 篇新日志"
+      "newPosts_plural": "您关注的Journalers发布了 {{count}} 篇新日志",
+      "mention": "{{mentioner}} 在回复中提及了您"
     },
     "levelTwo": {
       "newFollowers": "这位超棒的Jounaler正在关注您",

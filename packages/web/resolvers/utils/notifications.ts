@@ -75,83 +75,113 @@ type InAppNotificationSubtypes = {
     type: 'NEW_POST'
     subNotification: Prisma.NewPostNotificationUncheckedCreateWithoutNotificationInput
   }
+  Mention: {
+    type: 'MENTION'
+    subNotification: Prisma.MentionNotificationUncheckedCreateWithoutNotificationInput
+  }
 }
 
 type BaseInAppNotificationCreationInput = {
-  userId: number,
-  key: Partial<Pick<Prisma.InAppNotificationUncheckedCreateInput, 'postId' | 'triggeringUserId' >>
+  userId: number
+  key: Partial<
+    Pick<Prisma.InAppNotificationUncheckedCreateInput, 'postId' | 'triggeringUserId'>
+  > | null
 }
 
-type InAppNotificationCreationInput = (
-  BaseInAppNotificationCreationInput
-  & InAppNotificationSubtypes[keyof InAppNotificationSubtypes]
-)
-
+type InAppNotificationCreationInput = BaseInAppNotificationCreationInput &
+  InAppNotificationSubtypes[keyof InAppNotificationSubtypes]
 
 const createInAppNotification = async (
   db: PrismaClient,
   input: InAppNotificationCreationInput,
-  notificationTime?: Date
+  notificationTime?: Date,
 ) => {
   const timestamp = notificationTime || new Date()
 
-  let ian = await db.inAppNotification.findFirst({
-    where: {
-      ...input.key,
-      readStatus: 'UNREAD',
-      type: input.type,
-      userId: input.userId,
-    },
-  })
+  // If you pass an empty `key` object,
+  // all notification of this type will be grouped together.
+  // If you pass a key value of `null`,
+  // no grouping will occur.
+  let ian
+  if (input.key !== null) {
+    ian = await db.inAppNotification.findFirst({
+      where: {
+        ...input.key,
+        readStatus: 'UNREAD',
+        type: input.type,
+        userId: input.userId,
+      },
+    })
+  }
 
-  let subnoteData: Partial<Pick<Prisma.InAppNotificationCreateInput, 'threadCommentNotifications' | 'postCommentNotifications' | 'newFollowerNotifications' | 'postClapNotifications' | 'threadCommentThanksNotifications' | 'newPostNotifications' | 'newFollowerNotifications'>>
+  let subnoteData: Partial<
+    Pick<
+      Prisma.InAppNotificationCreateInput,
+      | 'threadCommentNotifications'
+      | 'postCommentNotifications'
+      | 'newFollowerNotifications'
+      | 'postClapNotifications'
+      | 'threadCommentThanksNotifications'
+      | 'newPostNotifications'
+      | 'newFollowerNotifications'
+      | 'mentionNotifications'
+    >
+  >
 
   switch (input.type) {
     case 'THREAD_COMMENT': {
       subnoteData = {
         threadCommentNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
     case 'THREAD_COMMENT_THANKS': {
       subnoteData = {
         threadCommentThanksNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
     case 'POST_CLAP': {
       subnoteData = {
         postClapNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
     case 'POST_COMMENT': {
       subnoteData = {
         postCommentNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
     case 'NEW_POST': {
       subnoteData = {
         newPostNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
       }
       break
     }
     case 'NEW_FOLLOWER': {
       subnoteData = {
         newFollowerNotifications: {
-          create: [input.subNotification]
-        }
+          create: [input.subNotification],
+        },
+      }
+      break
+    }
+    case 'MENTION': {
+      subnoteData = {
+        mentionNotifications: {
+          create: [input.subNotification],
+        },
       }
       break
     }
@@ -163,7 +193,7 @@ const createInAppNotification = async (
       data: {
         ...subnoteData,
         bumpedAt: timestamp,
-      }
+      },
     })
   } else {
     ian = await db.inAppNotification.create({
@@ -173,7 +203,7 @@ const createInAppNotification = async (
         bumpedAt: timestamp,
         userId: input.userId,
         type: input.type,
-      }
+      },
     })
   }
 

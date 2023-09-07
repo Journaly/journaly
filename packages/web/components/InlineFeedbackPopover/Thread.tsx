@@ -12,7 +12,7 @@ import {
 import theme from '@/theme'
 import Comment from './Comment'
 import Button, { ButtonVariant } from '@/components/Button'
-import Textarea from '@/components/Textarea'
+import MarkdownEditor from '../MarkdownEditor/MarkdownEditor'
 
 export type PendingThreadData = {
   postId: number
@@ -62,8 +62,8 @@ const Thread: React.FC<ThreadProps> = ({
         const { data } = await createThread({
           variables: {
             ...pendingThreadData,
-            body: commentBody
-          }
+            body: commentBody,
+          },
         })
 
         if (!data) {
@@ -82,7 +82,6 @@ const Thread: React.FC<ThreadProps> = ({
         onNewComment(thread.id)
       }
 
-
       textareaRef.current.value = ''
     } catch (e) {
       console.error('Error creating comment or thread: ', e)
@@ -95,10 +94,7 @@ const Thread: React.FC<ThreadProps> = ({
   const archived = thread?.archived || false
   const highlightedContent = (pendingThreadData || thread)?.highlightedContent || ''
 
-  const sanitizedHTML = useMemo(
-    () => sanitize(highlightedContent),
-    [highlightedContent]
-  )
+  const sanitizedHTML = useMemo(() => sanitize(highlightedContent), [highlightedContent])
 
   return (
     <div className="thread">
@@ -126,7 +122,7 @@ const Thread: React.FC<ThreadProps> = ({
           <form onSubmit={createNewComment}>
             <fieldset>
               <div className="new-comment-block">
-                <Textarea
+                <MarkdownEditor
                   placeholder={t('addCommentPlaceholder')}
                   disabled={loading}
                   ref={textareaRef}

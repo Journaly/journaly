@@ -17,6 +17,7 @@ const InAppNotification = objectType({
     t.model.postClapNotifications({ pagination: false })
     t.model.threadCommentThanksNotifications({ pagination: false })
     t.model.newPostNotifications({ pagination: false })
+    t.model.mentionNotifications({ pagination: false })
   },
 })
 
@@ -65,6 +66,15 @@ const NewPostNotification = objectType({
   definition(t) {
     t.model.id()
     t.model.post()
+  },
+})
+
+const MentionNotification = objectType({
+  name: 'MentionNotification',
+  definition(t) {
+    t.model.id()
+    t.model.comment()
+    t.model.postComment()
   },
 })
 
@@ -129,7 +139,7 @@ const NotificationMutations = extendType({
             id: args.notificationId,
           },
         })
-        
+
         if (!notification) {
           throw new Error('Notification not found')
         }
@@ -155,4 +165,5 @@ export default [
   ThreadCommentThanksNotification,
   NewPostNotification,
   NotificationMutations,
+  MentionNotification,
 ]

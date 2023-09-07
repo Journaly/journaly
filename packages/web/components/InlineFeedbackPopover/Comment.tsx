@@ -32,6 +32,10 @@ type CommentProps = {
   currentUser?: UserType | null
 }
 
+// The character that triggers a "mention" search
+// TODO move this somewhere else as it will be shared with PostComment
+// const MENTION_KEYWORD_CHAR = '@'
+
 const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProps) => {
   const { t } = useTranslation('comment')
   const [isEditMode, setIsEditMode] = useState(false)

@@ -64,7 +64,12 @@ const Modal: React.FC<Props> = (props) => {
   }
 
   return ReactDOM.createPortal(
-    <div className="modal-container" onClick={onClose} data-testid={dataTestId}>
+    <div
+      className="modal-container"
+      role="dialog"
+      onClick={onClose}
+      data-testid={dataTestId}
+    >
       <div className="modal-wrapper">
         <ModalContent
           type={onFormSubmit ? 'form' : 'div'}

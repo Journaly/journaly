@@ -105,6 +105,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
         <div className="right-hand-actions" ref={rightHandActionsRef}>
           <Button
             variant={ButtonVariant.Icon}
+            tabIndex={-1}
             onClick={() => {
               handleCloseActions()
               nonDestructiveAction()
@@ -117,6 +118,7 @@ const SwipeableElement: React.FC<SwipeableElementProps> = ({
           </Button>
           <Button
             variant={ButtonVariant.Icon}
+            tabIndex={-1}
             onClick={() => {
               handleCloseActions()
               destructiveAction()

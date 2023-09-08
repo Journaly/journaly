@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import Nav, { navConstants } from '@/components/Dashboard/Nav'
 import { layoutPadding } from '@/components/Dashboard/dashboardConstants'
+import SkipLink, { SkipLinkTarget } from '@/components/SkipLink'
 import Header from '@/components/Dashboard/Header'
 import NotificationContextProvider from '../NotificationFeed/NotificationContext'
 
@@ -25,6 +26,9 @@ const DashboardLayout: React.FC<Props> = ({ children, pad = 'always' }) => {
 
   return (
     <NotificationContextProvider>
+      <SkipLink target="start-of-content">
+        Skip to content
+      </SkipLink>
       <div className="dashboard">
         <Header onMenuClick={toggleNav} />
 
@@ -34,7 +38,10 @@ const DashboardLayout: React.FC<Props> = ({ children, pad = 'always' }) => {
           disableLargeNav={router.pathname.includes('/settings/')}
         />
 
-        <div className={dashboardContainerStyles}>{children}</div>
+        <div className={dashboardContainerStyles}>
+          <SkipLinkTarget id="start-of-content" />
+          {children}
+        </div>
 
         <style jsx>{`
           .dashboard {

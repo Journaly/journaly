@@ -14,8 +14,8 @@ const NotificationCount: React.FC<NotificationCountProps> = ({ count }) => {
           position: absolute;
           background: ${theme.colors.blueLight};
           color: ${theme.colors.white};
-          border-radius: 50%;
-          padding: 0 8px;
+          border-radius: 10px;
+          padding: 3px 5px;
           font-size: 12px;
           top: -10px;
           right: -5px;

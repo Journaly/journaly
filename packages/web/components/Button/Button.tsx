@@ -36,6 +36,7 @@ type Props = {
   variant?: ButtonVariant
   style?: CSS.Properties | undefined
   dataTestId?: string
+  tabIndex?: number
 }
 
 const Button: React.FC<Props> = (props) => {
@@ -172,10 +173,9 @@ const Button: React.FC<Props> = (props) => {
           border: none;
           padding: 0;
         }
-        .${ButtonVariant.Link}:hover:not(:disabled) {
-          text-decoration: underline;
-        }
+        .${ButtonVariant.Link}:hover:not(:disabled),
         .${ButtonVariant.Link}:focus:not(:disabled) {
+          text-decoration: underline;
           outline: none;
           border-width: 0;
         }

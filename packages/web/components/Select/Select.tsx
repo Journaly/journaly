@@ -134,9 +134,6 @@ const SelectBase = <T extends OptionValue>(
           -ms-appearance: none;
           appearance: none;
         }
-        select:focus {
-          outline: none;
-        }
         select::-ms-expand {
           display: none;
         }

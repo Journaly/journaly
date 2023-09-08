@@ -7,7 +7,7 @@ import JournalyEditor from '@/components/JournalyEditor'
 import XIcon from '@/components/Icons/XIcon'
 import Select from '@/components/Select'
 import MultiSelect from '@/components/MultiSelect'
-import Button from '@/components/Button'
+import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
 import useAutosavedState from '@/hooks/useAutosavedState'
 import {
@@ -237,11 +237,15 @@ const PostEditor: React.FC<PostEditorProps> = ({
             <Button onClick={() => setDisplayImageUploadModal(true)}>
               {t('uploadImageButtonText')}
             </Button>
-            <XIcon
-              className="cancel-image-icon"
-              color={theme.colors.white}
+            <Button
+              variant={ButtonVariant.Icon}
               onClick={() => setImage(null)}
-            />
+            >
+              <XIcon
+                className="cancel-image-icon"
+                color={theme.colors.white}
+              />
+            </Button>
           </div>
         </PostHeader>
       </div>

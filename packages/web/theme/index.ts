@@ -53,6 +53,7 @@ export type Theme = {
   typography: {
     readonly [key in Typography]: string
   }
+  buttonReset: string
 }
 
 const theme: Theme = {
@@ -147,6 +148,13 @@ const theme: Theme = {
       font-size: 12px;
     `,
   },
+  buttonReset: `
+    appearance: none;
+    border: none;
+    background: unset;
+    padding: 0;
+    margin: 0;
+  `
 }
 
 export default theme

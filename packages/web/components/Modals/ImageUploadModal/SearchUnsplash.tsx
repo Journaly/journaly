@@ -2,6 +2,7 @@ import React from 'react'
 import { createApi } from 'unsplash-js'
 import { toast } from 'react-toastify'
 import { InitiatePostImageUploadResponse } from '@/generated/graphql'
+import theme from '@/theme'
 import SearchInput from '@/components/Dashboard/Filters/SearchInput'
 import { useTranslation } from '@/config/i18n'
 
@@ -49,9 +50,12 @@ const ImageComp: React.FC<{
 
   return (
     <>
-      <div className="img-container">
-        <img src={urls.small} onClick={handleImageClick} />
-      </div>
+      <button
+        className="img-container"
+        onClick={handleImageClick}
+      >
+        <img src={urls.small} />
+      </button>
       <a className="credit" target="_blank" href={`https://unsplash.com/@${user.username}`}>
         {user.name}
       </a>
@@ -60,6 +64,8 @@ const ImageComp: React.FC<{
           height: 200px;
           border-radius: 3px;
           overflow: hidden;
+          width: 100%;
+          ${theme.buttonReset}
         }
 
         img {

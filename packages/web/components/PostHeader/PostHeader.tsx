@@ -43,6 +43,9 @@ const PostHeader: React.FC<PostHeaderProps> = ({
   return (
     <div className="post-header">
       <img src={postImage} alt={postTitle} />
+      <div className="embedded-content">
+        {children}
+      </div>
       <div className="post-header-info" dir="auto">
         <div className="top-badges">
           {language && (
@@ -84,7 +87,6 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           ))}
         </div>
       </div>
-      {children}
       <style jsx>{`
         .post-header {
           position: relative;
@@ -169,6 +171,13 @@ const PostHeader: React.FC<PostHeaderProps> = ({
           min-height: 310px;
           display: flex;
           flex-direction: column;
+        }
+
+        .embedded-content {
+          z-index: 1;
+          width: 100%;
+          height: 100%;
+          position: absolute;
         }
 
         .title-and-info {

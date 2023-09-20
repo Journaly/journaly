@@ -13,6 +13,7 @@ import { useSlate } from 'slate-react'
 
 import theme from '@/theme'
 
+import SkipLink, { SkipLinkTarget } from '@/components/SkipLink'
 import FormatBoldIcon from '@/components/Icons/FormatBoldIcon'
 import FormatItalicIcon from '@/components/Icons/FormatItalicIcon'
 import FormatUnderlinedIcon from '@/components/Icons/FormatUnderlinedIcon'
@@ -87,6 +88,7 @@ const Toolbar = ({
       <div ref={toolbarObserverRef} />
       <div className={toolbarClasses}>
         <div className="editor-toolbar">
+          <SkipLink target="end-editing-controls">Skip formatting controls</SkipLink>
           <div className="toolbar-row">
             <ToggleMarkButton type="bold">
               <FormatBoldIcon title="Bold" titleId="toolbar-bold-icon" />
@@ -165,6 +167,7 @@ const Toolbar = ({
               />
             </div>
           </div>
+          <SkipLinkTarget id="end-editing-controls" />
         </div>
         <style jsx>{`
           .editor-toolbar-container {

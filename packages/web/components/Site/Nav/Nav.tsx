@@ -16,22 +16,22 @@ const Nav = () => {
 
         <ul className="nav-items">
           <NavLink href="/about">
-            <a className="nav-link">{t('home.nav.about')}</a>
+            <span className="nav-link">{t('home.nav.about')}</span>
           </NavLink>
           <NavLink href="/pricing">
-            <a className="nav-link">{t('home.nav.pricing')}</a>
+            <span className="nav-link">{t('home.nav.pricing')}</span>
           </NavLink>
           {currentUser ? (
             <NavLink href="/my-feed">
-              <a className="nav-link">{t('home.nav.dashboard')}</a>
+              <span className="nav-link">{t('home.nav.dashboard')}</span>
             </NavLink>
           ) : (
             <>
               <NavLink href="/login">
-                <a className="nav-link">{t('home.nav.logIn')}</a>
+                <span className="nav-link">{t('home.nav.logIn')}</span>
               </NavLink>
               <NavLink href="/signup">
-                <a className="nav-link">{t('home.nav.signUp')}</a>
+                <span className="nav-link">{t('home.nav.signUp')}</span>
               </NavLink>
             </>
           )}

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import {
   CurrentUserDocument,
   CurrentUserQuery,
@@ -189,12 +189,16 @@ const NotificationFeed: React.FC<NotificationFeedProps> = ({ onClose }) => {
     })
   }
 
+  useEffect(() => {
+    document.getElementById('close-notif-feed')?.focus()
+  }, [])
+
   return (
     <div className="container" ref={feedContainerRef}>
       <div className="level-one">
         <div className="top">
           <p>Notifications</p>
-          <Button variant={ButtonVariant.Icon} onClick={onClose}>
+          <Button variant={ButtonVariant.Icon} onClick={onClose} id="close-notif-feed">
             <XIcon color={theme.colors.white} />
           </Button>
         </div>

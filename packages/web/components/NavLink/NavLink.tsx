@@ -18,7 +18,7 @@ const NavLink: React.FC<NavLinkProps> = (props) => {
   }
 
   return (
-    <Link href={href} {...otherProps} legacyBehavior>
+    <Link href={href} {...otherProps}>
       {React.cloneElement(child, { className })}
     </Link>
   )

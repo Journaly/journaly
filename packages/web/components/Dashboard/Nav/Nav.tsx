@@ -153,26 +153,26 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               </div>
               <div className="nav-bottom">
                 <NavLink href="/my-feed">
-                  <a className="nav-link" onClick={handleCollapse} data-testid="my-feed-nav-link">
+                  <span className="nav-link" onClick={handleCollapse} data-testid="my-feed-nav-link">
                     <FeedIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.myFeed')}</span>
-                  </a>
+                  </span>
                 </NavLink>
                 <NavLink href="/my-posts">
-                  <a className="nav-link" onClick={handleCollapse} data-testid="my-posts-nav-link">
+                  <span className="nav-link" onClick={handleCollapse} data-testid="my-posts-nav-link">
                     <FeedIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.myPosts')}</span>
-                  </a>
+                  </span>
                 </NavLink>
                 <NavLink href="/new-post">
-                  <a className="nav-link" onClick={handleCollapse} data-testid="new-post-nav-link">
+                  <span className="nav-link" onClick={handleCollapse} data-testid="new-post-nav-link">
                     <NewPostIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.newPost')}</span>
-                  </a>
+                  </span>
                 </NavLink>
                 <hr />
 
-                <div
+                <button
                   className="nav-link notifications"
                   onClick={notificationFeedState.toggleDesktop}
                   data-testid="notifications-nav-link"
@@ -183,15 +183,15 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                     aria-hidden="true"
                   />
                   <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
-                </div>
+                </button>
                 <NavLink href="/settings/profile">
-                  <a className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
+                  <span className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
                     <SettingsIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.settings')}</span>
-                  </a>
+                  </span>
                 </NavLink>
 
-                <a
+                <button
                   role="button"
                   className="log-out nav-link"
                   onClick={handleLogOut}
@@ -199,21 +199,20 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                 >
                   <LogOutIcon aria-hidden="true" />
                   <span className="nav-link-text">{t('dashboardNav.logOut')}</span>
-                </a>
+                </button>
               </div>
             </>
           )}
 
           <div className="nav-support">
             {currentUser && (
-              <span
-                role="button"
+              <button
                 className="help-btn"
                 onClick={() => setShouldShowModal(true)}
                 data-testid="help-nav-link"
               >
                 <HelpIcon width={30} height={30} />
-              </span>
+              </button>
             )}
             <h1 className="nav-logo">
               <Link href="/" legacyBehavior>
@@ -328,8 +327,9 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           align-items: center;
         }
 
-        .help-btn:hover {
+        .help-btn {
           cursor: pointer;
+          ${theme.buttonReset}
         }
 
         .nav-wrapper:not(.logged-in) .nav-logo {
@@ -403,6 +403,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
           color: ${theme.colors.white};
           transition: padding-left ${navConstants.transitionDuration}ms linear,
             padding-right ${navConstants.transitionDuration}ms linear;
+          ${theme.buttonReset}
         }
 
         .nav-link.notifications {

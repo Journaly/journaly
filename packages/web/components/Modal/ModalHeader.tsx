@@ -1,7 +1,6 @@
 import React from 'react'
 import Button, { ButtonVariant } from '@/components/Button'
 import XIcon from '@/components/Icons/XIcon'
-import modalConstants from './modalConstants'
 import { truncate } from '@/utils'
 import theme from '@/theme'
 
@@ -27,7 +26,7 @@ const ModalHeader: React.FC<Props> = ({ onClose, title, showTitle }) => {
           padding: ${showTitle ? '14px 64px' : '0'};
           border-bottom: ${showTitle ? '1px solid #d4d8db' : 0};
         }
-        @media (min-width: ${modalConstants.modalBreakpoint}) {
+        @media (min-width: ${theme.breakpoints.XS}) {
           .modal-header {
             padding: ${showTitle ? '14px 64px' : '0'};
           }
@@ -42,7 +41,7 @@ const ModalHeader: React.FC<Props> = ({ onClose, title, showTitle }) => {
         .modal-header :global(.modal-close-button):hover {
           background-color: ${theme.colors.gray500};
         }
-        @media (min-width: ${modalConstants.modalBreakpoint}) {
+        @media (min-width: ${theme.breakpoints.XS}) {
           .modal-header :global(.modal-close-button) {
             top: 16px;
           }
@@ -59,7 +58,7 @@ const ModalHeader: React.FC<Props> = ({ onClose, title, showTitle }) => {
           transition: opacity 150ms ease-in, border 150ms ease-in;
           ${truncate(247)};
         }
-        @media (min-width: ${modalConstants.modalBreakpoint}) {
+        @media (min-width: ${theme.breakpoints.XS}) {
           h1 {
             ${truncate(432)};
           }

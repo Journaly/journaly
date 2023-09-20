@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import modalConstants from './modalConstants'
 import theme from '@/theme'
 
 interface Props {
@@ -36,7 +35,13 @@ const ModalBody: React.FC<Props> = (props) => {
           padding: 0 24px 48px;
           overflow: auto;
         }
-        @media (min-width: ${modalConstants.modalBreakpoint}) {
+        @media (max-width: ${theme.breakpoints.XS}) {
+          #modal-body {
+            width: 100vw;
+          }
+        }
+
+        @media (min-width: ${theme.breakpoints.XS}) {
           #modal-body {
             padding: 0 40px 40px;
           }

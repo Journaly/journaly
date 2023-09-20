@@ -46,7 +46,7 @@ const Modal: React.FC<Props> = (props) => {
     ariaLabelledBy,
     ariaDescribedBy,
     triggerElementId = '',
-    maxWidth = modalConstants.modalBreakpoint,
+    maxWidth = theme.breakpoints.XS,
     maxHeight = '100%',
     dataTestId,
   } = props
@@ -124,7 +124,7 @@ const Modal: React.FC<Props> = (props) => {
           overflow: auto;
           animation: 300ms enterFromBottom cubic-bezier(0, 0, 0.2, 1);
         }
-        @media (min-width: ${modalConstants.modalBreakpoint}) {
+        @media (min-width: ${theme.breakpoints.XS}) {
           .modal-wrapper {
             padding: 64px 0;
           }
@@ -137,7 +137,7 @@ const Modal: React.FC<Props> = (props) => {
           max-width: ${maxWidth};
           background-color: ${theme.colors.white};
         }
-        @media (min-width: ${modalConstants.modalBreakpoint}) {
+        @media (min-width: ${theme.breakpoints.XS}) {
           :global(.modal-content) {
             flex-grow: 0;
             max-height: ${maxHeight};

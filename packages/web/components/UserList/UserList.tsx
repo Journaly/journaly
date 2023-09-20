@@ -28,6 +28,13 @@ const UserList: React.FC<UserListProps> = ({ users, colorScheme = 'light-mode' }
           display: flex;
           flex-direction: column;
           gap: 10px;
+          min-width: 400px;
+        }
+
+        @media (max-width: ${theme.breakpoints.XS}) {
+          .list-container {
+            min-width: unset;
+          }
         }
 
         .user-container {

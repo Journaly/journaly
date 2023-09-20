@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import modalConstants from './modalConstants'
 import theme from '@/theme'
 
 interface Props {

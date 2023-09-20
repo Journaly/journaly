@@ -1,7 +1,6 @@
 import React from 'react'
 import Button, { ButtonVariant } from '@/components/Button'
 import XIcon from '@/components/Icons/XIcon'
-import modalConstants from './modalConstants'
 import { truncate } from '@/utils'
 import theme from '@/theme'
 

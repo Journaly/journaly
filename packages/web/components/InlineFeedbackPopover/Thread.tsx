@@ -32,6 +32,8 @@ type ThreadProps = {
   currentUser: UserType | null | undefined
 } & ThreadOrHighlightProps
 
+const SUGGESTION_KEY_CHAR = '```'
+
 const Thread: React.FC<ThreadProps> = ({
   thread,
   pendingThreadData,
@@ -96,6 +98,14 @@ const Thread: React.FC<ThreadProps> = ({
 
   const sanitizedHTML = useMemo(() => sanitize(highlightedContent), [highlightedContent])
 
+  const handleClickInsertComment = () => {
+    // TODO: Don't override current text content
+    if (textareaRef.current) {
+      // setIsSuggestionMode(true)
+      textareaRef.current.value = `${SUGGESTION_KEY_CHAR}\n${highlightedContent}\n${SUGGESTION_KEY_CHAR}`
+    }
+  }
+
   return (
     <div className="thread">
       <div className="thread-subject">
@@ -112,6 +122,7 @@ const Thread: React.FC<ThreadProps> = ({
                 key={idx}
                 onUpdateComment={onUpdateComment}
                 currentUser={currentUser}
+                highlightedContent={highlightedContent}
               />
             )
           })}
@@ -122,6 +133,15 @@ const Thread: React.FC<ThreadProps> = ({
           <form onSubmit={createNewComment}>
             <fieldset>
               <div className="new-comment-block">
+                <div className="new-comment-toolbar">
+                  <Button
+                    variant={ButtonVariant.Link}
+                    className="new-comment-toolbar-btn"
+                    onClick={handleClickInsertComment}
+                  >
+                    Insert Suggestion
+                  </Button>
+                </div>
                 <MarkdownEditor
                   placeholder={t('addCommentPlaceholder')}
                   disabled={loading}
@@ -214,6 +234,16 @@ const Thread: React.FC<ThreadProps> = ({
 
         .btn-container :global(.new-comment-btn) {
           margin-right: 10px;
+        }
+
+        .new-comment-toolbar {
+          text-align: center;
+          font-size: 12px;
+          font-weight: 600;
+          /* background-color: ${theme.colors.gray100}; */
+        }
+        .new-comment-toolbar-btn {
+          text-transform: uppercase;
         }
       `}</style>
     </div>

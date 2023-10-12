@@ -30,13 +30,20 @@ type CommentProps = {
   canEdit: boolean
   onUpdateComment(): void
   currentUser?: UserType | null
+  highlightedContent: string
 }
 
 // The character that triggers a "mention" search
 // TODO move this somewhere else as it will be shared with PostComment
 // const MENTION_KEYWORD_CHAR = '@'
 
-const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProps) => {
+const Comment = ({
+  comment,
+  canEdit,
+  onUpdateComment,
+  currentUser,
+  highlightedContent,
+}: CommentProps) => {
   const { t } = useTranslation('comment')
   const [isEditMode, setIsEditMode] = useState(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState(comment.body)
@@ -178,6 +185,7 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           updatingCommentBody={updatingCommentBody}
           setUpdatingCommentBody={setUpdatingCommentBody}
           editing={isEditMode}
+          baseContent={highlightedContent}
         />
       </div>
       {canEdit && !isEditMode && (

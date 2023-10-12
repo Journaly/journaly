@@ -4,12 +4,14 @@ import remarkGfm from 'remark-gfm'
 import remarkMentions from 'remark-mentions'
 
 import theme from '@/theme'
+import rehypedSuggestions from '@/utils/rehypeSuggestions'
 
 type EditableMarkdownProps = {
   body: string
   updatingCommentBody: string
   setUpdatingCommentBody: (arg0: string) => void
   editing?: boolean
+  baseContent?: string
 }
 
 const EditableMarkdown = ({
@@ -17,13 +19,13 @@ const EditableMarkdown = ({
   updatingCommentBody,
   setUpdatingCommentBody,
   editing = false,
+  baseContent,
 }: EditableMarkdownProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Focus textarea and select content when opening edit mode.
   useEffect(() => {
-    if (!editing)
-      return
+    if (!editing) return
 
     setTimeout(() => {
       const el = textareaRef.current
@@ -49,6 +51,8 @@ const EditableMarkdown = ({
             remarkGfm,
             [remarkMentions, { usernameLink: (handle: string) => `/user/${handle}` }],
           ]}
+          // TODO (This PR) figure out this type
+          rehypePlugins={[...(baseContent ? ([[rehypedSuggestions, { baseContent }]] as any) : [])]}
         >
           {body}
         </Markdown>

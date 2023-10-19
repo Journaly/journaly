@@ -586,6 +586,9 @@ enum EmailNotificationType {
   POST_CLAP
 }
 
+// WARNING: Every new notification type requires
+// updating our DB trigger to clean up toxic InAppNotifications
+// whenever sub-notifications are deleted.
 enum InAppNotificationType {
   THREAD_COMMENT
   POST_COMMENT

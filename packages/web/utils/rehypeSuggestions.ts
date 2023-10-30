@@ -9,12 +9,9 @@ import { suggestionDiff } from '@/utils/suggestionDiff'
  * @type {import('unified').Plugin<[Options?]|void[], Root>}
  */
 export default function rehypedSuggestions(options: any) {
-  console.log('options', options)
   // TODO (this PR): figure this type out
   return (tree: any) => {
-    console.log('tree', tree)
     visit(tree, 'element', (node) => {
-      console.log('VISITING...')
       let { data, tagName } = node
       console.log(tagName)
 
@@ -26,12 +23,26 @@ export default function rehypedSuggestions(options: any) {
       }
 
       node.properties.className = ['suggestion']
+
+      const oldStrDiv = document.createElement('div')
+      const newStrDiv = document.createElement('div')
+
+      oldStrDiv.textContent = 'old'
+      newStrDiv.textContent = 'new'
+
+      console.log(oldStrDiv)
+      console.log(newStrDiv)
+
+      // node.appendChild(oldStrDiv)
+      // node.appendChild(newStrDiv)
+      console.log('node', node)
       const textNode = node.children[0].children[0]
+      console.log('textNode', textNode)
       const originalStr = options.baseContent
       const suggestionStr = textNode.value
 
       const diff = suggestionDiff(originalStr, suggestionStr)
-      console.log(diff)
+      console.log('diff', diff)
 
       textNode.value = `- ${options.baseContent} \n + ${textNode.value}`
 

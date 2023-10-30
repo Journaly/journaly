@@ -1,7 +1,9 @@
 import { visit } from 'unist-util-visit'
 import { Properties } from 'hast'
+import { suggestionDiff } from '@/utils/suggestionDiff'
 
 /**
+ * TOOD: update this
  * Plugin to enable, disable, and ignore messages.
  *
  * @type {import('unified').Plugin<[Options?]|void[], Root>}
@@ -24,6 +26,14 @@ export default function rehypedSuggestions(options: any) {
       }
 
       node.properties.className = ['suggestion']
+      const textNode = node.children[0].children[0]
+      const originalStr = options.baseContent
+      const suggestionStr = textNode.value
+
+      const diff = suggestionDiff(originalStr, suggestionStr)
+      console.log(diff)
+
+      textNode.value = `- ${options.baseContent} \n + ${textNode.value}`
 
       const props: Properties = data.hProperties || (data.hProperties = {})
 

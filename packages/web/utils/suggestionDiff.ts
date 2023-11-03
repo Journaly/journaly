@@ -5,47 +5,35 @@ type Memo = {
 const suggestionDiff = (originalStr: string, suggestedStr: string) => {
   const lcs = longestCommonSubsequence(originalStr, suggestedStr)
 
-  let idx1 = 0
-  let idx1Next = 0
-  let idx2 = 0
-  let idx2Next = 0
-  const additions = []
-  const deletions = []
-  const unchanged = []
-
   const oldStr = []
   const newStr = []
   let oldIdx = 0
   let newIdx = 0
-
-  for (let idx = 0; idx < lcs.length; idx += 1) {
-    idx1Next = originalStr.indexOf(lcs[idx], idx1)
-    idx2Next = suggestedStr.indexOf(lcs[idx], idx2)
-
+  let idx = 0
+  while (idx < lcs.length) {
+    const deletions: string[] = []
     while (originalStr[oldIdx] !== lcs[idx]) {
-      oldStr.push(['-', originalStr[oldIdx]])
+      deletions.push(originalStr[oldIdx])
       oldIdx++
     }
+    deletions.length && oldStr.push(['-', deletions.join('')])
 
+    const additions: string[] = []
     while (suggestedStr[newIdx] !== lcs[idx]) {
-      newStr.push(['+', suggestedStr[newIdx]])
+      additions.push(suggestedStr[newIdx])
       newIdx++
     }
+    additions.length && newStr.push(['+', additions.join('')])
 
-    oldStr.push([' ', originalStr[oldIdx]])
-    newStr.push([' ', suggestedStr[newIdx]])
-
-    oldIdx++
-    newIdx++
-
-    // deletions.push(`x${originalStr.substring(idx1, idx1Next)}x`)
-    // additions.push(`+${suggestedStr.substring(idx2, idx2Next)}+`)
-
-    // additions.push(lcs[idx])
-    // deletions.push(lcs[idx])
-
-    // idx1 = idx1Next + 1
-    // idx2 = idx2Next + 1
+    const unchanged: string[] = []
+    while (originalStr[oldIdx] === lcs[idx] && suggestedStr[newIdx] === lcs[idx]) {
+      unchanged.push(lcs[idx])
+      idx++
+      oldIdx++
+      newIdx++
+    }
+    oldStr.push([' ', unchanged.join('')])
+    newStr.push([' ', unchanged.join('')])
   }
 
   while (oldIdx < originalStr.length) {
@@ -58,13 +46,8 @@ const suggestionDiff = (originalStr: string, suggestedStr: string) => {
     newIdx++
   }
 
-  // additions.push(`+${suggestedStr.substring(idx2)}+`)
-  // deletions.push(`x${originalStr.substring(idx1)}x`)
-
   return {
     lcs,
-    // additions: additions.join(''),
-    // deletions: deletions.join(''),
     oldStr,
     newStr,
   }

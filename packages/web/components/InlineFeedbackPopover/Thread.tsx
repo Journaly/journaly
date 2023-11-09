@@ -99,10 +99,9 @@ const Thread: React.FC<ThreadProps> = ({
   const sanitizedHTML = useMemo(() => sanitize(highlightedContent), [highlightedContent])
 
   const handleClickInsertComment = () => {
-    // TODO: Don't override current text content
     if (textareaRef.current) {
       // setIsSuggestionMode(true)
-      textareaRef.current.value = `${SUGGESTION_KEY_CHAR}\n${highlightedContent}\n${SUGGESTION_KEY_CHAR}`
+      textareaRef.current.value += `${SUGGESTION_KEY_CHAR}\n${highlightedContent}\n${SUGGESTION_KEY_CHAR}`
     }
   }
 

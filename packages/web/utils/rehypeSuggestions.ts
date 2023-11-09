@@ -23,16 +23,12 @@ export default function rehypedSuggestions(options: any) {
       }
 
       node.properties.className = ['suggestion']
-      console.log(node)
       const textNode = node.children[0].children[0]
       const originalStr = options.baseContent
       const suggestionStr = textNode.value
 
       const { lcs, oldStr, newStr } = suggestionDiff(originalStr, suggestionStr)
-      console.log('lcs', lcs)
-      // console.log('diff', diff)
 
-      // const oldStrDiv = document.createElement('div')
       const oldStrDiv = {
         type: 'element',
         tagName: 'div',
@@ -53,12 +49,6 @@ export default function rehypedSuggestions(options: any) {
         },
       }
 
-      console.log('oldStr', oldStr)
-      console.log('newStr', newStr)
-      // oldStrDiv.classList.add('old-string')
-      // const newStrDiv = document.createElement('div')
-      // newStrDiv.classList.add('new-string')
-
       for (const [mode, value] of oldStr) {
         const newEl = {
           type: 'element',
@@ -74,7 +64,6 @@ export default function rehypedSuggestions(options: any) {
           },
         }
 
-        // console.log(el)
         if (mode === '-') {
           newEl.properties.className.push('del')
         } else if (mode === '+') {
@@ -106,15 +95,6 @@ export default function rehypedSuggestions(options: any) {
         }
         newStrDiv.children.push(newEl)
       }
-
-      // oldStrDiv.textContent = 'old'
-      // newStrDiv.textContent = 'new'
-
-      console.log(oldStrDiv)
-      console.log(newStrDiv)
-
-      // node.appendChild(oldStrDiv)
-      // node.appendChild(newStrDiv)
 
       textNode.value = `- ${options.baseContent} \n + ${textNode.value}`
       node.children[0].children = [oldStrDiv, newStrDiv]

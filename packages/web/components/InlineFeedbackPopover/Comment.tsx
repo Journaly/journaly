@@ -10,10 +10,11 @@ import {
   useCreateCommentThanksMutation,
   useDeleteCommentThanksMutation,
   CommentThanks,
-  UserFragmentFragment as UserType,
+  CurrentUserFragmentFragment as UserType,
+  UserRole,
 } from '@/generated/graphql'
 import theme from '@/theme'
-import { useTranslation } from '@/config/i18n'
+import { Router, useTranslation } from '@/config/i18n'
 import EditableMarkdown from '@/components/EditableMarkdown'
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
 import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
@@ -24,6 +25,8 @@ import LikeIcon from '@/components/Icons/LikeIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
 import LevelGauge from '../LevelGauge'
 import UserAvatar from '../UserAvatar'
+import PremiumFeatureModal from '../Modals/PremiumFeatureModal'
+import { JOURNALY_PREMIUM_URL } from '@/constants'
 
 type CommentProps = {
   comment: CommentType
@@ -52,6 +55,8 @@ const Comment = ({
       onUpdateComment()
     },
   })
+
+  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
 
   const [DeleteConfirmationModal, confirmDeletion] = useConfirmationModal({
     title: t('deleteCommentConfirmModalTitle'),
@@ -159,6 +164,22 @@ const Comment = ({
   const isLoadingCommentThanks =
     createCommentThanksResult.loading || deleteCommentThanksResult.loading
 
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
+
+  const handleAcceptSuggestionClick = () => {
+    // Do lots of things to apply the suggestion
+    console.log(currentUser)
+    if (!isPremiumFeatureEligible) {
+      setDisplayPremiumFeatureModal(true)
+    } else {
+      setDisplayPremiumFeatureModal(true)
+      // do the thing!
+    }
+  }
+
   return (
     <div className="comment">
       <div className="author-body-container">
@@ -187,6 +208,9 @@ const Comment = ({
           editing={isEditMode}
           baseContent={highlightedContent}
         />
+        <Button size={ButtonSize.Small} onClick={handleAcceptSuggestionClick}>
+          Accept Suggestion
+        </Button>
       </div>
       {canEdit && !isEditMode && (
         <div className="edit-thanks-block">
@@ -250,6 +274,16 @@ const Comment = ({
           </span>
           <span className="thanks-count">{numThanks}</span>
         </div>
+      )}
+      {displayPremiumFeatureModal && (
+        <PremiumFeatureModal
+          featureExplanation={t('acceptSuggestionPremiumFeatureExplanation')}
+          onAcknowledge={() => setDisplayPremiumFeatureModal(false)}
+          onGoToPremium={() => {
+            Router.push(JOURNALY_PREMIUM_URL)
+            setDisplayPremiumFeatureModal(false)
+          }}
+        />
       )}
       <DeleteConfirmationModal />
       <style jsx>{`

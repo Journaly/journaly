@@ -39,7 +39,7 @@ import {
 } from './helpers'
 import ClapIcon from '@/components/Icons/ClapIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
-import { POST_BUMP_LIMIT } from '../../../constants'
+import { JOURNALY_PREMIUM_URL, POST_BUMP_LIMIT } from '@/constants'
 import { SelectionState, PostProps, PostContentProps, ThreadType } from './types'
 import BookmarkIcon from '@/components/Icons/BookmarkIcon'
 import UserListModal from '@/components/Modals/UserListModal'
@@ -794,7 +794,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={() => {
-            Router.push('/settings/subscription')
+            Router.push(JOURNALY_PREMIUM_URL)
             setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}

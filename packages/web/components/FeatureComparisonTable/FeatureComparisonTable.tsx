@@ -77,6 +77,7 @@ const FeatureComparisonTable = ({ version = 'SETTINGS' }: FeatureComparisonTable
             <Feature name={t('features.postBumping')} plan="premium" />
             <Feature name={t('features.postSaving')} plan="premium" />
             <Feature name={t('features.privateShareLinks')} plan="premium" />
+            <Feature name={t('features.acceptSuggestions')} plan="premium" />
             <Feature name={t('features.supportTheCreators')} plan="premium" />
             <Feature name={t('features.supportFreeLearning')} plan="premium" />
             <Feature name={t('features.writingPrompts')} plan="premium" status="coming soon" />

@@ -108,6 +108,22 @@ const EditableMarkdown = ({
           text-decoration: underline;
         }
 
+        // Styles for suggestions
+        .body-block :global(.suggestion) {
+        }
+        .body-block :global(.old-string) {
+          background: ${theme.colors.redHighlight};
+        }
+        .body-block :global(.new-string) {
+          background: ${theme.colors.greenHighlight};
+        }
+        .body-block :global(.add) {
+          font-weight: 600;
+        }
+        .body-block :global(.del) {
+          text-decoration: line-through;
+        }
+
         textarea {
           flex: 1;
           width: 100%;
@@ -118,6 +134,10 @@ const EditableMarkdown = ({
           resize: vertical;
           border: 1px solid ${theme.colors.gray400};
           border-radius: 5px;
+        }
+
+        .suggestion {
+          background: pink;
         }
       `}</style>
     </div>

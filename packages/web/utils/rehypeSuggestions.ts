@@ -13,7 +13,6 @@ export default function rehypedSuggestions(options: any) {
   return (tree: any) => {
     visit(tree, 'element', (node) => {
       let { data, tagName } = node
-      console.log(tagName)
 
       if (tagName !== 'pre') return
 
@@ -25,7 +24,8 @@ export default function rehypedSuggestions(options: any) {
       node.properties.className = ['suggestion']
       const textNode = node.children[0].children[0]
       const originalStr = options.baseContent
-      const suggestionStr = textNode.value
+      // Strip out new line that Rehype introduces at the end of the tag.
+      const suggestionStr = textNode.value.replace(/\n$/, '')
 
       const { lcs, oldStr, newStr } = suggestionDiff(originalStr, suggestionStr)
 
@@ -99,13 +99,46 @@ export default function rehypedSuggestions(options: any) {
       textNode.value = `- ${options.baseContent} \n + ${textNode.value}`
       node.children[0].children = [oldStrDiv, newStrDiv]
 
-      const props: Properties = data.hProperties || (data.hProperties = {})
-
-      // data.hChildren = lowlight.highlight(lang, node.value, {prefix}).children
-      data.hChildren = 'foobar'
-
-      props.className = ['suggestion']
-      // console.log('node', node)
+      const headerDiv = {
+        type: 'element',
+        tagName: 'div',
+        // TODO: Fix type
+        children: [
+          {
+            type: 'element',
+            tagName: 'span',
+            // TODO: Fix type
+            children: [
+              {
+                type: 'text',
+                value: 'Suggestion',
+              },
+            ] as any[],
+            properties: {
+              className: [],
+            },
+          },
+          {
+            type: 'element',
+            tagName: 'button',
+            // TODO: Fix type
+            children: [
+              {
+                type: 'text',
+                value: 'Apply Suggestion',
+              },
+            ] as any[],
+            properties: {
+              className: ['apply-suggestion-btn'],
+              'data-suggestion': suggestionStr,
+            },
+          },
+        ] as any[],
+        properties: {
+          className: ['header'],
+        },
+      }
+      node.children.unshift(headerDiv)
     })
   }
 }

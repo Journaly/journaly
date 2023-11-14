@@ -26,7 +26,6 @@ type Colors =
   | 'blueLight'
   | 'red'
   | 'redHighlight'
-  | 'redTest'
   | 'greenHighlight'
   | 'greenLight'
   | 'greenDark'

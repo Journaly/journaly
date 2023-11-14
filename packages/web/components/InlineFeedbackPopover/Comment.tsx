@@ -208,9 +208,9 @@ const Comment = ({
           editing={isEditMode}
           baseContent={highlightedContent}
         />
-        <Button size={ButtonSize.Small} onClick={handleAcceptSuggestionClick}>
+        {/* <Button size={ButtonSize.Small} onClick={handleAcceptSuggestionClick}>
           Accept Suggestion
-        </Button>
+        </Button> */}
       </div>
       {canEdit && !isEditMode && (
         <div className="edit-thanks-block">

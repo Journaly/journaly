@@ -110,18 +110,67 @@ const EditableMarkdown = ({
 
         // Styles for suggestions
         .body-block :global(.suggestion) {
+          margin: 8px 0;
+          border-radius: 5px;
+          overflow: hidden;
+          padding: 5px 5px;
+          border: 1px solid ${theme.colors.gray400};
+          border-radius: 5px;
+          background-color: ${theme.colors.gray100};
+        }
+        .body-block :global(.suggestion > .header) {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          line-height: 1.2;
+          font-size: 12px;
+          padding: 4px 8px 8px;
+        }
+        .body-block :global(.suggestion > .header > span) {
+          font-weight: 400;
+          color: ${theme.colors.gray600};
+          text-align: left;
+          font-style: italic;
+        }
+        .body-block :global(.suggestion > code) {
+          padding: 0;
         }
         .body-block :global(.old-string) {
           background: ${theme.colors.redHighlight};
+          padding: 2px 8px;
+          border-radius: 4px 4px 0 0;
         }
         .body-block :global(.new-string) {
           background: ${theme.colors.greenHighlight};
+          padding: 2px 8px;
+          border-radius: 0 0 4px 4px;
         }
         .body-block :global(.add) {
           font-weight: 600;
+          color: ${theme.colors.greenDark};
         }
         .body-block :global(.del) {
+          font-weight: 600;
           text-decoration: line-through;
+          color: ${theme.colors.red};
+        }
+        // "Apply Suggestion" button styles.
+        // Button has to be styled separately
+        // due to how it is rendered and not
+        // being a React component.
+        .body-block :global(.apply-suggestion-btn) {
+          appearance: none;
+          border: none;
+          margin: 0;
+          padding: 4px 8px;
+          font-size: 12px;
+          font-weight: 600;
+          border-radius: 4px;
+          color: ${theme.colors.white};
+          background-color: ${theme.colors.blueLight};
+          /* background-color: ${theme.colors.charcoal}; */
+          cursor: pointer;
+          white-space: nowrap;
         }
 
         textarea {

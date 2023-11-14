@@ -12,5 +12,8 @@
   "deleteCommentConfirmModalTitle": "刪除評論",
   "deleteCommentConfirmModalBody": "確認刪除評論？",
   "numUsersGaveThanks": "{{numThanks}} 用戶點贊了你的評論",
-  "nativeBadgeText": "母語用戶"
+  "nativeBadgeText": "母語用戶",
+  "acceptSuggestionPremiumFeatureExplanation": "Accept Suggestion is a wonderful Premium feature that allows you to apply the suggestion to your post with a single click! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!",
+  "suggestion": "Suggestion",
+  "applySuggestion": "Apply Suggestion"
 }

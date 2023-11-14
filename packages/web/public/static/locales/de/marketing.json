@@ -32,6 +32,7 @@
     "privateGroups": "Private Groups (coming soon)",
     "correctionsInDms": "Corrections in DMs (coming soon)",
     "savedMessagesInDms": "Saved messages (coming soon)",
-    "numSupportedUiLanguages": "U.I. available in 7 languages"
+    "numSupportedUiLanguages": "U.I. available in 7 languages",
+    "acceptSuggestions": "Apply suggestions with one click"
   }
 }

@@ -8,5 +8,8 @@
   "noCommentsYetMessage": "Ningún comentario... ¡todavía!",
   "tabGeneralKey": "General",
   "tabOutdatedKey": "Fuera de fecha",
-  "noOutdatedThreadsMessage": "No hay hilos fuera de fecha para ver"
+  "noOutdatedThreadsMessage": "No hay hilos fuera de fecha para ver",
+  "acceptSuggestionPremiumFeatureExplanation": "Accept Suggestion is a wonderful Premium feature that allows you to apply the suggestion to your post with a single click! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!",
+  "suggestion": "Suggestion",
+  "applySuggestion": "Apply Suggestion"
 }

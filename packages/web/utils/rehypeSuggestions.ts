@@ -1,5 +1,4 @@
 import { visit } from 'unist-util-visit'
-import { Properties } from 'hast'
 import { suggestionDiff } from '@/utils/suggestionDiff'
 
 /**

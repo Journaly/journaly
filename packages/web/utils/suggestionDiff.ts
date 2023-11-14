@@ -26,7 +26,11 @@ const suggestionDiff = (originalStr: string, suggestedStr: string) => {
     additions.length && newStr.push(['+', additions.join('')])
 
     const unchanged: string[] = []
-    while (originalStr[oldIdx] === lcs[idx] && suggestedStr[newIdx] === lcs[idx]) {
+    while (
+      idx < suggestedStr.length &&
+      originalStr[oldIdx] === lcs[idx] &&
+      suggestedStr[newIdx] === lcs[idx]
+    ) {
       unchanged.push(lcs[idx])
       idx++
       oldIdx++

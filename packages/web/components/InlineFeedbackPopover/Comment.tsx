@@ -169,7 +169,11 @@ const Comment = ({
     currentUser?.userRole === UserRole.Admin ||
     currentUser?.userRole === UserRole.Moderator
 
-  const handleAcceptSuggestionClick = () => {
+  const handleAcceptSuggestionClick = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement
+    if (!target?.classList?.contains('apply-suggestion-btn')) {
+      return
+    }
     // Do lots of things to apply the suggestion
     console.log(currentUser)
     if (!isPremiumFeatureEligible) {
@@ -181,7 +185,7 @@ const Comment = ({
   }
 
   return (
-    <div className="comment">
+    <div className="comment" onClick={handleAcceptSuggestionClick}>
       <div className="author-body-container">
         <div className="author-block">
           <Link href={`/user/${comment.author.handle}`} legacyBehavior>

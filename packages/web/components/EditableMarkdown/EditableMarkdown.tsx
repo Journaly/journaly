@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm'
 import remarkMentions from 'remark-mentions'
 
 import theme from '@/theme'
-import rehypedSuggestions from '@/utils/rehypeSuggestions'
+import rehypeSuggestions from '@/utils/rehypeSuggestions'
 
 type EditableMarkdownProps = {
   body: string
@@ -52,7 +52,13 @@ const EditableMarkdown = ({
             [remarkMentions, { usernameLink: (handle: string) => `/user/${handle}` }],
           ]}
           // TODO (This PR) figure out this type
-          rehypePlugins={[...(baseContent ? ([[rehypedSuggestions, { baseContent }]] as any) : [])]}
+          rehypePlugins={[
+            ...(baseContent
+              ? [
+                [rehypeSuggestions, { baseContent }] as [typeof rehypeSuggestions, { baseContent: string }]
+              ] : []
+            )
+          ]}
         >
           {body}
         </Markdown>

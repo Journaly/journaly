@@ -5,7 +5,7 @@ import { sanitize } from '@/utils'
 import {
   useCreateCommentMutation,
   useCreateThreadMutation,
-  UserFragmentFragment as UserType,
+  CurrentUserFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
 } from '@/generated/graphql'
 

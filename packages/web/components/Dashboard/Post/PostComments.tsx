@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import {
   useCreatePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
-  UserWithLanguagesFragmentFragment as UserType,
+  CurrentUserFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
   PostPageDocument,
   PostPageQuery,

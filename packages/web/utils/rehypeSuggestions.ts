@@ -1,143 +1,100 @@
+import { Root, Element, Node, Text } from "hast";
 import { visit } from 'unist-util-visit'
 import { suggestionDiff } from '@/utils/suggestionDiff'
 
-/**
- * TOOD: update this
- * Plugin to enable, disable, and ignore messages.
- *
- * @type {import('unified').Plugin<[Options?]|void[], Root>}
- */
-export default function rehypedSuggestions(options: any) {
-  // TODO (this PR): figure this type out
-  return (tree: any) => {
-    visit(tree, 'element', (node) => {
-      let { data, tagName } = node
+type Settings = {
+  baseContent: string
+}
 
-      if (tagName !== 'pre') return
+const isElement = (node: Node): node is Element => {
+  return node?.type === 'element'
+}
 
-      if (!data) {
-        data = {}
-        node.data = data
-      }
+type CreateElementOpts = {
+  className?: string
+  children?: (Element|Text)[]
+  text?: string
+}
+
+const createElement = (
+  tagName: string,
+  opts: CreateElementOpts
+): Element => {
+  return {
+    type: 'element',
+    tagName,
+    children: opts.children ?? (
+      opts.text !== undefined
+        ? [{ type: 'text', value: opts.text }]
+        : []
+    ),
+    ...(opts.className ? { properties: { className: [opts.className] } } : {}),
+  }
+}
+
+
+const rehypeSuggestions = (options: Settings) => {
+  return (tree: Root) => {
+    visit(tree, 'element', (node: Node) => {
+      if (!isElement(node) || node.tagName !== 'pre')
+        return
+
+      if (!node.properties)
+        node.properties = {}
 
       node.properties.className = ['suggestion']
-      const textNode = node.children[0].children[0]
+      const textNode = (node.children[0] as Element).children[0] as Text
       const originalStr = options.baseContent
       // Strip out new line that Rehype introduces at the end of the tag.
       const suggestionStr = textNode.value.replace(/\n$/, '')
 
-      const { lcs, oldStr, newStr } = suggestionDiff(originalStr, suggestionStr)
+      const { oldStr, newStr } = suggestionDiff(originalStr, suggestionStr)
 
-      const oldStrDiv = {
-        type: 'element',
-        tagName: 'div',
-        // TODO: Fix type
-        children: [] as any[],
-        properties: {
-          className: ['old-string'],
-        },
-      }
-
-      const newStrDiv = {
-        type: 'element',
-        tagName: 'div',
-        // TODO: Fix type
-        children: [] as any[],
-        properties: {
-          className: ['new-string'],
-        },
-      }
+      const oldStrDiv = createElement('div', { className: 'old-string' })
+      const newStrDiv = createElement('div', { className: 'new-string' })
 
       for (const [mode, value] of oldStr) {
-        const newEl = {
-          type: 'element',
-          tagName: 'span',
-          children: [
-            {
-              type: 'text',
-              value: value,
-            },
-          ],
-          properties: {
-            className: [] as string[],
-          },
-        }
-
-        if (mode === '-') {
-          newEl.properties.className.push('del')
-        } else if (mode === '+') {
-          newEl.properties.className.push('add')
-        }
-
-        oldStrDiv.children.push(newEl)
+        oldStrDiv.children.push(
+          createElement('span', {
+            text: value,
+            className: mode === '-'
+              ? 'del'
+              : mode === '+'
+              ? 'add'
+              : undefined
+          })
+        )
       }
 
       for (const [mode, value] of newStr) {
-        const newEl = {
-          type: 'element',
-          tagName: 'span',
-          children: [
-            {
-              type: 'text',
-              value: value,
-            },
-          ],
-          properties: {
-            className: [] as string[],
-          },
-        }
-
-        if (mode === '-') {
-          newEl.properties.className.push('del')
-        } else if (mode === '+') {
-          newEl.properties.className.push('add')
-        }
-        newStrDiv.children.push(newEl)
+        newStrDiv.children.push(
+          createElement('span', {
+            text: value,
+            className: mode === '-'
+              ? 'del'
+              : mode === '+'
+              ? 'add'
+              : undefined
+          })
+        )
       }
 
-      textNode.value = `- ${options.baseContent} \n + ${textNode.value}`
-      node.children[0].children = [oldStrDiv, newStrDiv]
+      ;(node.children[0] as Element).children = [oldStrDiv, newStrDiv]
 
-      const headerDiv = {
-        type: 'element',
-        tagName: 'div',
-        // TODO: Fix type
+      const headerDiv = createElement('div', {
         children: [
-          {
-            type: 'element',
-            tagName: 'span',
-            // TODO: Fix type
-            children: [
-              {
-                type: 'text',
-                value: 'Suggestion',
-              },
-            ] as any[],
-            properties: {
-              className: [],
-            },
-          },
-          {
-            type: 'element',
-            tagName: 'button',
-            // TODO: Fix type
-            children: [
-              {
-                type: 'text',
-                value: 'Apply Suggestion',
-              },
-            ] as any[],
-            properties: {
-              className: ['apply-suggestion-btn'],
-              'data-suggestion': suggestionStr,
-            },
-          },
-        ] as any[],
-        properties: {
-          className: ['header'],
-        },
-      }
+          createElement('span', { text: 'Suggestion' }),
+          createElement('Button', {
+            text: 'Apply Suggestion',
+            className: 'apply-suggestion-btn',
+          }),
+        ],
+        className: 'header'
+      })
+
       node.children.unshift(headerDiv)
     })
   }
 }
+
+export default rehypeSuggestions

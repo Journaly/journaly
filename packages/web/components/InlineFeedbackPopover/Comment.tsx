@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
 import classNames from 'classnames'
@@ -169,20 +169,23 @@ const Comment = ({
     currentUser?.userRole === UserRole.Admin ||
     currentUser?.userRole === UserRole.Moderator
 
-  const handleAcceptSuggestionClick = (e: React.MouseEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement
-    if (!target?.classList?.contains('apply-suggestion-btn')) {
-      return
-    }
-    // Do lots of things to apply the suggestion
-    console.log(currentUser)
-    if (!isPremiumFeatureEligible) {
-      setDisplayPremiumFeatureModal(true)
-    } else {
-      setDisplayPremiumFeatureModal(true)
-      // do the thing!
-    }
-  }
+  const handleAcceptSuggestionClick = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      const target = e.target as HTMLElement
+      if (!target?.classList?.contains('apply-suggestion-btn')) {
+        return
+      }
+      // Do lots of things to apply the suggestion
+      console.log(currentUser)
+      if (!isPremiumFeatureEligible) {
+        setDisplayPremiumFeatureModal(true)
+      } else {
+        setDisplayPremiumFeatureModal(true)
+        // do the thing!
+      }
+    },
+    [currentUser]
+  )
 
   return (
     <div className="comment" onClick={handleAcceptSuggestionClick}>

@@ -7,22 +7,10 @@ import {
   Post,
   BadgeType,
 } from '@journaly/j-db-client'
-
+import { NodeType } from './slate'
 
 export const assertUnreachable = (x: never): never => {
   throw new Error(`Didn't expect to get here ${x}`)
-}
-
-export type NodeType = {
-  text?: string | null
-  italic?: boolean | null
-  bold?: boolean | null
-  underline?: boolean | null
-  type?: string | null
-  url?: string | null
-  colSizes?: number[] | null
-  size?: number | null
-  children?: NodeType[] | undefined | null
 }
 
 type AuthoredObject = { authorId: number }
@@ -130,7 +118,9 @@ const htmlifyEditorNode = (node: NodeType): string => {
       attributes.push('style="table-layout:fixed;"')
       content = `
         <colgroup style="width: 100%;">
-          ${node.colSizes.map(size => `<col style="min-width: 48px; width: ${size}px;">`).join('\n')}
+          ${node.colSizes
+            .map((size) => `<col style="min-width: 48px; width: ${size}px;">`)
+            .join('\n')}
         </colgroup>
         <tbody>
           ${content}
@@ -337,10 +327,8 @@ export const assignBadge = async (
   badge: BadgeType,
 ): Promise<void> => {
   await db.userBadge.createMany({
-    data: [
-      { type: badge, userId, }
-    ],
-    skipDuplicates: true
+    data: [{ type: badge, userId }],
+    skipDuplicates: true,
   })
 
   return
@@ -353,3 +341,4 @@ export * from './db'
 export * from './notifications'
 export * from './types'
 export * from './badges'
+export type { NodeType }

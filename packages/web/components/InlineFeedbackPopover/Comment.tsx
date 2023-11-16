@@ -56,6 +56,11 @@ const Comment = ({
     },
   })
 
+  // Refactor this to compare post.author.id === currentUser?.id
+  // This requires getting the post data.
+  const isPostAuthor = comment.author.id === currentUser?.id
+  console.log(isPostAuthor)
+
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
 
   const [DeleteConfirmationModal, confirmDeletion] = useConfirmationModal({
@@ -184,7 +189,7 @@ const Comment = ({
         // do the thing!
       }
     },
-    [currentUser]
+    [currentUser],
   )
 
   return (
@@ -214,6 +219,7 @@ const Comment = ({
           setUpdatingCommentBody={setUpdatingCommentBody}
           editing={isEditMode}
           baseContent={highlightedContent}
+          isPostAuthor={isPostAuthor}
         />
         {/* <Button size={ButtonSize.Small} onClick={handleAcceptSuggestionClick}>
           Accept Suggestion

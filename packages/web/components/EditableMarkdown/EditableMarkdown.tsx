@@ -12,6 +12,7 @@ type EditableMarkdownProps = {
   setUpdatingCommentBody: (arg0: string) => void
   editing?: boolean
   baseContent?: string
+  isPostAuthor: boolean
 }
 
 const EditableMarkdown = ({
@@ -20,6 +21,7 @@ const EditableMarkdown = ({
   setUpdatingCommentBody,
   editing = false,
   baseContent,
+  isPostAuthor,
 }: EditableMarkdownProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -55,9 +57,12 @@ const EditableMarkdown = ({
           rehypePlugins={[
             ...(baseContent
               ? [
-                [rehypeSuggestions, { baseContent }] as [typeof rehypeSuggestions, { baseContent: string }]
-              ] : []
-            )
+                  [rehypeSuggestions, { baseContent, isPostAuthor }] as [
+                    typeof rehypeSuggestions,
+                    { baseContent: string; isPostAuthor: boolean },
+                  ],
+                ]
+              : []),
           ]}
         >
           {body}

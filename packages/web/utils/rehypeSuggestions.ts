@@ -4,6 +4,7 @@ import { suggestionDiff } from '@/utils/suggestionDiff'
 
 type Settings = {
   baseContent: string
+  isPostAuthor: boolean
 }
 
 const isElement = (node: Node): node is Element => {
@@ -31,7 +32,6 @@ const createElement = (
     ...(opts.className ? { properties: { className: [opts.className] } } : {}),
   }
 }
-
 
 const rehypeSuggestions = (options: Settings) => {
   return (tree: Root) => {
@@ -81,15 +81,21 @@ const rehypeSuggestions = (options: Settings) => {
 
       ;(node.children[0] as Element).children = [oldStrDiv, newStrDiv]
 
-      const headerDiv = createElement('div', {
-        children: [
-          createElement('span', { text: 'Suggestion' }),
+      const headerDivChildren = []
+      headerDivChildren.push(createElement('span', { text: 'Suggestion' }))
+      // If the user is not the author of the post, create button element.
+      if (options.isPostAuthor) {
+        headerDivChildren.push(
           createElement('Button', {
             text: 'Apply Suggestion',
             className: 'apply-suggestion-btn',
           }),
-        ],
-        className: 'header'
+        )
+      }
+
+      const headerDiv = createElement('div', {
+        children: headerDivChildren,
+        className: 'header',
       })
 
       node.children.unshift(headerDiv)

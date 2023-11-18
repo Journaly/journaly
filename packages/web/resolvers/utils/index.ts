@@ -7,7 +7,7 @@ import {
   Post,
   BadgeType,
 } from '@journaly/j-db-client'
-import { NodeType } from './slate'
+import { NodeType, extractText, isEmptyParagraph } from './slate'
 
 export const assertUnreachable = (x: never): never => {
   throw new Error(`Didn't expect to get here ${x}`)
@@ -42,7 +42,6 @@ const textNodeFormatEls: { [T in textNodeFormatType]: string } = {
   underline: 'u',
 }
 
-const emptySet = new Set<string>([])
 const nonBodyTypes = new Set<string>([
   'heading-one',
   'heading-two',
@@ -71,14 +70,6 @@ const getNodeTagName = (node: NodeType): string => {
   }
 
   return typeToElStrMap[node.type]
-}
-
-const isEmptyParagraph = (node: NodeType): boolean => {
-  if (node.type !== 'paragraph') return false
-
-  if (node.children && node.children.length > 0) return false
-
-  return true
 }
 
 const htmlifyEditorNode = (node: NodeType): string => {
@@ -134,33 +125,6 @@ const htmlifyEditorNode = (node: NodeType): string => {
 
 export const htmlifyEditorNodes = (value: NodeType[]): string => {
   return value.map(htmlifyEditorNode).join('')
-}
-
-const extractTextFromNode = (node: NodeType, ignoreNodeTypes = emptySet): string => {
-  if (!node.type && typeof node.text === 'string') {
-    return node.text
-  }
-
-  if (!node.type || ignoreNodeTypes.has(node.type)) {
-    return ''
-  }
-
-  const content: string = (node.children || [])
-    .map((node) => extractTextFromNode(node, ignoreNodeTypes))
-    .join('')
-
-  return content
-}
-
-const removeDoubleSpace = (str: string): string => str.replace(/ +(?= )/g, '')
-
-export const extractText = (
-  document: NodeType[],
-  ignoreNodeTypes = emptySet,
-  separator = ' ',
-): string => {
-  const text = document.map((node) => extractTextFromNode(node, ignoreNodeTypes)).join(separator)
-  return removeDoubleSpace(text)
 }
 
 export const generateExcerpt = (document: NodeType[], length = 200, tolerance = 20): string => {

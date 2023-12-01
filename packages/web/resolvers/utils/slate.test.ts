@@ -1,6 +1,17 @@
 import { isEmptyParagraph, applySuggestion, Doc, findCommonAncestor } from './slate'
 
 const simpleDocument: Doc = [{ type: 'paragraph', children: [{ text: 'The quick brown fox.' }] }]
+// simpleDocument2 represents the bodySrc property that comes in on a Post.
+// TODO: Write test case for this
+/**
+ * startIndex: 13,
+    endIndex: 16,
+     highlightedContent: 'fox',
+     suggestedContnet: 'fog',
+ */
+const simpleDocument2: Doc = [{"type":"paragraph","children":[{"text":"The slow red fox secretly loves the quick brown fox. "}]}]
+
+
 const highlyStructuredDocument: Doc = [
   {
     type: 'paragraph',

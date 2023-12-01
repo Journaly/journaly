@@ -38,6 +38,7 @@ import {
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
+import { applySuggestion } from './utils/slate'
 
 const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {
   const countQuery = Prisma.sql`
@@ -48,23 +49,18 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
       AND "status" = ${PostStatus.PUBLISHED}
   `
 
-  const newBadgeCount = await assignCountBadges(
-    db,
-    userId,
-    countQuery,
-    {
-      10: BadgeType.TEN_POSTS,
-      20: BadgeType.TWENTY_POSTS,
-      50: BadgeType.FIFTY_POSTS,
-      75: BadgeType.SEVENTYFIVE_POSTS,
-      100: BadgeType.ONEHUNDRED_POSTS,
-      150: BadgeType.ONEHUNDREDFIFTY_POSTS,
-      200: BadgeType.TWOHUNDRED_POSTS,
-      250: BadgeType.TWOHUNDREDFIFTY_POSTS,
-      350: BadgeType.THREEHUNDREDFIFTY_POSTS,
-      500: BadgeType.FIVEHUNDRED_POSTS,
-    }
-  )
+  const newBadgeCount = await assignCountBadges(db, userId, countQuery, {
+    10: BadgeType.TEN_POSTS,
+    20: BadgeType.TWENTY_POSTS,
+    50: BadgeType.FIFTY_POSTS,
+    75: BadgeType.SEVENTYFIVE_POSTS,
+    100: BadgeType.ONEHUNDRED_POSTS,
+    150: BadgeType.ONEHUNDREDFIFTY_POSTS,
+    200: BadgeType.TWOHUNDRED_POSTS,
+    250: BadgeType.TWOHUNDREDFIFTY_POSTS,
+    350: BadgeType.THREEHUNDREDFIFTY_POSTS,
+    500: BadgeType.FIVEHUNDRED_POSTS,
+  })
 
   if (newBadgeCount) {
     const newBadges = await db.userBadge.findMany({
@@ -167,7 +163,11 @@ const InitiatePostImageUploadResponse = objectType({
     t.string('checkUrl', { description: 'polling goes here' })
     t.string('finalUrlLarge', { description: 'final url of the large size transform' })
     t.string('finalUrlSmall', { description: 'final url of the mall size transform' })
-    t.string('unsplashPhotographer', { nullable: true, description: 'Unsplash username of the photographer who originally uploaded the image on Unsplash'})
+    t.string('unsplashPhotographer', {
+      nullable: true,
+      description:
+        'Unsplash username of the photographer who originally uploaded the image on Unsplash',
+    })
   },
 })
 
@@ -689,6 +689,48 @@ const PostMutations = extendType({
         }
 
         return post
+      },
+    })
+
+    t.field('applySuggestion', {
+      type: 'Post',
+      args: {
+        commentId: intArg({ required: true }),
+        suggestedContent: stringArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { commentId, suggestedContent } = args
+
+        const comment = await ctx.db.comment.findUnique({
+          where: {
+            id: commentId,
+          },
+          include: {
+            thread: {
+              include: {
+                post: true,
+              },
+            },
+          },
+        })
+
+        const thread = comment.thread
+        const post = thread.post
+
+        const doc = JSON.parse(post.bodySrc)
+        const updatedDoc = applySuggestion({
+          doc,
+          startIdx: thread.startIndex,
+          endIdx: thread.endIndex,
+          suggestedContent: suggestedContent,
+        })
+
+        console.log({ doc: JSON.stringify(updatedDoc), thread })
+
+        return await ctx.db.post.update({
+          where: { id: post.id },
+          data: processEditorDocument(updatedDoc),
+        })
       },
     })
 

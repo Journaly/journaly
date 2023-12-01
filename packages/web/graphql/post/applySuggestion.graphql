@@ -1,0 +1,5 @@
+mutation applySuggestion($commentId: Int!, $suggestedContent: String!) {
+  applySuggestion(commentId: $commentId, suggestedContent: $suggestedContent) {
+    ...PostFragment
+  }
+}

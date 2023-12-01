@@ -12,6 +12,7 @@ import {
   CommentThanks,
   CurrentUserFragmentFragment as UserType,
   UserRole,
+  useApplySuggestionMutation,
 } from '@/generated/graphql'
 import theme from '@/theme'
 import { Router, useTranslation } from '@/config/i18n'
@@ -174,20 +175,33 @@ const Comment = ({
     currentUser?.userRole === UserRole.Admin ||
     currentUser?.userRole === UserRole.Moderator
 
+  const [applySuggestion] = useApplySuggestionMutation()
+
   const handleAcceptSuggestionClick = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       const target = e.target as HTMLElement
       if (!target?.classList?.contains('apply-suggestion-btn')) {
         return
       }
-      // Do lots of things to apply the suggestion
-      console.log(currentUser)
+
       if (!isPremiumFeatureEligible) {
         setDisplayPremiumFeatureModal(true)
-      } else {
-        setDisplayPremiumFeatureModal(true)
-        // do the thing!
+        return
       }
+
+      const suggestedContent = target.dataset.suggestedContent
+      if (!suggestedContent) {
+        throw new Error('Suggested content missing from Apply Suggestion Button')
+      }
+
+      // Do lots of things to apply the suggestion
+      console.log(currentUser)
+      const updatedPost = applySuggestion({
+        variables: {
+          commentId: comment.id,
+          suggestedContent,
+        },
+      })
     },
     [currentUser],
   )

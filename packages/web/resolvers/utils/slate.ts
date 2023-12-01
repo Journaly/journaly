@@ -1,5 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep'
-
 export type NodeType = {
   text?: string | null
   italic?: boolean | null

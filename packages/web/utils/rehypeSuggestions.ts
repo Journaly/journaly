@@ -13,34 +13,33 @@ const isElement = (node: Node): node is Element => {
 
 type CreateElementOpts = {
   className?: string
-  children?: (Element|Text)[]
+  children?: (Element | Text)[]
   text?: string
+  properties?: Element['properties']
 }
 
-const createElement = (
-  tagName: string,
-  opts: CreateElementOpts
-): Element => {
+const createElement = (tagName: string, opts: CreateElementOpts): Element => {
+  const properties = { ...opts.properties }
+
+  if (opts.className) {
+    properties.className = [opts.className]
+  }
+
   return {
     type: 'element',
     tagName,
-    children: opts.children ?? (
-      opts.text !== undefined
-        ? [{ type: 'text', value: opts.text }]
-        : []
-    ),
-    ...(opts.className ? { properties: { className: [opts.className] } } : {}),
+    properties,
+    children:
+      opts.children ?? (opts.text !== undefined ? [{ type: 'text', value: opts.text }] : []),
   }
 }
 
 const rehypeSuggestions = (options: Settings) => {
   return (tree: Root) => {
     visit(tree, 'element', (node: Node) => {
-      if (!isElement(node) || node.tagName !== 'pre')
-        return
+      if (!isElement(node) || node.tagName !== 'pre') return
 
-      if (!node.properties)
-        node.properties = {}
+      if (!node.properties) node.properties = {}
 
       node.properties.className = ['suggestion']
       const textNode = (node.children[0] as Element).children[0] as Text
@@ -57,12 +56,8 @@ const rehypeSuggestions = (options: Settings) => {
         oldStrDiv.children.push(
           createElement('span', {
             text: value,
-            className: mode === '-'
-              ? 'del'
-              : mode === '+'
-              ? 'add'
-              : undefined
-          })
+            className: mode === '-' ? 'del' : mode === '+' ? 'add' : undefined,
+          }),
         )
       }
 
@@ -70,12 +65,8 @@ const rehypeSuggestions = (options: Settings) => {
         newStrDiv.children.push(
           createElement('span', {
             text: value,
-            className: mode === '-'
-              ? 'del'
-              : mode === '+'
-              ? 'add'
-              : undefined
-          })
+            className: mode === '-' ? 'del' : mode === '+' ? 'add' : undefined,
+          }),
         )
       }
 
@@ -86,9 +77,12 @@ const rehypeSuggestions = (options: Settings) => {
       // If the user is not the author of the post, create button element.
       if (options.isPostAuthor) {
         headerDivChildren.push(
-          createElement('Button', {
+          createElement('button', {
             text: 'Apply Suggestion',
             className: 'apply-suggestion-btn',
+            properties: {
+              'data-suggested-content': suggestionStr,
+            },
           }),
         )
       }

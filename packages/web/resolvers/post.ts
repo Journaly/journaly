@@ -39,6 +39,7 @@ import {
 import { EditorNode, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
 import { applySuggestion } from './utils/slate'
+import { clamp } from '@/utils'
 
 const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {
   const countQuery = Prisma.sql`
@@ -718,6 +719,9 @@ const PostMutations = extendType({
         const post = thread.post
 
         const doc = JSON.parse(post.bodySrc)
+
+        const lengthDelta = suggestedContent.length - thread.highlightedContent.length
+
         const updatedDoc = applySuggestion({
           doc,
           startIdx: thread.startIndex,
@@ -725,7 +729,72 @@ const PostMutations = extendType({
           suggestedContent: suggestedContent,
         })
 
-        console.log({ doc: JSON.stringify(updatedDoc), thread })
+        if (lengthDelta !== 0) {
+          const allThreads = await ctx.db.thread.findMany({
+            where: {
+              postId: post.id,
+            },
+          })
+
+          await Promise.all<unknown>(
+            allThreads.map(({ id, startIndex, endIndex }) => {
+              const findNewIndices = () => {
+                let newStartIndex = startIndex
+                let newEndIndex = endIndex
+
+                // Thread IS Suggestion (priority case)
+                if (id === thread.id) {
+                  newEndIndex += lengthDelta
+                  // If we hit this case, no additional processing needed.
+                  return [newStartIndex, newEndIndex]
+                }
+
+                // 1. Thread starts within Suggestion
+                if (startIndex >= thread.startIndex && startIndex <= thread.endIndex) {
+                  newStartIndex = clamp(
+                    thread.startIndex,
+                    startIndex,
+                    thread.endIndex + lengthDelta,
+                  )
+                }
+
+                // 2. Thread ends within Suggestion
+                if (endIndex >= thread.startIndex && endIndex <= thread.endIndex) {
+                  newEndIndex = clamp(thread.startIndex, endIndex, thread.endIndex + lengthDelta)
+                }
+
+                // 3. Thread ends after Suggestion
+                if (endIndex >= thread.endIndex) {
+                  // Covers the following cases:
+                  // 3.1. Thread encompases Suggestion
+                  // 3.2. Thread is wholy AFTER Suggestion
+                  // 3.3. Thread encompases suggestionEnd BUT NOT suggestionStart
+                  newEndIndex += lengthDelta
+                }
+
+                // 4. Thread starts wholy after Suggestion
+                if (startIndex > thread.endIndex) {
+                  newStartIndex += lengthDelta
+                }
+
+                // Thread ends before Suggestion is intentional no-op.
+                // If that happens, no action is required.
+
+                return [newStartIndex, newEndIndex]
+              }
+
+              const [newStartIndex, newEndIndex] = findNewIndices()
+
+              return ctx.db.thread.update({
+                where: { id },
+                data: {
+                  startIndex: newStartIndex,
+                  endIndex: newEndIndex,
+                },
+              })
+            }),
+          )
+        }
 
         return await ctx.db.post.update({
           where: { id: post.id },

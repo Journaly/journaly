@@ -1,16 +1,6 @@
 import { isEmptyParagraph, applySuggestion, Doc, findCommonAncestor } from './slate'
 
 const simpleDocument: Doc = [{ type: 'paragraph', children: [{ text: 'The quick brown fox.' }] }]
-// simpleDocument2 represents the bodySrc property that comes in on a Post.
-// TODO: Write test case for this
-/**
- * startIndex: 13,
-    endIndex: 16,
-     highlightedContent: 'fox',
-     suggestedContnet: 'fog',
- */
-const simpleDocument2: Doc = [{"type":"paragraph","children":[{"text":"The slow red fox secretly loves the quick brown fox. "}]}]
-
 
 const highlyStructuredDocument: Doc = [
   {
@@ -47,12 +37,13 @@ describe('Slate Utils', () => {
       ).toEqual([{ type: 'paragraph', children: [{ text: 'The slow brown fox.' }] }])
     })
 
-    it.only('applies a suggestion to a highly structured document', () => {
+    it('applies a suggestion to a highly structured document', () => {
+      // 'ABCDEFG' > 'ABCDZZG
       expect(
         applySuggestion({
           doc: highlyStructuredDocument,
           startIdx: 4,
-          endIdx: 5,
+          endIdx: 6,
           suggestedContent: 'ZZ',
         }),
       ).toEqual([
@@ -65,9 +56,9 @@ describe('Slate Utils', () => {
 
   describe('findCommonAncestor', () => {
     it('finds the common ancestor in a highly structured document', () => {
-      expect(findCommonAncestor(highlyStructuredDocument, 4, 5)).toEqual([
+      expect(findCommonAncestor(highlyStructuredDocument, 4, 6)).toEqual([
         highlyStructuredDocument[1],
-        4,
+        3,
       ])
     })
 

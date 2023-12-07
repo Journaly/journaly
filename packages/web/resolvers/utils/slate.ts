@@ -74,7 +74,7 @@ export const findCommonAncestor = (
       start = node
       startAncestry = ancestry
     }
-    if (nodeEnd > endIdx && !end) {
+    if (nodeEnd >= endIdx && !end) {
       end = node
       endAncestry = new Set(ancestry.map(([node]) => node))
     }
@@ -100,8 +100,7 @@ export const applySuggestion = ({
 
   if (commonAncestor === null) {
     const baseText = extractText(doc)
-    const modified =
-      baseText.substring(0, startIdx) + suggestedContent + baseText.substring(endIdx + 1)
+    const modified = baseText.substring(0, startIdx) + suggestedContent + baseText.substring(endIdx)
     return [
       {
         text: modified,
@@ -112,7 +111,7 @@ export const applySuggestion = ({
     const modified =
       baseText.substring(0, startIdx - commonAncestorStart) +
       suggestedContent +
-      baseText.substring(endIdx + 1 - commonAncestorStart)
+      baseText.substring(endIdx - commonAncestorStart)
 
     if (commonAncestor.type) {
       return swapNode(doc, commonAncestor, { ...commonAncestor, children: [{ text: modified }] })

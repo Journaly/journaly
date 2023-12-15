@@ -141,7 +141,7 @@ const Thread: React.FC<ThreadProps> = ({
                     className="new-comment-toolbar-btn"
                     onClick={handleClickInsertComment}
                   >
-                    Insert Suggestion
+                    {t('insertSuggestion')}
                   </Button>
                 </div>
                 <MarkdownEditor

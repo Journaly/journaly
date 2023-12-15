@@ -14,6 +14,7 @@
   "numUsersGaveThanks": "{{numThanks}} 用戶點贊了你的評論",
   "nativeBadgeText": "母語用戶",
   "acceptSuggestionPremiumFeatureExplanation": "接受建議是會員專屬的功能，它能讓你一鍵接受建議並取代原本的文字。點擊下方了解Journaly會員詳情，或盡情享受我們所有精彩的免費功能，繼續寫日誌吧！",
+  "insertSuggestion": "Insert Suggestion",
   "suggestion": "建議",
   "applySuggestion": "接受建議"
 }

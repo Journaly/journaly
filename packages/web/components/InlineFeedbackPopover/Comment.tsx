@@ -196,8 +196,6 @@ const Comment = ({
         throw new Error('Suggested content missing from Apply Suggestion Button')
       }
 
-      // Do lots of things to apply the suggestion
-      console.log(currentUser)
       const updatedPost = applySuggestion({
         variables: {
           commentId: comment.id,

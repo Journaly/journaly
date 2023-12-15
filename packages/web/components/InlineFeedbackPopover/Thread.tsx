@@ -13,6 +13,7 @@ import theme from '@/theme'
 import Comment from './Comment'
 import Button, { ButtonVariant } from '@/components/Button'
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor'
+import { stripHTMLTags } from '@/utils/stripHTMLTags'
 
 export type PendingThreadData = {
   postId: number
@@ -102,8 +103,10 @@ const Thread: React.FC<ThreadProps> = ({
 
   const handleClickInsertComment = () => {
     if (textareaRef.current) {
-      // setIsSuggestionMode(true)
-      textareaRef.current.value += `${SUGGESTION_KEY_CHAR}\n${highlightedContent}\n${SUGGESTION_KEY_CHAR}`
+      // textareaRef.current.value += `${SUGGESTION_KEY_CHAR}\n${highlightedContent}\n${SUGGESTION_KEY_CHAR}`
+      textareaRef.current.value += `${SUGGESTION_KEY_CHAR}\n${stripHTMLTags(
+        highlightedContent,
+      )}\n${SUGGESTION_KEY_CHAR}`
     }
   }
 

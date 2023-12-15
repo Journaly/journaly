@@ -3,6 +3,6 @@
  * and strips out the HTML tags, along with their contents.
  */
 
-const stripHTMLTags = (str: string) => {
+export const stripHTMLTags = (str: string) => {
   return str.replace(/(<([^>]+)>)/gi, '')
 }

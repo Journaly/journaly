@@ -30,6 +30,7 @@ type ThreadProps = {
   onUpdateComment: () => void
   close: () => void
   currentUser: UserType | null | undefined
+  currentInPostContent: string
 } & ThreadOrHighlightProps
 
 const SUGGESTION_KEY_CHAR = '```'
@@ -41,6 +42,7 @@ const Thread: React.FC<ThreadProps> = ({
   onUpdateComment,
   close,
   currentUser,
+  currentInPostContent,
 }) => {
   const { t } = useTranslation('comment')
 
@@ -122,6 +124,7 @@ const Thread: React.FC<ThreadProps> = ({
                 onUpdateComment={onUpdateComment}
                 currentUser={currentUser}
                 highlightedContent={highlightedContent}
+                currentContentInPost={currentInPostContent}
               />
             )
           })}

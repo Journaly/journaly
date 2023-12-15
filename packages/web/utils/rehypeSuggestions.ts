@@ -4,6 +4,7 @@ import { suggestionDiff } from '@/utils/suggestionDiff'
 
 type Settings = {
   baseContent: string
+  currentContentInPost: string
   isPostAuthor: boolean
 }
 
@@ -46,6 +47,12 @@ const rehypeSuggestions = (options: Settings) => {
       const originalStr = options.baseContent
       // Strip out new line that Rehype introduces at the end of the tag.
       const suggestionStr = textNode.value.replace(/\n$/, '')
+      // TODO (this PR): Find best way to trim here.
+      const suggestionMatches = suggestionStr === options.currentContentInPost.trim()
+
+      if (suggestionMatches) {
+        node.properties.className.push('accepted')
+      }
 
       const { oldStr, newStr } = suggestionDiff(originalStr, suggestionStr)
 
@@ -75,7 +82,7 @@ const rehypeSuggestions = (options: Settings) => {
       const headerDivChildren = []
       headerDivChildren.push(createElement('span', { text: 'Suggestion' }))
       // If the user is not the author of the post, create button element.
-      if (options.isPostAuthor) {
+      if (options.isPostAuthor && !suggestionMatches) {
         headerDivChildren.push(
           createElement('button', {
             text: 'Apply Suggestion',
@@ -83,6 +90,13 @@ const rehypeSuggestions = (options: Settings) => {
             properties: {
               'data-suggested-content': suggestionStr,
             },
+          }),
+        )
+      } else if (suggestionMatches) {
+        headerDivChildren.push(
+          createElement('span', {
+            text: 'Suggestion Accepted ✔️',
+            className: 'suggestion-accepted-text',
           }),
         )
       }

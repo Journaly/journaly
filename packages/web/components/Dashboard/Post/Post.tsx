@@ -163,6 +163,9 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const popoverRef = useRef<HTMLDivElement>(null)
   const [displayCommentButton, setDisplayCommentButton] = useState(false)
   const [activeThreadId, setActiveThreadId] = useState<number>(-1)
+  const [activeThreadCurrentInPostContent, setActiveThreadCurrentInPostContent] = useState<
+    string | null
+  >()
   const [pendingThreadData, setPendingThreadData] = useState<PendingThreadData | null>(null)
   const [commentButtonPosition, setCommentButtonPosition] = useState({ x: '0', y: '0' })
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0, w: 0, h: 0 })
@@ -499,6 +502,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     }
 
     setActiveThreadId(parseInt(threadHighlight.dataset.tid, 10))
+    setActiveThreadCurrentInPostContent(threadHighlight.textContent)
     setPopoverPosition({
       ...getCoords(threadHighlight),
       w: threadHighlight.offsetWidth,
@@ -548,7 +552,6 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   }
 
   const activeThread = post.threads.find((thread: ThreadType) => thread.id === activeThreadId)
-
   const handleBumpPost = () => {
     if (!canAttemptBump) {
       setPremiumFeatureModalExplanation(t('postBumpingPremiumFeatureExplanation'))
@@ -754,6 +757,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       {(activeThread && (
         <InlineFeedbackPopover
           thread={activeThread}
+          currentInPostContent={activeThreadCurrentInPostContent}
           target={popoverPosition}
           currentUser={currentUser}
           onNewComment={handleNewComment}

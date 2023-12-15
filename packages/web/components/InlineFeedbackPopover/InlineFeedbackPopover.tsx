@@ -5,13 +5,14 @@ import Thread, { ThreadProps } from './Thread'
 
 type InlineFeedbackPopoverProps = ThreadProps & {
   target: DOMOffsetTarget
+  currentInPostContent: string
 }
 
 const InlineFeedbackPopover = React.forwardRef<HTMLDivElement, InlineFeedbackPopoverProps>(
-  ({ target, ...rest }, ref) => {
+  ({ target, currentInPostContent, ...rest }, ref) => {
     return (
       <Popover target={target} ref={ref}>
-        <Thread {...rest} />
+        <Thread currentInPostContent={currentInPostContent} {...rest} />
       </Popover>
     )
   },

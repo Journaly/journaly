@@ -35,6 +35,7 @@ type CommentProps = {
   onUpdateComment(): void
   currentUser?: UserType | null
   highlightedContent: string
+  currentContentInPost: string
 }
 
 // The character that triggers a "mention" search
@@ -47,6 +48,7 @@ const Comment = ({
   onUpdateComment,
   currentUser,
   highlightedContent,
+  currentContentInPost,
 }: CommentProps) => {
   const { t } = useTranslation('comment')
   const [isEditMode, setIsEditMode] = useState(false)
@@ -234,10 +236,8 @@ const Comment = ({
           editing={isEditMode}
           baseContent={highlightedContent}
           isPostAuthor={isPostAuthor}
+          currentContentInPost={currentContentInPost}
         />
-        {/* <Button size={ButtonSize.Small} onClick={handleAcceptSuggestionClick}>
-          Accept Suggestion
-        </Button> */}
       </div>
       {canEdit && !isEditMode && (
         <div className="edit-thanks-block">

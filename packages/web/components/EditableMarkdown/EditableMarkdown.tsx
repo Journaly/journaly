@@ -13,6 +13,7 @@ type EditableMarkdownProps = {
   editing?: boolean
   baseContent?: string
   isPostAuthor: boolean
+  currentContentInPost: string
 }
 
 const EditableMarkdown = ({
@@ -22,6 +23,7 @@ const EditableMarkdown = ({
   editing = false,
   baseContent,
   isPostAuthor,
+  currentContentInPost,
 }: EditableMarkdownProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -57,9 +59,9 @@ const EditableMarkdown = ({
           rehypePlugins={[
             ...(baseContent
               ? [
-                  [rehypeSuggestions, { baseContent, isPostAuthor }] as [
+                  [rehypeSuggestions, { baseContent, currentContentInPost, isPostAuthor }] as [
                     typeof rehypeSuggestions,
-                    { baseContent: string; isPostAuthor: boolean },
+                    { baseContent: string; currentContentInPost: string; isPostAuthor: boolean },
                   ],
                 ]
               : []),
@@ -129,6 +131,10 @@ const EditableMarkdown = ({
           border-radius: 5px;
           background-color: ${theme.colors.gray100};
         }
+        .body-block :global(.suggestion.accepted .suggestion-accepted-text) {
+          color: ${theme.colors.greenDark};
+          font-weight: 600;
+        }
         .body-block :global(.suggestion > .header) {
           display: flex;
           justify-content: space-between;
@@ -194,10 +200,6 @@ const EditableMarkdown = ({
           resize: vertical;
           border: 1px solid ${theme.colors.gray400};
           border-radius: 5px;
-        }
-
-        .suggestion {
-          background: pink;
         }
       `}</style>
     </div>

@@ -266,6 +266,7 @@ export type Mutation = {
   __typename?: 'Mutation'
   addLanguageRelation: LanguageRelation
   addUserInterest: UserInterest
+  applySuggestion: Post
   bumpPost: Post
   createComment: Comment
   createCommentThanks: CommentThanks
@@ -317,6 +318,12 @@ export type MutationAddLanguageRelationArgs = {
 
 export type MutationAddUserInterestArgs = {
   topicId: Scalars['Int']
+}
+
+export type MutationApplySuggestionArgs = {
+  commentId: Scalars['Int']
+  currentContentInPost: Scalars['String']
+  suggestedContent: Scalars['String']
 }
 
 export type MutationBumpPostArgs = {
@@ -2698,6 +2705,110 @@ export type UserWithSubscriptionFragmentFragment = {
     cancelAtPeriodEnd: boolean
     isActive: boolean
   } | null
+}
+
+export type ApplySuggestionMutationVariables = Exact<{
+  commentId: Scalars['Int']
+  suggestedContent: Scalars['String']
+  currentContentInPost: Scalars['String']
+}>
+
+export type ApplySuggestionMutation = {
+  __typename?: 'Mutation'
+  applySuggestion: {
+    __typename?: 'Post'
+    id: number
+    title: string
+    body: string
+    status: PostStatus
+    excerpt: string
+    readTime: number
+    createdAt: any
+    publishedAt?: any | null
+    bumpedAt?: any | null
+    bumpCount: number
+    publishedLanguageLevel: LanguageLevel
+    privateShareId?: string | null
+    author: {
+      __typename?: 'User'
+      postsWrittenCount: number
+      thanksReceivedCount: number
+      id: number
+      name?: string | null
+      handle: string
+      profileImage?: string | null
+      languages: Array<{
+        __typename?: 'LanguageRelation'
+        level: LanguageLevel
+        language: {
+          __typename?: 'Language'
+          id: number
+          name: string
+          devName?: string | null
+          dialect?: string | null
+        }
+      }>
+    }
+    threads: Array<{
+      __typename?: 'Thread'
+      id: number
+      startIndex: number
+      endIndex: number
+      highlightedContent: string
+      archived: boolean
+      comments: Array<{
+        __typename?: 'Comment'
+        id: number
+        body: string
+        createdAt: any
+        authorLanguageLevel: LanguageLevel
+        author: {
+          __typename?: 'User'
+          id: number
+          name?: string | null
+          handle: string
+          profileImage?: string | null
+        }
+        thanks: Array<{
+          __typename?: 'CommentThanks'
+          id: number
+          author: { __typename?: 'User'; id: number; name?: string | null; handle: string }
+        }>
+      }>
+    }>
+    postComments: Array<{
+      __typename?: 'PostComment'
+      id: number
+      body: string
+      createdAt: any
+      authorLanguageLevel: LanguageLevel
+      author: {
+        __typename?: 'User'
+        id: number
+        name?: string | null
+        handle: string
+        profileImage?: string | null
+      }
+    }>
+    headlineImage: {
+      __typename?: 'HeadlineImage'
+      id: number
+      smallSize: string
+      largeSize: string
+      unsplashPhotographer?: string | null
+    }
+    claps: Array<{
+      __typename?: 'PostClap'
+      id: number
+      author: {
+        __typename?: 'User'
+        id: number
+        name?: string | null
+        handle: string
+        profileImage?: string | null
+      }
+    }>
+  }
 }
 
 export type BumpPostMutationVariables = Exact<{
@@ -5693,6 +5804,64 @@ export type SubscriptionSettingsPageLazyQueryHookResult = ReturnType<
 export type SubscriptionSettingsPageQueryResult = Apollo.QueryResult<
   SubscriptionSettingsPageQuery,
   SubscriptionSettingsPageQueryVariables
+>
+export const ApplySuggestionDocument = gql`
+  mutation applySuggestion(
+    $commentId: Int!
+    $suggestedContent: String!
+    $currentContentInPost: String!
+  ) {
+    applySuggestion(
+      commentId: $commentId
+      suggestedContent: $suggestedContent
+      currentContentInPost: $currentContentInPost
+    ) {
+      ...PostFragment
+    }
+  }
+  ${PostFragmentFragmentDoc}
+`
+export type ApplySuggestionMutationFn = Apollo.MutationFunction<
+  ApplySuggestionMutation,
+  ApplySuggestionMutationVariables
+>
+
+/**
+ * __useApplySuggestionMutation__
+ *
+ * To run a mutation, you first call `useApplySuggestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useApplySuggestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [applySuggestionMutation, { data, loading, error }] = useApplySuggestionMutation({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *      suggestedContent: // value for 'suggestedContent'
+ *      currentContentInPost: // value for 'currentContentInPost'
+ *   },
+ * });
+ */
+export function useApplySuggestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ApplySuggestionMutation,
+    ApplySuggestionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<ApplySuggestionMutation, ApplySuggestionMutationVariables>(
+    ApplySuggestionDocument,
+    options,
+  )
+}
+export type ApplySuggestionMutationHookResult = ReturnType<typeof useApplySuggestionMutation>
+export type ApplySuggestionMutationResult = Apollo.MutationResult<ApplySuggestionMutation>
+export type ApplySuggestionMutationOptions = Apollo.BaseMutationOptions<
+  ApplySuggestionMutation,
+  ApplySuggestionMutationVariables
 >
 export const BumpPostDocument = gql`
   mutation bumpPost($postId: Int!) {

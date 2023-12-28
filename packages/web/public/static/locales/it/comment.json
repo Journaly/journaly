@@ -12,5 +12,9 @@
   "deleteCommentConfirmModalTitle": "Elimina Commento",
   "deleteCommentConfirmModalBody": "Sei sicuro di voler eliminare questo commento?",
   "numUsersGaveThanks": "{{numThanks}} utenti ti hanno ringraziato per questo commento.",
-  "nativeBadgeText": "madrelingua"
+  "nativeBadgeText": "madrelingua",
+  "acceptSuggestionPremiumFeatureExplanation": "Accept Suggestion is a wonderful Premium feature that allows you to apply the suggestion to your post with a single click! Click below to check out all the details of Journaly Premium, or please feel free to continue Journaling with all our fantastic free features!",
+  "insertSuggestion": "Insert Suggestion",
+  "suggestion": "Suggestion",
+  "applySuggestion": "Apply Suggestion"
 }

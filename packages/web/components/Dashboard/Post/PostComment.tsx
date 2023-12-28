@@ -101,6 +101,12 @@ const PostComment: React.FC<PostCommentProps> = ({
           updatingCommentBody={updatingCommentBody}
           setUpdatingCommentBody={setUpdatingCommentBody}
           editing={isEditMode}
+          // TODO: `currentContentInPost` & `isPostAuthor` are only relevant to
+          // Inline Feedback Comments so for now we just pass falsy values here.
+          // We should pull the suggestion logic out of EditableMarkdown and have
+          // the parent pass down the rehype config.
+          currentContentInPost={null}
+          isPostAuthor={false}
         />
       </div>
       {canEdit && !isEditMode && (

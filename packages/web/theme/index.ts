@@ -25,6 +25,8 @@ type Colors =
   | 'blue'
   | 'blueLight'
   | 'red'
+  | 'redHighlight'
+  | 'greenHighlight'
   | 'greenLight'
   | 'greenDark'
   | 'highlightColor'
@@ -75,6 +77,8 @@ const theme: Theme = {
     highlightColor: '#4391C940',
     highlightColorHover: '#4391C980',
     red: '#c42f14',
+    redHighlight: '#db5b5080',
+    greenHighlight: '#cee3d7',
     greenLight: '#B0EED3',
     greenDark: '#1AAE6F',
     orangeDark: '#c47429',
@@ -154,7 +158,7 @@ const theme: Theme = {
     background: unset;
     padding: 0;
     margin: 0;
-  `
+  `,
 }
 
 export default theme

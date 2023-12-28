@@ -78,7 +78,7 @@ export function highlightRange(range: Range, threadId: number): string {
   commentedTextSpan.appendChild(selectedText)
   range.insertNode(commentedTextSpan)
 
-  return commentedTextSpan.innerHTML
+  return commentedTextSpan.innerText
 }
 
 export function buildPreOrderList(rootEl: HTMLElement): (HTMLElement | Node)[] {

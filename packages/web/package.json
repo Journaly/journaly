@@ -34,7 +34,8 @@
     "migrate:apply": "npm explore '@journaly/j-db-client' -- npm run migrate:apply",
     "migrate:deploy": "npm explore '@journaly/j-db-client' -- npm run migrate:deploy",
     "translations:topics:pull": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/pull-topic-translations.mjs",
-    "translations:topics:push": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/push-topic-translations.mjs"
+    "translations:topics:push": "ts-node -r tsconfig-paths/register -P tsconfig-base.json scripts/push-topic-translations.mjs",
+    "test": "jest"
   },
   "prisma": {
     "schema": "node_modules/@journaly/j-db-client/prisma/schema.prisma"
@@ -113,6 +114,7 @@
     "@types/cookie": "^0.4.0",
     "@types/express": "^4.17.11",
     "@types/is-url": "^1.2.28",
+    "@types/jest": "^29.5.8",
     "@types/node": "^14.14.31",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^18.2.1",
@@ -123,10 +125,12 @@
     "csv-reader": "^1.0.7",
     "csv-writer": "^1.6.0",
     "express": "^4.17.1",
+    "jest": "^29.7.0",
     "jsonc-parser": "^3.0.0",
     "prettier": "^2.0.1",
     "prisma": "3.15.2",
     "prompts": "^2.3.2",
+    "ts-jest": "^29.1.1",
     "typescript": "^4.5.2",
     "yargs": "^16.2.0"
   },

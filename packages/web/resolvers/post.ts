@@ -38,6 +38,8 @@ import {
 } from '@journaly/j-db-client'
 import { EditorNode, HeadlineImageInput } from './inputTypes'
 import { POST_BUMP_LIMIT } from '../constants'
+import { applySuggestion } from './utils/slate'
+import { clamp } from '@/utils'
 
 const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<void> => {
   const countQuery = Prisma.sql`
@@ -48,23 +50,18 @@ const assignPostCountBadges = async (db: PrismaClient, userId: number): Promise<
       AND "status" = ${PostStatus.PUBLISHED}
   `
 
-  const newBadgeCount = await assignCountBadges(
-    db,
-    userId,
-    countQuery,
-    {
-      10: BadgeType.TEN_POSTS,
-      20: BadgeType.TWENTY_POSTS,
-      50: BadgeType.FIFTY_POSTS,
-      75: BadgeType.SEVENTYFIVE_POSTS,
-      100: BadgeType.ONEHUNDRED_POSTS,
-      150: BadgeType.ONEHUNDREDFIFTY_POSTS,
-      200: BadgeType.TWOHUNDRED_POSTS,
-      250: BadgeType.TWOHUNDREDFIFTY_POSTS,
-      350: BadgeType.THREEHUNDREDFIFTY_POSTS,
-      500: BadgeType.FIVEHUNDRED_POSTS,
-    }
-  )
+  const newBadgeCount = await assignCountBadges(db, userId, countQuery, {
+    10: BadgeType.TEN_POSTS,
+    20: BadgeType.TWENTY_POSTS,
+    50: BadgeType.FIFTY_POSTS,
+    75: BadgeType.SEVENTYFIVE_POSTS,
+    100: BadgeType.ONEHUNDRED_POSTS,
+    150: BadgeType.ONEHUNDREDFIFTY_POSTS,
+    200: BadgeType.TWOHUNDRED_POSTS,
+    250: BadgeType.TWOHUNDREDFIFTY_POSTS,
+    350: BadgeType.THREEHUNDREDFIFTY_POSTS,
+    500: BadgeType.FIVEHUNDRED_POSTS,
+  })
 
   if (newBadgeCount) {
     const newBadges = await db.userBadge.findMany({
@@ -167,7 +164,11 @@ const InitiatePostImageUploadResponse = objectType({
     t.string('checkUrl', { description: 'polling goes here' })
     t.string('finalUrlLarge', { description: 'final url of the large size transform' })
     t.string('finalUrlSmall', { description: 'final url of the mall size transform' })
-    t.string('unsplashPhotographer', { nullable: true, description: 'Unsplash username of the photographer who originally uploaded the image on Unsplash'})
+    t.string('unsplashPhotographer', {
+      nullable: true,
+      description:
+        'Unsplash username of the photographer who originally uploaded the image on Unsplash',
+    })
   },
 })
 
@@ -689,6 +690,119 @@ const PostMutations = extendType({
         }
 
         return post
+      },
+    })
+
+    t.field('applySuggestion', {
+      type: 'Post',
+      args: {
+        commentId: intArg({ required: true }),
+        suggestedContent: stringArg({ required: true }),
+        currentContentInPost: stringArg({ required: true }),
+      },
+      resolve: async (_parent, args, ctx) => {
+        const { commentId, suggestedContent } = args
+
+        const comment = await ctx.db.comment.findUnique({
+          where: {
+            id: commentId,
+          },
+          include: {
+            thread: {
+              include: {
+                post: true,
+              },
+            },
+          },
+        })
+
+        if (!comment) throw new NotFoundError('Comment')
+
+        const thread = comment.thread
+        const post = thread.post
+
+        const doc = JSON.parse(post.bodySrc)
+
+        const lengthDelta = suggestedContent.length - args.currentContentInPost.length
+
+        const updatedDoc = applySuggestion({
+          doc,
+          startIdx: thread.startIndex,
+          endIdx: thread.endIndex,
+          suggestedContent: suggestedContent,
+        })
+
+        if (lengthDelta !== 0) {
+          const allThreads = await ctx.db.thread.findMany({
+            where: {
+              postId: post.id,
+            },
+          })
+
+          await Promise.all<unknown>(
+            allThreads.map(({ id, startIndex, endIndex }) => {
+              const findNewIndices = () => {
+                let newStartIndex = startIndex
+                let newEndIndex = endIndex
+
+                // Thread IS Suggestion (priority case)
+                if (id === thread.id) {
+                  newEndIndex += lengthDelta
+                  // If we hit this case, no additional processing needed.
+                  return [newStartIndex, newEndIndex]
+                }
+
+                // 1. Thread starts within Suggestion
+                if (startIndex >= thread.startIndex && startIndex <= thread.endIndex) {
+                  newStartIndex = clamp(
+                    thread.startIndex,
+                    startIndex,
+                    thread.endIndex + lengthDelta,
+                  )
+                }
+
+                // 2. Thread ends within Suggestion
+                if (endIndex >= thread.startIndex && endIndex <= thread.endIndex) {
+                  newEndIndex = clamp(thread.startIndex, endIndex, thread.endIndex + lengthDelta)
+                }
+
+                // 3. Thread ends after Suggestion
+                if (endIndex >= thread.endIndex) {
+                  // Covers the following cases:
+                  // 3.1. Thread encompases Suggestion
+                  // 3.2. Thread is wholy AFTER Suggestion
+                  // 3.3. Thread encompases suggestionEnd BUT NOT suggestionStart
+                  newEndIndex += lengthDelta
+                }
+
+                // 4. Thread starts wholy after Suggestion
+                if (startIndex > thread.endIndex) {
+                  newStartIndex += lengthDelta
+                }
+
+                // Thread ends before Suggestion is intentional no-op.
+                // If that happens, no action is required.
+
+                return [newStartIndex, newEndIndex]
+              }
+
+              const [newStartIndex, newEndIndex] = findNewIndices()
+
+              return ctx.db.thread.update({
+                where: { id },
+                data: {
+                  startIndex: newStartIndex,
+                  endIndex: newEndIndex,
+                },
+              })
+            }),
+          )
+        }
+
+        return await ctx.db.post.update({
+          where: { id: post.id },
+          data: processEditorDocument(updatedDoc),
+        })
       },
     })
 

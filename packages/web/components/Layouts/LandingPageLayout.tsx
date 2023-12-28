@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
@@ -13,17 +14,17 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ children }) => {
 
   const currentUser = data?.currentUser as UserType
 
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push({ pathname: '/my-feed' })
+    }
+  }, [currentUser])
+
   if (loading || error) {
     return null
   }
 
-  if (currentUser && typeof window !== 'undefined') {
-    router.push({
-      pathname: '/my-feed',
-    })
-
-    return null
-  }
 
   return (
     <LoadingWrapper loading={loading} error={error}>

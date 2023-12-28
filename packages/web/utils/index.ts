@@ -36,3 +36,11 @@ export const iOS = () => {
 export const wait = (timeout: number) => {
   return new Promise((res) => setTimeout(res, timeout))
 }
+
+// Provide upper bound (a) and lower bound (c) and you get back a val that is either b or clamped witin the range of a & c.
+// If b is between a & c, we return b.
+// If b is outside that range, we return the closest number to b within the range, which will be either a or c.
+// a: 3, b: 10, c: 6 returns c
+export const clamp = (a: number, b: number, c: number) => {
+  return Math.max(a, Math.min(b, c))
+}

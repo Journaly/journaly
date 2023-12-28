@@ -369,5 +369,43 @@ yargs
       await db.pool.end()
     },
   })
+  .command({
+    command: 'strip-markup-in-thread-highlights',
+    describe: 'A one-time command to strip all markup from existing thread highlights',
+    builder: (yargs) => {
+      yargs.option('database-url', {
+        describe: 'The URL to connect to the database',
+        type: 'string',
+      })
+    },
+    handler: async (args) => {
+      const db = await getDb(args)
+
+      const threadsWithMarkup = await db.all`
+        SELECT id, "highlightedContent"
+        FROM "Thread"
+        WHERE "highlightedContent" LIKE '%<%';
+      `
+
+      if (!threadsWithMarkup) {
+        console.error(`No Threads found`)
+        process.exit(1)
+      }
+
+      let counter = 0
+
+      for (const thread of threadsWithMarkup) {
+        await db.query`
+          UPDATE "Thread"
+          SET "highlightedContent" = ${thread.highlightedContent.replace(/(<([^>]+)>)/gi, '')}
+          WHERE id = ${thread.id};
+        `
+        counter++
+        console.log(`${counter} threads updated so far...`)
+      }
+
+      await db.pool.end()
+    },
+  })
   .demandCommand(1)
   .parse(process.argv.slice(2))

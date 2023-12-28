@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
 import classNames from 'classnames'
@@ -10,10 +10,12 @@ import {
   useCreateCommentThanksMutation,
   useDeleteCommentThanksMutation,
   CommentThanks,
-  UserFragmentFragment as UserType,
+  CurrentUserFragmentFragment as UserType,
+  UserRole,
+  useApplySuggestionMutation,
 } from '@/generated/graphql'
 import theme from '@/theme'
-import { useTranslation } from '@/config/i18n'
+import { Router, useTranslation } from '@/config/i18n'
 import EditableMarkdown from '@/components/EditableMarkdown'
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
 import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
@@ -24,19 +26,30 @@ import LikeIcon from '@/components/Icons/LikeIcon'
 import { generateNegativeRandomNumber } from '@/utils/number'
 import LevelGauge from '../LevelGauge'
 import UserAvatar from '../UserAvatar'
+import PremiumFeatureModal from '../Modals/PremiumFeatureModal'
+import { JOURNALY_PREMIUM_URL } from '@/constants'
 
 type CommentProps = {
   comment: CommentType
   canEdit: boolean
   onUpdateComment(): void
   currentUser?: UserType | null
+  highlightedContent: string
+  currentContentInPost: string | null
 }
 
 // The character that triggers a "mention" search
 // TODO move this somewhere else as it will be shared with PostComment
 // const MENTION_KEYWORD_CHAR = '@'
 
-const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProps) => {
+const Comment = ({
+  comment,
+  canEdit,
+  onUpdateComment,
+  currentUser,
+  highlightedContent,
+  currentContentInPost,
+}: CommentProps) => {
   const { t } = useTranslation('comment')
   const [isEditMode, setIsEditMode] = useState(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState(comment.body)
@@ -45,6 +58,12 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
       onUpdateComment()
     },
   })
+
+  // Refactor this to compare post.author.id === currentUser?.id
+  // This requires getting the post data.
+  const isPostAuthor = comment.author.id === currentUser?.id
+
+  const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
 
   const [DeleteConfirmationModal, confirmDeletion] = useConfirmationModal({
     title: t('deleteCommentConfirmModalTitle'),
@@ -152,8 +171,48 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
   const isLoadingCommentThanks =
     createCommentThanksResult.loading || deleteCommentThanksResult.loading
 
+  const isPremiumFeatureEligible =
+    currentUser?.membershipSubscription?.isActive ||
+    currentUser?.userRole === UserRole.Admin ||
+    currentUser?.userRole === UserRole.Moderator
+
+  const [applySuggestion] = useApplySuggestionMutation()
+
+  const handleAcceptSuggestionClick = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      const target = e.target as HTMLElement
+
+      if (!target?.classList?.contains('apply-suggestion-btn')) {
+        return
+      }
+
+      if (currentContentInPost === null) {
+        return
+      }
+
+      if (!isPremiumFeatureEligible) {
+        setDisplayPremiumFeatureModal(true)
+        return
+      }
+
+      const suggestedContent = target.dataset.suggestedContent
+      if (!suggestedContent) {
+        throw new Error('Suggested content missing from Apply Suggestion Button')
+      }
+
+      applySuggestion({
+        variables: {
+          commentId: comment.id,
+          suggestedContent,
+          currentContentInPost,
+        },
+      })
+    },
+    [currentUser],
+  )
+
   return (
-    <div className="comment">
+    <div className="comment" onClick={handleAcceptSuggestionClick}>
       <div className="author-body-container">
         <div className="author-block">
           <Link href={`/user/${comment.author.handle}`} legacyBehavior>
@@ -178,6 +237,9 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           updatingCommentBody={updatingCommentBody}
           setUpdatingCommentBody={setUpdatingCommentBody}
           editing={isEditMode}
+          baseContent={highlightedContent}
+          isPostAuthor={isPostAuthor}
+          currentContentInPost={currentContentInPost}
         />
       </div>
       {canEdit && !isEditMode && (
@@ -242,6 +304,16 @@ const Comment = ({ comment, canEdit, onUpdateComment, currentUser }: CommentProp
           </span>
           <span className="thanks-count">{numThanks}</span>
         </div>
+      )}
+      {displayPremiumFeatureModal && (
+        <PremiumFeatureModal
+          featureExplanation={t('acceptSuggestionPremiumFeatureExplanation')}
+          onAcknowledge={() => setDisplayPremiumFeatureModal(false)}
+          onGoToPremium={() => {
+            Router.push(JOURNALY_PREMIUM_URL)
+            setDisplayPremiumFeatureModal(false)
+          }}
+        />
       )}
       <DeleteConfirmationModal />
       <style jsx>{`

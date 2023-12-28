@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import { useTranslation } from '@/config/i18n'
-import { sanitize } from '@/utils'
 import {
   useCreateCommentMutation,
   useCreateThreadMutation,
-  UserFragmentFragment as UserType,
+  CurrentUserFragmentFragment as UserType,
   ThreadFragmentFragment as ThreadType,
 } from '@/generated/graphql'
 
@@ -30,7 +29,10 @@ type ThreadProps = {
   onUpdateComment: () => void
   close: () => void
   currentUser: UserType | null | undefined
+  currentContentInPost: string | null
 } & ThreadOrHighlightProps
+
+const SUGGESTION_KEY_CHAR = '```'
 
 const Thread: React.FC<ThreadProps> = ({
   thread,
@@ -39,6 +41,7 @@ const Thread: React.FC<ThreadProps> = ({
   onUpdateComment,
   close,
   currentUser,
+  currentContentInPost,
 }) => {
   const { t } = useTranslation('comment')
 
@@ -94,12 +97,16 @@ const Thread: React.FC<ThreadProps> = ({
   const archived = thread?.archived || false
   const highlightedContent = (pendingThreadData || thread)?.highlightedContent || ''
 
-  const sanitizedHTML = useMemo(() => sanitize(highlightedContent), [highlightedContent])
+  const handleClickInsertComment = () => {
+    if (textareaRef.current) {
+      textareaRef.current.value += `${SUGGESTION_KEY_CHAR}\n${highlightedContent}\n${SUGGESTION_KEY_CHAR}`
+    }
+  }
 
   return (
     <div className="thread">
       <div className="thread-subject">
-        <span className="highlighted-content" dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
+        <span className="highlighted-content">{thread?.highlightedContent}</span>
       </div>
       <div className="thread-body">
         <div className="comments">
@@ -112,6 +119,8 @@ const Thread: React.FC<ThreadProps> = ({
                 key={idx}
                 onUpdateComment={onUpdateComment}
                 currentUser={currentUser}
+                highlightedContent={highlightedContent}
+                currentContentInPost={currentContentInPost}
               />
             )
           })}
@@ -122,6 +131,15 @@ const Thread: React.FC<ThreadProps> = ({
           <form onSubmit={createNewComment}>
             <fieldset>
               <div className="new-comment-block">
+                <div className="new-comment-toolbar">
+                  <Button
+                    variant={ButtonVariant.Link}
+                    className="new-comment-toolbar-btn"
+                    onClick={handleClickInsertComment}
+                  >
+                    {t('insertSuggestion')}
+                  </Button>
+                </div>
                 <MarkdownEditor
                   placeholder={t('addCommentPlaceholder')}
                   disabled={loading}
@@ -214,6 +232,16 @@ const Thread: React.FC<ThreadProps> = ({
 
         .btn-container :global(.new-comment-btn) {
           margin-right: 10px;
+        }
+
+        .new-comment-toolbar {
+          text-align: center;
+          font-size: 12px;
+          font-weight: 600;
+          /* background-color: ${theme.colors.gray100}; */
+        }
+        .new-comment-toolbar-btn {
+          text-transform: uppercase;
         }
       `}</style>
     </div>

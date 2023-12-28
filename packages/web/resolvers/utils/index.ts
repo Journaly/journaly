@@ -7,22 +7,10 @@ import {
   Post,
   BadgeType,
 } from '@journaly/j-db-client'
-
+import { NodeType, extractText, isEmptyParagraph } from './slate'
 
 export const assertUnreachable = (x: never): never => {
   throw new Error(`Didn't expect to get here ${x}`)
-}
-
-export type NodeType = {
-  text?: string | null
-  italic?: boolean | null
-  bold?: boolean | null
-  underline?: boolean | null
-  type?: string | null
-  url?: string | null
-  colSizes?: number[] | null
-  size?: number | null
-  children?: NodeType[] | undefined | null
 }
 
 type AuthoredObject = { authorId: number }
@@ -54,7 +42,6 @@ const textNodeFormatEls: { [T in textNodeFormatType]: string } = {
   underline: 'u',
 }
 
-const emptySet = new Set<string>([])
 const nonBodyTypes = new Set<string>([
   'heading-one',
   'heading-two',
@@ -83,14 +70,6 @@ const getNodeTagName = (node: NodeType): string => {
   }
 
   return typeToElStrMap[node.type]
-}
-
-const isEmptyParagraph = (node: NodeType): boolean => {
-  if (node.type !== 'paragraph') return false
-
-  if (node.children && node.children.length > 0) return false
-
-  return true
 }
 
 const htmlifyEditorNode = (node: NodeType): string => {
@@ -130,7 +109,9 @@ const htmlifyEditorNode = (node: NodeType): string => {
       attributes.push('style="table-layout:fixed;"')
       content = `
         <colgroup style="width: 100%;">
-          ${node.colSizes.map(size => `<col style="min-width: 48px; width: ${size}px;">`).join('\n')}
+          ${node.colSizes
+            .map((size) => `<col style="min-width: 48px; width: ${size}px;">`)
+            .join('\n')}
         </colgroup>
         <tbody>
           ${content}
@@ -144,33 +125,6 @@ const htmlifyEditorNode = (node: NodeType): string => {
 
 export const htmlifyEditorNodes = (value: NodeType[]): string => {
   return value.map(htmlifyEditorNode).join('')
-}
-
-const extractTextFromNode = (node: NodeType, ignoreNodeTypes = emptySet): string => {
-  if (!node.type && typeof node.text === 'string') {
-    return node.text
-  }
-
-  if (!node.type || ignoreNodeTypes.has(node.type)) {
-    return ''
-  }
-
-  const content: string = (node.children || [])
-    .map((node) => extractTextFromNode(node, ignoreNodeTypes))
-    .join('')
-
-  return content
-}
-
-const removeDoubleSpace = (str: string): string => str.replace(/ +(?= )/g, '')
-
-export const extractText = (
-  document: NodeType[],
-  ignoreNodeTypes = emptySet,
-  separator = ' ',
-): string => {
-  const text = document.map((node) => extractTextFromNode(node, ignoreNodeTypes)).join(separator)
-  return removeDoubleSpace(text)
 }
 
 export const generateExcerpt = (document: NodeType[], length = 200, tolerance = 20): string => {
@@ -337,10 +291,8 @@ export const assignBadge = async (
   badge: BadgeType,
 ): Promise<void> => {
   await db.userBadge.createMany({
-    data: [
-      { type: badge, userId, }
-    ],
-    skipDuplicates: true
+    data: [{ type: badge, userId }],
+    skipDuplicates: true,
   })
 
   return
@@ -353,3 +305,4 @@ export * from './db'
 export * from './notifications'
 export * from './types'
 export * from './badges'
+export type { NodeType }

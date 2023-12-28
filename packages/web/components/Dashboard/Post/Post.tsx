@@ -762,6 +762,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           currentContentInPost={activeThreadCurrentContentInPost}
           target={popoverPosition}
           currentUser={currentUser}
+          postAuthorId={post.author.id}
           onNewComment={handleNewComment}
           onUpdateComment={refetch}
           close={closeThread}
@@ -774,6 +775,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
             currentContentInPost={activeThreadCurrentContentInPost}
             target={popoverPosition}
             currentUser={currentUser}
+            postAuthorId={post.author.id}
             onNewComment={handleNewComment}
             onUpdateComment={refetch}
             close={closeThread}

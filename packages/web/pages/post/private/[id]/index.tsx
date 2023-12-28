@@ -32,6 +32,7 @@ const PostPage: NextPage = () => {
               <div className="post-lower-section">
                 <PostComments
                   postId={post.id}
+                  postAuthorId={post.author.id}
                   comments={post.postComments}
                   outdatedThreads={outdatedThreads}
                   currentUser={currentUser || null}

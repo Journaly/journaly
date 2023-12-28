@@ -25,6 +25,7 @@ import MarkdownEditor from '@/components/MarkdownEditor/MarkdownEditor'
 
 type PostCommentsProps = {
   postId: number
+  postAuthorId: number
   comments: PostCommentType[]
   outdatedThreads: ThreadType[]
   currentUser: UserType | null
@@ -34,6 +35,7 @@ type PostCommentsProps = {
 
 const PostComments = ({
   postId,
+  postAuthorId,
   comments,
   outdatedThreads,
   onUpdateComment,
@@ -172,6 +174,7 @@ const PostComments = ({
                   onUpdateComment={onUpdateComment}
                   close={() => {}}
                   currentContentInPost={null}
+                  postAuthorId={postAuthorId}
                 />
               </div>
             ))}

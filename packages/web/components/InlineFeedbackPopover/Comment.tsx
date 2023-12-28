@@ -36,6 +36,7 @@ type CommentProps = {
   currentUser?: UserType | null
   highlightedContent: string
   currentContentInPost: string | null
+  postAuthorId: number
 }
 
 // The character that triggers a "mention" search
@@ -49,6 +50,7 @@ const Comment = ({
   currentUser,
   highlightedContent,
   currentContentInPost,
+  postAuthorId,
 }: CommentProps) => {
   const { t } = useTranslation('comment')
   const [isEditMode, setIsEditMode] = useState(false)
@@ -59,9 +61,7 @@ const Comment = ({
     },
   })
 
-  // Refactor this to compare post.author.id === currentUser?.id
-  // This requires getting the post data.
-  const isPostAuthor = comment.author.id === currentUser?.id
+  const isPostAuthor = postAuthorId === currentUser?.id
 
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
 

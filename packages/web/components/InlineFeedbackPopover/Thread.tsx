@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import { useTranslation } from '@/config/i18n'
-import { sanitize } from '@/utils'
 import {
   useCreateCommentMutation,
   useCreateThreadMutation,
@@ -13,7 +12,6 @@ import theme from '@/theme'
 import Comment from './Comment'
 import Button, { ButtonVariant } from '@/components/Button'
 import MarkdownEditor from '../MarkdownEditor/MarkdownEditor'
-import { stripHTMLTags } from '@/utils/stripHTMLTags'
 
 export type PendingThreadData = {
   postId: number
@@ -31,7 +29,7 @@ type ThreadProps = {
   onUpdateComment: () => void
   close: () => void
   currentUser: UserType | null | undefined
-  currentInPostContent: string
+  currentContentInPost: string | null
 } & ThreadOrHighlightProps
 
 const SUGGESTION_KEY_CHAR = '```'
@@ -43,7 +41,7 @@ const Thread: React.FC<ThreadProps> = ({
   onUpdateComment,
   close,
   currentUser,
-  currentInPostContent,
+  currentContentInPost,
 }) => {
   const { t } = useTranslation('comment')
 
@@ -99,21 +97,16 @@ const Thread: React.FC<ThreadProps> = ({
   const archived = thread?.archived || false
   const highlightedContent = (pendingThreadData || thread)?.highlightedContent || ''
 
-  const sanitizedHTML = useMemo(() => sanitize(highlightedContent), [highlightedContent])
-
   const handleClickInsertComment = () => {
     if (textareaRef.current) {
-      // textareaRef.current.value += `${SUGGESTION_KEY_CHAR}\n${highlightedContent}\n${SUGGESTION_KEY_CHAR}`
-      textareaRef.current.value += `${SUGGESTION_KEY_CHAR}\n${stripHTMLTags(
-        highlightedContent,
-      )}\n${SUGGESTION_KEY_CHAR}`
+      textareaRef.current.value += `${SUGGESTION_KEY_CHAR}\n${highlightedContent}\n${SUGGESTION_KEY_CHAR}`
     }
   }
 
   return (
     <div className="thread">
       <div className="thread-subject">
-        <span className="highlighted-content" dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
+        <span className="highlighted-content">{thread?.highlightedContent}</span>
       </div>
       <div className="thread-body">
         <div className="comments">
@@ -127,7 +120,7 @@ const Thread: React.FC<ThreadProps> = ({
                 onUpdateComment={onUpdateComment}
                 currentUser={currentUser}
                 highlightedContent={highlightedContent}
-                currentContentInPost={currentInPostContent}
+                currentContentInPost={currentContentInPost}
               />
             )
           })}

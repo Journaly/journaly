@@ -698,6 +698,7 @@ const PostMutations = extendType({
       args: {
         commentId: intArg({ required: true }),
         suggestedContent: stringArg({ required: true }),
+        currentContentInPost: stringArg({ required: true }),
       },
       resolve: async (_parent, args, ctx) => {
         const { commentId, suggestedContent } = args
@@ -715,12 +716,14 @@ const PostMutations = extendType({
           },
         })
 
+        if (!comment) throw new NotFoundError('Comment')
+
         const thread = comment.thread
         const post = thread.post
 
         const doc = JSON.parse(post.bodySrc)
 
-        const lengthDelta = suggestedContent.length - thread.highlightedContent.length
+        const lengthDelta = suggestedContent.length - args.currentContentInPost.length
 
         const updatedDoc = applySuggestion({
           doc,

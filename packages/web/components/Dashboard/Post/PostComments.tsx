@@ -171,6 +171,7 @@ const PostComments = ({
                   onNewComment={() => {}}
                   onUpdateComment={onUpdateComment}
                   close={() => {}}
+                  currentContentInPost={null}
                 />
               </div>
             ))}

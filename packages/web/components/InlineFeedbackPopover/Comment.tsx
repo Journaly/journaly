@@ -35,7 +35,7 @@ type CommentProps = {
   onUpdateComment(): void
   currentUser?: UserType | null
   highlightedContent: string
-  currentContentInPost: string
+  currentContentInPost: string | null
 }
 
 // The character that triggers a "mention" search
@@ -62,7 +62,6 @@ const Comment = ({
   // Refactor this to compare post.author.id === currentUser?.id
   // This requires getting the post data.
   const isPostAuthor = comment.author.id === currentUser?.id
-  console.log(isPostAuthor)
 
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
 
@@ -182,7 +181,12 @@ const Comment = ({
   const handleAcceptSuggestionClick = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       const target = e.target as HTMLElement
+
       if (!target?.classList?.contains('apply-suggestion-btn')) {
+        return
+      }
+
+      if (currentContentInPost === null) {
         return
       }
 
@@ -196,10 +200,11 @@ const Comment = ({
         throw new Error('Suggested content missing from Apply Suggestion Button')
       }
 
-      const updatedPost = applySuggestion({
+      applySuggestion({
         variables: {
           commentId: comment.id,
           suggestedContent,
+          currentContentInPost,
         },
       })
     },

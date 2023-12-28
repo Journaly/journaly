@@ -13,7 +13,7 @@ type EditableMarkdownProps = {
   editing?: boolean
   baseContent?: string
   isPostAuthor: boolean
-  currentContentInPost: string
+  currentContentInPost: string | null
 }
 
 const EditableMarkdown = ({

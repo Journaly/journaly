@@ -322,6 +322,7 @@ export type MutationAddUserInterestArgs = {
 
 export type MutationApplySuggestionArgs = {
   commentId: Scalars['Int']
+  currentContentInPost: Scalars['String']
   suggestedContent: Scalars['String']
 }
 
@@ -2709,6 +2710,7 @@ export type UserWithSubscriptionFragmentFragment = {
 export type ApplySuggestionMutationVariables = Exact<{
   commentId: Scalars['Int']
   suggestedContent: Scalars['String']
+  currentContentInPost: Scalars['String']
 }>
 
 export type ApplySuggestionMutation = {
@@ -5804,8 +5806,16 @@ export type SubscriptionSettingsPageQueryResult = Apollo.QueryResult<
   SubscriptionSettingsPageQueryVariables
 >
 export const ApplySuggestionDocument = gql`
-  mutation applySuggestion($commentId: Int!, $suggestedContent: String!) {
-    applySuggestion(commentId: $commentId, suggestedContent: $suggestedContent) {
+  mutation applySuggestion(
+    $commentId: Int!
+    $suggestedContent: String!
+    $currentContentInPost: String!
+  ) {
+    applySuggestion(
+      commentId: $commentId
+      suggestedContent: $suggestedContent
+      currentContentInPost: $currentContentInPost
+    ) {
       ...PostFragment
     }
   }
@@ -5831,6 +5841,7 @@ export type ApplySuggestionMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      commentId: // value for 'commentId'
  *      suggestedContent: // value for 'suggestedContent'
+ *      currentContentInPost: // value for 'currentContentInPost'
  *   },
  * });
  */

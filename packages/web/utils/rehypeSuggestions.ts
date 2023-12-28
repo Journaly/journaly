@@ -4,7 +4,7 @@ import { suggestionDiff } from '@/utils/suggestionDiff'
 
 type Settings = {
   baseContent: string
-  currentContentInPost: string
+  currentContentInPost: string | null
   isPostAuthor: boolean
 }
 
@@ -48,7 +48,7 @@ const rehypeSuggestions = (options: Settings) => {
       // Strip out new line that Rehype introduces at the end of the tag.
       const suggestionStr = textNode.value.replace(/\n$/, '')
       // TODO (this PR): Find best way to trim here.
-      const suggestionMatches = suggestionStr === options.currentContentInPost.trim()
+      const suggestionMatches = suggestionStr === options.currentContentInPost?.trim()
 
       if (suggestionMatches) {
         node.properties.className.push('accepted')

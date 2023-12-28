@@ -1,5 +1,13 @@
-mutation applySuggestion($commentId: Int!, $suggestedContent: String!) {
-  applySuggestion(commentId: $commentId, suggestedContent: $suggestedContent) {
+mutation applySuggestion(
+  $commentId: Int!
+  $suggestedContent: String!
+  $currentContentInPost: String!
+) {
+  applySuggestion(
+    commentId: $commentId
+    suggestedContent: $suggestedContent
+    currentContentInPost: $currentContentInPost
+  ) {
     ...PostFragment
   }
 }

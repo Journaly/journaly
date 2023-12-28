@@ -163,9 +163,9 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const popoverRef = useRef<HTMLDivElement>(null)
   const [displayCommentButton, setDisplayCommentButton] = useState(false)
   const [activeThreadId, setActiveThreadId] = useState<number>(-1)
-  const [activeThreadCurrentInPostContent, setActiveThreadCurrentInPostContent] = useState<
+  const [activeThreadCurrentContentInPost, setActiveThreadCurrentContentInPost] = useState<
     string | null
-  >()
+  >(null)
   const [pendingThreadData, setPendingThreadData] = useState<PendingThreadData | null>(null)
   const [commentButtonPosition, setCommentButtonPosition] = useState({ x: '0', y: '0' })
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0, w: 0, h: 0 })
@@ -350,7 +350,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     return post.claps.find((clap) => clap.author.id === currentUser?.id) !== undefined
   }, [post.claps, currentUser?.id])
 
-  const rerenderThreadHighlights = () => {
+  const rerenderThreadHighlights = useCallback(() => {
     if (!selectableRef.current) {
       return
     }
@@ -388,9 +388,9 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         return
       }
     })
-  }
+  }, [post.threads.length, post.body])
 
-  useEffect(rerenderThreadHighlights, [post.threads.length])
+  useEffect(rerenderThreadHighlights, [rerenderThreadHighlights])
 
   useEffect(() => {
     const onSelectionChange = () => {
@@ -437,7 +437,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     setPendingThreadData(null)
 
     rerenderThreadHighlights()
-  }, [post.threads.length])
+  }, [rerenderThreadHighlights])
   useOnClickOut(popoverRef, closeThread)
 
   const createThreadHandler = (e: React.MouseEvent) => {
@@ -502,7 +502,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
     }
 
     setActiveThreadId(parseInt(threadHighlight.dataset.tid, 10))
-    setActiveThreadCurrentInPostContent(threadHighlight.textContent)
+    setActiveThreadCurrentContentInPost(threadHighlight.textContent)
     setPopoverPosition({
       ...getCoords(threadHighlight),
       w: threadHighlight.offsetWidth,
@@ -531,7 +531,9 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         },
       },
       update(cache, { data }) {
+        console.log('before')
         if (data?.updatePost) {
+          console.log('after')
           cache.modify({
             id: cache.identify(makeReference('ROOT_QUERY')),
             fields: {
@@ -757,7 +759,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       {(activeThread && (
         <InlineFeedbackPopover
           thread={activeThread}
-          currentInPostContent={activeThreadCurrentInPostContent}
+          currentContentInPost={activeThreadCurrentContentInPost}
           target={popoverPosition}
           currentUser={currentUser}
           onNewComment={handleNewComment}
@@ -769,6 +771,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         (pendingThreadData && (
           <InlineFeedbackPopover
             pendingThreadData={pendingThreadData}
+            currentContentInPost={activeThreadCurrentContentInPost}
             target={popoverPosition}
             currentUser={currentUser}
             onNewComment={handleNewComment}

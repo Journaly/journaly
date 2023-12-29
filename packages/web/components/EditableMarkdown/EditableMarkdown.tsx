@@ -151,6 +151,7 @@ const EditableMarkdown = ({
         }
         .body-block :global(.suggestion > code) {
           padding: 0;
+          text-wrap: wrap;
         }
         .body-block :global(.old-string) {
           background: ${theme.colors.redHighlight};

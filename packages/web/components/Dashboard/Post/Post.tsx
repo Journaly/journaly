@@ -255,7 +255,8 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       toast.success(t('deletePostSuccess'))
       Router.push('/my-posts')
     },
-    onError: () => {
+    onError: (err) => {
+      console.error(err)
       toast.error(t('deletePostError'))
     },
     update: (cache, { data }) => {
@@ -263,8 +264,19 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
       if (dp?.id && dp?.__typename) {
         cache.modify({
           fields: {
-            posts(existingPosts = []): PostModel[] {
-              return existingPosts.filter((p: any) => p.__ref !== `${dp.__typename}:${dp.id}`)
+            posts(existingPosts) {
+              if (existingPosts?.posts) {
+                const filteredPosts = existingPosts.posts.filter(
+                  (p: any) => p.__ref !== `${dp.__typename}:${dp.id}`,
+                )
+                return {
+                  ...existingPosts,
+                  posts: filteredPosts,
+                  count: filteredPosts.length,
+                }
+              } else {
+                return existingPosts
+              }
             },
           },
         })

@@ -407,5 +407,80 @@ yargs
       await db.pool.end()
     },
   })
+  .command({
+    command: 'backfill-moosend',
+    describe: 'Backfill Moosend Product Updates list after they changed our API key and broke stuff - Jan 2024',
+    builder: (yargs) => {
+      yargs.option('database-url', {
+        describe: 'The URL to connect to the database',
+        type: 'string',
+      })
+    },
+    handler: async (args) => {
+      const apiKey = process.env.MOOSEND_API_KEY
+      const listId = process.env.MOOSEND_PRODUCT_UPDATES_MAILING_LIST_ID
+      const db = await getDb(args)
+
+      const usersToBackfill = await db.all`
+        SELECT "User".id AS id, email, handle, "createdAt", name
+        FROM "User"
+        JOIN "Auth"
+        ON "User".id = "Auth"."userId"
+        WHERE "moosendSubscriberId" IS NULL
+        AND "Auth"."emailVerificationStatus" = 'VERIFIED';
+      `
+
+      if (!usersToBackfill) {
+        console.error(`No Threads found`)
+        process.exit(1)
+      }
+
+      const userRecords = []
+
+      // NOTE: Max num users to batch add is 1000, but here in prod there are only
+      // around 600 impacted accounts. If more than 1000, we'd need to check.
+      for (const user of usersToBackfill) {
+        userRecords.push({
+          Name: user.name || user.handle,
+          Email: user.email,
+          CustomFields: [`journalyId=${user.id}`, `registrationDate=${user.createdAt.toISOString()}`],
+        })
+        
+      }
+
+      const res = await fetch(`https://api.moosend.com/v3/subscribers/${listId}/subscribe_many.json?apikey=${apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        cache: 'no-cache',
+        body: JSON.stringify({
+          HasExternalDoubleOptIn: true,
+          Subscribers: userRecords,
+        }),
+      }).then((r) => r.json())
+      
+      if (res.Code) {
+        console.error(res)
+        throw new Error("Something went wrong with the Moosend subscribe_many call", res)
+      }
+      console.log(res)
+      console.log('Response received, proceeding to update Journaly User records...')
+      for (const moosendSubscriber of res.Context) {
+        const journalyId = moosendSubscriber.CustomFields.find(({ Name }) => Name === 'journalyId').Value
+
+        await db.query`
+          UPDATE "User"
+          SET "moosendSubscriberId" = ${moosendSubscriber.ID}
+          WHERE id = ${journalyId};
+        `
+      }
+
+      console.log('Success!')
+
+      await db.pool.end()
+    },
+  })
   .demandCommand(1)
   .parse(process.argv.slice(2))

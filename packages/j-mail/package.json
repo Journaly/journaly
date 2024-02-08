@@ -40,7 +40,7 @@
     "@types/nodemailer": "^6.4.0",
     "aws-sdk": "^2.737.0",
     "date-fns": "^2.16.1",
-    "nodemailer": "^6.6.1",
+    "nodemailer": "^6.9.9",
     "pug": "^3.0.1"
   }
 }

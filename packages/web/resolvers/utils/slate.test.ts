@@ -1,6 +1,112 @@
-import { isEmptyParagraph, applySuggestion, Doc, findCommonAncestor } from './slate'
+import { Thread } from '@prisma/client'
+import {
+  isEmptyParagraph,
+  applySuggestion,
+  extractText,
+  Doc,
+  findCommonAncestor,
+  updatedThreadPositions,
+} from './slate'
+
+type Chunks = [number, string][]
+
+const insertChunk = (chunks: Chunks, insertedContent: string, position: number): Chunks => {
+  // [[0, "I "]. [2, "am"], [4, " the goat"]]
+  for (let i = 0; i < chunks.length; i++) {
+    const [start, content] = chunks[i]
+    if (start >= 0 && position >= start && position < start + content.length) {
+      const left = content.substring(0, position - start)
+      const right = content.substring(position - start)
+
+      // -1 represents inserted content that doesn't affect the indices.
+      return [
+        ...chunks.slice(0, i),
+        [start, left],
+        [-1, insertedContent],
+        [start + left.length, right],
+        ...chunks.slice(i),
+      ]
+    }
+  }
+
+  throw new Error('We did not find a place to insert anything.')
+}
+
+const serializeThreads = (threads: Thread[], document: Doc) => {
+  // Use [] to indicate where thread boundaries fall.
+  const serializedDoc = extractText(document)
+  // An array of tuples, with each tuple representing a chunk of text and its original index.
+  // The text will be "split" at the index of each thread so we can insert text
+  // while tracking the original index of each chunk.
+
+  //  0123456789
+  // "I am the goat"
+  //  0123456789
+  // "I [am] the goat"
+
+  // We want to keep track of the original indices before the matching "fence posts" were inserted.
+  let chunks: [number, string][] = [[0, serializedDoc]]
+  for (const thread of threads) {
+    chunks = insertChunk(chunks, '[', thread.startIndex)
+    chunks = insertChunk(chunks, ']', thread.endIndex)
+  }
+  return chunks.map((chunk) => chunk[1]).join('')
+}
+// TODO NEXT TIME: write test case for ...
+// take in expected val, doc, threads, then call serialize thing on doc + threads, then just assert result = expexted val
+
+expect.extend({
+  toMatchTodo(received, expected) {
+    // define Todo object structure with objectContaining
+    const expectTodoObject = (todo?: Todo) =>
+      expect.objectContaining({
+        id: todo?.id || expect.any(Number),
+        userId: todo?.userId || expect.any(Number),
+        title: todo?.title || expect.any(String),
+        completed: todo?.completed || expect.any(Boolean),
+      })
+
+    // define Todo array with arrayContaining and re-use expectTodoObject
+    const expectTodoArray = (todos: Array<Todo>) =>
+      todos.length === 0
+        ? // in case an empty array is passed
+          expect.arrayContaining([expectTodoObject()])
+        : // in case an array of Todos is passed
+          expect.arrayContaining(todos.map(expectTodoObject))
+
+    // expected can either be an array or an object
+    const expectedResult = Array.isArray(expected)
+      ? expectTodoArray(expected)
+      : expectTodoObject(expected)
+
+    // equality check for received todo and expected todo
+    const pass = this.equals(received, expectedResult)
+
+    if (pass) {
+      return {
+        message: () =>
+          `Expected: ${this.utils.printExpected(
+            expectedResult,
+          )}\nReceived: ${this.utils.printReceived(received)}`,
+        pass: true,
+      }
+    }
+    return {
+      message: () =>
+        `Expected: ${this.utils.printExpected(
+          expectedResult,
+        )}\nReceived: ${this.utils.printReceived(received)}\n\n${this.utils.diff(
+          expectedResult,
+          received,
+        )}`,
+      pass: false,
+    }
+  },
+})
 
 const simpleDocument: Doc = [{ type: 'paragraph', children: [{ text: 'The quick brown fox.' }] }]
+
+const cinemaDocument: Doc = [{ type: 'paragraph', children: [{ text: 'I am at the cinema' }] }]
 
 const highlyStructuredDocument: Doc = [
   {
@@ -64,6 +170,34 @@ describe('Slate Utils', () => {
 
     it('finds the common ancestor in a highly structured document when common ancestor is full document', () => {
       expect(findCommonAncestor(highlyStructuredDocument, 0, 7)).toEqual([null, 0])
+    })
+  })
+
+  describe('updateThreadPositions', () => {
+    it('handles short deletions with common char', () => {
+      const threads = [
+        {
+          id: 42,
+          startIndex: 5,
+          endIndex: 7,
+        },
+      ] as Thread[]
+
+      const updatedCinemaDocument: Doc = [
+        { type: 'paragraph', children: [{ text: 'I am the cinema' }] },
+      ]
+
+      const updatedThreads = updatedThreadPositions(cinemaDocument, updatedCinemaDocument, threads)
+
+      // TOOD: create custom matcher to express expected vs. actual thread positions
+      // expected "I am the cinema" to be "I am [t]he cinema"
+      expect(updatedThreads).toEqual([
+        {
+          id: 42,
+          startIndex: -1,
+          endIndex: -1,
+        },
+      ])
     })
   })
 })

@@ -24,7 +24,7 @@ const insertChunk = (chunks: Chunks, insertedContent: string, position: number):
         [start, left],
         [-1, insertedContent],
         [start + left.length, right],
-        ...chunks.slice(i),
+        ...chunks.slice(i + 1),
       ]
     }
   }
@@ -55,58 +55,30 @@ const serializeThreads = (threads: Thread[], document: Doc) => {
 // TODO NEXT TIME: write test case for ...
 // take in expected val, doc, threads, then call serialize thing on doc + threads, then just assert result = expexted val
 
-expect.extend({
-  toMatchTodo(received, expected) {
-    // define Todo object structure with objectContaining
-    const expectTodoObject = (todo?: Todo) =>
-      expect.objectContaining({
-        id: todo?.id || expect.any(Number),
-        userId: todo?.userId || expect.any(Number),
-        title: todo?.title || expect.any(String),
-        completed: todo?.completed || expect.any(Boolean),
-      })
-
-    // define Todo array with arrayContaining and re-use expectTodoObject
-    const expectTodoArray = (todos: Array<Todo>) =>
-      todos.length === 0
-        ? // in case an empty array is passed
-          expect.arrayContaining([expectTodoObject()])
-        : // in case an array of Todos is passed
-          expect.arrayContaining(todos.map(expectTodoObject))
-
-    // expected can either be an array or an object
-    const expectedResult = Array.isArray(expected)
-      ? expectTodoArray(expected)
-      : expectTodoObject(expected)
-
-    // equality check for received todo and expected todo
-    const pass = this.equals(received, expectedResult)
-
-    if (pass) {
-      return {
-        message: () =>
-          `Expected: ${this.utils.printExpected(
-            expectedResult,
-          )}\nReceived: ${this.utils.printReceived(received)}`,
-        pass: true,
-      }
-    }
-    return {
-      message: () =>
-        `Expected: ${this.utils.printExpected(
-          expectedResult,
-        )}\nReceived: ${this.utils.printReceived(received)}\n\n${this.utils.diff(
-          expectedResult,
-          received,
-        )}`,
-      pass: false,
-    }
-  },
+describe('Serialize threads', () => {
+  it('Should handle a single thread', () => {
+    const threads: Thread[] = [
+      {
+        startIndex: 2,
+        endIndex: 4,
+      } as Thread,
+    ]
+    const doc: Doc = [
+      {
+        text: 'I am the goat',
+      },
+    ]
+    expect(serializeThreads(threads, doc)).toBe('I [am] the goat')
+  })
 })
 
 const simpleDocument: Doc = [{ type: 'paragraph', children: [{ text: 'The quick brown fox.' }] }]
 
 const cinemaDocument: Doc = [{ type: 'paragraph', children: [{ text: 'I am at the cinema' }] }]
+const cinemaDocument2: Doc = [{ type: 'paragraph', children: [{ text: "I'm the cinema" }] }]
+const fragmentedDelectionDocument: Doc = [
+  { type: 'paragraph', children: [{ text: "That's is cool" }] },
+]
 
 const highlyStructuredDocument: Doc = [
   {
@@ -173,6 +145,9 @@ describe('Slate Utils', () => {
     })
   })
 
+  // NOTE: This test passes but is not the ideal behavior.
+  // Current idea (3/21/24) is to bias the diff towards continuous deletions vs. fragmented ones
+  // Current challenge is to think of a case where this would NOT be desired
   describe('updateThreadPositions', () => {
     it('handles short deletions with common char', () => {
       const threads = [
@@ -183,21 +158,15 @@ describe('Slate Utils', () => {
         },
       ] as Thread[]
 
+      expect(serializeThreads(threads, cinemaDocument)).toEqual('I am [at] the cinema')
+
       const updatedCinemaDocument: Doc = [
         { type: 'paragraph', children: [{ text: 'I am the cinema' }] },
       ]
 
       const updatedThreads = updatedThreadPositions(cinemaDocument, updatedCinemaDocument, threads)
 
-      // TOOD: create custom matcher to express expected vs. actual thread positions
-      // expected "I am the cinema" to be "I am [t]he cinema"
-      expect(updatedThreads).toEqual([
-        {
-          id: 42,
-          startIndex: -1,
-          endIndex: -1,
-        },
-      ])
+      expect(serializeThreads(updatedThreads, updatedCinemaDocument)).toEqual('I am [t]he cinema')
     })
   })
 })

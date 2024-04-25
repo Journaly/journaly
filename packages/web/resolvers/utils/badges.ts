@@ -42,4 +42,17 @@ const assignCountBadges = (
   return db.$executeRaw(query)
 }
 
+export const assignBadge = async (
+  db: PrismaClient,
+  userId: number,
+  badge: BadgeType,
+): Promise<void> => {
+  await db.userBadge.createMany({
+    data: [{ type: badge, userId }],
+    skipDuplicates: true,
+  })
+
+  return
+}
+
 export { assignCountBadges }

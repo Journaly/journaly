@@ -1,17 +1,18 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { NextPage, NextPageContext } from 'next'
 import { useRouter } from 'next/router'
 
-import { withApollo } from '@/lib/apollo'
 import Post from '@/components/Dashboard/Post'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
-import { PostStatus, usePostPageQuery } from '@/generated/graphql'
+import { PostPageDocument, PostStatus, UiLanguage, usePostPageQuery } from '@/generated/graphql'
 import PostAuthorCard from '@/components/Dashboard/Post/PostAuthorCard'
 import PostComments from '@/components/Dashboard/Post/PostComments'
-import useUILanguage from '@/hooks/useUILanguage'
+import useUILanguage, { langCodeToUILangMap } from '@/hooks/useUILanguage'
 import theme from '@/theme'
 import PrivateShareLink from '@/components/PrivateShareLink'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import i18nConfig from '@/config/i18n'
 
 const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
@@ -72,8 +73,53 @@ const PostPage: NextPage = () => {
   )
 }
 
-PostPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'post', 'comment', 'post-author-card'],
-})
+const getUiLanguage = (ctx: NextPageContext): UiLanguage => {
+  let langCode
+  if (ctx.req) {
+    const i18n = ctx.req.i18n as any
+    if (!i18n) {
+      langCode = 'en'
+    } else {
+      const { allLanguages, defaultLanguage, fallbackLng } = i18n.options
+      const fallback = fallbackLng || defaultLanguage
 
-export default withApollo(PostPage)
+      if (!i18n.languages) {
+        langCode = typeof fallback === 'string' ? fallback : null
+      } else {
+        langCode = i18n.languages.find((lang: string) => allLanguages.includes(lang)) || fallback
+      }
+    }
+  } else {
+    langCode = i18nConfig.i18n.language
+  }
+
+  return langCodeToUILangMap[langCode] || UiLanguage.English
+}
+
+PostPage.getInitialProps = async (ctx) => {
+  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+    const idStr = ctx.query.id as string
+    const id = parseInt(idStr, 10)
+
+    // const uiLanguage = useUILanguage()
+
+    // const { i18n: { language } } = React.useContext(I18nContext)
+
+    // return langCodeToUILangMap[language] || UILanguage.English
+
+    await apolloClient.query({
+      query: PostPageDocument,
+      variables: {
+        id,
+        uiLanguage: getUiLanguage(ctx),
+      },
+    })
+  })
+
+  return {
+    ...props,
+    namespacesRequired: ['common', 'post', 'comment', 'post-author-card'],
+  }
+}
+
+export default PostPage

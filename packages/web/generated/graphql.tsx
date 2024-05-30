@@ -730,8 +730,12 @@ export type TopicTranslation = {
 }
 
 export enum UiLanguage {
+  ChineseSimplified = 'CHINESE_SIMPLIFIED',
+  ChineseTraditional = 'CHINESE_TRADITIONAL',
   English = 'ENGLISH',
   German = 'GERMAN',
+  Italian = 'ITALIAN',
+  PortugueseBrazilian = 'PORTUGUESE_BRAZILIAN',
   Spanish = 'SPANISH',
 }
 

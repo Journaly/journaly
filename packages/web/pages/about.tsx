@@ -1,7 +1,6 @@
 import { NextPage } from 'next'
 import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 import About from '@/components/Site/About'
-import { withApollo } from '@/lib/apollo'
 
 const AboutPage: NextPage = () => (
   <LandingPageLayout>
@@ -9,8 +8,11 @@ const AboutPage: NextPage = () => (
   </LandingPageLayout>
 )
 
-AboutPage.getInitialProps = async () => ({
-  namespacesRequired: ['common'],
-})
+// TODO: Let's get the about page translated?
+AboutPage.getInitialProps = async () => {
+  return {
+    namespacesRequired: ['common'],
+  }
+}
 
-export default withApollo(AboutPage)
+export default AboutPage

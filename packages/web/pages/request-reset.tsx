@@ -1,5 +1,4 @@
 import { NextPage } from 'next'
-import { withApollo } from '@/lib/apollo'
 import RequestResetPasswordForm from '@/components/RequestResetPasswordForm'
 import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 
@@ -18,4 +17,4 @@ RequestResetPasswordPage.getInitialProps = async () => ({
   namespacesRequired: ['common', 'authentication'],
 })
 
-export default withApollo(RequestResetPasswordPage)
+export default RequestResetPasswordPage

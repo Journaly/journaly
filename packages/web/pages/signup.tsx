@@ -18,4 +18,4 @@ SignupPage.getInitialProps = async () => ({
   namespacesRequired: ['common', 'authentication'],
 })
 
-export default withApollo(SignupPage)
+export default SignupPage

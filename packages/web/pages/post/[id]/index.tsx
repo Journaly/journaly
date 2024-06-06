@@ -1,18 +1,18 @@
 import React from 'react'
-import { NextPage, NextPageContext } from 'next'
+import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import Post from '@/components/Dashboard/Post'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
-import { PostPageDocument, PostStatus, UiLanguage, usePostPageQuery } from '@/generated/graphql'
+import { PostPageDocument, PostStatus, usePostPageQuery } from '@/generated/graphql'
 import PostAuthorCard from '@/components/Dashboard/Post/PostAuthorCard'
 import PostComments from '@/components/Dashboard/Post/PostComments'
-import useUILanguage, { langCodeToUILangMap } from '@/hooks/useUILanguage'
+import useUILanguage from '@/hooks/useUILanguage'
 import theme from '@/theme'
 import PrivateShareLink from '@/components/PrivateShareLink'
 import { journalyMiddleware } from '@/lib/journalyMiddleware'
-import i18nConfig from '@/config/i18n'
+import { getUiLanguage } from '@/utils/getUiLanguage'
 
 const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
@@ -71,29 +71,6 @@ const PostPage: NextPage = () => {
       </LoadingWrapper>
     </DashboardLayout>
   )
-}
-
-const getUiLanguage = (ctx: NextPageContext): UiLanguage => {
-  let langCode
-  if (ctx.req) {
-    const i18n = ctx.req.i18n as any
-    if (!i18n) {
-      langCode = 'en'
-    } else {
-      const { allLanguages, defaultLanguage, fallbackLng } = i18n.options
-      const fallback = fallbackLng || defaultLanguage
-
-      if (!i18n.languages) {
-        langCode = typeof fallback === 'string' ? fallback : null
-      } else {
-        langCode = i18n.languages.find((lang: string) => allLanguages.includes(lang)) || fallback
-      }
-    }
-  } else {
-    langCode = i18nConfig.i18n.language
-  }
-
-  return langCodeToUILangMap[langCode] || UiLanguage.English
 }
 
 PostPage.getInitialProps = async (ctx) => {

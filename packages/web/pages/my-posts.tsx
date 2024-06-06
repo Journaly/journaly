@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
 import { NextPage } from 'next'
-import { withApollo } from '@/lib/apollo'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import TabToggle from '@/components/TabToggle'
 import AuthGate from '@/components/AuthGate'
 import MyPosts from '@/components/Dashboard/MyPosts'
-import { PostStatus as PostStatusType } from '@/generated/graphql'
+import {
+  CurrentUserDocument,
+  PostStatus as PostStatusType,
+  PostsDocument,
+} from '@/generated/graphql'
 import theme from '@/theme'
 import { useTranslation } from '@/config/i18n'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import { NUM_POSTS_PER_MY_POSTS_PAGE } from '@/constants'
+import { getCurrentUserId } from '@/utils/getCurrentUserId'
 
 type Tab = {
   key: PostStatusType
@@ -33,7 +39,9 @@ const MyPostsPage: NextPage = () => {
       {(currentUser) => (
         <DashboardLayout>
           <div className="my-posts-page">
-            <h1 className="my-posts-title" data-testid="my-posts-header">{t('pageTitle')}</h1>
+            <h1 className="my-posts-title" data-testid="my-posts-header">
+              {t('pageTitle')}
+            </h1>
             <TabToggle activeKey={activeKey} tabs={tabs} onToggle={handleToggle} />
             <div className="posts-wrapper">
               <MyPosts status={activeKey} currentUser={currentUser} />
@@ -67,8 +75,35 @@ const MyPostsPage: NextPage = () => {
   )
 }
 
-MyPostsPage.getInitialProps = async () => ({
-  namespacesRequired: ['my-posts', 'common'],
-})
+MyPostsPage.getInitialProps = async (ctx) => {
+  console.log('getInitialPropsUserId', getCurrentUserId(ctx))
+  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+    await apolloClient.query({
+      query: PostsDocument,
+      variables: {
+        languages: [],
+        topics: [],
+        followedAuthors: false,
+        needsFeedback: false,
+        hasInteracted: false,
+        search: '',
+        savedPosts: false,
+        first: NUM_POSTS_PER_MY_POSTS_PAGE,
+        skip: 0,
+        status: PostStatusType.Published,
+        authorId: getCurrentUserId(ctx),
+      },
+    })
 
-export default withApollo(MyPostsPage)
+    await apolloClient.query({
+      query: CurrentUserDocument,
+    })
+  })
+
+  return {
+    ...props,
+    namespacesRequired: ['my-posts', 'common'],
+  }
+}
+
+export default MyPostsPage

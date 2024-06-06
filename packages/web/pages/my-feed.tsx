@@ -8,6 +8,8 @@ import MyFeed from '@/components/Dashboard/MyFeed'
 import AuthGate from '@/components/AuthGate'
 import WelcomeModal from '@/components/Modals/WelcomeModal'
 import { InitialSearchFilters } from '@/components/Dashboard/MyFeed'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import { PostsDocument } from '@/generated/graphql'
 
 interface InitialProps {
   namespacesRequired: string[]
@@ -49,10 +51,19 @@ MyFeedPage.getInitialProps = async (ctx) => {
       console.log('Error parsing default_search_filters cookie', e)
     }
   }
+  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+    await apolloClient.query({
+      query: PostsDocument,
+      variables: {
+        ...initialSearchFilters,
+      },
+    })
+  })
   return {
-    namespacesRequired: ['common', 'settings', 'my-feed'],
+    ...props,
     initialSearchFilters,
+    namespacesRequired: ['common', 'settings', 'my-feed'],
   }
 }
 
-export default withApollo(MyFeedPage)
+export default MyFeedPage

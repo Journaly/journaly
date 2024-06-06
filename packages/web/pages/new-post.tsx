@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { makeReference } from '@apollo/client'
 
-import { withApollo } from '@/lib/apollo'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import { navConstants } from '@/components/Dashboard/Nav'
 import PostEditor, {
@@ -19,12 +18,15 @@ import {
   useCreatePostMutation,
   PostStatus as PostStatusType,
   UserRole,
+  NewPostDocument,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import { useTranslation, Router } from '@/config/i18n'
 import useUILanguage from '@/hooks/useUILanguage'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import { getUiLanguage } from '@/utils/getUiLanguage'
 
 type NewPostPageProps = {
   defaultImage: {
@@ -330,9 +332,21 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   )
 }
 
-NewPostPage.getInitialProps = async () => ({
-  defaultImage: selectDefaultImage(),
-  namespacesRequired: ['common', 'post'],
-})
+NewPostPage.getInitialProps = async (ctx) => {
+  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+    await apolloClient.query({
+      query: NewPostDocument,
+      variables: {
+        uiLanguage: getUiLanguage(ctx),
+      },
+    })
+  })
 
-export default withApollo(NewPostPage)
+  return {
+    ...props,
+    defaultImage: selectDefaultImage(),
+    namespacesRequired: ['common', 'post'],
+  }
+}
+
+export default NewPostPage

@@ -13,8 +13,7 @@ import PostCard from '../PostCard'
 import theme from '@/theme'
 import Filters, { PostQueryVarsType } from '@/components/Dashboard/Filters'
 import Pagination from '@/components/Pagination'
-
-const NUM_POSTS_PER_PAGE = 10
+import { NUM_POSTS_PER_MY_POSTS_PAGE } from '@/constants'
 
 type Props = {
   currentUser: UserType
@@ -40,18 +39,19 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
   })
   const { loading, data, error } = usePostsQuery({
     variables: {
-      first: NUM_POSTS_PER_PAGE,
-      skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
+      first: NUM_POSTS_PER_MY_POSTS_PAGE,
+      skip: (currentPage - 1) * NUM_POSTS_PER_MY_POSTS_PAGE,
       status,
       authorId: currentUser.id,
       ...postQueryVars,
     },
   })
+  console.log('componentCurrentUserId', currentUser.id)
 
   const posts = (data?.posts?.posts as PostType[]) || []
   const count = data?.posts?.count || 0
   const showPosts = !loading && posts.length > 0
-  const showPagination = count > NUM_POSTS_PER_PAGE
+  const showPagination = count > NUM_POSTS_PER_MY_POSTS_PAGE
   const showEmptyState = !loading && posts.length === 0
   const pageTitle = t('pageTitle')
 
@@ -92,7 +92,7 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
             <Pagination
               currentPage={currentPage}
               total={count}
-              numPerPage={NUM_POSTS_PER_PAGE}
+              numPerPage={NUM_POSTS_PER_MY_POSTS_PAGE}
               title={pageTitle}
             />
           )}

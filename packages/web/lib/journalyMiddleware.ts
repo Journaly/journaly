@@ -2,6 +2,7 @@ import { ApolloClient } from '@apollo/client'
 import { NextPageContext } from 'next'
 import { initApolloClient } from './apollo'
 
+// TOOD: Add documentation
 export const journalyMiddleware = async (
   ctx: NextPageContext,
   callback: (apolloClient: ApolloClient<any>) => Promise<unknown>,

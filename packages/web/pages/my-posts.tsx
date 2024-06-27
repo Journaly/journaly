@@ -76,7 +76,6 @@ const MyPostsPage: NextPage = () => {
 }
 
 MyPostsPage.getInitialProps = async (ctx) => {
-  console.log('getInitialPropsUserId', getCurrentUserId(ctx))
   const props = await journalyMiddleware(ctx, async (apolloClient) => {
     await apolloClient.query({
       query: PostsDocument,

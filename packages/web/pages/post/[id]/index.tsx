@@ -78,12 +78,6 @@ PostPage.getInitialProps = async (ctx) => {
     const idStr = ctx.query.id as string
     const id = parseInt(idStr, 10)
 
-    // const uiLanguage = useUILanguage()
-
-    // const { i18n: { language } } = React.useContext(I18nContext)
-
-    // return langCodeToUILangMap[language] || UILanguage.English
-
     await apolloClient.query({
       query: PostPageDocument,
       variables: {

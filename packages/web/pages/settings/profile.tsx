@@ -1,6 +1,5 @@
 import React from 'react'
 import { NextPage } from 'next'
-import { withApollo } from '@/lib/apollo'
 import useUILanguage from '@/hooks/useUILanguage'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import LoadingSpinner from '@/components/Icons/LoadingSpinner'
@@ -10,7 +9,13 @@ import BioForm from '@/components/Dashboard/Settings/BioForm'
 import InterestsForm from '@/components/Dashboard/Settings/InterestsForm'
 import SocialForm from '@/components/Dashboard/Settings/SocialForm'
 import AuthGate from '@/components/AuthGate'
-import { useSettingsFormDataQuery } from '@/generated/graphql'
+import {
+  CurrentUserDocument,
+  SettingsFormDataDocument,
+  useSettingsFormDataQuery,
+} from '@/generated/graphql'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import { getUiLanguage } from '@/utils/getUiLanguage'
 
 const ProfileInfo: NextPage = () => {
   const uiLanguage = useUILanguage()
@@ -67,8 +72,24 @@ const ProfileInfo: NextPage = () => {
   )
 }
 
-ProfileInfo.getInitialProps = async () => ({
-  namespacesRequired: ['settings', 'common', 'badge'],
-})
+ProfileInfo.getInitialProps = async (ctx) => {
+  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+    await apolloClient.query({
+      query: SettingsFormDataDocument,
+      variables: {
+        uiLanguage: getUiLanguage(ctx),
+      },
+    })
 
-export default withApollo(ProfileInfo)
+    await apolloClient.query({
+      query: CurrentUserDocument,
+    })
+  })
+
+  return {
+    ...props,
+    namespacesRequired: ['common', 'settings', 'badge'],
+  }
+}
+
+export default ProfileInfo

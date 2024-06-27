@@ -8,7 +8,9 @@ import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import UpdatePasswordForm from '@/components/Dashboard/Settings/UpdatePasswordForm'
 import NotificationSettingsForm from '@/components/Dashboard/Settings/NotificationSettingsForm'
 import UILanguageForm from '@/components/Dashboard/Settings/UILanguageForm'
-import { useSettingsFormDataQuery } from '@/generated/graphql'
+import { SettingsFormDataDocument, useSettingsFormDataQuery } from '@/generated/graphql'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import { getUiLanguage } from '@/utils/getUiLanguage'
 
 const Account: NextPage = () => {
   const uiLanguage = useUILanguage()
@@ -56,8 +58,20 @@ const Account: NextPage = () => {
   )
 }
 
-Account.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'settings'],
-})
+Account.getInitialProps = async (ctx) => {
+  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+    await apolloClient.query({
+      query: SettingsFormDataDocument,
+      variables: {
+        uiLanguage: getUiLanguage(ctx),
+      },
+    })
+  })
+
+  return {
+    ...props,
+    namespacesRequired: ['common', 'settings'],
+  }
+}
 
 export default withApollo(Account)

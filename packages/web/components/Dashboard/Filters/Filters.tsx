@@ -1,7 +1,13 @@
 import React, { useState, useCallback } from 'react'
 import isEqual from 'lodash/isEqual'
 import Button, { ButtonVariant } from '@/components/Button'
-import { User as UserType, useTopicsQuery, useLanguagesQuery, UserRole } from '@/generated/graphql'
+import {
+  User as UserType,
+  useTopicsQuery,
+  useLanguagesQuery,
+  UserRole,
+  LanguagesDocument,
+} from '@/generated/graphql'
 import SearchInput from './SearchInput'
 import LanguageSelect from './LanguageSelect'
 import TopicSelect from './TopicSelect'
@@ -9,16 +15,8 @@ import useToggle from '@/hooks/useToggle'
 import useUILanguage from '@/hooks/useUILanguage'
 import { Router, useTranslation } from '@/config/i18n'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
-
-export type PostQueryVarsType = {
-  languages: number[]
-  topics: number[]
-  followedAuthors: boolean
-  search: string
-  needsFeedback: boolean
-  hasInteracted: boolean
-  savedPosts: boolean
-}
+import { PostQueryVarsType } from '../MyFeed/MyFeed'
+import { useApolloClient } from '@apollo/client'
 
 type Props = {
   currentUser: UserType
@@ -143,7 +141,7 @@ const Filters: React.FC<Props> = ({
     }))
     resetPagination()
   }, [resetPagination])
-  
+
   const toggleMyLanguagesFilter = useCallback(() => {
     setPostQueryVars((prevState) => ({
       ...prevState,

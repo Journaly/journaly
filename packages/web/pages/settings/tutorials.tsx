@@ -1,6 +1,5 @@
 import React from 'react'
 import { NextPage } from 'next'
-import { withApollo } from '@/lib/apollo'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import AuthGate from '@/components/AuthGate'
 import theme from '@/theme'

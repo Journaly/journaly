@@ -13,6 +13,7 @@ import {
   usePostsQuery,
   PostCardFragmentFragment,
   PostStatus,
+  PostsDocument,
 } from '@/generated/graphql'
 
 import PostCard from '../PostCard'
@@ -28,6 +29,7 @@ type Props = {
   initialSearchFilters: InitialSearchFilters | null
 }
 
+// TODO: let's consider adding `followedAuthor` here
 export type InitialSearchFilters = {
   languages: number[]
   topics: number[]
@@ -37,9 +39,40 @@ export type InitialSearchFilters = {
   search: string
 }
 
+export type PostQueryVarsType = {
+  languages: number[]
+  topics: number[]
+  followedAuthors: boolean
+  search: string
+  needsFeedback: boolean
+  hasInteracted: boolean
+  savedPosts: boolean
+}
+
+export const constructPostQueryVars = (
+  postQueryVars: PostQueryVarsType | null,
+  currentPage: number,
+) => {
+  const variables = {
+    first: NUM_POSTS_PER_PAGE,
+    skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
+    status: PostStatus.Published,
+    languages: postQueryVars?.languages || [],
+    topics: postQueryVars?.topics || [],
+    followedAuthors: postQueryVars?.followedAuthors || false,
+    needsFeedback: postQueryVars?.needsFeedback || false,
+    hasInteracted: postQueryVars?.hasInteracted || false,
+    search: postQueryVars?.search || '',
+    savedPosts: postQueryVars?.savedPosts || false,
+  }
+  return variables
+}
+
 const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   const { t } = useTranslation('my-feed')
   const client = useApolloClient()
+
+  console.log('ROOT', client.cache.data.data.ROOT_QUERY)
 
   /**
    * Pagination handling
@@ -77,15 +110,20 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
     gtag('event', 'myFeedFilterSet', { filters: postQueryVars })
   }, [postQueryVars])
 
+  console.log('vars1', constructPostQueryVars(postQueryVars, currentPage))
   // fetch posts for the feed!
   const { loading, error, data } = usePostsQuery({
-    variables: {
-      first: NUM_POSTS_PER_PAGE,
-      skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
-      status: PostStatus.Published,
-      ...postQueryVars,
-    },
+    variables: constructPostQueryVars(postQueryVars, currentPage),
   })
+
+  console.log({ loading, error })
+  console.log(
+    'POSTS_QUERY',
+    client.readQuery({
+      query: PostsDocument,
+      variables: constructPostQueryVars(postQueryVars, currentPage),
+    }),
+  )
 
   const posts = data?.posts?.posts
   const count = data?.posts?.count || 0

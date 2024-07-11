@@ -8,7 +8,14 @@ import AuthGate from '@/components/AuthGate'
 import WelcomeModal from '@/components/Modals/WelcomeModal'
 import { InitialSearchFilters } from '@/components/Dashboard/MyFeed'
 import { journalyMiddleware } from '@/lib/journalyMiddleware'
-import { PostsDocument } from '@/generated/graphql'
+import {
+  CurrentUserDocument,
+  LanguagesDocument,
+  PostsDocument,
+  TopicsDocument,
+} from '@/generated/graphql'
+import { constructPostQueryVars } from '@/components/Dashboard/MyFeed/MyFeed'
+import { getUiLanguage } from '@/utils/getUiLanguage'
 
 interface InitialProps {
   namespacesRequired: string[]
@@ -50,14 +57,55 @@ MyFeedPage.getInitialProps = async (ctx) => {
       console.log('Error parsing default_search_filters cookie', e)
     }
   }
+
+  console.log({ initialSearchFilters })
+
   const props = await journalyMiddleware(ctx, async (apolloClient) => {
-    await apolloClient.query({
+    await Promise.all([
+      apolloClient.query({
+        query: CurrentUserDocument,
+      }),
+      apolloClient.query({
+        query: PostsDocument,
+        variables: constructPostQueryVars(
+          initialSearchFilters,
+          ctx.query.page ? Math.max(1, parseInt(ctx.query.page as string, 10)) : 1,
+        ),
+      }),
+      apolloClient.query({
+        query: TopicsDocument,
+        variables: {
+          uiLanguage: getUiLanguage(ctx),
+          languages: initialSearchFilters?.languages || [],
+          hasPosts: true,
+          authoredOnly: false,
+        },
+      }),
+      apolloClient.query({
+        query: LanguagesDocument,
+        variables: {
+          hasPosts: true,
+          authoredOnly: false,
+        },
+      }),
+    ])
+    console.log('POSTS_QUERY_2', {
       query: PostsDocument,
-      variables: {
-        ...initialSearchFilters,
-      },
+      variables: constructPostQueryVars(
+        initialSearchFilters,
+        ctx.query.page ? Math.max(1, parseInt(ctx.query.page as string, 10)) : 1,
+      ),
     })
   })
+
+  console.log(
+    'vars2',
+    constructPostQueryVars(
+      initialSearchFilters,
+      ctx.query.page ? Math.max(1, parseInt(ctx.query.page as string, 10)) : 1,
+    ),
+  )
+
   return {
     ...props,
     initialSearchFilters,

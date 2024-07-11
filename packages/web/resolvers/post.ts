@@ -294,6 +294,7 @@ const PostQueries = extendType({
         }),
       },
       resolve: async (_parent, args, ctx) => {
+        console.log('start', args)
         const { userId } = ctx.request
 
         const currentUser = userId
@@ -419,7 +420,7 @@ const PostQueries = extendType({
           `,
           ctx.db.$queryRaw<{ count: number }[]>`SELECT COUNT(*) ${queryPred};`,
         ])
-
+        console.log('THE END')
         return { posts, count }
       },
     })

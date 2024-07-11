@@ -32,6 +32,7 @@ export const config = {
 };
 
 const handler = async (req: any, res: any) => {
+  console.log('start', req.cookies)
   const bodyPromise = readBody(req)
   const { token } = req.cookies
   req.response = res
@@ -46,9 +47,12 @@ const handler = async (req: any, res: any) => {
   console.log(`GraphQL request took ${gqlDuration} ms`)
 
   if (gqlDuration > LOG_QUERY_THRESHOLD) {
-    console.log(`Request ran longer than ${LOG_QUERY_THRESHOLD}ms, request body is:`, await bodyPromise)
+    console.log(
+      `Request ran longer than ${LOG_QUERY_THRESHOLD}ms, request body is:`,
+      await bodyPromise,
+    )
   }
-
+  console.log('END', await bodyPromise)
   return response
 }
 

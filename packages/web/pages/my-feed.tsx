@@ -89,13 +89,13 @@ MyFeedPage.getInitialProps = async (ctx) => {
         },
       }),
     ])
-    console.log('POSTS_QUERY_2', {
+    console.log('POSTS_QUERY_2', apolloClient.readQuery({
       query: PostsDocument,
       variables: constructPostQueryVars(
         initialSearchFilters,
         ctx.query.page ? Math.max(1, parseInt(ctx.query.page as string, 10)) : 1,
       ),
-    })
+    }))
   })
 
   console.log(

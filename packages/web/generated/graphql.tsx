@@ -1565,7 +1565,7 @@ export type PostCardFragmentFragment = {
   publishedLanguageLevel: LanguageLevel
   commentCount: number
   status: PostStatus
-  headlineImage: { __typename?: 'HeadlineImage'; id: number; smallSize: string }
+  headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
   claps: Array<{ __typename?: 'PostClap'; id: number }>
   author: {
     __typename?: 'User'
@@ -2560,7 +2560,7 @@ export type ProfilePageQuery = {
       publishedLanguageLevel: LanguageLevel
       commentCount: number
       status: PostStatus
-      headlineImage: { __typename?: 'HeadlineImage'; id: number; smallSize: string }
+      headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
       claps: Array<{ __typename?: 'PostClap'; id: number }>
       author: {
         __typename?: 'User'
@@ -2847,7 +2847,7 @@ export type CreatePostMutation = {
     publishedLanguageLevel: LanguageLevel
     commentCount: number
     status: PostStatus
-    headlineImage: { __typename?: 'HeadlineImage'; id: number; smallSize: string }
+    headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
     claps: Array<{ __typename?: 'PostClap'; id: number }>
     author: {
       __typename?: 'User'
@@ -3429,7 +3429,7 @@ export type PostsQuery = {
       publishedLanguageLevel: LanguageLevel
       commentCount: number
       status: PostStatus
-      headlineImage: { __typename?: 'HeadlineImage'; id: number; smallSize: string }
+      headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
       claps: Array<{ __typename?: 'PostClap'; id: number }>
       author: {
         __typename?: 'User'
@@ -4513,7 +4513,6 @@ export const PostCardFragmentFragmentDoc = gql`
     commentCount
     status
     headlineImage {
-      id
       smallSize
     }
     claps {

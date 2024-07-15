@@ -194,7 +194,6 @@ fragment PostCardFragment on Post {
   commentCount
   status
   headlineImage {
-    id
     smallSize
   }
   claps {

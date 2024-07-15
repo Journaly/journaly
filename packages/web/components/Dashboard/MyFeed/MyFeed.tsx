@@ -116,15 +116,6 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
     variables: constructPostQueryVars(postQueryVars, currentPage),
   })
 
-  console.log({ loading, error })
-  console.log(
-    'POSTS_QUERY',
-    client.readQuery({
-      query: PostsDocument,
-      variables: constructPostQueryVars(postQueryVars, currentPage),
-    }),
-  )
-
   const posts = data?.posts?.posts
   const count = data?.posts?.count || 0
   const showPagination = count > NUM_POSTS_PER_PAGE

@@ -36,7 +36,7 @@ const MyFeedPage: NextPage<InitialProps> = ({ initialSearchFilters }) => {
 }
 
 MyFeedPage.getInitialProps = async (ctx) => {
-  let initialSearchFilters = null
+  let initialSearchFilters: InitialSearchFilters | null = null
   if (typeof window !== 'undefined') {
     try {
       const defaultSearchFilters = cookie.parse(document.cookie).default_search_filters
@@ -92,7 +92,7 @@ MyFeedPage.getInitialProps = async (ctx) => {
   return {
     ...props,
     initialSearchFilters,
-    namespacesRequired: ['common', 'settings', 'my-feed'],
+    namespacesRequired: ['common', 'settings', 'my-feed', 'post'],
   }
 }
 

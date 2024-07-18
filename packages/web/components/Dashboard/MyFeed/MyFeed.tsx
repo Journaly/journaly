@@ -13,13 +13,11 @@ import {
   usePostsQuery,
   PostCardFragmentFragment,
   PostStatus,
-  PostsDocument,
 } from '@/generated/graphql'
 
 import PostCard from '../PostCard'
 import FeedHeader from './FeedHeader'
-import Filters from '../Filters'
-import { PostQueryVarsType } from '../Filters'
+import Filters, { PostQueryVarsType } from '@/components/Dashboard/Filters'
 import { makeReference, useApolloClient } from '@apollo/client'
 
 const NUM_POSTS_PER_PAGE = 9
@@ -37,16 +35,6 @@ export type InitialSearchFilters = {
   hasInteracted: boolean
   savedPosts: boolean
   search: string
-}
-
-export type PostQueryVarsType = {
-  languages: number[]
-  topics: number[]
-  followedAuthors: boolean
-  search: string
-  needsFeedback: boolean
-  hasInteracted: boolean
-  savedPosts: boolean
 }
 
 export const constructPostQueryVars = (

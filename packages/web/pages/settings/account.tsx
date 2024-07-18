@@ -1,6 +1,5 @@
 import React from 'react'
 import { NextPage } from 'next'
-import { withApollo } from '@/lib/apollo'
 import useUILanguage from '@/hooks/useUILanguage'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import AuthGate from '@/components/AuthGate'
@@ -8,7 +7,11 @@ import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import UpdatePasswordForm from '@/components/Dashboard/Settings/UpdatePasswordForm'
 import NotificationSettingsForm from '@/components/Dashboard/Settings/NotificationSettingsForm'
 import UILanguageForm from '@/components/Dashboard/Settings/UILanguageForm'
-import { SettingsFormDataDocument, useSettingsFormDataQuery } from '@/generated/graphql'
+import {
+  CurrentUserDocument,
+  SettingsFormDataDocument,
+  useSettingsFormDataQuery,
+} from '@/generated/graphql'
 import { journalyMiddleware } from '@/lib/journalyMiddleware'
 import { getUiLanguage } from '@/utils/getUiLanguage'
 
@@ -65,6 +68,10 @@ Account.getInitialProps = async (ctx) => {
       variables: {
         uiLanguage: getUiLanguage(ctx),
       },
+    })
+
+    await apolloClient.query({
+      query: CurrentUserDocument,
     })
   })
 

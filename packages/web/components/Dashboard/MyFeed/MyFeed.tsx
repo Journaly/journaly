@@ -72,8 +72,6 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
   const { t } = useTranslation('my-feed')
   const client = useApolloClient()
 
-  console.log('ROOT', client.cache.data.data.ROOT_QUERY)
-
   /**
    * Pagination handling
    */
@@ -110,7 +108,6 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
     gtag('event', 'myFeedFilterSet', { filters: postQueryVars })
   }, [postQueryVars])
 
-  console.log('vars1', constructPostQueryVars(postQueryVars, currentPage))
   // fetch posts for the feed!
   const { loading, error, data } = usePostsQuery({
     variables: constructPostQueryVars(postQueryVars, currentPage),

@@ -58,8 +58,6 @@ MyFeedPage.getInitialProps = async (ctx) => {
     }
   }
 
-  console.log({ initialSearchFilters })
-
   const props = await journalyMiddleware(ctx, async (apolloClient) => {
     await Promise.all([
       apolloClient.query({
@@ -89,22 +87,7 @@ MyFeedPage.getInitialProps = async (ctx) => {
         },
       }),
     ])
-    console.log('POSTS_QUERY_2', apolloClient.readQuery({
-      query: PostsDocument,
-      variables: constructPostQueryVars(
-        initialSearchFilters,
-        ctx.query.page ? Math.max(1, parseInt(ctx.query.page as string, 10)) : 1,
-      ),
-    }))
   })
-
-  console.log(
-    'vars2',
-    constructPostQueryVars(
-      initialSearchFilters,
-      ctx.query.page ? Math.max(1, parseInt(ctx.query.page as string, 10)) : 1,
-    ),
-  )
 
   return {
     ...props,

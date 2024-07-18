@@ -543,9 +543,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         },
       },
       update(cache, { data }) {
-        console.log('before')
         if (data?.updatePost) {
-          console.log('after')
           cache.modify({
             id: cache.identify(makeReference('ROOT_QUERY')),
             fields: {

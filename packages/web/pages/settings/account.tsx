@@ -74,4 +74,4 @@ Account.getInitialProps = async (ctx) => {
   }
 }
 
-export default withApollo(Account)
+export default Account

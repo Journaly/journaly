@@ -46,7 +46,6 @@ const MyPosts: React.FC<Props> = ({ currentUser, status }) => {
       ...postQueryVars,
     },
   })
-  console.log('componentCurrentUserId', currentUser.id)
 
   const posts = (data?.posts?.posts as PostType[]) || []
   const count = data?.posts?.count || 0

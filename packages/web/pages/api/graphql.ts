@@ -32,7 +32,6 @@ export const config = {
 };
 
 const handler = async (req: any, res: any) => {
-  console.log('start', req.cookies)
   const bodyPromise = readBody(req)
   const { token } = req.cookies
   req.response = res
@@ -52,7 +51,6 @@ const handler = async (req: any, res: any) => {
       await bodyPromise,
     )
   }
-  console.log('END', await bodyPromise)
   return response
 }
 

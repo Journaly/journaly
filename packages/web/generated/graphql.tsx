@@ -1200,7 +1200,11 @@ export type CurrentUserFragmentFragment = {
     }>
   }>
   savedPosts: Array<{ __typename?: 'Post'; id: number }>
-  membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+  membershipSubscription?: {
+    __typename?: 'MembershipSubscription'
+    id: number
+    isActive: boolean
+  } | null
   languages: Array<{
     __typename?: 'LanguageRelation'
     id: number
@@ -1616,6 +1620,7 @@ export type PostTopicFragmentFragment = {
 
 export type UserBadgeFragmentFragment = {
   __typename?: 'UserBadge'
+  id: number
   type: BadgeType
   createdAt: any
 }
@@ -1818,6 +1823,7 @@ export type LanguagesFormDataQuery = {
   }>
   currentUser?: {
     __typename?: 'User'
+    id: number
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -2174,7 +2180,11 @@ export type PostPageQuery = {
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
-    membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+    membershipSubscription?: {
+      __typename?: 'MembershipSubscription'
+      id: number
+      isActive: boolean
+    } | null
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -2458,7 +2468,11 @@ export type PrivatePostPageQuery = {
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
-    membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+    membershipSubscription?: {
+      __typename?: 'MembershipSubscription'
+      id: number
+      isActive: boolean
+    } | null
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -2519,7 +2533,7 @@ export type ProfilePageQuery = {
       country?: string | null
       emailAddressVerified: boolean
     }>
-    badges: Array<{ __typename?: 'UserBadge'; type: BadgeType; createdAt: any }>
+    badges: Array<{ __typename?: 'UserBadge'; id: number; type: BadgeType; createdAt: any }>
     userInterests: Array<{
       __typename?: 'UserInterest'
       topic: { __typename?: 'Topic'; id: number; name?: string | null }
@@ -2643,7 +2657,7 @@ export type ProfileUserFragmentFragment = {
     country?: string | null
     emailAddressVerified: boolean
   }>
-  badges: Array<{ __typename?: 'UserBadge'; type: BadgeType; createdAt: any }>
+  badges: Array<{ __typename?: 'UserBadge'; id: number; type: BadgeType; createdAt: any }>
   userInterests: Array<{
     __typename?: 'UserInterest'
     topic: { __typename?: 'Topic'; id: number; name?: string | null }
@@ -3063,7 +3077,11 @@ export type EditPostQuery = {
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
-    membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+    membershipSubscription?: {
+      __typename?: 'MembershipSubscription'
+      id: number
+      isActive: boolean
+    } | null
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -3274,7 +3292,11 @@ export type NewPostQuery = {
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
-    membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+    membershipSubscription?: {
+      __typename?: 'MembershipSubscription'
+      id: number
+      isActive: boolean
+    } | null
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -3820,7 +3842,11 @@ export type CurrentUserQuery = {
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
-    membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+    membershipSubscription?: {
+      __typename?: 'MembershipSubscription'
+      id: number
+      isActive: boolean
+    } | null
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -3940,6 +3966,7 @@ export type SettingsFormDataQuery = {
   topics: Array<{ __typename?: 'Topic'; id: number; name?: string | null }>
   currentUser?: {
     __typename?: 'User'
+    id: number
     bio?: string | null
     languages: Array<{
       __typename?: 'LanguageRelation'
@@ -3959,6 +3986,7 @@ export type SettingsFormDataQuery = {
     }>
     configuration?: {
       __typename?: 'UserConfiguration'
+      id: number
       digestEmail: DigestEmailConfiguration
     } | null
     socialMedia?: {
@@ -4325,6 +4353,7 @@ export const CurrentUserFragmentFragmentDoc = gql`
       id
     }
     membershipSubscription {
+      id
       isActive
     }
   }
@@ -4544,6 +4573,7 @@ export const TopicWithPostCountFragmentFragmentDoc = gql`
 `
 export const UserBadgeFragmentFragmentDoc = gql`
   fragment UserBadgeFragment on UserBadge {
+    id
     type
     createdAt
   }
@@ -5185,6 +5215,7 @@ export const LanguagesFormDataDocument = gql`
       ...LanguageFragment
     }
     currentUser {
+      id
       languages {
         id
         level
@@ -7258,6 +7289,7 @@ export const SettingsFormDataDocument = gql`
       ...TopicFragment
     }
     currentUser {
+      id
       bio
       languages {
         id
@@ -7271,6 +7303,7 @@ export const SettingsFormDataDocument = gql`
       }
       ...SocialMediaFragment
       configuration {
+        id
         digestEmail
       }
     }

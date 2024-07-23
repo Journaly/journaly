@@ -6,7 +6,7 @@ import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import MyFeed from '@/components/Dashboard/MyFeed'
 import AuthGate from '@/components/AuthGate'
 import WelcomeModal from '@/components/Modals/WelcomeModal'
-import { InitialSearchFilters } from '@/components/Dashboard/MyFeed'
+import { PostQueryVarsType } from '@/components/Dashboard/Filters'
 import { journalyMiddleware } from '@/lib/journalyMiddleware'
 import {
   CurrentUserDocument,
@@ -19,7 +19,7 @@ import { getUiLanguage } from '@/utils/getUiLanguage'
 
 interface InitialProps {
   namespacesRequired: string[]
-  initialSearchFilters: InitialSearchFilters | null
+  initialSearchFilters: PostQueryVarsType | null
 }
 
 const MyFeedPage: NextPage<InitialProps> = ({ initialSearchFilters }) => {
@@ -36,12 +36,12 @@ const MyFeedPage: NextPage<InitialProps> = ({ initialSearchFilters }) => {
 }
 
 MyFeedPage.getInitialProps = async (ctx) => {
-  let initialSearchFilters: InitialSearchFilters | null = null
+  let initialSearchFilters: PostQueryVarsType | null = null
   if (typeof window !== 'undefined') {
     try {
       const defaultSearchFilters = cookie.parse(document.cookie).default_search_filters
       initialSearchFilters = defaultSearchFilters
-        ? (JSON.parse(defaultSearchFilters) as InitialSearchFilters)
+        ? (JSON.parse(defaultSearchFilters) as PostQueryVarsType)
         : null
     } catch (e) {
       console.log('Error parsing default_search_filters cookie', e)
@@ -51,7 +51,7 @@ MyFeedPage.getInitialProps = async (ctx) => {
       const request = ctx.req as Request
       const defaultSearchFilters = request.cookies.default_search_filters
       initialSearchFilters = defaultSearchFilters
-        ? (JSON.parse(defaultSearchFilters) as InitialSearchFilters)
+        ? (JSON.parse(defaultSearchFilters) as PostQueryVarsType)
         : null
     } catch (e) {
       console.log('Error parsing default_search_filters cookie', e)

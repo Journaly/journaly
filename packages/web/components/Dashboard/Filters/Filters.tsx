@@ -10,7 +10,6 @@ import useUILanguage from '@/hooks/useUILanguage'
 import { Router, useTranslation } from '@/config/i18n'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
 
-// TODO: Revisit this, move back,
 export type PostQueryVarsType = {
   languages: number[]
   topics: number[]

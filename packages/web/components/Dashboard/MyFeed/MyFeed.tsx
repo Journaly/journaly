@@ -24,17 +24,7 @@ const NUM_POSTS_PER_PAGE = 9
 
 type Props = {
   currentUser: UserType
-  initialSearchFilters: InitialSearchFilters | null
-}
-
-// TODO: let's consider adding `followedAuthor` here
-export type InitialSearchFilters = {
-  languages: number[]
-  topics: number[]
-  needsFeedback: boolean
-  hasInteracted: boolean
-  savedPosts: boolean
-  search: string
+  initialSearchFilters: PostQueryVarsType | null
 }
 
 export const constructPostQueryVars = (

@@ -6,7 +6,7 @@ import i18nConfig from '@/config/i18n'
 export const getUiLanguage = (ctx: NextPageContext): UiLanguage => {
   let langCode
   if (ctx.req) {
-    const i18n = ctx.req.i18n as any
+    const i18n = ctx.req.i18n
     if (!i18n) {
       langCode = 'en'
     } else {

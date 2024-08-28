@@ -20,8 +20,8 @@ import {
   generatePostPrivateShareId,
   createInAppNotification,
   sendReportSpamPostEmail,
+  getPostingIpAddress,
 } from './utils'
-
 
 import { NotFoundError, NotAuthorizedError, ResolverError } from './errors'
 import {
@@ -486,6 +486,7 @@ const PostMutations = extendType({
             publishedAt: isPublished ? new Date() : null,
             bumpedAt: isPublished ? new Date() : null,
             publishedLanguageLevel: userLanguageLevel,
+            postingIpAddress: getPostingIpAddress(ctx.req),
             postCommentSubscriptions: {
               create: [
                 {

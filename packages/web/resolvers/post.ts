@@ -486,7 +486,7 @@ const PostMutations = extendType({
             publishedAt: isPublished ? new Date() : null,
             bumpedAt: isPublished ? new Date() : null,
             publishedLanguageLevel: userLanguageLevel,
-            postingIpAddress: getPostingIpAddress(ctx.req),
+            postingIpAddress: getPostingIpAddress(ctx.request),
             postCommentSubscriptions: {
               create: [
                 {

@@ -140,6 +140,7 @@ model Post {
   savedUsers               User[]                    @relation("UserSavedPosts", references: [id])
   privateShareId           String?                   @unique
   newPostNotifications     NewPostNotification[]
+  postingIpAddress         String?
 }
 
 model Language {
@@ -247,6 +248,7 @@ model Comment {
   authorLanguageLevel               LanguageLevel                      @default(BEGINNER)
   threadCommentNotifications        ThreadCommentNotification[]
   mentionNotifications              MentionNotification[]
+  postingIpAddress                  String?
 }
 
 model PostComment {
@@ -263,6 +265,7 @@ model PostComment {
   postCommentNotifications        PostCommentNotification[]
   mentionNotifications            MentionNotification[]
   authorLanguageLevel             LanguageLevel                    @default(BEGINNER)
+  postingIpAddress                String?
 }
 
 model Thread {

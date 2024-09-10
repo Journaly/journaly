@@ -1,8 +1,8 @@
 import { PrismaClient } from '@journaly/j-db-client'
 import { IncomingMessage, ServerResponse } from 'http';
 
-interface Request extends IncomingMessage {
-  userId: number,
+export interface Request extends IncomingMessage {
+  userId: number
 }
 
 

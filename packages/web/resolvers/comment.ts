@@ -25,6 +25,7 @@ import {
   ThreadWithRels,
   sendNewBadgeEmail,
   assignCountBadges,
+  getPostingIpAddress,
 } from './utils'
 import { NotFoundError } from './errors'
 
@@ -41,7 +42,7 @@ const assignCommentCountBadges = async (db: PrismaClient, userId: number): Promi
     FROM "Comment"
     WHERE "authorId" = ${userId}
   `
-  
+
   const postCommentCountQuery = Prisma.sql`
     SELECT COUNT(*) AS count
     FROM "PostComment"
@@ -184,10 +185,11 @@ type CreateCommentArg = {
   }>
   author: UserWithRels<{ languages: true }>
   body: string
+  postingIpAddress: string | undefined
   db: PrismaClient
 }
 
-const createComment = async ({ db, thread, author, body }: CreateCommentArg) => {
+const createComment = async ({ db, thread, author, body, postingIpAddress }: CreateCommentArg) => {
   const authorHasPostLanguage =
     author && author.languages.find((language) => language.languageId === thread.post.languageId)
 
@@ -199,6 +201,7 @@ const createComment = async ({ db, thread, author, body }: CreateCommentArg) => 
     data: {
       body,
       authorLanguageLevel,
+      postingIpAddress,
       author: {
         connect: { id: author.id },
       },
@@ -363,11 +366,13 @@ const CommentMutations = extendType({
           },
         })
 
+        const authorPostingIpAddress = getPostingIpAddress(ctx.request)
         await createComment({
           db: ctx.db,
           thread,
           author,
           body,
+          postingIpAddress: authorPostingIpAddress,
         })
 
         await assignCommentCountBadges(ctx.db, userId)
@@ -453,13 +458,14 @@ const CommentMutations = extendType({
         if (!author) {
           throw new NotFoundError('user')
         }
-
+        const authorPostingIpAddress = getPostingIpAddress(ctx.request)
         const [comment, _] = await Promise.all([
           createComment({
             db: ctx.db,
             thread,
             author,
             body: args.body,
+            postingIpAddress: authorPostingIpAddress,
           }),
           assignCommentCountBadges(ctx.db, userId),
         ] as const)
@@ -603,10 +609,13 @@ const CommentMutations = extendType({
 
         const mentionedUserHandles = parseCommentBodyForMentions(args.body)
 
+        const authorPostingIpAddress = getPostingIpAddress(ctx.request)
+
         const postComment = await ctx.db.postComment.create({
           data: {
             body: args.body,
             authorLanguageLevel,
+            postingIpAddress: authorPostingIpAddress,
             author: {
               connect: { id: userId },
             },

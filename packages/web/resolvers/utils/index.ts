@@ -305,4 +305,5 @@ export * from './db'
 export * from './notifications'
 export * from './types'
 export * from './badges'
+export * from './getPostingIpAddress'
 export type { NodeType }

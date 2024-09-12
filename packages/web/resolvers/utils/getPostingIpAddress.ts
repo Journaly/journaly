@@ -6,9 +6,6 @@ const isNextRequest = (req: NextRequest | Request): req is NextRequest => {
 }
 
 export const getPostingIpAddress = (req: NextRequest | Request) => {
-  console.log('headers', req?.headers)
-  console.log('ip', (req as any)?.ip)
-
   if (isNextRequest(req)) return req.ip
 
   const headers =

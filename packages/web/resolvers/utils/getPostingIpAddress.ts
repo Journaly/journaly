@@ -11,7 +11,11 @@ export const getPostingIpAddress = (req: NextRequest | Request) => {
 
   if (isNextRequest(req)) return req.ip
 
-  const headers = req?.headers['X-Forwarded-For']
+  const headers =
+    req?.headers['x-forwarded-for'] ||
+    req?.headers['x-real-ip'] ||
+    req?.headers['X-Forwarded-For'] ||
+    req?.headers['X-Real-IP']
   if (typeof headers === 'string') return headers.split(',')?.[0]
 
   return undefined

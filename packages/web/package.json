@@ -72,7 +72,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "next": "^13.3.4",
+    "next": "^13.5.6",
     "next-i18next": "^7.0.1",
     "nexus": "^1.0.0",
     "nexus-plugin-prisma": "^0.35.0",

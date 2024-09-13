@@ -78,6 +78,13 @@ const Comment = ({
   const numThanks = comment.thanks.length
 
   const updateExistingComment = () => {
+    if(!updatingCommentBody) return
+
+    if (updatingCommentBody == comment.body) {
+      setIsEditMode(false)
+      return
+    }
+
     updateComment({
       variables: {
         commentId: comment.id,
@@ -273,6 +280,7 @@ const Comment = ({
             size={ButtonSize.Small}
             onClick={updateExistingComment}
             loading={loading}
+            disabled={!updatingCommentBody}
             variant={ButtonVariant.PrimaryDark}
             style={{
               marginRight: '5px',

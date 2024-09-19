@@ -1,6 +1,6 @@
 import FeatureComparisonTable from '@/components/FeatureComparisonTable'
 import theme from '@/theme'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 const Pricing = () => {
   const { t } = useTranslation('settings')

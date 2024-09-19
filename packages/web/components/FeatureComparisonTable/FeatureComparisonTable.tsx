@@ -1,6 +1,6 @@
 import theme from '@/theme'
 import React from 'react'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import CheckmarkCircleIcon from '../Icons/CheckmarkCircleIcon'
 
 type FeatureProps = {

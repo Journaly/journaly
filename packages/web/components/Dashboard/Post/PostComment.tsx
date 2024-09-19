@@ -6,7 +6,7 @@ import {
   useDeletePostCommentMutation,
   PostCommentFragmentFragment as PostCommentType,
 } from '@/generated/graphql'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 import EditableMarkdown from '@/components/EditableMarkdown'
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'

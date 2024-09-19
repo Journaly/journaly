@@ -1,11 +1,15 @@
 import React from 'react'
 import { NextPage } from 'next'
-import { withApollo } from '@/lib/apollo'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import AuthGate from '@/components/AuthGate'
 import SubscriptionForm from '@/components/Dashboard/Settings/Subscription/SubscriptionForm'
-import { useSubscriptionSettingsPageQuery } from '@/generated/graphql'
+import {
+  CurrentUserDocument,
+  SubscriptionSettingsPageDocument,
+  useSubscriptionSettingsPageQuery,
+} from '@/generated/graphql'
 import theme from '@/theme'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
 
 const Subscription: NextPage = () => {
   const { loading, data, refetch: refetchUser } = useSubscriptionSettingsPageQuery()
@@ -36,8 +40,21 @@ const Subscription: NextPage = () => {
   )
 }
 
-Subscription.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'settings', 'marketing'],
-})
+Subscription.getInitialProps = async (ctx) => {
+  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+    await apolloClient.query({
+      query: SubscriptionSettingsPageDocument,
+    })
 
-export default withApollo(Subscription)
+    await apolloClient.query({
+      query: CurrentUserDocument,
+    })
+  })
+
+  return {
+    ...props,
+    namespacesRequired: ['common', 'settings', 'marketing'],
+  }
+}
+
+export default Subscription

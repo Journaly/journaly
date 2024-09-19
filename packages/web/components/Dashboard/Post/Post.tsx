@@ -23,7 +23,7 @@ import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
 import PostBodyStyles from '@/components/PostBodyStyles'
 import InlineFeedbackPopover, { PendingThreadData } from '@/components/InlineFeedbackPopover'
-import { Router, useTranslation } from '@/config/i18n'
+import { Router, useTranslation } from 'next-i18next'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
@@ -543,9 +543,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
         },
       },
       update(cache, { data }) {
-        console.log('before')
         if (data?.updatePost) {
-          console.log('after')
           cache.modify({
             id: cache.identify(makeReference('ROOT_QUERY')),
             fields: {

@@ -1,5 +1,4 @@
 import { NextPage } from 'next'
-import { withApollo } from '@/lib/apollo'
 import LoginForm from '@/components/LoginForm'
 import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 
@@ -18,4 +17,4 @@ LoginPage.getInitialProps = async () => ({
   namespacesRequired: ['common', 'authentication'],
 })
 
-export default withApollo(LoginPage)
+export default LoginPage

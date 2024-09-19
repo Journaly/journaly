@@ -419,7 +419,6 @@ const PostQueries = extendType({
           `,
           ctx.db.$queryRaw<{ count: number }[]>`SELECT COUNT(*) ${queryPred};`,
         ])
-
         return { posts, count }
       },
     })

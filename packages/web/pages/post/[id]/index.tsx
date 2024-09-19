@@ -2,16 +2,17 @@ import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
-import { withApollo } from '@/lib/apollo'
 import Post from '@/components/Dashboard/Post'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
-import { PostStatus, usePostPageQuery } from '@/generated/graphql'
+import { PostPageDocument, PostStatus, usePostPageQuery } from '@/generated/graphql'
 import PostAuthorCard from '@/components/Dashboard/Post/PostAuthorCard'
 import PostComments from '@/components/Dashboard/Post/PostComments'
 import useUILanguage from '@/hooks/useUILanguage'
 import theme from '@/theme'
 import PrivateShareLink from '@/components/PrivateShareLink'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import { getUiLanguage } from '@/utils/getUiLanguage'
 
 const PostPage: NextPage = () => {
   const idStr = useRouter().query.id as string
@@ -72,8 +73,24 @@ const PostPage: NextPage = () => {
   )
 }
 
-PostPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'post', 'comment', 'post-author-card'],
-})
+PostPage.getInitialProps = async (ctx) => {
+  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+    const idStr = ctx.query.id as string
+    const id = parseInt(idStr, 10)
 
-export default withApollo(PostPage)
+    await apolloClient.query({
+      query: PostPageDocument,
+      variables: {
+        id,
+        uiLanguage: getUiLanguage(ctx),
+      },
+    })
+  })
+
+  return {
+    ...props,
+    namespacesRequired: ['common', 'post', 'comment', 'post-author-card'],
+  }
+}
+
+export default PostPage

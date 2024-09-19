@@ -1,7 +1,13 @@
+const { i18n } = require('./next-i18next.config')
+
 const CopyPlugin = require("copy-webpack-plugin")
 
+/**
+ * @type {import('next').NextConfig}
+ */
 let config = {
   productionBrowserSourceMaps: true,
+  i18n,
   webpack: (config, { isServer }) => {
     // This is a workaround due to: https://github.com/prisma/prisma/issues/6564
     // Should be able to remove this when: https://github.com/prisma/prisma/pull/7931 is merged

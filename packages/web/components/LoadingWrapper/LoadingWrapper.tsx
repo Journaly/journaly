@@ -1,7 +1,7 @@
 import React from 'react'
 import { ApolloError } from '@apollo/client'
 
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import theme from '@/theme'
 

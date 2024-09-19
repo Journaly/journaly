@@ -7,7 +7,7 @@ import LanguageSelect from './LanguageSelect'
 import TopicSelect from './TopicSelect'
 import useToggle from '@/hooks/useToggle'
 import useUILanguage from '@/hooks/useUILanguage'
-import { Router, useTranslation } from '@/config/i18n'
+import { Router, useTranslation } from 'next-i18next'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
 
 export type PostQueryVarsType = {
@@ -143,7 +143,7 @@ const Filters: React.FC<Props> = ({
     }))
     resetPagination()
   }, [resetPagination])
-  
+
   const toggleMyLanguagesFilter = useCallback(() => {
     setPostQueryVars((prevState) => ({
       ...prevState,

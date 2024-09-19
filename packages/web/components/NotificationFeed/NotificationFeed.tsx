@@ -17,7 +17,7 @@ import GenericErrorBoundary from '@/components/GenericErrorBoundary'
 import XIcon from '../Icons/XIcon'
 import { useNotificationContext } from './NotificationContext'
 import NotificationLevelTwo from './NotificationLevelTwo'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import useOnClickOut from '@/hooks/useOnClickOut'
 import { findEventTargetParent } from '@/utils'
 

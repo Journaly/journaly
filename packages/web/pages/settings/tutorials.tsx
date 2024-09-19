@@ -1,9 +1,10 @@
 import React from 'react'
 import { NextPage } from 'next'
-import { withApollo } from '@/lib/apollo'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import AuthGate from '@/components/AuthGate'
 import theme from '@/theme'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import { CurrentUserDocument } from '@/generated/graphql'
 
 const Tutorials: NextPage = () => {
   return (
@@ -247,8 +248,17 @@ const Tutorials: NextPage = () => {
   )
 }
 
-Tutorials.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'tutorials'],
-})
+Tutorials.getInitialProps = async (ctx) => {
+  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+    await apolloClient.query({
+      query: CurrentUserDocument,
+    })
+  })
 
-export default withApollo(Tutorials)
+  return {
+    ...props,
+    namespacesRequired: ['common', 'tutorials'],
+  }
+}
+
+export default Tutorials

@@ -1,7 +1,7 @@
 import React from 'react'
 import Modal from '@/components/Modal'
 import PaymentForm from './PaymentForm'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 type PaymentFormModalProps = {
   onClose: () => void

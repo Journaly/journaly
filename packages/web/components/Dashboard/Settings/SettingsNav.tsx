@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import NavLink from '@/components/NavLink'
 import theme from '@/theme'
 
@@ -18,9 +18,7 @@ const SettingsNav: React.FC = () => {
         {Object.entries(links).map(([page, navText]) => {
           return (
             <NavLink href={`/settings/${page}`} key={`${page}-nav-link`}>
-              <li className="settings-nav-item">
-                <a>{navText}</a>
-              </li>
+              <li className="settings-nav-item">{navText}</li>
             </NavLink>
           )
         })}

@@ -11,7 +11,7 @@ import Button, { ButtonVariant } from '@/components/Button'
 import { OptionPills } from '@/components/MultiSelect'
 import { languageNameWithDialect } from '@/utils/languages'
 import theme from '@/theme'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 type Props = {
   languages: LanguageType[]

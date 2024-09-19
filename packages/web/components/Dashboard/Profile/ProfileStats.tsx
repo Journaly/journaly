@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import chroma from 'chroma-js'
 
 import differenceInCalendarWeeks from 'date-fns/differenceInCalendarWeeks'

@@ -1,9 +1,10 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 
-import { withApollo } from '@/lib/apollo'
-import { useUserByIdentifierQuery } from '@/generated/graphql'
+import { UserByIdentifierDocument, useUserByIdentifierQuery } from '@/generated/graphql'
 import theme from '@/theme'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import { NextPageContext } from 'next'
 
 /**
  * This page is part of the deprecated URL pattern: `/dashboard/*` and should not be used.
@@ -60,4 +61,23 @@ const OldProfilePage = () => {
   return null
 }
 
-export default withApollo(OldProfilePage)
+OldProfilePage.getInitialProps = async (ctx: NextPageContext) => {
+  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+    const idStr = ctx.query.id as string
+    const id = parseInt(idStr, 10)
+
+    await apolloClient.query({
+      query: UserByIdentifierDocument,
+      variables: {
+        id,
+      },
+    })
+  })
+
+  return {
+    ...props,
+    namespacesRequired: ['common'],
+  }
+}
+
+export default OldProfilePage

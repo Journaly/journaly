@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import FormError from '@/components/FormError'
 import SettingsForm from '@/components/Dashboard/Settings/SettingsForm'
 import SettingsFieldset from '@/components/Dashboard/Settings/SettingsFieldset'

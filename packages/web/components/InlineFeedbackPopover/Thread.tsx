@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import {
   useCreateCommentMutation,
   useCreateThreadMutation,

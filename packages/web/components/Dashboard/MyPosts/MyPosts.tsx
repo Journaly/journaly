@@ -6,7 +6,7 @@ import {
   User as UserType,
   usePostsQuery,
 } from '@/generated/graphql'
-import { useTranslation, Trans } from '@/config/i18n'
+import { useTranslation, Trans } from 'next-i18next'
 import TranslationLink from '@/components/TranslationLink'
 import LoadingSpinner from '@/components/Icons/LoadingSpinner'
 import PostCard from '../PostCard'

@@ -8,7 +8,7 @@ import Document, {
   DocumentProps,
 } from 'next/document'
 
-import { i18n } from '@/config/i18n'
+import { i18n } from 'next-i18next'
 
 interface CustomProps {
   language: string
@@ -19,7 +19,7 @@ class MyDocument extends Document<DocumentProps & { children?: ReactNode } & Cus
     const initialProps = await Document.getInitialProps(context)
 
     const additionalProps = {
-      language: i18n.language,
+      language: i18n?.language,
     }
 
     return { ...initialProps, ...additionalProps }

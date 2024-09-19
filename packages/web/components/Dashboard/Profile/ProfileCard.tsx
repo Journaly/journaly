@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import FacebookIcon from '@/components/Icons/FacebookIcon'
 import InstagramIcon from '@/components/Icons/InstagramIcon'
 import YoutubeIcon from '@/components/Icons/YoutubeIcon'

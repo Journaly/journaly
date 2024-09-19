@@ -10,7 +10,7 @@ import {
   PostsDocument,
 } from '@/generated/graphql'
 import theme from '@/theme'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { journalyMiddleware } from '@/lib/journalyMiddleware'
 import { NUM_POSTS_PER_MY_POSTS_PAGE } from '@/constants'
 import { getCurrentUserId } from '@/utils/getCurrentUserId'

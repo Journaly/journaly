@@ -1,6 +1,6 @@
 import React from 'react'
 import { I18nContext } from 'react-i18next'
-import { useTranslation, i18n } from '@/config/i18n'
+import { useTranslation, i18n } from 'next-i18next'
 
 import Select from '@/components/Select'
 

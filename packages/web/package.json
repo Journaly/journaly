@@ -71,7 +71,7 @@
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.20",
     "next": "^14.2.5",
-    "next-i18next": "^7.0.1",
+    "next-i18next": "^15.3.1",
     "nexus": "^1.0.0",
     "nexus-plugin-prisma": "^0.35.0",
     "node-fetch": "^2.6.7",

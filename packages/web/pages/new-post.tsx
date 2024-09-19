@@ -21,7 +21,7 @@ import {
   NewPostDocument,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
-import { useTranslation, Router } from '@/config/i18n'
+import { useTranslation, Router } from 'next-i18next'
 import useUILanguage from '@/hooks/useUILanguage'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'

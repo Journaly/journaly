@@ -7,7 +7,7 @@ import {
   useUnfollowUserMutation,
   useFollowingUsersQuery,
 } from '@/generated/graphql'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { languageNameWithDialect } from '@/utils/languages'
 import Button, { ButtonVariant } from '@/components/Button'
 import LevelGauge from '@/components/LevelGauge'

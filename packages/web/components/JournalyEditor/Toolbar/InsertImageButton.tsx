@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useSlate } from 'slate-react'
 
-import { useTranslation, Router } from '@/config/i18n'
+import { useTranslation, Router } from 'next-i18next'
 import BaseToolbarButton from './BaseToolbarButton'
 import { insertImage } from '../helpers'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'

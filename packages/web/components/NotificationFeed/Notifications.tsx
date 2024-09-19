@@ -10,7 +10,7 @@ import {
 import theme from '@/theme'
 import ClapIcon from '../Icons/ClapIcon'
 import UserList from '../UserList'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import LikeIcon from '../Icons/LikeIcon'
 import UserAvatar from '../UserAvatar'
 import MultiuserAvatar from '../MultiuserAvatar'

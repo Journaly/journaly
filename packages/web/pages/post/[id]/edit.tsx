@@ -1,7 +1,7 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { TElement } from '@udecode/plate'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'

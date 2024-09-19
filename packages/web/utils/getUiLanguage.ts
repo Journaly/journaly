@@ -1,7 +1,7 @@
 import { NextPageContext } from 'next'
 import { langCodeToUILangMap } from '@/hooks/useUILanguage'
 import { UiLanguage } from '@/generated/graphql'
-import i18nConfig from '@/config/i18n'
+import i18nConfig from 'next-i18next'
 
 export const getUiLanguage = (ctx: NextPageContext): UiLanguage => {
   let langCode
@@ -20,7 +20,7 @@ export const getUiLanguage = (ctx: NextPageContext): UiLanguage => {
       }
     }
   } else {
-    langCode = i18nConfig.i18n.language
+    langCode = i18nConfig?.i18n?.language
   }
 
   return langCodeToUILangMap[langCode] || UiLanguage.English

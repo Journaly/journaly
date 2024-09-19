@@ -14,7 +14,8 @@ export const langCodeToUILangMap: { [key: string]: UILanguage } = {
 }
 
 const useUILanguage = () => {
-  const { i18n: { language } } = React.useContext(I18nContext)
+  const { i18n } = React.useContext(I18nContext)
+  const language = i18n?.language
 
   return langCodeToUILangMap[language] || UILanguage.English
 }

@@ -1,10 +1,10 @@
 import React from 'react'
-import App from 'next/app'
+import {AppProps} from 'next/app'
 import Head from 'next/head'
-import Router, { withRouter } from 'next/router'
+import Router from 'next/router'
 import NProgress from 'nprogress'
 import { ToastContainer } from 'react-toastify'
-import nexti18Next from '@/config/i18n'
+import {appWithTranslation} from 'next-i18next'
 
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 
@@ -20,11 +20,10 @@ import { initApolloClient } from '@/lib/apollo'
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeError', () => NProgress.done())
 Router.events.on('routeChangeComplete', () => NProgress.done())
-class JournalyApp extends App {
-  componentDidMount() {}
 
-  render() {
-    const { Component, pageProps } = this.props
+const JournalyApp = (props: AppProps) =>  {
+    const { Component, pageProps } = props
+
     const client = initApolloClient(pageProps.apolloState)
 
     return (
@@ -39,7 +38,6 @@ class JournalyApp extends App {
         <ToastContainer />
       </ApolloProvider>
     )
-  }
 }
 
-export default nexti18Next.appWithTranslation(withRouter(JournalyApp))
+export default appWithTranslation(JournalyApp)

@@ -12,7 +12,7 @@ type Props = {
 }
 
 const Pagination: React.FC<Props> = ({ currentPage, total, numPerPage, title }) => {
-  const { t } = useTranslation('my-feed')
+  const { t } = useTranslation('common')
   const { pathname } = useRouter()
   const pages = Math.ceil(total / numPerPage)
 

@@ -26,6 +26,12 @@
     "textSearchPlaceholder": "Buscar publicaciones",
     "topicSelectPlaceholder": "Temas"
   },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página",
+    "of": "de"
+  },
   "dashboardNav": {
     "myFeed": "Mi Feed",
     "myPosts": "Mis publicaciones",

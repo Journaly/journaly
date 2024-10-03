@@ -1,10 +1,4 @@
 {
   "pageTitle": "Il Mio Feed",
-  "noPostsMessage": "Nulla da mostrare, per il momento...",
-  "pagination": {
-    "previous": "Indietro",
-    "next": "Avanti",
-    "page": "Pagina",
-    "of": "di"
-  }
+  "noPostsMessage": "Nulla da mostrare, per il momento..."
 }

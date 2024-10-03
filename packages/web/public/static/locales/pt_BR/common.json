@@ -34,6 +34,12 @@
     "savedPosts": "saved posts",
     "savePostPremiumFeatureExplanation": "Publicações salvas é uma funcionalidade Premium que te deixa salvar publicações para ler mais tarde. Para lê-las, acesse sua lista no seu Feed com o uso dos filtros avançados! Clique no link abaixo para ver todos os detalhes do Journaly Premium, ou fique a vontade para continuar escrevendo no Journaly com todas as fantásticas funcionabilidades gratuitas!"
   },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Próxima",
+    "page": "Página",
+    "of": "de"
+  },
   "dashboardNav": {
     "myFeed": "Meu feed",
     "myPosts": "Minhas postagens",

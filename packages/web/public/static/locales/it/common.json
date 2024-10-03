@@ -34,6 +34,12 @@
     "savedPosts": "post salvati",
     "savePostPremiumFeatureExplanation": "Post Salvati è una splendida funzionalità Premium che ti permette di  salvare post per leggerli più tardi. Puoi accedere alla tua lista dai filtri avanzati della pagina Il Mio Feed! Clicca qui sotto per sapere di più su tutte le funzionalità di Journaly Premium o sentiti libero di continuare a usare tutte le fantastiche funzionalità gratuite di Journaly!"
   },
+  "pagination": {
+    "previous": "Indietro",
+    "next": "Avanti",
+    "page": "Pagina",
+    "of": "di"
+  },
   "dashboardNav": {
     "myFeed": "Il Mio Feed",
     "myPosts": "I Miei Post",

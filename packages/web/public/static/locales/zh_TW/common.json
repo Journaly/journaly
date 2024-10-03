@@ -34,6 +34,12 @@
     "savedPosts": "收藏的日誌",
     "savePostPremiumFeatureExplanation": "收藏日誌是一項尊享會員功能，您將可以收藏日誌，稍後通過 我的頁面 > 高級篩選 找到它們！點擊下方了解Journaly會員詳情，或繼續使用我們所有精彩的免費功能！"
   },
+  "pagination": {
+    "previous": "上一頁",
+    "next": "下一頁",
+    "page": "當前頁",
+    "of": "共計"
+  },
   "dashboardNav": {
     "myFeed": "我的頁面",
     "myPosts": "我的日誌",

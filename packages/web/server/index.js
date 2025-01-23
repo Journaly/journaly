@@ -1,6 +1,5 @@
 const express = require('express')
 const next = require('next')
-// const nextI18next = require('../next-i18next.config')
 const nextI18next = require('next-i18next')
 
 const port = parseInt(process.env.PORT || '3000', 10)

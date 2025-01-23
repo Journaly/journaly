@@ -75,7 +75,10 @@ const PostBodyStyles: React.FC<Props> = ({ parentClassName }: Props) => {
 
       @media (min-width: ${theme.breakpoints.SM}) {
         .${parentClassName} h2 {
+          // TODO: Remove this bg unset once we can hopefully
+          // get Next to fix this.
           ${theme.typography.headingXL};
+          background: unset;
         }
       }
     `}</style>

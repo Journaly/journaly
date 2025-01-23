@@ -1,9 +1,9 @@
-import { NextPageContext } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import { langCodeToUILangMap } from '@/hooks/useUILanguage'
 import { UiLanguage } from '@/generated/graphql'
 import i18nConfig from 'next-i18next'
 
-export const getUiLanguage = (ctx: NextPageContext): UiLanguage => {
+export const getUiLanguage = (ctx: GetServerSidePropsContext): UiLanguage => {
   let langCode
   if (ctx.req) {
     const i18n = ctx.req.i18n

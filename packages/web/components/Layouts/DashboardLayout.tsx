@@ -26,9 +26,7 @@ const DashboardLayout: React.FC<Props> = ({ children, pad = 'always' }) => {
 
   return (
     <NotificationContextProvider>
-      <SkipLink target="start-of-content">
-        Skip to content
-      </SkipLink>
+      <SkipLink target="start-of-content">Skip to content</SkipLink>
       <div className="dashboard">
         <Header onMenuClick={toggleNav} />
 
@@ -56,7 +54,10 @@ const DashboardLayout: React.FC<Props> = ({ children, pad = 'always' }) => {
 
           @media (${navConstants.mobileNavOnly}) {
             .dashboard-container {
-              ${pad === 'aboveMobile' ? 'padding: 0;' : ''}
+              // TODO: Remove this bg unset once we can hopefully
+              // get Next to fix this.
+              ${pad === 'aboveMobile' ? 'padding: 0;' : ''};
+              background: unset;
             }
           }
 

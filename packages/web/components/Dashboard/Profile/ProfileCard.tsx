@@ -177,12 +177,12 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
               </ExternalLink>
             )}
           </div>
-          
+
           <ul className="badge-list">
-          {badges.map((badge) => (
+            {badges.map((badge) => (
               <li key={badge.type}>
-              <Badge badge={badge} />
-            </li>
+                <Badge badge={badge} />
+              </li>
             ))}
           </ul>
         </div>
@@ -276,7 +276,10 @@ const ProfileCard: React.FC<Props> = ({ user }) => {
         }
 
         .profile-name {
+          // TODO: Remove this bg unset once we can hopefully
+          // get Next to fix this.
           ${theme.typography.headingLG};
+          background: unset;
         }
         @media (min-width: ${theme.breakpoints.MD}) {
           .profile-name {

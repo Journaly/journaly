@@ -23,7 +23,8 @@ import Button, { ButtonVariant } from '@/components/Button'
 import theme from '@/theme'
 import PostBodyStyles from '@/components/PostBodyStyles'
 import InlineFeedbackPopover, { PendingThreadData } from '@/components/InlineFeedbackPopover'
-import { Router, useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next'
+import { Router, useRouter } from 'next/router'
 import PostHeader from '@/components/PostHeader'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
@@ -158,6 +159,7 @@ const PostContent = memo(
 
 const Post = ({ post, currentUser, refetch }: PostProps) => {
   const { t } = useTranslation('post')
+  const router = useRouter()
 
   const selectableRef = useRef<HTMLDivElement>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
@@ -253,7 +255,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [deletePost] = useDeletePostMutation({
     onCompleted: () => {
       toast.success(t('deletePostSuccess'))
-      Router.push('/my-posts')
+      router.push('/my-posts')
     },
     onError: (err) => {
       console.error(err)
@@ -585,7 +587,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
           numRemaining: POST_BUMP_LIMIT - (post.bumpCount + 1),
         }),
       )
-      Router.push('/my-feed')
+      router.push('/my-feed')
     },
   })
 
@@ -695,7 +697,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
                   type="button"
                   variant={ButtonVariant.Secondary}
                   onClick={() => {
-                    Router.push('/post/[id]/edit', `/post/${post.id}/edit`)
+                    router.push('/post/[id]/edit', `/post/${post.id}/edit`)
                   }}
                 >
                   {t('editPostAction')}
@@ -813,7 +815,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={() => {
-            Router.push(JOURNALY_PREMIUM_URL)
+            router.push(JOURNALY_PREMIUM_URL)
             setPremiumFeatureModalExplanation(undefined)
             setDisplayPremiumFeatureModal(false)
           }}

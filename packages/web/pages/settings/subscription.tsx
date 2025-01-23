@@ -1,5 +1,5 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import AuthGate from '@/components/AuthGate'
 import SubscriptionForm from '@/components/Dashboard/Settings/Subscription/SubscriptionForm'
@@ -40,8 +40,9 @@ const Subscription: NextPage = () => {
   )
 }
 
-Subscription.getInitialProps = async (ctx) => {
-  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'settings', 'marketing']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
     await apolloClient.query({
       query: SubscriptionSettingsPageDocument,
     })
@@ -52,8 +53,7 @@ Subscription.getInitialProps = async (ctx) => {
   })
 
   return {
-    ...props,
-    namespacesRequired: ['common', 'settings', 'marketing'],
+    props,
   }
 }
 

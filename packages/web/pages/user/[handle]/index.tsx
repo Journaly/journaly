@@ -1,5 +1,5 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import LoadingWrapper from '@/components/LoadingWrapper'
@@ -40,14 +40,12 @@ const ProfilePage: NextPage<InitialProps> = () => {
   )
 }
 
-ProfilePage.getInitialProps = async (ctx) => {
-  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'profile', 'post']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
     const userHandle = ctx.query.handle as string
 
-    // const uiLanguage = useUILanguage()
-    // const { i18n: { language } } = React.useContext(I18nContext)
-    // return langCodeToUILangMap[language] || UILanguage.English
-
+    // TODO: fix hardcoded English UI Lang
     await apolloClient.query({
       query: ProfilePageDocument,
       variables: {
@@ -57,8 +55,7 @@ ProfilePage.getInitialProps = async (ctx) => {
     })
   })
   return {
-    ...props,
-    namespacesRequired: ['common', 'profile', 'post'],
+    props,
   }
 }
 

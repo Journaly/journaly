@@ -1,5 +1,5 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
 
 import Post from '@/components/Dashboard/Post'
@@ -67,8 +67,10 @@ const PostPage: NextPage = () => {
   )
 }
 
-PostPage.getInitialProps = async (ctx) => {
-  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'post', 'comment', 'post-author-card']
+
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
     const idStr = ctx.query.id as string
     const id = parseInt(idStr, 10)
 
@@ -82,8 +84,7 @@ PostPage.getInitialProps = async (ctx) => {
   })
 
   return {
-    ...props,
-    namespacesRequired: ['common', 'post', 'comment', 'post-author-card'],
+    props,
   }
 }
 

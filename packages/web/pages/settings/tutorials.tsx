@@ -1,5 +1,5 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import AuthGate from '@/components/AuthGate'
 import theme from '@/theme'
@@ -248,16 +248,16 @@ const Tutorials: NextPage = () => {
   )
 }
 
-Tutorials.getInitialProps = async (ctx) => {
-  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'tutorials']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
     await apolloClient.query({
       query: CurrentUserDocument,
     })
   })
 
   return {
-    ...props,
-    namespacesRequired: ['common', 'tutorials'],
+    props,
   }
 }
 

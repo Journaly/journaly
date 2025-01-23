@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo } from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { makeReference } from '@apollo/client'
@@ -288,9 +288,9 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             }
 
             h1 {
+              ${theme.typography.headingXL};
               margin: 50px auto;
               text-align: center;
-              ${theme.typography.headingXL};
             }
 
             .button-container {
@@ -332,8 +332,9 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   )
 }
 
-NewPostPage.getInitialProps = async (ctx) => {
-  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'post']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
     await apolloClient.query({
       query: NewPostDocument,
       variables: {
@@ -343,9 +344,10 @@ NewPostPage.getInitialProps = async (ctx) => {
   })
 
   return {
-    ...props,
-    defaultImage: selectDefaultImage(),
-    namespacesRequired: ['common', 'post'],
+    props: {
+      ...props,
+      defaultImage: selectDefaultImage(),
+    },
   }
 }
 

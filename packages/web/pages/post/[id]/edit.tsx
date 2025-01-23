@@ -1,5 +1,5 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { TElement } from '@udecode/plate'
@@ -200,6 +200,9 @@ const EditPostPage: NextPage = () => {
               margin: 50px auto;
               text-align: center;
               ${theme.typography.headingXL};
+              background: unset;
+              // TODO: Remove this bg unset once we can hopefully
+              // get Next to fix this.
             }
 
             .button-container {
@@ -227,8 +230,9 @@ const EditPostPage: NextPage = () => {
   )
 }
 
-EditPostPage.getInitialProps = async (ctx) => {
-  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'post']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
     const idStr = ctx.query.id as string
     const id = parseInt(idStr, 10)
 
@@ -250,8 +254,7 @@ EditPostPage.getInitialProps = async (ctx) => {
   })
 
   return {
-    ...props,
-    namespacesRequired: ['common', 'post'],
+    props,
   }
 }
 

@@ -15,11 +15,10 @@ const getLocalePath = () => {
 
 module.exports = {
   i18n: {
-    // The "dev" fallback language will show the translation key, indicating there is a missing translation
-    defaultLocale: process.env.NODE_ENV === 'production' ? 'en-US' : 'dev',
+    defaultLocale: 'en',
     // These are all the locales that we support in the application.
     // Other languages will be added here once there are translations for them.
-    locales: ['en-US', 'de', 'es', 'zh_CN', 'zh_TW', 'it', 'pt_BR', 'dev'],
+    locales: ['en', 'de', 'es', 'zh_CN', 'zh_TW', 'it', 'pt_BR', 'dev'],
     // Help nexti18next figure out how to load in a serverless env
   },
   localePath: getLocalePath(),

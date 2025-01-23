@@ -28,9 +28,12 @@ const HomeSection: React.FC<Props> = ({ sectionHeading, grey = false, children }
         }
 
         h1 {
+          // TODO: Remove this bg unset once we can hopefully
+          // get Next to fix this.
           margin-bottom: 50px;
           text-align: center;
           ${theme.typography.headingLG}
+          background: unset;
         }
 
         .j-video {

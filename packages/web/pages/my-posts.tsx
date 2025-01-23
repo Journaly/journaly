@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import TabToggle from '@/components/TabToggle'
 import AuthGate from '@/components/AuthGate'
@@ -75,8 +76,9 @@ const MyPostsPage: NextPage = () => {
   )
 }
 
-MyPostsPage.getInitialProps = async (ctx) => {
-  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['my-posts', 'common', 'post']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
     await apolloClient.query({
       query: PostsDocument,
       variables: {
@@ -100,8 +102,7 @@ MyPostsPage.getInitialProps = async (ctx) => {
   })
 
   return {
-    ...props,
-    namespacesRequired: ['my-posts', 'common'],
+    props,
   }
 }
 

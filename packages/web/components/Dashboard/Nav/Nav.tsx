@@ -153,19 +153,31 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
               </div>
               <div className="nav-bottom">
                 <NavLink href="/my-feed">
-                  <span className="nav-link" onClick={handleCollapse} data-testid="my-feed-nav-link">
+                  <span
+                    className="nav-link"
+                    onClick={handleCollapse}
+                    data-testid="my-feed-nav-link"
+                  >
                     <FeedIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.myFeed')}</span>
                   </span>
                 </NavLink>
                 <NavLink href="/my-posts">
-                  <span className="nav-link" onClick={handleCollapse} data-testid="my-posts-nav-link">
+                  <span
+                    className="nav-link"
+                    onClick={handleCollapse}
+                    data-testid="my-posts-nav-link"
+                  >
                     <FeedIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.myPosts')}</span>
                   </span>
                 </NavLink>
                 <NavLink href="/new-post">
-                  <span className="nav-link" onClick={handleCollapse} data-testid="new-post-nav-link">
+                  <span
+                    className="nav-link"
+                    onClick={handleCollapse}
+                    data-testid="new-post-nav-link"
+                  >
                     <NewPostIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.newPost')}</span>
                   </span>
@@ -185,7 +197,11 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
                   <span className="nav-link-text">{t('dashboardNav.notifications')}</span>
                 </button>
                 <NavLink href="/settings/profile">
-                  <span className="nav-link" onClick={handleCollapse} data-testid="settings-nav-link">
+                  <span
+                    className="nav-link"
+                    onClick={handleCollapse}
+                    data-testid="settings-nav-link"
+                  >
                     <SettingsIcon aria-hidden="true" />
                     <span className="nav-link-text">{t('dashboardNav.settings')}</span>
                   </span>
@@ -328,8 +344,8 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         }
 
         .help-btn {
-          cursor: pointer;
           ${theme.buttonReset}
+          cursor: pointer;
         }
 
         .nav-wrapper:not(.logged-in) .nav-logo {
@@ -394,16 +410,16 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
         }
 
         .nav-link {
+          ${theme.buttonReset}
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           height: 70px;
           font-size: 16px;
-          color: ${theme.colors.white};
           transition: padding-left ${navConstants.transitionDuration}ms linear,
             padding-right ${navConstants.transitionDuration}ms linear;
-          ${theme.buttonReset}
+          color: ${theme.colors.white};
         }
 
         .nav-link.notifications {

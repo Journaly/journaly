@@ -1,5 +1,5 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import useUILanguage from '@/hooks/useUILanguage'
 import SettingsPageLayout from '@/components/Layouts/SettingsPageLayout'
 import LoadingSpinner from '@/components/Icons/LoadingSpinner'
@@ -72,8 +72,9 @@ const ProfileInfo: NextPage = () => {
   )
 }
 
-ProfileInfo.getInitialProps = async (ctx) => {
-  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'settings', 'badge']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
     await apolloClient.query({
       query: SettingsFormDataDocument,
       variables: {
@@ -87,8 +88,7 @@ ProfileInfo.getInitialProps = async (ctx) => {
   })
 
   return {
-    ...props,
-    namespacesRequired: ['common', 'settings', 'badge'],
+    props,
   }
 }
 

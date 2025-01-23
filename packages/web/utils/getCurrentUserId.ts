@@ -1,8 +1,8 @@
-import { NextPageContext } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import cookie from 'cookie'
 import { jwtDecode } from 'jwt-decode'
 
-export const getCurrentUserId = (ctx: NextPageContext): number | null => {
+export const getCurrentUserId = (ctx: GetServerSidePropsContext): number | null => {
   try {
     let jwt
 

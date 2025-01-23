@@ -1,5 +1,5 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import cookie from 'cookie'
 import { Request } from 'express'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
@@ -35,7 +35,7 @@ const MyFeedPage: NextPage<InitialProps> = ({ initialSearchFilters }) => {
   )
 }
 
-MyFeedPage.getInitialProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   let initialSearchFilters: PostQueryVarsType | null = null
   if (typeof window !== 'undefined') {
     try {
@@ -58,7 +58,8 @@ MyFeedPage.getInitialProps = async (ctx) => {
     }
   }
 
-  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+  const namespacesRequired = ['common', 'settings', 'my-feed', 'post']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
     await Promise.all([
       apolloClient.query({
         query: CurrentUserDocument,
@@ -90,9 +91,10 @@ MyFeedPage.getInitialProps = async (ctx) => {
   })
 
   return {
-    ...props,
-    initialSearchFilters,
-    namespacesRequired: ['common', 'settings', 'my-feed', 'post'],
+    props: {
+      ...props,
+      initialSearchFilters,
+    },
   }
 }
 

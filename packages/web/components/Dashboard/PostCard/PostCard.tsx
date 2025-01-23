@@ -119,6 +119,7 @@ const PostCard: React.FC<Props> = ({ post, avatar = false, stacked = false }) =>
           box-shadow: 0px 8px 10px #00000029;
           transition: all 150ms ease-in;
         }
+
         @media (min-width: ${theme.breakpoints.MD}) {
           .post-card-container:not(.stacked) {
             flex-direction: row;
@@ -168,8 +169,8 @@ const PostCard: React.FC<Props> = ({ post, avatar = false, stacked = false }) =>
         }
 
         .post-title {
-          margin: 5px 0;
           ${theme.typography.headingLG};
+          margin: 5px 0;
         }
 
         .post-avatar-and-data {

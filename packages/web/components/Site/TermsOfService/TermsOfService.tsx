@@ -93,14 +93,14 @@ const TermsOfService = () => {
         }
 
         h1 {
+          ${theme.typography.headingXL}
           margin-bottom: 20px;
           text-align: center;
-          ${theme.typography.headingXL}
         }
 
         h2 {
-          margin-bottom: 12px;
           ${theme.typography.headingMD}
+          margin-bottom: 12px;
         }
 
         p {

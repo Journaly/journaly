@@ -20,7 +20,8 @@ const UILanguageSelect = () => {
   } = React.useContext(I18nContext)
 
   const handleChangeLanguage = useCallback((lang: string) => {
-    document.cookie = `j-lang=${lang};path=/`
+    const standardizedLang = lang.replaceAll('_', '-')
+    document.cookie = `j-lang=${standardizedLang};path=/`
     document.location.reload()
   }, [])
 

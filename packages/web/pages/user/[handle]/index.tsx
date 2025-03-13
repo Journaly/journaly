@@ -42,18 +42,21 @@ const ProfilePage: NextPage<InitialProps> = () => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const namespacesRequired = ['common', 'profile', 'post']
-  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
-    const userHandle = ctx.query.handle as string
+  const props = await journalyMiddleware(
+    ctx,
+    namespacesRequired,
+    async (apolloClient, uiLanguage) => {
+      const userHandle = ctx.query.handle as string
 
-    // TODO: fix hardcoded English UI Lang
-    await apolloClient.query({
-      query: ProfilePageDocument,
-      variables: {
-        uiLanguage: UiLanguage.English,
-        userHandle,
-      },
-    })
-  })
+      await apolloClient.query({
+        query: ProfilePageDocument,
+        variables: {
+          uiLanguage,
+          userHandle,
+        },
+      })
+    },
+  )
   return {
     props,
   }

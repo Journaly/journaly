@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { GetServerSideProps, NextPage } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import TabToggle from '@/components/TabToggle'
 import AuthGate from '@/components/AuthGate'

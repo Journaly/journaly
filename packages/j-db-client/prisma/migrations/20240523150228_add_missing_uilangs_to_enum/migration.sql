@@ -10,3 +10,5 @@ ALTER TYPE "UILanguage" ADD VALUE 'CHINESE_SIMPLIFIED';
 ALTER TYPE "UILanguage" ADD VALUE 'CHINESE_TRADITIONAL';
 ALTER TYPE "UILanguage" ADD VALUE 'ITALIAN';
 ALTER TYPE "UILanguage" ADD VALUE 'PORTUGUESE_BRAZILIAN';
+
+-- TODO (this PR) URGENT: remember to shimmity shim this into the prod DB before all goes live

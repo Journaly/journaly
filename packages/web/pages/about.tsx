@@ -1,6 +1,7 @@
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 import About from '@/components/Site/About'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
 
 const AboutPage: NextPage = () => (
   <LandingPageLayout>
@@ -8,10 +9,12 @@ const AboutPage: NextPage = () => (
   </LandingPageLayout>
 )
 
-// TODO: Let's get the about page translated?
-AboutPage.getInitialProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common']
+  const props = await journalyMiddleware(ctx, namespacesRequired)
+
   return {
-    namespacesRequired: ['common'],
+    props,
   }
 }
 

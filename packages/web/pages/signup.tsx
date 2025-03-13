@@ -1,6 +1,7 @@
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import SignupForm from '@/components/SignupForm'
 import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
 
 const SignupPage: NextPage = () => (
   <LandingPageLayout>
@@ -13,8 +14,13 @@ const SignupPage: NextPage = () => (
   </LandingPageLayout>
 )
 
-SignupPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'authentication'],
-})
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'authentication']
+  const props = await journalyMiddleware(ctx, namespacesRequired)
+
+  return {
+    props,
+  }
+}
 
 export default SignupPage

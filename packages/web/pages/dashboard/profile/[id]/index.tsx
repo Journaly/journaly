@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { UserByIdentifierDocument, useUserByIdentifierQuery } from '@/generated/graphql'
 import theme from '@/theme'
 import { journalyMiddleware } from '@/lib/journalyMiddleware'
-import { NextPageContext } from 'next'
+import { GetServerSideProps } from 'next'
 
 /**
  * This page is part of the deprecated URL pattern: `/dashboard/*` and should not be used.
@@ -61,8 +61,9 @@ const OldProfilePage = () => {
   return null
 }
 
-OldProfilePage.getInitialProps = async (ctx: NextPageContext) => {
-  const props = await journalyMiddleware(ctx, async (apolloClient) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
     const idStr = ctx.query.id as string
     const id = parseInt(idStr, 10)
 
@@ -73,10 +74,8 @@ OldProfilePage.getInitialProps = async (ctx: NextPageContext) => {
       },
     })
   })
-
   return {
-    ...props,
-    namespacesRequired: ['common'],
+    props,
   }
 }
 

@@ -1,4 +1,5 @@
-// TODO: cite original source
+// TODO (this PR): cite original source
+// ALSO: Add types to everything!
 
 var regex = /((([a-zA-Z]+(-[a-zA-Z0-9]+){0,2})|\*)(;q=[0-1](\.[0-9]+)?)?)*/g
 
@@ -17,7 +18,6 @@ function parse(al) {
       var bits = m.split(';')
       var ietf = bits[0].split('-')
       var hasScript = ietf.length === 3
-
       return {
         code: ietf[0],
         script: hasScript ? ietf[1] : null,

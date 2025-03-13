@@ -21,7 +21,7 @@ import {
   NewPostDocument,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
-import { useTranslation, Router } from 'next-i18next'
+import { useTranslation } from 'next-i18next'
 import useUILanguage from '@/hooks/useUILanguage'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
@@ -272,7 +272,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
                 setDisplayPremiumFeatureModal(false)
               }}
               onGoToPremium={() => {
-                Router.push('/settings/subscription')
+                router.push('/settings/subscription')
                 setDisplayPremiumFeatureModal(false)
               }}
             />

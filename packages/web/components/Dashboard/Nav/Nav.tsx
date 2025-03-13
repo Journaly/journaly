@@ -2,7 +2,8 @@ import React, { useCallback, useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import classNames from 'classnames'
 
-import { Router, useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 import { navConstants } from './nav-constants'
 import theme from '@/theme'
 import {
@@ -77,6 +78,7 @@ const useNotificationFeedState = () => {
 
 const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
   const { t } = useTranslation()
+  const router = useRouter()
 
   const { data, error } = useCurrentUserQuery()
   const [logout] = useLogoutMutation({
@@ -113,7 +115,7 @@ const Nav: React.FC<Props> = ({ expanded, collapse, disableLargeNav }) => {
     await logout()
 
     // Redirect to home page
-    Router.push('/')
+    router.push('/')
   }, [logout])
 
   return (

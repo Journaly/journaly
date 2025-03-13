@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 
 import LoadingWrapper from '@/components/LoadingWrapper'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
-import { ProfilePageDocument, UiLanguage, useProfilePageQuery } from '@/generated/graphql'
+import { ProfilePageDocument, useProfilePageQuery } from '@/generated/graphql'
 import useUILanguage from '@/hooks/useUILanguage'
 import Profile from '@/components/Dashboard/Profile'
 import { journalyMiddleware } from '@/lib/journalyMiddleware'

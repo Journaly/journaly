@@ -174,7 +174,7 @@ const Post = ({ post, currentUser, refetch }: PostProps) => {
   const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const [displayUserListModal, setDisplayUserListModal] = useState(false)
-  const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState()
+  const [premiumFeatureModalExplanation, setPremiumFeatureModalExplanation] = useState<string>()
   const [ReportSpamConfirmationModal, confirmReportSpam] = useConfirmationModal({
     title: t('reportSpamModal.title'),
     body: t('reportSpamModal.confirmationText'),

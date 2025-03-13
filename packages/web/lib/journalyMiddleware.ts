@@ -12,8 +12,7 @@ const supportedLanguages = Object.keys(langCodeToUILangMap).map((lang) => lang.r
 const detectLanguage = (req: GetServerSidePropsContext['req']): UILanguage => {
   const acceptStr = req.cookies['j-lang'] || req.headers['accept-language'] || 'en'
   const lang = pick(supportedLanguages, acceptStr) || 'en'
-  console.log(lang, 'LAAAAANG!')
-  return lang.replaceAll('-', '_')
+  return lang.replaceAll('-', '_') as UILanguage
 }
 
 // TOOD: Add documentation

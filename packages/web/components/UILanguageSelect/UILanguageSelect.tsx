@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { I18nContext, useTranslation, i18n } from 'next-i18next'
+import { I18nContext, useTranslation } from 'next-i18next'
 
 import Select from '@/components/Select'
 

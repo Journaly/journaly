@@ -1,4 +1,4 @@
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import React from 'react'
 import HomeSection from './HomeSection'
 import Testimonial from './Testimonial'

@@ -2,6 +2,7 @@
 
 When creating a new page, make sure to require a namespace for translations. This ensures that only the translations that are needed are sent along with that page.
 
+// TODO: update to remove withApollo
 ```jsx
 const MyPage: NextPage = () => {
   /* ... */

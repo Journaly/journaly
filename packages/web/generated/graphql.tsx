@@ -730,8 +730,12 @@ export type TopicTranslation = {
 }
 
 export enum UiLanguage {
+  ChineseSimplified = 'CHINESE_SIMPLIFIED',
+  ChineseTraditional = 'CHINESE_TRADITIONAL',
   English = 'ENGLISH',
   German = 'GERMAN',
+  Italian = 'ITALIAN',
+  PortugueseBrazilian = 'PORTUGUESE_BRAZILIAN',
   Spanish = 'SPANISH',
 }
 
@@ -1196,7 +1200,11 @@ export type CurrentUserFragmentFragment = {
     }>
   }>
   savedPosts: Array<{ __typename?: 'Post'; id: number }>
-  membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+  membershipSubscription?: {
+    __typename?: 'MembershipSubscription'
+    id: number
+    isActive: boolean
+  } | null
   languages: Array<{
     __typename?: 'LanguageRelation'
     id: number
@@ -1561,7 +1569,7 @@ export type PostCardFragmentFragment = {
   publishedLanguageLevel: LanguageLevel
   commentCount: number
   status: PostStatus
-  headlineImage: { __typename?: 'HeadlineImage'; id: number; smallSize: string }
+  headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
   claps: Array<{ __typename?: 'PostClap'; id: number }>
   author: {
     __typename?: 'User'
@@ -1612,6 +1620,7 @@ export type PostTopicFragmentFragment = {
 
 export type UserBadgeFragmentFragment = {
   __typename?: 'UserBadge'
+  id: number
   type: BadgeType
   createdAt: any
 }
@@ -1814,6 +1823,7 @@ export type LanguagesFormDataQuery = {
   }>
   currentUser?: {
     __typename?: 'User'
+    id: number
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -2170,7 +2180,11 @@ export type PostPageQuery = {
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
-    membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+    membershipSubscription?: {
+      __typename?: 'MembershipSubscription'
+      id: number
+      isActive: boolean
+    } | null
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -2454,7 +2468,11 @@ export type PrivatePostPageQuery = {
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
-    membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+    membershipSubscription?: {
+      __typename?: 'MembershipSubscription'
+      id: number
+      isActive: boolean
+    } | null
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -2515,7 +2533,7 @@ export type ProfilePageQuery = {
       country?: string | null
       emailAddressVerified: boolean
     }>
-    badges: Array<{ __typename?: 'UserBadge'; type: BadgeType; createdAt: any }>
+    badges: Array<{ __typename?: 'UserBadge'; id: number; type: BadgeType; createdAt: any }>
     userInterests: Array<{
       __typename?: 'UserInterest'
       topic: { __typename?: 'Topic'; id: number; name?: string | null }
@@ -2556,7 +2574,7 @@ export type ProfilePageQuery = {
       publishedLanguageLevel: LanguageLevel
       commentCount: number
       status: PostStatus
-      headlineImage: { __typename?: 'HeadlineImage'; id: number; smallSize: string }
+      headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
       claps: Array<{ __typename?: 'PostClap'; id: number }>
       author: {
         __typename?: 'User'
@@ -2639,7 +2657,7 @@ export type ProfileUserFragmentFragment = {
     country?: string | null
     emailAddressVerified: boolean
   }>
-  badges: Array<{ __typename?: 'UserBadge'; type: BadgeType; createdAt: any }>
+  badges: Array<{ __typename?: 'UserBadge'; id: number; type: BadgeType; createdAt: any }>
   userInterests: Array<{
     __typename?: 'UserInterest'
     topic: { __typename?: 'Topic'; id: number; name?: string | null }
@@ -2843,7 +2861,7 @@ export type CreatePostMutation = {
     publishedLanguageLevel: LanguageLevel
     commentCount: number
     status: PostStatus
-    headlineImage: { __typename?: 'HeadlineImage'; id: number; smallSize: string }
+    headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
     claps: Array<{ __typename?: 'PostClap'; id: number }>
     author: {
       __typename?: 'User'
@@ -3059,7 +3077,11 @@ export type EditPostQuery = {
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
-    membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+    membershipSubscription?: {
+      __typename?: 'MembershipSubscription'
+      id: number
+      isActive: boolean
+    } | null
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -3270,7 +3292,11 @@ export type NewPostQuery = {
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
-    membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+    membershipSubscription?: {
+      __typename?: 'MembershipSubscription'
+      id: number
+      isActive: boolean
+    } | null
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -3425,7 +3451,7 @@ export type PostsQuery = {
       publishedLanguageLevel: LanguageLevel
       commentCount: number
       status: PostStatus
-      headlineImage: { __typename?: 'HeadlineImage'; id: number; smallSize: string }
+      headlineImage: { __typename?: 'HeadlineImage'; smallSize: string }
       claps: Array<{ __typename?: 'PostClap'; id: number }>
       author: {
         __typename?: 'User'
@@ -3816,7 +3842,11 @@ export type CurrentUserQuery = {
       }>
     }>
     savedPosts: Array<{ __typename?: 'Post'; id: number }>
-    membershipSubscription?: { __typename?: 'MembershipSubscription'; isActive: boolean } | null
+    membershipSubscription?: {
+      __typename?: 'MembershipSubscription'
+      id: number
+      isActive: boolean
+    } | null
     languages: Array<{
       __typename?: 'LanguageRelation'
       id: number
@@ -3936,6 +3966,7 @@ export type SettingsFormDataQuery = {
   topics: Array<{ __typename?: 'Topic'; id: number; name?: string | null }>
   currentUser?: {
     __typename?: 'User'
+    id: number
     bio?: string | null
     languages: Array<{
       __typename?: 'LanguageRelation'
@@ -3955,6 +3986,7 @@ export type SettingsFormDataQuery = {
     }>
     configuration?: {
       __typename?: 'UserConfiguration'
+      id: number
       digestEmail: DigestEmailConfiguration
     } | null
     socialMedia?: {
@@ -4321,6 +4353,7 @@ export const CurrentUserFragmentFragmentDoc = gql`
       id
     }
     membershipSubscription {
+      id
       isActive
     }
   }
@@ -4509,7 +4542,6 @@ export const PostCardFragmentFragmentDoc = gql`
     commentCount
     status
     headlineImage {
-      id
       smallSize
     }
     claps {
@@ -4541,6 +4573,7 @@ export const TopicWithPostCountFragmentFragmentDoc = gql`
 `
 export const UserBadgeFragmentFragmentDoc = gql`
   fragment UserBadgeFragment on UserBadge {
+    id
     type
     createdAt
   }
@@ -5182,6 +5215,7 @@ export const LanguagesFormDataDocument = gql`
       ...LanguageFragment
     }
     currentUser {
+      id
       languages {
         id
         level
@@ -7255,6 +7289,7 @@ export const SettingsFormDataDocument = gql`
       ...TopicFragment
     }
     currentUser {
+      id
       bio
       languages {
         id
@@ -7268,6 +7303,7 @@ export const SettingsFormDataDocument = gql`
       }
       ...SocialMediaFragment
       configuration {
+        id
         digestEmail
       }
     }

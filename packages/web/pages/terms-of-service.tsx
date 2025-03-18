@@ -1,11 +1,16 @@
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import TermsOfService from '@/components/Site/TermsOfService'
-import { withApollo } from '@/lib/apollo'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
 
 const TermsOfServicePage: NextPage = () => <TermsOfService />
 
-TermsOfServicePage.getInitialProps = async () => ({
-  namespacesRequired: ['common'],
-})
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common']
+  const props = await journalyMiddleware(ctx, namespacesRequired)
 
-export default withApollo(TermsOfServicePage)
+  return {
+    props,
+  }
+}
+
+export default TermsOfServicePage

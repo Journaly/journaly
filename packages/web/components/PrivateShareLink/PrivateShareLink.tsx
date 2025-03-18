@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 import Button, { ButtonVariant } from '@/components/Button'
 import ContentCopyIcon from '../Icons/ContentCopyIcon'
 import theme from '@/theme'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 type PrivateShareLinkProps = {
   privateShareId: string

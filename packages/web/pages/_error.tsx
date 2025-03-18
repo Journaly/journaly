@@ -1,15 +1,13 @@
 import React from 'react'
 import { NextPage } from 'next'
 import Error, { ErrorProps } from 'next/error'
-import { useTranslation } from '@/config/i18n'
 import theme from '@/theme'
 
+// TODO: Let's fix the translation of this page one day
 const ErrorPage: NextPage<ErrorProps> = ({ statusCode }) => {
-  const { t } = useTranslation()
-
   return (
     <div className="container">
-      <Error statusCode={statusCode} title={t('error')} />
+      <Error statusCode={statusCode} title="Error" />
       <style global jsx>{`
         .container {
           max-width: 900px;
@@ -41,7 +39,6 @@ ErrorPage.getInitialProps = async ({ res, err }) => {
   if (err && err.statusCode) statusCode = err.statusCode
 
   return {
-    namespacesRequired: ['common'],
     title: `Error | ${statusCode}`,
     statusCode,
   }

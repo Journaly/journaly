@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useSlate } from 'slate-react'
 
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 import BaseToolbarButton from './BaseToolbarButton'
 import { ButtonType, toogleByType, isTypeActive } from '../helpers'

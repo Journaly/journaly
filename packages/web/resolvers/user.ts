@@ -354,10 +354,7 @@ const UserMutations = extendType({
             },
           })
         } catch (ex) {
-          if (
-            ex instanceof Prisma.PrismaClientKnownRequestError &&
-            ex.code === 'P2002'
-          ) {
+          if (ex instanceof Prisma.PrismaClientKnownRequestError && ex.code === 'P2002') {
             const target = ex?.meta?.target as string[] | undefined
 
             if (target?.find((x: string) => x === 'email')) {
@@ -385,6 +382,8 @@ const UserMutations = extendType({
 
         await sendEmailAddressVerificationEmail({ user, verificationToken: emailVerificationToken })
 
+        // TODO: We should update this so the tokens expire.
+        // Potentially a couple of weeks.
         const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET!)
         ctx.response.setHeader(
           'Set-Cookie',

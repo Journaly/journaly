@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
 import { useSlate } from 'slate-react'
 
-import { useTranslation, Router } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 import BaseToolbarButton from './BaseToolbarButton'
 import { insertImage } from '../helpers'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
@@ -17,6 +18,8 @@ type InsertImageButtonProps = {
 
 const InsertImageButton = ({ children, allowInlineImages }: InsertImageButtonProps) => {
   const { t } = useTranslation('post')
+  const router = useRouter()
+
   const editor = useSlate()
   const fileInput = React.useRef<HTMLInputElement>(null)
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = React.useState(false)
@@ -58,7 +61,7 @@ const InsertImageButton = ({ children, allowInlineImages }: InsertImageButtonPro
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={(): void => {
-            Router.push('/settings/subscription')
+            router.push('/settings/subscription')
             setDisplayPremiumFeatureModal(false)
           }}
         />

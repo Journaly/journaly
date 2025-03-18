@@ -7,7 +7,7 @@ import {
 } from '@/generated/graphql'
 import Button, { ButtonVariant } from '@/components/Button'
 import { OptionPills } from '@/components/MultiSelect'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import Select from '../Select'
 
 type Props = {

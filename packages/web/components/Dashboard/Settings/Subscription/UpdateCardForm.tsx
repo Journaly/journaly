@@ -7,7 +7,7 @@ import {
   useUpdateSubscriptionPaymentMethodMutation,
 } from '@/generated/graphql'
 import Button from '@/components/Button'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import theme from '@/theme'
 
 type UpdateCardFormProps = {

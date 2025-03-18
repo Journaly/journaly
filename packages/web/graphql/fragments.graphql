@@ -37,6 +37,7 @@ fragment CurrentUserFragment on User {
     id
   }
   membershipSubscription {
+    id
     isActive
   }
 }
@@ -194,7 +195,6 @@ fragment PostCardFragment on Post {
   commentCount
   status
   headlineImage {
-    id
     smallSize
   }
   claps {
@@ -237,6 +237,7 @@ fragment PostTopicFragment on PostTopic {
 }
 
 fragment UserBadgeFragment on UserBadge {
+  id
   type
   createdAt
 }

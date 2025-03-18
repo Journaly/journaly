@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import theme from '@/theme'
 import Button, { ButtonSize } from '@/components/Button'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 const TopSection = () => {
   const { t } = useTranslation('common')

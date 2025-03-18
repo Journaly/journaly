@@ -2,7 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 type Props = {
   currentPage: number
@@ -12,7 +12,7 @@ type Props = {
 }
 
 const Pagination: React.FC<Props> = ({ currentPage, total, numPerPage, title }) => {
-  const { t } = useTranslation('my-feed')
+  const { t } = useTranslation('common')
   const { pathname } = useRouter()
   const pages = Math.ceil(total / numPerPage)
 

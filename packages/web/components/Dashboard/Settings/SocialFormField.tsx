@@ -1,6 +1,6 @@
 import React from 'react'
 import { FieldError, ValidationOptions } from 'react-hook-form'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import FacebookIcon from '@/components/Icons/FacebookIcon'
 import GlobeIcon from '@/components/Icons/GlobeIcon'
 import InstagramIcon from '@/components/Icons/InstagramIcon'

@@ -1,6 +1,5 @@
-import React from 'react'
-import { I18nContext } from 'react-i18next'
-import { useTranslation, i18n } from '@/config/i18n'
+import React, { useCallback } from 'react'
+import { I18nContext, useTranslation } from 'next-i18next'
 
 import Select from '@/components/Select'
 
@@ -19,12 +18,19 @@ const UILanguageSelect = () => {
   const {
     i18n: { language },
   } = React.useContext(I18nContext)
+
+  const handleChangeLanguage = useCallback((lang: string) => {
+    const standardizedLang = lang.replaceAll('_', '-')
+    document.cookie = `j-lang=${standardizedLang};path=/`
+    document.location.reload()
+  }, [])
+
   return (
     <Select
       placeholder={t('profile.uiLanguage.placeholder')}
       options={uiLanguageOptions}
       value={language}
-      onChange={(value) => i18n.changeLanguage(value)}
+      onChange={handleChangeLanguage}
     />
   )
 }

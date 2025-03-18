@@ -1,10 +1,9 @@
 import React, { useRef, useState, useMemo } from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { makeReference } from '@apollo/client'
 
-import { withApollo } from '@/lib/apollo'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import { navConstants } from '@/components/Dashboard/Nav'
 import PostEditor, {
@@ -19,12 +18,15 @@ import {
   useCreatePostMutation,
   PostStatus as PostStatusType,
   UserRole,
+  NewPostDocument,
 } from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
-import { useTranslation, Router } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import useUILanguage from '@/hooks/useUILanguage'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import { getUiLanguage } from '@/utils/getUiLanguage'
 
 type NewPostPageProps = {
   defaultImage: {
@@ -270,7 +272,7 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
                 setDisplayPremiumFeatureModal(false)
               }}
               onGoToPremium={() => {
-                Router.push('/settings/subscription')
+                router.push('/settings/subscription')
                 setDisplayPremiumFeatureModal(false)
               }}
             />
@@ -286,9 +288,9 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
             }
 
             h1 {
+              ${theme.typography.headingXL};
               margin: 50px auto;
               text-align: center;
-              ${theme.typography.headingXL};
             }
 
             .button-container {
@@ -330,9 +332,23 @@ const NewPostPage: NextPage<NewPostPageProps> = ({ defaultImage }) => {
   )
 }
 
-NewPostPage.getInitialProps = async () => ({
-  defaultImage: selectDefaultImage(),
-  namespacesRequired: ['common', 'post'],
-})
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'post']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
+    await apolloClient.query({
+      query: NewPostDocument,
+      variables: {
+        uiLanguage: getUiLanguage(ctx),
+      },
+    })
+  })
 
-export default withApollo(NewPostPage)
+  return {
+    props: {
+      ...props,
+      defaultImage: selectDefaultImage(),
+    },
+  }
+}
+
+export default NewPostPage

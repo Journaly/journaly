@@ -30,7 +30,7 @@ import ToolbarButton from './ToolbarButton'
 import InsertImageButton from './InsertImageButton'
 import { isTableActive } from '../helpers'
 import SwitchToggle from '@/components/SwitchToggle'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import useIntersectionObserver from '@/hooks/userIntersectionObserver'
 
 type ToolbarProps = {

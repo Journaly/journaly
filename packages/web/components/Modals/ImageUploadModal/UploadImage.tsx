@@ -5,7 +5,7 @@ import { ButtonVariant } from '@/components/Button'
 import usePostImageUpload from '@/hooks/usePostImageUpload'
 import { InitiatePostImageUploadResponse } from '@/generated/graphql'
 import { HTMLInputEvent } from '@/hooks/useImageUpload'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 type UploadImageProps = {
   onImageSelect: (image: InitiatePostImageUploadResponse | null) => void

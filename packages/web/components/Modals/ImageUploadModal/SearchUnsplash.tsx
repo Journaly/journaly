@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { InitiatePostImageUploadResponse } from '@/generated/graphql'
 import theme from '@/theme'
 import SearchInput from '@/components/Dashboard/Filters/SearchInput'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 /**
  * PostEditor

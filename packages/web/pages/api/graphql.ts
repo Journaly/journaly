@@ -46,9 +46,11 @@ const handler = async (req: any, res: any) => {
   console.log(`GraphQL request took ${gqlDuration} ms`)
 
   if (gqlDuration > LOG_QUERY_THRESHOLD) {
-    console.log(`Request ran longer than ${LOG_QUERY_THRESHOLD}ms, request body is:`, await bodyPromise)
+    console.log(
+      `Request ran longer than ${LOG_QUERY_THRESHOLD}ms, request body is:`,
+      await bodyPromise,
+    )
   }
-
   return response
 }
 

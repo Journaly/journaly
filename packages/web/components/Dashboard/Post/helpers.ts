@@ -1,5 +1,5 @@
 import { PostClapFragmentFragment as PostClapType } from '@/generated/graphql'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { isChildOf } from '@/utils'
 
 // Elements whose boundaries a comment can cross

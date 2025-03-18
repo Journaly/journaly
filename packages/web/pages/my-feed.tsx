@@ -1,17 +1,25 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import cookie from 'cookie'
 import { Request } from 'express'
-import { withApollo } from '@/lib/apollo'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
 import MyFeed from '@/components/Dashboard/MyFeed'
 import AuthGate from '@/components/AuthGate'
 import WelcomeModal from '@/components/Modals/WelcomeModal'
-import { InitialSearchFilters } from '@/components/Dashboard/MyFeed'
+import { PostQueryVarsType } from '@/components/Dashboard/Filters'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import {
+  CurrentUserDocument,
+  LanguagesDocument,
+  PostsDocument,
+  TopicsDocument,
+} from '@/generated/graphql'
+import { constructPostQueryVars } from '@/components/Dashboard/MyFeed/MyFeed'
+import { getUiLanguage } from '@/utils/getUiLanguage'
 
 interface InitialProps {
   namespacesRequired: string[]
-  initialSearchFilters: InitialSearchFilters | null
+  initialSearchFilters: PostQueryVarsType | null
 }
 
 const MyFeedPage: NextPage<InitialProps> = ({ initialSearchFilters }) => {
@@ -27,13 +35,13 @@ const MyFeedPage: NextPage<InitialProps> = ({ initialSearchFilters }) => {
   )
 }
 
-MyFeedPage.getInitialProps = async (ctx) => {
-  let initialSearchFilters = null
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  let initialSearchFilters: PostQueryVarsType | null = null
   if (typeof window !== 'undefined') {
     try {
       const defaultSearchFilters = cookie.parse(document.cookie).default_search_filters
       initialSearchFilters = defaultSearchFilters
-        ? (JSON.parse(defaultSearchFilters) as InitialSearchFilters)
+        ? (JSON.parse(defaultSearchFilters) as PostQueryVarsType)
         : null
     } catch (e) {
       console.log('Error parsing default_search_filters cookie', e)
@@ -43,16 +51,51 @@ MyFeedPage.getInitialProps = async (ctx) => {
       const request = ctx.req as Request
       const defaultSearchFilters = request.cookies.default_search_filters
       initialSearchFilters = defaultSearchFilters
-        ? (JSON.parse(defaultSearchFilters) as InitialSearchFilters)
+        ? (JSON.parse(defaultSearchFilters) as PostQueryVarsType)
         : null
     } catch (e) {
       console.log('Error parsing default_search_filters cookie', e)
     }
   }
+
+  const namespacesRequired = ['common', 'settings', 'my-feed', 'post']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
+    await Promise.all([
+      apolloClient.query({
+        query: CurrentUserDocument,
+      }),
+      apolloClient.query({
+        query: PostsDocument,
+        variables: constructPostQueryVars(
+          initialSearchFilters,
+          ctx.query.page ? Math.max(1, parseInt(ctx.query.page as string, 10)) : 1,
+        ),
+      }),
+      apolloClient.query({
+        query: TopicsDocument,
+        variables: {
+          uiLanguage: getUiLanguage(ctx),
+          languages: initialSearchFilters?.languages || [],
+          hasPosts: true,
+          authoredOnly: false,
+        },
+      }),
+      apolloClient.query({
+        query: LanguagesDocument,
+        variables: {
+          hasPosts: true,
+          authoredOnly: false,
+        },
+      }),
+    ])
+  })
+
   return {
-    namespacesRequired: ['common', 'settings', 'my-feed'],
-    initialSearchFilters,
+    props: {
+      ...props,
+      initialSearchFilters,
+    },
   }
 }
 
-export default withApollo(MyFeedPage)
+export default MyFeedPage

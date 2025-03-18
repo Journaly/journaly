@@ -1,10 +1,4 @@
 {
   "pageTitle": "Mein Feed",
-  "noPostsMessage": "Es gibt noch nichts zu sehen ...",
-  "pagination": {
-    "previous": "Vor",
-    "next": "Weiter",
-    "page": "Seite",
-    "of": "von"
-  }
+  "noPostsMessage": "Es gibt noch nichts zu sehen ..."
 }

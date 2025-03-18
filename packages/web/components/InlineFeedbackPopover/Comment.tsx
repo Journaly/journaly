@@ -15,7 +15,7 @@ import {
   useApplySuggestionMutation,
 } from '@/generated/graphql'
 import theme from '@/theme'
-import { Router, useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import EditableMarkdown from '@/components/EditableMarkdown'
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
 import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
@@ -28,6 +28,7 @@ import LevelGauge from '../LevelGauge'
 import UserAvatar from '../UserAvatar'
 import PremiumFeatureModal from '../Modals/PremiumFeatureModal'
 import { JOURNALY_PREMIUM_URL } from '@/constants'
+import { useRouter } from 'next/router'
 
 type CommentProps = {
   comment: CommentType
@@ -52,6 +53,7 @@ const Comment = ({
   currentContentInPost,
   postAuthorId,
 }: CommentProps) => {
+  const router = useRouter()
   const { t } = useTranslation('comment')
   const [isEditMode, setIsEditMode] = useState(false)
   const [updatingCommentBody, setUpdatingCommentBody] = useState(comment.body)
@@ -310,7 +312,7 @@ const Comment = ({
           featureExplanation={t('acceptSuggestionPremiumFeatureExplanation')}
           onAcknowledge={() => setDisplayPremiumFeatureModal(false)}
           onGoToPremium={() => {
-            Router.push(JOURNALY_PREMIUM_URL)
+            router.push(JOURNALY_PREMIUM_URL)
             setDisplayPremiumFeatureModal(false)
           }}
         />

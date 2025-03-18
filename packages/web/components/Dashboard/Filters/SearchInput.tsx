@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import _ from 'lodash'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 type Props = {
   defaultValue: string

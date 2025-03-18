@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import theme from '@/theme'
 import Button, { ButtonSize, ButtonVariant } from '@/components/Button'
 
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import UpdateCardFormModal from './UpdateCardFormModal'
 
 type CardOnFileProps = {

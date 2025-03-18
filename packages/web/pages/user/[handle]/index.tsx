@@ -1,13 +1,13 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
 
-import { withApollo } from '@/lib/apollo'
 import LoadingWrapper from '@/components/LoadingWrapper'
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
-import { useProfilePageQuery } from '@/generated/graphql'
+import { ProfilePageDocument, useProfilePageQuery } from '@/generated/graphql'
 import useUILanguage from '@/hooks/useUILanguage'
 import Profile from '@/components/Dashboard/Profile'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
 
 interface InitialProps {
   namespacesRequired: string[]
@@ -40,8 +40,26 @@ const ProfilePage: NextPage<InitialProps> = () => {
   )
 }
 
-ProfilePage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'profile', 'post'],
-})
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'profile', 'post']
+  const props = await journalyMiddleware(
+    ctx,
+    namespacesRequired,
+    async (apolloClient, uiLanguage) => {
+      const userHandle = ctx.query.handle as string
 
-export default withApollo(ProfilePage)
+      await apolloClient.query({
+        query: ProfilePageDocument,
+        variables: {
+          uiLanguage,
+          userHandle,
+        },
+      })
+    },
+  )
+  return {
+    props,
+  }
+}
+
+export default ProfilePage

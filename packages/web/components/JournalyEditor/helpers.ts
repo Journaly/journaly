@@ -179,7 +179,7 @@ const toggleLink = ({ editor, t }: ToggleArgs) => {
 
   url = validateProtocol(url)
   if (!isUrl(url)) {
-    t && toast.error(t<string>('websitePatternError'))
+    t && toast.error(t('websitePatternError'))
     return
   }
 

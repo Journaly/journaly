@@ -6,6 +6,7 @@ query settingsFormData($uiLanguage: UILanguage!) {
     ...TopicFragment
   }
   currentUser {
+    id
     bio
     languages {
       id
@@ -19,6 +20,7 @@ query settingsFormData($uiLanguage: UILanguage!) {
     }
     ...SocialMediaFragment
     configuration {
+      id
       digestEmail
     }
   }

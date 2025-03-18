@@ -36,7 +36,7 @@
     "typescript": "4.2.4"
   },
   "dependencies": {
-    "@journaly/j-db-client": "^13.22.0",
+    "@journaly/j-db-client": "^13.23.0",
     "@types/nodemailer": "^6.4.0",
     "aws-sdk": "^2.737.0",
     "date-fns": "^2.16.1",

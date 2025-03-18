@@ -1,10 +1,4 @@
 {
   "pageTitle": "Mi Feed",
-  "noPostsMessage": "Nada para ver todavía...",
-  "pagination": {
-    "previous": "Anterior",
-    "next": "Siguiente",
-    "page": "Página",
-    "of": "de"
-  }
+  "noPostsMessage": "Nada para ver todavía..."
 }

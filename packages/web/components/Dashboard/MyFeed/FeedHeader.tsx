@@ -45,9 +45,9 @@ const FeedHeader: React.FC<Props> = ({ currentUser }) => {
       <style jsx>
         {`
           h1 {
+            ${theme.typography.headingXL};
             margin: 0 auto 40px;
             text-align: center;
-            ${theme.typography.headingXL};
           }
         `}
       </style>

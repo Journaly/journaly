@@ -18,7 +18,7 @@ import {
   InitiatePostImageUploadResponse,
 } from '@/generated/graphql'
 import { languageNameWithDialect } from '@/utils/languages'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import ImageUploadModal from '../Modals/ImageUploadModal'
 
 type BasePostData = {

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { MembershipSubscriptionPeriod } from '@/generated/graphql'
 import Select from '@/components/Select'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 
 type SubscriptionPlanSelectProps = {
   selectedOption: MembershipSubscriptionPeriod

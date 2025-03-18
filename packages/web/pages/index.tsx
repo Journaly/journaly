@@ -1,9 +1,9 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 
-import { withApollo } from '@/lib/apollo'
 import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
 import Home from '@/components/Site/Home'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
 
 const HomePage: NextPage = () => {
   return (
@@ -13,8 +13,13 @@ const HomePage: NextPage = () => {
   )
 }
 
-HomePage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'marketing'],
-})
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'marketing']
+  const props = await journalyMiddleware(ctx, namespacesRequired)
 
-export default withApollo(HomePage)
+  return {
+    props,
+  }
+}
+
+export default HomePage

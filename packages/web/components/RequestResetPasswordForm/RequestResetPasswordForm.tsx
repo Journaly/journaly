@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useForm, ErrorMessage } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { useRequestResetPasswordMutation } from '@/generated/graphql'
 import FormError from '@/components/FormError'
 import Button from '@/components/Button'

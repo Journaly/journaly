@@ -7,7 +7,7 @@ import {
   LanguageFragmentFragment as LanguageType,
   LanguageLevel,
 } from '@/generated/graphql'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { formatLongDate } from '@/utils'
 
 import theme from '@/theme'

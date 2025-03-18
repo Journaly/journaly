@@ -1,7 +1,7 @@
-import { NextPage } from 'next'
-import { withApollo } from '@/lib/apollo'
+import { GetServerSideProps, NextPage } from 'next'
 import LoginForm from '@/components/LoginForm'
 import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
 
 const LoginPage: NextPage = () => (
   <LandingPageLayout>
@@ -14,8 +14,13 @@ const LoginPage: NextPage = () => (
   </LandingPageLayout>
 )
 
-LoginPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'authentication'],
-})
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'authentication']
+  const props = await journalyMiddleware(ctx, namespacesRequired)
 
-export default withApollo(LoginPage)
+  return {
+    props,
+  }
+}
+
+export default LoginPage

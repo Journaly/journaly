@@ -1,8 +1,7 @@
 import React from 'react'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { withApollo } from '@/lib/apollo'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { TElement } from '@udecode/plate'
 
 import DashboardLayout from '@/components/Layouts/DashboardLayout'
@@ -13,12 +12,19 @@ import PostEditor, {
 } from '@/components/PostEditor'
 import theme from '@/theme'
 import Button, { ButtonVariant } from '@/components/Button'
-import { useEditPostQuery, useUpdatePostMutation } from '@/generated/graphql'
+import {
+  EditPostDocument,
+  PostPageDocument,
+  useEditPostQuery,
+  useUpdatePostMutation,
+} from '@/generated/graphql'
 import AuthGate from '@/components/AuthGate'
 import ConfirmationModal from '@/components/Modals/ConfirmationModal'
 import useUILanguage from '@/hooks/useUILanguage'
 import useAuthCheck from '@/hooks/useAuthCheck'
 import useUploadInlineImages from '@/hooks/useUploadInlineImages'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
+import { getUiLanguage } from '@/utils/getUiLanguage'
 
 const EditPostPage: NextPage = () => {
   const router = useRouter()
@@ -123,19 +129,15 @@ const EditPostPage: NextPage = () => {
     clear()
     setSaving(false)
     router.push({ pathname: `/post/${postId}` })
-  }, [
-    setSaving,
-    setErrorMessage,
-    dataRef,
-    uploadInlineImages,
-    updatePost,
-    router,
-  ])
+  }, [setSaving, setErrorMessage, dataRef, uploadInlineImages, updatePost, router])
 
-  const onSaveClick = React.useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    savePost()
-  }, [savePost])
+  const onSaveClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      savePost()
+    },
+    [savePost],
+  )
 
   return (
     <AuthGate>
@@ -198,6 +200,9 @@ const EditPostPage: NextPage = () => {
               margin: 50px auto;
               text-align: center;
               ${theme.typography.headingXL};
+              background: unset;
+              // TODO: Remove this bg unset once we can hopefully
+              // get Next to fix this.
             }
 
             .button-container {
@@ -225,8 +230,32 @@ const EditPostPage: NextPage = () => {
   )
 }
 
-EditPostPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'post'],
-})
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'post']
+  const props = await journalyMiddleware(ctx, namespacesRequired, async (apolloClient) => {
+    const idStr = ctx.query.id as string
+    const id = parseInt(idStr, 10)
 
-export default withApollo(EditPostPage)
+    await apolloClient.query({
+      query: PostPageDocument,
+      variables: {
+        id,
+        uiLanguage: getUiLanguage(ctx),
+      },
+    })
+
+    await apolloClient.query({
+      query: EditPostDocument,
+      variables: {
+        id,
+        uiLanguage: getUiLanguage(ctx),
+      },
+    })
+  })
+
+  return {
+    props,
+  }
+}
+
+export default EditPostPage

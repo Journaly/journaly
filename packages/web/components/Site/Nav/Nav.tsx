@@ -1,5 +1,5 @@
 import { useCurrentUserQuery, User as UserType } from '@/generated/graphql'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import NavLink from '@/components/NavLink'
 import Logo from '@/components/Logo'
 import theme from '@/theme'

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { UserBadgeFragmentFragment as Badge, BadgeType } from '@/generated/graphql'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import theme from '@/theme'
 
 type Props = {

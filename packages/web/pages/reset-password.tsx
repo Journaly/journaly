@@ -1,8 +1,8 @@
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { withApollo } from '@/lib/apollo'
 import ResetPasswordForm from '@/components/ResetPasswordForm'
 import LandingPageLayout from '@/components/Layouts/LandingPageLayout'
+import { journalyMiddleware } from '@/lib/journalyMiddleware'
 
 const ResetPasswordPage: NextPage = () => {
   const { query } = useRouter()
@@ -20,8 +20,13 @@ const ResetPasswordPage: NextPage = () => {
   )
 }
 
-ResetPasswordPage.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'authentication'],
-})
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const namespacesRequired = ['common', 'authentication']
+  const props = await journalyMiddleware(ctx, namespacesRequired)
 
-export default withApollo(ResetPasswordPage)
+  return {
+    props,
+  }
+}
+
+export default ResetPasswordPage

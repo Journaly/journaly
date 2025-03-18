@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 
 import Button, { ButtonVariant } from '@/components/Button'
 import { useConfirmationModal } from '@/components/Modals/ConfirmationModal'
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import {
   MembershipSubscriptionPeriod,
   UserWithSubscriptionFragmentFragment as UserType,

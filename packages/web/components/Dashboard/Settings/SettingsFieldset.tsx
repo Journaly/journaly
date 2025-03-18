@@ -20,7 +20,10 @@ const SettingsFieldset: React.FC<Props> = ({ children, legend }) => {
           text-align: center;
         }
         .settings-fieldset-legend h2 {
+          // TODO: Remove this bg unset once we can hopefully
+          // get Next to fix this.
           ${theme.typography.headingLG}
+          background: unset;
         }
         @media (min-width: ${theme.breakpoints.SM}) {
           .settings-fieldset-legend {

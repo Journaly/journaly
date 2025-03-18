@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import _ from 'lodash'
 
-import { useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
 import { gtag } from '@/components/GoogleAnalytics'
 import Pagination from '@/components/Pagination'
 import LoadingWrapper from '@/components/LoadingWrapper'
@@ -17,24 +17,33 @@ import {
 
 import PostCard from '../PostCard'
 import FeedHeader from './FeedHeader'
-import Filters from '../Filters'
-import { PostQueryVarsType } from '../Filters'
+import Filters, { PostQueryVarsType } from '@/components/Dashboard/Filters'
 import { makeReference, useApolloClient } from '@apollo/client'
 
 const NUM_POSTS_PER_PAGE = 9
 
 type Props = {
   currentUser: UserType
-  initialSearchFilters: InitialSearchFilters | null
+  initialSearchFilters: PostQueryVarsType | null
 }
 
-export type InitialSearchFilters = {
-  languages: number[]
-  topics: number[]
-  needsFeedback: boolean
-  hasInteracted: boolean
-  savedPosts: boolean
-  search: string
+export const constructPostQueryVars = (
+  postQueryVars: PostQueryVarsType | null,
+  currentPage: number,
+) => {
+  const variables = {
+    first: NUM_POSTS_PER_PAGE,
+    skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
+    status: PostStatus.Published,
+    languages: postQueryVars?.languages || [],
+    topics: postQueryVars?.topics || [],
+    followedAuthors: postQueryVars?.followedAuthors || false,
+    needsFeedback: postQueryVars?.needsFeedback || false,
+    hasInteracted: postQueryVars?.hasInteracted || false,
+    search: postQueryVars?.search || '',
+    savedPosts: postQueryVars?.savedPosts || false,
+  }
+  return variables
 }
 
 const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
@@ -79,12 +88,7 @@ const MyFeed: React.FC<Props> = ({ currentUser, initialSearchFilters }) => {
 
   // fetch posts for the feed!
   const { loading, error, data } = usePostsQuery({
-    variables: {
-      first: NUM_POSTS_PER_PAGE,
-      skip: (currentPage - 1) * NUM_POSTS_PER_PAGE,
-      status: PostStatus.Published,
-      ...postQueryVars,
-    },
+    variables: constructPostQueryVars(postQueryVars, currentPage),
   })
 
   const posts = data?.posts?.posts

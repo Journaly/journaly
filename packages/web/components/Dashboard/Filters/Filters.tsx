@@ -7,7 +7,8 @@ import LanguageSelect from './LanguageSelect'
 import TopicSelect from './TopicSelect'
 import useToggle from '@/hooks/useToggle'
 import useUILanguage from '@/hooks/useUILanguage'
-import { Router, useTranslation } from '@/config/i18n'
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 import PremiumFeatureModal from '@/components/Modals/PremiumFeatureModal'
 
 export type PostQueryVarsType = {
@@ -43,6 +44,7 @@ const Filters: React.FC<Props> = ({
   showSavedPosts = false,
 }) => {
   const { t } = useTranslation('common')
+  const router = useRouter()
   const [showAdvancedFilters, setShowAdvancedFilters] = useToggle(false)
   const [displayPremiumFeatureModal, setDisplayPremiumFeatureModal] = useState(false)
   const onSearchChange = useCallback(
@@ -143,7 +145,7 @@ const Filters: React.FC<Props> = ({
     }))
     resetPagination()
   }, [resetPagination])
-  
+
   const toggleMyLanguagesFilter = useCallback(() => {
     setPostQueryVars((prevState) => ({
       ...prevState,
@@ -277,7 +279,7 @@ const Filters: React.FC<Props> = ({
             setDisplayPremiumFeatureModal(false)
           }}
           onGoToPremium={() => {
-            Router.push('/settings/subscription')
+            router.push('/settings/subscription')
             setDisplayPremiumFeatureModal(false)
           }}
         />

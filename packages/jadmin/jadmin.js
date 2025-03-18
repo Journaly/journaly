@@ -84,6 +84,9 @@ async function getDb(args) {
   const db = pgTag(
     new Pool({
       connectionString: dbUrl,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
   )
 
